@@ -122,7 +122,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate, UICollec
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let layout = (collectionViewLayout as! UICollectionViewFlowLayout)
 		if view.bounds.size.width <= 320 {
-			return CGSize(width: 300, height: 150)
+			return CGSize(width: 300, height: 200)
 		} else if view.bounds.size.width >= 694 {
 			let extras = layout.minimumInteritemSpacing * 2 + layout.sectionInset.left + layout.sectionInset.right
 			let third = ((view.bounds.size.width - extras) / 3.0).rounded(.down)

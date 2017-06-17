@@ -45,6 +45,11 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			let info = archivedDrop.displayInfo
 			image.image = info.image
 			image.contentMode = info.imageContentMode
+			if image.contentMode == .center {
+				label.numberOfLines = 10
+			} else {
+				label.numberOfLines = 2
+			}
 			label.text = info.title
 
 			if archivedDrop.isLoading {
