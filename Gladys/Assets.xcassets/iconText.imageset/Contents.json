@@ -2,25 +2,22 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "1012-sticky-note.png",
+      "filename" : "704-compose.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "1012-sticky-note@2x.png",
+      "filename" : "704-compose@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "1012-sticky-note@3x.png",
+      "filename" : "704-compose@3x.png",
       "scale" : "3x"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }
