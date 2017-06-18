@@ -9,12 +9,13 @@
 /* Begin PBXBuildFile section */
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
-		16101E8E1EF5A21C00CCBD3C /* ArchivedDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8D1EF5A21C00CCBD3C /* ArchivedDrop.swift */; };
+		1626609B1EF66813003AC22C /* LoadCompletionCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626609A1EF66813003AC22C /* LoadCompletionCounter.swift */; };
 		1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D01EF475FE005697CB /* AppDelegate.swift */; };
 		1678F9D31EF475FF005697CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D21EF475FF005697CB /* ViewController.swift */; };
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
-		16D2C7101EF5A5DF009B97F9 /* LoadCompletionCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C70F1EF5A5DF009B97F9 /* LoadCompletionCounter.swift */; };
+		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
+		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -22,14 +23,15 @@
 /* Begin PBXFileReference section */
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
-		16101E8D1EF5A21C00CCBD3C /* ArchivedDrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDrop.swift; sourceTree = "<group>"; };
+		1626609A1EF66813003AC22C /* LoadCompletionCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadCompletionCounter.swift; sourceTree = "<group>"; };
 		1678F9CD1EF475FE005697CB /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1678F9D01EF475FE005697CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1678F9D21EF475FF005697CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1678F9D71EF475FF005697CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1678F9DA1EF475FF005697CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		16D2C70F1EF5A5DF009B97F9 /* LoadCompletionCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadCompletionCounter.swift; sourceTree = "<group>"; };
+		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
+		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -48,10 +50,11 @@
 		16101E8F1EF5A23000CCBD3C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				16101E8D1EF5A21C00CCBD3C /* ArchivedDrop.swift */,
+				1626609A1EF66813003AC22C /* LoadCompletionCounter.swift */,
 				16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */,
 				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
-				16D2C70F1EF5A5DF009B97F9 /* LoadCompletionCounter.swift */,
+				16A223E21EF67959009EEEBC /* PopTimer.swift */,
+				16A223E41EF67FC7009EEEBC /* Model.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -166,13 +169,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16101E8E1EF5A21C00CCBD3C /* ArchivedDrop.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
-				16D2C7101EF5A5DF009B97F9 /* LoadCompletionCounter.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
+				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
+				1626609B1EF66813003AC22C /* LoadCompletionCounter.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
+				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -42,18 +42,24 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3H-LC-FOH">
-                                                    <rect key="frame" x="8" y="128.5" width="219" height="13.5"/>
+                                                    <rect key="frame" x="8" y="128" width="219" height="13.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS">
-                                                    <rect key="frame" x="8" y="8" width="219" height="113"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS">
+                                                    <rect key="frame" x="8" y="30" width="219" height="90"/>
                                                     <color key="backgroundColor" red="0.84341198205947876" green="0.83196836709976196" blue="0.80659013986587524" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ZI7-Rk-HVF">
                                                     <rect key="frame" x="107.5" y="65" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lnk-SW-KkP">
+                                                    <rect key="frame" x="8" y="8" width="219" height="13.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -62,15 +68,19 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="v3H-LC-FOH" secondAttribute="trailing" id="54Q-4S-UsC"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="5lP-ga-4TG"/>
                                             <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="G3V-Sb-LMb"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="Lnk-SW-KkP" secondAttribute="trailing" id="MLn-ck-mTO"/>
                                             <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YxE-hL-dVE"/>
-                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="cXG-14-tzl"/>
+                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="Lnk-SW-KkP" secondAttribute="bottom" constant="8" id="fR2-e0-xPA"/>
+                                            <constraint firstItem="Lnk-SW-KkP" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="lX8-Z5-Y4P"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="tCq-Kc-mNY"/>
+                                            <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="accessoryLabel" destination="v3H-LC-FOH" id="2ro-g0-Ad4"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
-                                            <outlet property="label" destination="v3H-LC-FOH" id="KOz-SA-QlZ"/>
+                                            <outlet property="label" destination="Lnk-SW-KkP" id="WHN-Fa-wtj"/>
                                             <outlet property="spinner" destination="ZI7-Rk-HVF" id="8Yn-is-eJ3"/>
                                         </connections>
                                     </collectionViewCell>
@@ -106,7 +116,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="806" y="136"/>
+            <point key="canvasLocation" x="805.60000000000002" y="135.38230884557723"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">

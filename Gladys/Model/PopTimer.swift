@@ -1,0 +1,49 @@
+
+import Foundation
+
+final class PopTimer {
+
+	private final class Timer {
+
+		private let timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+
+		init(repeats: Bool, interval: TimeInterval, block: @escaping ()->Void) {
+
+			if repeats {
+				timer.scheduleRepeating(deadline: .now() + interval, interval: interval)
+			} else {
+				timer.scheduleOneshot(deadline: .now() + interval)
+			}
+			timer.setEventHandler(handler: block)
+			timer.resume()
+		}
+
+		deinit {
+			timer.cancel()
+		}
+	}
+
+	private var popTimer: Timer?
+	private let timeInterval: TimeInterval
+	private let callback: ()->Void
+
+	func push() {
+		popTimer = Timer(repeats: false, interval: timeInterval) { [weak self] in
+			self?.abort()
+			self?.callback()
+		}
+	}
+
+	func abort() {
+		popTimer = nil
+	}
+
+	var isRunning: Bool {
+		return popTimer != nil
+	}
+
+	init(timeInterval: TimeInterval, callback: @escaping ()->Void) {
+		self.timeInterval = timeInterval
+		self.callback = callback
+	}
+}

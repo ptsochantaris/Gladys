@@ -2,36 +2,100 @@
 import UIKit
 import MapKit
 
-final class ArchivedDropItemType {
+final class ArchivedDropItemType: Codable {
 
-	let typeIdentifier: String
-	var classType: ClassType?
+	private enum CodingKeys : String, CodingKey {
+		case typeIdentifier
+		case classType
+		case bytes
+		case folderUrl
+		case uuid
+		case allLoadedWell
+	}
 
+	func encode(to encoder: Encoder) throws {
+		var v = encoder.container(keyedBy: CodingKeys.self)
+		try v.encode(typeIdentifier, forKey: .typeIdentifier)
+		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
+		try v.encodeIfPresent(bytes, forKey: .bytes)
+		try v.encode(folderUrl, forKey: .folderUrl)
+		try v.encode(uuid, forKey: .uuid)
+		try v.encode(allLoadedWell, forKey: .allLoadedWell)
+	}
+
+	init(from decoder: Decoder) throws {
+		let v = try decoder.container(keyedBy: CodingKeys.self)
+		typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
+		if let typeValue = try v.decodeIfPresent(String.self, forKey: .classType) {
+			classType = ClassType(rawValue: typeValue)
+		}
+		bytes = try v.decode(Data.self, forKey: .bytes)
+		folderUrl = try v.decode(URL.self, forKey: .folderUrl)
+		uuid = try v.decode(UUID.self, forKey: .uuid)
+		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
+	}
+
+	private let typeIdentifier: String
+	private var classType: ClassType?
 	private var bytes: Data?
 	private let folderUrl: URL
-	private let uuid = UUID()
+	private let uuid: UUID
 
+	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
 	private var loadCount = 0
 	private var allLoadedWell = true
 
-	func setBytes(object: Any, classType: ClassType) {
-		let d = NSMutableData()
-		let k = NSKeyedArchiver(forWritingWith: d)
-		k.encode(object, forKey: classType.rawValue)
-		k.finishEncoding()
-		self.bytes = d as Data
-		self.classType = classType
-	}
-
-	enum ClassType: String {
+	private enum ClassType: String {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
 	}
 
+	private func decode(_ type: ClassType) -> Any? {
+		guard let bytes = bytes else { return nil }
+		let u = NSKeyedUnarchiver(forReadingWith: bytes)
+		let className = type.rawValue
+		return u.decodeObject(of: [NSClassFromString(className)!], forKey: className)
+	}
+
+	var backgroundInfoObject: (Any?, Int) {
+		guard let classType = classType else { return (nil, 0) }
+
+		switch classType {
+
+		case .MKMapItem: return (decode(.MKMapItem), 30)
+
+		case .UIColor: return (decode(.UIColor), 10)
+
+		case .NSURL:
+			let url = decode(.NSURL) as? NSURL
+			if url?.scheme != "file" {
+				return  (url, 20)
+			}
+			fallthrough
+
+		default: return (nil, 0)
+		}
+	}
+
+	func register(with provider: NSItemProvider) {
+		provider.registerItem(forTypeIdentifier: typeIdentifier, loadHandler: loadHandler)
+	}
+
+	private func setBytes(object: Any, type: ClassType) {
+		let d = NSMutableData()
+		let k = NSKeyedArchiver(forWritingWith: d)
+		k.encode(object, forKey: type.rawValue)
+		k.finishEncoding()
+		bytes = d as Data
+		classType = type
+	}
+
 	init(provider: NSItemProvider, typeIdentifier: String, parentUrl: URL, delegate: LoadCompletionDelegate) {
+
+		self.uuid = UUID()
 		self.typeIdentifier = typeIdentifier
-		self.delegate = delegate
 		self.folderUrl = parentUrl.appendingPathComponent(uuid.uuidString)
+		self.delegate = delegate
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let item = item {
@@ -41,22 +105,22 @@ final class ArchivedDropItemType {
 
 			if let item = item as? NSString {
 				NSLog("      received string: \(item)")
-				self.setBytes(object: item, classType: .NSString)
+				self.setBytes(object: item, type: .NSString)
 				self.signalDone()
 
 			} else if let item = item as? NSAttributedString {
 				NSLog("      received attributed string: \(item)")
-				self.setBytes(object: item, classType: .NSAttributedString)
+				self.setBytes(object: item, type: .NSAttributedString)
 				self.signalDone()
 
 			} else if let item = item as? UIColor {
 				NSLog("      received color: \(item)")
-				self.setBytes(object: item, classType: .UIColor)
+				self.setBytes(object: item, type: .UIColor)
 				self.signalDone()
 
 			} else if let item = item as? UIImage {
 				NSLog("      received image: \(item)")
-				self.setBytes(object: item, classType: .UIImage)
+				self.setBytes(object: item, type: .UIImage)
 				self.signalDone()
 
 			} else if let item = item as? Data {
@@ -67,7 +131,7 @@ final class ArchivedDropItemType {
 
 			} else if let item = item as? MKMapItem {
 				NSLog("      received map item: \(item)")
-				self.setBytes(object: item, classType: .MKMapItem)
+				self.setBytes(object: item, type: .MKMapItem)
 				self.signalDone()
 
 			} else if let item = item as? URL {
@@ -77,7 +141,7 @@ final class ArchivedDropItemType {
 						if let url = url {
 							NSLog("      received local url: \(url)")
 							let localUrl = self.copyLocal(url)
-							self.setBytes(object: localUrl, classType: .NSURL)
+							self.setBytes(object: localUrl, type: .NSURL)
 							self.signalDone()
 
 						} else if let error = error {
@@ -88,7 +152,7 @@ final class ArchivedDropItemType {
 					}
 				} else {
 					NSLog("      received remote url: \(item)")
-					self.setBytes(object: item, classType: .NSURL)
+					self.setBytes(object: item, type: .NSURL)
 					self.signalDone()
 				}
 
@@ -124,23 +188,22 @@ final class ArchivedDropItemType {
 		return newUrl
 	}
 
-	lazy var loadHandler: NSItemProvider.LoadHandler = { completion, requestedClassType, options in
+	private lazy var loadHandler: NSItemProvider.LoadHandler = { completion, requestedClassType, options in
 
-		if let data = self.bytes, let classType = self.classType {
+		if let bytes = self.bytes, let classType = self.classType {
 
 			if requestedClassType != nil {
 				let requestedClassName = NSStringFromClass(requestedClassType)
 				if requestedClassName == "NSData" {
-					completion(data as NSData, nil)
+					completion(bytes as NSData, nil)
 					return
 				}
 			}
 
-			let u = NSKeyedUnarchiver(forReadingWith: data)
-			let item = u.decodeObject(of: [NSClassFromString(classType.rawValue)!], forKey: classType.rawValue) as? NSSecureCoding
+			let item = self.decode(classType) as? NSSecureCoding
 			let finalName = String(describing: item)
 			NSLog("Responding with \(finalName)")
-			completion(item ?? (data as NSData), nil)
+			completion(item ?? (bytes as NSData), nil)
 
 		} else {
 			completion(nil, nil)
@@ -150,16 +213,14 @@ final class ArchivedDropItemType {
 	var displayIcon: (UIImage?, Int, UIViewContentMode) {
 		if let data = self.bytes {
 			if classType == .UIImage {
-				let u = NSKeyedUnarchiver(forReadingWith: data)
-				if let a = u.decodeObject(of: [UIImage.self], forKey: ClassType.UIImage.rawValue) as? UIImage {
+				if let a = decode(.UIImage) as? UIImage {
 					return (a, 15, .scaleAspectFill)
 				}
 			}
 
 			if typeIdentifier == "public.png" || typeIdentifier == "public.jpeg" {
 				if classType == .NSURL {
-					let u = NSKeyedUnarchiver(forReadingWith: data)
-					if let url = u.decodeObject(of: [NSURL.self], forKey: ClassType.NSURL.rawValue) as? NSURL, let path = url.path, let image = UIImage(contentsOfFile: path) {
+					if let url = decode(.NSURL) as? NSURL, let path = url.path, let image = UIImage(contentsOfFile: path) {
 						return (image, 10, .scaleAspectFill)
 					}
 				} else if classType == .NSData {
@@ -195,30 +256,31 @@ final class ArchivedDropItemType {
 	}
 
 	var displayTitle: (String?, Int) {
+
+		if classType == .NSString {
+			if let res = decode(.NSString) as? String {
+				return (res, 10)
+			}
+		} else if classType == .NSAttributedString {
+			let a = decode(.NSAttributedString) as? NSAttributedString
+			if let res = a?.string {
+				return (res, 7)
+			}
+		} else if classType == .NSURL {
+			let a = decode(.NSURL) as? NSURL
+			if let res = a?.absoluteString {
+				return (res, 6)
+			}
+		}
+
 		if let data = self.bytes {
-			if classType == .NSString {
-				let u = NSKeyedUnarchiver(forReadingWith: data)
-				if let res = u.decodeObject(of: [NSString.self], forKey: ClassType.NSString.rawValue) as? String {
-					return (res, 10)
-				}
-			} else if classType == .NSAttributedString {
-				let u = NSKeyedUnarchiver(forReadingWith: data)
-				let a = u.decodeObject(of: [NSAttributedString.self], forKey: ClassType.NSAttributedString.rawValue) as? NSAttributedString
-				if let res = a?.string {
-					return (res, 7)
-				}
-			} else if classType == .NSURL {
-				let u = NSKeyedUnarchiver(forReadingWith: data)
-				let a = u.decodeObject(of: [NSURL.self], forKey: ClassType.NSURL.rawValue) as? NSURL
-				if let res = a?.absoluteString {
-					return (res, 6)
-				}
-			} else if typeIdentifier == "public.utf8-plain-text" {
+			if typeIdentifier == "public.utf8-plain-text" {
 				return (String(data: data, encoding: .utf8), 9)
 			} else if typeIdentifier == "public.utf16-plain-text" {
 				return (String(data: data, encoding: .utf16), 8)
 			}
 		}
+
 		return (nil, 0)
 	}
 }

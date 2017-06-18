@@ -4,9 +4,9 @@ import Foundation
 class LoadCompletionCounter: LoadCompletionDelegate {
 	weak var delegate: LoadCompletionDelegate?
 	var isLoading = true
+	var allLoadedWell = true
 
 	private var loadCount: Int
-	private var allLoadedWell = true
  	func loadCompleted(success: Bool) {
 		if !success { allLoadedWell = false }
 		loadCount = loadCount - 1

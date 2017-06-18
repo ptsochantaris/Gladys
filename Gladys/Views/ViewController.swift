@@ -8,73 +8,90 @@
 
 import UIKit
 
-final class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
+final class ViewController: UIViewController, UICollectionViewDelegate,
+UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
 
-	private var archivedDrops = [ArchivedDrop]()
+	private let model = Model()
+
+	/////////////////////////
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		return archivedDrops[indexPath.item].dragItems
+		return [model.drops[indexPath.item].dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let newItems = archivedDrops[indexPath.item].dragItems
-		let onlyNewItems = newItems.filter { !session.items.contains($0) }
-		return onlyNewItems
+		let newItem = model.drops[indexPath.item].dragItem
+		if !session.items.contains(newItem) {
+			return [newItem]
+		} else {
+			return []
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return archivedDrops.count
+		return model.drops.count
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
-		cell.setArchivedDrop(archivedDrops[indexPath.item])
+		cell.setArchivedDropItem(model.drops[indexPath.item])
 		return cell
+	}
+
+	private func handleDrop(collectionView: UICollectionView, coordinator: UICollectionViewDropCoordinator) {
+
+		var changesMade = false
+
+		for coordinatorItem in coordinator.items {
+			let dragItem = coordinatorItem.dragItem
+
+			if coordinator.session.localDragSession == nil {
+
+				NSLog("insert drop")
+
+				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: nil)
+
+				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
+				model.drops.insert(item, at: destinationIndexPath.item)
+				collectionView.insertItems(at: [destinationIndexPath])
+
+				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				changesMade = true
+
+			} else {
+
+				NSLog("move drop")
+
+				guard
+					let destinationIndexPath = coordinator.destinationIndexPath,
+					let existingItem = dragItem.localObject as? ArchivedDropItem,
+					let previousIndex = coordinatorItem.sourceIndexPath else { return }
+
+				NSLog("looks good")
+
+				model.drops.remove(at: previousIndex.item)
+				model.drops.insert(existingItem, at: destinationIndexPath.item)
+				collectionView.moveItem(at: previousIndex, to: destinationIndexPath)
+
+				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				changesMade = true
+			}
+		}
+
+		if changesMade {
+			Model.save()
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
-		if let _ = coordinator.session.localDragSession {
+		collectionView.performBatchUpdates({
+			self.handleDrop(collectionView: collectionView, coordinator: coordinator)
+		}, completion: { finished in
 
-			NSLog("local drop")
-
-			if let destinationIndexPath = coordinator.destinationIndexPath,
-				let firstDragItem = coordinator.items.first,
-				let existingItem = firstDragItem.dragItem.localObject as? ArchivedDrop,
-				let previousIndex = firstDragItem.sourceIndexPath {
-
-				collectionView.performBatchUpdates({
-					self.archivedDrops.remove(at: previousIndex.item)
-					self.archivedDrops.insert(existingItem, at: destinationIndexPath.item)
-					collectionView.moveItem(at: previousIndex, to: destinationIndexPath)
-				}, completion: { finished in
-
-				})
-
-				coordinator.drop(firstDragItem.dragItem, toItemAt: destinationIndexPath)
-			}
-
-		} else {
-
-			NSLog("insert drop")
-
-			let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: archivedDrops.count, section: 0)
-			if let firstDragItem = coordinator.items.first?.dragItem {
-
-				let item = ArchivedDrop(session: coordinator.session)
-
-				collectionView.performBatchUpdates({
-					self.archivedDrops.insert(item, at: destinationIndexPath.item)
-					collectionView.insertItems(at: [destinationIndexPath])
-				}, completion: { finished in
-
-				})
-
-				coordinator.drop(firstDragItem, toItemAt: destinationIndexPath)
-			}
-		}
+		})
 	}
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -91,7 +108,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate, UICollec
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
 		// TODO: possibe bug
-		if collectionView.numberOfItems(inSection: 0) != archivedDrops.count {
+		if collectionView.numberOfItems(inSection: 0) != model.drops.count {
 			collectionView.endInteractiveMovement()
 		}
 	}
@@ -112,7 +129,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate, UICollec
 	@IBAction func resetPressed(_ sender: UIBarButtonItem) {
 		sender.isEnabled = false
 		archivedItemCollectionView.performBatchUpdates({
-			self.archivedDrops.removeAll()
+			for item in self.model.drops {
+				item.delete()
+			}
+			self.model.drops.removeAll()
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: { finished in
 			sender.isEnabled = true
