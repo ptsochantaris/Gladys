@@ -161,6 +161,7 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			} else {
 				label.numberOfLines = 2
 			}
+			label.textAlignment = info.titleAlignment
 			label.text = info.title
 
 			if let t = info.accessoryText {

@@ -6,6 +6,7 @@ final class ArchivedDropDisplayInfo {
 	var imageContentMode = UIViewContentMode.center
 	var title: String?
 	var accessoryText: String?
+	var titleAlignment = NSTextAlignment.center
 }
 
 final class ArchivedDropItem: LoadCompletionCounter, Codable {
@@ -56,12 +57,12 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		let info = ArchivedDropDisplayInfo()
 
 		let (img, contentMode) = displayIcon
-		info.image = img
 		info.imageContentMode = contentMode
+		info.image = img
 
-		if let title = displayTitle {
-			info.title = title
-		}
+		let (title, alignment) = displayTitle
+		info.titleAlignment = alignment
+		info.title = title
 
 		info.accessoryText = accessoryTitle
 
@@ -118,17 +119,19 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		return (image, contentMode)
 	}
 
-	private var displayTitle: String? {
+	private var displayTitle: (String?, NSTextAlignment) {
 		var title = suggestedName
 		var priority = 0
+		var alignment = NSTextAlignment.center
 		for i in typeItems {
-			let (newTitle, newPriority) = i.displayTitle
+			let (newTitle, newPriority, newAlignment) = i.displayTitle
 			if let newTitle = newTitle, newPriority > priority {
 				title = newTitle
 				priority = newPriority
+				alignment = newAlignment
 			}
 		}
-		return title
+		return (title, alignment)
 	}
 
 	private var accessoryTitle: String? {

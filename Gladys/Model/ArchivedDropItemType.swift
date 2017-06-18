@@ -37,6 +37,7 @@ final class ArchivedDropItemType: Codable {
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
+		patchLocalUrl()
 	}
 
 	private let typeIdentifier: String
@@ -55,11 +56,11 @@ final class ArchivedDropItemType: Codable {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
 	}
 
-	private func decode(_ type: ClassType) -> Any? {
+	private func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
 		guard let bytes = bytes else { return nil }
 		let u = NSKeyedUnarchiver(forReadingWith: bytes)
-		let className = type.rawValue
-		return u.decodeObject(of: [NSClassFromString(className)!], forKey: className)
+		let className = String(describing: type)
+		return u.decodeObject(of: [NSClassFromString(className)!], forKey: className) as? T
 	}
 
 	var backgroundInfoObject: (Any?, Int) {
@@ -67,29 +68,28 @@ final class ArchivedDropItemType: Codable {
 
 		switch classType {
 
-		case .MKMapItem: return (decode(.MKMapItem), 30)
+		case .MKMapItem: return (decode(MKMapItem.self), 30)
 
-		case .UIColor: return (decode(.UIColor), 10)
+		case .UIColor: return (decode(UIColor.self), 10)
 
 		default: return (nil, 0)
 		}
 	}
 
-	private var decodedUrl: NSURL? {
-		if let url = decode(.NSURL) as? NSURL {
+	private func patchLocalUrl() {
 
-			if url.scheme == "file", let s = url.absoluteString {
+		if let myDataIsAUrl = decode(NSURL.self) {
+
+			if myDataIsAUrl.scheme == "file", let s = myDataIsAUrl.absoluteString, let classType = classType {
 				let myPath = "\(parentUuid)/\(uuid)/"
 				if let indexUpToMyPath = s.range(of: myPath)?.lowerBound {
 					let keep = s.substring(from: indexUpToMyPath)
 					let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-					return docs.appendingPathComponent(keep) as NSURL
+					let correctUrl = docs.appendingPathComponent(keep) as NSURL
+					setBytes(object: correctUrl, type: classType)
 				}
 			}
-
-			return url
 		}
-		return nil
 	}
 
 	func register(with provider: NSItemProvider) {
@@ -152,7 +152,7 @@ final class ArchivedDropItemType: Codable {
 			} else if let item = item as? URL {
 				if item.scheme == "file" {
 					NSLog("      will duplicate item at local url: \(item)")
-					provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { url, isLocal, error in
+					provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { url, error in
 						if let url = url {
 							let localUrl = self.copyLocal(url)
 							NSLog("      received to local url: \(localUrl)")
@@ -264,7 +264,26 @@ final class ArchivedDropItemType: Codable {
 				}
 			}
 
-			let item = self.decode(classType) as? NSSecureCoding
+			NSLog("requested type: \(requestedClassType), our type: \(classType.rawValue)")
+
+			let item: NSSecureCoding?
+			switch classType {
+			case .NSString:
+				item = self.decode(NSString.self)
+			case .NSAttributedString:
+				item = self.decode(NSAttributedString.self)
+			case .UIImage:
+				item = self.decode(UIImage.self)
+			case .UIColor:
+				item = self.decode(UIColor.self)
+			case .NSData:
+				item = self.decode(NSData.self)
+			case .MKMapItem:
+				item = self.decode(MKMapItem.self)
+			case .NSURL:
+				item = self.decode(NSURL.self)
+			}
+
 			let finalName = String(describing: item)
 			NSLog("Responding with \(finalName)")
 			completion(item ?? (bytes as NSData), nil)
@@ -279,14 +298,14 @@ final class ArchivedDropItemType: Codable {
 		if let data = self.bytes {
 
 			if classType == .UIImage {
-				if let a = decode(.UIImage) as? UIImage {
+				if let a = decode(UIImage.self) {
 					return (a, 15, .scaleAspectFill)
 				}
 			}
 
 			if typeIdentifier == "public.png" || typeIdentifier == "public.jpeg" {
 				if classType == .NSURL {
-					if let url = decodedUrl, let path = url.path, let image = UIImage(contentsOfFile: path) {
+					if let url = decode(NSURL.self), let path = url.path, let image = UIImage(contentsOfFile: path) {
 						return (image, 10, .scaleAspectFill)
 					}
 				} else if classType == .NSData {
@@ -329,21 +348,21 @@ final class ArchivedDropItemType: Codable {
 		return (#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 	}
 
-	lazy var displayTitle: (String?, Int) = { self.updatedDisplayTitle() }()
-	private func updatedDisplayTitle() -> (String?, Int) {
+	lazy var displayTitle: (String?, Int, NSTextAlignment) = { self.updatedDisplayTitle() }()
+	private func updatedDisplayTitle() -> (String?, Int, NSTextAlignment) {
 
 		if classType == .NSString {
-			if let res = decode(.NSString) as? String {
-				return (res, 10)
+			if let res = decode(NSString.self) as String? {
+				return (res, 10, preferredAlignment(for: res))
 			}
 		} else if classType == .NSAttributedString {
-			let a = decode(.NSAttributedString) as? NSAttributedString
+			let a = decode(NSAttributedString.self)
 			if let res = a?.string {
-				return (res, 7)
+				return (res, 7, preferredAlignment(for: res))
 			}
 		} else if classType == .NSURL {
-			if let url = decodedUrl, url.scheme != "file", let res = url.absoluteString {
-				return (res, 6)
+			if let url = decode(NSURL.self), url.scheme != "file", let res = url.absoluteString {
+				return (res, 6, .center)
 			}
 		}
 
@@ -356,17 +375,26 @@ final class ArchivedDropItemType: Codable {
 					if !person.familyName.isEmpty { name += person.familyName }
 					if !name.isEmpty && !person.organizationName.isEmpty { name += " - " }
 					if !person.organizationName.isEmpty { name += person.organizationName }
-					return (name, 9)
+					return (name, 9, .center)
 				}
 
 			} else if typeIdentifier == "public.utf8-plain-text" {
-				return (String(data: data, encoding: .utf8), 9)
+				let s = String(data: data, encoding: .utf8)
+				return (s, 9, preferredAlignment(for: s))
 			} else if typeIdentifier == "public.utf16-plain-text" {
-				return (String(data: data, encoding: .utf16), 8)
+				let s = String(data: data, encoding: .utf16)
+				return (s, 8, preferredAlignment(for: s))
 			}
 		}
 
-		return (nil, 0)
+		return (nil, 0, .center)
+	}
+
+	private func preferredAlignment(for string: String?) -> NSTextAlignment {
+		if let string = string, string.characters.count > 200 {
+			return .justified
+		}
+		return .center
 	}
 }
 
