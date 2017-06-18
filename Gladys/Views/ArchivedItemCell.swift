@@ -77,7 +77,9 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 	@IBOutlet weak var image: UIImageView!
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var accessoryLabel: UILabel!
+	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
 	@IBOutlet var spinner: UIActivityIndicatorView!
+
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -104,6 +106,7 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 
 		image.subviews.forEach { $0.removeFromSuperview() }
 		accessoryLabel.text = nil
+		accessoryLabelDistance.constant = 0
 
 		if let archivedDropItem = archivedDropItem {
 
@@ -111,7 +114,7 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			image.image = info.image
 			image.contentMode = info.imageContentMode
 			if image.contentMode == .center {
-				label.numberOfLines = 10
+				label.numberOfLines = 9
 			} else {
 				label.numberOfLines = 2
 			}
@@ -132,8 +135,8 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 
 					} else if let url = backgroundItem as? NSURL {
 						fetchWebTitle(for: url as URL) { [weak self] title in
-							self?.accessoryLabel.text = self?.label.text
-							self?.label.text = title
+							self?.accessoryLabel.text = title
+							self?.accessoryLabelDistance.constant = 8
 						}
 
 					} else if let color = backgroundItem as? UIColor {

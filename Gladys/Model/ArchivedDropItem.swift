@@ -7,13 +7,11 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 	private let suggestedName: String?
 	private var typeItems: [ArchivedDropItemType]!
 	private let createdAt:  Date
-	private let folderUrl: URL
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
 		case typeItems
 		case createdAt
-		case folderUrl
 		case uuid
 		case allLoadedWell
 	}
@@ -22,7 +20,6 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		var v = encoder.container(keyedBy: CodingKeys.self)
 		try v.encodeIfPresent(suggestedName, forKey: .suggestedName)
 		try v.encode(createdAt, forKey: .createdAt)
-		try v.encode(folderUrl, forKey: .folderUrl)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(typeItems, forKey: .typeItems)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
@@ -32,7 +29,6 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
 		createdAt = try v.decode(Date.self, forKey: .createdAt)
-		folderUrl = try v.decode(URL.self, forKey: .folderUrl)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 
@@ -47,7 +43,7 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 			try! f.removeItem(at: folderUrl)
 		}
 	}
-	
+
 	var displayInfo: ArchivedDropDisplayInfo {
 
 		let info = ArchivedDropDisplayInfo()
@@ -130,19 +126,21 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		return title
 	}
 
+	private lazy var folderUrl: URL = {
+		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+		return docs.appendingPathComponent(self.uuid.uuidString)
+	}()
+
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
 
 		uuid = UUID()
 		createdAt = Date()
 		suggestedName = provider.suggestedName
 
-		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-		folderUrl = docs.appendingPathComponent(uuid.uuidString)
-
 		super.init(loadCount: provider.registeredTypeIdentifiers.count, delegate: delegate)
 
 		typeItems = provider.registeredTypeIdentifiers.map {
-			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUrl: folderUrl, delegate: self)
+			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
 		}
 	}
 

@@ -8,9 +8,9 @@ final class ArchivedDropItemType: Codable {
 		case typeIdentifier
 		case classType
 		case bytes
-		case folderUrl
 		case uuid
 		case allLoadedWell
+		case parentUuid
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -18,9 +18,9 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(typeIdentifier, forKey: .typeIdentifier)
 		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
 		try v.encodeIfPresent(bytes, forKey: .bytes)
-		try v.encode(folderUrl, forKey: .folderUrl)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
+		try v.encode(parentUuid, forKey: .parentUuid)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -30,16 +30,16 @@ final class ArchivedDropItemType: Codable {
 			classType = ClassType(rawValue: typeValue)
 		}
 		bytes = try v.decode(Data.self, forKey: .bytes)
-		folderUrl = try v.decode(URL.self, forKey: .folderUrl)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
+		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 	}
 
 	private let typeIdentifier: String
 	private var classType: ClassType?
 	private var bytes: Data?
-	private let folderUrl: URL
 	private let uuid: UUID
+	private let parentUuid: UUID
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
@@ -90,12 +90,12 @@ final class ArchivedDropItemType: Codable {
 		classType = type
 	}
 
-	init(provider: NSItemProvider, typeIdentifier: String, parentUrl: URL, delegate: LoadCompletionDelegate) {
+	init(provider: NSItemProvider, typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 
 		self.uuid = UUID()
 		self.typeIdentifier = typeIdentifier
-		self.folderUrl = parentUrl.appendingPathComponent(uuid.uuidString)
 		self.delegate = delegate
+		self.parentUuid = parentUuid
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let item = item {
@@ -139,8 +139,8 @@ final class ArchivedDropItemType: Codable {
 					NSLog("      will duplicate item at local url: \(item)")
 					provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { url, isLocal, error in
 						if let url = url {
-							NSLog("      received local url: \(url)")
 							let localUrl = self.copyLocal(url)
+							NSLog("      received to local url: \(localUrl)")
 							self.setBytes(object: localUrl, type: .NSURL)
 							self.signalDone()
 
@@ -178,6 +178,10 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	private func copyLocal(_ url: URL) -> URL {
+
+		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+		let folderUrl = docs.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
+
 		let f = FileManager.default
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
@@ -212,6 +216,7 @@ final class ArchivedDropItemType: Codable {
 
 	var displayIcon: (UIImage?, Int, UIViewContentMode) {
 		if let data = self.bytes {
+
 			if classType == .UIImage {
 				if let a = decode(.UIImage) as? UIImage {
 					return (a, 15, .scaleAspectFill)

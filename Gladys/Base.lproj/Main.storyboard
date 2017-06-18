@@ -78,9 +78,10 @@
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="accessoryLabel" destination="v3H-LC-FOH" id="2ro-g0-Ad4"/>
+                                            <outlet property="accessoryLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
+                                            <outlet property="accessoryLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
-                                            <outlet property="label" destination="Lnk-SW-KkP" id="WHN-Fa-wtj"/>
+                                            <outlet property="label" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
                                             <outlet property="spinner" destination="ZI7-Rk-HVF" id="8Yn-is-eJ3"/>
                                         </connections>
                                     </collectionViewCell>
