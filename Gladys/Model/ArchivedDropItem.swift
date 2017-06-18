@@ -1,6 +1,13 @@
 
 import UIKit
 
+final class ArchivedDropDisplayInfo {
+	var image: UIImage?
+	var imageContentMode = UIViewContentMode.center
+	var title: String?
+	var accessoryText: String?
+}
+
 final class ArchivedDropItem: LoadCompletionCounter, Codable {
 
 	private let uuid: UUID
@@ -48,14 +55,15 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 
 		let info = ArchivedDropDisplayInfo()
 
-		if info.image == nil {
-			let (img, contentMode) = displayIcon
-			info.image = img
-			info.imageContentMode = contentMode
-		}
-		if info.title == nil, let title = displayTitle {
+		let (img, contentMode) = displayIcon
+		info.image = img
+		info.imageContentMode = contentMode
+
+		if let title = displayTitle {
 			info.title = title
 		}
+
+		info.accessoryText = accessoryTitle
 
 		if info.title == nil && !isLoading {
 			info.title = "\(createdAt.timeIntervalSinceReferenceDate)" // TODO
@@ -121,6 +129,15 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 			}
 		}
 		return title
+	}
+
+	private var accessoryTitle: String? {
+		for i in typeItems {
+			if let t = i.accessoryTitle {
+				return t
+			}
+		}
+		return nil
 	}
 
 	private lazy var folderUrl: URL = {

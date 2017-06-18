@@ -19,15 +19,6 @@ protocol LoadCompletionDelegate: class {
 	func loadCompleted(success: Bool)
 }
 
-// TODO: use snapshots instead
-// TODO: cache snapshots
-
-final class ArchivedDropDisplayInfo {
-	var image: UIImage?
-	var imageContentMode = UIViewContentMode.center
-	var title: String?
-}
-
 final class MiniMapView: UIImageView {
 
 	private let coordinate: CLLocationCoordinate2D
@@ -120,6 +111,11 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			}
 			label.text = info.title
 
+			if let t = info.accessoryText {
+				accessoryLabel.text = t
+				accessoryLabelDistance.constant = 8
+			}
+
 			if archivedDropItem.isLoading {
 				image.isHidden = true
 				spinner.startAnimating()
@@ -132,12 +128,6 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 					if let mapItem = backgroundItem as? MKMapItem {
 						let m = MiniMapView(at: mapItem)
 						image.cover(with: m)
-
-					} else if let url = backgroundItem as? NSURL {
-						fetchWebTitle(for: url as URL) { [weak self] title in
-							self?.accessoryLabel.text = title
-							self?.accessoryLabelDistance.constant = 8
-						}
 
 					} else if let color = backgroundItem as? UIColor {
 						image.backgroundColor = color
@@ -154,27 +144,6 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			label.text = nil
 			spinner.startAnimating()
 		}
-	}
-
-	func fetchWebTitle(for url: URL, completion: @escaping (String)->Void) {
-
-		let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
-
-			// in thread!!
-
-			if let data = data,
-				let html = String(data: data, encoding: .utf8),
-				let titleStart = html.range(of: "<title>")?.upperBound {
-				let sub = html.substring(from: titleStart)
-				if let titleEnd = sub.range(of: "</title>")?.lowerBound {
-					let title = sub.substring(to: titleEnd)
-					DispatchQueue.main.async {
-						completion(title)
-					}
-				}
-			}
-		}
-		fetch.resume()
 	}
 
 	func loadCompleted(success: Bool) {

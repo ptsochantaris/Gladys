@@ -12,6 +12,7 @@ final class ArchivedDropItemType: Codable {
 		case uuid
 		case allLoadedWell
 		case parentUuid
+		case accessoryTitle
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -22,6 +23,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(parentUuid, forKey: .parentUuid)
+		try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -34,6 +36,7 @@ final class ArchivedDropItemType: Codable {
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
+		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
 	}
 
 	private let typeIdentifier: String
@@ -41,6 +44,7 @@ final class ArchivedDropItemType: Codable {
 	private var bytes: Data?
 	private let uuid: UUID
 	private let parentUuid: UUID
+	var accessoryTitle: String?
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
@@ -66,13 +70,6 @@ final class ArchivedDropItemType: Codable {
 		case .MKMapItem: return (decode(.MKMapItem), 30)
 
 		case .UIColor: return (decode(.UIColor), 10)
-
-		case .NSURL:
-			let url = decodedUrl
-			if url?.scheme != "file" {
-				return  (url, 20)
-			}
-			fallthrough
 
 		default: return (nil, 0)
 		}
@@ -171,7 +168,10 @@ final class ArchivedDropItemType: Codable {
 				} else {
 					NSLog("      received remote url: \(item)")
 					self.setBytes(object: item, type: .NSURL)
-					self.signalDone()
+					self.fetchWebTitle(for: item) { [weak self] title in
+						self?.accessoryTitle = title ?? self?.accessoryTitle
+						self?.signalDone()
+					}
 				}
 
 			} else if let error = error {
@@ -189,7 +189,49 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	private func fetchWebTitle(for url: URL, testing: Bool = true, completion: @escaping (String?)->Void) {
+
+		// in thread!!
+
+		if testing {
+			var request = URLRequest(url: url)
+			request.addValue("text/html", forHTTPHeaderField: "Accept")
+			request.httpMethod = "HEAD"
+			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
+				if let response = response as? HTTPURLResponse {
+					if let type = response.allHeaderFields["Content-Type"] as? String, type == "text/html" {
+						NSLog("Content for this is HTML, will try to fetch title")
+						self.fetchWebTitle(for: url, testing: false, completion: completion)
+					} else {
+						completion(nil)
+					}
+				}
+			}
+			headFetch.resume()
+
+		} else {
+			let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
+				if let data = data,
+					let html = String(data: data, encoding: .utf8),
+					let titleStart = html.range(of: "<title>")?.upperBound {
+					let sub = html.substring(from: titleStart)
+					if let titleEnd = sub.range(of: "</title>")?.lowerBound {
+						let title = sub.substring(to: titleEnd)
+						DispatchQueue.main.async {
+							completion(title)
+							return
+						}
+					}
+				}
+				completion(nil)
+			}
+			fetch.resume()
+		}
+	}
+
 	private func signalDone() {
+		displayIcon = updatedDisplayIcon()
+		displayTitle = updatedDisplayTitle()
 		DispatchQueue.main.async {
 			self.delegate?.loadCompleted(success: self.allLoadedWell)
 		}
@@ -232,7 +274,8 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var displayIcon: (UIImage?, Int, UIViewContentMode) {
+    lazy var displayIcon: (UIImage?, Int, UIViewContentMode) = { return self.updatedDisplayIcon() }()
+	private func updatedDisplayIcon() -> (UIImage?, Int, UIViewContentMode){
 		if let data = self.bytes {
 
 			if classType == .UIImage {
@@ -254,7 +297,15 @@ final class ArchivedDropItemType: Codable {
 			}
 
 			if typeIdentifier == "public.vcard" {
-				return (#imageLiteral(resourceName: "iconPerson"), 5, .center)
+				if let contacts = try? CNContactVCardSerialization.contacts(with: data),
+					let person = contacts.first,
+					let imageData = person.imageData,
+					let img = UIImage(data: imageData) {
+
+					return (img, 9, .scaleAspectFill)
+				} else {
+					return (#imageLiteral(resourceName: "iconPerson"), 5, .center)
+				}
 			}
 
 			if typeIdentifier == "com.apple.mapkit.map-item" {
@@ -278,7 +329,8 @@ final class ArchivedDropItemType: Codable {
 		return (#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 	}
 
-	var displayTitle: (String?, Int) {
+	lazy var displayTitle: (String?, Int) = { self.updatedDisplayTitle() }()
+	private func updatedDisplayTitle() -> (String?, Int) {
 
 		if classType == .NSString {
 			if let res = decode(.NSString) as? String {
