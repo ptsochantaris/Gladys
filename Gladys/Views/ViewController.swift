@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController, UICollectionViewDelegate,
+final class ViewController: UIViewController, UICollectionViewDelegate, ArchivedItemCellDelegate,
 UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -30,6 +30,8 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
 		cell.setArchivedDropItem(model.drops[indexPath.item])
+		cell.isEditing = isEditing
+		cell.delegate = self
 		return cell
 	}
 
@@ -47,8 +49,11 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: nil)
 
 				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
-				model.drops.insert(item, at: destinationIndexPath.item)
-				collectionView.insertItems(at: [destinationIndexPath])
+
+				collectionView.performBatchUpdates({
+					self.model.drops.insert(item, at: destinationIndexPath.item)
+					collectionView.insertItems(at: [destinationIndexPath])
+				}, completion: nil)
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				changesMade = true
@@ -64,9 +69,12 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 				NSLog("looks good")
 
-				model.drops.remove(at: previousIndex.item)
-				model.drops.insert(existingItem, at: destinationIndexPath.item)
-				collectionView.moveItem(at: previousIndex, to: destinationIndexPath)
+				collectionView.performBatchUpdates({
+					self.model.drops.remove(at: previousIndex.item)
+					collectionView.deleteItems(at: [previousIndex])
+					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
+					collectionView.insertItems(at: [destinationIndexPath])
+				}, completion: nil)
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				changesMade = true
@@ -79,12 +87,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-
-		collectionView.performBatchUpdates({
 			self.handleDrop(collectionView: collectionView, coordinator: coordinator)
-		}, completion: { finished in
-
-		})
 	}
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -116,7 +119,9 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	@IBAction func editSelected(_ sender: UIBarButtonItem) {
-		//archivedItemCollectionView.edit
+		isEditing = !isEditing
+		sender.title = isEditing ? "Done" : "Edit"
+		archivedItemCollectionView.reloadSections([0])
 	}
 
 	@IBAction func resetPressed(_ sender: UIBarButtonItem) {
@@ -164,6 +169,18 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 			}, completion: nil)
 		}
 		lastSize = view.bounds.size
+	}
+
+	/////////////////////////////////
+
+	func deleteRequested(for item: ArchivedDropItem) {
+		if let i = model.drops.index(where: { $0 === item }) {
+			archivedItemCollectionView.performBatchUpdates({
+				self.model.drops.remove(at: i)
+				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
+			}, completion: nil)
+		}
+		Model.save()
 	}
 }
 

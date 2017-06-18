@@ -64,6 +64,10 @@ final class MiniMapView: UIImageView {
 	}
 }
 
+protocol ArchivedItemCellDelegate: class {
+	func deleteRequested(for: ArchivedDropItem)
+}
+
 final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 	@IBOutlet weak var image: UIImageView!
 	@IBOutlet weak var label: UILabel!
@@ -71,6 +75,54 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
 	@IBOutlet var spinner: UIActivityIndicatorView!
 
+	weak var delegate: ArchivedItemCellDelegate?
+
+	private lazy var deleteButton: UIButton = {
+		let b = UIButton(frame: .zero)
+		b.translatesAutoresizingMaskIntoConstraints = false
+		b.tintColor = .white
+		b.setImage(#imageLiteral(resourceName: "iconDelete"), for: .normal)
+		b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+		b.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
+		return b
+	}()
+
+	@objc private func deleteSelected() {
+		if let archivedDropItem = archivedDropItem {
+			delegate?.deleteRequested(for: archivedDropItem)
+		}
+	}
+
+	var isEditing: Bool = false {
+		didSet {
+			if isEditing && deleteButton.superview == nil {
+
+				let holder = UIView(frame: .zero)
+				holder.translatesAutoresizingMaskIntoConstraints = false
+				holder.backgroundColor = .red
+				addSubview(holder)
+
+				holder.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+
+				holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+
+				holder.layer.cornerRadius = 5
+				holder.clipsToBounds = true
+
+				holder.widthAnchor.constraint(equalToConstant: 50).isActive = true
+				holder.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+				holder.addSubview(deleteButton)
+				deleteButton.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
+				deleteButton.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
+				holder.cover(with: deleteButton)
+
+			} else if !isEditing && deleteButton.superview != nil {
+				deleteButton.superview?.removeFromSuperview()
+				deleteButton.removeFromSuperview()
+			}
+		}
+	}
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
