@@ -111,11 +111,8 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 	}
 
 	private var displayTitle: String? {
-		if let suggestedName = suggestedName {
-			return suggestedName
-		}
-		var title: String?
-		var priority = -1
+		var title = suggestedName
+		var priority = 0
 		for i in typeItems {
 			let (newTitle, newPriority) = i.displayTitle
 			if let newTitle = newTitle, newPriority > priority {

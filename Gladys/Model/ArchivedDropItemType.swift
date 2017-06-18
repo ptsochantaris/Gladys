@@ -1,6 +1,7 @@
 
 import UIKit
 import MapKit
+import Contacts
 
 final class ArchivedDropItemType: Codable {
 
@@ -67,7 +68,7 @@ final class ArchivedDropItemType: Codable {
 		case .UIColor: return (decode(.UIColor), 10)
 
 		case .NSURL:
-			let url = decode(.NSURL) as? NSURL
+			let url = decodedUrl
 			if url?.scheme != "file" {
 				return  (url, 20)
 			}
@@ -75,6 +76,23 @@ final class ArchivedDropItemType: Codable {
 
 		default: return (nil, 0)
 		}
+	}
+
+	private var decodedUrl: NSURL? {
+		if let url = decode(.NSURL) as? NSURL {
+
+			if url.scheme == "file", let s = url.absoluteString {
+				let myPath = "\(parentUuid)/\(uuid)/"
+				if let indexUpToMyPath = s.range(of: myPath)?.lowerBound {
+					let keep = s.substring(from: indexUpToMyPath)
+					let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+					return docs.appendingPathComponent(keep) as NSURL
+				}
+			}
+
+			return url
+		}
+		return nil
 	}
 
 	func register(with provider: NSItemProvider) {
@@ -225,7 +243,7 @@ final class ArchivedDropItemType: Codable {
 
 			if typeIdentifier == "public.png" || typeIdentifier == "public.jpeg" {
 				if classType == .NSURL {
-					if let url = decode(.NSURL) as? NSURL, let path = url.path, let image = UIImage(contentsOfFile: path) {
+					if let url = decodedUrl, let path = url.path, let image = UIImage(contentsOfFile: path) {
 						return (image, 10, .scaleAspectFill)
 					}
 				} else if classType == .NSData {
@@ -272,14 +290,24 @@ final class ArchivedDropItemType: Codable {
 				return (res, 7)
 			}
 		} else if classType == .NSURL {
-			let a = decode(.NSURL) as? NSURL
-			if let res = a?.absoluteString {
+			if let url = decodedUrl, url.scheme != "file", let res = url.absoluteString {
 				return (res, 6)
 			}
 		}
 
 		if let data = self.bytes {
-			if typeIdentifier == "public.utf8-plain-text" {
+			if typeIdentifier == "public.vcard" {
+				if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
+					var name = ""
+					if !person.givenName.isEmpty { name += person.givenName }
+					if !name.isEmpty && !person.familyName.isEmpty { name += " " }
+					if !person.familyName.isEmpty { name += person.familyName }
+					if !name.isEmpty && !person.organizationName.isEmpty { name += " - " }
+					if !person.organizationName.isEmpty { name += person.organizationName }
+					return (name, 9)
+				}
+
+			} else if typeIdentifier == "public.utf8-plain-text" {
 				return (String(data: data, encoding: .utf8), 9)
 			} else if typeIdentifier == "public.utf16-plain-text" {
 				return (String(data: data, encoding: .utf16), 8)

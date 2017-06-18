@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 16/06/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
 
 import UIKit
 
@@ -143,10 +136,17 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		let layout = (collectionViewLayout as! UICollectionViewFlowLayout)
 		if view.bounds.size.width <= 320 {
 			return CGSize(width: 300, height: 200)
+
+		} else if view.bounds.size.width >= 1024 {
+			let extras = layout.minimumInteritemSpacing * 3 + layout.sectionInset.left + layout.sectionInset.right
+			let fourth = ((view.bounds.size.width - extras) / 4.0).rounded(.down)
+			return CGSize(width: fourth, height: fourth)
+
 		} else if view.bounds.size.width >= 694 {
 			let extras = layout.minimumInteritemSpacing * 2 + layout.sectionInset.left + layout.sectionInset.right
 			let third = ((view.bounds.size.width - extras) / 3.0).rounded(.down)
 			return CGSize(width: third, height: third)
+
 		} else {
 			let extras = layout.minimumInteritemSpacing + layout.sectionInset.left + layout.sectionInset.right
 			let third = ((view.bounds.size.width - extras) / 2.0).rounded(.down)
