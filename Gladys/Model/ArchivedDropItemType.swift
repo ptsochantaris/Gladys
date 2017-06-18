@@ -8,7 +8,6 @@ final class ArchivedDropItemType: Codable {
 	private enum CodingKeys : String, CodingKey {
 		case typeIdentifier
 		case classType
-		case bytes
 		case uuid
 		case allLoadedWell
 		case parentUuid
@@ -19,7 +18,6 @@ final class ArchivedDropItemType: Codable {
 		var v = encoder.container(keyedBy: CodingKeys.self)
 		try v.encode(typeIdentifier, forKey: .typeIdentifier)
 		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
-		try v.encodeIfPresent(bytes, forKey: .bytes)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(parentUuid, forKey: .parentUuid)
@@ -32,17 +30,42 @@ final class ArchivedDropItemType: Codable {
 		if let typeValue = try v.decodeIfPresent(String.self, forKey: .classType) {
 			classType = ClassType(rawValue: typeValue)
 		}
-		bytes = try v.decode(Data.self, forKey: .bytes)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
+
+		// Completing setup
 		patchLocalUrl()
+		displayTitle = updatedDisplayTitle()
+		displayIcon = updatedDisplayIcon()
+	}
+
+	private var bytes: Data? {
+		set {
+			NSLog("setting bytes")
+			let byteLocation = folderUrl.appendingPathComponent("blob", isDirectory: false)
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: byteLocation.path) {
+					try! f.removeItem(at: byteLocation)
+				}
+			} else {
+				try! newValue?.write(to: byteLocation, options: [.atomic])
+			}
+		}
+		get {
+			let byteLocation = folderUrl.appendingPathComponent("blob", isDirectory: false)
+			if FileManager.default.fileExists(atPath: byteLocation.path) {
+				return try! Data(contentsOf: byteLocation, options: [])
+			} else {
+				return nil
+			}
+		}
 	}
 
 	private let typeIdentifier: String
 	private var classType: ClassType?
-	private var bytes: Data?
 	private let uuid: UUID
 	private let parentUuid: UUID
 	var accessoryTitle: String?
@@ -194,15 +217,19 @@ final class ArchivedDropItemType: Codable {
 		// in thread!!
 
 		if testing {
+
+			NSLog("Investigating possible HTML title from this URL")
+
 			var request = URLRequest(url: url)
 			request.addValue("text/html", forHTTPHeaderField: "Accept")
 			request.httpMethod = "HEAD"
 			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
-					if let type = response.allHeaderFields["Content-Type"] as? String, type == "text/html" {
+					if let type = response.allHeaderFields["Content-Type"] as? String, type.hasPrefix("text/html") {
 						NSLog("Content for this is HTML, will try to fetch title")
 						self.fetchWebTitle(for: url, testing: false, completion: completion)
 					} else {
+						NSLog("Content for this isn't HTML, never mind")
 						completion(nil)
 					}
 				}
@@ -237,17 +264,23 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	lazy var folderUrl: URL = {
+		let f = FileManager.default
+		let docs = f.urls(for: .documentDirectory, in: .userDomainMask).first!
+		let url = docs.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
+		if !f.fileExists(atPath: url.path) {
+			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		}
+		return url
+	}()
+
 	private func copyLocal(_ url: URL) -> URL {
 
-		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-		let folderUrl = docs.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
-
-		let f = FileManager.default
-		if f.fileExists(atPath: folderUrl.path) {
-			try! f.removeItem(at: folderUrl)
-		}
-		try! f.createDirectory(at: folderUrl, withIntermediateDirectories: true, attributes: nil)
 		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
+		let f = FileManager.default
+		if f.fileExists(atPath: newUrl.path) {
+			try! f.removeItem(at: newUrl)
+		}
 		try! f.copyItem(at: url, to: newUrl)
 		return newUrl
 	}

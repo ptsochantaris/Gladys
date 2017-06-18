@@ -131,6 +131,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				item.delete()
 			}
 			self.model.drops.removeAll()
+			Model.save()
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: { finished in
 			sender.isEnabled = true
