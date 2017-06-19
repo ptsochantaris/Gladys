@@ -118,7 +118,7 @@ final class ArchivedDropItemType: Codable {
 	private var allLoadedWell = true
 
 	private enum ClassType: String {
-		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
+		case string, attributedString, color, image, data, mapItem, url
 	}
 
 	private func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
@@ -134,16 +134,55 @@ final class ArchivedDropItemType: Codable {
 
 		switch classType {
 
-		case .MKMapItem: return (decode(MKMapItem.self), 30)
+		case .mapItem: return (decode(MKMapItem.self), 30)
 
-		case .UIColor: return (decode(UIColor.self), 10)
+		case .color: return (decode(UIColor.self), 10)
 
 		default: return (nil, 0)
 		}
 	}
 
 	func register(with provider: NSItemProvider) {
-		provider.registerItem(forTypeIdentifier: typeIdentifier, loadHandler: loadHandler)
+		provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
+
+			if let bytes = self.bytes, let classType = self.classType {
+
+				if requestedClassType != nil {
+					let requestedClassName = NSStringFromClass(requestedClassType)
+					if requestedClassName == "NSData" {
+						completion(bytes as NSData, nil)
+						return
+					}
+				}
+
+				NSLog("requested type: \(requestedClassType), our type: \(classType.rawValue)")
+
+				let item: NSSecureCoding?
+				switch classType {
+				case .string:
+					item = self.decode(NSString.self)
+				case .attributedString:
+					item = self.decode(NSAttributedString.self)
+				case .image:
+					item = self.decode(UIImage.self)
+				case .color:
+					item = self.decode(UIColor.self)
+				case .data:
+					item = self.decode(NSData.self)
+				case .mapItem:
+					item = self.decode(MKMapItem.self)
+				case .url:
+					item = self.decode(NSURL.self)
+				}
+
+				let finalName = String(describing: item)
+				NSLog("Responding with \(finalName)")
+				completion(item ?? (bytes as NSData), nil)
+
+			} else {
+				completion(nil, nil)
+			}
+		}
 	}
 
 	private func setBytes(object: Any, type: ClassType) {
@@ -161,30 +200,30 @@ final class ArchivedDropItemType: Codable {
 			NSLog("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .NSString)
+			setBytes(object: item, type: .string)
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
 			NSLog("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .NSAttributedString)
+			setBytes(object: item, type: .attributedString)
 			signalDone()
 
 		} else if let item = item as? UIColor {
 			NSLog("      received color: \(item)")
-			setBytes(object: item, type: .UIColor)
+			setBytes(object: item, type: .color)
 			signalDone()
 
 		} else if let item = item as? UIImage {
 			NSLog("      received image: \(item)")
 			setDisplayIcon(item, 15, .fill)
-			setBytes(object: item, type: .UIImage)
+			setBytes(object: item, type: .image)
 			signalDone()
 
 		} else if let item = item as? Data {
 			NSLog("      received data: \(item)")
-			classType = .NSData
+			classType = .data
 			bytes = item
 
 			if let image = UIImage(data: item) {
@@ -223,7 +262,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else if let item = item as? MKMapItem {
 			NSLog("      received map item: \(item)")
-			setBytes(object: item, type: .MKMapItem)
+			setBytes(object: item, type: .mapItem)
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
 			signalDone()
 
@@ -247,7 +286,7 @@ final class ArchivedDropItemType: Codable {
 			} else {
 				NSLog("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
-				setBytes(object: item, type: .NSURL)
+				setBytes(object: item, type: .url)
 				fetchWebTitle(for: item) { [weak self] title in
 					self?.accessoryTitle = title ?? self?.accessoryTitle
 					self?.signalDone()
@@ -271,7 +310,7 @@ final class ArchivedDropItemType: Codable {
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
 			}
-			setBytes(object: localUrl, type: .NSURL)
+			setBytes(object: localUrl, type: .url)
 			signalDone()
 
 		} else if let error = error {
@@ -406,47 +445,6 @@ final class ArchivedDropItemType: Codable {
 		return newUrl
 	}
 
-	private lazy var loadHandler: NSItemProvider.LoadHandler = { completion, requestedClassType, options in
-
-		if let bytes = self.bytes, let classType = self.classType {
-
-			if requestedClassType != nil {
-				let requestedClassName = NSStringFromClass(requestedClassType)
-				if requestedClassName == "NSData" {
-					completion(bytes as NSData, nil)
-					return
-				}
-			}
-
-			NSLog("requested type: \(requestedClassType), our type: \(classType.rawValue)")
-
-			let item: NSSecureCoding?
-			switch classType {
-			case .NSString:
-				item = self.decode(NSString.self)
-			case .NSAttributedString:
-				item = self.decode(NSAttributedString.self)
-			case .UIImage:
-				item = self.decode(UIImage.self)
-			case .UIColor:
-				item = self.decode(UIColor.self)
-			case .NSData:
-				item = self.decode(NSData.self)
-			case .MKMapItem:
-				item = self.decode(MKMapItem.self)
-			case .NSURL:
-				item = self.decode(NSURL.self)
-			}
-
-			let finalName = String(describing: item)
-			NSLog("Responding with \(finalName)")
-			completion(item ?? (bytes as NSData), nil)
-
-		} else {
-			completion(nil, nil)
-		}
-	}
-
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
@@ -476,9 +474,9 @@ final class ArchivedDropItemType: Codable {
 			return (item, 15)
 		}
 
-		if let url = decode(NSURL.self) as URL? {
+		if let url = decode(NSURL.self) {
 
-			if classType == .NSURL {
+			if classType == .url {
 				return (url, 10)
 			}
 
