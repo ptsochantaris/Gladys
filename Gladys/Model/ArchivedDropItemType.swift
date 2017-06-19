@@ -17,6 +17,7 @@ final class ArchivedDropItemType: Codable {
 		case displayTitlePriority
 		case displayIconPriority
 		case displayIconContentMode
+		case displayIconScale
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -32,6 +33,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
 		try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
+		try v.encode(displayIconScale, forKey: .displayIconScale)
 
 		let imagePath = folderUrl.appendingPathComponent("thumbnail.png")
 		if let displayIcon = displayIcon {
@@ -54,6 +56,7 @@ final class ArchivedDropItemType: Codable {
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
 		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
+		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
 		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
@@ -61,8 +64,11 @@ final class ArchivedDropItemType: Codable {
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
-		let imagePath = folderUrl.appendingPathComponent("thumbnail.png").path
-		displayIcon = UIImage(contentsOfFile: imagePath)
+		let imagePath = folderUrl.appendingPathComponent("thumbnail.png")
+		if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
+			let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
+			displayIcon = UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
+		}
 
 		patchLocalUrl()
 	}
@@ -331,6 +337,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
+		displayIconScale = 1
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let error = error {
@@ -349,8 +356,10 @@ final class ArchivedDropItemType: Codable {
 	var displayIcon: UIImage?
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
+	private var displayIconScale: CGFloat
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
 		displayIcon = icon
+		displayIconScale = icon.scale
 		displayIconPriority = priority
 		displayIconContentMode = contentMode
 	}
