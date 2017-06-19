@@ -102,14 +102,14 @@ final class ArchivedDropItemType: Codable {
 
 	private func patchLocalUrl() {
 
-		if let myDataIsAUrl = decode(NSURL.self) {
+		if let encodedURL = decode(NSURL.self), encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
 
-			if myDataIsAUrl.scheme == "file", let s = myDataIsAUrl.absoluteString, let classType = classType {
-				let myPath = "\(parentUuid)/\(uuid)/"
-				if let indexUpToMyPath = s.range(of: myPath)?.lowerBound {
-					let keep = s.substring(from: indexUpToMyPath)
-					let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-					let correctUrl = docs.appendingPathComponent(keep) as NSURL
+			let myPath = "\(parentUuid)/\(uuid)/"
+			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
+				let keep = currentPath.substring(from: indexUpToMyPath)
+				let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+				let correctUrl = docs.appendingPathComponent(keep) as NSURL
+				if encodedURL != correctUrl {
 					setBytes(object: correctUrl, type: classType)
 				}
 			}
@@ -175,11 +175,11 @@ final class ArchivedDropItemType: Codable {
 
 			} else if let item = item as? URL {
 				if item.scheme == "file" {
-					NSLog("      will duplicate item at local url: \(item)")
+					NSLog("      will duplicate item at local path: \(item.path)")
 					provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { url, error in
 						if let url = url {
 							let localUrl = self.copyLocal(url)
-							NSLog("      received to local url: \(localUrl)")
+							NSLog("      received to local url: \(localUrl.path)")
 							self.setBytes(object: localUrl, type: .NSURL)
 							self.signalDone()
 
@@ -190,7 +190,7 @@ final class ArchivedDropItemType: Codable {
 						}
 					}
 				} else {
-					NSLog("      received remote url: \(item)")
+					NSLog("      received remote url: \(item.absoluteString)")
 					self.setBytes(object: item, type: .NSURL)
 					self.fetchWebTitle(for: item) { [weak self] title in
 						self?.accessoryTitle = title ?? self?.accessoryTitle

@@ -21,21 +21,41 @@ protocol LoadCompletionDelegate: class {
 
 final class MiniMapView: UIImageView {
 
-	private let coordinate: CLLocationCoordinate2D
+	private var coordinate: CLLocationCoordinate2D?
+	private static let cache = NSCache<NSString, UIImage>()
+
+	func show(location: MKMapItem) {
+
+		let newCoordinate = location.placemark.coordinate
+		if let coordinate = coordinate,
+			newCoordinate.latitude == coordinate.latitude,
+			newCoordinate.longitude == coordinate.longitude { return }
+
+		image = nil
+		coordinate = newCoordinate
+		setNeedsLayout()
+	}
 
 	init(at location: MKMapItem) {
-		coordinate = location.placemark.coordinate
 		super.init(frame: .zero)
 		contentMode = .center
-		self.alpha = 0
+		show(location: location)
 	}
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
 
+		guard let coordinate = coordinate else { return }
 		if bounds.isEmpty { return }
-
 		if let image = image, image.size == bounds.size { return }
+
+		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
+		if let existingImage = MiniMapView.cache.object(forKey: cacheKey) {
+			image = existingImage
+			return
+		}
+
+		alpha = 0
 
 		let options = MKMapSnapshotOptions()
 		options.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
@@ -46,7 +66,9 @@ final class MiniMapView: UIImageView {
 		snapshotter.start { snapshot, error in
 			if let snapshot = snapshot {
 				DispatchQueue.main.async { [weak self] in
-					self?.image = snapshot.image
+					let img = snapshot.image
+					self?.image = img
+					MiniMapView.cache.setObject(img, forKey: cacheKey)
 					UIView.animate(withDuration: 0.2) {
 						self?.alpha = 1
 					}
@@ -136,7 +158,10 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 	func setArchivedDropItem(_ newDrop: ArchivedDropItem) {
 		archivedDropItem?.delegate = nil
 		archivedDropItem = newDrop
-		decorate()
+		archivedDropItem?.delegate = self
+		if let item = archivedDropItem, !item.isLoading {
+			decorate()
+		}
 	}
 	private var archivedDropItem: ArchivedDropItem?
 
@@ -147,9 +172,13 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 
 	private func decorate() {
 
-		image.subviews.forEach { $0.removeFromSuperview() }
+		var wantMapView = false
+
 		accessoryLabel.text = nil
 		accessoryLabelDistance.constant = 0
+		image.image = nil
+		image.isHidden = true
+		label.text = nil
 
 		if let archivedDropItem = archivedDropItem {
 
@@ -179,25 +208,31 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 				// if we're showing an icon, let's try to enahnce things a bit
 				if image.contentMode == .center, let backgroundItem = archivedDropItem.backgroundInfoObject {
 					if let mapItem = backgroundItem as? MKMapItem {
-						let m = MiniMapView(at: mapItem)
-						image.cover(with: m)
+						wantMapView = true
+						if let m = existingMapView {
+							m.show(location: mapItem)
+						} else {
+							let m = MiniMapView(at: mapItem)
+							image.cover(with: m)
+							existingMapView = m
+						}
 
 					} else if let color = backgroundItem as? UIColor {
 						image.backgroundColor = color
 					}
 				}
 			}
-
-			archivedDropItem.delegate = self
-
 		} else {
-			archivedDropItem?.delegate = nil
-			image.image = nil
-			image.isHidden = true
-			label.text = nil
 			spinner.startAnimating()
 		}
+
+		if !wantMapView, let e = existingMapView {
+			e.removeFromSuperview()
+			existingMapView = nil
+		}
 	}
+
+	private var existingMapView: MiniMapView?
 
 	func loadCompleted(success: Bool) {
 		decorate()
