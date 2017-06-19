@@ -3,15 +3,7 @@ import UIKit
 import MapKit
 import Contacts
 
-final class ArchivedDropDisplayInfo {
-	var image: UIImage?
-	var imageContentMode = UIViewContentMode.center
-	var title: String?
-	var accessoryText: String?
-	var titleAlignment = NSTextAlignment.center
-}
-
-final class ArchivedDropItem: LoadCompletionCounter, Codable {
+final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 	private let uuid: UUID
 	private let suggestedName: String?
@@ -42,9 +34,9 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 
-		super.init(loadCount: 0, delegate: nil)
-		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
+		loadCount = 0
 		isLoading = false
+		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 	}
 
 	func delete() {
@@ -56,22 +48,15 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 
 	var displayInfo: ArchivedDropDisplayInfo {
 
-		let info = ArchivedDropDisplayInfo()
-
 		let (img, contentMode) = displayIcon
-		info.imageContentMode = contentMode
-		info.image = img
-
 		let (title, alignment) = displayTitle
-		info.titleAlignment = alignment
-		info.title = title
 
-		info.accessoryText = accessoryTitle
-
-		if info.image == nil {
-			info.image = #imageLiteral(resourceName: "iconStickyNote")
-			info.imageContentMode = .center
-		}
+		let info = ArchivedDropDisplayInfo(
+			image: img,
+			imageContentMode: contentMode,
+			title: title,
+			accessoryText: accessoryTitle,
+			titleAlignment: alignment)
 
 		return info
 	}
@@ -133,10 +118,10 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		}
 	}
 
-	private var displayIcon: (UIImage?, UIViewContentMode) {
+	private var displayIcon: (UIImage?, ArchivedDropItemDisplayType) {
 		var priority = -1
 		var image: UIImage?
-		var contentMode = UIViewContentMode.center
+		var contentMode = ArchivedDropItemDisplayType.center
 		for i in typeItems {
 			let newImage = i.displayIcon
 			let newPriority = i.displayIconPriority
@@ -146,6 +131,12 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 				contentMode = i.displayIconContentMode
 			}
 		}
+
+		if image == nil {
+			image = #imageLiteral(resourceName: "iconStickyNote")
+			contentMode = .center
+		}
+
 		return (image, contentMode)
 	}
 
@@ -189,18 +180,30 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		uuid = UUID()
 		createdAt = Date()
 		suggestedName = provider.suggestedName
-
-		super.init(loadCount: provider.registeredTypeIdentifiers.count, delegate: delegate)
+		loadCount = provider.registeredTypeIdentifiers.count
+		isLoading = true
+		allLoadedWell = true
+		self.delegate = delegate
 
 		typeItems = provider.registeredTypeIdentifiers.map {
 			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
 		}
 	}
 
-	override func loadCompleted(success: Bool) {
-		super.loadCompleted(success: success)
-		Model.save()
-	}
-
 	//////////////////////////
+
+	weak var delegate: LoadCompletionDelegate?
+	var isLoading: Bool
+	var allLoadedWell: Bool
+
+	private var loadCount: Int
+	func loadCompleted(success: Bool) {
+		if !success { allLoadedWell = false }
+		loadCount = loadCount - 1
+		if loadCount == 0 {
+			isLoading = false
+			delegate?.loadCompleted(success: allLoadedWell)
+			Model.save()
+		}
+	}
 }

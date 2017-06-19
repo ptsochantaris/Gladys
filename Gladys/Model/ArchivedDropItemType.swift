@@ -56,20 +56,31 @@ final class ArchivedDropItemType: Codable {
 		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
-		if let alignment = NSTextAlignment(rawValue: a) {
-			displayTitleAlignment = alignment
-		}
+		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
 
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
-		if let mode = UIViewContentMode(rawValue: m) {
-			displayIconContentMode = mode
-		}
+		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
 		let imagePath = folderUrl.appendingPathComponent("thumbnail.png").path
 		displayIcon = UIImage(contentsOfFile: imagePath)
 
-		// Completing setup
 		patchLocalUrl()
+	}
+
+	private func patchLocalUrl() {
+
+		if let encodedURL = decode(NSURL.self), encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
+
+			let myPath = "\(parentUuid)/\(uuid)/"
+			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
+				let keep = currentPath.substring(from: indexUpToMyPath)
+				let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+				let correctUrl = docs.appendingPathComponent(keep) as NSURL
+				if encodedURL != correctUrl {
+					setBytes(object: correctUrl, type: classType)
+				}
+			}
+		}
 	}
 
 	private var bytes: Data? {
@@ -131,22 +142,6 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private func patchLocalUrl() {
-
-		if let encodedURL = decode(NSURL.self), encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
-
-			let myPath = "\(parentUuid)/\(uuid)/"
-			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
-				let keep = currentPath.substring(from: indexUpToMyPath)
-				let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-				let correctUrl = docs.appendingPathComponent(keep) as NSURL
-				if encodedURL != correctUrl {
-					setBytes(object: correctUrl, type: classType)
-				}
-			}
-		}
-	}
-
 	func register(with provider: NSItemProvider) {
 		provider.registerItem(forTypeIdentifier: typeIdentifier, loadHandler: loadHandler)
 	}
@@ -183,7 +178,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else if let item = item as? UIImage {
 			NSLog("      received image: \(item)")
-			setDisplayIcon(item, 15, .scaleAspectFill)
+			setDisplayIcon(item, 15, .fill)
 			setBytes(object: item, type: .UIImage)
 			signalDone()
 
@@ -193,21 +188,17 @@ final class ArchivedDropItemType: Codable {
 			bytes = item
 
 			if let image = UIImage(data: item) {
-				setDisplayIcon(image, 10, .scaleAspectFill)
+				setDisplayIcon(image, 10, .fill)
 			}
 
 			if typeIdentifier == "public.vcard" {
 				if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
-					var name = ""
-					if !person.givenName.isEmpty { name += person.givenName }
-					if !name.isEmpty && !person.familyName.isEmpty { name += " " }
-					if !person.familyName.isEmpty { name += person.familyName }
-					if !name.isEmpty && !person.organizationName.isEmpty { name += " - " }
-					if !person.organizationName.isEmpty { name += person.organizationName }
-					accessoryTitle = name
+					let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
+					let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
+					accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
 
 					if let imageData = person.imageData, let img = UIImage(data: imageData) {
-						setDisplayIcon(img, 9, .scaleAspectFit)
+						setDisplayIcon(img, 9, .circle)
 					} else {
 						setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
 					}
@@ -216,16 +207,16 @@ final class ArchivedDropItemType: Codable {
 			} else if typeIdentifier == "public.utf8-plain-text" {
 				let s = String(data: item, encoding: .utf8)
 				setTitleInfo(s, 9)
+				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
 			} else if typeIdentifier == "public.utf16-plain-text" {
 				let s = String(data: item, encoding: .utf16)
 				setTitleInfo(s, 8)
+				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
 			} else if typeIdentifier == "com.apple.mapkit.map-item" {
 				setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
 
-			} else if typeIdentifier.hasSuffix("-plain-text") {
-				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 			}
 
 			signalDone()
@@ -278,7 +269,7 @@ final class ArchivedDropItemType: Codable {
 			NSLog("      received to local url: \(localUrl.path)")
 
 			if let image = UIImage(contentsOfFile: localUrl.path) {
-				setDisplayIcon(image, 10, .scaleAspectFill)
+				setDisplayIcon(image, 10, .fill)
 			}
 			setBytes(object: localUrl, type: .NSURL)
 			signalDone()
@@ -292,10 +283,15 @@ final class ArchivedDropItemType: Codable {
 
 	init(provider: NSItemProvider, typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 
-		self.uuid = UUID()
 		self.typeIdentifier = typeIdentifier
 		self.delegate = delegate
 		self.parentUuid = parentUuid
+
+		uuid = UUID()
+		displayIconPriority = 0
+		displayIconContentMode = .center
+		displayTitlePriority = 0
+		displayTitleAlignment = .center
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let error = error {
@@ -311,7 +307,10 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: UIViewContentMode) {
+	var displayIcon: UIImage?
+	var displayIconPriority: Int
+	var displayIconContentMode: ArchivedDropItemDisplayType
+	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
 		displayIcon = icon
 		displayIconPriority = priority
 		displayIconContentMode = contentMode
@@ -448,10 +447,9 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var displayIcon: UIImage?
-	var displayIconPriority = 0
-	var displayIconContentMode = UIViewContentMode.center
-
+	var displayTitle: String?
+	var displayTitlePriority: Int
+	var displayTitleAlignment: NSTextAlignment
 	private func setTitleInfo(_ text: String?, _ priority: Int) {
 
 		let alignment: NSTextAlignment
@@ -467,10 +465,6 @@ final class ArchivedDropItemType: Codable {
 		displayTitlePriority = priority
 		displayTitleAlignment = alignment
 	}
-
-	var displayTitle: String?
-	var displayTitlePriority = 0
-	var displayTitleAlignment = NSTextAlignment.center
 
 	var itemForShare: (Any?, Int) {
 

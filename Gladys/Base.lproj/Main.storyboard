@@ -44,7 +44,7 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="30" width="284" height="240.5"/>
                                                     <color key="backgroundColor" red="0.84341198205947876" green="0.83196836709976196" blue="0.80659013986587524" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
@@ -61,7 +61,8 @@
                                         </view>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" id="4l4-BC-JFB"/>
+                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="0TK-62-FeR"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" priority="750" id="4l4-BC-JFB"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="v3H-LC-FOH" secondAttribute="trailing" id="54Q-4S-UsC"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="5lP-ga-4TG"/>
                                             <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="G3V-Sb-LMb"/>
@@ -69,7 +70,7 @@
                                             <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YxE-hL-dVE"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="Lnk-SW-KkP" secondAttribute="bottom" constant="8" id="fR2-e0-xPA"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="lX8-Z5-Y4P"/>
-                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="tCq-Kc-mNY"/>
+                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" priority="750" id="tCq-Kc-mNY"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>

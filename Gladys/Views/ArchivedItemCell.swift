@@ -15,6 +15,41 @@ extension UIView {
 	}
 }
 
+final class GladysImageView: UIImageView {
+
+	var circle: Bool = false {
+		didSet {
+			if oldValue != circle {
+				setNeedsLayout()
+			}
+		}
+	}
+
+	private var aspectLock: NSLayoutConstraint?
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+
+		if circle {
+			let smallestSide = min(bounds.size.width, bounds.size.height)
+			layer.cornerRadius = (smallestSide * 0.5).rounded(.down)
+			if let a = aspectLock {
+				a.constant = smallestSide
+			} else {
+				aspectLock = widthAnchor.constraint(equalToConstant: smallestSide)
+				aspectLock?.isActive = true
+			}
+
+		} else {
+			layer.cornerRadius = 5
+			if let a = aspectLock {
+				removeConstraint(a)
+				aspectLock = nil
+			}
+		}
+	}
+}
+
 protocol LoadCompletionDelegate: class {
 	func loadCompleted(success: Bool)
 }
@@ -91,7 +126,7 @@ protocol ArchivedItemCellDelegate: class {
 }
 
 final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
-	@IBOutlet weak var image: UIImageView!
+	@IBOutlet weak var image: GladysImageView!
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var labelDistance: NSLayoutConstraint!
 	@IBOutlet weak var accessoryLabel: UILabel!
@@ -183,7 +218,22 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 
 			let info = archivedDropItem.displayInfo
 			image.image = info.image
-			image.contentMode = info.imageContentMode
+
+			switch info.imageContentMode {
+			case .center:
+				image.contentMode = .center
+				image.circle = false
+			case .fill:
+				image.contentMode = .scaleAspectFill
+				image.circle = false
+			case .fit:
+				image.contentMode = .scaleAspectFit
+				image.circle = false
+			case .circle:
+				image.contentMode = .scaleAspectFill
+				image.circle = true
+			}
+
 			if image.contentMode == .center {
 				label.numberOfLines = 9
 			} else {
