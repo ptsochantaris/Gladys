@@ -159,9 +159,7 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 		archivedDropItem?.delegate = nil
 		archivedDropItem = newDrop
 		archivedDropItem?.delegate = self
-		if let item = archivedDropItem, !item.isLoading {
-			decorate()
-		}
+		decorate()
 	}
 	private var archivedDropItem: ArchivedDropItem?
 

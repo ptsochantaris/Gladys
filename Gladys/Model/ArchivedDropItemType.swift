@@ -385,17 +385,31 @@ final class ArchivedDropItemType: Codable {
 		return (#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 	}
 
+	private func composeTitleResponse(_ text: String?, _ priority: Int) -> (String?, Int, NSTextAlignment) {
+
+		let alignment: NSTextAlignment
+		let finalText: String?
+		if let text = text, text.characters.count > 200 {
+			alignment = .justified
+			finalText = text.replacingOccurrences(of: "\n", with: " ")
+		} else {
+			alignment = .center
+			finalText = text
+		}
+		return (finalText, priority, alignment)
+	}
+
 	lazy var displayTitle: (String?, Int, NSTextAlignment) = { self.updatedDisplayTitle() }()
 	private func updatedDisplayTitle() -> (String?, Int, NSTextAlignment) {
 
 		if classType == .NSString {
 			if let res = decode(NSString.self) as String? {
-				return (res, 10, preferredAlignment(for: res))
+				return composeTitleResponse(res, 10)
 			}
 		} else if classType == .NSAttributedString {
 			let a = decode(NSAttributedString.self)
 			if let res = a?.string {
-				return (res, 7, preferredAlignment(for: res))
+				return composeTitleResponse(res, 7)
 			}
 		} else if classType == .NSURL {
 			if let url = decode(NSURL.self), url.scheme != "file", let res = url.absoluteString {
@@ -417,21 +431,14 @@ final class ArchivedDropItemType: Codable {
 
 			} else if typeIdentifier == "public.utf8-plain-text" {
 				let s = String(data: data, encoding: .utf8)
-				return (s, 9, preferredAlignment(for: s))
+				return composeTitleResponse(s, 9)
 			} else if typeIdentifier == "public.utf16-plain-text" {
 				let s = String(data: data, encoding: .utf16)
-				return (s, 8, preferredAlignment(for: s))
+				return composeTitleResponse(s, 8)
 			}
 		}
 
 		return (nil, 0, .center)
-	}
-
-	private func preferredAlignment(for string: String?) -> NSTextAlignment {
-		if let string = string, string.characters.count > 200 {
-			return .justified
-		}
-		return .center
 	}
 
 	var itemForShare: (Any?, Int) {
