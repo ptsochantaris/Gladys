@@ -1,5 +1,7 @@
 
 import UIKit
+import MapKit
+import Contacts
 
 final class ArchivedDropDisplayInfo {
 	var image: UIImage?
@@ -102,6 +104,37 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = self
 		return i
+	}
+
+	func tryOpen() {
+		var priority = -1
+		var item: Any?
+		for i in typeItems {
+			let (newItem, newPriority) = i.itemForShare
+			if let newItem = newItem, newPriority > priority {
+				item = newItem
+				priority = newPriority
+			}
+		}
+		if let item = item as? MKMapItem {
+			item.openInMaps(launchOptions: [ MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDefault ])
+		} else if let _ = item as? CNContact {
+			// TODO
+		} else if let item = item as? URL {
+			UIApplication.shared.open(item, options: [:]) { success in
+				if !success {
+					let message: String
+					if item.scheme == "file" {
+						message = "iOS does not recognise the type of this file"
+					} else {
+						message = "iOS does not recognise the type of this link"
+					}
+					let a = UIAlertController(title: "Can't Open", message: message, preferredStyle: .alert)
+					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+					UIApplication.shared.windows.first!.rootViewController!.present(a, animated: true)
+				}
+			}
+		}
 	}
 
 	private var displayIcon: (UIImage?, UIViewContentMode) {

@@ -12,7 +12,7 @@
         <!--Gladys-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController definesPresentationContext="YES" id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,9 +21,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="WG5-yf-DTp">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                            </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -89,14 +86,10 @@
                             </collectionView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="WG5-yf-DTp" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="1H9-nY-sg6"/>
                             <constraint firstAttribute="bottom" secondItem="90w-Xn-bmO" secondAttribute="bottom" id="5Ao-MF-90e"/>
-                            <constraint firstItem="WG5-yf-DTp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="8k1-oz-1YC"/>
                             <constraint firstAttribute="trailing" secondItem="90w-Xn-bmO" secondAttribute="trailing" id="Fye-Nf-aY1"/>
                             <constraint firstItem="90w-Xn-bmO" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Tjt-Sy-SQ3"/>
                             <constraint firstItem="90w-Xn-bmO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="h3W-Sh-AaK"/>
-                            <constraint firstAttribute="trailing" secondItem="WG5-yf-DTp" secondAttribute="trailing" id="hl7-7j-jfc"/>
-                            <constraint firstAttribute="bottom" secondItem="WG5-yf-DTp" secondAttribute="bottom" id="ilQ-dn-kdl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
@@ -124,7 +117,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="oc1-ut-DYH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.91022449731826782" green="0.89479202032089233" blue="0.86518722772598267" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -139,8 +132,5 @@
             <point key="canvasLocation" x="-53" y="137"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="paper" width="2100" height="1500"/>
-    </resources>
     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
 </document>

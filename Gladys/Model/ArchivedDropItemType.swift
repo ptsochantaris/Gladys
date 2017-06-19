@@ -81,6 +81,7 @@ final class ArchivedDropItemType: Codable {
 
 	private func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
 		guard let bytes = bytes else { return nil }
+
 		let u = NSKeyedUnarchiver(forReadingWith: bytes)
 		let className = String(describing: type)
 		return u.decodeObject(of: [NSClassFromString(className)!], forKey: className) as? T
@@ -256,6 +257,8 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	// TODO: MEMORY LEAK BIGTIME
+
 	private func signalDone() {
 		displayIcon = updatedDisplayIcon()
 		displayTitle = updatedDisplayTitle()
@@ -369,10 +372,11 @@ final class ArchivedDropItemType: Codable {
 			}
 
 			if classType == .NSURL {
-				if typeIdentifier == "com.apple.DocumentManager.uti.FPItem.File" {
+				if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
+					if typeIdentifier.hasSuffix("Location") {
+						return(#imageLiteral(resourceName: "iconFolder"), 5, .center)
+					}
 					return (#imageLiteral(resourceName: "iconBlock"), 5, .center)
-				} else if typeIdentifier == "com.apple.DocumentManager.uti.FPItem.Location" {
-					return(#imageLiteral(resourceName: "iconFolder"), 5, .center)
 				} else {
 					return(#imageLiteral(resourceName: "iconLink"), 5, .center)
 				}
@@ -428,6 +432,32 @@ final class ArchivedDropItemType: Codable {
 			return .justified
 		}
 		return .center
+	}
+
+	var itemForShare: (Any?, Int) {
+
+		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = try? CNContactVCardSerialization.contacts(with: bytes) {
+			return (contact, 12)
+		}
+
+		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode(MKMapItem.self) {
+			return (item, 15)
+		}
+
+		if let url = decode(NSURL.self) as URL? {
+
+			if classType == .NSURL {
+				return (url, 10)
+			}
+
+			if typeIdentifier == "public.url" {
+				return (url, 5)
+			}
+
+			return (url, 1)
+		}
+
+		return (nil, 0)
 	}
 }
 

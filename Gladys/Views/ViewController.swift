@@ -87,7 +87,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-			self.handleDrop(collectionView: collectionView, coordinator: coordinator)
+			handleDrop(collectionView: collectionView, coordinator: coordinator)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -109,6 +109,11 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		}
 	}
 
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let item = model.drops[indexPath.item]
+		item.tryOpen()
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		archivedItemCollectionView.dataSource = self
@@ -116,6 +121,10 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
+		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+
+		let searchController = UISearchController(searchResultsController: nil)
+		navigationItem.searchController = searchController
 	}
 
 	@IBAction func editSelected(_ sender: UIBarButtonItem) {
