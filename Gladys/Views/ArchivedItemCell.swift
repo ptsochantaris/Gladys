@@ -93,6 +93,7 @@ protocol ArchivedItemCellDelegate: class {
 final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 	@IBOutlet weak var image: UIImageView!
 	@IBOutlet weak var label: UILabel!
+	@IBOutlet weak var labelDistance: NSLayoutConstraint!
 	@IBOutlet weak var accessoryLabel: UILabel!
 	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
 	@IBOutlet var spinner: UIActivityIndicatorView!
@@ -174,9 +175,9 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 
 		accessoryLabel.text = nil
 		accessoryLabelDistance.constant = 0
+
 		image.image = nil
 		image.isHidden = true
-		label.text = nil
 
 		if let archivedDropItem = archivedDropItem {
 
@@ -190,6 +191,8 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			}
 			label.textAlignment = info.titleAlignment
 			label.text = info.title
+
+			labelDistance.constant = label.text == nil ? 0 : 8
 
 			if let t = info.accessoryText {
 				accessoryLabel.text = t
@@ -220,7 +223,9 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 					}
 				}
 			}
-		} else {
+		} else { // item is nil
+			label.text = nil
+			labelDistance.constant = 0
 			spinner.startAnimating()
 		}
 

@@ -12,6 +12,11 @@ final class ArchivedDropItemType: Codable {
 		case allLoadedWell
 		case parentUuid
 		case accessoryTitle
+		case displayTitle
+		case displayTitleAlignment
+		case displayTitlePriority
+		case displayIconPriority
+		case displayIconContentMode
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -22,6 +27,18 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(parentUuid, forKey: .parentUuid)
 		try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
+		try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
+		try v.encode(displayTitleAlignment.rawValue, forKey: .displayTitleAlignment)
+		try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
+		try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
+		try v.encode(displayIconPriority, forKey: .displayIconPriority)
+
+		let imagePath = folderUrl.appendingPathComponent("thumbnail.png")
+		if let displayIcon = displayIcon {
+			try! UIImagePNGRepresentation(displayIcon)!.write(to: imagePath)
+		} else if FileManager.default.fileExists(atPath: imagePath.path) {
+			try! FileManager.default.removeItem(at: imagePath)
+		}
 	}
 
 	init(from decoder: Decoder) throws {
@@ -34,11 +51,25 @@ final class ArchivedDropItemType: Codable {
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
+		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
+		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
+		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
+
+		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
+		if let alignment = NSTextAlignment(rawValue: a) {
+			displayTitleAlignment = alignment
+		}
+
+		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
+		if let mode = UIViewContentMode(rawValue: m) {
+			displayIconContentMode = mode
+		}
+
+		let imagePath = folderUrl.appendingPathComponent("thumbnail.png").path
+		displayIcon = UIImage(contentsOfFile: imagePath)
 
 		// Completing setup
 		patchLocalUrl()
-		displayTitle = updatedDisplayTitle()
-		displayIcon = updatedDisplayIcon()
 	}
 
 	private var bytes: Data? {
@@ -129,6 +160,136 @@ final class ArchivedDropItemType: Codable {
 		classType = type
 	}
 
+	private func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+
+		if let item = item as? NSString {
+			NSLog("      received string: \(item)")
+			setTitleInfo(item as String, 10)
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setBytes(object: item, type: .NSString)
+			signalDone()
+
+		} else if let item = item as? NSAttributedString {
+			NSLog("      received attributed string: \(item)")
+			setTitleInfo(item.string, 7)
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setBytes(object: item, type: .NSAttributedString)
+			signalDone()
+
+		} else if let item = item as? UIColor {
+			NSLog("      received color: \(item)")
+			setBytes(object: item, type: .UIColor)
+			signalDone()
+
+		} else if let item = item as? UIImage {
+			NSLog("      received image: \(item)")
+			setDisplayIcon(item, 15, .scaleAspectFill)
+			setBytes(object: item, type: .UIImage)
+			signalDone()
+
+		} else if let item = item as? Data {
+			NSLog("      received data: \(item)")
+			classType = .NSData
+			bytes = item
+
+			if let image = UIImage(data: item) {
+				setDisplayIcon(image, 10, .scaleAspectFill)
+			}
+
+			if typeIdentifier == "public.vcard" {
+				if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
+					var name = ""
+					if !person.givenName.isEmpty { name += person.givenName }
+					if !name.isEmpty && !person.familyName.isEmpty { name += " " }
+					if !person.familyName.isEmpty { name += person.familyName }
+					if !name.isEmpty && !person.organizationName.isEmpty { name += " - " }
+					if !person.organizationName.isEmpty { name += person.organizationName }
+					accessoryTitle = name
+
+					if let imageData = person.imageData, let img = UIImage(data: imageData) {
+						setDisplayIcon(img, 9, .scaleAspectFit)
+					} else {
+						setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
+					}
+				}
+
+			} else if typeIdentifier == "public.utf8-plain-text" {
+				let s = String(data: item, encoding: .utf8)
+				setTitleInfo(s, 9)
+
+			} else if typeIdentifier == "public.utf16-plain-text" {
+				let s = String(data: item, encoding: .utf16)
+				setTitleInfo(s, 8)
+
+			} else if typeIdentifier == "com.apple.mapkit.map-item" {
+				setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
+
+			} else if typeIdentifier.hasSuffix("-plain-text") {
+				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			}
+
+			signalDone()
+
+		} else if let item = item as? MKMapItem {
+			NSLog("      received map item: \(item)")
+			setBytes(object: item, type: .MKMapItem)
+			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
+			signalDone()
+
+		} else if let item = item as? URL {
+
+			if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
+				if typeIdentifier.hasSuffix("Location") {
+					setDisplayIcon(#imageLiteral(resourceName: "iconFolder"), 5, .center)
+				} else {
+					setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
+				}
+			} else {
+				setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+			}
+
+			if item.scheme == "file" {
+				NSLog("      will duplicate item at local path: \(item.path)")
+				provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, wasLocal, error in
+					self?.handleLocalFetch(url: url, error: error)
+				}
+			} else {
+				NSLog("      received remote url: \(item.absoluteString)")
+				setTitleInfo(item.absoluteString, 6)
+				setBytes(object: item, type: .NSURL)
+				fetchWebTitle(for: item) { [weak self] title in
+					self?.accessoryTitle = title ?? self?.accessoryTitle
+					self?.signalDone()
+				}
+			}
+
+		} else {
+			NSLog("      unknown class")
+			allLoadedWell = false
+			setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+			signalDone()
+			// TODO: generate analyitics report to record what type was received and what UTI
+		}
+	}
+
+	private func handleLocalFetch(url: URL?, error: Error?) {
+		if let url = url {
+			let localUrl = copyLocal(url)
+			NSLog("      received to local url: \(localUrl.path)")
+
+			if let image = UIImage(contentsOfFile: localUrl.path) {
+				setDisplayIcon(image, 10, .scaleAspectFill)
+			}
+			setBytes(object: localUrl, type: .NSURL)
+			signalDone()
+
+		} else if let error = error {
+			NSLog("Error fetching local url file representation: \(error.localizedDescription)")
+			allLoadedWell = false
+			signalDone()
+		}
+	}
+
 	init(provider: NSItemProvider, typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 
 		self.uuid = UUID()
@@ -137,80 +298,23 @@ final class ArchivedDropItemType: Codable {
 		self.parentUuid = parentUuid
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
-			if let item = item {
-				let receivedTypeString = type(of: item)
-				NSLog("name: [\(provider.suggestedName ?? "")] type: [\(typeIdentifier)] class: [\(receivedTypeString)]")
-			}
-
-			if let item = item as? NSString {
-				NSLog("      received string: \(item)")
-				self.setBytes(object: item, type: .NSString)
-				self.signalDone()
-
-			} else if let item = item as? NSAttributedString {
-				NSLog("      received attributed string: \(item)")
-				self.setBytes(object: item, type: .NSAttributedString)
-				self.signalDone()
-
-			} else if let item = item as? UIColor {
-				NSLog("      received color: \(item)")
-				self.setBytes(object: item, type: .UIColor)
-				self.signalDone()
-
-			} else if let item = item as? UIImage {
-				NSLog("      received image: \(item)")
-				self.setBytes(object: item, type: .UIImage)
-				self.signalDone()
-
-			} else if let item = item as? Data {
-				NSLog("      received data: \(item)")
-				self.classType = .NSData
-				self.bytes = item
-				self.signalDone()
-
-			} else if let item = item as? MKMapItem {
-				NSLog("      received map item: \(item)")
-				self.setBytes(object: item, type: .MKMapItem)
-				self.signalDone()
-
-			} else if let item = item as? URL {
-				if item.scheme == "file" {
-					NSLog("      will duplicate item at local path: \(item.path)")
-					provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { url, error in
-						if let url = url {
-							let localUrl = self.copyLocal(url)
-							NSLog("      received to local url: \(localUrl.path)")
-							self.setBytes(object: localUrl, type: .NSURL)
-							self.signalDone()
-
-						} else if let error = error {
-							NSLog("Error fetching local url file representation: \(error.localizedDescription)")
-							self.allLoadedWell = false
-							self.signalDone()
-						}
-					}
-				} else {
-					NSLog("      received remote url: \(item.absoluteString)")
-					self.setBytes(object: item, type: .NSURL)
-					self.fetchWebTitle(for: item) { [weak self] title in
-						self?.accessoryTitle = title ?? self?.accessoryTitle
-						self?.signalDone()
-					}
-				}
-
-			} else if let error = error {
+			if let error = error {
 				NSLog("      error receiving item: \(error.localizedDescription)")
 				self.allLoadedWell = false
+				self.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				self.signalDone()
-
-
-			} else {
-				NSLog("      unknown class")
-				self.allLoadedWell = false
-				self.signalDone()
-				// TODO: generate analyitics report to record what type was received and what UTI
+			} else if let item = item {
+				let receivedTypeString = type(of: item)
+				NSLog("item name: [\(provider.suggestedName ?? "")] type: [\(typeIdentifier)] class: [\(receivedTypeString)]")
+				self.ingest(item: item, from: provider)
 			}
 		}
+	}
+
+	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: UIViewContentMode) {
+		displayIcon = icon
+		displayIconPriority = priority
+		displayIconContentMode = contentMode
 	}
 
 	private func fetchWebTitle(for url: URL, testing: Bool = true, completion: @escaping (String?)->Void) {
@@ -219,10 +323,9 @@ final class ArchivedDropItemType: Codable {
 
 		if testing {
 
-			NSLog("Investigating possible HTML title from this URL")
+			NSLog("Investigating possible HTML title from this URL: \(url.absoluteString)")
 
 			var request = URLRequest(url: url)
-			request.addValue("text/html", forHTTPHeaderField: "Accept")
 			request.httpMethod = "HEAD"
 			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
@@ -234,10 +337,15 @@ final class ArchivedDropItemType: Codable {
 						completion(nil)
 					}
 				}
+				if let error = error {
+					NSLog("Error while investigating URL: \(error.localizedDescription)")
+					completion(nil)
+				}
 			}
 			headFetch.resume()
 
 		} else {
+
 			let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
 				if let data = data,
 					let html = String(data: data, encoding: .utf8),
@@ -245,12 +353,25 @@ final class ArchivedDropItemType: Codable {
 					let sub = html.substring(from: titleStart)
 					if let titleEnd = sub.range(of: "</title>")?.lowerBound {
 						let title = sub.substring(to: titleEnd)
+						NSLog("Title located at URL")
 						DispatchQueue.main.async {
 							completion(title)
 							return
 						}
+					} else {
+						NSLog("Weird header fetching title URL")
+						completion(nil)
+						return
 					}
 				}
+
+				if let error = error {
+					NSLog("Error while fetching title URL: \(error.localizedDescription)")
+					completion(nil)
+					return
+				}
+
+				NSLog("No valid data but no error while fetching title for URL: \(url.absoluteString)")
 				completion(nil)
 			}
 			fetch.resume()
@@ -260,8 +381,6 @@ final class ArchivedDropItemType: Codable {
 	// TODO: MEMORY LEAK BIGTIME
 
 	private func signalDone() {
-		displayIcon = updatedDisplayIcon()
-		displayTitle = updatedDisplayTitle()
 		DispatchQueue.main.async {
 			self.delegate?.loadCompleted(success: self.allLoadedWell)
 		}
@@ -329,63 +448,11 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-    lazy var displayIcon: (UIImage?, Int, UIViewContentMode) = { return self.updatedDisplayIcon() }()
-	private func updatedDisplayIcon() -> (UIImage?, Int, UIViewContentMode){
-		if let data = self.bytes {
+	var displayIcon: UIImage?
+	var displayIconPriority = 0
+	var displayIconContentMode = UIViewContentMode.center
 
-			if classType == .UIImage {
-				if let a = decode(UIImage.self) {
-					return (a, 15, .scaleAspectFill)
-				}
-			}
-
-			if typeIdentifier == "public.png" || typeIdentifier == "public.jpeg" {
-				if classType == .NSURL {
-					if let url = decode(NSURL.self), let path = url.path, let image = UIImage(contentsOfFile: path) {
-						return (image, 10, .scaleAspectFill)
-					}
-				} else if classType == .NSData {
-					if let image = UIImage(data: data) {
-						return (image, 10, .scaleAspectFill)
-					}
-				}
-			}
-
-			if typeIdentifier == "public.vcard" {
-				if let contacts = try? CNContactVCardSerialization.contacts(with: data),
-					let person = contacts.first,
-					let imageData = person.imageData,
-					let img = UIImage(data: imageData) {
-
-					return (img, 9, .scaleAspectFill)
-				} else {
-					return (#imageLiteral(resourceName: "iconPerson"), 5, .center)
-				}
-			}
-
-			if typeIdentifier == "com.apple.mapkit.map-item" {
-				return (#imageLiteral(resourceName: "iconMap"), 5, .center)
-			}
-
-			if classType == .NSString || classType == .NSAttributedString || typeIdentifier.hasSuffix("-plain-text") {
-				return (#imageLiteral(resourceName: "iconText"), 5, .center)
-			}
-
-			if classType == .NSURL {
-				if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
-					if typeIdentifier.hasSuffix("Location") {
-						return(#imageLiteral(resourceName: "iconFolder"), 5, .center)
-					}
-					return (#imageLiteral(resourceName: "iconBlock"), 5, .center)
-				} else {
-					return(#imageLiteral(resourceName: "iconLink"), 5, .center)
-				}
-			}
-		}
-		return (#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-	}
-
-	private func composeTitleResponse(_ text: String?, _ priority: Int) -> (String?, Int, NSTextAlignment) {
+	private func setTitleInfo(_ text: String?, _ priority: Int) {
 
 		let alignment: NSTextAlignment
 		let finalText: String?
@@ -396,50 +463,14 @@ final class ArchivedDropItemType: Codable {
 			alignment = .center
 			finalText = text
 		}
-		return (finalText, priority, alignment)
+		displayTitle = finalText
+		displayTitlePriority = priority
+		displayTitleAlignment = alignment
 	}
 
-	lazy var displayTitle: (String?, Int, NSTextAlignment) = { self.updatedDisplayTitle() }()
-	private func updatedDisplayTitle() -> (String?, Int, NSTextAlignment) {
-
-		if classType == .NSString {
-			if let res = decode(NSString.self) as String? {
-				return composeTitleResponse(res, 10)
-			}
-		} else if classType == .NSAttributedString {
-			let a = decode(NSAttributedString.self)
-			if let res = a?.string {
-				return composeTitleResponse(res, 7)
-			}
-		} else if classType == .NSURL {
-			if let url = decode(NSURL.self), url.scheme != "file", let res = url.absoluteString {
-				return (res, 6, .center)
-			}
-		}
-
-		if let data = self.bytes {
-			if typeIdentifier == "public.vcard" {
-				if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
-					var name = ""
-					if !person.givenName.isEmpty { name += person.givenName }
-					if !name.isEmpty && !person.familyName.isEmpty { name += " " }
-					if !person.familyName.isEmpty { name += person.familyName }
-					if !name.isEmpty && !person.organizationName.isEmpty { name += " - " }
-					if !person.organizationName.isEmpty { name += person.organizationName }
-					return (name, 9, .center)
-				}
-
-			} else if typeIdentifier == "public.utf8-plain-text" {
-				let s = String(data: data, encoding: .utf8)
-				return composeTitleResponse(s, 9)
-			} else if typeIdentifier == "public.utf16-plain-text" {
-				let s = String(data: data, encoding: .utf16)
-				return composeTitleResponse(s, 8)
-			}
-		}
-
-		return (nil, 0, .center)
-	}
+	var displayTitle: String?
+	var displayTitlePriority = 0
+	var displayTitleAlignment = NSTextAlignment.center
 
 	var itemForShare: (Any?, Int) {
 

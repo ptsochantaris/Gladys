@@ -25,34 +25,34 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="O1B-Q3-jL2">
-                                    <size key="itemSize" width="235" height="150"/>
+                                    <size key="itemSize" width="300" height="300"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArchivedItemCell" id="x5M-NP-dlj" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="70" y="10" width="235" height="150"/>
+                                        <rect key="frame" x="37.5" y="10" width="300" height="300"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="235" height="150"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3H-LC-FOH">
-                                                    <rect key="frame" x="8" y="128" width="219" height="13.5"/>
+                                                    <rect key="frame" x="8" y="278.5" width="284" height="13.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS">
-                                                    <rect key="frame" x="8" y="30" width="219" height="90"/>
+                                                    <rect key="frame" x="8" y="30" width="284" height="240.5"/>
                                                     <color key="backgroundColor" red="0.84341198205947876" green="0.83196836709976196" blue="0.80659013986587524" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ZI7-Rk-HVF">
-                                                    <rect key="frame" x="107.5" y="65" width="20" height="20"/>
+                                                    <rect key="frame" x="140" y="140" width="20" height="20"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lnk-SW-KkP">
-                                                    <rect key="frame" x="8" y="8" width="219" height="13.5"/>
+                                                    <rect key="frame" x="8" y="8" width="284" height="13.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -79,6 +79,7 @@
                                             <outlet property="accessoryLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
                                             <outlet property="label" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
+                                            <outlet property="labelDistance" destination="zYq-Vr-jMB" id="b5Z-Uo-UfU"/>
                                             <outlet property="spinner" destination="ZI7-Rk-HVF" id="8Yn-is-eJ3"/>
                                         </connections>
                                     </collectionViewCell>

@@ -68,10 +68,6 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 
 		info.accessoryText = accessoryTitle
 
-		if info.title == nil && !isLoading {
-			info.title = "\(createdAt.timeIntervalSinceReferenceDate)" // TODO
-		}
-
 		if info.image == nil {
 			info.image = #imageLiteral(resourceName: "iconStickyNote")
 			info.imageContentMode = .center
@@ -142,26 +138,33 @@ final class ArchivedDropItem: LoadCompletionCounter, Codable {
 		var image: UIImage?
 		var contentMode = UIViewContentMode.center
 		for i in typeItems {
-			let (newImage, newPriority, newContentMode) = i.displayIcon
+			let newImage = i.displayIcon
+			let newPriority = i.displayIconPriority
 			if let newImage = newImage, newPriority > priority {
 				image = newImage
 				priority = newPriority
-				contentMode = newContentMode
+				contentMode = i.displayIconContentMode
 			}
 		}
 		return (image, contentMode)
 	}
 
 	private var displayTitle: (String?, NSTextAlignment) {
-		var title = suggestedName
+
+		if let suggestedName = suggestedName {
+			return (suggestedName, .center)
+		}
+
+		var title: String?
 		var priority = 0
 		var alignment = NSTextAlignment.center
 		for i in typeItems {
-			let (newTitle, newPriority, newAlignment) = i.displayTitle
+			let newTitle = i.displayTitle
+			let newPriority = i.displayTitlePriority
 			if let newTitle = newTitle, newPriority > priority {
 				title = newTitle
 				priority = newPriority
-				alignment = newAlignment
+				alignment = i.displayTitleAlignment
 			}
 		}
 		return (title, alignment)
