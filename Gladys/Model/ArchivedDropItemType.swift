@@ -2,6 +2,7 @@
 import UIKit
 import MapKit
 import Contacts
+import Fuzi
 
 final class ArchivedDropItemType: Codable {
 
@@ -288,17 +289,20 @@ final class ArchivedDropItemType: Codable {
 				NSLog("      will duplicate item at local path: \(item.path)")
 				provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, wasLocal, error in
 					self?.handleLocalFetch(url: url, error: error)
+					self?.signalDone()
 				}
 			} else {
 				NSLog("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
 				setBytes(object: item, type: .url)
-				fetchWebTitle(for: item) { [weak self] title in
+				fetchWebPreview(for: item) { [weak self] title, image in
 					self?.accessoryTitle = title ?? self?.accessoryTitle
+					if let image = image {
+						self?.setDisplayIcon(image, 30, .center)
+					}
 					self?.signalDone()
 				}
 			}
-
 		} else {
 			NSLog("      unknown class")
 			allLoadedWell = false
@@ -322,7 +326,6 @@ final class ArchivedDropItemType: Codable {
 		} else if let error = error {
 			NSLog("Error fetching local url file representation: \(error.localizedDescription)")
 			allLoadedWell = false
-			signalDone()
 		}
 	}
 
@@ -364,7 +367,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconContentMode = contentMode
 	}
 
-	private func fetchWebTitle(for url: URL, testing: Bool = true, completion: @escaping (String?)->Void) {
+	private func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, UIImage?)->Void) {
 
 		// in thread!!
 
@@ -378,15 +381,15 @@ final class ArchivedDropItemType: Codable {
 				if let response = response as? HTTPURLResponse {
 					if let type = response.allHeaderFields["Content-Type"] as? String, type.hasPrefix("text/html") {
 						NSLog("Content for this is HTML, will try to fetch title")
-						self.fetchWebTitle(for: url, testing: false, completion: completion)
+						self.fetchWebPreview(for: url, testing: false, completion: completion)
 					} else {
 						NSLog("Content for this isn't HTML, never mind")
-						completion(nil)
+						completion(nil, nil)
 					}
 				}
 				if let error = error {
 					NSLog("Error while investigating URL: \(error.localizedDescription)")
-					completion(nil)
+					completion(nil, nil)
 				}
 			}
 			headFetch.resume()
@@ -395,31 +398,40 @@ final class ArchivedDropItemType: Codable {
 
 			let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
 				if let data = data,
-					let html = String(data: data, encoding: .utf8),
-					let titleStart = html.range(of: "<title>")?.upperBound {
-					let sub = html.substring(from: titleStart)
-					if let titleEnd = sub.range(of: "</title>")?.lowerBound {
-						let title = sub.substring(to: titleEnd)
-						NSLog("Title located at URL")
-						DispatchQueue.main.async {
-							completion(title)
-							return
-						}
+					let text = String(data: data, encoding: .utf8),
+					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
+
+					let title = htmlDoc.title
+					if let title = title {
+						NSLog("Title located at URL: \(title)")
 					} else {
-						NSLog("Weird header fetching title URL")
-						completion(nil)
-						return
+						NSLog("No title located at URL")
 					}
-				}
 
-				if let error = error {
+					var iconImage: UIImage?
+
+					if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+						for file in ["/favicon.ico"] {
+							c.path = file
+							if  let url = c.url,
+								let data = try? Data(contentsOf: url, options: []),
+								let image = UIImage(data: data) {
+
+								iconImage = image
+								break
+							}
+						}
+					}
+
+					completion(title, iconImage)
+
+				} else if let error = error {
 					NSLog("Error while fetching title URL: \(error.localizedDescription)")
-					completion(nil)
-					return
+					completion(nil, nil)
+				} else {
+					NSLog("Bad HTML data while fetching title URL")
+					completion(nil, nil)
 				}
-
-				NSLog("No valid data but no error while fetching title for URL: \(url.absoluteString)")
-				completion(nil)
 			}
 			fetch.resume()
 		}

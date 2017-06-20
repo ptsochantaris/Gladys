@@ -18,6 +18,7 @@
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
+		88A1FCBA8B3301331DF83CAD /* Pods_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF3C693FB9166C9F1B58032 /* Pods_Gladys.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,10 @@
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		16FAC6771EF988D6009BCB35 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		3AC19643217B78C2D6DD5E97 /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
+		69AEA2B69B1914D6FD90CFFB /* Pods-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
+		8BF3C693FB9166C9F1B58032 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88A1FCBA8B3301331DF83CAD /* Pods_Gladys.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +70,8 @@
 			children = (
 				1678F9CF1EF475FE005697CB /* Gladys */,
 				1678F9CE1EF475FE005697CB /* Products */,
+				16FAC6761EF988D6009BCB35 /* Frameworks */,
+				66D3EBA231E6637523A1D0E6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +106,24 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				16FAC6771EF988D6009BCB35 /* libxml2.tbd */,
+				8BF3C693FB9166C9F1B58032 /* Pods_Gladys.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		66D3EBA231E6637523A1D0E6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				69AEA2B69B1914D6FD90CFFB /* Pods-Gladys.debug.xcconfig */,
+				3AC19643217B78C2D6DD5E97 /* Pods-Gladys.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -105,9 +131,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
 			buildPhases = (
+				A15A01FA84FF194E60984843 /* [CP] Check Pods Manifest.lock */,
 				1678F9C91EF475FE005697CB /* Sources */,
 				1678F9CA1EF475FE005697CB /* Frameworks */,
 				1678F9CB1EF475FE005697CB /* Resources */,
+				5723C6B7E8A1EDDFEDFEB197 /* [CP] Embed Pods Frameworks */,
+				B00A60B28DE4CDDCAB6BA89D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -163,6 +192,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5723C6B7E8A1EDDFEDFEB197 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Gladys/Pods-Gladys-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A15A01FA84FF194E60984843 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B00A60B28DE4CDDCAB6BA89D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Gladys/Pods-Gladys-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1678F9C91EF475FE005697CB /* Sources */ = {
@@ -250,11 +327,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 			};
@@ -302,9 +382,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
@@ -313,6 +396,7 @@
 		};
 		1678F9E01EF475FF005697CB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 69AEA2B69B1914D6FD90CFFB /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
@@ -326,6 +410,7 @@
 		};
 		1678F9E11EF475FF005697CB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3AC19643217B78C2D6DD5E97 /* Pods-Gladys.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
