@@ -197,7 +197,9 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 					self?.archivedItemCollectionView.reloadItems(at: [IndexPath(item: i, section: 0)])
 				}, completion: nil)
 			}
-			model.save()
+			model.save() { success in
+				(sender as? ArchivedDropItem)?.makeIndex()
+			}
 		} else {
 			// TODO remove from data model and collection view
 		}

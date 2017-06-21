@@ -8,12 +8,6 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
-	lazy var saveTimer: PopTimer = {
-		return PopTimer(timeInterval: 1.0) { [weak self] in
-			self?.save(immediately: true)
-		}
-	}()
-
 	static var fileUrl: URL {
 		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 		return docs.appendingPathComponent("items.json")
@@ -36,13 +30,9 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		super.init()
 	}
 
-	func save(immediately: Bool = false) {
-		if !immediately {
-			saveTimer.push()
-			return
-		}
+	
 
-		saveTimer.abort()
+	func save(completion: ((Bool)->Void)? = nil) {
 
 		let itemsToSave = drops.filter { !$0.isLoading }
 
@@ -52,8 +42,14 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
 				try data.write(to: Model.fileUrl, options: .atomic)
+				DispatchQueue.main.async {
+					completion?(true)
+				}
 			} catch {
 				NSLog("Saving Error: \(error.localizedDescription)")
+				DispatchQueue.main.async {
+					completion?(true)
+				}
 			}
 		}
 	}

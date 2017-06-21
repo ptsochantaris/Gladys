@@ -46,12 +46,13 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		guard let firstItem = typeItems.first else { return }
 
 		let attributes = CSSearchableItemAttributeSet(itemContentType: firstItem.typeIdentifier)
-		attributes.displayName = displayTitle.0
+		attributes.title = displayTitle.0
 		attributes.contentDescription = accessoryTitle
 		attributes.thumbnailURL = firstItem.imagePath
 		attributes.keywords = ["Gladys"]
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
+		attributes.contentCreationDate = createdAt
 
 		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
@@ -247,7 +248,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if !success { allLoadedWell = false }
 		loadCount = loadCount - 1
 		if loadCount == 0 {
-			makeIndex()
 			isLoading = false
 			delegate?.loadCompleted(sender: self, success: allLoadedWell)
 		}
