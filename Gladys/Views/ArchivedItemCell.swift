@@ -50,10 +50,6 @@ final class GladysImageView: UIImageView {
 	}
 }
 
-protocol LoadCompletionDelegate: class {
-	func loadCompleted(success: Bool)
-}
-
 final class MiniMapView: UIImageView {
 
 	private var coordinate: CLLocationCoordinate2D?

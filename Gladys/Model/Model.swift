@@ -9,20 +9,7 @@ final class Model {
 
 	lazy var saveTimer: PopTimer = {
 		return PopTimer(timeInterval: 1.0) { [weak self] in
-			guard let s = self else { return }
-
-			let itemsToSave = s.drops.filter { !$0.isLoading }
-
-			s.saveQueue.async {
-				NSLog("Saving")
-
-				do {
-					let data = try JSONEncoder().encode(itemsToSave)
-					try data.write(to: Model.fileUrl, options: .atomic)
-				} catch {
-					NSLog("Saving Error: \(error.localizedDescription)")
-				}
-			}
+			self?.save(immediately: true)
 		}
 	}()
 
@@ -45,13 +32,29 @@ final class Model {
 			NSLog("Starting fresh store")
 			drops = [ArchivedDropItem]()
 		}
-		Model.shared = self
 	}
 
-	private static var shared: Model!
+	func save(immediately: Bool = false) {
+		if !immediately {
+			saveTimer.push()
+			return
+		}
 
-	class func save() {
-		shared.saveTimer.push()
+		saveTimer.abort()
+
+		let itemsToSave = drops.filter { !$0.isLoading }
+
+		saveQueue.async {
+			NSLog("Saving")
+
+			do {
+				let data = try JSONEncoder().encode(itemsToSave)
+				try data.write(to: Model.fileUrl, options: .atomic)
+			} catch {
+				NSLog("Saving Error: \(error.localizedDescription)")
+			}
+		}
+
 	}
 }
 

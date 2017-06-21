@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController, UICollectionViewDelegate, ArchivedItemCellDelegate,
+final class ViewController: UIViewController, UICollectionViewDelegate, ArchivedItemCellDelegate, LoadCompletionDelegate,
 UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -37,8 +37,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 	private func handleDrop(collectionView: UICollectionView, coordinator: UICollectionViewDropCoordinator) {
 
-		var changesMade = false
-
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
@@ -46,7 +44,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 				NSLog("insert drop")
 
-				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: nil)
+				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: self)
 
 				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
 
@@ -56,7 +54,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				}, completion: nil)
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-				changesMade = true
+				// save gets handled by the item loading correctly
 
 			} else {
 
@@ -77,12 +75,8 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				}, completion: nil)
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-				changesMade = true
+				model.save()
 			}
-		}
-
-		if changesMade {
-			Model.save()
 		}
 	}
 
@@ -140,7 +134,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				item.delete()
 			}
 			self.model.drops.removeAll()
-			Model.save()
+			self.model.save()
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: { finished in
 			sender.isEnabled = true
@@ -190,7 +184,13 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
 			}, completion: nil)
 		}
-		Model.save()
+		model.save()
+	}
+
+	func loadCompleted(success: Bool) {
+		if success {
+			model.save()
+		}
 	}
 }
 

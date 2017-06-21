@@ -13,3 +13,7 @@ enum ArchivedDropItemDisplayType: Int {
 	case fit, fill, center, circle
 }
 
+protocol LoadCompletionDelegate: class {
+	func loadCompleted(success: Bool)
+}
+

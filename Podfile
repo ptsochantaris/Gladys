@@ -4,3 +4,7 @@ use_frameworks!
 target 'Gladys' do
   pod 'Fuzi', '~> 1'
 end
+
+target 'GladysIndex' do
+  pod 'Fuzi', '~> 1'
+end

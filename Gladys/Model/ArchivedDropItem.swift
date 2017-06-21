@@ -6,7 +6,7 @@ import CoreSpotlight
 
 final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
-	private let uuid: UUID
+	let uuid: UUID
 	private let suggestedName: String?
 	private var typeItems: [ArchivedDropItemType]!
 	private let createdAt:  Date
@@ -111,6 +111,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return i
 	}
 
+	#if MAINAPP
+
 	func tryOpen() {
 		var priority = -1
 		var item: Any?
@@ -141,6 +143,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			}
 		}
 	}
+
+	#endif
 
 	private var displayIcon: (UIImage?, ArchivedDropItemDisplayType) {
 		var priority = -1
@@ -214,6 +218,20 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 
+	func bytes(for type: String) -> Data? {
+		if let item = typeItems.first(where: { $0.typeIdentifier == type }) {
+			return item.bytes
+		}
+		return nil
+	}
+
+	func url(for type: String) -> NSURL? {
+		if let item = typeItems.first(where: { $0.typeIdentifier == type }) {
+			return item.encodedUrl
+		}
+		return nil
+	}
+
 	//////////////////////////
 
 	weak var delegate: LoadCompletionDelegate?
@@ -228,7 +246,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			makeIndex()
 			isLoading = false
 			delegate?.loadCompleted(success: allLoadedWell)
-			Model.save()
 		}
 	}
 }

@@ -77,9 +77,13 @@ final class ArchivedDropItemType: Codable {
 		patchLocalUrl()
 	}
 
+	var encodedUrl: NSURL? {
+		return decode(NSURL.self)
+	}
+
 	private func patchLocalUrl() {
 
-		if let encodedURL = decode(NSURL.self), encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
+		if let encodedURL = encodedUrl, encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
 
 			let myPath = "\(parentUuid)/\(uuid)/"
 			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
@@ -93,10 +97,14 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private var bytes: Data? {
+	var bytesPath: URL {
+		return folderUrl.appendingPathComponent("blob", isDirectory: false)
+	}
+
+	var bytes: Data? {
 		set {
 			NSLog("setting bytes")
-			let byteLocation = folderUrl.appendingPathComponent("blob", isDirectory: false)
+			let byteLocation = bytesPath
 			if newValue == nil {
 				let f = FileManager.default
 				if f.fileExists(atPath: byteLocation.path) {
@@ -107,7 +115,7 @@ final class ArchivedDropItemType: Codable {
 			}
 		}
 		get {
-			let byteLocation = folderUrl.appendingPathComponent("blob", isDirectory: false)
+			let byteLocation = bytesPath
 			if FileManager.default.fileExists(atPath: byteLocation.path) {
 				return try! Data(contentsOf: byteLocation, options: [])
 			} else {
@@ -182,7 +190,7 @@ final class ArchivedDropItemType: Codable {
 				case .mapItem:
 					item = self.decode(MKMapItem.self)
 				case .url:
-					item = self.decode(NSURL.self)
+					item = self.encodedUrl
 				}
 
 				let finalName = String(describing: item)
@@ -497,7 +505,7 @@ final class ArchivedDropItemType: Codable {
 			return (item, 15)
 		}
 
-		if let url = decode(NSURL.self) {
+		if let url = encodedUrl {
 
 			if classType == .url {
 				return (url, 10)
