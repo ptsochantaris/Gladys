@@ -2,6 +2,7 @@
 import UIKit
 import MapKit
 import Contacts
+import CoreSpotlight
 
 final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
@@ -39,7 +40,30 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 	}
 
+	// fulfill drag and drop promise from search drag!
+
+	func makeIndex() {
+
+		guard let firstItem = typeItems.first else { return }
+
+		let attributes = CSSearchableItemAttributeSet(itemContentType: firstItem.typeIdentifier)
+		attributes.title = displayTitle.0
+		attributes.contentDescription = accessoryTitle
+		attributes.thumbnailURL = firstItem.imagePath
+		attributes.keywords = ["Gladys"]
+		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
+
+		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
+		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
+			if let error = error {
+				NSLog("Error indexing item \(self.uuid): \(error)")
+			}
+			NSLog("-------------------------")
+		})
+	}
+
 	func delete() {
+		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString], completionHandler: nil)
 		let f = FileManager.default
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
@@ -201,6 +225,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if !success { allLoadedWell = false }
 		loadCount = loadCount - 1
 		if loadCount == 0 {
+			makeIndex()
 			isLoading = false
 			delegate?.loadCompleted(success: allLoadedWell)
 			Model.save()

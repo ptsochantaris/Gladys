@@ -36,12 +36,16 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
 		try v.encode(displayIconScale, forKey: .displayIconScale)
 
-		let imagePath = folderUrl.appendingPathComponent("thumbnail.png")
+		let ipath = imagePath
 		if let displayIcon = displayIcon {
-			try! UIImagePNGRepresentation(displayIcon)!.write(to: imagePath)
-		} else if FileManager.default.fileExists(atPath: imagePath.path) {
-			try! FileManager.default.removeItem(at: imagePath)
+			try! UIImagePNGRepresentation(displayIcon)!.write(to: ipath)
+		} else if FileManager.default.fileExists(atPath: ipath.path) {
+			try! FileManager.default.removeItem(at: ipath)
 		}
+	}
+
+	var imagePath: URL {
+		return folderUrl.appendingPathComponent("thumbnail.png")
 	}
 
 	init(from decoder: Decoder) throws {
@@ -65,7 +69,6 @@ final class ArchivedDropItemType: Codable {
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
-		let imagePath = folderUrl.appendingPathComponent("thumbnail.png")
 		if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
 			let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
 			displayIcon = UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
@@ -113,7 +116,7 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private let typeIdentifier: String
+	let typeIdentifier: String
 	private var classType: ClassType?
 	private let uuid: UUID
 	private let parentUuid: UUID
@@ -289,7 +292,6 @@ final class ArchivedDropItemType: Codable {
 				NSLog("      will duplicate item at local path: \(item.path)")
 				provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, wasLocal, error in
 					self?.handleLocalFetch(url: url, error: error)
-					self?.signalDone()
 				}
 			} else {
 				NSLog("      received remote url: \(item.absoluteString)")
