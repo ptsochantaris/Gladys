@@ -9,7 +9,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
 	static var fileUrl: URL {
-		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+		let docs = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!
 		return docs.appendingPathComponent("items.json")
 	}
 
