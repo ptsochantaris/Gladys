@@ -34,10 +34,9 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		createdAt = try v.decode(Date.self, forKey: .createdAt)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
-
-		loadCount = 0
-		isLoading = false
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
+		isLoading = false
+		loadCount = 0
 	}
 
 	// fulfill drag and drop promise from search drag!
@@ -47,11 +46,12 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		guard let firstItem = typeItems.first else { return }
 
 		let attributes = CSSearchableItemAttributeSet(itemContentType: firstItem.typeIdentifier)
-		attributes.title = displayTitle.0
+		attributes.displayName = displayTitle.0
 		attributes.contentDescription = accessoryTitle
 		attributes.thumbnailURL = firstItem.imagePath
 		attributes.keywords = ["Gladys"]
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
+		attributes.userCurated = true
 
 		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
@@ -63,7 +63,11 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	func delete() {
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString], completionHandler: nil)
+		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
+			if let error = error {
+				NSLog("Error while deleting an index \(error)")
+			}
+		}
 		let f = FileManager.default
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
@@ -239,13 +243,13 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	var allLoadedWell: Bool
 
 	private var loadCount: Int
-	func loadCompleted(success: Bool) {
+	func loadCompleted(sender: AnyObject, success: Bool) {
 		if !success { allLoadedWell = false }
 		loadCount = loadCount - 1
 		if loadCount == 0 {
 			makeIndex()
 			isLoading = false
-			delegate?.loadCompleted(success: allLoadedWell)
+			delegate?.loadCompleted(sender: self, success: allLoadedWell)
 		}
 	}
 }

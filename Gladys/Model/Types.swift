@@ -14,6 +14,6 @@ enum ArchivedDropItemDisplayType: Int {
 }
 
 protocol LoadCompletionDelegate: class {
-	func loadCompleted(success: Bool)
+	func loadCompleted(sender: AnyObject, success: Bool)
 }
 

@@ -121,7 +121,7 @@ protocol ArchivedItemCellDelegate: class {
 	func deleteRequested(for: ArchivedDropItem)
 }
 
-final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
+final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var image: GladysImageView!
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var labelDistance: NSLayoutConstraint!
@@ -187,13 +187,13 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 		contentView.tintColor = .darkGray
 	}
 
-	func setArchivedDropItem(_ newDrop: ArchivedDropItem) {
-		archivedDropItem?.delegate = nil
-		archivedDropItem = newDrop
-		archivedDropItem?.delegate = self
-		decorate()
+	var archivedDropItem: ArchivedDropItem? {
+		didSet {
+			decorate()
+		}
 	}
-	private var archivedDropItem: ArchivedDropItem?
+
+	private var existingMapView: MiniMapView?
 
 	override func prepareForReuse() {
 		archivedDropItem = nil
@@ -279,13 +279,6 @@ final class ArchivedItemCell: UICollectionViewCell, LoadCompletionDelegate {
 			e.removeFromSuperview()
 			existingMapView = nil
 		}
-	}
-
-	private var existingMapView: MiniMapView?
-
-	func loadCompleted(success: Bool) {
-		decorate()
-		NSLog("load complete for drop group")
 	}
 }
 

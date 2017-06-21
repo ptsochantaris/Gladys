@@ -29,7 +29,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
-		cell.setArchivedDropItem(model.drops[indexPath.item])
+		cell.archivedDropItem = model.drops[indexPath.item]
 		cell.isEditing = isEditing
 		cell.delegate = self
 		return cell
@@ -187,9 +187,16 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		model.save()
 	}
 
-	func loadCompleted(success: Bool) {
+	func loadCompleted(sender: AnyObject, success: Bool) {
 		if success {
+			if let i = model.drops.index(where: { $0 === sender }) {
+				archivedItemCollectionView.performBatchUpdates({ [weak self] in
+					self?.archivedItemCollectionView.reloadItems(at: [IndexPath(item: i, section: 0)])
+				}, completion: nil)
+			}
 			model.save()
+		} else {
+			// TODO remove from data model and collectinon view
 		}
 	}
 }
