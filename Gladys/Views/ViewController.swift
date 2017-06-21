@@ -1,5 +1,6 @@
 
 import UIKit
+import CoreSpotlight
 
 final class ViewController: UIViewController, UICollectionViewDelegate, ArchivedItemCellDelegate, LoadCompletionDelegate,
 UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
@@ -117,6 +118,8 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		archivedItemCollectionView.reorderingCadence = .immediate
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 
+		CSSearchableIndex.default().indexDelegate = model
+
 		let searchController = UISearchController(searchResultsController: nil)
 		navigationItem.searchController = searchController
 	}
@@ -196,7 +199,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 			}
 			model.save()
 		} else {
-			// TODO remove from data model and collectinon view
+			// TODO remove from data model and collection view
 		}
 	}
 }

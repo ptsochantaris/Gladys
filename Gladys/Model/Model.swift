@@ -1,7 +1,8 @@
 
 import Foundation
+import CoreSpotlight
 
-final class Model {
+final class Model: NSObject, CSSearchableIndexDelegate {
 
 	var drops: [ArchivedDropItem]
 
@@ -18,7 +19,7 @@ final class Model {
 		return docs.appendingPathComponent("items.json")
 	}
 
-	init() {
+	override init() {
 		let url = Model.fileUrl
 		if FileManager.default.fileExists(atPath: url.path) {
 			do {
@@ -32,6 +33,7 @@ final class Model {
 			NSLog("Starting fresh store")
 			drops = [ArchivedDropItem]()
 		}
+		super.init()
 	}
 
 	func save(immediately: Bool = false) {
@@ -54,7 +56,36 @@ final class Model {
 				NSLog("Saving Error: \(error.localizedDescription)")
 			}
 		}
-
 	}
+
+	//////////////////
+
+	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+		acknowledgementHandler()
+	}
+
+	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+		acknowledgementHandler()
+	}
+
+	func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+		let model = Model()
+		if let item = model.drops.filter({ $0.uuid.uuidString == itemIdentifier }).first,
+			let data = item.bytes(for: typeIdentifier) {
+
+			return data
+		}
+		return Data()
+	}
+
+	func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
+		let model = Model()
+		if let item = model.drops.filter({ $0.uuid.uuidString == itemIdentifier }).first,
+			let url = item.url(for: typeIdentifier) {
+			return url as URL
+		}
+		return URL(string:"file://")!
+	}
+
 }
 
