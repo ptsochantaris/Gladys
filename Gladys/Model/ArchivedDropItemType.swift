@@ -91,7 +91,7 @@ final class ArchivedDropItemType: Codable {
 				let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 				let correctUrl = docs.appendingPathComponent(keep) as NSURL
 				if encodedURL != correctUrl {
-					setBytes(object: correctUrl, type: classType)
+					setBytes(object: correctUrl as NSURL, type: classType)
 				}
 			}
 		}
@@ -136,7 +136,7 @@ final class ArchivedDropItemType: Codable {
 	private var allLoadedWell = true
 
 	private enum ClassType: String {
-		case string, attributedString, color, image, data, mapItem, url
+		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
 	}
 
 	private func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
@@ -144,7 +144,7 @@ final class ArchivedDropItemType: Codable {
 
 		let u = NSKeyedUnarchiver(forReadingWith: bytes)
 		let className = String(describing: type)
-		return u.decodeObject(of: [NSClassFromString(className)!], forKey: className) as? T
+		return u.decodeObject(forKey: className) as? T
 	}
 
 	var backgroundInfoObject: (Any?, Int) {
@@ -152,9 +152,9 @@ final class ArchivedDropItemType: Codable {
 
 		switch classType {
 
-		case .mapItem: return (decode(MKMapItem.self), 30)
+		case .MKMapItem: return (decode(MKMapItem.self), 30)
 
-		case .color: return (decode(UIColor.self), 10)
+		case .UIColor: return (decode(UIColor.self), 10)
 
 		default: return (nil, 0)
 		}
@@ -175,26 +175,30 @@ final class ArchivedDropItemType: Codable {
 
 				NSLog("requested type: \(requestedClassType), our type: \(classType.rawValue)")
 
-				let item: NSSecureCoding?
+				var item: NSSecureCoding?
 				switch classType {
-				case .string:
+				case .NSString:
 					item = self.decode(NSString.self)
-				case .attributedString:
+				case .NSAttributedString:
 					item = self.decode(NSAttributedString.self)
-				case .image:
+				case .UIImage:
 					item = self.decode(UIImage.self)
-				case .color:
+				case .UIColor:
 					item = self.decode(UIColor.self)
-				case .data:
-					item = self.decode(NSData.self)
-				case .mapItem:
+				case .NSData:
+					break
+				case .MKMapItem:
 					item = self.decode(MKMapItem.self)
-				case .url:
+				case .NSURL:
 					item = self.encodedUrl
 				}
 
-				let finalName = String(describing: item)
-				NSLog("Responding with \(finalName)")
+				if let item = item {
+					let finalName = String(describing: item)
+					NSLog("Responding with \(finalName)")
+				} else {
+					NSLog("Responding with NSData bytes")
+				}
 				completion(item ?? (bytes as NSData), nil)
 
 			} else {
@@ -218,30 +222,30 @@ final class ArchivedDropItemType: Codable {
 			NSLog("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .string)
+			setBytes(object: item, type: .NSString)
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
 			NSLog("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .attributedString)
+			setBytes(object: item, type: .NSAttributedString)
 			signalDone()
 
 		} else if let item = item as? UIColor {
 			NSLog("      received color: \(item)")
-			setBytes(object: item, type: .color)
+			setBytes(object: item, type: .UIColor)
 			signalDone()
 
 		} else if let item = item as? UIImage {
 			NSLog("      received image: \(item)")
 			setDisplayIcon(item, 15, .fill)
-			setBytes(object: item, type: .image)
+			setBytes(object: item, type: .UIImage)
 			signalDone()
 
 		} else if let item = item as? Data {
 			NSLog("      received data: \(item)")
-			classType = .data
+			classType = .NSData
 			bytes = item
 
 			if let image = UIImage(data: item) {
@@ -280,7 +284,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else if let item = item as? MKMapItem {
 			NSLog("      received map item: \(item)")
-			setBytes(object: item, type: .mapItem)
+			setBytes(object: item, type: .MKMapItem)
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
 			signalDone()
 
@@ -304,7 +308,7 @@ final class ArchivedDropItemType: Codable {
 			} else {
 				NSLog("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
-				setBytes(object: item, type: .url)
+				setBytes(object: item as NSURL, type: .NSURL)
 				fetchWebPreview(for: item) { [weak self] title, image in
 					self?.accessoryTitle = title ?? self?.accessoryTitle
 					if let image = image {
@@ -330,7 +334,7 @@ final class ArchivedDropItemType: Codable {
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
 			}
-			setBytes(object: localUrl, type: .url)
+			setBytes(object: localUrl as NSURL, type: .NSURL)
 			signalDone()
 
 		} else if let error = error {
@@ -507,7 +511,7 @@ final class ArchivedDropItemType: Codable {
 
 		if let url = encodedUrl {
 
-			if classType == .url {
+			if classType == .NSURL {
 				return (url, 10)
 			}
 

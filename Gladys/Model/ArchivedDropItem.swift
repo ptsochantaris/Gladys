@@ -58,8 +58,9 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
 			if let error = error {
 				NSLog("Error indexing item \(self.uuid): \(error)")
+			} else {
+				NSLog("Item indexed: \(self.uuid)")
 			}
-			NSLog("-------------------------")
 		})
 	}
 

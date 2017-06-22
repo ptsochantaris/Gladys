@@ -34,7 +34,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 
 	func save(completion: ((Bool)->Void)? = nil) {
 
-		let itemsToSave = drops.filter { !$0.isLoading }
+		let itemsToSave = drops.filter { !$0.isLoading && $0.allLoadedWell }
 
 		saveQueue.async {
 			NSLog("Saving")
@@ -57,10 +57,16 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	//////////////////
 
 	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+		for item in drops {
+			item.makeIndex()
+		}
 		acknowledgementHandler()
 	}
 
 	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+		for item in drops.filter({ identifiers.contains($0.uuid.uuidString) }) {
+			item.makeIndex()
+		}
 		acknowledgementHandler()
 	}
 
@@ -82,6 +88,5 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		}
 		return URL(string:"file://")!
 	}
-
 }
 

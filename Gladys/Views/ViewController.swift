@@ -70,12 +70,12 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: previousIndex.item)
-					collectionView.deleteItems(at: [previousIndex])
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
+					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
+					coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				}, completion: nil)
 
-				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				model.save()
 			}
 		}
@@ -90,6 +90,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+		NSLog("update")
 		if session.localDragSession == nil {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
@@ -97,11 +98,12 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		}
 	}
 
-	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
-		// TODO: possibe bug
-		if collectionView.numberOfItems(inSection: 0) != model.drops.count {
-			collectionView.endInteractiveMovement()
-		}
+	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
+		NSLog("Exit")
+	}
+
+	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
+		NSLog("Enter")
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -197,6 +199,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 			}
 			model.save() { success in
 				(sender as? ArchivedDropItem)?.makeIndex()
+				NSLog("-------------------------")
 			}
 		} else {
 			// TODO remove from data model and collection view
