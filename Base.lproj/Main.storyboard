@@ -122,7 +122,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.91022449731826782" green="0.89479202032089233" blue="0.86518722772598267" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -134,5 +133,5 @@
             <point key="canvasLocation" x="-53" y="137"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="0.47928744554519653" green="0.18450555205345154" blue="0.16901880502700806" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" red="0.47928744550000002" green="0.1845055521" blue="0.16901880499999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
