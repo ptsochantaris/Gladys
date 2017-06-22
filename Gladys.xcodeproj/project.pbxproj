@@ -65,10 +65,10 @@
 		1678F9D21EF475FF005697CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1678F9D71EF475FF005697CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1678F9DA1EF475FF005697CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Gladys/Info.plist; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Gladys.entitlements; sourceTree = "<group>"; };
+		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -146,13 +146,9 @@
 		1678F9CF1EF475FE005697CB /* Gladys */ = {
 			isa = PBXGroup;
 			children = (
-				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
-				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+				16E27BCC1EFC5F9D00FD0818 /* Support */,
 				16D2C7111EF5A6D3009B97F9 /* Views */,
 				16101E8F1EF5A23000CCBD3C /* Model */,
-				1678F9D71EF475FF005697CB /* Assets.xcassets */,
-				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
-				1678F9DC1EF475FF005697CB /* Info.plist */,
 			);
 			path = Gladys;
 			sourceTree = "<group>";
@@ -165,6 +161,19 @@
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		16E27BCC1EFC5F9D00FD0818 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
+				1678F9DC1EF475FF005697CB /* Info.plist */,
+				1678F9D71EF475FF005697CB /* Assets.xcassets */,
+				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
+				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+			);
+			name = Support;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {

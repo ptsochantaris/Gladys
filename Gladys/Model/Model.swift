@@ -43,6 +43,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 				let data = try JSONEncoder().encode(itemsToSave)
 				try data.write(to: Model.fileUrl, options: .atomic)
 				DispatchQueue.main.async {
+					NSLog("Saved")
 					completion?(true)
 				}
 			} catch {

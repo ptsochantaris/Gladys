@@ -73,9 +73,9 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
 					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
-					coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				}, completion: nil)
 
+				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				model.save()
 			}
 		}
@@ -90,7 +90,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		NSLog("update")
 		if session.localDragSession == nil {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
@@ -113,11 +112,11 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		archivedItemCollectionView.dataSource = self
-		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
+		archivedItemCollectionView.dataSource = self
+		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 
 		CSSearchableIndex.default().indexDelegate = model
