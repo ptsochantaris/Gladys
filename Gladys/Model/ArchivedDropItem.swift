@@ -107,9 +107,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 		let p = NSItemProvider()
 		p.suggestedName = suggestedName
-		for item in typeItems {
-			item.register(with: p)
-		}
+		typeItems.forEach { $0.register(with: p) }
 
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = self
@@ -195,12 +193,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	private var accessoryTitle: String? {
-		for i in typeItems {
-			if let t = i.accessoryTitle {
-				return t
-			}
-		}
-		return nil
+		return typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle
 	}
 
 	private lazy var folderUrl: URL = {
@@ -224,17 +217,11 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	func bytes(for type: String) -> Data? {
-		if let item = typeItems.first(where: { $0.typeIdentifier == type }) {
-			return item.bytes
-		}
-		return nil
+		return typeItems.first(where: { $0.typeIdentifier == type })?.bytes
 	}
 
 	func url(for type: String) -> NSURL? {
-		if let item = typeItems.first(where: { $0.typeIdentifier == type }) {
-			return item.encodedUrl
-		}
-		return nil
+		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
 	//////////////////////////

@@ -91,9 +91,9 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 		if session.localDragSession == nil {
-			return UICollectionViewDropProposal(dropOperation: .copy, intent: .insertAtDestinationIndexPath)
+			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
-			return UICollectionViewDropProposal(dropOperation: .move, intent: .insertAtDestinationIndexPath)
+			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 		}
 	}
 
@@ -133,9 +133,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	@IBAction func resetPressed(_ sender: UIBarButtonItem) {
 		sender.isEnabled = false
 		archivedItemCollectionView.performBatchUpdates({
-			for item in self.model.drops {
-				item.delete()
-			}
+			self.model.drops.forEach { $0.delete() }
 			self.model.drops.removeAll()
 			self.model.save()
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
