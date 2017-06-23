@@ -37,7 +37,6 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		let itemsToSave = drops.filter { !$0.isLoading && $0.allLoadedWell }
 
 		saveQueue.async {
-			NSLog("Saving")
 
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)

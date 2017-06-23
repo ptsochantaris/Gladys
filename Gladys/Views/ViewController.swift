@@ -36,17 +36,13 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		return cell
 	}
 
-	private func handleDrop(collectionView: UICollectionView, coordinator: UICollectionViewDropCoordinator) {
-
+	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
 			if coordinator.session.localDragSession == nil {
 
-				NSLog("insert drop")
-
 				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: self)
-
 				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
 
 				collectionView.performBatchUpdates({
@@ -59,14 +55,10 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 
 			} else {
 
-				NSLog("move drop")
-
 				guard
 					let destinationIndexPath = coordinator.destinationIndexPath,
 					let existingItem = dragItem.localObject as? ArchivedDropItem,
 					let previousIndex = coordinatorItem.sourceIndexPath else { return }
-
-				NSLog("looks good")
 
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: previousIndex.item)
@@ -81,10 +73,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		}
 	}
 
-	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-			handleDrop(collectionView: collectionView, coordinator: coordinator)
-	}
-
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
 	}
@@ -95,14 +83,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		} else {
 			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 		}
-	}
-
-	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
-		NSLog("Exit")
-	}
-
-	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-		NSLog("Enter")
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -190,18 +170,22 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
-		if success {
-			if let i = model.drops.index(where: { $0 === sender }) {
-				archivedItemCollectionView.performBatchUpdates({ [weak self] in
-					self?.archivedItemCollectionView.reloadItems(at: [IndexPath(item: i, section: 0)])
+
+		if let i = model.drops.index(where: { $0 === sender }) {
+			let ip = [IndexPath(item: i, section: 0)]
+
+			if success {
+				archivedItemCollectionView.reloadItems(at: ip)
+				model.save() { success in
+					(sender as? ArchivedDropItem)?.makeIndex()
+				}
+
+			} else {
+				archivedItemCollectionView.performBatchUpdates({
+					self.model.drops.remove(at: i)
+					self.archivedItemCollectionView.deleteItems(at: ip)
 				}, completion: nil)
 			}
-			model.save() { success in
-				(sender as? ArchivedDropItem)?.makeIndex()
-				NSLog("-------------------------")
-			}
-		} else {
-			// TODO remove from data model and collection view
 		}
 	}
 }
