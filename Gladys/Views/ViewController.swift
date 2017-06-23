@@ -227,11 +227,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	func highlightItem(with identifier: String) {
 		resetSearch()
+		archivedItemCollectionView.isUserInteractionEnabled = false
 		if let i = model.drops.index(where: { $0.uuid.uuidString == identifier }) {
 			let ip = IndexPath(item: i, section: 0)
-			archivedItemCollectionView.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: true)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-				// flash or zoom it
+			archivedItemCollectionView.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+				let cell = self.archivedItemCollectionView.cellForItem(at: ip) as! ArchivedItemCell
+				cell.flash()
+				self.archivedItemCollectionView.isUserInteractionEnabled = true
 			}
 		}
 	}

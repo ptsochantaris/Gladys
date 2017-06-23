@@ -280,5 +280,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 			existingMapView = nil
 		}
 	}
+
+	func flash() {
+		UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
+			self.backgroundColor = .red
+		}) { finished in
+			UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+				self.backgroundColor = .white
+			}) { finished in
+			}
+		}
+	}
 }
 
