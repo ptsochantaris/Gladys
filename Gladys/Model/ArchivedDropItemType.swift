@@ -19,6 +19,7 @@ final class ArchivedDropItemType: Codable {
 		case displayIconPriority
 		case displayIconContentMode
 		case displayIconScale
+		case hasLocalFiles
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -35,6 +36,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
 		try v.encode(displayIconScale, forKey: .displayIconScale)
+		try v.encode(hasLocalFiles, forKey: .hasLocalFiles)
 
 		let ipath = imagePath
 		if let displayIcon = displayIcon {
@@ -57,6 +59,7 @@ final class ArchivedDropItemType: Codable {
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
+		hasLocalFiles = try v.decode(Bool.self, forKey: .hasLocalFiles)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
@@ -125,22 +128,40 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	let typeIdentifier: String
+	var accessoryTitle: String?
 	private var classType: ClassType?
 	private let uuid: UUID
 	private let parentUuid: UUID
-	var accessoryTitle: String?
+	private var hasLocalFiles: Bool
+	private var allLoadedWell = true
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
 	private var loadCount = 0
-	private var allLoadedWell = true
 
 	private enum ClassType: String {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
 	}
 
+	private var objCType: AnyClass? {
+		guard let classType = classType else { return nil }
+		switch classType {
+		case .NSData: return NSData.self
+		case .NSString: return NSString.self
+		case .NSAttributedString: return NSAttributedString.self
+		case .UIColor: return UIColor.self
+		case .UIImage: return UIImage.self
+		case .MKMapItem: return MKMapItem.self
+		case .NSURL: return NSURL.self
+		}
+	}
+
 	private func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
 		guard let bytes = bytes else { return nil }
+
+		if type == NSData.self {
+			return bytes as? T
+		}
 
 		let u = NSKeyedUnarchiver(forReadingWith: bytes)
 		let className = String(describing: type)
@@ -160,49 +181,76 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
+		switch classType {
+		case .NSString:
+			return decode(NSString.self)
+		case .NSAttributedString:
+			return decode(NSAttributedString.self)
+		case .UIImage:
+			return decode(UIImage.self)
+		case .UIColor:
+			return decode(UIColor.self)
+		case .NSData:
+			return decode(NSData.self)
+		case .MKMapItem:
+			return decode(MKMapItem.self)
+		case .NSURL:
+			return encodedUrl
+		}
+	}
+
 	func register(with provider: NSItemProvider) {
-		provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
 
-			if let bytes = self.bytes, let classType = self.classType {
-
-				if requestedClassType != nil {
-					let requestedClassName = NSStringFromClass(requestedClassType)
-					if requestedClassName == "NSData" {
-						completion(bytes as NSData, nil)
-						return
-					}
-				}
-
-				NSLog("requested type: \(requestedClassType), our type: \(classType.rawValue)")
-
-				var item: NSSecureCoding?
-				switch classType {
-				case .NSString:
-					item = self.decode(NSString.self)
-				case .NSAttributedString:
-					item = self.decode(NSAttributedString.self)
-				case .UIImage:
-					item = self.decode(UIImage.self)
-				case .UIColor:
-					item = self.decode(UIColor.self)
-				case .NSData:
-					break
-				case .MKMapItem:
-					item = self.decode(MKMapItem.self)
-				case .NSURL:
-					item = self.encodedUrl
-				}
-
-				if let item = item {
-					let finalName = String(describing: item)
-					NSLog("Responding with \(finalName)")
+		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
+			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
+				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
+				if let decoded = decoded {
+					NSLog("Responding with object type: \(type(of: decoded))")
 				} else {
-					NSLog("Responding with NSData bytes")
+					NSLog("Responding with nil object")
 				}
-				completion(item ?? (bytes as NSData), nil)
+				completion(decoded, nil)
+				return nil
+			}
+		}
 
-			} else {
-				completion(nil, nil)
+		if hasLocalFiles {
+			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
+				let decoded = self.encodedUrl as URL?
+				NSLog("Responding with url: \(decoded?.absoluteString ?? "<nil>")")
+				completion(decoded, false, nil)
+				return nil
+			}
+
+		} else if let bytes = bytes {
+
+			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
+				NSLog("Responding with data block")
+				completion(bytes, nil)
+				return nil
+			}
+
+			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
+
+				let deliveredClassType: ClassType
+				if let requestedClassType = requestedClassType {
+					deliveredClassType = ClassType(rawValue: NSStringFromClass(requestedClassType)) ?? .NSData
+				} else if let classType = self.classType {
+					deliveredClassType = classType
+				} else {
+					deliveredClassType = .NSData
+				}
+
+				NSLog("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
+
+				if let item = self.decodedObject(for: deliveredClassType) {
+					NSLog("Responding with item \(item)")
+					completion(item, nil)
+				} else {
+					NSLog("Could not decode local data, responding with NSData item")
+					completion(bytes as NSData, nil)
+				}
 			}
 		}
 	}
@@ -355,6 +403,7 @@ final class ArchivedDropItemType: Codable {
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
 		displayIconScale = 1
+		hasLocalFiles = false
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let error = error {
@@ -470,6 +519,8 @@ final class ArchivedDropItemType: Codable {
 	}()
 
 	private func copyLocal(_ url: URL) -> URL {
+
+		hasLocalFiles = true
 
 		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
 		let f = FileManager.default
