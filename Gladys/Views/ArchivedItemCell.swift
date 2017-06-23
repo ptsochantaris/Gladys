@@ -178,13 +178,32 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	override func dragStateDidChange(_ dragState: UICollectionViewCellDragState) {
+		super.dragStateDidChange(dragState)
+		switch dragState {
+		case .dragging, .lifting:
+			backgroundView?.alpha = 0
+		case .none:
+			backgroundView?.alpha = 1
+		}
+	}
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = true
-		layer.cornerRadius = 10
 		image.clipsToBounds = true
 		image.layer.cornerRadius = 5
 		contentView.tintColor = .darkGray
+
+		let b = UIView()
+		b.backgroundColor = .lightGray
+		b.layer.cornerRadius = 10
+		backgroundView = b
+
+		let borderView = UIView()
+		borderView.backgroundColor = .white
+		borderView.layer.cornerRadius = 10
+		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
 	}
 
 	var archivedDropItem: ArchivedDropItem? {

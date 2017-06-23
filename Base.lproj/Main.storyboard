@@ -59,7 +59,6 @@
                                                 </label>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="0TK-62-FeR"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" priority="750" id="4l4-BC-JFB"/>
