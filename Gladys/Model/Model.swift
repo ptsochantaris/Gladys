@@ -56,18 +56,36 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 
 	//////////////////
 
-	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-		for item in drops {
-			item.makeIndex()
+	private func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
+
+		let group = DispatchGroup()
+		group.enter()
+
+		let bgQueue = DispatchQueue.global(qos: .background)
+		bgQueue.async {
+			let identifiers = items.map { $0.uuid.uuidString }
+			CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: identifiers) { error in
+				for item in items {
+					group.enter()
+					item.makeIndex { success in
+						group.leave() // re-index completion
+					}
+				}
+				group.leave() // delete completion
+			}
 		}
-		acknowledgementHandler()
+		group.notify(queue: bgQueue) {
+			completion()
+		}
+	}
+
+	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+		reIndex(items: drops, completion: acknowledgementHandler)
 	}
 
 	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-		for item in drops.filter({ identifiers.contains($0.uuid.uuidString) }) {
-			item.makeIndex()
-		}
-		acknowledgementHandler()
+		let items = drops.filter { identifiers.contains($0.uuid.uuidString) }
+		reIndex(items: items, completion: acknowledgementHandler)
 	}
 
 	func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {

@@ -41,7 +41,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 	// fulfill drag and drop promise from search drag!
 
-	func makeIndex() {
+	func makeIndex(completion: ((Bool)->Void)? = nil) {
 
 		guard let firstItem = typeItems.first else { return }
 
@@ -58,8 +58,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
 			if let error = error {
 				NSLog("Error indexing item \(self.uuid): \(error)")
+				completion?(false)
 			} else {
 				NSLog("Item indexed: \(self.uuid)")
+				completion?(true)
 			}
 		})
 	}
@@ -128,7 +130,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			}
 		}
 		if let item = item as? MKMapItem {
-			item.openInMaps(launchOptions: [ MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDefault ])
+			item.openInMaps(launchOptions: [:])
 		} else if let _ = item as? CNContact {
 			// TODO
 		} else if let item = item as? URL {

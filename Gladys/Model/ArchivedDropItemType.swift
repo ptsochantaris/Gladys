@@ -218,7 +218,7 @@ final class ArchivedDropItemType: Codable {
 		if hasLocalFiles {
 			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
 				let decoded = self.encodedUrl as URL?
-				NSLog("Responding with url: \(decoded?.absoluteString ?? "<nil>")")
+				NSLog("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
 				completion(decoded, false, nil)
 				return nil
 			}
