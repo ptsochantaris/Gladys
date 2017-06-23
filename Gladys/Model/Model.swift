@@ -30,8 +30,6 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		super.init()
 	}
 
-	
-
 	func save(completion: ((Bool)->Void)? = nil) {
 
 		let itemsToSave = drops.filter { !$0.isLoading && $0.allLoadedWell }
@@ -105,6 +103,37 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			return url as URL
 		}
 		return URL(string:"file://")!
+	}
+
+	///////////////////////
+
+	var isFiltering: Bool {
+		if let f = filter, !f.isEmpty {
+			return true
+		}
+		return false
+	}
+	var filter: String? {
+		didSet {
+			if let f = filter, !f.isEmpty {
+				// TODO: expand using Core Spotlight?
+				_cachedFilteredDrops = drops.filter {
+					$0.displayInfo.title?.localizedCaseInsensitiveContains(f) ?? false
+						||
+						$0.displayInfo.accessoryText?.localizedCaseInsensitiveContains(f) ?? false
+				}
+			} else {
+				_cachedFilteredDrops = nil
+			}
+		}
+	}
+	private var _cachedFilteredDrops: [ArchivedDropItem]?
+	var filteredDrops: [ArchivedDropItem] {
+		if let f = _cachedFilteredDrops {
+			return f
+		} else {
+			return drops
+		}
 	}
 }
 

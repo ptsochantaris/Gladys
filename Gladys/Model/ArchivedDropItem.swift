@@ -49,7 +49,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		attributes.title = displayTitle.0
 		attributes.contentDescription = accessoryTitle
 		attributes.thumbnailURL = firstItem.imagePath
-		attributes.keywords = ["Gladys"]
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
 		attributes.contentCreationDate = createdAt

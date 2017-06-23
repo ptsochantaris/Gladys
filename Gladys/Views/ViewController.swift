@@ -2,21 +2,26 @@
 import UIKit
 import CoreSpotlight
 
-final class ViewController: UIViewController, UICollectionViewDelegate, ArchivedItemCellDelegate, LoadCompletionDelegate,
-UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDropDelegate, UICollectionViewDragDelegate {
+final class ViewController: UIViewController, UICollectionViewDelegate,
+	ArchivedItemCellDelegate, LoadCompletionDelegate,
+	UISearchControllerDelegate, UISearchResultsUpdating,
+	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
+	UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
 
 	private let model = Model()
 
+	static var shared: ViewController!
+
 	/////////////////////////
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		return [model.drops[indexPath.item].dragItem]
+		return [model.filteredDrops[indexPath.item].dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let newItem = model.drops[indexPath.item].dragItem
+		let newItem = model.filteredDrops[indexPath.item].dragItem
 		if !session.items.contains(newItem) {
 			return [newItem]
 		} else {
@@ -25,12 +30,12 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return model.drops.count
+		return model.filteredDrops.count
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
-		cell.archivedDropItem = model.drops[indexPath.item]
+		cell.archivedDropItem = model.filteredDrops[indexPath.item]
 		cell.isEditing = isEditing
 		cell.delegate = self
 		return cell
@@ -48,7 +53,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: destinationIndexPath.item)
 					collectionView.insertItems(at: [destinationIndexPath])
-				}, completion: nil)
+				})
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				// save gets handled by the item loading correctly
@@ -65,7 +70,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
 					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
-				}, completion: nil)
+				})
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				model.save()
@@ -78,7 +83,9 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if session.localDragSession == nil {
+		if model.isFiltering {
+			return UICollectionViewDropProposal(operation: .forbidden)
+		} else if session.localDragSession == nil {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
 			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
@@ -86,12 +93,15 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let item = model.drops[indexPath.item]
+		let item = model.filteredDrops[indexPath.item]
 		item.tryOpen()
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		ViewController.shared = self
+
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
@@ -102,6 +112,11 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		CSSearchableIndex.default().indexDelegate = model
 
 		let searchController = UISearchController(searchResultsController: nil)
+		searchController.dimsBackgroundDuringPresentation = false
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.delegate = self
+		searchController.searchResultsUpdater = self
+		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 	}
 
@@ -152,7 +167,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 		if let lastSize = lastSize {
 			if lastSize == boundsSize { return }
 			archivedItemCollectionView.performBatchUpdates({
-			}, completion: nil)
+			})
 		}
 		lastSize = view.bounds.size
 	}
@@ -160,33 +175,74 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionView
 	/////////////////////////////////
 
 	func deleteRequested(for item: ArchivedDropItem) {
-		if let i = model.drops.index(where: { $0 === item }) {
+		if let i = model.filteredDrops.index(where: { $0 === item }) {
 			archivedItemCollectionView.performBatchUpdates({
-				self.model.drops.remove(at: i)
 				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
-			}, completion: nil)
+			})
+		}
+		if let i = model.drops.index(where: { $0 === item }) {
+			model.drops.remove(at: i)
 		}
 		model.save()
 	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
 
-		if let i = model.drops.index(where: { $0 === sender }) {
+		if let i = model.filteredDrops.index(where: { $0 === sender }) {
 			let ip = [IndexPath(item: i, section: 0)]
-
 			if success {
 				archivedItemCollectionView.reloadItems(at: ip)
+			} else {
+				archivedItemCollectionView.performBatchUpdates({
+					self.archivedItemCollectionView.deleteItems(at: ip)
+				})
+			}
+		}
+
+		if let i = model.drops.index(where: { $0 === sender }) {
+			if success {
 				model.save() { success in
 					(sender as? ArchivedDropItem)?.makeIndex()
 				}
-
 			} else {
-				archivedItemCollectionView.performBatchUpdates({
-					self.model.drops.remove(at: i)
-					self.archivedItemCollectionView.deleteItems(at: ip)
-				}, completion: nil)
+				model.drops.remove(at: i)
 			}
 		}
+	}
+
+	//////////////////////////
+
+	func startSearch(initialText: String) {
+		if let s = navigationItem.searchController {
+			s.searchBar.text = initialText
+			s.isActive = true
+		}
+	}
+
+	func resetSearch() {
+		model.filter = nil
+		navigationItem.searchController?.searchBar.text = nil
+		archivedItemCollectionView.reloadData()
+	}
+
+	func highlightItem(with identifier: String) {
+		resetSearch()
+		if let i = model.drops.index(where: { $0.uuid.uuidString == identifier }) {
+			let ip = IndexPath(item: i, section: 0)
+			archivedItemCollectionView.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: true)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				// flash or zoom it
+			}
+		}
+	}
+
+	func willDismissSearchController(_ searchController: UISearchController) {
+		resetSearch()
+	}
+
+	func updateSearchResults(for searchController: UISearchController) {
+		model.filter = searchController.searchBar.text
+		archivedItemCollectionView.reloadData()
 	}
 }
 
