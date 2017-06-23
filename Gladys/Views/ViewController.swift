@@ -118,6 +118,16 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
+
+		searchTimer = PopTimer(timeInterval: 0.3) { [weak self, weak searchController] in
+			self?.model.filter = searchController?.searchBar.text
+		}
+
+		NotificationCenter.default.addObserver(self, selector: #selector(searchUpdated), name: Notification.Name("SEARCH_UPDATE"), object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	@IBAction func editSelected(_ sender: UIBarButtonItem) {
@@ -220,9 +230,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func resetSearch() {
-		model.filter = nil
-		navigationItem.searchController?.searchBar.text = nil
-		archivedItemCollectionView.reloadData()
+		if model.filter != nil {
+			model.filter = nil
+			navigationItem.searchController?.searchBar.text = nil
+			archivedItemCollectionView.reloadData()
+		}
 	}
 
 	func highlightItem(with identifier: String) {
@@ -243,8 +255,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		resetSearch()
 	}
 
+	private var searchTimer: PopTimer!
+
 	func updateSearchResults(for searchController: UISearchController) {
-		model.filter = searchController.searchBar.text
+		searchTimer.push()
+	}
+
+	@objc func searchUpdated() {
 		archivedItemCollectionView.reloadData()
 	}
 }

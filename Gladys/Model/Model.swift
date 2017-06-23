@@ -115,18 +115,34 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	}
 	var filter: String? {
 		didSet {
+
+			guard filter != oldValue else {
+				return
+			}
+
+			_currentFilterQuery?.cancel()
+			_currentFilterQuery = nil
+
 			if let f = filter, !f.isEmpty {
-				// TODO: expand using Core Spotlight?
-				_cachedFilteredDrops = drops.filter {
-					$0.displayInfo.title?.localizedCaseInsensitiveContains(f) ?? false
-						||
-						$0.displayInfo.accessoryText?.localizedCaseInsensitiveContains(f) ?? false
+				_cachedFilteredDrops = []
+				let criterion = "\"*\(f)*\"cd"
+				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
+				q.foundItemsHandler = { items in
+					DispatchQueue.main.async {
+						let uuids = items.map { $0.uniqueIdentifier }
+						let items = self.drops.filter { uuids.contains($0.uuid.uuidString) }
+						self._cachedFilteredDrops?.append(contentsOf: items)
+						NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
+					}
 				}
+				q.start()
 			} else {
 				_cachedFilteredDrops = nil
 			}
+			NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
 		}
 	}
+	private var _currentFilterQuery: CSSearchQuery?
 	private var _cachedFilteredDrops: [ArchivedDropItem]?
 	var filteredDrops: [ArchivedDropItem] {
 		if let f = _cachedFilteredDrops {
