@@ -43,6 +43,7 @@ extension FileManager {
 extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
 	static let SearchResultsUpdated = Notification.Name("SearchResultsUpdated")
+	static let DeleteSelected = Notification.Name("DeleteSelected")
 }
 
 let diskSizeFormatter = ByteCountFormatter()

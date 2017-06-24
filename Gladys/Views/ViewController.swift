@@ -147,6 +147,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 	}
 
 	deinit {
@@ -214,6 +215,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	/////////////////////////////////
+
+	@objc private func deleteDetected(_ notification: Notification) {
+		if let item = notification.object as? ArchivedDropItem {
+			deleteRequested(for: item)
+		}
+	}
 
 	func deleteRequested(for item: ArchivedDropItem) {
 		if let i = model.filteredDrops.index(where: { $0 === item }) {

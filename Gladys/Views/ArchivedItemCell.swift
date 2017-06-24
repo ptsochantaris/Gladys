@@ -132,6 +132,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	weak var delegate: ArchivedItemCellDelegate?
 
 	private var deleteButton: UIButton?
+	private var editHolder: UIView?
 
 	@objc private func deleteSelected() {
 		if let archivedDropItem = archivedDropItem {
@@ -142,8 +143,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override func tintColorDidChange() {
 		deleteButton?.tintColor = tintColor
 	}
-
-	private var editHolder: UIView?
 
 	var isEditing: Bool = false {
 		didSet {

@@ -55,6 +55,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		}
 	}
 
+	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
+		dismiss(animated: true) {
+			NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
+		}
+	}
+
 	//////////////////////////////////
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
