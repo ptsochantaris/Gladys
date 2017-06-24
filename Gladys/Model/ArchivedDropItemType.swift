@@ -398,7 +398,7 @@ final class ArchivedDropItemType: Codable {
 
 			if item.scheme == "file" {
 				NSLog("      will duplicate item at local path: \(item.path)")
-				provider.loadInPlaceFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, wasLocal, error in
+				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
 					self?.handleLocalFetch(url: url, error: error)
 				}
 			} else {
@@ -431,13 +431,12 @@ final class ArchivedDropItemType: Codable {
 				setDisplayIcon(image, 10, .fill)
 			}
 			setBytes(object: localUrl as NSURL, type: .NSURL)
-			signalDone()
 
 		} else if let error = error {
-			NSLog("Error fetching local url file representation: \(error.localizedDescription)")
+			NSLog("Error fetching local data from url: \(error.localizedDescription)")
 			allLoadedWell = false
-			signalDone()
 		}
+		signalDone()
 	}
 
 	init(provider: NSItemProvider, typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
