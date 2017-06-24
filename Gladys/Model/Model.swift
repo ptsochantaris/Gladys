@@ -108,11 +108,9 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	///////////////////////
 
 	var isFiltering: Bool {
-		if let f = filter, !f.isEmpty {
-			return true
-		}
-		return false
+		return _currentFilterQuery != nil
 	}
+
 	var filter: String? {
 		didSet {
 
@@ -121,7 +119,6 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			}
 
 			_currentFilterQuery?.cancel()
-			_currentFilterQuery = nil
 
 			if let f = filter, !f.isEmpty {
 				_cachedFilteredDrops = []
@@ -135,11 +132,13 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 						NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
 					}
 				}
+				_currentFilterQuery = q
 				q.start()
 			} else {
 				_cachedFilteredDrops = nil
+				_currentFilterQuery = nil
+				NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
 			}
-			NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
 		}
 	}
 	private var _currentFilterQuery: CSSearchQuery?

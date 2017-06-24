@@ -82,10 +82,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return true
 	}
 
+	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
+		resetSearch()
+	}
+
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if model.isFiltering {
-			return UICollectionViewDropProposal(operation: .forbidden)
-		} else if session.localDragSession == nil {
+		if session.localDragSession == nil {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
 			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
@@ -229,11 +231,17 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	func resetSearch() {
-		if model.filter != nil {
+	private func resetSearch() {
+		if let s = navigationItem.searchController {
+			s.searchResultsUpdater = nil
+			s.delegate = nil
+
 			model.filter = nil
-			navigationItem.searchController?.searchBar.text = nil
-			archivedItemCollectionView.reloadData()
+			s.searchBar.text = nil
+			s.isActive = false
+
+			s.searchResultsUpdater = self
+			s.delegate = self
 		}
 	}
 
@@ -261,8 +269,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		searchTimer.push()
 	}
 
+	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		archivedItemCollectionView.reloadData()
+		archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 	}
 }
 
