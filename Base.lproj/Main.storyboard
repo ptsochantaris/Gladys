@@ -239,15 +239,15 @@
                         </constraints>
                     </view>
                     <toolbarItems>
-                        <barButtonItem systemItem="action" id="3fs-bH-AAg">
+                        <barButtonItem image="iconDeleteSmall" id="mOK-KI-1To">
                             <connections>
-                                <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
+                                <action selector="deleteSelected:" destination="Ftr-GB-y6U" id="xDc-PW-PZ5"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="pVl-Ou-R6C"/>
-                        <barButtonItem title="Open" id="qFs-2B-sKz">
+                        <barButtonItem systemItem="action" id="3fs-bH-AAg">
                             <connections>
-                                <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
+                                <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -257,9 +257,9 @@
                                 <action selector="doneSelected:" destination="Ftr-GB-y6U" id="Tfb-QU-WjI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="iconDeleteSmall" id="mOK-KI-1To">
+                        <barButtonItem key="rightBarButtonItem" title="Open" id="qFs-2B-sKz">
                             <connections>
-                                <action selector="deleteSelected:" destination="Ftr-GB-y6U" id="xDc-PW-PZ5"/>
+                                <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

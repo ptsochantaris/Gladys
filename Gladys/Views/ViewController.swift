@@ -208,8 +208,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let boundsSize = view.bounds.size
 		if let lastSize = lastSize {
 			if lastSize == boundsSize { return }
-			archivedItemCollectionView.performBatchUpdates({
-			})
+
+			if let n = presentedViewController, n.modalPresentationStyle == .popover {
+				n.dismiss(animated: false)
+			}
+
+			archivedItemCollectionView.performBatchUpdates({})
 		}
 		lastSize = view.bounds.size
 	}
