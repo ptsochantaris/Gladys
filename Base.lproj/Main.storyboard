@@ -94,20 +94,32 @@
                             <constraint firstItem="90w-Xn-bmO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="h3W-Sh-AaK"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Count" style="plain" id="TxA-gi-n3z">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="2Jn-s2-2WY"/>
+                        <barButtonItem title="Size" style="plain" id="1qG-Qk-AnU">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
-                        <barButtonItem key="leftBarButtonItem" title="Reset" id="mt1-yh-Q5a">
+                        <barButtonItem key="leftBarButtonItem" title="Reset" style="plain" id="mt1-yh-Q5a">
                             <connections>
                                 <action selector="resetPressed:" destination="BYZ-38-t0r" id="wfA-Aw-Rxb"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="whf-84-8vG">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" style="plain" id="whf-84-8vG">
                             <connections>
                                 <action selector="editSelected:" destination="BYZ-38-t0r" id="nOn-Ad-UBO"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="archivedItemCollectionView" destination="90w-Xn-bmO" id="f5y-Uh-ajj"/>
+                        <outlet property="countLabel" destination="TxA-gi-n3z" id="6JK-VO-0Ua"/>
+                        <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -239,7 +251,7 @@
                                     <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Open" id="qFs-2B-sKz">
+                            <barButtonItem title="Open" style="plain" id="qFs-2B-sKz">
                                 <connections>
                                     <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
                                 </connections>
@@ -263,13 +275,17 @@
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Xv4-HG-X2o">
+                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="KyV-g3-Rlk"/>
                     </connections>

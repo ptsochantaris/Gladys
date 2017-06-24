@@ -9,8 +9,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
-	//@IBOutlet weak var countLabel: UIBarButtonItem!
-	//@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
+	@IBOutlet weak var countLabel: UIBarButtonItem!
+	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 
 	private let model = Model()
 
@@ -154,13 +154,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func updateTotals() {
-		//countLabel.title = "\(model.drops.count) Items"
-		//totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+		countLabel.title = "\(model.drops.count) Items"
+		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 	}
 
 	@IBAction func editSelected(_ sender: UIBarButtonItem) {
 		isEditing = !isEditing
 		sender.title = isEditing ? "Done" : "Edit"
+		sender.style = isEditing ? .done : .plain
 		archivedItemCollectionView.reloadSections([0])
 		updateTotals()
 		navigationController?.setToolbarHidden(!isEditing, animated: true)
