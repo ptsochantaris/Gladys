@@ -44,10 +44,29 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+
+		var needSave = false
+
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
-			if coordinator.session.localDragSession == nil {
+			if let existingItem = dragItem.localObject as? ArchivedDropItem {
+
+				guard
+					let destinationIndexPath = coordinator.destinationIndexPath,
+					let previousIndex = coordinatorItem.sourceIndexPath else { return }
+
+				collectionView.performBatchUpdates({
+					self.model.drops.remove(at: previousIndex.item)
+					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
+					collectionView.deleteItems(at: [previousIndex])
+					collectionView.insertItems(at: [destinationIndexPath])
+				})
+
+				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				needSave = true
+
+			} else {
 
 				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: self)
 				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
@@ -59,24 +78,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 				// save gets handled by the item loading correctly
-
-			} else {
-
-				guard
-					let destinationIndexPath = coordinator.destinationIndexPath,
-					let existingItem = dragItem.localObject as? ArchivedDropItem,
-					let previousIndex = coordinatorItem.sourceIndexPath else { return }
-
-				collectionView.performBatchUpdates({
-					self.model.drops.remove(at: previousIndex.item)
-					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
-					collectionView.deleteItems(at: [previousIndex])
-					collectionView.insertItems(at: [destinationIndexPath])
-				})
-
-				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-				model.save()
 			}
+		}
+
+		if needSave{
+			model.save()
 		}
 	}
 
@@ -84,14 +90,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return true
 	}
 
+	private func someWillBeInserts(in session: UIDropSession) -> Bool {
+		for i in session.items {
+			if !(i.localObject is ArchivedDropItem) {
+				return true
+			}
+		}
+		return true
+	}
+
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-		if session.localDragSession == nil {
+		if someWillBeInserts(in: session) {
 			resetSearch()
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if session.localDragSession == nil {
+		if someWillBeInserts(in: session) {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
 			if model.isFiltering {
@@ -242,22 +257,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		if let i = model.filteredDrops.index(where: { $0 === sender }) {
 			let ip = [IndexPath(item: i, section: 0)]
-			if success {
-				archivedItemCollectionView.reloadItems(at: ip)
-			} else {
-				archivedItemCollectionView.performBatchUpdates({
-					self.archivedItemCollectionView.deleteItems(at: ip)
-				})
-			}
-		}
-
-		if let i = model.drops.index(where: { $0 === sender }) {
-			if success {
-				model.save() { success in
-					(sender as? ArchivedDropItem)?.makeIndex()
-				}
-			} else {
-				model.drops.remove(at: i)
+			archivedItemCollectionView.reloadItems(at: ip)
+			model.save() { success in
+				(sender as? ArchivedDropItem)?.makeIndex()
 			}
 		}
 	}

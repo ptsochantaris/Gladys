@@ -236,45 +236,19 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		if let archivedDropItem = archivedDropItem {
 
-			let info = archivedDropItem.displayInfo
-			image.image = info.image
-
-			switch info.imageContentMode {
-			case .center:
-				image.contentMode = .center
-				image.circle = false
-			case .fill:
-				image.contentMode = .scaleAspectFill
-				image.circle = false
-			case .fit:
-				image.contentMode = .scaleAspectFit
-				image.circle = false
-			case .circle:
-				image.contentMode = .scaleAspectFill
-				image.circle = true
-			}
-
-			if image.contentMode == .center {
-				label.numberOfLines = 9
-			} else {
-				label.numberOfLines = 2
-			}
-			label.textAlignment = info.titleAlignment
-			label.text = info.title
-
-			labelDistance.constant = label.text == nil ? 0 : 8
-
-			if let t = info.accessoryText {
-				accessoryLabel.text = t
-				accessoryLabelDistance.constant = 8
-			}
-
 			if archivedDropItem.isLoading {
 				image.isHidden = true
 				spinner.startAnimating()
 			} else {
-				image.isHidden = false
 				spinner.stopAnimating()
+
+				if !archivedDropItem.allLoadedWell {
+					image.isHidden = true
+					label.text = "Could not import this item"
+				} else {
+					image.isHidden = false
+					decorateLoadedItem(archivedDropItem)
+				}
 
 				// if we're showing an icon, let's try to enahnce things a bit
 				if image.contentMode == .center, let backgroundItem = archivedDropItem.backgroundInfoObject {
@@ -293,6 +267,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 					}
 				}
 			}
+
 		} else { // item is nil
 			label.text = nil
 			labelDistance.constant = 0
@@ -302,6 +277,42 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if !wantMapView, let e = existingMapView {
 			e.removeFromSuperview()
 			existingMapView = nil
+		}
+	}
+
+	private func decorateLoadedItem(_ item: ArchivedDropItem) {
+
+		let info = item.displayInfo
+		image.image = info.image
+
+		switch info.imageContentMode {
+		case .center:
+			image.contentMode = .center
+			image.circle = false
+		case .fill:
+			image.contentMode = .scaleAspectFill
+			image.circle = false
+		case .fit:
+			image.contentMode = .scaleAspectFit
+			image.circle = false
+		case .circle:
+			image.contentMode = .scaleAspectFill
+			image.circle = true
+		}
+
+		if image.contentMode == .center {
+			label.numberOfLines = 9
+		} else {
+			label.numberOfLines = 2
+		}
+		label.textAlignment = info.titleAlignment
+		label.text = info.title
+
+		labelDistance.constant = label.text == nil ? 0 : 8
+
+		if let t = info.accessoryText {
+			accessoryLabel.text = t
+			accessoryLabelDistance.constant = 8
 		}
 	}
 

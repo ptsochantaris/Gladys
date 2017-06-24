@@ -104,6 +104,10 @@ final class ArchivedDropItemType: Codable {
 		return folderUrl.appendingPathComponent("blob", isDirectory: false)
 	}
 
+	var dataExists: Bool {
+		return FileManager.default.fileExists(atPath: bytesPath.path)
+	}
+
 	var bytes: Data? {
 		set {
 			NSLog("setting bytes")
@@ -432,6 +436,7 @@ final class ArchivedDropItemType: Codable {
 		} else if let error = error {
 			NSLog("Error fetching local url file representation: \(error.localizedDescription)")
 			allLoadedWell = false
+			signalDone()
 		}
 	}
 
@@ -618,6 +623,21 @@ final class ArchivedDropItemType: Codable {
 		}
 
 		return (nil, 0)
+	}
+
+	var oneTitle: String? {
+		return accessoryTitle ?? displayTitle
+	}
+
+	var dragItem: UIDragItem {
+
+		let p = NSItemProvider()
+		p.suggestedName = oneTitle
+		register(with: p)
+
+		let i = UIDragItem(itemProvider: p)
+		i.localObject = ["local_object": self]
+		return i
 	}
 }
 

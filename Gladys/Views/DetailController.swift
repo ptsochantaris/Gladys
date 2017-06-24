@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -16,8 +16,10 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		super.viewDidLoad()
 		table.estimatedRowHeight = 120
 		table.rowHeight = UITableViewAutomaticDimension
+		table.dragInteractionEnabled = true
+		table.dragDelegate = self
 
-		titleLabel.text = item.displayInfo.accessoryText ?? item.displayInfo.title
+		titleLabel.text = item.oneTitle
 		openButton.isEnabled = item.canOpen
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt)
 		totalSizeLabel.text = diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
@@ -80,12 +82,24 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		let typeEntry = item.typeItems[indexPath.section]
 		if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 			cell.name.text = "\"\(title)\""
-		} else {
+		} else if typeEntry.dataExists {
 			cell.name.text = "<Binary Data>"
+		} else {
+			cell.name.text = "<Data Error>"
 		}
 		cell.type.text = typeEntry.contentDescription
 		cell.size.text = typeEntry.sizeDescription
 		return cell
+	}
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			self.dismiss(animated: true)
+		}
+
+		let typeItem = item.typeItems[indexPath.section]
+		return [typeItem.dragItem]
 	}
 
 }

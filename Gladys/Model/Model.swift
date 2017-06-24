@@ -32,7 +32,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 
 	func save(completion: ((Bool)->Void)? = nil) {
 
-		let itemsToSave = drops.filter { !$0.isLoading && $0.allLoadedWell }
+		let itemsToSave = drops.filter { !$0.isLoading }
 
 		saveQueue.async {
 

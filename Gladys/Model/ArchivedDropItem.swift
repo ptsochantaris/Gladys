@@ -116,6 +116,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return i
 	}
 
+	var oneTitle: String? {
+		return displayInfo.accessoryText ?? displayInfo.title
+	}
+
 	#if MAINAPP
 
 	var shareableComponents: [Any] {
