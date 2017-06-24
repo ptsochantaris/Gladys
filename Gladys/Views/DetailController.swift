@@ -93,11 +93,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-
-		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-			self.dismiss(animated: true)
-		}
-
 		let typeItem = item.typeItems[indexPath.section]
 		return [typeItem.dragItem]
 	}
