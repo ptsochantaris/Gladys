@@ -8,6 +8,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet weak var titleLabel: UILabel!
 	@IBOutlet weak var header: UIView!
+	@IBOutlet weak var openButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -15,6 +16,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.rowHeight = UITableViewAutomaticDimension
 
 		titleLabel.text = item.displayInfo.accessoryText ?? item.displayInfo.title
+		openButton.isEnabled = item.canOpen
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -37,6 +39,10 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
 		present(a, animated: true)
+	}
+
+	@IBAction func openSelected(_ sender: UIBarButtonItem) {
+		item.tryOpen()
 	}
 
 	//////////////////////////////////

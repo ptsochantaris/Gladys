@@ -6,6 +6,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -129,11 +130,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="KDa-Aj-nZK">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="78"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OnR-j9-A6x">
-                                            <rect key="frame" x="8" y="8" width="359" height="62"/>
+                                            <rect key="frame" x="8" y="8" width="359" height="18"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXL-nQ-tpx">
+                                            <rect key="frame" x="8" y="30" width="359" height="18"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -141,15 +148,18 @@
                                     </subviews>
                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="OnR-j9-A6x" secondAttribute="bottom" id="UYk-tT-E7j"/>
+                                        <constraint firstItem="TXL-nQ-tpx" firstAttribute="leading" secondItem="KDa-Aj-nZK" secondAttribute="leadingMargin" id="UOy-nL-sut"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="OnR-j9-A6x" secondAttribute="trailing" id="Wqn-aE-glR"/>
                                         <constraint firstItem="OnR-j9-A6x" firstAttribute="leading" secondItem="KDa-Aj-nZK" secondAttribute="leadingMargin" id="eG0-jM-QIX"/>
                                         <constraint firstItem="OnR-j9-A6x" firstAttribute="top" secondItem="KDa-Aj-nZK" secondAttribute="topMargin" id="eWk-qf-Adm"/>
+                                        <constraint firstItem="TXL-nQ-tpx" firstAttribute="top" secondItem="OnR-j9-A6x" secondAttribute="bottom" constant="4" id="ezC-Gp-IcK"/>
+                                        <constraint firstItem="TXL-nQ-tpx" firstAttribute="trailing" secondItem="KDa-Aj-nZK" secondAttribute="trailingMargin" id="imj-j7-qEU"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="TXL-nQ-tpx" secondAttribute="bottom" id="oyl-Uy-6b4"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" id="ucz-Df-3Uv" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="133.5" width="375" height="151"/>
+                                        <rect key="frame" x="0.0" y="129.5" width="375" height="151"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ucz-Df-3Uv" id="2po-Br-7Vd">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="150.5"/>
@@ -214,15 +224,23 @@
                                 <action selector="doneSelected:" destination="Ftr-GB-y6U" id="Tfb-QU-WjI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="3fs-bH-AAg">
-                            <connections>
-                                <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="3fs-bH-AAg">
+                                <connections>
+                                    <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Open" id="qFs-2B-sKz">
+                                <connections>
+                                    <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <connections>
                         <outlet property="header" destination="KDa-Aj-nZK" id="bvg-9f-r3l"/>
+                        <outlet property="openButton" destination="qFs-2B-sKz" id="BBT-G6-mGu"/>
                         <outlet property="table" destination="gOE-Fp-Sbs" id="TwQ-11-yVK"/>
                         <outlet property="titleLabel" destination="OnR-j9-A6x" id="kSM-UV-71H"/>
                     </connections>

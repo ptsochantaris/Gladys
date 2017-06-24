@@ -126,9 +126,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return items
 	}
 
-	func tryOpen() {
+	var canOpen: Bool {
 		var priority = -1
 		var item: Any?
+
 		for i in typeItems {
 			let (newItem, newPriority) = i.itemForShare
 			if let newItem = newItem, newPriority > priority {
@@ -136,6 +137,30 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 				priority = newPriority
 			}
 		}
+
+		if item is MKMapItem {
+			return true
+		} else if item is CNContact {
+			return false
+		} else if let item = item as? URL {
+			return UIApplication.shared.canOpenURL(item)
+		}
+
+		return false
+	}
+
+	func tryOpen() {
+		var priority = -1
+		var item: Any?
+
+		for i in typeItems {
+			let (newItem, newPriority) = i.itemForShare
+			if let newItem = newItem, newPriority > priority {
+				item = newItem
+				priority = newPriority
+			}
+		}
+
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
 		} else if let _ = item as? CNContact {
