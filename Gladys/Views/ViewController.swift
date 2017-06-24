@@ -202,12 +202,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	func deleteRequested(for item: ArchivedDropItem) {
 		if let i = model.filteredDrops.index(where: { $0 === item }) {
+			if let x = model.drops.index(where: { $0 === item }) {
+				model.drops.remove(at: x)
+			}
 			archivedItemCollectionView.performBatchUpdates({
 				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
 			})
-		}
-		if let i = model.drops.index(where: { $0 === item }) {
-			model.drops.remove(at: i)
 		}
 		model.save()
 	}

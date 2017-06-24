@@ -49,7 +49,11 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 		let typeEntry = item.typeItems[indexPath.section]
-		cell.name.text = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path ?? "<Binary Data>"
+		if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
+			cell.name.text = "\"\(title)\""
+		} else {
+			cell.name.text = "<Binary Data>"
+		}
 		cell.type.text = typeEntry.contentDescription
 		cell.size.text = typeEntry.sizeDescription
 		return cell

@@ -153,13 +153,8 @@ final class ArchivedDropItemType: Codable {
 		case .UIColor: return "Color"
 		case .UIImage: return "Image"
 		case .MKMapItem: return "Map Location"
-		case .NSURL:
-			if hasLocalFiles {
-				return hasLocalFiles ? "File(s)" : "Link"
-			}
+		case .NSURL: return hasLocalFiles ? "File(s)" : "Link"
 		}
-
-		return nil
 	}
 
 	private static let sizeFormatter = ByteCountFormatter()
@@ -336,7 +331,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else if let item = item as? UIImage {
 			NSLog("      received image: \(item)")
-			setDisplayIcon(item, 15, .fill)
+			setDisplayIcon(item, 50, .fill)
 			setBytes(object: item, type: .UIImage)
 			signalDone()
 
@@ -346,7 +341,7 @@ final class ArchivedDropItemType: Codable {
 			bytes = item
 
 			if let image = UIImage(data: item) {
-				setDisplayIcon(image, 10, .fill)
+				setDisplayIcon(image, 40, .fill)
 			}
 
 			if typeIdentifier == "public.vcard" {
