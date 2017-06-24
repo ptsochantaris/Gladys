@@ -157,34 +157,34 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private static let sizeFormatter = ByteCountFormatter()
+	var sizeInBytes: Int64 {
 
-	var sizeDescription: String? {
-
-		func sizeItem(path: URL) -> String? {
+		func sizeItem(path: URL) -> Int64 {
 			let fm = FileManager.default
 
 			var isDir: ObjCBool = false
 			if fm.fileExists(atPath: path.path, isDirectory: &isDir) {
 
 				if isDir.boolValue {
-					let size = fm.contentSizeOfDirectory(at: path)
-					return ArchivedDropItemType.sizeFormatter.string(fromByteCount: size)
+					return fm.contentSizeOfDirectory(at: path)
 				} else {
-					if let attrs = try? fm.attributesOfItem(atPath: path.path),
-						let size = attrs[FileAttributeKey.size] as? Int64 {
-						return ArchivedDropItemType.sizeFormatter.string(fromByteCount: size)
+					if let attrs = try? fm.attributesOfItem(atPath: path.path) {
+						return attrs[FileAttributeKey.size] as? Int64 ?? 0
 					}
 				}
 			}
-			return nil
+			return 0
 		}
 
 		if classType == .NSURL && hasLocalFiles, let localUrl = encodedUrl as URL? {
 			return sizeItem(path: localUrl)
 		}
-		
+
 		return sizeItem(path: bytesPath)
+	}
+
+	var sizeDescription: String? {
+		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
 	private var objCType: AnyClass? {

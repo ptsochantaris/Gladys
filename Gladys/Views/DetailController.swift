@@ -7,8 +7,10 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet weak var titleLabel: UILabel!
+	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var header: UIView!
 	@IBOutlet weak var openButton: UIBarButtonItem!
+	@IBOutlet weak var totalSizeLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -17,6 +19,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 		titleLabel.text = item.displayInfo.accessoryText ?? item.displayInfo.title
 		openButton.isEnabled = item.canOpen
+		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt)
+		totalSizeLabel.text = diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -42,7 +46,13 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {
-		item.tryOpen()
+		item.tryOpen { error in
+			if let error = error {
+				let a = UIAlertController(title: "Can't Open", message: error.localizedDescription, preferredStyle: .alert)
+				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+				self.present(a, animated: true)
+			}
+		}
 	}
 
 	//////////////////////////////////

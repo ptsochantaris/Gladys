@@ -39,3 +39,18 @@ extension FileManager {
 		return contentSize
 	}
 }
+
+extension Notification.Name {
+	static let SaveComplete = Notification.Name("SaveComplete")
+	static let SearchResultsUpdated = Notification.Name("SearchResultsUpdated")
+}
+
+let diskSizeFormatter = ByteCountFormatter()
+
+let dateFormatter: DateFormatter = {
+	let d = DateFormatter()
+	d.doesRelativeDateFormatting = true
+	d.dateStyle = .medium
+	d.timeStyle = .medium
+	return d
+}()

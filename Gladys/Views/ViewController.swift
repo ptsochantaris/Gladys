@@ -9,6 +9,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
+	//@IBOutlet weak var countLabel: UIBarButtonItem!
+	//@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 
 	private let model = Model()
 
@@ -140,17 +142,28 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			self?.model.filter = searchController?.searchBar.text
 		}
 
-		NotificationCenter.default.addObserver(self, selector: #selector(searchUpdated), name: Notification.Name("SEARCH_UPDATE"), object: nil)
+		navigationController?.setToolbarHidden(true, animated: false)
+
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
+		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
 	}
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	@objc private func updateTotals() {
+		//countLabel.title = "\(model.drops.count) Items"
+		//totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+	}
+
 	@IBAction func editSelected(_ sender: UIBarButtonItem) {
 		isEditing = !isEditing
 		sender.title = isEditing ? "Done" : "Edit"
 		archivedItemCollectionView.reloadSections([0])
+		updateTotals()
+		navigationController?.setToolbarHidden(!isEditing, animated: true)
 	}
 
 	@IBAction func resetPressed(_ sender: UIBarButtonItem) {

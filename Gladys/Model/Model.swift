@@ -42,11 +42,14 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 				DispatchQueue.main.async {
 					NSLog("Saved")
 					completion?(true)
+					NotificationCenter.default.post(name: .SaveComplete, object: nil)
 				}
 			} catch {
 				NSLog("Saving Error: \(error.localizedDescription)")
-				DispatchQueue.main.async {
-					completion?(true)
+				if let completion = completion {
+					DispatchQueue.main.async {
+						completion(false)
+					}
 				}
 			}
 		}
@@ -105,6 +108,10 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		return URL(string:"file://")!
 	}
 
+	var sizeInBytes: Int64 {
+		return drops.reduce(0, { $0 + $1.sizeInBytes })
+	}
+
 	///////////////////////
 
 	var isFiltering: Bool {
@@ -129,7 +136,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 						let uuids = items.map { $0.uniqueIdentifier }
 						let items = self.drops.filter { uuids.contains($0.uuid.uuidString) }
 						self._cachedFilteredDrops?.append(contentsOf: items)
-						NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
+						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 					}
 				}
 				_currentFilterQuery = q
@@ -137,7 +144,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			} else {
 				_cachedFilteredDrops = nil
 				_currentFilterQuery = nil
-				NotificationCenter.default.post(name: Notification.Name("SEARCH_UPDATE"), object: nil)
+				NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 			}
 		}
 	}

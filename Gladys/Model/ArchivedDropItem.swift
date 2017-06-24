@@ -9,7 +9,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	let uuid: UUID
 	var typeItems: [ArchivedDropItemType]!
 	private let suggestedName: String?
-	private let createdAt:  Date
+	let createdAt:  Date
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -149,7 +149,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return false
 	}
 
-	func tryOpen() {
+	func tryOpen(completion: @escaping (Error?)->Void) {
 		var priority = -1
 		var item: Any?
 
@@ -167,22 +167,26 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			// TODO
 		} else if let item = item as? URL {
 			UIApplication.shared.open(item, options: [:]) { success in
-				if !success {
+				if success {
+					completion(nil)
+				} else {
 					let message: String
 					if item.scheme == "file" {
 						message = "iOS does not recognise the type of this file"
 					} else {
 						message = "iOS does not recognise the type of this link"
 					}
-					let a = UIAlertController(title: "Can't Open", message: message, preferredStyle: .alert)
-					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-					UIApplication.shared.windows.first!.rootViewController!.present(a, animated: true)
+					completion(NSError(domain: "build.bru.app", code: 1, userInfo: [ NSLocalizedDescriptionKey: message ]))
 				}
 			}
 		}
 	}
 
 	#endif
+
+	var sizeInBytes: Int64 {
+		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
+	}
 
 	private var displayIcon: (UIImage?, ArchivedDropItemDisplayType) {
 		var priority = -1
