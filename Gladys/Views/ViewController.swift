@@ -105,9 +105,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let d = n.topViewController as! DetailController
 		d.item = model.filteredDrops[indexPath.item]
 		n.modalPresentationStyle = .popover
-		present(n, animated: true)
+		navigationController?.visibleViewController?.present(n, animated: true)
 		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
 			p.permittedArrowDirections = [.any]
+			p.backgroundColor = .groupTableViewBackground
 			p.sourceView = cell
 			p.sourceRect = cell.bounds
 		}

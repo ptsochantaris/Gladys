@@ -3,19 +3,26 @@ import UIKit
 
 final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-	var item: ArchivedDropItem! {
-		didSet {
-			title = item.displayInfo.accessoryText ?? item.displayInfo.title
-		}
-	}
+	var item: ArchivedDropItem!
 
 	@IBOutlet weak var table: UITableView!
-	@IBOutlet weak var doneButton: UIBarButtonItem!
+	@IBOutlet weak var titleLabel: UILabel!
+	@IBOutlet weak var header: UIView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		table.estimatedRowHeight = 120
 		table.rowHeight = UITableViewAutomaticDimension
+
+		titleLabel.text = item.displayInfo.accessoryText ?? item.displayInfo.title
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		let newSize = header.systemLayoutSizeFitting(CGSize(width: view.bounds.size.width, height: 0),
+		                                             withHorizontalFittingPriority: .required,
+		                                             verticalFittingPriority: .fittingSizeLevel)
+		header.frame = CGRect(origin: .zero, size: newSize)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
