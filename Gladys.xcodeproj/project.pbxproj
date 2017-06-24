@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16062E091EFE647800AB5353 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E081EFE647800AB5353 /* DetailController.swift */; };
+		16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E0B1EFE705800AB5353 /* DetailCell.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
@@ -54,6 +56,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		16062E081EFE647800AB5353 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
+		16062E0B1EFE705800AB5353 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +163,8 @@
 				1678F9D01EF475FE005697CB /* AppDelegate.swift */,
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
+				16062E081EFE647800AB5353 /* DetailController.swift */,
+				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -406,6 +412,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
@@ -413,6 +420,7 @@
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
+				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,8 +7,8 @@ import CoreSpotlight
 final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 	let uuid: UUID
+	var typeItems: [ArchivedDropItemType]!
 	private let suggestedName: String?
-	private var typeItems: [ArchivedDropItemType]!
 	private let createdAt:  Date
 
 	private enum CodingKeys : String, CodingKey {
@@ -117,6 +117,14 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	#if MAINAPP
+
+	var shareableComponents: [Any] {
+		var items = typeItems.flatMap { $0.itemForShare.0 }
+		if let a = accessoryTitle {
+			items.append(a)
+		}
+		return items
+	}
 
 	func tryOpen() {
 		var priority = -1

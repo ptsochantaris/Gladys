@@ -83,20 +83,34 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-		resetSearch()
+		if session.localDragSession == nil {
+			resetSearch()
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 		if session.localDragSession == nil {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
-			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			if model.isFiltering {
+				return UICollectionViewDropProposal(operation: .forbidden)
+			} else {
+				return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			}
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let item = model.filteredDrops[indexPath.item]
-		item.tryOpen()
+		let n = storyboard?.instantiateViewController(withIdentifier: "DetailController") as! UINavigationController
+		let d = n.topViewController as! DetailController
+		d.item = model.filteredDrops[indexPath.item]
+		n.modalPresentationStyle = .popover
+		present(n, animated: true)
+		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
+			p.permittedArrowDirections = [.any]
+			p.sourceView = cell
+			p.sourceRect = cell.bounds
+		}
 	}
 
 	override func viewDidLoad() {

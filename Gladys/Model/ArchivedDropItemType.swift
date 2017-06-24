@@ -143,6 +143,55 @@ final class ArchivedDropItemType: Codable {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
 	}
 
+	var contentDescription: String? {
+		guard let classType = classType else { return nil }
+
+		switch classType {
+		case .NSData: return "Raw Data"
+		case .NSString: return "Text"
+		case .NSAttributedString: return "Rich Text"
+		case .UIColor: return "Color"
+		case .UIImage: return "Image"
+		case .MKMapItem: return "Map Location"
+		case .NSURL:
+			if hasLocalFiles {
+				return hasLocalFiles ? "File(s)" : "Link"
+			}
+		}
+
+		return nil
+	}
+
+	private static let sizeFormatter = ByteCountFormatter()
+
+	var sizeDescription: String? {
+
+		func sizeItem(path: URL) -> String? {
+			let fm = FileManager.default
+
+			var isDir: ObjCBool = false
+			if fm.fileExists(atPath: path.path, isDirectory: &isDir) {
+
+				if isDir.boolValue {
+					let size = fm.contentSizeOfDirectory(at: path)
+					return ArchivedDropItemType.sizeFormatter.string(fromByteCount: size)
+				} else {
+					if let attrs = try? fm.attributesOfItem(atPath: path.path),
+						let size = attrs[FileAttributeKey.size] as? Int64 {
+						return ArchivedDropItemType.sizeFormatter.string(fromByteCount: size)
+					}
+				}
+			}
+			return nil
+		}
+
+		if classType == .NSURL && hasLocalFiles, let localUrl = encodedUrl as URL? {
+			return sizeItem(path: localUrl)
+		}
+		
+		return sizeItem(path: bytesPath)
+	}
+
 	private var objCType: AnyClass? {
 		guard let classType = classType else { return nil }
 		switch classType {
@@ -570,7 +619,7 @@ final class ArchivedDropItemType: Codable {
 				return (url, 5)
 			}
 
-			return (url, 1)
+			return (url, 3)
 		}
 
 		return (nil, 0)
