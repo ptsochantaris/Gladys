@@ -104,12 +104,12 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
-                        <barButtonItem key="leftBarButtonItem" title="Reset" style="plain" id="mt1-yh-Q5a">
+                        <barButtonItem key="leftBarButtonItem" title="Reset" id="mt1-yh-Q5a">
                             <connections>
                                 <action selector="resetPressed:" destination="BYZ-38-t0r" id="wfA-Aw-Rxb"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" style="plain" id="whf-84-8vG">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="whf-84-8vG">
                             <connections>
                                 <action selector="editSelected:" destination="BYZ-38-t0r" id="nOn-Ad-UBO"/>
                             </connections>
@@ -124,7 +124,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="805.60000000000002" y="135.38230884557723"/>
+            <point key="canvasLocation" x="729" y="136"/>
         </scene>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
@@ -251,7 +251,7 @@
                                     <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Open" style="plain" id="qFs-2B-sKz">
+                            <barButtonItem title="Open" id="qFs-2B-sKz">
                                 <connections>
                                     <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
                                 </connections>
@@ -270,7 +270,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A9F-i9-UXY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2402" y="134"/>
+            <point key="canvasLocation" x="2454" y="136"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">
@@ -310,7 +310,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j6H-Im-qtY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1680" y="134.93253373313345"/>
+            <point key="canvasLocation" x="1670" y="136"/>
         </scene>
     </scenes>
     <color key="tintColor" red="0.47928744550000002" green="0.1845055521" blue="0.16901880499999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

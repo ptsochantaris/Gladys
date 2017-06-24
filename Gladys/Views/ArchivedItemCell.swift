@@ -131,15 +131,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	weak var delegate: ArchivedItemCellDelegate?
 
-	private lazy var deleteButton: UIButton = {
-		let b = UIButton(frame: .zero)
-		b.translatesAutoresizingMaskIntoConstraints = false
-		b.tintColor = .white
-		b.setImage(#imageLiteral(resourceName: "iconDelete"), for: .normal)
-		b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-		b.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
-		return b
-	}()
+	private var deleteButton: UIButton?
 
 	@objc private func deleteSelected() {
 		if let archivedDropItem = archivedDropItem {
@@ -147,33 +139,47 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	override func tintColorDidChange() {
+		deleteButton?.tintColor = tintColor
+	}
+
+	private var editHolder: UIView?
+
 	var isEditing: Bool = false {
 		didSet {
-			if isEditing && deleteButton.superview == nil {
+			if isEditing && editHolder == nil {
+
+				let button = UIButton(frame: .zero)
+				button.translatesAutoresizingMaskIntoConstraints = false
+				button.tintColor = self.tintColor
+				button.setImage(#imageLiteral(resourceName: "iconDelete"), for: .normal)
+				button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+				button.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
-				holder.backgroundColor = .red
+				holder.backgroundColor = .white
+				holder.layer.cornerRadius = 10
 				addSubview(holder)
 
 				holder.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-
 				holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-
-				holder.layer.cornerRadius = 5
-				holder.clipsToBounds = true
 
 				holder.widthAnchor.constraint(equalToConstant: 50).isActive = true
 				holder.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
-				holder.addSubview(deleteButton)
-				deleteButton.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
-				deleteButton.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
-				holder.cover(with: deleteButton)
+				holder.addSubview(button)
+				button.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
+				button.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
+				holder.cover(with: button)
 
-			} else if !isEditing && deleteButton.superview != nil {
-				deleteButton.superview?.removeFromSuperview()
-				deleteButton.removeFromSuperview()
+				deleteButton = button
+				editHolder = holder
+
+			} else if !isEditing, let h = editHolder {
+				h.removeFromSuperview()
+				editHolder = nil
+				deleteButton = nil
 			}
 		}
 	}
