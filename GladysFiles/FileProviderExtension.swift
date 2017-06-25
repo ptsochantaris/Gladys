@@ -9,17 +9,13 @@ final class FileProviderExtension: NSFileProviderExtension {
 
     static func getItem(for identifier: NSFileProviderItemIdentifier) -> FileProviderItem? {
 
-		if identifier == NSFileProviderItemIdentifier.rootContainer {
-			return FileProviderItem()
-		} else {
-			for item in FileProviderExtension.model.drops {
-				if item.uuid.uuidString == identifier.rawValue {
-					return FileProviderItem(item)
-				}
-				for typeItem in item.typeItems {
-					if typeItem.uuid.uuidString == identifier.rawValue {
-						return FileProviderItem(typeItem)
-					}
+		for item in FileProviderExtension.model.drops {
+			if item.uuid.uuidString == identifier.rawValue {
+				return FileProviderItem(item)
+			}
+			for typeItem in item.typeItems {
+				if typeItem.uuid.uuidString == identifier.rawValue {
+					return FileProviderItem(typeItem)
 				}
 			}
 		}
@@ -91,18 +87,15 @@ final class FileProviderExtension: NSFileProviderExtension {
     // MARK: - Enumeration
     
     override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-        var maybeEnumerator: NSFileProviderEnumerator? = nil
+        let enumerator: NSFileProviderEnumerator
         if containerItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
-			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
+			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
         } else if containerItemIdentifier == NSFileProviderItemIdentifier.workingSet {
-			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
+			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
         } else if containerItemIdentifier == NSFileProviderItemIdentifier.allDirectories {
-			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
+			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
         } else {
-			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
-        }
-        guard let enumerator = maybeEnumerator else {
-            throw NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:])
+			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
         }
         return enumerator
     }

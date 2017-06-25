@@ -14,7 +14,12 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			currentAnchor = "0"
 		}
         super.init()
+		NSLog("Enumerator for \(uuid) created")
     }
+
+	var uuid: String {
+		return relatedItem?.item?.uuid.uuidString ?? relatedItem?.typeItem?.uuid.uuidString ?? "root"
+	}
 
     func invalidate() {
     }
@@ -28,17 +33,21 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		if let fileItem = relatedItem?.typeItem {
 			items = [FileProviderItem(fileItem)]
 		} else if let dirItem = relatedItem?.item {
-			if sortByDate {
-				items = dirItem.typeItems.sorted(by: { $0.createdAt < $1.createdAt }).map { FileProviderItem($0) }
-			} else {
-				items = dirItem.typeItems.sorted(by: { $0.oneTitle < $1.oneTitle }).map { FileProviderItem($0) }
-			}
+			items = getItems(for: dirItem)
 		} else { // root or all dirs (same thing for us)
 			items = rootItems
 		}
 		observer.didEnumerate(items)
-		observer.finishEnumerating(upToPage: page)
+		observer.finishEnumerating(upToPage: nil)
     }
+
+	private func getItems(for dirItem: ArchivedDropItem) -> [FileProviderItem] {
+		if sortByDate {
+			return dirItem.typeItems.sorted(by: { $0.createdAt < $1.createdAt }).map { FileProviderItem($0) }
+		} else {
+			return dirItem.typeItems.sorted(by: { $0.oneTitle < $1.oneTitle }).map { FileProviderItem($0) }
+		}
+	}
 
 	private var rootItems: [FileProviderItem] {
 		if sortByDate {
@@ -54,9 +63,19 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	func currentSyncAnchor(completionHandler: @escaping (Data?) -> Void) {
 		completionHandler(currentAnchor?.data(using: .utf8))
 	}
+
+	deinit {
+		NSLog("Enumerator for \(uuid) shut down")
+	}
     
     func enumerateChanges(for observer: NSFileProviderChangeObserver, fromSyncAnchor anchor: Data) {
-		if enumeratedItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
+		if relatedItem?.typeItem != nil {
+			NSLog("Changes requested for enumerator of end-file")
+
+		} else if relatedItem?.item != nil {
+			NSLog("Changes requested for enumerator of directory")
+
+		} else {
 
 			let oldItemIds = rootItems.map { $0.itemIdentifier }
 			FileProviderExtension.model.reloadData()
@@ -68,10 +87,6 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 			let deletedItemIds = oldItemIds.filter({ !newItemIds.contains($0) })
 			observer.didDeleteItems(withIdentifiers: deletedItemIds)
-		} else if relatedItem?.typeItem != nil {
-			NSLog("Changes requested for enumerator of end-file")
-		} else if relatedItem?.item != nil {
-			NSLog("Changes requested for enumerator of directory")
 		}
 
 		let oldAnchorString = String(data: anchor, encoding: .utf8) ?? "0"

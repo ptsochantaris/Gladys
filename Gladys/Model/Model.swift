@@ -39,7 +39,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 					}
 					dataFileLastModified = dataModified
 				}
-				let data = try Data(contentsOf: url)
+				let data = try Data(contentsOf: url, options: [.alwaysMapped])
 				NSLog("Loaded data")
 				return try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 

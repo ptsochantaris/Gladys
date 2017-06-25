@@ -94,7 +94,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		} else if let typeItem = typeItem {
 			return typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
 		} else {
-			assert(false, "wat")
+			return "<no name>"
 		}
     }
     

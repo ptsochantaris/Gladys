@@ -16,32 +16,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GladysFiles/FileProviderEnumerator.swift"
-            timestampString = "520099847.373869"
+            timestampString = "520106501.776529"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "enumerateChanges(for:fromSyncAnchor:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GladysFiles/FileProviderEnumerator.swift"
-            timestampString = "520099847.37393"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "enumerateChanges(for:fromSyncAnchor:)"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "enumerateItems(for:startingAtPage:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

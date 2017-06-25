@@ -77,13 +77,11 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
 		}
-		/* TODO: see why this isn't coming through
 		NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
 			if let e = error {
 				NSLog("Error signalling deletion of item: \(e.localizedDescription)")
 			}
 		}
-		*/
 	}
 
 	var displayInfo: ArchivedDropDisplayInfo {

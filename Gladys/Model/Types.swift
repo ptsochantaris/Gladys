@@ -63,7 +63,7 @@ extension UIImage {
 		let widthRatio  = targetSize.width  / mySize.width
 		let heightRatio = targetSize.height / mySize.height
 
-		let ratio = max(widthRatio, heightRatio)
+		let ratio = min(20, max(widthRatio, heightRatio))
 		let newSize = CGSize(width: mySize.width * ratio, height: mySize.height * ratio)
 
 		let offset = CGPoint(x: (targetSize.width - newSize.width) * 0.5,
