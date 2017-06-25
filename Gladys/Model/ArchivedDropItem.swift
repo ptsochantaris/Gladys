@@ -247,7 +247,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	private lazy var folderUrl: URL = {
-		return Model.storageRoot.appendingPathComponent(self.uuid.uuidString)
+		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.uuid.uuidString)
 	}()
 
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {

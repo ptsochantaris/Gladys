@@ -48,9 +48,9 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var imagePath: URL {
-		return folderUrl.appendingPathComponent("thumbnail.png")
-	}
+	lazy var imagePath: URL = {
+		return self.folderUrl.appendingPathComponent("thumbnail.png")
+	}()
 
 	init(from decoder: Decoder) throws {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
@@ -85,9 +85,9 @@ final class ArchivedDropItemType: Codable {
 		return decode(NSURL.self)
 	}
 
-	var bytesPath: URL {
-		return folderUrl.appendingPathComponent("blob", isDirectory: false)
-	}
+	lazy var bytesPath: URL = {
+		return self.folderUrl.appendingPathComponent("blob", isDirectory: false)
+	}()
 
 	var dataExists: Bool {
 		return FileManager.default.fileExists(atPath: bytesPath.path)
@@ -499,7 +499,7 @@ final class ArchivedDropItemType: Codable {
 					let text = String(data: data, encoding: .utf8),
 					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
 
-					let title = htmlDoc.title
+					let title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
 					if let title = title {
 						NSLog("Title located at URL: \(title)")
 					} else {
@@ -544,8 +544,8 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	lazy var folderUrl: URL = {
+		let url = NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
 		let f = FileManager.default
-		let url = Model.storageRoot.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
 		if !f.fileExists(atPath: url.path) {
 			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		}

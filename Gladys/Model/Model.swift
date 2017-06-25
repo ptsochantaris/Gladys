@@ -1,6 +1,7 @@
 
 import Foundation
 import CoreSpotlight
+import FileProvider
 
 #if MAINAPP
 import FileProvider
@@ -12,14 +13,9 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
-	static var storageRoot: URL {
-		let docs = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!
-		return docs.appendingPathComponent("File Provider Storage", isDirectory: true)
-	}
-
-	static var fileUrl: URL {
-		return storageRoot.appendingPathComponent("items.json")
-	}
+	static var fileUrl: URL = {
+		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent("items.json")
+	}()
 
 	override init() {
 		drops = Model.loadData() ?? [ArchivedDropItem]()

@@ -7,8 +7,7 @@ final class FileProviderExtension: NSFileProviderExtension {
     private var fileManager = FileManager()
 	static let model = Model()
 
-    static func getItem(for identifier: NSFileProviderItemIdentifier) -> FileProviderItem? {
-
+	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 		for item in FileProviderExtension.model.drops {
 			if item.uuid.uuidString == identifier.rawValue {
 				return FileProviderItem(item)
@@ -20,11 +19,11 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 		}
 
-		return nil
-    }
-    
+		throw NSError(domain: "build.bru.error", code: 2, userInfo: [ NSLocalizedDescriptionKey: "Could not find item with identifier \(identifier.rawValue)" ])
+	}
+
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
-        guard let fpi = FileProviderExtension.getItem(for: identifier) else {
+        guard let fpi = (try? item(for: identifier)) as? FileProviderItem else {
             return nil
         }
 
@@ -34,20 +33,18 @@ final class FileProviderExtension: NSFileProviderExtension {
 		} else if let fileItem = fpi.typeItem {
 			root.appendPathComponent(fileItem.parentUuid.uuidString, isDirectory: true)
 			root.appendPathComponent(fileItem.uuid.uuidString, isDirectory: true)
-			root.appendPathComponent("blob", isDirectory: false)
 		}
         return root
     }
     
 	override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
-		if url.lastPathComponent == "blob" {
-			if let c = url.pathComponents.dropLast().last {
-				return NSFileProviderItemIdentifier(c)
-			}
-		} else if let c = url.pathComponents.last {
-			return NSFileProviderItemIdentifier(c)
+		let uuidString = url.lastPathComponent
+		let identifier = NSFileProviderItemIdentifier(uuidString)
+		if (try? item(for: identifier)) != nil {
+			return identifier
+		} else {
+			return NSFileProviderItemIdentifier.rootContainer
 		}
-		return NSFileProviderItemIdentifier.rootContainer
 	}
     
     override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {
@@ -65,7 +62,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		DispatchQueue.global(qos: .background).async {
 			for itemID in itemIdentifiers {
 				autoreleasepool {
-					if let fpi = FileProviderExtension.getItem(for: itemID) {
+					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
 						if let dir = fpi.item, let img = dir.displayInfo.image {
 							let scaledImage = img.limited(to: size)
 							let data = UIImagePNGRepresentation(scaledImage)
@@ -87,17 +84,8 @@ final class FileProviderExtension: NSFileProviderExtension {
     // MARK: - Enumeration
     
     override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-        let enumerator: NSFileProviderEnumerator
-        if containerItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
-			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
-        } else if containerItemIdentifier == NSFileProviderItemIdentifier.workingSet {
-			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
-        } else if containerItemIdentifier == NSFileProviderItemIdentifier.allDirectories {
-			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
-        } else {
-			enumerator = FileProviderEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
-        }
-        return enumerator
+		let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
+        return FileProviderEnumerator(relatedItem: i)
     }
     
 }

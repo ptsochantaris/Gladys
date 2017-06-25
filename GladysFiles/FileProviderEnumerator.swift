@@ -2,29 +2,40 @@
 import FileProvider
 
 final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
-    
-    var enumeratedItemIdentifier: NSFileProviderItemIdentifier
+
 	private let relatedItem: FileProviderItem?
-    
-    init(enumeratedItemIdentifier: NSFileProviderItemIdentifier) {
-        self.enumeratedItemIdentifier = enumeratedItemIdentifier
-		relatedItem = FileProviderExtension.getItem(for: enumeratedItemIdentifier)
 
-		if enumeratedItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
-			currentAnchor = "0"
+	private let uuid: String
+
+	private var sortByDate = false
+	private var currentAnchor = "0".data(using: .utf8)!
+
+	init(relatedItem: FileProviderItem?) { // nil is root
+		self.relatedItem = relatedItem
+		uuid = relatedItem?.item?.uuid.uuidString ?? relatedItem?.item?.uuid.uuidString ?? "root"
+
+		super.init()
+		if relatedItem == nil {
+			NSLog("Enumerator created for root")
+		} else if relatedItem?.item == nil {
+			NSLog("Enumerator for \(uuid) created for type directory")
+		} else {
+			NSLog("Enumerator for \(uuid) created for entity directory")
 		}
-        super.init()
-		NSLog("Enumerator for \(uuid) created")
-    }
-
-	var uuid: String {
-		return relatedItem?.item?.uuid.uuidString ?? relatedItem?.typeItem?.uuid.uuidString ?? "root"
 	}
 
     func invalidate() {
     }
 
     func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAtPage page: Data) {
+
+		if relatedItem?.typeItem != nil {
+			NSLog("Listing file (wat?)")
+		} else if relatedItem?.item != nil {
+			NSLog("Listing entity directory")
+		} else {
+			NSLog("Listing root")
+		}
 
 		let p = NSFileProviderPage(data: page)
 		sortByDate = p == NSFileProviderInitialPageSortedByDate // otherwise by name
@@ -57,11 +68,8 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		}
 	}
 
-	private var sortByDate = false
-	private var currentAnchor: String?
-
 	func currentSyncAnchor(completionHandler: @escaping (Data?) -> Void) {
-		completionHandler(currentAnchor?.data(using: .utf8))
+		completionHandler(currentAnchor)
 	}
 
 	deinit {
@@ -75,7 +83,21 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		} else if relatedItem?.item != nil {
 			NSLog("Changes requested for enumerator of directory")
 
+			FileProviderExtension.model.reloadData()
+			let newItemIds = rootItems.map { $0.itemIdentifier }
+			let myId = NSFileProviderItemIdentifier(uuid)
+
+			if !newItemIds.contains(myId) { // I'm gone
+				var ids = [myId]
+				if let childrenIds = relatedItem?.item?.typeItems.map({ NSFileProviderItemIdentifier($0.uuid.uuidString) }) {
+					ids.append(contentsOf: childrenIds)
+					observer.didDeleteItems(withIdentifiers: ids)
+					incrementAnchor()
+				}
+			}
+
 		} else {
+			NSLog("Enumerating changes for root")
 
 			let oldItemIds = rootItems.map { $0.itemIdentifier }
 			FileProviderExtension.model.reloadData()
@@ -83,17 +105,25 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			let newItemIds = rootItems.map { $0.itemIdentifier }
 
 			let createdItems = newItems.filter { !oldItemIds.contains($0.itemIdentifier) }
-			observer.didUpdate(createdItems)
+			if createdItems.count > 0 {
+				observer.didUpdate(createdItems)
+			}
 
 			let deletedItemIds = oldItemIds.filter({ !newItemIds.contains($0) })
-			observer.didDeleteItems(withIdentifiers: deletedItemIds)
+			if deletedItemIds.count > 0 {
+				observer.didDeleteItems(withIdentifiers: deletedItemIds)
+			}
+
+			if createdItems.count > 0 || deletedItemIds.count > 0 {
+				incrementAnchor()
+			}
 		}
 
-		let oldAnchorString = String(data: anchor, encoding: .utf8) ?? "0"
-		let newAnchorString = String((Int64(oldAnchorString) ?? 0) + 1)
-		currentAnchor = newAnchorString
-		let newAnchorData = newAnchorString.data(using: .utf8) ?? anchor
-		observer.finishEnumeratingChanges(upTo: newAnchorData, moreComing: false)
+		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
     }
-    
+
+	private func incrementAnchor() {
+		let newAnchorCount = Int64(String(data: currentAnchor, encoding: .utf8)!)! + 1
+		currentAnchor = String(newAnchorCount).data(using: .utf8)!
+	}
 }
