@@ -8,3 +8,7 @@ end
 target 'GladysIndex' do
   pod 'Fuzi', '~> 1'
 end
+
+target 'GladysFiles' do
+  pod 'Fuzi', '~> 1'
+end

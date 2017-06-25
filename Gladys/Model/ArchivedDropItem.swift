@@ -39,8 +39,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		loadCount = 0
 	}
 
-	// fulfill drag and drop promise from search drag!
-
 	func makeIndex(completion: ((Bool)->Void)? = nil) {
 
 		guard let firstItem = typeItems.first else { return }
@@ -105,6 +103,12 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return currentItem
 	}
 
+	var oneTitle: String {
+		return accessoryTitle ?? displayTitle.0 ?? uuid.uuidString
+	}
+
+	#if MAINAPP
+
 	var dragItem: UIDragItem {
 
 		let p = NSItemProvider()
@@ -115,12 +119,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		i.localObject = self
 		return i
 	}
-
-	var oneTitle: String? {
-		return displayInfo.accessoryText ?? displayInfo.title
-	}
-
-	#if MAINAPP
 
 	var shareableComponents: [Any] {
 		var items = typeItems.flatMap { $0.itemForShare.0 }
@@ -240,8 +238,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	private lazy var folderUrl: URL = {
-		let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-		return docs.appendingPathComponent(self.uuid.uuidString)
+		return Model.storageRoot.appendingPathComponent(self.uuid.uuidString)
 	}()
 
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {

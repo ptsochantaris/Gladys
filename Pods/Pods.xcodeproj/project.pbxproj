@@ -7,26 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		046B3AC0AB9B8FF8B9117E7C61C46185 /* Pods-GladysIndex-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3651E8E81E2C88F0EF7E0751610D9752 /* Pods-GladysIndex-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		11108F0AB1675A82CD55C2D5D7A1819B /* Pods-GladysIndex-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1D83BD1A39DE8482595212B50E224 /* Pods-GladysIndex-dummy.m */; };
+		046B3AC0AB9B8FF8B9117E7C61C46185 /* Pods-GladysIndex-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FDD6A967DF38A9DA82D8A9542183B8A /* Pods-GladysIndex-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AA45E52B42EF10052AFBCCA9B850000 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		11108F0AB1675A82CD55C2D5D7A1819B /* Pods-GladysIndex-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E49C3F88F965277100CE33851A92183 /* Pods-GladysIndex-dummy.m */; };
 		138BC580FC0F8F5BDB836ED460FF026B /* Fuzi-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1727DA737414191279270BD24B95AF /* Fuzi-dummy.m */; };
-		199440827C7DB6325490C93F4F8A2D39 /* Pods-Gladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D9CF54690F914F326E659D3DFC563D69 /* Pods-Gladys-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		199440827C7DB6325490C93F4F8A2D39 /* Pods-Gladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6E1EA74D250FDF963447EF16199680 /* Pods-Gladys-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D7E1FF2D06C8CC8939E1F44FEB95FC1 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02DA8EE307AD10D3C55C4E059B8244F /* Element.swift */; };
+		4FF2AB4DEF0EC0A3DC14BAA2E6D37E58 /* Pods-GladysFiles-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C64C1DED8AA11297AEFE0B782FB942C /* Pods-GladysFiles-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7CBF2F4872E28B44B343F546B7EA81DE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49CF3558E6AAAC1D4DAFD1B020D8032 /* Error.swift */; };
 		88670677F46DFE4D9839E2550DAC0645 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		916E21CB1B4552C920479AC13ED55676 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		AD309C209D862B074248726BC6BAB556 /* Pods-GladysFiles-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F85E479E68870139871BCF5338C98B5 /* Pods-GladysFiles-dummy.m */; };
 		B075F4D3291FFBE83DD2F6A10EA04F42 /* NodeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FE1463502ED9A51946130CFCC7707B /* NodeSet.swift */; };
 		B3CED0BC841D587965F5C0CD71FD1310 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AD970DD2D7206ED32A6C9FB67028B7 /* Document.swift */; };
 		CA66A58D374BE217245888B8B9F673FB /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F667B872C585D9F94BC8B2C612AA06C /* Queryable.swift */; };
 		DA0CB8D9E116575CBED169DE5539E6F3 /* Fuzi-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5697ED49B793BC96545F175AA0AD299C /* Fuzi-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD9E033DDF2E73A38055A633B430AF97 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		DECB46CFC9B34B913FC9B6C422E2D4E2 /* Pods-Gladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AAB69AA1469254D35E37FAC6646587 /* Pods-Gladys-dummy.m */; };
+		DECB46CFC9B34B913FC9B6C422E2D4E2 /* Pods-Gladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B859A5139DC73E82475A3E6F8AA5FB /* Pods-Gladys-dummy.m */; };
 		EC1635D552D6A1A86AD2344017D27022 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297B2E7123E31BDB6B66A96464DB8DD /* Helpers.swift */; };
 		F4BC91C44751CABE21A3BB91A423910A /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3803B0DECD8DDBE6F6F398F4324F3B2 /* Node.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		1C3B9FBFEEE3972E03D4A0914089EA3E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E765B8AB74C35B1FEF51FA254D5C734;
+			remoteInfo = Fuzi;
+		};
+		1C3D07D3688ABE4D64F8B55F77655DB9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
@@ -43,43 +53,53 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		061927ED3958E29542F7578A3DEBC53B /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
-		16974D0E7EE337FEBD7F8B51C0945C39 /* Pods-GladysIndex-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysIndex-acknowledgements.markdown"; sourceTree = "<group>"; };
+		0688309C86693130F2529BF12D11A2E9 /* Pods-GladysIndex-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysIndex-acknowledgements.plist"; sourceTree = "<group>"; };
+		0FDD6A967DF38A9DA82D8A9542183B8A /* Pods-GladysIndex-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GladysIndex-umbrella.h"; sourceTree = "<group>"; };
 		192FF9B8B9CFEA5875E50DFD54A371B9 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E49C3F88F965277100CE33851A92183 /* Pods-GladysIndex-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GladysIndex-dummy.m"; sourceTree = "<group>"; };
 		1F667B872C585D9F94BC8B2C612AA06C /* Queryable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Queryable.swift; path = Sources/Queryable.swift; sourceTree = "<group>"; };
-		1FD1D83BD1A39DE8482595212B50E224 /* Pods-GladysIndex-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GladysIndex-dummy.m"; sourceTree = "<group>"; };
-		25117427A7B2A407D1ACFA6B30F49420 /* Pods-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
+		1FA5EFBFF4A464062D8017931370DB16 /* Pods-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
 		2C1727DA737414191279270BD24B95AF /* Fuzi-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Fuzi-dummy.m"; sourceTree = "<group>"; };
-		30F8633956BCA189B014F7A781943CA9 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		33E46E4518925DC10D2B26C46591B591 /* Pods-Gladys-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-resources.sh"; sourceTree = "<group>"; };
 		33FE1463502ED9A51946130CFCC7707B /* NodeSet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NodeSet.swift; path = Sources/NodeSet.swift; sourceTree = "<group>"; };
-		3651E8E81E2C88F0EF7E0751610D9752 /* Pods-GladysIndex-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GladysIndex-umbrella.h"; sourceTree = "<group>"; };
-		50AAB69AA1469254D35E37FAC6646587 /* Pods-Gladys-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Gladys-dummy.m"; sourceTree = "<group>"; };
-		53268908B7B1DA36D6E670B0168F8698 /* Pods-GladysIndex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysIndex.release.xcconfig"; sourceTree = "<group>"; };
+		363E965585BF490ACEFC4568129D7992 /* Pods-GladysFiles.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-GladysFiles.modulemap"; sourceTree = "<group>"; };
+		3C64C1DED8AA11297AEFE0B782FB942C /* Pods-GladysFiles-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GladysFiles-umbrella.h"; sourceTree = "<group>"; };
+		3C9D9168C0D89C0097C3B68ED4F693B9 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CD2008E3C829CEB1A6C42371BA27FF7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40B859A5139DC73E82475A3E6F8AA5FB /* Pods-Gladys-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Gladys-dummy.m"; sourceTree = "<group>"; };
+		42729352D57290F3AF31F29557D7B457 /* Pods-GladysFiles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysFiles.debug.xcconfig"; sourceTree = "<group>"; };
+		4F85E479E68870139871BCF5338C98B5 /* Pods-GladysFiles-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GladysFiles-dummy.m"; sourceTree = "<group>"; };
 		5697ED49B793BC96545F175AA0AD299C /* Fuzi-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Fuzi-umbrella.h"; sourceTree = "<group>"; };
+		5D49A445474417989361FB548241624B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5ED6C02551467F00A82F620F0C42167B /* Pods-Gladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Gladys-acknowledgements.plist"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		7623BC9D043C4A79DCFE50EBF14B8010 /* Pods-GladysIndex-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GladysIndex-resources.sh"; sourceTree = "<group>"; };
-		7D7CD241D20C02ED138837B67CA7ECF4 /* Pods-Gladys-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Gladys-acknowledgements.markdown"; sourceTree = "<group>"; };
+		66F771B56DA68CC4AD7A9E4116214B47 /* Pods-GladysIndex.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-GladysIndex.modulemap"; sourceTree = "<group>"; };
+		7C6BDC3866E8CBA4100799BF8BAC4017 /* Pods-GladysIndex.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysIndex.debug.xcconfig"; sourceTree = "<group>"; };
 		7E4BCA5EDC0F688233BA887059E4D332 /* Fuzi.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Fuzi.xcconfig; sourceTree = "<group>"; };
 		84A625845B348BDA19755ED8A8A2B676 /* Fuzi.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Fuzi.modulemap; sourceTree = "<group>"; };
 		85AD970DD2D7206ED32A6C9FB67028B7 /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
+		910374E1358C0F83D922AC93C16309DC /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		B1FD01ED1A5B5BCA9390DCFC04AF4075 /* Pods-Gladys-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-frameworks.sh"; sourceTree = "<group>"; };
-		B233FBF69983785E544C491A664C835E /* Pods_GladysIndex.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysIndex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9ECF01053D05E03991E9C31661679DAE /* Pods_GladysFiles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysFiles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABE6F15E1C8330280C640E2243965387 /* Pods-Gladys-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Gladys-acknowledgements.markdown"; sourceTree = "<group>"; };
+		B23BE7666B25EFD8CB9C055DD4676EC6 /* Pods-GladysIndex-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GladysIndex-resources.sh"; sourceTree = "<group>"; };
 		B297B2E7123E31BDB6B66A96464DB8DD /* Helpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Sources/Helpers.swift; sourceTree = "<group>"; };
-		B69F3750E13608E5EA2D8CC5F0E92D44 /* Pods-GladysIndex.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysIndex.debug.xcconfig"; sourceTree = "<group>"; };
-		B8F4B19F5C5B3F9D6FDAD94E9D992078 /* Pods-Gladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Gladys.modulemap"; sourceTree = "<group>"; };
-		C0B53B6EF9E9FF737F60128E82EC20F8 /* Pods-GladysIndex-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysIndex-acknowledgements.plist"; sourceTree = "<group>"; };
-		C4AA5C5ED76694A0BE46603E4C87A94F /* Pods-GladysIndex.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-GladysIndex.modulemap"; sourceTree = "<group>"; };
-		C6DA3F535811FD4AD7D6DAF73F26AE58 /* Pods-Gladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Gladys-acknowledgements.plist"; sourceTree = "<group>"; };
-		C8943C958DDC4B93AE07607E500068B8 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CB8F69D2874FE21A8606ECCE37BCA64C /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0D5F674AEDC1E05E11CE05E8126A979 /* Pods-Gladys-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-resources.sh"; sourceTree = "<group>"; };
-		D9CF54690F914F326E659D3DFC563D69 /* Pods-Gladys-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Gladys-umbrella.h"; sourceTree = "<group>"; };
-		DE1AF898DEB96C8A21C7D919B3A7A1C6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA1850A6CB4CAF2F3194627FD47C96DD /* Pods-GladysFiles-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysFiles-acknowledgements.markdown"; sourceTree = "<group>"; };
+		BE075006BF3246679EBFA147841A2C72 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6B1AA46CE4C0B2E0C741CDA57D17DF9 /* Pods-Gladys-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-frameworks.sh"; sourceTree = "<group>"; };
+		C94C74C503A5C2F9D8C3BCD89D970F3C /* Pods_GladysIndex.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysIndex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6792A9F2C8C6AE5B1B3B8A2B60C92BE /* Pods-GladysFiles-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GladysFiles-resources.sh"; sourceTree = "<group>"; };
+		DED29D98E51537CD3ADD5A1BBFB3714E /* Pods-GladysIndex-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysIndex-acknowledgements.markdown"; sourceTree = "<group>"; };
+		E3D479F7150ACAA63D7CA84AADBC5342 /* Pods-Gladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Gladys.modulemap"; sourceTree = "<group>"; };
 		E49CF3558E6AAAC1D4DAFD1B020D8032 /* Error.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Error.swift; path = Sources/Error.swift; sourceTree = "<group>"; };
+		E6D270A7276F17023739741BB4B4EB43 /* Pods-GladysFiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysFiles.release.xcconfig"; sourceTree = "<group>"; };
+		EACC4789654A7166BADF008572221345 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F02DA8EE307AD10D3C55C4E059B8244F /* Element.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Element.swift; path = Sources/Element.swift; sourceTree = "<group>"; };
 		F3803B0DECD8DDBE6F6F398F4324F3B2 /* Node.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Node.swift; path = Sources/Node.swift; sourceTree = "<group>"; };
+		F3A5D0813C4ED637E242C890C4BFC3CC /* Pods-GladysFiles-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysFiles-acknowledgements.plist"; sourceTree = "<group>"; };
 		FA17415A29CECE3DCD690D0213BD36C0 /* Fuzi-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Fuzi-prefix.pch"; sourceTree = "<group>"; };
+		FA6E1EA74D250FDF963447EF16199680 /* Pods-Gladys-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Gladys-umbrella.h"; sourceTree = "<group>"; };
+		FFE76D0AA6FCCC7DF3888AB73428F3C3 /* Pods-GladysIndex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysIndex.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +108,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				88670677F46DFE4D9839E2550DAC0645 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3424F76069450B851C54FA6B158F90C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AA45E52B42EF10052AFBCCA9B850000 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,19 +138,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		22C7BF02C06976AE1E15C2A6CE2373F1 /* Pods-Gladys */ = {
+		053BE7C71F9895B0EF533876D31A1606 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				DE1AF898DEB96C8A21C7D919B3A7A1C6 /* Info.plist */,
-				B8F4B19F5C5B3F9D6FDAD94E9D992078 /* Pods-Gladys.modulemap */,
-				7D7CD241D20C02ED138837B67CA7ECF4 /* Pods-Gladys-acknowledgements.markdown */,
-				C6DA3F535811FD4AD7D6DAF73F26AE58 /* Pods-Gladys-acknowledgements.plist */,
-				50AAB69AA1469254D35E37FAC6646587 /* Pods-Gladys-dummy.m */,
-				B1FD01ED1A5B5BCA9390DCFC04AF4075 /* Pods-Gladys-frameworks.sh */,
-				D0D5F674AEDC1E05E11CE05E8126A979 /* Pods-Gladys-resources.sh */,
-				D9CF54690F914F326E659D3DFC563D69 /* Pods-Gladys-umbrella.h */,
-				25117427A7B2A407D1ACFA6B30F49420 /* Pods-Gladys.debug.xcconfig */,
-				061927ED3958E29542F7578A3DEBC53B /* Pods-Gladys.release.xcconfig */,
+				24A08AF6B0FE12AE65609CAE83473482 /* Pods-Gladys */,
+				50E15BFF9FBD253E57B258157F1EC4FA /* Pods-GladysFiles */,
+				E0AC1D3D161087B07D01A06CA5EB3C92 /* Pods-GladysIndex */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		24A08AF6B0FE12AE65609CAE83473482 /* Pods-Gladys */ = {
+			isa = PBXGroup;
+			children = (
+				5D49A445474417989361FB548241624B /* Info.plist */,
+				E3D479F7150ACAA63D7CA84AADBC5342 /* Pods-Gladys.modulemap */,
+				ABE6F15E1C8330280C640E2243965387 /* Pods-Gladys-acknowledgements.markdown */,
+				5ED6C02551467F00A82F620F0C42167B /* Pods-Gladys-acknowledgements.plist */,
+				40B859A5139DC73E82475A3E6F8AA5FB /* Pods-Gladys-dummy.m */,
+				C6B1AA46CE4C0B2E0C741CDA57D17DF9 /* Pods-Gladys-frameworks.sh */,
+				33E46E4518925DC10D2B26C46591B591 /* Pods-Gladys-resources.sh */,
+				FA6E1EA74D250FDF963447EF16199680 /* Pods-Gladys-umbrella.h */,
+				1FA5EFBFF4A464062D8017931370DB16 /* Pods-Gladys.debug.xcconfig */,
+				910374E1358C0F83D922AC93C16309DC /* Pods-Gladys.release.xcconfig */,
 			);
 			name = "Pods-Gladys";
 			path = "Target Support Files/Pods-Gladys";
@@ -143,25 +181,43 @@
 			path = Fuzi;
 			sourceTree = "<group>";
 		};
+		50E15BFF9FBD253E57B258157F1EC4FA /* Pods-GladysFiles */ = {
+			isa = PBXGroup;
+			children = (
+				3CD2008E3C829CEB1A6C42371BA27FF7 /* Info.plist */,
+				363E965585BF490ACEFC4568129D7992 /* Pods-GladysFiles.modulemap */,
+				BA1850A6CB4CAF2F3194627FD47C96DD /* Pods-GladysFiles-acknowledgements.markdown */,
+				F3A5D0813C4ED637E242C890C4BFC3CC /* Pods-GladysFiles-acknowledgements.plist */,
+				4F85E479E68870139871BCF5338C98B5 /* Pods-GladysFiles-dummy.m */,
+				D6792A9F2C8C6AE5B1B3B8A2B60C92BE /* Pods-GladysFiles-resources.sh */,
+				3C64C1DED8AA11297AEFE0B782FB942C /* Pods-GladysFiles-umbrella.h */,
+				42729352D57290F3AF31F29557D7B457 /* Pods-GladysFiles.debug.xcconfig */,
+				E6D270A7276F17023739741BB4B4EB43 /* Pods-GladysFiles.release.xcconfig */,
+			);
+			name = "Pods-GladysFiles";
+			path = "Target Support Files/Pods-GladysFiles";
+			sourceTree = "<group>";
+		};
+		7A8C10AF2DC0504B58767BB955369789 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BE075006BF3246679EBFA147841A2C72 /* Fuzi.framework */,
+				3C9D9168C0D89C0097C3B68ED4F693B9 /* Pods_Gladys.framework */,
+				9ECF01053D05E03991E9C31661679DAE /* Pods_GladysFiles.framework */,
+				C94C74C503A5C2F9D8C3BCD89D970F3C /* Pods_GladysIndex.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
 				DF91C9E0E73C9D5AC62237C9F75AF0F5 /* Pods */,
-				A380CD438DDE1451A0BB47F2C5958566 /* Products */,
-				F098111993B54DFBBFF9EF82131CB101 /* Targets Support Files */,
+				7A8C10AF2DC0504B58767BB955369789 /* Products */,
+				053BE7C71F9895B0EF533876D31A1606 /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		A380CD438DDE1451A0BB47F2C5958566 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CB8F69D2874FE21A8606ECCE37BCA64C /* Fuzi.framework */,
-				C8943C958DDC4B93AE07607E500068B8 /* Pods_Gladys.framework */,
-				B233FBF69983785E544C491A664C835E /* Pods_GladysIndex.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
@@ -202,30 +258,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		E6A0C4423E1F66662E01285756196C7C /* Pods-GladysIndex */ = {
+		E0AC1D3D161087B07D01A06CA5EB3C92 /* Pods-GladysIndex */ = {
 			isa = PBXGroup;
 			children = (
-				30F8633956BCA189B014F7A781943CA9 /* Info.plist */,
-				C4AA5C5ED76694A0BE46603E4C87A94F /* Pods-GladysIndex.modulemap */,
-				16974D0E7EE337FEBD7F8B51C0945C39 /* Pods-GladysIndex-acknowledgements.markdown */,
-				C0B53B6EF9E9FF737F60128E82EC20F8 /* Pods-GladysIndex-acknowledgements.plist */,
-				1FD1D83BD1A39DE8482595212B50E224 /* Pods-GladysIndex-dummy.m */,
-				7623BC9D043C4A79DCFE50EBF14B8010 /* Pods-GladysIndex-resources.sh */,
-				3651E8E81E2C88F0EF7E0751610D9752 /* Pods-GladysIndex-umbrella.h */,
-				B69F3750E13608E5EA2D8CC5F0E92D44 /* Pods-GladysIndex.debug.xcconfig */,
-				53268908B7B1DA36D6E670B0168F8698 /* Pods-GladysIndex.release.xcconfig */,
+				EACC4789654A7166BADF008572221345 /* Info.plist */,
+				66F771B56DA68CC4AD7A9E4116214B47 /* Pods-GladysIndex.modulemap */,
+				DED29D98E51537CD3ADD5A1BBFB3714E /* Pods-GladysIndex-acknowledgements.markdown */,
+				0688309C86693130F2529BF12D11A2E9 /* Pods-GladysIndex-acknowledgements.plist */,
+				1E49C3F88F965277100CE33851A92183 /* Pods-GladysIndex-dummy.m */,
+				B23BE7666B25EFD8CB9C055DD4676EC6 /* Pods-GladysIndex-resources.sh */,
+				0FDD6A967DF38A9DA82D8A9542183B8A /* Pods-GladysIndex-umbrella.h */,
+				7C6BDC3866E8CBA4100799BF8BAC4017 /* Pods-GladysIndex.debug.xcconfig */,
+				FFE76D0AA6FCCC7DF3888AB73428F3C3 /* Pods-GladysIndex.release.xcconfig */,
 			);
 			name = "Pods-GladysIndex";
 			path = "Target Support Files/Pods-GladysIndex";
-			sourceTree = "<group>";
-		};
-		F098111993B54DFBBFF9EF82131CB101 /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				22C7BF02C06976AE1E15C2A6CE2373F1 /* Pods-Gladys */,
-				E6A0C4423E1F66662E01285756196C7C /* Pods-GladysIndex */,
-			);
-			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +291,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				046B3AC0AB9B8FF8B9117E7C61C46185 /* Pods-GladysIndex-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42D3C64C5ACD1BA77A9F642CB636D83E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FF2AB4DEF0EC0A3DC14BAA2E6D37E58 /* Pods-GladysFiles-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,7 +328,7 @@
 			);
 			name = "Pods-GladysIndex";
 			productName = "Pods-GladysIndex";
-			productReference = B233FBF69983785E544C491A664C835E /* Pods_GladysIndex.framework */;
+			productReference = C94C74C503A5C2F9D8C3BCD89D970F3C /* Pods_GladysIndex.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		3E765B8AB74C35B1FEF51FA254D5C734 /* Fuzi */ = {
@@ -290,7 +345,25 @@
 			);
 			name = Fuzi;
 			productName = Fuzi;
-			productReference = CB8F69D2874FE21A8606ECCE37BCA64C /* Fuzi.framework */;
+			productReference = BE075006BF3246679EBFA147841A2C72 /* Fuzi.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		97ABA74D02338173803FB1652413A0E6 /* Pods-GladysFiles */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F478D6A39B4A3B5F883D0223EE21DE4B /* Build configuration list for PBXNativeTarget "Pods-GladysFiles" */;
+			buildPhases = (
+				5C1DEB6DCBFCD939A371910952436FF0 /* Sources */,
+				3424F76069450B851C54FA6B158F90C0 /* Frameworks */,
+				42D3C64C5ACD1BA77A9F642CB636D83E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				23853893D0C341B0FE0B097B96CC4864 /* PBXTargetDependency */,
+			);
+			name = "Pods-GladysFiles";
+			productName = "Pods-GladysFiles";
+			productReference = 9ECF01053D05E03991E9C31661679DAE /* Pods_GladysFiles.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B8314E668512A3A952063974F06AE2A2 /* Pods-Gladys */ = {
@@ -308,7 +381,7 @@
 			);
 			name = "Pods-Gladys";
 			productName = "Pods-Gladys";
-			productReference = C8943C958DDC4B93AE07607E500068B8 /* Pods_Gladys.framework */;
+			productReference = 3C9D9168C0D89C0097C3B68ED4F693B9 /* Pods_Gladys.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -328,12 +401,13 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = A380CD438DDE1451A0BB47F2C5958566 /* Products */;
+			productRefGroup = 7A8C10AF2DC0504B58767BB955369789 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				3E765B8AB74C35B1FEF51FA254D5C734 /* Fuzi */,
 				B8314E668512A3A952063974F06AE2A2 /* Pods-Gladys */,
+				97ABA74D02338173803FB1652413A0E6 /* Pods-GladysFiles */,
 				3C53C5E9C583CABA9EECE5892E27515C /* Pods-GladysIndex */,
 			);
 		};
@@ -345,6 +419,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				11108F0AB1675A82CD55C2D5D7A1819B /* Pods-GladysIndex-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5C1DEB6DCBFCD939A371910952436FF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD309C209D862B074248726BC6BAB556 /* Pods-GladysFiles-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +456,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		23853893D0C341B0FE0B097B96CC4864 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Fuzi;
+			target = 3E765B8AB74C35B1FEF51FA254D5C734 /* Fuzi */;
+			targetProxy = 1C3D07D3688ABE4D64F8B55F77655DB9 /* PBXContainerItemProxy */;
+		};
 		8B6A90A1CAB4853A778BB31422F9A566 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Fuzi;
@@ -391,7 +479,7 @@
 /* Begin XCBuildConfiguration section */
 		00BBDC91503B3C5B8B352581CDB5DC6F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 25117427A7B2A407D1ACFA6B30F49420 /* Pods-Gladys.debug.xcconfig */;
+			baseConfigurationReference = 1FA5EFBFF4A464062D8017931370DB16 /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -480,9 +568,48 @@
 			};
 			name = Release;
 		};
+		22D4B868397BCF0AB4DE0F2E29FE8F37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6D270A7276F17023739741BB4B4EB43 /* Pods-GladysFiles.release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-GladysFiles/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GladysFiles/Pods-GladysFiles.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_GladysFiles;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		36DC1C2AD2A16E1CDC5E13E61CEA8DB3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53268908B7B1DA36D6E670B0168F8698 /* Pods-GladysIndex.release.xcconfig */;
+			baseConfigurationReference = FFE76D0AA6FCCC7DF3888AB73428F3C3 /* Pods-GladysIndex.release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -521,7 +648,7 @@
 		};
 		3C8FF5BA8AAE8C18D30EA44F95F359E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B69F3750E13608E5EA2D8CC5F0E92D44 /* Pods-GladysIndex.debug.xcconfig */;
+			baseConfigurationReference = 7C6BDC3866E8CBA4100799BF8BAC4017 /* Pods-GladysIndex.debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -548,6 +675,46 @@
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Pods_GladysIndex;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		458B2996BD13FEBAC308869750C36A93 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42729352D57290F3AF31F29557D7B457 /* Pods-GladysFiles.debug.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-GladysFiles/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GladysFiles/Pods-GladysFiles.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_GladysFiles;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -653,7 +820,7 @@
 		};
 		A5A2A0917C82A04BB9DF06351E285861 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 061927ED3958E29542F7578A3DEBC53B /* Pods-Gladys.release.xcconfig */;
+			baseConfigurationReference = 910374E1358C0F83D922AC93C16309DC /* Pods-Gladys.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -750,6 +917,15 @@
 			buildConfigurations = (
 				55482C086308EAB599A50A3E733834F5 /* Debug */,
 				D137CAAC8445B9DEE288359E84DB6B00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F478D6A39B4A3B5F883D0223EE21DE4B /* Build configuration list for PBXNativeTarget "Pods-GladysFiles" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				458B2996BD13FEBAC308869750C36A93 /* Debug */,
+				22D4B868397BCF0AB4DE0F2E29FE8F37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

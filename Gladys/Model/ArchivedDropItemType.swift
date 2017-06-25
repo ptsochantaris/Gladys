@@ -20,6 +20,7 @@ final class ArchivedDropItemType: Codable {
 		case displayIconContentMode
 		case displayIconScale
 		case hasLocalFiles
+		case createdAt
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -37,6 +38,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
 		try v.encode(displayIconScale, forKey: .displayIconScale)
 		try v.encode(hasLocalFiles, forKey: .hasLocalFiles)
+		try v.encode(createdAt, forKey: .createdAt)
 
 		let ipath = imagePath
 		if let displayIcon = displayIcon {
@@ -65,6 +67,7 @@ final class ArchivedDropItemType: Codable {
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
 		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
 		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
+		createdAt = try v.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
 		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
@@ -76,28 +79,10 @@ final class ArchivedDropItemType: Codable {
 			let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
 			displayIcon = UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
 		}
-
-		patchLocalUrl()
 	}
 
 	var encodedUrl: NSURL? {
 		return decode(NSURL.self)
-	}
-
-	private func patchLocalUrl() {
-
-		if let encodedURL = encodedUrl, encodedURL.scheme == "file", let currentPath = encodedURL.path, let classType = classType {
-
-			let myPath = "\(parentUuid)/\(uuid)/"
-			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
-				let keep = currentPath.substring(from: indexUpToMyPath)
-				let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-				let correctUrl = docs.appendingPathComponent(keep) as NSURL
-				if encodedURL != correctUrl {
-					setBytes(object: correctUrl as NSURL, type: classType)
-				}
-			}
-		}
 	}
 
 	var bytesPath: URL {
@@ -124,7 +109,7 @@ final class ArchivedDropItemType: Codable {
 		get {
 			let byteLocation = bytesPath
 			if FileManager.default.fileExists(atPath: byteLocation.path) {
-				return try! Data(contentsOf: byteLocation, options: [])
+				return try! Data(contentsOf: byteLocation, options: [.alwaysMapped])
 			} else {
 				return nil
 			}
@@ -133,9 +118,10 @@ final class ArchivedDropItemType: Codable {
 
 	let typeIdentifier: String
 	var accessoryTitle: String?
+	let uuid: UUID
+	let parentUuid: UUID
+	let createdAt: Date
 	private var classType: ClassType?
-	private let uuid: UUID
-	private let parentUuid: UUID
 	private var hasLocalFiles: Bool
 	private var allLoadedWell = true
 
@@ -452,6 +438,7 @@ final class ArchivedDropItemType: Codable {
 		displayTitleAlignment = .center
 		displayIconScale = 1
 		hasLocalFiles = false
+		createdAt = Date()
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let error = error {
@@ -558,8 +545,7 @@ final class ArchivedDropItemType: Codable {
 
 	lazy var folderUrl: URL = {
 		let f = FileManager.default
-		let docs = f.urls(for: .documentDirectory, in: .userDomainMask).first!
-		let url = docs.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
+		let url = Model.storageRoot.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
 		if !f.fileExists(atPath: url.path) {
 			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		}
@@ -624,8 +610,8 @@ final class ArchivedDropItemType: Codable {
 		return (nil, 0)
 	}
 
-	var oneTitle: String? {
-		return accessoryTitle ?? displayTitle
+	var oneTitle: String {
+		return accessoryTitle ?? displayTitle ?? typeIdentifier.replacingOccurrences(of: ".", with: "-")
 	}
 
 	var dragItem: UIDragItem {

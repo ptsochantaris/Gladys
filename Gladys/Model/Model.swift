@@ -2,15 +2,23 @@
 import Foundation
 import CoreSpotlight
 
+#if MAINAPP
+import FileProvider
+#endif
+
 final class Model: NSObject, CSSearchableIndexDelegate {
 
 	var drops: [ArchivedDropItem]
 
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
-	static var fileUrl: URL {
+	static var storageRoot: URL {
 		let docs = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!
-		return docs.appendingPathComponent("items.json")
+		return docs.appendingPathComponent("File Provider Storage", isDirectory: true)
+	}
+
+	static var fileUrl: URL {
+		return storageRoot.appendingPathComponent("items.json")
 	}
 
 	override init() {
@@ -30,6 +38,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 		super.init()
 	}
 
+	#if MAINAPP
 	func save(completion: ((Bool)->Void)? = nil) {
 
 		let itemsToSave = drops.filter { !$0.isLoading }
@@ -43,6 +52,11 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 					NSLog("Saved")
 					completion?(true)
 					NotificationCenter.default.post(name: .SaveComplete, object: nil)
+					NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier.rootContainer) { error in
+						if let e = error {
+							NSLog("Error signalling change: \(e.localizedDescription)")
+						}
+					}
 				}
 			} catch {
 				NSLog("Saving Error: \(error.localizedDescription)")
@@ -54,6 +68,7 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			}
 		}
 	}
+	#endif
 
 	//////////////////
 

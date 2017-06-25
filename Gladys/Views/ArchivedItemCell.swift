@@ -238,6 +238,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 			if archivedDropItem.isLoading {
 				image.isHidden = true
+				label.text = nil
 				spinner.startAnimating()
 			} else {
 				spinner.stopAnimating()

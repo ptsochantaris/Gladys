@@ -250,6 +250,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
 			})
 		}
+		item.delete()
 		model.save()
 	}
 
