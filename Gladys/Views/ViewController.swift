@@ -96,7 +96,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				return true
 			}
 		}
-		return true
+		return false
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
@@ -242,8 +242,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func deleteRequested(for item: ArchivedDropItem) {
-		if let i = model.filteredDrops.index(where: { $0 === item }) {
-			if let x = model.drops.index(where: { $0 === item }) {
+		if let i = model.filteredDrops.index(where: { $0.uuid == item.uuid }) {
+			if let x = model.drops.index(where: { $0.uuid == item.uuid }) {
 				model.drops.remove(at: x)
 			}
 			archivedItemCollectionView.performBatchUpdates({

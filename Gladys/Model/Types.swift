@@ -55,3 +55,25 @@ let dateFormatter: DateFormatter = {
 	d.timeStyle = .medium
 	return d
 }()
+
+extension UIImage {
+	func limited(to targetSize: CGSize) -> UIImage {
+		let mySize = size
+
+		let widthRatio  = targetSize.width  / mySize.width
+		let heightRatio = targetSize.height / mySize.height
+
+		let ratio = max(widthRatio, heightRatio)
+		let newSize = CGSize(width: mySize.width * ratio, height: mySize.height * ratio)
+
+		let offset = CGPoint(x: (targetSize.width - newSize.width) * 0.5,
+		                     y: (targetSize.height - newSize.height) * 0.5)
+
+		UIGraphicsBeginImageContextWithOptions(targetSize, false, 1)
+		draw(in: CGRect(origin: offset, size: newSize))
+		let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+		UIGraphicsEndImageContext()
+
+		return newImage
+	}
+}

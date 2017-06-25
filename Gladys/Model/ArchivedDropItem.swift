@@ -3,6 +3,7 @@ import UIKit
 import MapKit
 import Contacts
 import CoreSpotlight
+import FileProvider
 
 final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
@@ -10,6 +11,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	var typeItems: [ArchivedDropItemType]!
 	private let suggestedName: String?
 	let createdAt:  Date
+
+	var isDeleting = false
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -64,6 +67,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	func delete() {
+		isDeleting = true
 		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
 			if let error = error {
 				NSLog("Error while deleting an index \(error)")
@@ -73,6 +77,13 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
 		}
+		/* TODO: see why this isn't coming through
+		NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
+			if let e = error {
+				NSLog("Error signalling deletion of item: \(e.localizedDescription)")
+			}
+		}
+		*/
 	}
 
 	var displayInfo: ArchivedDropDisplayInfo {

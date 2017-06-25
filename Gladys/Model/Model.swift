@@ -22,26 +22,47 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	}
 
 	override init() {
+		drops = Model.loadData() ?? [ArchivedDropItem]()
+		super.init()
+	}
+
+	private static var dataFileLastModified = Date.distantPast
+	private static func loadData() -> [ArchivedDropItem]? {
 		let url = Model.fileUrl
 		if FileManager.default.fileExists(atPath: url.path) {
 			do {
+
+				if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
+					if dataModified <= dataFileLastModified {
+						NSLog("No changes, no need to reload data")
+						return nil
+					}
+					dataFileLastModified = dataModified
+				}
 				let data = try Data(contentsOf: url)
-				drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+				NSLog("Loaded data")
+				return try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+
 			} catch {
 				NSLog("Loading Error: \(error)")
-				drops = [ArchivedDropItem]()
 			}
 		} else {
 			NSLog("Starting fresh store")
-			drops = [ArchivedDropItem]()
 		}
-		super.init()
+		return nil
+	}
+
+	func reloadData() {
+		NSLog("Reloading data")
+		if let d = Model.loadData() {
+			drops = d
+		}
 	}
 
 	#if MAINAPP
 	func save(completion: ((Bool)->Void)? = nil) {
 
-		let itemsToSave = drops.filter { !$0.isLoading }
+		let itemsToSave = drops.filter { !$0.isLoading && !$0.isDeleting }
 
 		saveQueue.async {
 

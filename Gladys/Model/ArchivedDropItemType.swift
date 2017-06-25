@@ -41,10 +41,10 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(createdAt, forKey: .createdAt)
 
 		let ipath = imagePath
-		if let displayIcon = displayIcon {
-			try! UIImagePNGRepresentation(displayIcon)!.write(to: ipath)
+		if let displayIcon = displayIcon, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
+			try? displayIconData.write(to: ipath, options: [.atomic])
 		} else if FileManager.default.fileExists(atPath: ipath.path) {
-			try! FileManager.default.removeItem(at: ipath)
+			try? FileManager.default.removeItem(at: ipath)
 		}
 	}
 

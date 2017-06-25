@@ -1,5 +1,6 @@
 
 import FileProvider
+import UIKit
 
 final class FileProviderExtension: NSFileProviderExtension {
     
@@ -63,30 +64,40 @@ final class FileProviderExtension: NSFileProviderExtension {
     override func stopProvidingItem(at url: URL) {
     }
 
-	/*
 	override func fetchThumbnails(forItemIdentifiers itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
-		for itemID in itemIdentifiers {
-			if let item = FileProviderExtension.getItem(for: itemID) {
-				if item
-			} else {
-				perThumbnailCompletionHandler(itemID, nil, nil)
+		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
+		DispatchQueue.global(qos: .background).async {
+			for itemID in itemIdentifiers {
+				autoreleasepool {
+					if let fpi = FileProviderExtension.getItem(for: itemID) {
+						if let dir = fpi.item, let img = dir.displayInfo.image {
+							let scaledImage = img.limited(to: size)
+							let data = UIImagePNGRepresentation(scaledImage)
+							perThumbnailCompletionHandler(itemID, data, nil)
+						} else if let file = fpi.typeItem, let img = file.displayIcon {
+							let scaledImage = img.limited(to: size)
+							let data = UIImagePNGRepresentation(scaledImage)
+							perThumbnailCompletionHandler(itemID, data, nil)
+						}
+					}
+					progress.completedUnitCount += 1
+				}
 			}
+			completionHandler(nil)
 		}
-		completionHandler(nil)
-		return nil
+		return progress
 	}
-	*/
     
     // MARK: - Enumeration
     
     override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
         var maybeEnumerator: NSFileProviderEnumerator? = nil
-        if (containerItemIdentifier == NSFileProviderItemIdentifier.rootContainer) {
+        if containerItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
 			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
-        } else if (containerItemIdentifier == NSFileProviderItemIdentifier.workingSet) {
+        } else if containerItemIdentifier == NSFileProviderItemIdentifier.workingSet {
 			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
-        } else if (containerItemIdentifier == NSFileProviderItemIdentifier.allDirectories) {
-			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: nil)
+        } else if containerItemIdentifier == NSFileProviderItemIdentifier.allDirectories {
+			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: NSFileProviderItemIdentifier.rootContainer)
         } else {
 			maybeEnumerator = FileProviderEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
         }
