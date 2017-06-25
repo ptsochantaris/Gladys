@@ -360,6 +360,16 @@ final class ArchivedDropItemType: Codable {
 			} else if typeIdentifier == "com.apple.mapkit.map-item" {
 				setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
 
+			} else if typeIdentifier.hasSuffix(".rtf") {
+				if let s = decode(NSAttributedString.self)?.string {
+					setTitleInfo(s, 4)
+				}
+				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			} else if typeIdentifier.hasSuffix(".rtfd") {
+				if let s = decode(NSAttributedString.self)?.string {
+					setTitleInfo(s, 4)
+				}
+				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 			}
 
 			signalDone()

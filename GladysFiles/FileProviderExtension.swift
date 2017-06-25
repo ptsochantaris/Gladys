@@ -33,18 +33,21 @@ final class FileProviderExtension: NSFileProviderExtension {
 		} else if let fileItem = fpi.typeItem {
 			root.appendPathComponent(fileItem.parentUuid.uuidString, isDirectory: true)
 			root.appendPathComponent(fileItem.uuid.uuidString, isDirectory: true)
+			root.appendPathComponent("blob", isDirectory: false)
 		}
         return root
     }
     
 	override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
-		let uuidString = url.lastPathComponent
-		let identifier = NSFileProviderItemIdentifier(uuidString)
-		if (try? item(for: identifier)) != nil {
-			return identifier
-		} else {
-			return NSFileProviderItemIdentifier.rootContainer
+		let urlComponents = url.pathComponents
+		if let lastComponent = urlComponents.last, urlComponents.count > 2 {
+			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
+			let identifier = NSFileProviderItemIdentifier(uuidString)
+			if (try? item(for: identifier)) != nil {
+				return identifier
+			}
 		}
+		return NSFileProviderItemIdentifier.rootContainer
 	}
     
     override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {

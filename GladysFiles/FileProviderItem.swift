@@ -92,7 +92,12 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		if let item = item {
 			return item.oneTitle
 		} else if let typeItem = typeItem {
-			return typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+			var t = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+			let c = t.components(separatedBy: "-")
+			if c.count > 1, c.first == "public", let l = c.last {
+				t = t.appending(".\(l)")
+			}
+			return t
 		} else {
 			return "<no name>"
 		}
