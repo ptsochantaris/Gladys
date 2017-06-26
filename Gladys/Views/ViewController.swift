@@ -125,10 +125,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		navigationController?.visibleViewController?.present(n, animated: true)
 		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
 			p.permittedArrowDirections = [.any]
-			p.backgroundColor = .groupTableViewBackground
 			p.sourceView = cell
 			p.sourceRect = cell.bounds.insetBy(dx: 5, dy: 0)
-			p.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper-detail"))
+			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
+			if traitCollection.horizontalSizeClass == .regular {
+				p.backgroundColor = c
+			} else {
+				n.view.backgroundColor = c
+			}
 		}
 	}
 

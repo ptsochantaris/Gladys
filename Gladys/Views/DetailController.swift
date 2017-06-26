@@ -24,6 +24,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt)
 		totalSizeLabel.text = diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
 		table.backgroundColor = .clear
+		table.separatorStyle = .none
 		view.backgroundColor = .clear
 	}
 
