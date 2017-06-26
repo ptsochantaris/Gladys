@@ -419,6 +419,7 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	private func handleLocalFetch(url: URL?, error: Error?) {
+		// in thread
 		if let url = url {
 			let localUrl = copyLocal(url)
 			NSLog("      received to local url: \(localUrl.path)")
@@ -469,7 +470,7 @@ final class ArchivedDropItemType: Codable {
 	var displayIconContentMode: ArchivedDropItemDisplayType
 	private var displayIconScale: CGFloat
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
-		displayIcon = icon
+		displayIcon = icon.limited(to: CGSize(width: 512, height: 512))
 		displayIconScale = icon.scale
 		displayIconPriority = priority
 		displayIconContentMode = contentMode

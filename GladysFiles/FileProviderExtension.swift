@@ -8,12 +8,19 @@ final class FileProviderExtension: NSFileProviderExtension {
 	static let model = Model()
 
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
-		for item in FileProviderExtension.model.drops {
-			if item.uuid.uuidString == identifier.rawValue {
+
+		let dropsCopy = FileProviderExtension.model.drops
+		let uuid = identifier.rawValue
+
+		for item in dropsCopy {
+			if item.uuid.uuidString == uuid {
 				return FileProviderItem(item)
 			}
+		}
+
+		for item in dropsCopy {
 			for typeItem in item.typeItems {
-				if typeItem.uuid.uuidString == identifier.rawValue {
+				if typeItem.uuid.uuidString == uuid {
 					return FileProviderItem(typeItem)
 				}
 			}
@@ -62,30 +69,38 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override func fetchThumbnails(forItemIdentifiers itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
-		DispatchQueue.global(qos: .background).async {
-			for itemID in itemIdentifiers {
-				autoreleasepool {
-					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
-						if let dir = fpi.item, let img = dir.displayInfo.image {
-							let scaledImage = img.limited(to: size)
-							let data = UIImagePNGRepresentation(scaledImage)
-							perThumbnailCompletionHandler(itemID, data, nil)
-						} else if let file = fpi.typeItem, let img = file.displayIcon {
-							let scaledImage = img.limited(to: size)
-							let data = UIImagePNGRepresentation(scaledImage)
-							perThumbnailCompletionHandler(itemID, data, nil)
-						}
+		let group = DispatchGroup()
+		(0 ..< itemIdentifiers.count).forEach { _ in group.enter() }
+		DispatchQueue.concurrentPerform(iterations: itemIdentifiers.count) { count in
+			autoreleasepool {
+				let itemID = itemIdentifiers[count]
+				if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
+					if let dir = fpi.item, let img = dir.displayInfo.image {
+						let scaledImage = img.limited(to: size)
+						let data = UIImagePNGRepresentation(scaledImage)
+						perThumbnailCompletionHandler(itemID, data, nil)
+					} else if let file = fpi.typeItem, let img = file.displayIcon {
+						let scaledImage = img.limited(to: size)
+						let data = UIImagePNGRepresentation(scaledImage)
+						perThumbnailCompletionHandler(itemID, data, nil)
 					}
-					progress.completedUnitCount += 1
 				}
+				progress.completedUnitCount += 1
+				group.leave()
 			}
+		}
+		group.notify(queue: DispatchQueue.global(qos: .background)) {
 			completionHandler(nil)
 		}
 		return progress
 	}
-    
+
+	deinit {
+		NSLog("File extension terminated")
+	}
+
     // MARK: - Enumeration
-    
+
     override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
 		let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
         return FileProviderEnumerator(relatedItem: i)
