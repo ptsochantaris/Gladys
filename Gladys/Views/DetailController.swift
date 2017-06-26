@@ -7,10 +7,11 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet weak var titleLabel: UILabel!
-	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var header: UIView!
 	@IBOutlet weak var openButton: UIBarButtonItem!
-	@IBOutlet weak var totalSizeLabel: UILabel!
+	@IBOutlet weak var dateItem: UIBarButtonItem!
+	@IBOutlet var dateLabel: UILabel!
+	@IBOutlet var dateLabelHolder: UIView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -20,9 +21,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.dragDelegate = self
 
 		titleLabel.text = item.oneTitle
+		titleLabel.textAlignment = item.displayInfo.titleAlignment
 		openButton.isEnabled = item.canOpen
-		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt)
-		totalSizeLabel.text = diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
+
+		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
+		dateItem.customView = dateLabelHolder
+
 		table.backgroundColor = .clear
 		table.separatorStyle = .none
 		view.backgroundColor = .clear
@@ -85,6 +89,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		let typeEntry = item.typeItems[indexPath.section]
 		if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 			cell.name.text = "\"\(title)\""
+			cell.name.textAlignment = typeEntry.displayTitleAlignment
 		} else if typeEntry.dataExists {
 			cell.name.text = "<Binary Data>"
 		} else {
