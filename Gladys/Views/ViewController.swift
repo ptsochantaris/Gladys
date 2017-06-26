@@ -127,7 +127,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			p.permittedArrowDirections = [.any]
 			p.backgroundColor = .groupTableViewBackground
 			p.sourceView = cell
-			p.sourceRect = cell.bounds
+			p.sourceRect = cell.bounds.insetBy(dx: 5, dy: 0)
+			p.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper-detail"))
 		}
 	}
 

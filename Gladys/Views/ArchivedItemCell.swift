@@ -264,7 +264,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 						}
 
 					} else if let color = backgroundItem as? UIColor {
-						image.backgroundColor = color
+						image.backgroundColor = color // TODO - perhaps a custom view over the curent one
 					}
 				}
 			}

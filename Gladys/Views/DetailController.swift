@@ -23,6 +23,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		openButton.isEnabled = item.canOpen
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt)
 		totalSizeLabel.text = diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
+		table.backgroundColor = .clear
+		view.backgroundColor = .clear
 	}
 
 	override func viewDidLayoutSubviews() {
