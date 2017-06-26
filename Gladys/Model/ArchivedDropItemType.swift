@@ -470,7 +470,11 @@ final class ArchivedDropItemType: Codable {
 	var displayIconContentMode: ArchivedDropItemDisplayType
 	private var displayIconScale: CGFloat
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
-		displayIcon = icon.limited(to: CGSize(width: 512, height: 512))
+		if contentMode == .center || contentMode == .circle {
+			displayIcon = icon
+		} else {
+			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), halved: false)
+		}
 		displayIconScale = icon.scale
 		displayIconPriority = priority
 		displayIconContentMode = contentMode

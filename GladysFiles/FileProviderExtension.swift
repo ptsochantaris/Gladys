@@ -67,6 +67,12 @@ final class FileProviderExtension: NSFileProviderExtension {
     override func stopProvidingItem(at url: URL) {
     }
 
+	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
+		let shouldHalve = contentMode == .center || contentMode == .circle
+		let scaledImage = img.limited(to: size, halved: shouldHalve)
+		return UIImagePNGRepresentation(scaledImage)
+	}
+
 	override func fetchThumbnails(forItemIdentifiers itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
 		let group = DispatchGroup()
@@ -76,12 +82,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 				let itemID = itemIdentifiers[count]
 				if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
 					if let dir = fpi.item, let img = dir.displayInfo.image {
-						let scaledImage = img.limited(to: size)
-						let data = UIImagePNGRepresentation(scaledImage)
+						let data = imageData(img: img, size: size, contentMode: dir.displayInfo.imageContentMode)
 						perThumbnailCompletionHandler(itemID, data, nil)
 					} else if let file = fpi.typeItem, let img = file.displayIcon {
-						let scaledImage = img.limited(to: size)
-						let data = UIImagePNGRepresentation(scaledImage)
+						let data = imageData(img: img, size: size, contentMode: file.displayIconContentMode)
 						perThumbnailCompletionHandler(itemID, data, nil)
 					}
 				}
