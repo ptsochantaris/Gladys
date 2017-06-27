@@ -3,15 +3,9 @@ import Foundation
 import CoreSpotlight
 import FileProvider
 
-#if MAINAPP
-import FileProvider
-#endif
-
-final class Model: NSObject, CSSearchableIndexDelegate {
+final class Model: NSObject {
 
 	var drops: [ArchivedDropItem]
-
-	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
 	static var fileUrl: URL = {
 		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent("items.json")
@@ -56,6 +50,9 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 	}
 
 	#if MAINAPP
+
+	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+
 	func save(completion: ((Bool)->Void)? = nil) {
 
 		let itemsToSave = drops.filter { !$0.isLoading && !$0.isDeleting }
@@ -85,66 +82,12 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			}
 		}
 	}
-	#endif
-
-	//////////////////
-
-	private func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
-
-		let group = DispatchGroup()
-		group.enter()
-
-		let bgQueue = DispatchQueue.global(qos: .background)
-		bgQueue.async {
-			let identifiers = items.map { $0.uuid.uuidString }
-			CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: identifiers) { error in
-				for item in items {
-					group.enter()
-					item.makeIndex { success in
-						group.leave() // re-index completion
-					}
-				}
-				group.leave() // delete completion
-			}
-		}
-		group.notify(queue: bgQueue) {
-			completion()
-		}
-	}
-
-	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-		reIndex(items: drops, completion: acknowledgementHandler)
-	}
-
-	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-		let items = drops.filter { identifiers.contains($0.uuid.uuidString) }
-		reIndex(items: items, completion: acknowledgementHandler)
-	}
-
-	func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-		let model = Model()
-		if let item = model.drops.filter({ $0.uuid.uuidString == itemIdentifier }).first,
-			let data = item.bytes(for: typeIdentifier) {
-
-			return data
-		}
-		return Data()
-	}
-
-	func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
-		let model = Model()
-		if let item = model.drops.filter({ $0.uuid.uuidString == itemIdentifier }).first,
-			let url = item.url(for: typeIdentifier) {
-			return url as URL
-		}
-		return URL(string:"file://")!
-	}
 
 	var sizeInBytes: Int64 {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
-	///////////////////////
+	////////////////////////// Filtering
 
 	var isFiltering: Bool {
 		return _currentFilterQuery != nil
@@ -189,5 +132,72 @@ final class Model: NSObject, CSSearchableIndexDelegate {
 			return drops
 		}
 	}
+
+	#endif
 }
+
+//////////////////
+
+#if MAINAPP || INDEXER
+
+	extension Model: CSSearchableIndexDelegate {
+
+		private func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
+
+			let group = DispatchGroup()
+			for _ in 0 ..< items.count {
+				group.enter()
+			}
+
+			let bgQueue = DispatchQueue.global(qos: .background)
+			bgQueue.async {
+				for item in items {
+					item.makeIndex { success in
+						group.leave() // re-index completion
+					}
+				}
+			}
+			group.notify(queue: bgQueue) {
+				completion()
+			}
+		}
+		
+		func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+			let existingItems = drops
+			CSSearchableIndex.default().deleteAllSearchableItems { error in
+				if let error = error {
+					NSLog("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
+				}
+				self.reIndex(items: existingItems, completion: acknowledgementHandler)
+			}
+		}
+
+		func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+			let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }
+			let currentItemIds = drops.map { $0.uuid.uuidString }
+			let deletedItems = identifiers.filter { currentItemIds.contains($0) }
+			CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: deletedItems) { error in
+				if let error = error {
+					NSLog("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
+				}
+				self.reIndex(items: existingItems, completion: acknowledgementHandler)
+			}
+		}
+
+		func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+			if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let data = item.bytes(for: typeIdentifier) {
+				return data
+			}
+			return Data()
+		}
+
+		func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
+			if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let url = item.url(for: typeIdentifier) {
+				return url as URL
+			}
+			return URL(string:"file://")!
+		}
+	}
+
+#endif
 

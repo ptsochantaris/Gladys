@@ -302,7 +302,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 
 		if image.contentMode == .center {
-			label.numberOfLines = 9
+			label.numberOfLines = 8
 		} else {
 			label.numberOfLines = 2
 		}

@@ -52,7 +52,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		attributes.thumbnailURL = firstItem.imagePath
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
-		attributes.contentCreationDate = createdAt
+		attributes.addedDate = createdAt
 
 		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in

@@ -29,4 +29,13 @@ class IndexRequestHandler: CSIndexExtensionRequestHandler {
 		let model = Model()
 		return try model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
     }
+
+	override init() {
+		super.init()
+		NSLog("Index extension activated")
+	}
+
+	deinit {
+		NSLog("Index extension disposed")
+	}
 }
