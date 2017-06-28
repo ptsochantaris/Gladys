@@ -2,6 +2,7 @@
 import UIKit
 import MapKit
 import Contacts
+import ContactsUI
 import CoreSpotlight
 import FileProvider
 
@@ -152,7 +153,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if item is MKMapItem {
 			return true
 		} else if item is CNContact {
-			return false
+			return true
 		} else if let item = item as? URL {
 			return UIApplication.shared.canOpenURL(item)
 		}
@@ -160,7 +161,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return false
 	}
 
-	func tryOpen(completion: @escaping (Error?)->Void) {
+	func tryOpen(in viewController: UINavigationController) {
 		var priority = -1
 		var item: Any?
 
@@ -174,20 +175,23 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
-		} else if let _ = item as? CNContact {
-			// TODO
+		} else if let contact = item as? CNContact {
+			let c = CNContactViewController(forUnknownContact: contact)
+			c.contactStore = CNContactStore()
+			c.hidesBottomBarWhenPushed = true
+			viewController.pushViewController(c, animated: true)
 		} else if let item = item as? URL {
 			UIApplication.shared.open(item, options: [:]) { success in
-				if success {
-					completion(nil)
-				} else {
+				if !success {
 					let message: String
 					if item.scheme == "file" {
 						message = "iOS does not recognise the type of this file"
 					} else {
 						message = "iOS does not recognise the type of this link"
 					}
-					completion(NSError(domain: "build.bru.app", code: 1, userInfo: [ NSLocalizedDescriptionKey: message ]))
+					let a = UIAlertController(title: "Can't Open", message: message, preferredStyle: .alert)
+					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+					viewController.present(a, animated: true)
 				}
 			}
 		}

@@ -601,7 +601,7 @@ final class ArchivedDropItemType: Codable {
 
 	var itemForShare: (Any?, Int) {
 
-		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = try? CNContactVCardSerialization.contacts(with: bytes) {
+		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
 			return (contact, 12)
 		}
 

@@ -55,13 +55,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {
-		item.tryOpen { error in
-			if let error = error {
-				let a = UIAlertController(title: "Can't Open", message: error.localizedDescription, preferredStyle: .alert)
-				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-				self.present(a, animated: true)
-			}
-		}
+		item.tryOpen(in: self.navigationController!)
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
