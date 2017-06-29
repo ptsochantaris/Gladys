@@ -60,11 +60,23 @@ extension UIImage {
 
 	func limited(to targetSize: CGSize, shouldHalve: Bool) -> UIImage {
 
-		let targetPixelWidth = targetSize.width * scale
-		let targetPixelHeight = targetSize.height * scale
+		let s = scale
+		let mySize = size
+		let widthRatio  = targetSize.width  / mySize.width
+		let heightRatio = targetSize.height / mySize.height
+		let ratio = max(widthRatio, heightRatio) * (shouldHalve ? 0.5 : 1) * s
 
+		let scaledWidthPixels = Int(mySize.width * ratio)
+		let scaledHeightPixels = Int(mySize.height * ratio)
+
+		let targetPixelWidth = targetSize.width * s
+		let targetPixelHeight = targetSize.height * s
+		let offsetX = (Int(targetPixelWidth) - scaledWidthPixels) / 2
+		let offsetY = (Int(targetPixelHeight) - scaledHeightPixels) / 2
+
+		let orientation = imageOrientation
 		var transform = CGAffineTransform.identity
-		switch imageOrientation {
+		switch orientation {
 		case .down, .downMirrored:
 			transform = transform.translatedBy(x: targetPixelWidth, y: targetPixelHeight).rotated(by: .pi)
 		case .left, .leftMirrored:
@@ -74,7 +86,7 @@ extension UIImage {
 		default: break
 		}
 
-		switch imageOrientation {
+		switch orientation {
 		case .upMirrored, .downMirrored:
 			transform = transform.translatedBy(x: targetPixelWidth, y: 0).scaledBy(x: -1, y: 1)
 		case .leftMirrored, .rightMirrored:
@@ -82,7 +94,6 @@ extension UIImage {
 		default: break
 		}
 
-		let s = scale
 		let imageRef = cgImage!
 		let c = CGContext(data: nil,
 		                  width: Int(targetPixelWidth),
@@ -94,25 +105,13 @@ extension UIImage {
 		c.interpolationQuality = .high
 		c.concatenate(transform)
 
-		let widthRatio  = targetSize.width  / size.width
-		let heightRatio = targetSize.height / size.height
-		let ratio = max(widthRatio, heightRatio) * (shouldHalve ? 0.5 : 1)
-
-		let scaledWidth = size.width * ratio
-		let scaledHeight = size.height * ratio
-
-		let scaledWidthPixels = Int(scaledWidth * s)
-		let scaledHeightPixels = Int(scaledHeight * s)
-
-		let offsetX = (Int(targetPixelWidth) - scaledWidthPixels) / 2
-		let offsetY = (Int(targetPixelHeight) - scaledHeightPixels) / 2
-
-		switch imageOrientation {
+		switch orientation {
 		case .left, .leftMirrored, .right, .rightMirrored:
 			c.draw(imageRef, in: CGRect(x: offsetY, y: offsetX, width: scaledHeightPixels, height: scaledWidthPixels))
 		default:
 			c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: scaledWidthPixels, height: scaledHeightPixels))
 		}
+
 		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
 	}
 }
