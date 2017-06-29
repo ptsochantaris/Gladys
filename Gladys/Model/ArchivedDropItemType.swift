@@ -388,12 +388,16 @@ final class ArchivedDropItemType: Codable {
 				NSLog("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
 				setBytes(object: item as NSURL, type: .NSURL)
-				fetchWebPreview(for: item) { [weak self] title, image in
-					self?.accessoryTitle = title ?? self?.accessoryTitle
-					if let image = image {
-						self?.setDisplayIcon(image, 30, .center)
+				if let s = item.scheme, s.hasPrefix("http") {
+					fetchWebPreview(for: item) { [weak self] title, image in
+						self?.accessoryTitle = title ?? self?.accessoryTitle
+						if let image = image {
+							self?.setDisplayIcon(image, 30, .center)
+						}
+						self?.signalDone()
 					}
-					self?.signalDone()
+				} else {
+					signalDone()
 				}
 			}
 		} else {

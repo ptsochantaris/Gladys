@@ -232,15 +232,17 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
 
+		let ids = provider.registeredTypeIdentifiers.filter { !$0.hasPrefix("com.apple.") }
+
 		uuid = UUID()
 		createdAt = Date()
 		suggestedName = provider.suggestedName
-		loadCount = provider.registeredTypeIdentifiers.count
+		loadCount = ids.count
 		isLoading = true
 		allLoadedWell = true
 		self.delegate = delegate
 
-		typeItems = provider.registeredTypeIdentifiers.map {
+		typeItems = ids.map {
 			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
 		}
 	}
