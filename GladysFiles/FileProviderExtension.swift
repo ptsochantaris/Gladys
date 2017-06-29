@@ -69,33 +69,34 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
 		let shouldHalve = contentMode == .center || contentMode == .circle
-		let scaledImage = img.limited(to: size, halved: shouldHalve)
+		let scaledImage = img.limited(to: size, shouldHalve: shouldHalve)
 		return UIImagePNGRepresentation(scaledImage)
 	}
 
 	override func fetchThumbnails(forItemIdentifiers itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
-		let group = DispatchGroup()
-		(0 ..< itemIdentifiers.count).forEach { _ in group.enter() }
-		DispatchQueue.concurrentPerform(iterations: itemIdentifiers.count) { count in
-			autoreleasepool {
-				let itemID = itemIdentifiers[count]
-				if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
-					if let dir = fpi.item, let img = dir.displayInfo.image {
-						let data = imageData(img: img, size: size, contentMode: dir.displayInfo.imageContentMode)
-						perThumbnailCompletionHandler(itemID, data, nil)
-					} else if let file = fpi.typeItem, let img = file.displayIcon {
-						let data = imageData(img: img, size: size, contentMode: file.displayIconContentMode)
-						perThumbnailCompletionHandler(itemID, data, nil)
+
+		let queue = DispatchQueue(label: "build.bru.thumbnails", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+		queue.async {
+			let mySize = CGSize(width: 256, height: 256)
+			for itemID in itemIdentifiers {
+				autoreleasepool {
+					NSLog("Creating thumbnail for item \(itemID.rawValue)")
+					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
+						if let dir = fpi.item, let img = dir.displayInfo.image {
+							let data = self.imageData(img: img, size: mySize, contentMode: dir.displayInfo.imageContentMode)
+							perThumbnailCompletionHandler(itemID, data, nil)
+						} else if let file = fpi.typeItem, let img = file.displayIcon {
+							let data = self.imageData(img: img, size: mySize, contentMode: file.displayIconContentMode)
+							perThumbnailCompletionHandler(itemID, data, nil)
+						}
 					}
+					progress.completedUnitCount += 1
 				}
-				progress.completedUnitCount += 1
-				group.leave()
 			}
-		}
-		group.notify(queue: DispatchQueue.global(qos: .background)) {
 			completionHandler(nil)
 		}
+
 		return progress
 	}
 

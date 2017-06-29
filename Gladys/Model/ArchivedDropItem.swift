@@ -204,24 +204,9 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	private var displayIcon: (UIImage?, ArchivedDropItemDisplayType) {
-		var priority = -1
-		var image: UIImage?
-		var contentMode = ArchivedDropItemDisplayType.center
-		for i in typeItems {
-			let newImage = i.displayIcon
-			let newPriority = i.displayIconPriority
-			if let newImage = newImage, newPriority > priority {
-				image = newImage
-				priority = newPriority
-				contentMode = i.displayIconContentMode
-			}
-		}
-
-		if image == nil {
-			image = #imageLiteral(resourceName: "iconStickyNote")
-			contentMode = .center
-		}
-
+		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		let contentMode = highestPriorityIconItem?.displayIconContentMode ?? .center
+		let image = highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 		return (image, contentMode)
 	}
 
@@ -231,18 +216,9 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			return (suggestedName, .center)
 		}
 
-		var title: String?
-		var priority = 0
-		var alignment = NSTextAlignment.center
-		for i in typeItems {
-			let newTitle = i.displayTitle
-			let newPriority = i.displayTitlePriority
-			if let newTitle = newTitle, newPriority > priority {
-				title = newTitle
-				priority = newPriority
-				alignment = i.displayTitleAlignment
-			}
-		}
+		let highestPriorityItem = typeItems.max(by: { $0.displayTitlePriority < $1.displayTitlePriority })
+		let title = highestPriorityItem?.displayTitle
+		let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
 		return (title, alignment)
 	}
 

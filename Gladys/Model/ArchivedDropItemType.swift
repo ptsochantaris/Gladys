@@ -39,13 +39,6 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconScale, forKey: .displayIconScale)
 		try v.encode(hasLocalFiles, forKey: .hasLocalFiles)
 		try v.encode(createdAt, forKey: .createdAt)
-
-		let ipath = imagePath
-		if let displayIcon = displayIcon, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
-			try? displayIconData.write(to: ipath, options: [.atomic])
-		} else if FileManager.default.fileExists(atPath: ipath.path) {
-			try? FileManager.default.removeItem(at: ipath)
-		}
 	}
 
 	lazy var imagePath: URL = {
@@ -74,11 +67,6 @@ final class ArchivedDropItemType: Codable {
 
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
-
-		if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
-			let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
-			displayIcon = UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
-		}
 	}
 
 	var encodedUrl: NSURL? {
@@ -127,7 +115,6 @@ final class ArchivedDropItemType: Codable {
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
-	private var loadCount = 0
 
 	private enum ClassType: String {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
@@ -465,7 +452,25 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var displayIcon: UIImage?
+	var displayIcon: UIImage? {
+		set {
+			let ipath = imagePath
+			if let displayIcon = newValue, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
+				try? displayIconData.write(to: ipath, options: [.atomic])
+			} else if FileManager.default.fileExists(atPath: ipath.path) {
+				try? FileManager.default.removeItem(at: ipath)
+			}
+		}
+		get {
+			if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
+				let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
+				return UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
+			} else {
+				return nil
+			}
+		}
+	}
+
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
 	private var displayIconScale: CGFloat
@@ -473,7 +478,7 @@ final class ArchivedDropItemType: Codable {
 		if contentMode == .center || contentMode == .circle {
 			displayIcon = icon
 		} else {
-			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), halved: false)
+			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), shouldHalve: false)
 		}
 		displayIconScale = icon.scale
 		displayIconPriority = priority
