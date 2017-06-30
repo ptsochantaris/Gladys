@@ -230,11 +230,13 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.uuid.uuidString)
 	}()
 
-	private static let blockedTypes = ["com.apple.uikit.useractivity", "com.apple.mobilemail.internalMessageTransfer"]
+	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer"]
 
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
 
-		let ids = provider.registeredTypeIdentifiers.filter { !ArchivedDropItem.blockedTypes.contains($0) }
+		let ids = provider.registeredTypeIdentifiers.filter({ typeIdentifier in
+			!ArchivedDropItem.blockedSuffixes.contains(where: { blockedSuffix in typeIdentifier.hasSuffix(blockedSuffix )})
+		})
 
 		uuid = UUID()
 		createdAt = Date()

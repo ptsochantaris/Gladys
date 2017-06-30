@@ -83,7 +83,7 @@ final class ArchivedDropItemType: Codable {
 
 	var bytes: Data? {
 		set {
-			log("setting bytes")
+			//log("setting bytes")
 			let byteLocation = bytesPath
 			if newValue == nil {
 				let f = FileManager.default
@@ -340,6 +340,9 @@ final class ArchivedDropItemType: Codable {
 				let s = String(data: item, encoding: .utf16)
 				setTitleInfo(s, 8)
 				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+
+			} else if typeIdentifier == "public.email-message" {
+				setDisplayIcon (#imageLiteral(resourceName: "iconEmail"), 10, .center)
 
 			} else if typeIdentifier == "com.apple.mapkit.map-item" {
 				setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
