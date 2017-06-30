@@ -155,7 +155,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		} else if item is CNContact {
 			return true
 		} else if let item = item as? URL {
-			return UIApplication.shared.canOpenURL(item)
+			return item.scheme != "file" && UIApplication.shared.canOpenURL(item)
 		}
 
 		return false

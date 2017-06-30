@@ -193,11 +193,8 @@ final class ArchivedDropItemType: Codable {
 		guard let classType = classType else { return (nil, 0) }
 
 		switch classType {
-
 		case .MKMapItem: return (decode(MKMapItem.self), 30)
-
 		case .UIColor: return (decode(UIColor.self), 10)
-
 		default: return (nil, 0)
 		}
 	}
