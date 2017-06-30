@@ -54,6 +54,8 @@ final class MiniMapView: UIImageView {
 
 	private var coordinate: CLLocationCoordinate2D?
 	private static let cache = NSCache<NSString, UIImage>()
+	private weak var snapshotter: MKMapSnapshotter?
+	private var snapshotOptions: MKMapSnapshotOptions?
 
 	func show(location: MKMapItem) {
 
@@ -79,6 +81,7 @@ final class MiniMapView: UIImageView {
 		guard let coordinate = coordinate else { return }
 		if bounds.isEmpty { return }
 		if let image = image, image.size == bounds.size { return }
+		if UIApplication.shared.applicationState == .background { return }
 
 		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
 		if let existingImage = MiniMapView.cache.object(forKey: cacheKey) {
@@ -86,15 +89,28 @@ final class MiniMapView: UIImageView {
 			return
 		}
 
-		alpha = 0
+		if let o = snapshotOptions {
+			if !(o.region.center.latitude != coordinate.latitude || o.region.center.longitude != coordinate.longitude || o.size != bounds.size) {
+				return
+			}
+		}
 
-		let options = MKMapSnapshotOptions()
-		options.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
-		options.showsBuildings = true
-		options.showsPointsOfInterest = true
-		options.size = bounds.size
-		let snapshotter = MKMapSnapshotter(options: options)
-		snapshotter.start { snapshot, error in
+		alpha = 0
+		snapshotter?.cancel()
+		snapshotter = nil
+		snapshotOptions = nil
+
+		let O = MKMapSnapshotOptions()
+		O.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
+		O.showsBuildings = true
+		O.showsPointsOfInterest = true
+		O.size = bounds.size
+		snapshotOptions = O
+
+		let S = MKMapSnapshotter(options: O)
+		snapshotter = S
+
+		S.start { snapshot, error in
 			if let snapshot = snapshot {
 				DispatchQueue.main.async { [weak self] in
 					let img = snapshot.image
@@ -109,7 +125,6 @@ final class MiniMapView: UIImageView {
 				NSLog("Error taking snapshot: \(error.localizedDescription)")
 			}
 		}
-
 	}
 
 	required init?(coder aDecoder: NSCoder) {
