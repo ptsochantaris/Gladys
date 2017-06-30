@@ -68,8 +68,8 @@ final class FileProviderExtension: NSFileProviderExtension {
     }
 
 	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
-		let shouldHalve = contentMode == .center || contentMode == .circle
-		let scaledImage = img.limited(to: size, shouldHalve: shouldHalve)
+		let limit: CGFloat = contentMode == .fit ? 0.8 : ((contentMode == .center || contentMode == .circle) ? 0.5 : 1.0)
+		let scaledImage = img.limited(to: size, limitTo: limit)
 		return UIImagePNGRepresentation(scaledImage)
 	}
 

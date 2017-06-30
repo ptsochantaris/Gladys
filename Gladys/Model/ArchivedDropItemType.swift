@@ -392,7 +392,11 @@ final class ArchivedDropItemType: Codable {
 					fetchWebPreview(for: item) { [weak self] title, image in
 						self?.accessoryTitle = title ?? self?.accessoryTitle
 						if let image = image {
-							self?.setDisplayIcon(image, 30, .center)
+							if image.size.height > 100 || image.size.width > 200 {
+								self?.setDisplayIcon(image, 30, .fit)
+							} else {
+								self?.setDisplayIcon(image, 30, .center)
+							}
 						}
 						self?.signalDone()
 					}
@@ -481,8 +485,10 @@ final class ArchivedDropItemType: Codable {
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
 		if contentMode == .center || contentMode == .circle {
 			displayIcon = icon
+		} else if contentMode == .fit {
+			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), limitTo: 0.75, useScreenScale: true)
 		} else {
-			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), shouldHalve: false)
+			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), useScreenScale: true)
 		}
 		displayIconScale = icon.scale
 		displayIconPriority = priority
@@ -518,6 +524,8 @@ final class ArchivedDropItemType: Codable {
 
 		} else {
 
+			log("Fetching HTML from URL: \(url.absoluteString)")
+
 			let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
 				if let data = data,
 					let text = String(data: data, encoding: .utf8),
@@ -530,19 +538,41 @@ final class ArchivedDropItemType: Codable {
 						log("No title located at URL")
 					}
 
-					var iconImage: UIImage?
+					var largestImagePath = "/favicon.ico"
+					var imageRank = 0
 
-					if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-						for file in ["/favicon.ico"] {
-							c.path = file
-							if  let url = c.url,
-								let data = try? Data(contentsOf: url, options: []),
-								let image = UIImage(data: data) {
-
-								iconImage = image
-								break
+					if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+						for node in touchIcons {
+							let isTouch = node.attr("rel") == "apple-touch-icon"
+							var rank = isTouch ? 10 : 1
+							if let sizes = node.attr("sizes") {
+								let numbers = sizes.split(separator: "x").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+								if numbers.count > 1 {
+									rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
+								}
+							}
+							if let href = node.attr("href") {
+								if rank > imageRank {
+									imageRank = rank
+									largestImagePath = href
+								}
 							}
 						}
+					}
+
+					var iconImage: UIImage?
+					var iconUrl: URL?
+					if let i = URL(string: largestImagePath), i.scheme != nil {
+						iconUrl = i
+					} else {
+						if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+							c.path = largestImagePath
+							iconUrl = c.url
+						}
+					}
+
+					if let url = iconUrl, let data = try? Data(contentsOf: url, options: []), let image = UIImage(data: data) {
+						iconImage = image
 					}
 
 					completion(title, iconImage)

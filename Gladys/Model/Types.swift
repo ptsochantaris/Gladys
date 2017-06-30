@@ -64,13 +64,19 @@ let dateFormatter: DateFormatter = {
 
 extension UIImage {
 
-	func limited(to targetSize: CGSize, shouldHalve: Bool) -> UIImage {
+	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false) -> UIImage {
 
-		let s = scale
+		let s = useScreenScale ? UIScreen.main.scale : scale
 		let mySize = size
 		let widthRatio  = targetSize.width  / mySize.width
 		let heightRatio = targetSize.height / mySize.height
-		let ratio = max(widthRatio, heightRatio) * (shouldHalve ? 0.5 : 1) * s
+
+		let ratio: CGFloat
+		if limitTo < 1 {
+			ratio = min(widthRatio, heightRatio) * limitTo * s
+		} else {
+			ratio = max(widthRatio, heightRatio) * limitTo * s
+		}
 
 		let scaledWidthPixels = Int(mySize.width * ratio)
 		let scaledHeightPixels = Int(mySize.height * ratio)
@@ -118,6 +124,6 @@ extension UIImage {
 			c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: scaledWidthPixels, height: scaledHeightPixels))
 		}
 
-		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
+		return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
 	}
 }
