@@ -81,7 +81,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			let mySize = CGSize(width: 256, height: 256)
 			for itemID in itemIdentifiers {
 				autoreleasepool {
-					NSLog("Creating thumbnail for item \(itemID.rawValue)")
+					log("Creating thumbnail for item \(itemID.rawValue)")
 					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
 						if let dir = fpi.item, let img = dir.displayInfo.image {
 							let data = self.imageData(img: img, size: mySize, contentMode: dir.displayInfo.imageContentMode)
@@ -101,7 +101,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	deinit {
-		NSLog("File extension terminated")
+		log("File extension terminated")
 	}
 
     // MARK: - Enumeration

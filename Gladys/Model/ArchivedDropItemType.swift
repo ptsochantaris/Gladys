@@ -83,7 +83,7 @@ final class ArchivedDropItemType: Codable {
 
 	var bytes: Data? {
 		set {
-			NSLog("setting bytes")
+			log("setting bytes")
 			let byteLocation = bytesPath
 			if newValue == nil {
 				let f = FileManager.default
@@ -224,9 +224,9 @@ final class ArchivedDropItemType: Codable {
 			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
 				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
 				if let decoded = decoded {
-					NSLog("Responding with object type: \(type(of: decoded))")
+					log("Responding with object type: \(type(of: decoded))")
 				} else {
-					NSLog("Responding with nil object")
+					log("Responding with nil object")
 				}
 				completion(decoded, nil)
 				return nil
@@ -236,7 +236,7 @@ final class ArchivedDropItemType: Codable {
 		if hasLocalFiles {
 			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
 				let decoded = self.encodedUrl as URL?
-				NSLog("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
+				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
 				completion(decoded, false, nil)
 				return nil
 			}
@@ -244,7 +244,7 @@ final class ArchivedDropItemType: Codable {
 		} else if let bytes = bytes {
 
 			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
-				NSLog("Responding with data block")
+				log("Responding with data block")
 				completion(bytes, nil)
 				return nil
 			}
@@ -260,13 +260,13 @@ final class ArchivedDropItemType: Codable {
 					deliveredClassType = .NSData
 				}
 
-				NSLog("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
+				log("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
 
 				if let item = self.decodedObject(for: deliveredClassType) {
-					NSLog("Responding with item \(item)")
+					log("Responding with item \(item)")
 					completion(item, nil)
 				} else {
-					NSLog("Could not decode local data, responding with NSData item")
+					log("Could not decode local data, responding with NSData item")
 					completion(bytes as NSData, nil)
 				}
 			}
@@ -285,32 +285,32 @@ final class ArchivedDropItemType: Codable {
 	private func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
 
 		if let item = item as? NSString {
-			NSLog("      received string: \(item)")
+			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 			setBytes(object: item, type: .NSString)
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
-			NSLog("      received attributed string: \(item)")
+			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 			setBytes(object: item, type: .NSAttributedString)
 			signalDone()
 
 		} else if let item = item as? UIColor {
-			NSLog("      received color: \(item)")
+			log("      received color: \(item)")
 			setBytes(object: item, type: .UIColor)
 			signalDone()
 
 		} else if let item = item as? UIImage {
-			NSLog("      received image: \(item)")
+			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
 			setBytes(object: item, type: .UIImage)
 			signalDone()
 
 		} else if let item = item as? Data {
-			NSLog("      received data: \(item)")
+			log("      received data: \(item)")
 			classType = .NSData
 			bytes = item
 
@@ -359,7 +359,7 @@ final class ArchivedDropItemType: Codable {
 			signalDone()
 
 		} else if let item = item as? MKMapItem {
-			NSLog("      received map item: \(item)")
+			log("      received map item: \(item)")
 			setBytes(object: item, type: .MKMapItem)
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
 			signalDone()
@@ -377,12 +377,12 @@ final class ArchivedDropItemType: Codable {
 			}
 
 			if item.scheme == "file" {
-				NSLog("      will duplicate item at local path: \(item.path)")
+				log("      will duplicate item at local path: \(item.path)")
 				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
 					self?.handleLocalFetch(url: url, error: error)
 				}
 			} else {
-				NSLog("      received remote url: \(item.absoluteString)")
+				log("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
 				setBytes(object: item as NSURL, type: .NSURL)
 				if let s = item.scheme, s.hasPrefix("http") {
@@ -398,7 +398,7 @@ final class ArchivedDropItemType: Codable {
 				}
 			}
 		} else {
-			NSLog("      unknown class")
+			log("      unknown class")
 			allLoadedWell = false
 			setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 			signalDone()
@@ -410,7 +410,7 @@ final class ArchivedDropItemType: Codable {
 		// in thread
 		if let url = url {
 			let localUrl = copyLocal(url)
-			NSLog("      received to local url: \(localUrl.path)")
+			log("      received to local url: \(localUrl.path)")
 
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
@@ -418,7 +418,7 @@ final class ArchivedDropItemType: Codable {
 			setBytes(object: localUrl as NSURL, type: .NSURL)
 
 		} else if let error = error {
-			NSLog("Error fetching local data from url: \(error.localizedDescription)")
+			log("Error fetching local data from url: \(error.localizedDescription)")
 			allLoadedWell = false
 		}
 		signalDone()
@@ -441,13 +441,13 @@ final class ArchivedDropItemType: Codable {
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
 			if let error = error {
-				NSLog("      error receiving item: \(error.localizedDescription)")
+				log("      error receiving item: \(error.localizedDescription)")
 				self.allLoadedWell = false
 				self.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				self.signalDone()
 			} else if let item = item {
 				let receivedTypeString = type(of: item)
-				NSLog("item name: [\(provider.suggestedName ?? "")] type: [\(typeIdentifier)] class: [\(receivedTypeString)]")
+				log("item name: [\(provider.suggestedName ?? "")] type: [\(typeIdentifier)] class: [\(receivedTypeString)]")
 				self.ingest(item: item, from: provider)
 			}
 		}
@@ -492,22 +492,22 @@ final class ArchivedDropItemType: Codable {
 
 		if testing {
 
-			NSLog("Investigating possible HTML title from this URL: \(url.absoluteString)")
+			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
 
 			var request = URLRequest(url: url)
 			request.httpMethod = "HEAD"
 			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
 					if let type = response.allHeaderFields["Content-Type"] as? String, type.hasPrefix("text/html") {
-						NSLog("Content for this is HTML, will try to fetch title")
+						log("Content for this is HTML, will try to fetch title")
 						self.fetchWebPreview(for: url, testing: false, completion: completion)
 					} else {
-						NSLog("Content for this isn't HTML, never mind")
+						log("Content for this isn't HTML, never mind")
 						completion(nil, nil)
 					}
 				}
 				if let error = error {
-					NSLog("Error while investigating URL: \(error.localizedDescription)")
+					log("Error while investigating URL: \(error.localizedDescription)")
 					completion(nil, nil)
 				}
 			}
@@ -522,9 +522,9 @@ final class ArchivedDropItemType: Codable {
 
 					let title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
 					if let title = title {
-						NSLog("Title located at URL: \(title)")
+						log("Title located at URL: \(title)")
 					} else {
-						NSLog("No title located at URL")
+						log("No title located at URL")
 					}
 
 					var iconImage: UIImage?
@@ -545,10 +545,10 @@ final class ArchivedDropItemType: Codable {
 					completion(title, iconImage)
 
 				} else if let error = error {
-					NSLog("Error while fetching title URL: \(error.localizedDescription)")
+					log("Error while fetching title URL: \(error.localizedDescription)")
 					completion(nil, nil)
 				} else {
-					NSLog("Bad HTML data while fetching title URL")
+					log("Bad HTML data while fetching title URL")
 					completion(nil, nil)
 				}
 			}

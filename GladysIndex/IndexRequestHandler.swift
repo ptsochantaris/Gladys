@@ -32,10 +32,10 @@ class IndexRequestHandler: CSIndexExtensionRequestHandler {
 
 	override init() {
 		super.init()
-		NSLog("Index extension activated")
+		log("Index extension activated")
 	}
 
 	deinit {
-		NSLog("Index extension disposed")
+		log("Index extension disposed")
 	}
 }

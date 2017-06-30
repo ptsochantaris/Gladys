@@ -16,11 +16,11 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 		super.init()
 		if relatedItem == nil {
-			NSLog("Enumerator created for root")
+			log("Enumerator created for root")
 		} else if relatedItem?.item == nil {
-			NSLog("Enumerator for \(uuid) created for type directory")
+			log("Enumerator for \(uuid) created for type directory")
 		} else {
-			NSLog("Enumerator for \(uuid) created for entity directory")
+			log("Enumerator for \(uuid) created for entity directory")
 		}
 	}
 
@@ -30,11 +30,11 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAtPage page: Data) {
 
 		if relatedItem?.typeItem != nil {
-			NSLog("Listing file (wat?)")
+			log("Listing file (wat?)")
 		} else if relatedItem?.item != nil {
-			NSLog("Listing entity directory")
+			log("Listing entity directory")
 		} else {
-			NSLog("Listing root")
+			log("Listing root")
 		}
 
 		let p = NSFileProviderPage(data: page)
@@ -73,15 +73,15 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	}
 
 	deinit {
-		NSLog("Enumerator for \(uuid) shut down")
+		log("Enumerator for \(uuid) shut down")
 	}
     
     func enumerateChanges(for observer: NSFileProviderChangeObserver, fromSyncAnchor anchor: Data) {
 		if relatedItem?.typeItem != nil {
-			NSLog("Changes requested for enumerator of end-file")
+			log("Changes requested for enumerator of end-file")
 
 		} else if relatedItem?.item != nil {
-			NSLog("Changes requested for enumerator of directory")
+			log("Changes requested for enumerator of directory")
 
 			FileProviderExtension.model.reloadData()
 			let newItemIds = rootItems.map { $0.itemIdentifier }
@@ -97,7 +97,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			}
 
 		} else {
-			NSLog("Enumerating changes for root")
+			log("Enumerating changes for root")
 
 			let oldItemIds = rootItems.map { $0.itemIdentifier }
 			FileProviderExtension.model.reloadData()

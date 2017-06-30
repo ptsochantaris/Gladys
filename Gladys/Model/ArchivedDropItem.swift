@@ -58,10 +58,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
 			if let error = error {
-				NSLog("Error indexing item \(self.uuid): \(error)")
+				log("Error indexing item \(self.uuid): \(error)")
 				completion?(false)
 			} else {
-				NSLog("Item indexed: \(self.uuid)")
+				log("Item indexed: \(self.uuid)")
 				completion?(true)
 			}
 		})
@@ -71,7 +71,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		isDeleting = true
 		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
 			if let error = error {
-				NSLog("Error while deleting an index \(error)")
+				log("Error while deleting an index \(error)")
 			}
 		}
 		let f = FileManager.default
@@ -80,7 +80,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 		NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
 			if let e = error {
-				NSLog("Error signalling deletion of item: \(e.localizedDescription)")
+				log("Error signalling deletion of item: \(e.localizedDescription)")
 			}
 		}
 	}

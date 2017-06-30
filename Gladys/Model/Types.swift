@@ -1,6 +1,12 @@
 
 import UIKit
 
+func log(_ line: @autoclosure ()->String) {
+	#if DEBUG
+		print(line())
+	#endif
+}
+
 struct ArchivedDropDisplayInfo {
 	let image: UIImage?
 	let imageContentMode: ArchivedDropItemDisplayType

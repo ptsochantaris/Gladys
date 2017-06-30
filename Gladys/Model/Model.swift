@@ -24,26 +24,26 @@ final class Model: NSObject {
 
 				if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
 					if dataModified <= dataFileLastModified {
-						NSLog("No changes, no need to reload data")
+						log("No changes, no need to reload data")
 						return nil
 					}
 					dataFileLastModified = dataModified
 				}
 				let data = try Data(contentsOf: url, options: [.alwaysMapped])
-				NSLog("Loaded data")
+				log("Loaded data")
 				return try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 
 			} catch {
-				NSLog("Loading Error: \(error)")
+				log("Loading Error: \(error)")
 			}
 		} else {
-			NSLog("Starting fresh store")
+			log("Starting fresh store")
 		}
 		return nil
 	}
 
 	func reloadData() {
-		NSLog("Reloading data")
+		log("Reloading data")
 		if let d = Model.loadData() {
 			drops = d
 		}
@@ -63,17 +63,17 @@ final class Model: NSObject {
 				let data = try JSONEncoder().encode(itemsToSave)
 				try data.write(to: Model.fileUrl, options: .atomic)
 				DispatchQueue.main.async {
-					NSLog("Saved")
+					log("Saved")
 					completion?(true)
 					NotificationCenter.default.post(name: .SaveComplete, object: nil)
 					NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier.rootContainer) { error in
 						if let e = error {
-							NSLog("Error signalling change: \(e.localizedDescription)")
+							log("Error signalling change: \(e.localizedDescription)")
 						}
 					}
 				}
 			} catch {
-				NSLog("Saving Error: \(error.localizedDescription)")
+				log("Saving Error: \(error.localizedDescription)")
 				if let completion = completion {
 					DispatchQueue.main.async {
 						completion(false)
@@ -166,7 +166,7 @@ final class Model: NSObject {
 			let existingItems = drops
 			CSSearchableIndex.default().deleteAllSearchableItems { error in
 				if let error = error {
-					NSLog("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
+					log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
 				}
 				self.reIndex(items: existingItems, completion: acknowledgementHandler)
 			}
@@ -178,7 +178,7 @@ final class Model: NSObject {
 			let deletedItems = identifiers.filter { currentItemIds.contains($0) }
 			CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: deletedItems) { error in
 				if let error = error {
-					NSLog("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
+					log("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
 				}
 				self.reIndex(items: existingItems, completion: acknowledgementHandler)
 			}
