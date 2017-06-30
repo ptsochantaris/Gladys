@@ -114,6 +114,16 @@ final class Model: NSObject {
 						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 					}
 				}
+				q.completionHandler = { error in
+					if let error = error {
+						log("Search error: \(error.localizedDescription)")
+					}
+					DispatchQueue.main.async {
+						if self._cachedFilteredDrops?.isEmpty ?? true {
+							NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+						}
+					}
+				}
 				_currentFilterQuery = q
 				q.start()
 			} else {
