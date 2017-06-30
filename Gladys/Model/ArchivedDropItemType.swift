@@ -541,9 +541,9 @@ final class ArchivedDropItemType: Codable {
 					var largestImagePath = "/favicon.ico"
 					var imageRank = 0
 
-					if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+					if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
 						for node in touchIcons {
-							let isTouch = node.attr("rel") == "apple-touch-icon"
+							let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
 							var rank = isTouch ? 10 : 1
 							if let sizes = node.attr("sizes") {
 								let numbers = sizes.split(separator: "x").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
