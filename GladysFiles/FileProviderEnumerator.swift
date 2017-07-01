@@ -30,7 +30,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAtPage page: Data) {
 
 		if relatedItem?.typeItem != nil {
-			log("Listing file (wat?)")
+			log("Listing file")
 		} else if relatedItem?.item != nil {
 			log("Listing entity directory")
 		} else {

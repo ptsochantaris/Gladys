@@ -33,6 +33,10 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return nil
 	}
 
+	var tagData: Data? {
+		return item?.tagData ?? typeItem?.tagData
+	}
+
 	var creationDate: Date? {
 		if let item = item {
 			return item.createdAt

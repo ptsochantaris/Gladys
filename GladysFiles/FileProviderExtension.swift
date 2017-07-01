@@ -73,6 +73,13 @@ final class FileProviderExtension: NSFileProviderExtension {
 		return UIImagePNGRepresentation(scaledImage)
 	}
 
+	override func setTagData(_ tagData: Data?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
+		if let i = try? item(for: itemIdentifier) as? FileProviderItem {
+			i?.item?.tagData = tagData
+			i?.typeItem?.tagData = tagData
+		}
+	}
+
 	override func fetchThumbnails(forItemIdentifiers itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
 
@@ -107,8 +114,14 @@ final class FileProviderExtension: NSFileProviderExtension {
     // MARK: - Enumeration
 
     override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-		let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
-        return FileProviderEnumerator(relatedItem: i)
+
+		switch containerItemIdentifier {
+		case .workingSet, .allDirectories, .rootContainer:
+			return FileProviderEnumerator(relatedItem: nil)
+		default:
+			let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
+			return FileProviderEnumerator(relatedItem: i)
+		}
     }
     
 }
