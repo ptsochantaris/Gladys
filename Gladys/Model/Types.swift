@@ -67,52 +67,56 @@ extension UIImage {
 
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false) -> UIImage {
 
+		let mySizePixelWidth = size.width * scale
+		let mySizePixelHeight = size.height * scale
+
 		let s = useScreenScale ? UIScreen.main.scale : scale
-		let mySize = size
-		let widthRatio  = targetSize.width  / mySize.width
-		let heightRatio = targetSize.height / mySize.height
+		let outputImagePixelWidth = targetSize.width * s
+		let outputImagePixelHeight = targetSize.height * s
+
+		let widthRatio  = outputImagePixelWidth  / mySizePixelWidth
+		let heightRatio = outputImagePixelHeight / mySizePixelHeight
 
 		let ratio: CGFloat
 		if limitTo < 1 {
-			ratio = min(widthRatio, heightRatio) * limitTo * s
+			ratio = min(widthRatio, heightRatio) * limitTo
 		} else {
-			ratio = max(widthRatio, heightRatio) * limitTo * s
+			ratio = max(widthRatio, heightRatio) * limitTo
 		}
 
-		let scaledWidthPixels = Int(mySize.width * ratio)
-		let scaledHeightPixels = Int(mySize.height * ratio)
+		let drawnImageWidthPixels = Int(mySizePixelWidth * ratio)
+		let drawnImageHeightPixels = Int(mySizePixelHeight * ratio)
 
-		let targetPixelWidth = targetSize.width * s
-		let targetPixelHeight = targetSize.height * s
-		let offsetX = (Int(targetPixelWidth) - scaledWidthPixels) / 2
-		let offsetY = (Int(targetPixelHeight) - scaledHeightPixels) / 2
+		let offsetX = (Int(outputImagePixelWidth) - drawnImageWidthPixels) / 2
+		let offsetY = (Int(outputImagePixelHeight) - drawnImageHeightPixels) / 2
 
 		let orientation = imageOrientation
-		var transform = CGAffineTransform.identity
+		var transform: CGAffineTransform
 		switch orientation {
 		case .down, .downMirrored:
-			transform = transform.translatedBy(x: targetPixelWidth, y: targetPixelHeight).rotated(by: .pi)
+			transform = CGAffineTransform(translationX: outputImagePixelWidth, y: outputImagePixelHeight).rotated(by: .pi)
 		case .left, .leftMirrored:
-			transform = transform.translatedBy(x: targetPixelWidth, y: 0).rotated(by: .pi/2)
+			transform = CGAffineTransform(translationX: outputImagePixelWidth, y: 0).rotated(by: .pi/2)
 		case .right, .rightMirrored:
-			transform = transform.translatedBy(x: 0, y: targetPixelHeight).rotated(by: -.pi/2)
-		default: break
+			transform = CGAffineTransform(translationX: 0, y: outputImagePixelHeight).rotated(by: -.pi/2)
+		default:
+			transform = .identity
 		}
 
 		switch orientation {
 		case .upMirrored, .downMirrored:
-			transform = transform.translatedBy(x: targetPixelWidth, y: 0).scaledBy(x: -1, y: 1)
+			transform = transform.translatedBy(x: outputImagePixelWidth, y: 0).scaledBy(x: -1, y: 1)
 		case .leftMirrored, .rightMirrored:
-			transform = transform.translatedBy(x: targetPixelHeight, y: 0).scaledBy(x: -1, y: 1)
+			transform = transform.translatedBy(x: outputImagePixelHeight, y: 0).scaledBy(x: -1, y: 1)
 		default: break
 		}
 
 		let imageRef = cgImage!
 		let c = CGContext(data: nil,
-		                  width: Int(targetPixelWidth),
-		                  height: Int(targetPixelHeight),
+		                  width: Int(outputImagePixelWidth),
+		                  height: Int(outputImagePixelHeight),
 		                  bitsPerComponent: 8,
-		                  bytesPerRow: Int(targetPixelHeight) * 4,
+		                  bytesPerRow: Int(outputImagePixelWidth) * 4,
 		                  space: CGColorSpaceCreateDeviceRGB(),
 		                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
 		c.interpolationQuality = .high
@@ -120,9 +124,9 @@ extension UIImage {
 
 		switch orientation {
 		case .left, .leftMirrored, .right, .rightMirrored:
-			c.draw(imageRef, in: CGRect(x: offsetY, y: offsetX, width: scaledHeightPixels, height: scaledWidthPixels))
+			c.draw(imageRef, in: CGRect(x: offsetY, y: offsetX, width: drawnImageHeightPixels, height: drawnImageWidthPixels))
 		default:
-			c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: scaledWidthPixels, height: scaledHeightPixels))
+			c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
 		}
 
 		return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
