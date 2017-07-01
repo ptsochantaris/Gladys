@@ -230,7 +230,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.uuid.uuidString)
 	}()
 
-	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer"]
+	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
 
 	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
 
