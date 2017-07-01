@@ -271,8 +271,15 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
-
 		if let i = model.filteredDrops.index(where: { $0 === sender }) {
+
+			if !success, let item = sender as? ArchivedDropItem {
+				let (errorPrefix, error) = item.loadingError
+				let a = UIAlertController(title: "Some data from \(item.oneTitle) could not be imported", message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")", preferredStyle: .alert)
+				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+				(presentedViewController?.presentedViewController ?? presentedViewController ?? self).present(a, animated: true)
+			}
+
 			let ip = [IndexPath(item: i, section: 0)]
 			archivedItemCollectionView.reloadItems(at: ip)
 			model.save() { success in

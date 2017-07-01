@@ -270,16 +270,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				spinner.startAnimating()
 			} else {
 				spinner.stopAnimating()
-
-				if !archivedDropItem.allLoadedWell {
-					image.isHidden = true
-					label.text = "Could not import this item"
-					labelDistance.constant = 8
-					hideCancel = false
-				} else {
-					image.isHidden = false
-					decorateLoadedItem(archivedDropItem)
-				}
+				image.isHidden = false
+				decorateLoadedItem(archivedDropItem)
 
 				// if we're showing an icon, let's try to enahnce things a bit
 				if image.contentMode == .center, let backgroundItem = archivedDropItem.backgroundInfoObject {
@@ -341,7 +333,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		label.textAlignment = info.titleAlignment
 		label.text = info.title
 
-		labelDistance.constant = label.text == nil ? 0 : 8
+		labelDistance.constant = (label.text == nil) ? 0 : 8
 
 		if let t = info.accessoryText {
 			accessoryLabel.text = t

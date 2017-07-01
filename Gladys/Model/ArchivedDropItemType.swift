@@ -10,7 +10,6 @@ final class ArchivedDropItemType: Codable {
 		case typeIdentifier
 		case classType
 		case uuid
-		case allLoadedWell
 		case parentUuid
 		case accessoryTitle
 		case displayTitle
@@ -28,7 +27,6 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(typeIdentifier, forKey: .typeIdentifier)
 		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
 		try v.encode(uuid, forKey: .uuid)
-		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(parentUuid, forKey: .parentUuid)
 		try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
 		try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
@@ -53,7 +51,6 @@ final class ArchivedDropItemType: Codable {
 		}
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
-		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		hasLocalFiles = try v.decode(Bool.self, forKey: .hasLocalFiles)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
@@ -137,13 +134,13 @@ final class ArchivedDropItemType: Codable {
 	let createdAt: Date
 	private var classType: ClassType?
 	private var hasLocalFiles: Bool
-	private var allLoadedWell = true
+	var loadingError: Error?
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
 
 	private enum ClassType: String {
-		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL
+		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL, NSArray, NSDictionary
 	}
 
 	var contentDescription: String? {
@@ -156,6 +153,8 @@ final class ArchivedDropItemType: Codable {
 		case .UIColor: return "Color"
 		case .UIImage: return "Image"
 		case .MKMapItem: return "Map Location"
+		case .NSArray: return "List"
+		case .NSDictionary: return "Associative List"
 		case .NSURL: return hasLocalFiles ? "File(s)" : "Link"
 		}
 	}
@@ -200,6 +199,8 @@ final class ArchivedDropItemType: Codable {
 		case .UIImage: return UIImage.self
 		case .MKMapItem: return MKMapItem.self
 		case .NSURL: return NSURL.self
+		case .NSArray: return NSArray.self
+		case .NSDictionary: return NSDictionary.self
 		}
 	}
 
@@ -239,6 +240,10 @@ final class ArchivedDropItemType: Codable {
 			return decode(NSData.self)
 		case .MKMapItem:
 			return decode(MKMapItem.self)
+		case .NSArray:
+			return decode(NSArray.self)
+		case .NSDictionary:
+			return decode(NSDictionary.self)
 		case .NSURL:
 			return encodedUrl
 		}
@@ -432,13 +437,39 @@ final class ArchivedDropItemType: Codable {
 					signalDone()
 				}
 			}
+		} else if let item = item as? NSArray {
+			setBytes(object: item, type: .NSArray)
+			log("      received array: \(item)")
+			if item.count == 1 {
+				setTitleInfo("1 Item", 1)
+			} else {
+				setTitleInfo("\(item.count) Items", 1)
+			}
+			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			signalDone()
+
+		} else if let item = item as? NSDictionary {
+			setBytes(object: item, type: .NSDictionary)
+			log("      received dictionary: \(item)")
+			if item.count == 1 {
+				setTitleInfo("1 Entry", 1)
+			} else {
+				setTitleInfo("\(item.count) Entries", 1)
+			}
+			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			signalDone()
+
 		} else {
-			log("      unknown class")
-			allLoadedWell = false
+			setLoadingError("Do not know how to handle an item of class \(String(describing: type(of: item)))")
 			setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 			signalDone()
 			// TODO: generate analyitics report to record what type was received and what UTI
 		}
+	}
+
+	private func setLoadingError(_ message: String) {
+		loadingError = NSError(domain: "build.build.Gladys.loadingError", code: 5, userInfo: [NSLocalizedDescriptionKey: message])
+		log("Error: \(message)")
 	}
 
 	private func handleLocalFetch(url: URL?, error: Error?) {
@@ -454,7 +485,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else if let error = error {
 			log("Error fetching local data from url: \(error.localizedDescription)")
-			allLoadedWell = false
+			loadingError = error
 		}
 		signalDone()
 	}
@@ -478,7 +509,7 @@ final class ArchivedDropItemType: Codable {
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log("      error receiving item: \(error.localizedDescription)")
-				s.allLoadedWell = false
+				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.signalDone()
 			} else if let item = item {
@@ -628,7 +659,7 @@ final class ArchivedDropItemType: Codable {
 	private func signalDone() {
 		if !loadingAborted {
 			DispatchQueue.main.async {
-				self.delegate?.loadCompleted(sender: self, success: self.allLoadedWell)
+				self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil)
 			}
 		}
 	}
@@ -655,7 +686,7 @@ final class ArchivedDropItemType: Codable {
 			try f.copyItem(at: url, to: newUrl)
 		} catch {
 			log("Error while copying item: \(error.localizedDescription)")
-			allLoadedWell = false
+			loadingError = error
 		}
 		return newUrl
 	}
@@ -674,7 +705,8 @@ final class ArchivedDropItemType: Codable {
 			alignment = .center
 			finalText = text
 		}
-		displayTitle = finalText
+		let final = finalText?.trimmingCharacters(in: .whitespacesAndNewlines)
+		displayTitle = (final?.isEmpty ?? true) ? nil : final
 		displayTitlePriority = priority
 		displayTitleAlignment = alignment
 	}

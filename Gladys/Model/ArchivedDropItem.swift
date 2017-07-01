@@ -294,7 +294,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	weak var delegate: LoadCompletionDelegate?
 	var isLoading: Bool
 	var allLoadedWell: Bool
-
 	var loadCount: Int
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		if !success { allLoadedWell = false }
@@ -305,4 +304,15 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 	func loadingProgress(sender: AnyObject) { }
+
+	////////////////////////////
+
+	var loadingError: (String?, Error?) {
+		for item in typeItems {
+			if let e = item.loadingError {
+				return ("Error processing type \(item.typeIdentifier): ", e)
+			}
+		}
+		return ("Error while loading items: ", NSError(domain: "build.bru.Gladys.loadError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Generic loading error"]))
+	}
 }
