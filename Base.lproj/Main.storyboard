@@ -49,8 +49,16 @@
                                                     <color key="backgroundColor" red="0.84341198205947876" green="0.83196836709976196" blue="0.80659013986587524" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ZI7-Rk-HVF">
-                                                    <rect key="frame" x="140" y="140" width="20" height="20"/>
+                                                    <rect key="frame" x="140" y="120" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEc-YZ-ZGZ">
+                                                    <rect key="frame" x="124" y="156" width="53" height="33"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <state key="normal" title="Cancel"/>
+                                                    <connections>
+                                                        <action selector="cancelSelected:" destination="x5M-NP-dlj" eventType="touchUpInside" id="7y9-0h-DnQ"/>
+                                                    </connections>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lnk-SW-KkP">
                                                     <rect key="frame" x="8" y="8" width="284" height="13.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
@@ -64,11 +72,13 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" priority="750" id="4l4-BC-JFB"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="v3H-LC-FOH" secondAttribute="trailing" id="54Q-4S-UsC"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="5lP-ga-4TG"/>
-                                            <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="G3V-Sb-LMb"/>
+                                            <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" constant="-20" id="G3V-Sb-LMb"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="Lnk-SW-KkP" secondAttribute="trailing" id="MLn-ck-mTO"/>
                                             <constraint firstItem="ZI7-Rk-HVF" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YxE-hL-dVE"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="Lnk-SW-KkP" secondAttribute="bottom" constant="8" id="fR2-e0-xPA"/>
+                                            <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="top" secondItem="ZI7-Rk-HVF" secondAttribute="bottom" constant="16" id="gAX-fy-T9X"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="lX8-Z5-Y4P"/>
+                                            <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="centerX" secondItem="g2k-cT-VHS" secondAttribute="centerX" id="rRb-4u-PDd"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" priority="750" id="tCq-Kc-mNY"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
@@ -77,6 +87,7 @@
                                         <connections>
                                             <outlet property="accessoryLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
                                             <outlet property="accessoryLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
+                                            <outlet property="cancelButton" destination="mEc-YZ-ZGZ" id="D4Y-sH-UBm"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
                                             <outlet property="label" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
                                             <outlet property="labelDistance" destination="zYq-Vr-jMB" id="b5Z-Uo-UfU"/>

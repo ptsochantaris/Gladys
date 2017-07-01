@@ -47,6 +47,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		var needSave = false
 
+		coordinator.session.progressIndicatorStyle = .none
+
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
@@ -257,6 +259,15 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 		item.delete()
 		model.save()
+	}
+
+	func loadingProgress(sender: AnyObject) {
+		if let i = model.filteredDrops.index(where: { $0 === sender }) {
+			let ip = IndexPath(item: i, section: 0)
+			if let cell = archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
+				cell.decorate()
+			}
+		}
 	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {

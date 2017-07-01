@@ -143,6 +143,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var accessoryLabel: UILabel!
 	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
 	@IBOutlet var spinner: UIActivityIndicatorView!
+	@IBOutlet weak var cancelButton: UIButton!
 
 	weak var delegate: ArchivedItemCellDelegate?
 
@@ -154,9 +155,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 			delegate?.deleteRequested(for: archivedDropItem)
 		}
 	}
+	
+	@IBAction func cancelSelected(_ sender: UIButton) {
+		if let archivedDropItem = archivedDropItem {
+			archivedDropItem.cancelIngest()
+			delegate?.deleteRequested(for: archivedDropItem)
+		}
+	}
 
 	override func tintColorDidChange() {
 		deleteButton?.tintColor = tintColor
+		cancelButton?.tintColor = tintColor
 	}
 
 	var isEditing: Bool = false {
@@ -239,9 +248,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		decorate()
 	}
 
-	private func decorate() {
+	func decorate() {
 
 		var wantMapView = false
+		var hideCancel = true
 
 		accessoryLabel.text = nil
 		accessoryLabelDistance.constant = 0
@@ -253,7 +263,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 			if archivedDropItem.isLoading {
 				image.isHidden = true
-				label.text = nil
+				let count = archivedDropItem.loadCount
+				label.text = count > 1 ? "\(count) items left to transfer" : "Completing transfer"
+				labelDistance.constant = 8
+				hideCancel = false
 				spinner.startAnimating()
 			} else {
 				spinner.stopAnimating()
@@ -261,6 +274,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				if !archivedDropItem.allLoadedWell {
 					image.isHidden = true
 					label.text = "Could not import this item"
+					labelDistance.constant = 8
+					hideCancel = false
 				} else {
 					image.isHidden = false
 					decorateLoadedItem(archivedDropItem)
@@ -294,6 +309,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 			e.removeFromSuperview()
 			existingMapView = nil
 		}
+
+		cancelButton.isHidden = hideCancel
 	}
 
 	private func decorateLoadedItem(_ item: ArchivedDropItem) {

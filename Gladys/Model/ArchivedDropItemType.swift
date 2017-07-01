@@ -382,6 +382,7 @@ final class ArchivedDropItemType: Codable {
 			if item.scheme == "file" {
 				log("      will duplicate item at local path: \(item.path)")
 				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
+					if self?.loadingAborted ?? true { return }
 					self?.handleLocalFetch(url: url, error: error)
 				}
 			} else {
@@ -390,6 +391,7 @@ final class ArchivedDropItemType: Codable {
 				setBytes(object: item as NSURL, type: .NSURL)
 				if let s = item.scheme, s.hasPrefix("http") {
 					fetchWebPreview(for: item) { [weak self] title, image in
+						if self?.loadingAborted ?? true { return }
 						self?.accessoryTitle = title ?? self?.accessoryTitle
 						if let image = image {
 							if image.size.height > 100 || image.size.width > 200 {
@@ -446,18 +448,24 @@ final class ArchivedDropItemType: Codable {
 		hasLocalFiles = false
 		createdAt = Date()
 
-		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
+		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in
+			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log("      error receiving item: \(error.localizedDescription)")
-				self.allLoadedWell = false
-				self.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-				self.signalDone()
+				s.allLoadedWell = false
+				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+				s.signalDone()
 			} else if let item = item {
 				let receivedTypeString = type(of: item)
 				log("item name: [\(provider.suggestedName ?? "")] type: [\(typeIdentifier)] class: [\(receivedTypeString)]")
-				self.ingest(item: item, from: provider)
+				s.ingest(item: item, from: provider)
 			}
 		}
+	}
+
+	private var loadingAborted = false
+	func cancelIngest() {
+		loadingAborted = true
 	}
 
 	var displayIcon: UIImage? {
@@ -592,8 +600,10 @@ final class ArchivedDropItemType: Codable {
 	// TODO: MEMORY LEAK BIGTIME
 
 	private func signalDone() {
-		DispatchQueue.main.async {
-			self.delegate?.loadCompleted(sender: self, success: self.allLoadedWell)
+		if !loadingAborted {
+			DispatchQueue.main.async {
+				self.delegate?.loadCompleted(sender: self, success: self.allLoadedWell)
+			}
 		}
 	}
 
@@ -609,13 +619,18 @@ final class ArchivedDropItemType: Codable {
 	private func copyLocal(_ url: URL) -> URL {
 
 		hasLocalFiles = true
-
+		
 		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
 		let f = FileManager.default
-		if f.fileExists(atPath: newUrl.path) {
-			try! f.removeItem(at: newUrl)
+		do {
+			if f.fileExists(atPath: newUrl.path) {
+				try f.removeItem(at: newUrl)
+			}
+			try f.copyItem(at: url, to: newUrl)
+		} catch {
+			log("Error while copying item: \(error.localizedDescription)")
+			allLoadedWell = false
 		}
-		try! f.copyItem(at: url, to: newUrl)
 		return newUrl
 	}
 

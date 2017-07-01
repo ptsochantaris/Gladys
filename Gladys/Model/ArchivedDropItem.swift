@@ -259,13 +259,17 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
+	func cancelIngest() {
+		typeItems.forEach { $0.cancelIngest() }
+	}
+
 	//////////////////////////
 
 	weak var delegate: LoadCompletionDelegate?
 	var isLoading: Bool
 	var allLoadedWell: Bool
 
-	private var loadCount: Int
+	var loadCount: Int
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		if !success { allLoadedWell = false }
 		loadCount = loadCount - 1
@@ -274,4 +278,5 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			delegate?.loadCompleted(sender: self, success: allLoadedWell)
 		}
 	}
+	func loadingProgress(sender: AnyObject) { }
 }
