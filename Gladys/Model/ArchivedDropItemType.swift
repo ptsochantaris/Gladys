@@ -2,7 +2,10 @@
 import UIKit
 import MapKit
 import Contacts
-import Fuzi
+
+#if MAINAPP || ACTIONEXTENSION
+	import Fuzi
+#endif
 
 final class ArchivedDropItemType: Codable {
 
@@ -74,10 +77,6 @@ final class ArchivedDropItemType: Codable {
 		return self.folderUrl.appendingPathComponent("blob", isDirectory: false)
 	}()
 
-	var dataExists: Bool {
-		return FileManager.default.fileExists(atPath: bytesPath.path)
-	}
-
 	var bytes: Data? {
 		set {
 			//log("setting bytes")
@@ -101,31 +100,35 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	#if FILEPROVIDER
+
 	lazy var tagDataPath: URL = {
-		return self.folderUrl.appendingPathComponent("tags", isDirectory: false)
+	return self.folderUrl.appendingPathComponent("tags", isDirectory: false)
 	}()
 
 	var tagData: Data? {
-		set {
-			let location = tagDataPath
-			if newValue == nil {
-				let f = FileManager.default
-				if f.fileExists(atPath: location.path) {
-					try! f.removeItem(at: location)
-				}
-			} else {
-				try! newValue?.write(to: location, options: [.atomic])
-			}
-		}
-		get {
-			let location = tagDataPath
-			if FileManager.default.fileExists(atPath: location.path) {
-				return try! Data(contentsOf: location, options: [.alwaysMapped])
-			} else {
-				return nil
-			}
-		}
+	set {
+	let location = tagDataPath
+	if newValue == nil {
+	let f = FileManager.default
+	if f.fileExists(atPath: location.path) {
+	try! f.removeItem(at: location)
 	}
+	} else {
+	try! newValue?.write(to: location, options: [.atomic])
+	}
+	}
+	get {
+	let location = tagDataPath
+	if FileManager.default.fileExists(atPath: location.path) {
+	return try! Data(contentsOf: location, options: [.alwaysMapped])
+	} else {
+	return nil
+	}
+	}
+	}
+
+	#endif
 
 	let typeIdentifier: String
 	var accessoryTitle: String?
@@ -138,6 +141,13 @@ final class ArchivedDropItemType: Codable {
 
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
+	private var displayIconScale: CGFloat
+	private var loadingAborted = false
+	var displayIconPriority: Int
+	var displayIconContentMode: ArchivedDropItemDisplayType
+	var displayTitle: String?
+	var displayTitlePriority: Int
+	var displayTitleAlignment: NSTextAlignment
 
 	private enum ClassType: String {
 		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL, NSArray, NSDictionary
@@ -216,16 +226,6 @@ final class ArchivedDropItemType: Codable {
 		return u.decodeObject(forKey: className) as? T
 	}
 
-	var backgroundInfoObject: (Any?, Int) {
-		guard let classType = classType else { return (nil, 0) }
-
-		switch classType {
-		case .MKMapItem: return (decode(MKMapItem.self), 30)
-		case .UIColor: return (decode(UIColor.self), 10)
-		default: return (nil, 0)
-		}
-	}
-
 	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
 		switch classType {
 		case .NSString:
@@ -249,60 +249,65 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	func register(with provider: NSItemProvider) {
-
-		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
-			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
-				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
-				if let decoded = decoded {
-					log("Responding with object type: \(type(of: decoded))")
-				} else {
-					log("Responding with nil object")
-				}
-				completion(decoded, nil)
-				return nil
+	var displayIcon: UIImage? {
+		set {
+			let ipath = imagePath
+			if let displayIcon = newValue, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
+				try? displayIconData.write(to: ipath, options: [.atomic])
+			} else if FileManager.default.fileExists(atPath: ipath.path) {
+				try? FileManager.default.removeItem(at: ipath)
 			}
 		}
-
-		if hasLocalFiles {
-			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
-				let decoded = self.encodedUrl as URL?
-				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
-				completion(decoded, false, nil)
+		get {
+			if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
+				let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
+				return UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
+			} else {
 				return nil
-			}
-
-		} else if let bytes = bytes {
-
-			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
-				log("Responding with data block")
-				completion(bytes, nil)
-				return nil
-			}
-
-			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
-
-				let deliveredClassType: ClassType
-				if let requestedClassType = requestedClassType {
-					deliveredClassType = ClassType(rawValue: NSStringFromClass(requestedClassType)) ?? .NSData
-				} else if let classType = self.classType {
-					deliveredClassType = classType
-				} else {
-					deliveredClassType = .NSData
-				}
-
-				log("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
-
-				if let item = self.decodedObject(for: deliveredClassType) {
-					log("Responding with item \(item)")
-					completion(item, nil)
-				} else {
-					log("Could not decode local data, responding with NSData item")
-					completion(bytes as NSData, nil)
-				}
 			}
 		}
 	}
+
+	lazy var folderUrl: URL = {
+		let url = Model.appStorageUrl.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
+		let f = FileManager.default
+		if !f.fileExists(atPath: url.path) {
+			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		}
+		return url
+	}()
+
+	var itemForShare: (Any?, Int) {
+
+		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+			return (contact, 12)
+		}
+
+		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode(MKMapItem.self) {
+			return (item, 15)
+		}
+
+		if let url = encodedUrl {
+
+			if classType == .NSURL {
+				return (url, 10)
+			}
+
+			if typeIdentifier == "public.url" {
+				return (url, 5)
+			}
+
+			return (url, 3)
+		}
+
+		return (nil, 0)
+	}
+
+	var oneTitle: String {
+		return accessoryTitle ?? displayTitle ?? typeIdentifier.replacingOccurrences(of: ".", with: "-")
+	}
+
+	#if MAINAPP || ACTIONEXTENSION
 
 	private func setBytes(object: Any, type: ClassType) {
 		let d = NSMutableData()
@@ -520,33 +525,10 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	private var loadingAborted = false
 	func cancelIngest() {
 		loadingAborted = true
 	}
 
-	var displayIcon: UIImage? {
-		set {
-			let ipath = imagePath
-			if let displayIcon = newValue, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
-				try? displayIconData.write(to: ipath, options: [.atomic])
-			} else if FileManager.default.fileExists(atPath: ipath.path) {
-				try? FileManager.default.removeItem(at: ipath)
-			}
-		}
-		get {
-			if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
-				let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
-				return UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
-			} else {
-				return nil
-			}
-		}
-	}
-
-	var displayIconPriority: Int
-	var displayIconContentMode: ArchivedDropItemDisplayType
-	private var displayIconScale: CGFloat
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
 		if contentMode == .center || contentMode == .circle {
 			displayIcon = icon
@@ -664,19 +646,10 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	lazy var folderUrl: URL = {
-		let url = NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
-		let f = FileManager.default
-		if !f.fileExists(atPath: url.path) {
-			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-		}
-		return url
-	}()
-
 	private func copyLocal(_ url: URL) -> URL {
 
 		hasLocalFiles = true
-		
+
 		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
 		let f = FileManager.default
 		do {
@@ -691,9 +664,6 @@ final class ArchivedDropItemType: Codable {
 		return newUrl
 	}
 
-	var displayTitle: String?
-	var displayTitlePriority: Int
-	var displayTitleAlignment: NSTextAlignment
 	private func setTitleInfo(_ text: String?, _ priority: Int) {
 
 		let alignment: NSTextAlignment
@@ -711,36 +681,9 @@ final class ArchivedDropItemType: Codable {
 		displayTitleAlignment = alignment
 	}
 
-	var itemForShare: (Any?, Int) {
+	#endif
 
-		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
-			return (contact, 12)
-		}
-
-		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode(MKMapItem.self) {
-			return (item, 15)
-		}
-
-		if let url = encodedUrl {
-
-			if classType == .NSURL {
-				return (url, 10)
-			}
-
-			if typeIdentifier == "public.url" {
-				return (url, 5)
-			}
-
-			return (url, 3)
-		}
-
-		return (nil, 0)
-	}
-
-	var oneTitle: String {
-		return accessoryTitle ?? displayTitle ?? typeIdentifier.replacingOccurrences(of: ".", with: "-")
-	}
-
+#if MAINAPP
 	var dragItem: UIDragItem {
 
 		let p = NSItemProvider()
@@ -751,5 +694,76 @@ final class ArchivedDropItemType: Codable {
 		i.localObject = ["local_object": self]
 		return i
 	}
+
+	func register(with provider: NSItemProvider) {
+
+		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
+			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
+				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
+				if let decoded = decoded {
+					log("Responding with object type: \(type(of: decoded))")
+				} else {
+					log("Responding with nil object")
+				}
+				completion(decoded, nil)
+				return nil
+			}
+		}
+
+		if hasLocalFiles {
+			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
+				let decoded = self.encodedUrl as URL?
+				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
+				completion(decoded, false, nil)
+				return nil
+			}
+
+		} else if let bytes = bytes {
+
+			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
+				log("Responding with data block")
+				completion(bytes, nil)
+				return nil
+			}
+
+			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
+
+				let deliveredClassType: ClassType
+				if let requestedClassType = requestedClassType {
+					deliveredClassType = ClassType(rawValue: NSStringFromClass(requestedClassType)) ?? .NSData
+				} else if let classType = self.classType {
+					deliveredClassType = classType
+				} else {
+					deliveredClassType = .NSData
+				}
+
+				log("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
+
+				if let item = self.decodedObject(for: deliveredClassType) {
+					log("Responding with item \(item)")
+					completion(item, nil)
+				} else {
+					log("Could not decode local data, responding with NSData item")
+					completion(bytes as NSData, nil)
+				}
+			}
+		}
+	}
+
+	var dataExists: Bool {
+		return FileManager.default.fileExists(atPath: bytesPath.path)
+	}
+
+	var backgroundInfoObject: (Any?, Int) {
+		guard let classType = classType else { return (nil, 0) }
+
+		switch classType {
+		case .MKMapItem: return (decode(MKMapItem.self), 30)
+		case .UIColor: return (decode(UIColor.self), 10)
+		default: return (nil, 0)
+		}
+	}
+
+#endif
 }
 

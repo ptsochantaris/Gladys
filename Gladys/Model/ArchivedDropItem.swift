@@ -4,16 +4,13 @@ import MapKit
 import Contacts
 import ContactsUI
 import CoreSpotlight
-import FileProvider
 
 final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
+	private let suggestedName: String?
 	let uuid: UUID
 	var typeItems: [ArchivedDropItemType]!
-	private let suggestedName: String?
 	let createdAt:  Date
-
-	var isDeleting = false
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -67,24 +64,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		})
 	}
 
-	func delete() {
-		isDeleting = true
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
-			if let error = error {
-				log("Error while deleting an index \(error)")
-			}
-		}
-		let f = FileManager.default
-		if f.fileExists(atPath: folderUrl.path) {
-			try! f.removeItem(at: folderUrl)
-		}
-		NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
-			if let e = error {
-				log("Error signalling deletion of item: \(e.localizedDescription)")
-			}
-		}
-	}
-
 	var displayInfo: ArchivedDropDisplayInfo {
 
 		let (img, contentMode) = displayIcon
@@ -100,24 +79,24 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return info
 	}
 
-	var backgroundInfoObject: Any? {
-		var currentItem: Any?
-		var currentPriority = -1
-		for item in typeItems {
-			let (newItem, newPriority) = item.backgroundInfoObject
-			if let newItem = newItem, newPriority > currentPriority {
-				currentItem = newItem
-				currentPriority = newPriority
-			}
-		}
-		return currentItem
-	}
-
 	var oneTitle: String {
 		return accessoryTitle ?? displayTitle.0 ?? uuid.uuidString
 	}
 
 	#if MAINAPP
+	
+	var backgroundInfoObject: Any? {
+	var currentItem: Any?
+	var currentPriority = -1
+	for item in typeItems {
+	let (newItem, newPriority) = item.backgroundInfoObject
+	if let newItem = newItem, newPriority > currentPriority {
+	currentItem = newItem
+	currentPriority = newPriority
+	}
+	}
+	return currentItem
+	}
 
 	var dragItem: UIDragItem {
 
@@ -197,6 +176,15 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 
+	var loadingError: (String?, Error?) {
+		for item in typeItems {
+			if let e = item.loadingError {
+				return ("Error processing type \(item.typeIdentifier): ", e)
+			}
+		}
+		return ("Error while loading items: ", NSError(domain: "build.bru.Gladys.loadError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Generic loading error"]))
+	}
+
 	#endif
 
 	var sizeInBytes: Int64 {
@@ -227,8 +215,12 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	}
 
 	private lazy var folderUrl: URL = {
-		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent(self.uuid.uuidString)
+		return Model.appStorageUrl.appendingPathComponent(self.uuid.uuidString)
 	}()
+
+#if MAINAPP || ACTIONEXTENSION
+
+	var isDeleting = false
 
 	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
 
@@ -251,6 +243,30 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 
+	func cancelIngest() {
+		typeItems.forEach { $0.cancelIngest() }
+	}
+
+	func delete() {
+		isDeleting = true
+		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
+			if let error = error {
+				log("Error while deleting an index \(error)")
+			}
+		}
+		let f = FileManager.default
+		if f.fileExists(atPath: folderUrl.path) {
+			try! f.removeItem(at: folderUrl)
+		}
+		NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
+			if let e = error {
+				log("Error signalling deletion of item: \(e.localizedDescription)")
+			}
+		}
+	}
+
+#endif
+
 	func bytes(for type: String) -> Data? {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.bytes
 	}
@@ -259,9 +275,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
-	func cancelIngest() {
-		typeItems.forEach { $0.cancelIngest() }
-	}
+#if FILEPROVIDER
 
 	lazy var tagDataPath: URL = {
 		return self.folderUrl.appendingPathComponent("tags", isDirectory: false)
@@ -289,6 +303,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 
+#endif
+
 	//////////////////////////
 
 	weak var delegate: LoadCompletionDelegate?
@@ -304,15 +320,4 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		}
 	}
 	func loadingProgress(sender: AnyObject) { }
-
-	////////////////////////////
-
-	var loadingError: (String?, Error?) {
-		for item in typeItems {
-			if let e = item.loadingError {
-				return ("Error processing type \(item.typeIdentifier): ", e)
-			}
-		}
-		return ("Error while loading items: ", NSError(domain: "build.bru.Gladys.loadError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Generic loading error"]))
-	}
 }

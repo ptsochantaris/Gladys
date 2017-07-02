@@ -51,6 +51,7 @@ extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
 	static let SearchResultsUpdated = Notification.Name("SearchResultsUpdated")
 	static let DeleteSelected = Notification.Name("DeleteSelected")
+	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
 }
 
 let diskSizeFormatter = ByteCountFormatter()

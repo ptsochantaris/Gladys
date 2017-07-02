@@ -83,7 +83,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		} else if relatedItem?.item != nil {
 			log("Changes requested for enumerator of directory")
 
-			FileProviderExtension.model.reloadData()
+			FileProviderExtension.model.reloadDataIfNeeded()
 			let newItemIds = rootItems.map { $0.itemIdentifier }
 			let myId = NSFileProviderItemIdentifier(uuid)
 
@@ -100,7 +100,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			log("Enumerating changes for root")
 
 			let oldItemIds = rootItems.map { $0.itemIdentifier }
-			FileProviderExtension.model.reloadData()
+			FileProviderExtension.model.reloadDataIfNeeded()
 			let newItems = rootItems
 			let newItemIds = rootItems.map { $0.itemIdentifier }
 

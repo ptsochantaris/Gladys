@@ -3,21 +3,36 @@ import Foundation
 import CoreSpotlight
 import FileProvider
 
-final class Model: NSObject {
+final class Model: NSObject, NSFilePresenter {
 
 	var drops: [ArchivedDropItem]
 
+	static var appStorageUrl: URL = {
+		#if FILEPROVIDER
+			return NSFileProviderManager.default.documentStorageURL
+		#else
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!.appendingPathComponent("File Provider Storage")
+		#endif
+	}()
+
 	static var fileUrl: URL = {
-		return NSFileProviderManager.default.documentStorageURL.appendingPathComponent("items.json")
+		return appStorageUrl.appendingPathComponent("items.json")
 	}()
 
 	override init() {
 		drops = Model.loadData() ?? [ArchivedDropItem]()
 		super.init()
+
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
+		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
+
+		foregrounded()
 	}
 
 	private static var dataFileLastModified = Date.distantPast
 	private static func loadData() -> [ArchivedDropItem]? {
+		
 		let url = Model.fileUrl
 		if FileManager.default.fileExists(atPath: url.path) {
 			do {
@@ -42,14 +57,15 @@ final class Model: NSObject {
 		return nil
 	}
 
-	func reloadData() {
-		log("Reloading data")
+	func reloadDataIfNeeded() {
 		if let d = Model.loadData() {
 			drops = d
+			log("Needed to reload data")
+			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 		}
 	}
 
-	#if MAINAPP
+	#if ACTIONEXTENSION || MAINAPP
 
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 
@@ -61,7 +77,19 @@ final class Model: NSObject {
 
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
-				try data.write(to: Model.fileUrl, options: .atomic)
+
+				let coordinator = NSFileCoordinator(filePresenter: self)
+				var coordinationError: NSError?
+				coordinator.coordinate(writingItemAt: Model.fileUrl, options: .forReplacing, error: &coordinationError) { url in
+					try! data.write(to: Model.fileUrl, options: .atomic)
+					if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
+						Model.dataFileLastModified = dataModified
+					}
+				}
+				if let e = coordinationError {
+					log("Error in saving coordination: \(e.localizedDescription)")
+				}
+
 				DispatchQueue.main.async {
 					log("Saved")
 					completion?(true)
@@ -144,6 +172,33 @@ final class Model: NSObject {
 	}
 
 	#endif
+
+	////////////////////////////
+
+	@objc private func foregrounded() {
+		reloadDataIfNeeded()
+		NSFileCoordinator.addFilePresenter(self)
+	}
+
+	@objc private func backgrounded() {
+		NSFileCoordinator.removeFilePresenter(self)
+	}
+
+	var presentedItemURL: URL? {
+		return Model.fileUrl
+	}
+
+	var presentedItemOperationQueue: OperationQueue {
+		return OperationQueue.main
+	}
+
+	func presentedItemDidChange() {
+		reloadDataIfNeeded()
+	}
+
+	deinit {
+		backgrounded()
+	}
 }
 
 //////////////////

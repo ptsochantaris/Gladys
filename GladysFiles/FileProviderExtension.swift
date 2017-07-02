@@ -34,7 +34,7 @@ final class FileProviderExtension: NSFileProviderExtension {
             return nil
         }
 
-		var root = NSFileProviderManager.default.documentStorageURL
+		var root = Model.appStorageUrl
 		if let directoryItem = fpi.item {
 			root.appendPathComponent(directoryItem.uuid.uuidString, isDirectory: true)
 		} else if let fileItem = fpi.typeItem {

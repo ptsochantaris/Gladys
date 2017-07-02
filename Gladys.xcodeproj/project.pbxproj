@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1604A3341F091D76005A477E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		1604A3351F091D79005A477E /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
+		1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
+		1604A3381F093073005A477E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16062E091EFE647800AB5353 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E081EFE647800AB5353 /* DetailController.swift */; };
 		16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E0B1EFE705800AB5353 /* DetailCell.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
@@ -27,6 +32,8 @@
 		16287AF71EFB05E9007188AE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		163845FC1EF8629700CB8D97 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		164136901F09195000B34574 /* ActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestHandler.swift */; };
+		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D01EF475FE005697CB /* AppDelegate.swift */; };
 		1678F9D31EF475FF005697CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D21EF475FF005697CB /* ViewController.swift */; };
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -36,6 +43,7 @@
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		197B417F6789BD0EC46CAF63 /* Pods_GladysFiles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E686D28343027BBE9C30CE0 /* Pods_GladysFiles.framework */; };
+		81A21F1E14EB11E9CCC1C80B /* Pods_GladysAction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1AF4A870C1E51197E832ED /* Pods_GladysAction.framework */; };
 		88A1FCBA8B3301331DF83CAD /* Pods_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF3C693FB9166C9F1B58032 /* Pods_Gladys.framework */; };
 		F8B3634A2D35A614EDE7BDD3 /* Pods_GladysIndex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D208460BF7361AD848FC7FCE /* Pods_GladysIndex.framework */; };
 /* End PBXBuildFile section */
@@ -55,6 +63,13 @@
 			remoteGlobalIDString = 16287AE61EFB03FD007188AE;
 			remoteInfo = GladysIndex;
 		};
+		164136941F09195000B34574 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1641368C1F09195000B34574;
+			remoteInfo = GladysAction;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +80,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				1619E81E1EFF3745000087DD /* GladysFiles.appex in Embed App Extensions */,
+				164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */,
 				16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -74,6 +90,7 @@
 
 /* Begin PBXFileReference section */
 		0E686D28343027BBE9C30CE0 /* Pods_GladysFiles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysFiles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1604A3331F091ABC005A477E /* GladysAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysAction.entitlements; sourceTree = "<group>"; };
 		16062E081EFE647800AB5353 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		16062E0B1EFE705800AB5353 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
@@ -88,6 +105,9 @@
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		163845FB1EF8629700CB8D97 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		1641368D1F09195000B34574 /* GladysAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1641368F1F09195000B34574 /* ActionRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestHandler.swift; sourceTree = "<group>"; };
+		164136931F09195000B34574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1678F9CD1EF475FE005697CB /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1678F9D01EF475FE005697CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1678F9D21EF475FF005697CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +121,7 @@
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16FAC6771EF988D6009BCB35 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		17DC3A0E5EE5EC1A16D6FBC1 /* Pods-GladysAction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysAction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction.debug.xcconfig"; sourceTree = "<group>"; };
 		3831437441A0E320E23481FB /* Pods-GladysIndex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIndex.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIndex/Pods-GladysIndex.release.xcconfig"; sourceTree = "<group>"; };
 		3AC19643217B78C2D6DD5E97 /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
 		43FDB32B9101BB1462574E97 /* Pods-GladysIndex.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIndex.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIndex/Pods-GladysIndex.debug.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +130,8 @@
 		D05CE378FBB51F221DECC2FE /* Pods-GladysFiles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysFiles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysFiles/Pods-GladysFiles.debug.xcconfig"; sourceTree = "<group>"; };
 		D208460BF7361AD848FC7FCE /* Pods_GladysIndex.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysIndex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F517AAB67E5921C0D60E34B4 /* Pods-GladysFiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysFiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysFiles/Pods-GladysFiles.release.xcconfig"; sourceTree = "<group>"; };
+		FE1AF4A870C1E51197E832ED /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEBBB8467D3904D466D48D02 /* Pods-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +148,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8B3634A2D35A614EDE7BDD3 /* Pods_GladysIndex.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1641368A1F09195000B34574 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81A21F1E14EB11E9CCC1C80B /* Pods_GladysAction.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,12 +204,23 @@
 			path = GladysIndex;
 			sourceTree = "<group>";
 		};
+		1641368E1F09195000B34574 /* GladysAction */ = {
+			isa = PBXGroup;
+			children = (
+				1604A3331F091ABC005A477E /* GladysAction.entitlements */,
+				1641368F1F09195000B34574 /* ActionRequestHandler.swift */,
+				164136931F09195000B34574 /* Info.plist */,
+			);
+			path = GladysAction;
+			sourceTree = "<group>";
+		};
 		1678F9C41EF475FE005697CB = {
 			isa = PBXGroup;
 			children = (
 				1678F9CF1EF475FE005697CB /* Gladys */,
 				16287AE81EFB03FD007188AE /* GladysIndex */,
 				1619E8131EFF3745000087DD /* GladysFiles */,
+				1641368E1F09195000B34574 /* GladysAction */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				66D3EBA231E6637523A1D0E6 /* Pods */,
@@ -191,6 +233,7 @@
 				1678F9CD1EF475FE005697CB /* Gladys.app */,
 				16287AE71EFB03FD007188AE /* GladysIndex.appex */,
 				1619E8121EFF3745000087DD /* GladysFiles.appex */,
+				1641368D1F09195000B34574 /* GladysAction.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,6 +280,7 @@
 				8BF3C693FB9166C9F1B58032 /* Pods_Gladys.framework */,
 				D208460BF7361AD848FC7FCE /* Pods_GladysIndex.framework */,
 				0E686D28343027BBE9C30CE0 /* Pods_GladysFiles.framework */,
+				FE1AF4A870C1E51197E832ED /* Pods_GladysAction.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -250,6 +294,8 @@
 				3831437441A0E320E23481FB /* Pods-GladysIndex.release.xcconfig */,
 				D05CE378FBB51F221DECC2FE /* Pods-GladysFiles.debug.xcconfig */,
 				F517AAB67E5921C0D60E34B4 /* Pods-GladysFiles.release.xcconfig */,
+				17DC3A0E5EE5EC1A16D6FBC1 /* Pods-GladysAction.debug.xcconfig */,
+				FEBBB8467D3904D466D48D02 /* Pods-GladysAction.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -295,6 +341,25 @@
 			productReference = 16287AE71EFB03FD007188AE /* GladysIndex.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		1641368C1F09195000B34574 /* GladysAction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 164136991F09195000B34574 /* Build configuration list for PBXNativeTarget "GladysAction" */;
+			buildPhases = (
+				E1C5E43AAEF2D6DB0F4ABCED /* [CP] Check Pods Manifest.lock */,
+				164136891F09195000B34574 /* Sources */,
+				1641368A1F09195000B34574 /* Frameworks */,
+				1641368B1F09195000B34574 /* Resources */,
+				8D9661604C19127711FF406A /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GladysAction;
+			productName = GladysAction;
+			productReference = 1641368D1F09195000B34574 /* GladysAction.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1678F9CC1EF475FE005697CB /* Gladys */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
@@ -312,6 +377,7 @@
 			dependencies = (
 				16287AED1EFB03FD007188AE /* PBXTargetDependency */,
 				1619E81D1EFF3745000087DD /* PBXTargetDependency */,
+				164136951F09195000B34574 /* PBXTargetDependency */,
 			);
 			name = Gladys;
 			productName = Gladys;
@@ -334,6 +400,14 @@
 					16287AE61EFB03FD007188AE = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 0900;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					1641368C1F09195000B34574 = {
+						CreatedOnToolsVersion = 9.0;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -367,6 +441,7 @@
 				1678F9CC1EF475FE005697CB /* Gladys */,
 				16287AE61EFB03FD007188AE /* GladysIndex */,
 				1619E8111EFF3745000087DD /* GladysFiles */,
+				1641368C1F09195000B34574 /* GladysAction */,
 			);
 		};
 /* End PBXProject section */
@@ -383,6 +458,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1641368B1F09195000B34574 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1604A3381F093073005A477E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +542,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		8D9661604C19127711FF406A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A15A01FA84FF194E60984843 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -504,6 +602,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		E1C5E43AAEF2D6DB0F4ABCED /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -531,6 +644,18 @@
 				16287AF71EFB05E9007188AE /* Types.swift in Sources */,
 				16287AF51EFB05E0007188AE /* ArchivedDropItem.swift in Sources */,
 				16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		164136891F09195000B34574 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1604A3351F091D79005A477E /* Types.swift in Sources */,
+				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
+				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
+				164136901F09195000B34574 /* ActionRequestHandler.swift in Sources */,
+				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +688,11 @@
 			isa = PBXTargetDependency;
 			target = 16287AE61EFB03FD007188AE /* GladysIndex */;
 			targetProxy = 16287AEC1EFB03FD007188AE /* PBXContainerItemProxy */;
+		};
+		164136951F09195000B34574 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1641368C1F09195000B34574 /* GladysAction */;
+			targetProxy = 164136941F09195000B34574 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -648,6 +778,42 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = INDEXER;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		164136971F09195000B34574 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 17DC3A0E5EE5EC1A16D6FBC1 /* Pods-GladysAction.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
+				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				INFOPLIST_FILE = GladysAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ACTIONEXTENSION";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		164136981F09195000B34574 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEBBB8467D3904D466D48D02 /* Pods-GladysAction.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
+				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				INFOPLIST_FILE = GladysAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = ACTIONEXTENSION;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -771,6 +937,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 69AEA2B69B1914D6FD90CFFB /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
@@ -787,6 +954,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3AC19643217B78C2D6DD5E97 /* Pods-Gladys.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
@@ -816,6 +984,15 @@
 			buildConfigurations = (
 				16287AEF1EFB03FD007188AE /* Debug */,
 				16287AF01EFB03FD007188AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		164136991F09195000B34574 /* Build configuration list for PBXNativeTarget "GladysAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				164136971F09195000B34574 /* Debug */,
+				164136981F09195000B34574 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

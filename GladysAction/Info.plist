@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Gladys Items</string>
+	<string>Keep in Gladys</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,12 +24,31 @@
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
 		<string>group.build.bru.Gladys</string>
-		<key>NSExtensionFileProviderSupportsEnumeration</key>
-		<true/>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>NSExtensionActivationRule</key>
+			<dict>
+				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
+				<integer>99999</integer>
+				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
+				<real>99999</real>
+				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
+				<integer>99999</integer>
+				<key>NSExtensionActivationSupportsText</key>
+				<true/>
+				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<integer>99999</integer>
+			</dict>
+		</dict>
 		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.fileprovider-nonui</string>
+		<string>com.apple.services</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).FileProviderExtension</string>
+		<string>$(PRODUCT_MODULE_NAME).ActionRequestHandler</string>
+	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
 </dict>
 </plist>

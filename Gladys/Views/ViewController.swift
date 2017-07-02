@@ -170,10 +170,16 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
+		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 	}
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func externalDataUpdate() {
+		archivedItemCollectionView.reloadData()
+		updateTotals()
 	}
 
 	@objc private func updateTotals() {
