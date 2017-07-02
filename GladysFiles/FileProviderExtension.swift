@@ -4,7 +4,6 @@ import UIKit
 
 final class FileProviderExtension: NSFileProviderExtension {
     
-    private var fileManager = FileManager()
 	static let model = Model()
 
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
