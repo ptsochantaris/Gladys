@@ -143,6 +143,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		ViewController.shared = self
 
+		navigationItem.rightBarButtonItem = editButtonItem
+
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
@@ -187,13 +189,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 	}
 
-	@IBAction func editSelected(_ sender: UIBarButtonItem) {
-		isEditing = !isEditing
-		sender.title = isEditing ? "Done" : "Edit"
-		sender.style = isEditing ? .done : .plain
+	override func setEditing(_ editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+
 		archivedItemCollectionView.reloadSections([0])
 		updateTotals()
-		navigationController?.setToolbarHidden(!isEditing, animated: true)
+		navigationController?.setToolbarHidden(!editing, animated: animated)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -243,15 +244,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func deleteRequested(for item: ArchivedDropItem) {
-		if let i = model.filteredDrops.index(where: { $0.uuid == item.uuid }) {
-			if let x = model.drops.index(where: { $0.uuid == item.uuid }) {
+		let uuid = item.uuid
+		if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
+			if let x = model.drops.index(where: { $0.uuid == uuid }) {
 				model.drops.remove(at: x)
 			}
-			archivedItemCollectionView.performBatchUpdates({
-				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
-			})
+			if model.filteredDrops.count > 0 {
+				archivedItemCollectionView.performBatchUpdates({
+					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
+				})
+			}
 		}
 		item.delete()
+		if model.filteredDrops.count == 0 {
+			setEditing(false, animated: true)
+		}
 		model.save()
 	}
 

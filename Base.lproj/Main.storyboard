@@ -113,13 +113,7 @@
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="whf-84-8vG">
-                            <connections>
-                                <action selector="editSelected:" destination="BYZ-38-t0r" id="nOn-Ad-UBO"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="archivedItemCollectionView" destination="90w-Xn-bmO" id="f5y-Uh-ajj"/>
