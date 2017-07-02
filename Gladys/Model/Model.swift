@@ -1,7 +1,16 @@
-
 import Foundation
-import CoreSpotlight
-import FileProvider
+
+#if FILEPROVIDER || ACTIONEXTENSION || MAINAPP
+	import FileProvider
+#endif
+
+#if ACTIONEXTENSION || MAINAPP || INDEXER
+	import CoreSpotlight
+#endif
+
+#if MAINAPP
+	import UIKit
+#endif
 
 final class Model: NSObject, NSFilePresenter {
 
@@ -73,6 +82,11 @@ final class Model: NSObject, NSFilePresenter {
 
 		let itemsToSave = drops.filter { !$0.isLoading && !$0.isDeleting }
 
+		#if MAINAPP
+			log("Starting save queue background task")
+			let bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
+		#endif
+
 		saveQueue.async {
 
 			do {
@@ -99,7 +113,14 @@ final class Model: NSObject, NSFilePresenter {
 							log("Error signalling change: \(e.localizedDescription)")
 						}
 					}
+					#if MAINAPP
+						DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+							log("Ending save queue background task")
+							UIApplication.shared.endBackgroundTask(bgTask)
+						}
+					#endif
 				}
+
 			} catch {
 				log("Saving Error: \(error.localizedDescription)")
 				if let completion = completion {

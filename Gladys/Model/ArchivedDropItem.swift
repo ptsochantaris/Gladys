@@ -86,16 +86,16 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 	#if MAINAPP
 	
 	var backgroundInfoObject: Any? {
-	var currentItem: Any?
-	var currentPriority = -1
-	for item in typeItems {
-	let (newItem, newPriority) = item.backgroundInfoObject
-	if let newItem = newItem, newPriority > currentPriority {
-	currentItem = newItem
-	currentPriority = newPriority
-	}
-	}
-	return currentItem
+		var currentItem: Any?
+		var currentPriority = -1
+		for item in typeItems {
+			let (newItem, newPriority) = item.backgroundInfoObject
+			if let newItem = newItem, newPriority > currentPriority {
+				currentItem = newItem
+				currentPriority = newPriority
+			}
+		}
+		return currentItem
 	}
 
 	var dragItem: UIDragItem {
@@ -241,10 +241,13 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		typeItems = ids.map {
 			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
 		}
+
+		self.startBgTask()
 	}
 
 	func cancelIngest() {
 		typeItems.forEach { $0.cancelIngest() }
+		endBgTask()
 	}
 
 	func delete() {
@@ -305,6 +308,28 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 #endif
 
+	deinit {
+		endBgTask()
+	}
+
+	//////////////////////////
+	#if MAINAPP
+	private var bgTask: UIBackgroundTaskIdentifier?
+	private func startBgTask() {
+		log("Starting background ingest background task")
+		bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
+	}
+	private func endBgTask() {
+		if let b = bgTask {
+			log("Ending background ingest background task")
+			UIApplication.shared.endBackgroundTask(b)
+			bgTask = nil
+		}
+	}
+	#else
+	private func startBgTask() {}
+	private func endBgTask() {}
+	#endif
 	//////////////////////////
 
 	weak var delegate: LoadCompletionDelegate?
@@ -317,6 +342,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if loadCount == 0 {
 			isLoading = false
 			delegate?.loadCompleted(sender: self, success: allLoadedWell)
+			endBgTask()
 		}
 	}
 	func loadingProgress(sender: AnyObject) { }

@@ -114,11 +114,6 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
-                        <barButtonItem key="leftBarButtonItem" title="Reset" id="mt1-yh-Q5a">
-                            <connections>
-                                <action selector="resetPressed:" destination="BYZ-38-t0r" id="wfA-Aw-Rxb"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Edit" id="whf-84-8vG">
                             <connections>
                                 <action selector="editSelected:" destination="BYZ-38-t0r" id="nOn-Ad-UBO"/>

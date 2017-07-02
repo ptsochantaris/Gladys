@@ -196,18 +196,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		navigationController?.setToolbarHidden(!isEditing, animated: true)
 	}
 
-	@IBAction func resetPressed(_ sender: UIBarButtonItem) {
-		sender.isEnabled = false
-		archivedItemCollectionView.performBatchUpdates({
-			self.model.drops.forEach { $0.delete() }
-			self.model.drops.removeAll()
-			self.model.save()
-			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
-		}, completion: { finished in
-			sender.isEnabled = true
-		})
-	}
-
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let layout = (collectionViewLayout as! UICollectionViewFlowLayout)
 		if view.bounds.size.width <= 320 {
