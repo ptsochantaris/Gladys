@@ -721,7 +721,6 @@
 			baseConfigurationReference = D05CE378FBB51F221DECC2FE /* Pods-GladysFiles.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
@@ -738,7 +737,6 @@
 			baseConfigurationReference = F517AAB67E5921C0D60E34B4 /* Pods-GladysFiles.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
@@ -755,7 +753,6 @@
 			baseConfigurationReference = 43FDB32B9101BB1462574E97 /* Pods-GladysIndex.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
@@ -771,7 +768,6 @@
 			baseConfigurationReference = 3831437441A0E320E23481FB /* Pods-GladysIndex.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
@@ -788,7 +784,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
@@ -806,7 +801,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
@@ -850,6 +844,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -911,6 +906,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -940,7 +936,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
@@ -957,7 +952,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
