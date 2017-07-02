@@ -173,6 +173,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+
+		updateTotals()
 	}
 
 	deinit {
@@ -187,6 +189,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@objc private func updateTotals() {
 		countLabel.title = "\(model.drops.count) Items"
 		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+		editButtonItem.isEnabled = model.drops.count > 0
 	}
 
 	override func setEditing(_ editing: Bool, animated: Bool) {
