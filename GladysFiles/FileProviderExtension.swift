@@ -89,8 +89,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 				autoreleasepool {
 					log("Creating thumbnail for item \(itemID.rawValue)")
 					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
-						if let dir = fpi.item, let img = dir.displayInfo.image {
-							let data = self.imageData(img: img, size: mySize, contentMode: dir.displayInfo.imageContentMode)
+						if let dir = fpi.item {
+							let data = self.imageData(img: dir.displayIcon, size: mySize, contentMode: dir.displayMode)
 							perThumbnailCompletionHandler(itemID, data, nil)
 						} else if let file = fpi.typeItem, let img = file.displayIcon {
 							let data = self.imageData(img: img, size: mySize, contentMode: file.displayIconContentMode)

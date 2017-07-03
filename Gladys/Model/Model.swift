@@ -80,6 +80,8 @@ final class Model: NSObject, NSFilePresenter {
 
 	func save(completion: ((Bool)->Void)? = nil) {
 
+		let start = Date()
+
 		let itemsToSave = drops.filter { !$0.isLoading && !$0.isDeleting }
 
 		#if MAINAPP
@@ -105,7 +107,7 @@ final class Model: NSObject, NSFilePresenter {
 				}
 
 				DispatchQueue.main.async {
-					log("Saved")
+					log("Saved: \(-start.timeIntervalSinceNow) seconds")
 					completion?(true)
 					NotificationCenter.default.post(name: .SaveComplete, object: nil)
 					NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier.rootContainer) { error in

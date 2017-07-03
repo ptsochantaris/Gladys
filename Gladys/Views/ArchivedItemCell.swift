@@ -271,7 +271,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			} else {
 				spinner.stopAnimating()
 				image.isHidden = false
-				decorateLoadedItem(archivedDropItem)
+				decorateLoadedItem()
 
 				// if we're showing an icon, let's try to enahnce things a bit
 				if image.contentMode == .center, let backgroundItem = archivedDropItem.backgroundInfoObject {
@@ -305,37 +305,58 @@ final class ArchivedItemCell: UICollectionViewCell {
 		cancelButton.isHidden = hideCancel
 	}
 
-	private func decorateLoadedItem(_ item: ArchivedDropItem) {
+	private func decorateLoadedItem() {
+		guard let item = archivedDropItem else { return }
 
-		let info = item.displayInfo
-		image.image = info.image
+		DispatchQueue.global(qos: .background).async {
+			if item.uuid != self.archivedDropItem?.uuid { return }
 
-		switch info.imageContentMode {
+			let img = item.displayIcon
+			let imageRef = img.cgImage!
+			let W = imageRef.width
+			let H =	imageRef.height
+			let c = CGContext(data: nil,
+			                  width: W,
+			                  height: H,
+			                  bitsPerComponent: 8,
+			                  bytesPerRow: W * 4,
+			                  space: CGColorSpaceCreateDeviceRGB(),
+			                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+			c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
+			let loadedImageRef = c.makeImage()!
+			let loadedImage = UIImage(cgImage: loadedImageRef, scale: img.scale, orientation: img.imageOrientation)
+
+			DispatchQueue.main.async {
+				self.image.image = loadedImage
+			}
+		}
+
+		switch item.displayMode {
 		case .center:
 			image.contentMode = .center
 			image.circle = false
+			label.numberOfLines = 8
 		case .fill:
 			image.contentMode = .scaleAspectFill
 			image.circle = false
+			label.numberOfLines = 2
 		case .fit:
 			image.contentMode = .scaleAspectFit
 			image.circle = false
+			label.numberOfLines = 2
 		case .circle:
 			image.contentMode = .scaleAspectFill
 			image.circle = true
-		}
-
-		if image.contentMode == .center {
-			label.numberOfLines = 8
-		} else {
 			label.numberOfLines = 2
 		}
-		label.textAlignment = info.titleAlignment
-		label.text = info.title
+
+		let titleInfo = item.displayTitle
+		label.textAlignment = titleInfo.1
+		label.text = titleInfo.0
 
 		labelDistance.constant = (label.text == nil) ? 0 : 8
 
-		if let t = info.accessoryText {
+		if let t = item.accessoryTitle {
 			accessoryLabel.text = t
 			accessoryLabelDistance.constant = 8
 		}

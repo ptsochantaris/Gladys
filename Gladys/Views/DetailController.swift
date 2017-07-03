@@ -21,7 +21,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.dragDelegate = self
 
 		titleLabel.text = item.oneTitle
-		titleLabel.textAlignment = item.displayInfo.titleAlignment
+		titleLabel.textAlignment = item.displayTitle.1
 		openButton.isEnabled = item.canOpen
 
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: item.sizeInBytes)

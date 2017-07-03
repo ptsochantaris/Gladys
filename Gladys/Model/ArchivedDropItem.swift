@@ -64,21 +64,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		})
 	}
 
-	var displayInfo: ArchivedDropDisplayInfo {
-
-		let (img, contentMode) = displayIcon
-		let (title, alignment) = displayTitle
-
-		let info = ArchivedDropDisplayInfo(
-			image: img,
-			imageContentMode: contentMode,
-			title: title,
-			accessoryText: accessoryTitle,
-			titleAlignment: alignment)
-
-		return info
-	}
-
 	var oneTitle: String {
 		return accessoryTitle ?? displayTitle.0 ?? uuid.uuidString
 	}
@@ -191,14 +176,17 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
-	private var displayIcon: (UIImage?, ArchivedDropItemDisplayType) {
+	var displayIcon: UIImage {
 		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
-		let contentMode = highestPriorityIconItem?.displayIconContentMode ?? .center
-		let image = highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
-		return (image, contentMode)
+		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 	}
 
-	private var displayTitle: (String?, NSTextAlignment) {
+	var displayMode: ArchivedDropItemDisplayType {
+		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		return highestPriorityIconItem?.displayIconContentMode ?? .center
+	}
+
+	var displayTitle: (String?, NSTextAlignment) {
 
 		if let suggestedName = suggestedName {
 			return (suggestedName, .center)
@@ -210,7 +198,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return (title, alignment)
 	}
 
-	private var accessoryTitle: String? {
+	var accessoryTitle: String? {
 		return typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle
 	}
 

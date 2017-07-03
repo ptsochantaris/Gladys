@@ -7,22 +7,6 @@ func log(_ line: @autoclosure ()->String) {
 	#endif
 }
 
-struct ArchivedDropDisplayInfo {
-	let image: UIImage?
-	let imageContentMode: ArchivedDropItemDisplayType
-	let title: String?
-	let accessoryText: String?
-	let titleAlignment: NSTextAlignment
-
-	init(image: UIImage?, imageContentMode: ArchivedDropItemDisplayType, title: String?, accessoryText: String?, titleAlignment: NSTextAlignment) {
-		self.image = image
-		self.imageContentMode = imageContentMode
-		self.title = title
-		self.accessoryText = (accessoryText != title) ? accessoryText : nil
-		self.titleAlignment = titleAlignment
-	}
-}
-
 enum ArchivedDropItemDisplayType: Int {
 	case fit, fill, center, circle
 }
@@ -119,7 +103,7 @@ extension UIImage {
 		                  bitsPerComponent: 8,
 		                  bytesPerRow: Int(outputImagePixelWidth) * 4,
 		                  space: CGColorSpaceCreateDeviceRGB(),
-		                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+		                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
 		c.interpolationQuality = .high
 		c.concatenate(transform)
 
