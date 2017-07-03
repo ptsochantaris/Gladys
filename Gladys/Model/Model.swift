@@ -12,7 +12,7 @@ import Foundation
 	import UIKit
 #endif
 
-final class Model: NSObject, NSFilePresenter {
+final class Model: NSObject {
 
 	var drops: [ArchivedDropItem]
 
@@ -32,38 +32,53 @@ final class Model: NSObject, NSFilePresenter {
 		drops = Model.loadData() ?? [ArchivedDropItem]()
 		super.init()
 
+		Model.filePresenter.model = self
+
+		#if MAINAPP
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
-
 		foregrounded()
+		#endif
 	}
 
 	private static var dataFileLastModified = Date.distantPast
 	private static func loadData() -> [ArchivedDropItem]? {
 		
-		let url = Model.fileUrl
-		if FileManager.default.fileExists(atPath: url.path) {
-			do {
+		var res: [ArchivedDropItem]?
 
-				if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
-					if dataModified <= dataFileLastModified {
-						log("No changes, no need to reload data")
-						return nil
+		let coordinator = NSFileCoordinator(filePresenter: Model.filePresenter)
+		var coordinationError: NSError?
+		coordinator.coordinate(readingItemAt: Model.fileUrl, options: .withoutChanges, error: &coordinationError) { url in
+
+			if FileManager.default.fileExists(atPath: url.path) {
+				do {
+
+					var shouldLoad = true
+					if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
+						if dataModified <= dataFileLastModified {
+							log("No changes, no need to reload data")
+							shouldLoad = false
+						} else {
+							dataFileLastModified = dataModified
+						}
 					}
-					dataFileLastModified = dataModified
+					if shouldLoad {
+						log("Loading data")
+						let data = try Data(contentsOf: url, options: [.alwaysMapped])
+						res = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+					}
+				} catch {
+					log("Loading Error: \(error)")
 				}
-				let data = try Data(contentsOf: url, options: [.alwaysMapped])
-				log("Loaded data")
-				return try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
-
-			} catch {
-				log("Loading Error: \(error)")
+			} else {
+				log("Starting fresh store")
 			}
-		} else {
-			log("Starting fresh store")
 		}
-		return nil
+		if let e = coordinationError {
+			log("Error in loading coordination: \(e.localizedDescription)")
+		}
+		return res
 	}
 
 	func reloadDataIfNeeded() {
@@ -94,10 +109,10 @@ final class Model: NSObject, NSFilePresenter {
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
 
-				let coordinator = NSFileCoordinator(filePresenter: self)
+				let coordinator = NSFileCoordinator(filePresenter: Model.filePresenter)
 				var coordinationError: NSError?
-				coordinator.coordinate(writingItemAt: Model.fileUrl, options: .forReplacing, error: &coordinationError) { url in
-					try! data.write(to: Model.fileUrl, options: .atomic)
+				coordinator.coordinate(writingItemAt: Model.fileUrl, options: [], error: &coordinationError) { url in
+					try! data.write(to: url, options: [])
 					if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
 						Model.dataFileLastModified = dataModified
 					}
@@ -108,14 +123,14 @@ final class Model: NSObject, NSFilePresenter {
 
 				DispatchQueue.main.async {
 					log("Saved: \(-start.timeIntervalSinceNow) seconds")
-					completion?(true)
-					NotificationCenter.default.post(name: .SaveComplete, object: nil)
 					NSFileProviderManager.default.signalEnumerator(forContainerItemIdentifier: NSFileProviderItemIdentifier.rootContainer) { error in
 						if let e = error {
-							log("Error signalling change: \(e.localizedDescription)")
+							log("Error signalling change to file provider: \(e.localizedDescription)")
 						}
 					}
+					completion?(true)
 					#if MAINAPP
+						NotificationCenter.default.post(name: .SaveComplete, object: nil)
 						DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 							log("Ending save queue background task")
 							UIApplication.shared.endBackgroundTask(bgTask)
@@ -198,29 +213,38 @@ final class Model: NSObject, NSFilePresenter {
 
 	////////////////////////////
 
+	#if MAINAPP
 	@objc private func foregrounded() {
 		reloadDataIfNeeded()
-		NSFileCoordinator.addFilePresenter(self)
+		NSFileCoordinator.addFilePresenter(Model.filePresenter)
 	}
 
 	@objc private func backgrounded() {
-		NSFileCoordinator.removeFilePresenter(self)
-	}
-
-	var presentedItemURL: URL? {
-		return Model.fileUrl
-	}
-
-	var presentedItemOperationQueue: OperationQueue {
-		return OperationQueue.main
-	}
-
-	func presentedItemDidChange() {
-		reloadDataIfNeeded()
+		NSFileCoordinator.removeFilePresenter(Model.filePresenter)
 	}
 
 	deinit {
 		backgrounded()
+	}
+	#endif
+
+	private static let filePresenter = ModelFilePresenter()
+
+	private class ModelFilePresenter: NSObject, NSFilePresenter {
+
+		weak var model: Model?
+
+		var presentedItemURL: URL? {
+			return Model.fileUrl
+		}
+
+		var presentedItemOperationQueue: OperationQueue {
+			return OperationQueue.main
+		}
+
+		func presentedItemDidChange() {
+			model?.reloadDataIfNeeded()
+		}
 	}
 }
 

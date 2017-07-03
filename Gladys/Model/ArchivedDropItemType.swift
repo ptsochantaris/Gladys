@@ -560,15 +560,17 @@ final class ArchivedDropItemType: Codable {
 
 		// in thread!!
 
+		var request = URLRequest(url: url)
+		request.setValue("Gladys/1.0.0 (iOS; iOS)", forHTTPHeaderField: "User-Agent")
+
 		if testing {
 
 			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
 
-			var request = URLRequest(url: url)
 			request.httpMethod = "HEAD"
 			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
-					if let type = response.allHeaderFields["Content-Type"] as? String, type.hasPrefix("text/html") {
+					if let type = response.mimeType, type.hasPrefix("text/html") {
 						log("Content for this is HTML, will try to fetch title")
 						self.fetchWebPreview(for: url, testing: false, completion: completion)
 					} else {
@@ -587,7 +589,7 @@ final class ArchivedDropItemType: Codable {
 
 			log("Fetching HTML from URL: \(url.absoluteString)")
 
-			let fetch = URLSession.shared.dataTask(with: url) { data, response, error in
+			let fetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let data = data,
 					let text = String(data: data, encoding: .utf8),
 					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
