@@ -50,6 +50,45 @@ let dateFormatter: DateFormatter = {
 
 extension UIImage {
 
+	func bitmapData() -> Data {
+		let imageRef = cgImage!
+		let W = imageRef.width
+		let H =	imageRef.height
+		let byteCount = W * 4 * H
+		let memory = UnsafeMutableRawPointer.allocate(bytes: byteCount, alignedTo: 0)
+		let c = CGContext(data: memory,
+		                  width: W,
+		                  height: H,
+		                  bitsPerComponent: 8,
+		                  bytesPerRow: W * 4,
+		                  space: CGColorSpaceCreateDeviceRGB(),
+		                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+		c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
+		return Data(bytesNoCopy: memory, count: byteCount, deallocator: .free)
+	}
+
+	static func fromBitmap(at path: String, width: CGFloat, height: CGFloat, scale: CGFloat) -> UIImage {
+
+		let W = Int(width * scale)
+		let H = Int(height * scale)
+
+		let c = CGContext(data: nil,
+						  width: W,
+						  height: H,
+						  bitsPerComponent: 8,
+						  bytesPerRow: W * 4,
+						  space: CGColorSpaceCreateDeviceRGB(),
+						  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+
+		let byteCount = Int(W * H * 4)
+
+		let F = open(path.cString(using: .utf8)!, O_RDONLY)
+		read(F, c.data!, byteCount)
+		close(F)
+
+		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
+	}
+
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false) -> UIImage {
 
 		let mySizePixelWidth = size.width * scale

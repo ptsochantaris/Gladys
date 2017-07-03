@@ -310,24 +310,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		DispatchQueue.global(qos: .background).async {
 			if item.uuid != self.archivedDropItem?.uuid { return }
-
 			let img = item.displayIcon
-			let imageRef = img.cgImage!
-			let W = imageRef.width
-			let H =	imageRef.height
-			let c = CGContext(data: nil,
-			                  width: W,
-			                  height: H,
-			                  bitsPerComponent: 8,
-			                  bytesPerRow: W * 4,
-			                  space: CGColorSpaceCreateDeviceRGB(),
-			                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
-			c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
-			let loadedImage = UIImage(cgImage: c.makeImage()!, scale: img.scale, orientation: img.imageOrientation)
-
 			DispatchQueue.main.async {
-				if item.uuid != self.archivedDropItem?.uuid { return }
-				self.image.image = loadedImage
+				self.image.image = img
 			}
 		}
 

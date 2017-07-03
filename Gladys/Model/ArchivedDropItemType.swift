@@ -21,6 +21,8 @@ final class ArchivedDropItemType: Codable {
 		case displayIconPriority
 		case displayIconContentMode
 		case displayIconScale
+		case displayIconWidth
+		case displayIconHeight
 		case hasLocalFiles
 		case createdAt
 	}
@@ -38,6 +40,8 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
 		try v.encode(displayIconScale, forKey: .displayIconScale)
+		try v.encode(displayIconWidth, forKey: .displayIconWidth)
+		try v.encode(displayIconHeight, forKey: .displayIconHeight)
 		try v.encode(hasLocalFiles, forKey: .hasLocalFiles)
 		try v.encode(createdAt, forKey: .createdAt)
 	}
@@ -60,6 +64,8 @@ final class ArchivedDropItemType: Codable {
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
 		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
 		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
+		displayIconWidth = try v.decode(CGFloat.self, forKey: .displayIconWidth)
+		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
 		createdAt = try v.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
@@ -142,6 +148,8 @@ final class ArchivedDropItemType: Codable {
 	// transient / ui
 	private weak var delegate: LoadCompletionDelegate?
 	private var displayIconScale: CGFloat
+	private var displayIconWidth: CGFloat
+	private var displayIconHeight: CGFloat
 	private var loadingAborted = false
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
@@ -252,16 +260,16 @@ final class ArchivedDropItemType: Codable {
 	var displayIcon: UIImage? {
 		set {
 			let ipath = imagePath
-			if let displayIcon = newValue, let displayIconData = UIImagePNGRepresentation(displayIcon)  {
-				try? displayIconData.write(to: ipath, options: [.atomic])
+			if let n = newValue {
+				try! n.bitmapData().write(to: ipath, options: [.atomic])
 			} else if FileManager.default.fileExists(atPath: ipath.path) {
 				try? FileManager.default.removeItem(at: ipath)
 			}
 		}
 		get {
-			if 	let cgDataProvider = CGDataProvider(url: imagePath as CFURL),
-				let cgImage = CGImage(pngDataProviderSource: cgDataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) {
-				return UIImage(cgImage: cgImage, scale: displayIconScale, orientation: .up)
+			let ipath = imagePath.path
+			if FileManager.default.fileExists(atPath: ipath) {
+				return UIImage.fromBitmap(at: ipath, width: displayIconWidth, height: displayIconHeight, scale: displayIconScale)
 			} else {
 				return nil
 			}
@@ -507,6 +515,8 @@ final class ArchivedDropItemType: Codable {
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
 		displayIconScale = 1
+		displayIconWidth = 0
+		displayIconHeight = 0
 		hasLocalFiles = false
 		createdAt = Date()
 
@@ -530,16 +540,20 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
+		let result: UIImage
 		if contentMode == .center || contentMode == .circle {
-			displayIcon = icon
+			result = icon
 		} else if contentMode == .fit {
-			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), limitTo: 0.75, useScreenScale: true)
+			result = icon.limited(to: CGSize(width: 512, height: 512), limitTo: 0.75, useScreenScale: true)
 		} else {
-			displayIcon = icon.limited(to: CGSize(width: 512, height: 512), useScreenScale: true)
+			result = icon.limited(to: CGSize(width: 512, height: 512), useScreenScale: true)
 		}
-		displayIconScale = icon.scale
+		displayIconScale = result.scale
+		displayIconWidth = result.size.width
+		displayIconHeight = result.size.height
 		displayIconPriority = priority
 		displayIconContentMode = contentMode
+		displayIcon = result
 	}
 
 	private func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, UIImage?)->Void) {
