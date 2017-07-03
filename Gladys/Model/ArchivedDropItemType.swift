@@ -261,7 +261,7 @@ final class ArchivedDropItemType: Codable {
 		set {
 			let ipath = imagePath
 			if let n = newValue {
-				try! n.bitmapData().write(to: ipath, options: [.atomic])
+				n.writeBitmap(to: ipath.path)
 			} else if FileManager.default.fileExists(atPath: ipath.path) {
 				try? FileManager.default.removeItem(at: ipath)
 			}

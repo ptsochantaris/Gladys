@@ -50,13 +50,12 @@ let dateFormatter: DateFormatter = {
 
 extension UIImage {
 
-	func bitmapData() -> Data {
+	func writeBitmap(to path: String) {
 		let imageRef = cgImage!
 		let W = imageRef.width
 		let H =	imageRef.height
 		let byteCount = W * 4 * H
-		let memory = UnsafeMutableRawPointer.allocate(bytes: byteCount, alignedTo: 0)
-		let c = CGContext(data: memory,
+		let c = CGContext(data: nil,
 		                  width: W,
 		                  height: H,
 		                  bitsPerComponent: 8,
@@ -64,7 +63,10 @@ extension UIImage {
 		                  space: CGColorSpaceCreateDeviceRGB(),
 		                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
 		c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
-		return Data(bytesNoCopy: memory, count: byteCount, deallocator: .free)
+
+		let F = open(path.cString(using: .utf8)!, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)
+		write(F, c.data!, byteCount)
+		close(F)
 	}
 
 	static func fromBitmap(at path: String, width: CGFloat, height: CGFloat, scale: CGFloat) -> UIImage {
