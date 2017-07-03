@@ -361,5 +361,5 @@
     <resources>
         <image name="iconDeleteSmall" width="18" height="22"/>
     </resources>
-    <color key="tintColor" red="0.47928744550000002" green="0.1845055521" blue="0.16901880499999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" red="0.5764203667640686" green="0.093400068581104279" blue="0.069711051881313324" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
