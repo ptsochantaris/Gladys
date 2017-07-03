@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate {
+final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -19,6 +19,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.rowHeight = UITableViewAutomaticDimension
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
+		table.dropDelegate = self
 
 		titleLabel.text = item.oneTitle
 		titleLabel.textAlignment = item.displayTitle.1
@@ -99,4 +100,21 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		return [typeItem.dragItem]
 	}
 
+	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+		return UITableViewDropProposal(operation: .cancel)
+	}
+
+	func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
+		if session.localDragSession != nil {
+			dismiss(animated: true, completion: nil)
+		}
+	}
+
+	func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
+		if session.localDragSession == nil {
+			dismiss(animated: true, completion: nil)
+		}
+	}
+
+	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
 }
