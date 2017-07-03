@@ -323,10 +323,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 			                  space: CGColorSpaceCreateDeviceRGB(),
 			                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
 			c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
-			let loadedImageRef = c.makeImage()!
-			let loadedImage = UIImage(cgImage: loadedImageRef, scale: img.scale, orientation: img.imageOrientation)
+			let loadedImage = UIImage(cgImage: c.makeImage()!, scale: img.scale, orientation: img.imageOrientation)
 
 			DispatchQueue.main.async {
+				if item.uuid != self.archivedDropItem?.uuid { return }
 				self.image.image = loadedImage
 			}
 		}
