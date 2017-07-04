@@ -233,11 +233,22 @@ final class ArchivedItemCell: UICollectionViewCell {
 		borderView.backgroundColor = .white
 		borderView.layer.cornerRadius = 10
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
+
+		NotificationCenter.default.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func lowMemoryModeOn() {
+		lowMemoryMode = true
+		reDecorate()
 	}
 
 	var archivedDropItem: ArchivedDropItem? {
 		didSet {
-			decorate()
+			reDecorate()
 		}
 	}
 
@@ -245,10 +256,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	override func prepareForReuse() {
 		archivedDropItem = nil
-		decorate()
+		reDecorate()
 	}
 
-	func decorate() {
+	var lowMemoryMode = false
+
+	func reDecorate() {
+		if lowMemoryMode {
+			decorate(with: nil)
+		} else {
+			decorate(with: archivedDropItem)
+		}
+	}
+
+	private func decorate(with item: ArchivedDropItem?) {
 
 		var wantMapView = false
 		var hideCancel = true
@@ -259,11 +280,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.image = nil
 		image.isHidden = true
 
-		if let archivedDropItem = archivedDropItem {
+		if let item = item {
 
-			if archivedDropItem.isLoading {
+			if item.isLoading {
 				image.isHidden = true
-				let count = archivedDropItem.loadCount
+				let count = item.loadCount
 				label.text = count > 1 ? "\(count) items left to transfer" : "Completing transfer"
 				labelDistance.constant = 8
 				hideCancel = false
@@ -273,8 +294,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				image.isHidden = false
 				decorateLoadedItem()
 
-				// if we're showing an icon, let's try to enahnce things a bit
-				if image.contentMode == .center, let backgroundItem = archivedDropItem.backgroundInfoObject {
+				// if we're showing an icon, let's try to enhance things a bit
+				if image.contentMode == .center, let backgroundItem = item.backgroundInfoObject {
 					if let mapItem = backgroundItem as? MKMapItem {
 						wantMapView = true
 						if let m = existingMapView {
@@ -294,7 +315,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		} else { // item is nil
 			label.text = nil
 			labelDistance.constant = 0
-			spinner.startAnimating()
+			spinner.stopAnimating()
 		}
 
 		if !wantMapView, let e = existingMapView {
@@ -305,11 +326,18 @@ final class ArchivedItemCell: UICollectionViewCell {
 		cancelButton.isHidden = hideCancel
 	}
 
+	private static let imageProcessingQueue: OperationQueue =  {
+		let o = OperationQueue()
+		o.maxConcurrentOperationCount = 1
+		o.qualityOfService = .background
+		return o
+	}()
+
 	private func decorateLoadedItem() {
 		guard let item = archivedDropItem else { return }
 
-		DispatchQueue.global(qos: .background).async {
-			if item.uuid != self.archivedDropItem?.uuid { return }
+		ArchivedItemCell.imageProcessingQueue.addOperation { [weak self] in
+			if item.uuid != self?.archivedDropItem?.uuid { return }
 			let img = item.displayIcon
 			DispatchQueue.main.async { [weak self] in
 				self?.image.image = img

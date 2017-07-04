@@ -37,6 +37,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
+		cell.lowMemoryMode = lowMemoryMode
 		cell.archivedDropItem = model.filteredDrops[indexPath.item]
 		cell.isEditing = isEditing
 		cell.delegate = self
@@ -173,8 +174,27 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 
 		updateTotals()
+	}
+
+	private var lowMemoryMode = false
+	override func didReceiveMemoryWarning() {
+		if UIApplication.shared.applicationState == .background {
+			lowMemoryMode = true
+			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
+		}
+	}
+
+	@objc private func foregrounded() {
+		if lowMemoryMode {
+			lowMemoryMode = false
+			for cell in archivedItemCollectionView.visibleCells as? [ArchivedItemCell] ?? [] {
+				cell.lowMemoryMode = false
+				cell.reDecorate()
+			}
+		}
 	}
 
 	deinit {
@@ -195,9 +215,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
-		archivedItemCollectionView.reloadSections([0])
 		updateTotals()
 		navigationController?.setToolbarHidden(!editing, animated: animated)
+
+		UIView.performWithoutAnimation {
+			for cell in archivedItemCollectionView.visibleCells as? [ArchivedItemCell] ?? [] {
+				cell.isEditing = editing
+			}
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -267,7 +292,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if let i = model.filteredDrops.index(where: { $0 === sender }) {
 			let ip = IndexPath(item: i, section: 0)
 			if let cell = archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
-				cell.decorate()
+				cell.reDecorate()
 			}
 		}
 	}

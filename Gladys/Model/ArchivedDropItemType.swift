@@ -495,9 +495,9 @@ final class ArchivedDropItemType: Codable {
 				setDisplayIcon(image, 10, .fill)
 			} else {
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 0, .center)
-				let p = localUrl.lastPathComponent
-				setTitleInfo(p, p.contains(".") ? 1 : 0)
 			}
+			let p = localUrl.lastPathComponent
+			setTitleInfo(p, p.contains(".") ? 1 : 0)
 			setBytes(object: localUrl as NSURL, type: .NSURL)
 
 		} else if let error = error {
