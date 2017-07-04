@@ -656,7 +656,7 @@ final class ArchivedDropItemType: Codable {
 
 	private func signalDone() {
 		if !loadingAborted {
-			DispatchQueue.main.async {
+			OperationQueue.main.addOperation {
 				self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil)
 			}
 		}
