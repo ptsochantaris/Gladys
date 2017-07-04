@@ -119,7 +119,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		} else if item is CNContact {
 			return true
 		} else if let item = item as? URL {
-			return item.scheme != "file" && UIApplication.shared.canOpenURL(item)
+			return !item.isFileURL && UIApplication.shared.canOpenURL(item)
 		}
 
 		return false
@@ -148,7 +148,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 			UIApplication.shared.open(item, options: [:]) { success in
 				if !success {
 					let message: String
-					if item.scheme == "file" {
+					if item.isFileURL {
 						message = "iOS does not recognise the type of this file"
 					} else {
 						message = "iOS does not recognise the type of this link"

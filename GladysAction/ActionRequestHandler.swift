@@ -21,7 +21,7 @@ class ActionRequestHandler: NSObject, NSExtensionRequestHandling, LoadCompletion
 			loadCount += inputItem.attachments?.count ?? 0
 			for provider in inputItem.attachments as? [NSItemProvider] ?? [] {
 				let newItem = ArchivedDropItem(provider: provider, delegate: self)
-				model.drops.append(newItem)
+				model.drops.insert(newItem, at: 0)
 			}
 		}
 

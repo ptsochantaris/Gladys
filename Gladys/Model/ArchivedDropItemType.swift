@@ -423,7 +423,7 @@ final class ArchivedDropItemType: Codable {
 				setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 			}
 
-			if item.scheme == "file" {
+			if item.isFileURL {
 				log("      will duplicate item at local path: \(item.path)")
 				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
 					if self?.loadingAborted ?? true { return }
@@ -493,6 +493,10 @@ final class ArchivedDropItemType: Codable {
 
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
+			} else {
+				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 0, .center)
+				let p = localUrl.lastPathComponent
+				setTitleInfo(p, p.contains(".") ? 1 : 0)
 			}
 			setBytes(object: localUrl as NSURL, type: .NSURL)
 
