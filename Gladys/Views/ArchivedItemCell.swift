@@ -112,7 +112,7 @@ final class MiniMapView: UIImageView {
 
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
-				OperationQueue.main.addOperation { [weak self] in
+				DispatchQueue.main.async { [weak self] in
 					let img = snapshot.image
 					self?.image = img
 					MiniMapView.cache.setObject(img, forKey: cacheKey)
@@ -311,7 +311,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		DispatchQueue.global(qos: .background).async {
 			if item.uuid != self.archivedDropItem?.uuid { return }
 			let img = item.displayIcon
-			OperationQueue.main.addOperation { [weak self] in
+			DispatchQueue.main.async { [weak self] in
 				self?.image.image = img
 			}
 		}

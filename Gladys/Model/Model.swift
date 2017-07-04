@@ -118,7 +118,7 @@ final class Model: NSObject {
 				self.coordinatedSave(data: data)
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
 				if let completion = completion {
-					OperationQueue.main.addOperation {
+					DispatchQueue.main.async {
 						completion(true)
 					}
 				}
@@ -126,13 +126,13 @@ final class Model: NSObject {
 			} catch {
 				log("Saving Error: \(error.localizedDescription)")
 				if let completion = completion {
-					OperationQueue.main.addOperation {
+					DispatchQueue.main.async {
 						completion(false)
 					}
 				}
 			}
 			#if MAINAPP
-				OperationQueue.main.addOperation {
+				DispatchQueue.main.async {
 					NotificationCenter.default.post(name: .SaveComplete, object: nil)
 					DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 						log("Ending save queue background task")
@@ -186,7 +186,7 @@ final class Model: NSObject {
 				let criterion = "\"*\(f)*\"cd"
 				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
 				q.foundItemsHandler = { items in
-					OperationQueue.main.addOperation {
+					DispatchQueue.main.async {
 						let uuids = items.map { $0.uniqueIdentifier }
 						let items = self.drops.filter { uuids.contains($0.uuid.uuidString) }
 						self._cachedFilteredDrops?.append(contentsOf: items)
@@ -197,7 +197,7 @@ final class Model: NSObject {
 					if let error = error {
 						log("Search error: \(error.localizedDescription)")
 					}
-					OperationQueue.main.addOperation {
+					DispatchQueue.main.async {
 						if self._cachedFilteredDrops?.isEmpty ?? true {
 							NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 						}
@@ -219,6 +219,15 @@ final class Model: NSObject {
 			return f
 		} else {
 			return drops
+		}
+	}
+
+	func removeItemFromList(uuid: UUID) {
+		if let x = drops.index(where: { $0.uuid == uuid }) {
+			drops.remove(at: x)
+		}
+		if _cachedFilteredDrops != nil, let x = _cachedFilteredDrops!.index(where: { $0.uuid == uuid }) {
+			_cachedFilteredDrops!.remove(at: x)
 		}
 	}
 

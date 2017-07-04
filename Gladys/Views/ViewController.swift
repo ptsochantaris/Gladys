@@ -249,9 +249,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	func deleteRequested(for item: ArchivedDropItem) {
 		let uuid = item.uuid
 		if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
-			if let x = model.drops.index(where: { $0.uuid == uuid }) {
-				model.drops.remove(at: x)
-			}
+			model.removeItemFromList(uuid: uuid)
 			if model.filteredDrops.count > 0 {
 				archivedItemCollectionView.performBatchUpdates({
 					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
@@ -259,7 +257,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 		item.delete()
-		if model.filteredDrops.count == 0 {
+		if model.drops.count == 0 {
 			setEditing(false, animated: true)
 		}
 		model.save()
@@ -341,7 +339,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
+		archivedItemCollectionView.performBatchUpdates({
+			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
+		}, completion: nil)
 	}
 }
 
