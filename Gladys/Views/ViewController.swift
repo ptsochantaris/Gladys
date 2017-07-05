@@ -202,7 +202,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func externalDataUpdate() {
-		archivedItemCollectionView.reloadData()
+		if model.isFiltering {
+			model.filter = nil
+			model.filter = self.navigationItem.searchController?.searchBar.text
+		} else {
+			archivedItemCollectionView.reloadData()
+		}
 		updateTotals()
 	}
 

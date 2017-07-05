@@ -8,34 +8,27 @@
 
 import CoreSpotlight
 
-class IndexRequestHandler: CSIndexExtensionRequestHandler {
+final class IndexRequestHandler: CSIndexExtensionRequestHandler {
+
+	private let model = Model()
 
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-		let model = Model() // TODO: optimise and load once?
+		model.reloadDataIfNeeded()
 		model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
     }
     
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-		let model = Model()
+		model.reloadDataIfNeeded()
 		model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
     }
     
     override func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-		let model = Model()
+		model.reloadDataIfNeeded()
 		return try model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
     }
     
     override func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
-		let model = Model()
+		model.reloadDataIfNeeded()
 		return try model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
     }
-
-	override init() {
-		super.init()
-		log("Index extension activated")
-	}
-
-	deinit {
-		log("Index extension disposed")
-	}
 }

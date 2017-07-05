@@ -4,11 +4,11 @@ import UIKit
 
 final class FileProviderExtension: NSFileProviderExtension {
     
-	static let model = Model()
+	private let model = Model()
 
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
-		let dropsCopy = FileProviderExtension.model.drops
+		let dropsCopy = model.drops
 		let uuid = identifier.rawValue
 
 		for item in dropsCopy {
@@ -106,6 +106,21 @@ final class FileProviderExtension: NSFileProviderExtension {
 		return progress
 	}
 
+	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
+		guard let fpi = (try? item(for: itemIdentifier)) as? FileProviderItem else {
+			completionHandler(NSError(domain: "build.bru", code: 15, userInfo: [ NSLocalizedDescriptionKey: "Item not found" ]))
+			return
+		}
+		guard let dir = fpi.item else {
+			completionHandler(NSError(domain: "build.bru", code: 18, userInfo: [ NSLocalizedDescriptionKey: "Item not deletable" ]))
+			return
+		}
+		if let i = model.drops.index(where: { $0 === dir }) {
+			model.drops.remove(at: i)
+			model.save()
+		}
+	}
+
 	deinit {
 		log("File extension terminated")
 	}
@@ -116,10 +131,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		switch containerItemIdentifier {
 		case .workingSet, .allDirectories, .rootContainer:
-			return FileProviderEnumerator(relatedItem: nil)
+			return FileProviderEnumerator(relatedItem: nil, model: model)
 		default:
 			let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
-			return FileProviderEnumerator(relatedItem: i)
+			return FileProviderEnumerator(relatedItem: i, model: model)
 		}
     }
     

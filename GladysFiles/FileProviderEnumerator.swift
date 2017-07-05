@@ -6,12 +6,14 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	private let relatedItem: FileProviderItem?
 
 	private let uuid: String
+	private let model: Model
 
 	private var sortByDate = false
 	private var currentAnchor = "0".data(using: .utf8)!
 
-	init(relatedItem: FileProviderItem?) { // nil is root
+	init(relatedItem: FileProviderItem?, model: Model) { // nil is root
 		self.relatedItem = relatedItem
+		self.model = model
 		uuid = relatedItem?.item?.uuid.uuidString ?? relatedItem?.item?.uuid.uuidString ?? "root"
 
 		super.init()
@@ -62,9 +64,9 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 	private var rootItems: [FileProviderItem] {
 		if sortByDate {
-			return FileProviderExtension.model.drops.sorted(by: { $0.createdAt < $1.createdAt }).map { FileProviderItem($0) }
+			return model.drops.sorted(by: { $0.createdAt < $1.createdAt }).map { FileProviderItem($0) }
 		} else {
-			return FileProviderExtension.model.drops.sorted(by: { $0.oneTitle < $1.oneTitle }).map { FileProviderItem($0) }
+			return model.drops.sorted(by: { $0.oneTitle < $1.oneTitle }).map { FileProviderItem($0) }
 		}
 	}
 
@@ -78,12 +80,12 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     
     func enumerateChanges(for observer: NSFileProviderChangeObserver, fromSyncAnchor anchor: Data) {
 		if relatedItem?.typeItem != nil {
-			log("Changes requested for enumerator of end-file")
+			log("Changes requested for enumerator of end-file, we never have any")
 
 		} else if relatedItem?.item != nil {
 			log("Changes requested for enumerator of directory")
 
-			FileProviderExtension.model.reloadDataIfNeeded()
+			model.reloadDataIfNeeded()
 			let newItemIds = rootItems.map { $0.itemIdentifier }
 			let myId = NSFileProviderItemIdentifier(uuid)
 
@@ -100,7 +102,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			log("Enumerating changes for root")
 
 			let oldItemIds = rootItems.map { $0.itemIdentifier }
-			FileProviderExtension.model.reloadDataIfNeeded()
+			model.reloadDataIfNeeded()
 			let newItems = rootItems
 			let newItemIds = rootItems.map { $0.itemIdentifier }
 

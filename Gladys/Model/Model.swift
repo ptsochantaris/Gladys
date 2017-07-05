@@ -96,7 +96,7 @@ final class Model: NSObject {
 		}
 	}
 
-	#if ACTIONEXTENSION || MAINAPP
+	#if ACTIONEXTENSION || MAINAPP || FILEPROVIDER
 
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
@@ -161,6 +161,10 @@ final class Model: NSObject {
 			}
 		}
 	}
+
+	#endif
+
+	#if MAINAPP
 
 	var sizeInBytes: Int64 {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
@@ -231,44 +235,38 @@ final class Model: NSObject {
 		}
 	}
 
-	#endif
+	private static let filePresenter = ModelFilePresenter()
 
-	////////////////////////////
+	@objc private func foregrounded() {
+		reloadDataIfNeeded()
+		NSFileCoordinator.addFilePresenter(Model.filePresenter)
+	}
 
-	#if MAINAPP
+	@objc private func backgrounded() {
+		NSFileCoordinator.removeFilePresenter(Model.filePresenter)
+	}
 
-		private static let filePresenter = ModelFilePresenter()
+	deinit {
+		backgrounded()
+	}
 
-		@objc private func foregrounded() {
-			reloadDataIfNeeded()
-			NSFileCoordinator.addFilePresenter(Model.filePresenter)
+	private class ModelFilePresenter: NSObject, NSFilePresenter {
+
+		weak var model: Model?
+
+		var presentedItemURL: URL? {
+			return Model.fileUrl
 		}
 
-		@objc private func backgrounded() {
-			NSFileCoordinator.removeFilePresenter(Model.filePresenter)
+		var presentedItemOperationQueue: OperationQueue {
+			return OperationQueue.main
 		}
 
-		deinit {
-			backgrounded()
+		func presentedItemDidChange() {
+			model?.reloadDataIfNeeded()
 		}
-
-		private class ModelFilePresenter: NSObject, NSFilePresenter {
-
-			weak var model: Model?
-
-			var presentedItemURL: URL? {
-				return Model.fileUrl
-			}
-
-			var presentedItemOperationQueue: OperationQueue {
-				return OperationQueue.main
-			}
-
-			func presentedItemDidChange() {
-				model?.reloadDataIfNeeded()
-			}
-		}
-	#endif
+	}
+#endif
 }
 
 //////////////////

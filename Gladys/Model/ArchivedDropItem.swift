@@ -206,9 +206,11 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		return Model.appStorageUrl.appendingPathComponent(self.uuid.uuidString)
 	}()
 
-#if MAINAPP || ACTIONEXTENSION
-
+#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
 	var isDeleting = false
+#endif
+
+#if MAINAPP || ACTIONEXTENSION
 
 	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
 

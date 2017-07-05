@@ -6,12 +6,6 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	let item: ArchivedDropItem?
 	let typeItem: ArchivedDropItemType?
 
-	override init() { // root
-		item = nil
-		typeItem = nil
-		super.init()
-	}
-
 	init(_ i: ArchivedDropItem) { // directory
 		item = i
 		typeItem = nil
@@ -58,10 +52,8 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	var childItemCount: NSNumber? {
 		if let item = item {
 			return NSNumber(value: item.typeItems.count)
-		} else if typeItem != nil {
-			return 0
 		} else {
-			return NSNumber(value: FileProviderExtension.model.drops.count)
+			return NSNumber(value: 0)
 		}
 	}
 
