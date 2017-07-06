@@ -254,11 +254,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private var existingMapView: MiniMapView?
 
-	override func prepareForReuse() {
-		archivedDropItem = nil
-		reDecorate()
-	}
-
 	var lowMemoryMode = false
 
 	func reDecorate() {
@@ -273,26 +268,61 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		var wantMapView = false
 		var hideCancel = true
+		var hideImage = true
+		var showSpinner = false
 
-		accessoryLabel.text = nil
-		accessoryLabelDistance.constant = 0
+		var accessoryLabelText: String?
+		var accessoryLabelDistanceConstant: CGFloat = 0
 
 		image.image = nil
-		image.isHidden = true
 
 		if let item = item {
 
 			if item.isLoading {
-				image.isHidden = true
 				let count = item.loadCount
 				label.text = count > 1 ? "\(count) items left to transfer" : "Completing transfer"
-				labelDistance.constant = 8
 				hideCancel = false
-				spinner.startAnimating()
+				showSpinner = true
 			} else {
-				spinner.stopAnimating()
-				image.isHidden = false
-				decorateLoadedItem()
+				hideImage = false
+
+				ArchivedItemCell.imageProcessingQueue.addOperation { [weak self] in
+					let uuid = item.uuid
+					if uuid != self?.archivedDropItem?.uuid { return }
+					let img = item.displayIcon
+					DispatchQueue.main.async { [weak self] in
+						if uuid != self?.archivedDropItem?.uuid { return }
+						self?.image.image = img
+					}
+				}
+
+				switch item.displayMode {
+				case .center:
+					image.contentMode = .center
+					image.circle = false
+					label.numberOfLines = 8
+				case .fill:
+					image.contentMode = .scaleAspectFill
+					image.circle = false
+					label.numberOfLines = 2
+				case .fit:
+					image.contentMode = .scaleAspectFit
+					image.circle = false
+					label.numberOfLines = 2
+				case .circle:
+					image.contentMode = .scaleAspectFill
+					image.circle = true
+					label.numberOfLines = 2
+				}
+
+				let titleInfo = item.displayTitle
+				label.textAlignment = titleInfo.1
+				label.text = titleInfo.0
+
+				if let t = item.accessoryTitle {
+					accessoryLabelText = t
+					accessoryLabelDistanceConstant = 8
+				}
 
 				// if we're showing an icon, let's try to enhance things a bit
 				if image.contentMode == .center, let backgroundItem = item.backgroundInfoObject {
@@ -314,8 +344,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		} else { // item is nil
 			label.text = nil
-			labelDistance.constant = 0
-			spinner.stopAnimating()
 		}
 
 		if !wantMapView, let e = existingMapView {
@@ -323,6 +351,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 			existingMapView = nil
 		}
 
+		if showSpinner && !spinner.isAnimating {
+			spinner.startAnimating()
+		} else if !showSpinner && spinner.isAnimating {
+			spinner.stopAnimating()
+		}
+		
+		accessoryLabel.text = accessoryLabelText
+		labelDistance.constant = (label.text == nil) ? 0 : 8
+		accessoryLabelDistance.constant = accessoryLabelDistanceConstant
+		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
 	}
 
@@ -332,48 +370,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		o.qualityOfService = .background
 		return o
 	}()
-
-	private func decorateLoadedItem() {
-		guard let item = archivedDropItem else { return }
-
-		ArchivedItemCell.imageProcessingQueue.addOperation { [weak self] in
-			if item.uuid != self?.archivedDropItem?.uuid { return }
-			let img = item.displayIcon
-			DispatchQueue.main.async { [weak self] in
-				self?.image.image = img
-			}
-		}
-
-		switch item.displayMode {
-		case .center:
-			image.contentMode = .center
-			image.circle = false
-			label.numberOfLines = 8
-		case .fill:
-			image.contentMode = .scaleAspectFill
-			image.circle = false
-			label.numberOfLines = 2
-		case .fit:
-			image.contentMode = .scaleAspectFit
-			image.circle = false
-			label.numberOfLines = 2
-		case .circle:
-			image.contentMode = .scaleAspectFill
-			image.circle = true
-			label.numberOfLines = 2
-		}
-
-		let titleInfo = item.displayTitle
-		label.textAlignment = titleInfo.1
-		label.text = titleInfo.0
-
-		labelDistance.constant = (label.text == nil) ? 0 : 8
-
-		if let t = item.accessoryTitle {
-			accessoryLabel.text = t
-			accessoryLabelDistance.constant = 8
-		}
-	}
 
 	func flash() {
 		UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
