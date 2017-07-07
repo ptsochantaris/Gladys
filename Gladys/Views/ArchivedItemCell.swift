@@ -170,7 +170,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	var isEditing: Bool = false {
 		didSet {
-			if isEditing && editHolder == nil {
+			if isEditing && editHolder == nil && cancelButton.isHidden {
 
 				let button = UIButton(frame: .zero)
 				button.translatesAutoresizingMaskIntoConstraints = false
