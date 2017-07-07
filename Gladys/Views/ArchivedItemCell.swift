@@ -264,6 +264,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	private static let displayIconCache = NSCache<NSString, UIImage>()
+
 	private func decorate(with item: ArchivedDropItem?) {
 
 		var wantMapView = false
@@ -274,8 +276,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var accessoryLabelText: String?
 		var accessoryLabelDistanceConstant: CGFloat = 0
 
-		image.image = nil
-
 		if let item = item {
 
 			if item.isLoading {
@@ -283,16 +283,25 @@ final class ArchivedItemCell: UICollectionViewCell {
 				label.text = count > 1 ? "\(count) items left to transfer" : "Completing transfer"
 				hideCancel = false
 				showSpinner = true
+				image.image = nil
 			} else {
 				hideImage = false
 
-				ArchivedItemCell.imageProcessingQueue.addOperation { [weak self] in
-					let uuid = item.uuid
-					if uuid != self?.archivedDropItem?.uuid { return }
-					let img = item.displayIcon
-					DispatchQueue.main.async { [weak self] in
-						if uuid != self?.archivedDropItem?.uuid { return }
-						self?.image.image = img
+				let cacheKey = item.uuid.uuidString as NSString
+				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
+					image.image = cachedImage
+				} else {
+					image.image = nil
+					ArchivedItemCell.imageProcessingQueue.async { [weak self] in
+						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+							let img = item.displayIcon
+							ArchivedItemCell.displayIconCache.setObject(img, forKey: cacheKey)
+							DispatchQueue.main.sync { [weak self] in
+								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
+									self?.image.image = img
+								}
+							}
+						}
 					}
 				}
 
@@ -344,6 +353,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		} else { // item is nil
 			label.text = nil
+			image.image = nil
 		}
 
 		if !wantMapView, let e = existingMapView {
@@ -364,12 +374,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		cancelButton.isHidden = hideCancel
 	}
 
-	private static let imageProcessingQueue: OperationQueue =  {
-		let o = OperationQueue()
-		o.maxConcurrentOperationCount = 1
-		o.qualityOfService = .background
-		return o
-	}()
+	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
 	func flash() {
 		UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {

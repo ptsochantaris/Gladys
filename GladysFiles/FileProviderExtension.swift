@@ -117,7 +117,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		}
 		if let i = model.drops.index(where: { $0 === dir }) {
 			model.drops.remove(at: i)
-			model.save()
+			model.needsSave = true
 		}
 	}
 

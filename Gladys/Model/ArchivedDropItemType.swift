@@ -548,9 +548,9 @@ final class ArchivedDropItemType: Codable {
 		if contentMode == .center || contentMode == .circle {
 			result = icon
 		} else if contentMode == .fit {
-			result = icon.limited(to: CGSize(width: 512, height: 512), limitTo: 0.75, useScreenScale: true)
+			result = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 0.75, useScreenScale: true)
 		} else {
-			result = icon.limited(to: CGSize(width: 512, height: 512), useScreenScale: true)
+			result = icon.limited(to: CGSize(width: 256, height: 256), useScreenScale: true)
 		}
 		displayIconScale = result.scale
 		displayIconWidth = result.size.width

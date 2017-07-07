@@ -85,7 +85,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		if needSave{
-			model.save()
+			model.needsSave = true
 		}
 	}
 
@@ -121,9 +121,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let item = model.filteredDrops[indexPath.item]
+		if item.isLoading {
+			return
+		}
+
 		let n = storyboard?.instantiateViewController(withIdentifier: "DetailController") as! UINavigationController
 		let d = n.topViewController as! DetailController
-		d.item = model.filteredDrops[indexPath.item]
+		d.item = item
 		n.modalPresentationStyle = .popover
 		navigationController?.visibleViewController?.present(n, animated: true)
 		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
@@ -280,17 +285,15 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let uuid = item.uuid
 		if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
 			model.removeItemFromList(uuid: uuid)
-			if model.filteredDrops.count > 0 {
-				archivedItemCollectionView.performBatchUpdates({
-					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
-				})
-			}
+			archivedItemCollectionView.performBatchUpdates({
+				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
+			})
 		}
 		item.delete()
-		if model.drops.count == 0 {
+		if isEditing && model.filteredDrops.count == 0 {
 			setEditing(false, animated: true)
 		}
-		model.save()
+		model.needsSave = true
 	}
 
 	func loadingProgress(sender: AnyObject) {
@@ -303,19 +306,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
-		if let i = model.filteredDrops.index(where: { $0 === sender }) {
 
-			if !success, let item = sender as? ArchivedDropItem {
+		if let item = sender as? ArchivedDropItem {
+			if !success {
 				let (errorPrefix, error) = item.loadingError
 				let a = UIAlertController(title: "Some data from \(item.oneTitle) could not be imported", message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")", preferredStyle: .alert)
 				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				(presentedViewController?.presentedViewController ?? presentedViewController ?? self).present(a, animated: true)
 			}
 
-			let ip = [IndexPath(item: i, section: 0)]
-			archivedItemCollectionView.reloadItems(at: ip)
-			model.save() { success in
-				(sender as? ArchivedDropItem)?.makeIndex()
+			item.makeIndex()
+			model.needsSave = true
+
+			if let i = model.filteredDrops.index(where: { $0 === sender }) {
+				let ip = [IndexPath(item: i, section: 0)]
+				archivedItemCollectionView.reloadItems(at: ip)
 			}
 		}
 	}

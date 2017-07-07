@@ -33,9 +33,9 @@ class ActionRequestHandler: NSObject, NSExtensionRequestHandling, LoadCompletion
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		loadCount -= 1
 		if loadCount == 0 {
+			model.needsSave = true
 			context?.completeRequest(returningItems: nil, completionHandler: nil)
 			context = nil
-			model.save()
 		}
 	}
 

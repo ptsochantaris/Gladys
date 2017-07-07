@@ -98,9 +98,18 @@ final class Model: NSObject {
 
 	#if ACTIONEXTENSION || MAINAPP || FILEPROVIDER
 
+	private var isSaving = false
+	var needsSave = false {
+		didSet {
+			if needsSave && !isSaving {
+				save()
+			}
+		}
+	}
+
 	private let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	func save(completion: ((Bool)->Void)? = nil) {
+	private func save() {
 
 		let start = Date()
 
@@ -111,35 +120,35 @@ final class Model: NSObject {
 			let bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
 		#endif
 
+		isSaving = true
+		needsSave = false
+
 		saveQueue.async {
 
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
 				self.coordinatedSave(data: data)
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
-				if let completion = completion {
-					DispatchQueue.main.async {
-						completion(true)
-					}
-				}
 
 			} catch {
 				log("Saving Error: \(error.localizedDescription)")
-				if let completion = completion {
-					DispatchQueue.main.async {
-						completion(false)
-					}
-				}
 			}
-			#if MAINAPP
-				DispatchQueue.main.async {
-					NotificationCenter.default.post(name: .SaveComplete, object: nil)
-					DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-						log("Ending save queue background task")
-						UIApplication.shared.endBackgroundTask(bgTask)
-					}
+			DispatchQueue.main.async {
+				if self.needsSave {
+					self.save()
+				} else {
+					self.isSaving = false
+					#if MAINAPP
+						NotificationCenter.default.post(name: .SaveComplete, object: nil)
+					#endif
 				}
-			#endif
+				#if MAINAPP
+				DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+					log("Ending save queue background task")
+					UIApplication.shared.endBackgroundTask(bgTask)
+				}
+				#endif
+			}
 		}
 	}
 

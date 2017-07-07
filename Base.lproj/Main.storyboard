@@ -44,7 +44,7 @@
                                                     <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="30" width="284" height="240.5"/>
                                                     <color key="backgroundColor" red="0.84341198205947876" green="0.83196836709976196" blue="0.80659013986587524" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
