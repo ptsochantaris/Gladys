@@ -16,6 +16,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	static var shared: ViewController!
 
+	///////////////////////
+
+	private var bgTask: UIBackgroundTaskIdentifier?
+	private func startBgTask() {
+		log("Starting background ingest task")
+		bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
+	}
+	private func endBgTask() {
+		if let b = bgTask {
+			log("Ending background ingest task")
+			UIApplication.shared.endBackgroundTask(b)
+			bgTask = nil
+		}
+	}
+
 	/////////////////////////
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -79,13 +94,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
+				loadCount += 1
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-				// save gets handled by the item loading correctly
 			}
 		}
 
 		if needSave{
 			model.needsSave = true
+		}
+	}
+
+	private var loadCount = 0 {
+		didSet {
+			if loadCount > 0 && bgTask == nil {
+				startBgTask()
+			} else if loadCount == 0 && bgTask != nil {
+				endBgTask()
+			}
 		}
 	}
 
@@ -310,17 +335,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if let item = sender as? ArchivedDropItem {
 			if !success {
 				let (errorPrefix, error) = item.loadingError
-				let a = UIAlertController(title: "Some data from \(item.oneTitle) could not be imported", message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")", preferredStyle: .alert)
-				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-				(presentedViewController?.presentedViewController ?? presentedViewController ?? self).present(a, animated: true)
+				if errorPrefix != nil || error != nil {
+					let a = UIAlertController(title: "Some data from \(item.oneTitle) could not be imported", message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")", preferredStyle: .alert)
+					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+					(presentedViewController?.presentedViewController ?? presentedViewController ?? self).present(a, animated: true)
+				}
 			}
 
 			item.makeIndex()
-			model.needsSave = true
 
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {
 				let ip = [IndexPath(item: i, section: 0)]
 				archivedItemCollectionView.reloadItems(at: ip)
+			}
+
+			loadCount -= 1
+			if loadCount == 0 {
+				model.needsSave = true
 			}
 		}
 	}

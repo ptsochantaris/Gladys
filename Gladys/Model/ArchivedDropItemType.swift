@@ -541,6 +541,7 @@ final class ArchivedDropItemType: Codable {
 
 	func cancelIngest() {
 		loadingAborted = true
+		signalDone()
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
@@ -656,13 +657,9 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	// TODO: MEMORY LEAK BIGTIME
-
 	private func signalDone() {
-		if !loadingAborted {
-			DispatchQueue.main.async {
-				self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil)
-			}
+		DispatchQueue.main.async {
+			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
 		}
 	}
 

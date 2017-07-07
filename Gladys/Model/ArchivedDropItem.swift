@@ -5,12 +5,18 @@ import Contacts
 import ContactsUI
 import CoreSpotlight
 
-final class ArchivedDropItem: Codable, LoadCompletionDelegate {
+#if MAINAPP || ACTIONEXTENSION
+	extension ArchivedDropItem: LoadCompletionDelegate {}
+#endif
+
+final class ArchivedDropItem: Codable {
 
 	private let suggestedName: String?
 	let uuid: UUID
 	var typeItems: [ArchivedDropItemType]!
 	let createdAt:  Date
+	var allLoadedWell: Bool
+	var isLoading: Bool
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -37,7 +43,9 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		isLoading = false
+		#if MAINAPP || ACTIONEXTENSION
 		loadCount = 0
+		#endif
 	}
 
 	func makeIndex(completion: ((Bool)->Void)? = nil) {
@@ -167,7 +175,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 				return ("Error processing type \(item.typeIdentifier): ", e)
 			}
 		}
-		return ("Error while loading items: ", NSError(domain: "build.bru.Gladys.loadError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Generic loading error"]))
+		return (nil, nil)
 	}
 
 	#endif
@@ -231,13 +239,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		typeItems = ids.map {
 			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
 		}
-
-		self.startBgTask()
 	}
 
 	func cancelIngest() {
 		typeItems.forEach { $0.cancelIngest() }
-		endBgTask()
 	}
 
 	func delete() {
@@ -298,33 +303,10 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 
 #endif
 
-	deinit {
-		endBgTask()
-	}
-
-	//////////////////////////
-	#if MAINAPP
-	private var bgTask: UIBackgroundTaskIdentifier?
-	private func startBgTask() {
-		log("Starting background ingest background task")
-		bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
-	}
-	private func endBgTask() {
-		if let b = bgTask {
-			log("Ending background ingest background task")
-			UIApplication.shared.endBackgroundTask(b)
-			bgTask = nil
-		}
-	}
-	#else
-	private func startBgTask() {}
-	private func endBgTask() {}
-	#endif
 	//////////////////////////
 
+	#if MAINAPP || ACTIONEXTENSION
 	weak var delegate: LoadCompletionDelegate?
-	var isLoading: Bool
-	var allLoadedWell: Bool
 	var loadCount: Int
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		if !success { allLoadedWell = false }
@@ -332,8 +314,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate {
 		if loadCount == 0 {
 			isLoading = false
 			delegate?.loadCompleted(sender: self, success: allLoadedWell)
-			endBgTask()
 		}
 	}
 	func loadingProgress(sender: AnyObject) { }
+	#endif
 }
