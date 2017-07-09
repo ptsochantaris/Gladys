@@ -145,7 +145,8 @@ BOOL verifyIapReceipt() {
 	}
 
 	// Load the Apple Root CA (downloaded from https://www.apple.com/certificateauthority/)
-	NSURL *appleRootURL = [[NSBundle mainBundle] URLForResource:@"AppleIncRootCertificate" withExtension:@"cer"];
+	NSBundle *bundle = [NSBundle bundleWithIdentifier:@"build.bru.Gladys.GladysFramework"];
+	NSURL *appleRootURL = [bundle URLForResource:@"AppleIncRootCertificate" withExtension:@"cer"];
 	NSData *appleRootData = [NSData dataWithContentsOfURL:appleRootURL];
 	BIO *appleRootBIO = BIO_new(BIO_s_mem());
 	BIO_write(appleRootBIO, (const void *) [appleRootData bytes], (int) [appleRootData length]);
