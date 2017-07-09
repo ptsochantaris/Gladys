@@ -34,9 +34,7 @@
 		163845FC1EF8629700CB8D97 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		164136901F09195000B34574 /* ActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestHandler.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1645F2CF1F12DA9300CF6506 /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16F21C171F12D1B40033FE8B /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		167574031F12C22500385079 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		167574081F12C22500385079 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1675740C1F12C2A500385079 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */; };
 		1675740D1F12C2A800385079 /* VerifyReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = 167A18D41F128A9300B7F0AF /* VerifyReceipt.m */; };
 		167574101F12C2D100385079 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1675740E1F12C2D100385079 /* libcrypto.a */; };
@@ -47,6 +45,12 @@
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16B552781F12E3F700641009 /* Fuzi.framework.dSYM in Carthage Copy Files */ = {isa = PBXBuildFile; fileRef = 16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */; };
+		16B5527D1F12E58300641009 /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F21C171F12D1B40033FE8B /* Fuzi.framework */; };
+		16B5527E1F12E58300641009 /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16F21C171F12D1B40033FE8B /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -73,14 +77,14 @@
 			remoteGlobalIDString = 1641368C1F09195000B34574;
 			remoteInfo = GladysAction;
 		};
-		167574041F12C22500385079 /* PBXContainerItemProxy */ = {
+		169426471F12D2F800F3A0A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 167573FE1F12C22500385079;
 			remoteInfo = GladysFramework;
 		};
-		169426471F12D2F800F3A0A4 /* PBXContainerItemProxy */ = {
+		16B552821F12E5C200641009 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
 			proxyType = 1;
@@ -109,10 +113,21 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1645F2CF1F12DA9300CF6506 /* Fuzi.framework in Embed Frameworks */,
-				167574081F12C22500385079 /* GladysFramework.framework in Embed Frameworks */,
+				16B5527E1F12E58300641009 /* Fuzi.framework in Embed Frameworks */,
+				16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16B552741F12E33200641009 /* Carthage Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				16B552781F12E3F700641009 /* Fuzi.framework.dSYM in Carthage Copy Files */,
+			);
+			name = "Carthage Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -153,6 +168,7 @@
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
+		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
@@ -177,6 +193,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +210,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B5527D1F12E58300641009 /* Fuzi.framework in Frameworks */,
+				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +336,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */,
 				1675740E1F12C2D100385079 /* libcrypto.a */,
 				1675740F1F12C2D100385079 /* libssl.a */,
 				16F21C171F12D1B40033FE8B /* Fuzi.framework */,
@@ -418,6 +438,7 @@
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
 				1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */,
+				16B552741F12E33200641009 /* Carthage Copy Files */,
 			);
 			buildRules = (
 			);
@@ -425,7 +446,7 @@
 				16287AED1EFB03FD007188AE /* PBXTargetDependency */,
 				1619E81D1EFF3745000087DD /* PBXTargetDependency */,
 				164136951F09195000B34574 /* PBXTargetDependency */,
-				167574051F12C22500385079 /* PBXTargetDependency */,
+				16B552831F12E5C200641009 /* PBXTargetDependency */,
 			);
 			name = Gladys;
 			productName = Gladys;
@@ -552,6 +573,7 @@
 			);
 			name = "Carthage Strip Frameworks";
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Fuzi.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -642,15 +664,15 @@
 			target = 1641368C1F09195000B34574 /* GladysAction */;
 			targetProxy = 164136941F09195000B34574 /* PBXContainerItemProxy */;
 		};
-		167574051F12C22500385079 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 167573FE1F12C22500385079 /* GladysFramework */;
-			targetProxy = 167574041F12C22500385079 /* PBXContainerItemProxy */;
-		};
 		169426481F12D2F800F3A0A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 167573FE1F12C22500385079 /* GladysFramework */;
 			targetProxy = 169426471F12D2F800F3A0A4 /* PBXContainerItemProxy */;
+		};
+		16B552831F12E5C200641009 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 167573FE1F12C22500385079 /* GladysFramework */;
+			targetProxy = 16B552821F12E5C200641009 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -705,6 +727,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -864,6 +887,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
