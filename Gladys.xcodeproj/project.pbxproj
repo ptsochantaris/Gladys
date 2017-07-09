@@ -417,6 +417,7 @@
 				1678F9CB1EF475FE005697CB /* Resources */,
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
+				1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */,
 			);
 			buildRules = (
 			);
@@ -539,6 +540,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Fuzi.framework",
+			);
+			name = "Carthage Strip Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1619E80E1EFF3745000087DD /* Sources */ = {
