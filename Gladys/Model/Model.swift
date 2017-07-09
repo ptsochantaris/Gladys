@@ -1,4 +1,3 @@
-import Foundation
 
 #if FILEPROVIDER || ACTIONEXTENSION || MAINAPP
 	import FileProvider
@@ -8,13 +7,25 @@ import Foundation
 	import CoreSpotlight
 #endif
 
+#if ACTIONEXTENSION || MAINAPP
+	import GladysFramework
+#endif
+
 #if MAINAPP
 	import UIKit
+#else
+	import Foundation
 #endif
 
 final class Model: NSObject {
 
 	var drops: [ArchivedDropItem]
+	private var dataFileLastModified = Date.distantPast
+
+	#if MAINAPP || ACTIONEXTENSION
+		var infiniteMode = verifyIapReceipt()
+		let nonInfiniteItemLimit = 10
+	#endif
 
 	static var appStorageUrl: URL = {
 		#if FILEPROVIDER
@@ -29,7 +40,7 @@ final class Model: NSObject {
 	}()
 
 	override init() {
-		drops = Model.loadData() ?? [ArchivedDropItem]()
+		drops = Model.loadData(&dataFileLastModified) ?? [ArchivedDropItem]()
 		super.init()
 
 		#if MAINAPP
@@ -52,8 +63,7 @@ final class Model: NSObject {
 		#endif
 	}
 
-	private static var dataFileLastModified = Date.distantPast
-	private static func loadData() -> [ArchivedDropItem]? {
+	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {
 		
 		var res: [ArchivedDropItem]?
 
@@ -90,7 +100,7 @@ final class Model: NSObject {
 	}
 
 	func reloadDataIfNeeded() {
-		if let d = Model.loadData() {
+		if let d = Model.loadData(&dataFileLastModified) {
 			drops = d
 			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 		}
@@ -157,7 +167,7 @@ final class Model: NSObject {
 		Model.coordinator.coordinate(writingItemAt: Model.fileUrl, options: .forReplacing, error: &coordinationError) { url in
 			try! data.write(to: url, options: [])
 			if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
-				Model.dataFileLastModified = dataModified
+				dataFileLastModified = dataModified
 			}
 		}
 		if let e = coordinationError {

@@ -2,6 +2,7 @@
 import UIKit
 import CoreSpotlight
 import StoreKit
+import GladysFramework
 
 final class ViewController: UIViewController, UICollectionViewDelegate,
 	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
@@ -63,10 +64,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
 		let insertCount = countInserts(in: coordinator.session)
-		if !infiniteMode && insertCount > 0 {
+		if !model.infiniteMode && insertCount > 0 {
 
 			let newTotal = model.drops.count + insertCount
-			if newTotal > nonInfiniteItemLimit {
+			if newTotal > model.nonInfiniteItemLimit {
 				displayIAPRequest(newTotal: newTotal)
 				return
 			}
@@ -427,15 +428,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	/////////////////////////////
 
 	private func fetchIap() {
-		if !infiniteMode {
+		if !model.infiniteMode {
 			let r = SKProductsRequest(productIdentifiers: ["INFINITE"])
 			r.delegate = self
 			r.start()
 		}
 	}
 
-	private var infiniteMode = verifyIapReceipt()
-	private let nonInfiniteItemLimit = 10
 	private var infiniteModeItem: SKProduct?
 	func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
 		infiniteModeItem = response.products.first
@@ -446,7 +445,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	private func displayIAPRequest(newTotal: Int) {
-		var message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase.\n\nHowever, we cannot seem to fetch the in-app purchase information for this at this time. Please check your internet connection and try again in a moment."
+		var message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nHowever, we cannot seem to fetch the in-app purchase information for this at this time. Please check your internet connection and try again in a moment."
 
 		guard let infiniteModeItem = infiniteModeItem else {
 			let a = UIAlertController(title: "You need to expand Gladys", message: message, preferredStyle: .alert)
@@ -461,7 +460,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		f.numberStyle = .currency
 		f.locale = infiniteModeItem.priceLocale
 		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
-		message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
 
 		let a = UIAlertController(title: "Would you like to expand Gladys?", message: message, preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
@@ -482,7 +481,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-		if !infiniteMode {
+		if !model.infiniteMode {
 			let a = UIAlertController(title: "Purchase could not be restored", message: "Are you sure you purchased this from the App Store account that you are currently using?", preferredStyle: .alert)
 			a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			present(a, animated: true)
@@ -505,7 +504,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				present(a, animated: true)
 				SKPaymentQueue.default().finishTransaction(t)
 			case .purchased, .restored:
-				infiniteMode = verifyIapReceipt()
+				model.infiniteMode = verifyIapReceipt()
 				SKPaymentQueue.default().finishTransaction(t)
 				displayIapSuccess()
 			case .purchasing, .deferred:

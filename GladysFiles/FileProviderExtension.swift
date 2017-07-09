@@ -25,7 +25,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 		}
 
-		throw NSError(domain: "build.bru.error", code: 2, userInfo: [ NSLocalizedDescriptionKey: "Could not find item with identifier \(identifier.rawValue)" ])
+		throw NSError(domain: "build.bru.Gladys.error", code: 2, userInfo: [ NSLocalizedDescriptionKey: "Could not find item with identifier \(identifier.rawValue)" ])
 	}
 
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
@@ -108,11 +108,11 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
 		guard let fpi = (try? item(for: itemIdentifier)) as? FileProviderItem else {
-			completionHandler(NSError(domain: "build.bru", code: 15, userInfo: [ NSLocalizedDescriptionKey: "Item not found" ]))
+			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 15, userInfo: [ NSLocalizedDescriptionKey: "Item not found" ]))
 			return
 		}
 		guard let dir = fpi.item else {
-			completionHandler(NSError(domain: "build.bru", code: 18, userInfo: [ NSLocalizedDescriptionKey: "Item not deletable" ]))
+			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 18, userInfo: [ NSLocalizedDescriptionKey: "Item not deletable" ]))
 			return
 		}
 		if let i = model.drops.index(where: { $0 === dir }) {
