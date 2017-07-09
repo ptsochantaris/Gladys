@@ -1,10 +1,11 @@
 
 import UIKit
 import CoreSpotlight
+import StoreKit
 
 final class ViewController: UIViewController, UICollectionViewDelegate,
-	ArchivedItemCellDelegate, LoadCompletionDelegate,
-	UISearchControllerDelegate, UISearchResultsUpdating,
+	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
+	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
 	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate {
 
@@ -60,6 +61,16 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+
+		let insertCount = countInserts(in: coordinator.session)
+		if !infiniteMode && insertCount > 0 {
+
+			let newTotal = model.drops.count + insertCount
+			if newTotal > nonInfiniteItemLimit {
+				displayIAPRequest(newTotal: newTotal)
+				return
+			}
+		}
 
 		var needSave = false
 
@@ -118,23 +129,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return true
 	}
 
-	private func someWillBeInserts(in session: UIDropSession) -> Bool {
-		for i in session.items {
-			if !(i.localObject is ArchivedDropItem) {
-				return true
+	private func countInserts(in session: UIDropSession) -> Int {
+		return session.items.reduce(0) { count, item in
+			if item.localObject == nil {
+				return count + 1
 			}
+			return count
 		}
-		return false
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-		if someWillBeInserts(in: session) {
+		if countInserts(in: session) > 0 {
 			resetSearch()
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if someWillBeInserts(in: session) {
+		if countInserts(in: session) > 0 {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
 			if model.isFiltering {
@@ -207,6 +218,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 
 		updateTotals()
+
+		SKPaymentQueue.default().add(self)
+		fetchIap()
 	}
 
 	private var lowMemoryMode = false
@@ -408,6 +422,96 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: nil)
+	}
+
+	/////////////////////////////
+
+	private func fetchIap() {
+		if !infiniteMode {
+			let r = SKProductsRequest(productIdentifiers: ["INFINITE"])
+			r.delegate = self
+			r.start()
+		}
+	}
+
+	private var infiniteMode = verifyIapReceipt()
+	private let nonInfiniteItemLimit = 10
+	private var infiniteModeItem: SKProduct?
+	func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+		infiniteModeItem = response.products.first
+	}
+
+	func request(_ request: SKRequest, didFailWithError error: Error) {
+		log("Error fetching IAP items: \(error.localizedDescription)")
+	}
+
+	private func displayIAPRequest(newTotal: Int) {
+		var message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase.\n\nHowever, we cannot seem to fetch the in-app purchase information for this at this time. Please check your internet connection and try again in a moment."
+
+		guard let infiniteModeItem = infiniteModeItem else {
+			let a = UIAlertController(title: "You need to expand Gladys", message: message, preferredStyle: .alert)
+			a.addAction(UIAlertAction(title: "OK", style: .cancel))
+			present(a, animated: true) {
+				self.fetchIap()
+			}
+			return
+		}
+
+		let f = NumberFormatter()
+		f.numberStyle = .currency
+		f.locale = infiniteModeItem.priceLocale
+		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
+		message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+
+		let a = UIAlertController(title: "Would you like to expand Gladys?", message: message, preferredStyle: .alert)
+		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
+			let payment = SKPayment(product: infiniteModeItem)
+			SKPaymentQueue.default().add(payment)
+		}))
+		a.addAction(UIAlertAction(title: "Restore previous purchase.", style: .default, handler: { action in
+			SKPaymentQueue.default().restoreCompletedTransactions()
+		}))
+		a.addAction(UIAlertAction(title: "It's OK, I'll delete older stuff", style: .cancel))
+		present(a, animated: true)
+	}
+
+	private func displayIapSuccess() {
+		let a = UIAlertController(title: "You can now add unlimited items!", message: "Thank you for supporting Gladys!", preferredStyle: .alert)
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+		present(a, animated: true)
+	}
+
+	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+		if !infiniteMode {
+			let a = UIAlertController(title: "Purchase could not be restored", message: "Are you sure you purchased this from the App Store account that you are currently using?", preferredStyle: .alert)
+			a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			present(a, animated: true)
+		}
+	}
+
+	func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+		let a = UIAlertController(title: "There was an error restoring your purchase", message: error.localizedDescription, preferredStyle: .alert)
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+		present(a, animated: true)
+	}
+
+	func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+		for t in transactions.filter({ $0.payment.productIdentifier == "INFINITE" }) {
+			switch t.transactionState {
+			case .failed:
+				SKPaymentQueue.default().finishTransaction(t)
+				let a = UIAlertController(title: "There was an error completing this purchase", message: t.error?.localizedDescription, preferredStyle: .alert)
+				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+				present(a, animated: true)
+				SKPaymentQueue.default().finishTransaction(t)
+			case .purchased, .restored:
+				infiniteMode = verifyIapReceipt()
+				SKPaymentQueue.default().finishTransaction(t)
+				displayIapSuccess()
+			case .purchasing, .deferred:
+				break
+			}
+		}
 	}
 }
 

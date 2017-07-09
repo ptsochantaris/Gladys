@@ -8,65 +8,29 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-Gladys.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 		<key>Pods-GladysAction.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>4</integer>
 		</dict>
 		<key>Pods-GladysFiles.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>5</integer>
 		</dict>
 		<key>Pods-GladysIndex.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>399D21A2670E6F42F89A42CA007D7415</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>3E765B8AB74C35B1FEF51FA254D5C734</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8119E444CE936A3004C26F1CBABD5316</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8B98A3571B1D128BE339FACCF220923F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B8314E668512A3A952063974F06AE2A2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>
