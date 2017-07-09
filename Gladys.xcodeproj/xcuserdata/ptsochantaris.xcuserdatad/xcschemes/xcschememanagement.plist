@@ -22,7 +22,7 @@
 		<key>GladysFramework.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>4</integer>
 		</dict>
 		<key>GladysIndex.xcscheme</key>
 		<dict>
@@ -43,6 +43,11 @@
 			<true/>
 		</dict>
 		<key>1641368C1F09195000B34574</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>167573FE1F12C22500385079</key>
 		<dict>
 			<key>primary</key>
 			<true/>
