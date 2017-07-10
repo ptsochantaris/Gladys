@@ -229,7 +229,11 @@ final class ArchivedDropItemType: Codable {
 			return bytes as? T
 		}
 
-		return NSKeyedUnarchiver.unarchiveObject(with: bytes) as? T
+		let item = try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)
+		if let firstString = (item as? [AnyObject])?.first as? String, let url = URL(string: firstString) as? T {
+			return url
+		}
+		return item as? T
 	}
 
 	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
@@ -316,7 +320,7 @@ final class ArchivedDropItemType: Codable {
 	#if MAINAPP || ACTIONEXTENSION
 
 	private func setBytes(object: Any, type: ClassType) {
-		bytes = NSKeyedArchiver.archivedData(withRootObject: object)
+		bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
 		classType = type
 	}
 
@@ -429,7 +433,6 @@ final class ArchivedDropItemType: Codable {
 				}
 			} else {
 				log("      received remote url: \(item.absoluteString)")
-				setTitleInfo(item.absoluteString, 6)
 				setBytes(object: item as NSURL, type: .NSURL)
 				handleRemoteUrl(item)
 			}
@@ -464,6 +467,7 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	private func handleRemoteUrl(_ item: URL) {
+		setTitleInfo(item.absoluteString, 6)
 		if let s = item.scheme, s.hasPrefix("http") {
 			fetchWebPreview(for: item) { [weak self] title, image in
 				if self?.loadingAborted ?? true { return }
