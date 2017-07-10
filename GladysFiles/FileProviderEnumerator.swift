@@ -9,7 +9,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	private let model: Model
 
 	private var sortByDate = false
-	private var currentAnchor = "0".data(using: .utf8)!
+	private var currentAnchor = NSFileProviderSyncAnchor("0".data(using: .utf8)!)
 
 	init(relatedItem: FileProviderItem?, model: Model) { // nil is root
 		self.relatedItem = relatedItem
@@ -29,7 +29,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     func invalidate() {
     }
 
-    func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAtPage page: Data) {
+	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 
 		if relatedItem?.typeItem != nil {
 			log("Listing file")
@@ -39,8 +39,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			log("Listing root")
 		}
 
-		let p = NSFileProviderPage(data: page)
-		sortByDate = p == NSFileProviderInitialPageSortedByDate // otherwise by name
+		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 
 		var items: [NSFileProviderItemProtocol]
 		if let fileItem = relatedItem?.typeItem {
@@ -51,7 +50,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			items = rootItems
 		}
 		observer.didEnumerate(items)
-		observer.finishEnumerating(upToPage: nil)
+		observer.finishEnumerating(upTo: nil)
     }
 
 	private func getItems(for dirItem: ArchivedDropItem) -> [FileProviderItem] {
@@ -70,15 +69,15 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		}
 	}
 
-	func currentSyncAnchor(completionHandler: @escaping (Data?) -> Void) {
+	func currentSyncAnchor(completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void) {
 		completionHandler(currentAnchor)
 	}
 
 	deinit {
 		log("Enumerator for \(uuid) shut down")
 	}
-    
-    func enumerateChanges(for observer: NSFileProviderChangeObserver, fromSyncAnchor anchor: Data) {
+
+	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
 		if relatedItem?.typeItem != nil {
 			log("Changes requested for enumerator of end-file, we never have any")
 
@@ -125,7 +124,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     }
 
 	private func incrementAnchor() {
-		let newAnchorCount = Int64(String(data: currentAnchor, encoding: .utf8)!)! + 1
-		currentAnchor = String(newAnchorCount).data(using: .utf8)!
+		let newAnchorCount = Int64(String(data: currentAnchor.rawValue, encoding: .utf8)!)! + 1
+		currentAnchor = NSFileProviderSyncAnchor(String(newAnchorCount).data(using: .utf8)!)
 	}
 }

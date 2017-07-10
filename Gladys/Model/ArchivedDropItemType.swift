@@ -229,9 +229,7 @@ final class ArchivedDropItemType: Codable {
 			return bytes as? T
 		}
 
-		let u = NSKeyedUnarchiver(forReadingWith: bytes)
-		let className = String(describing: type)
-		return u.decodeObject(forKey: className) as? T
+		return NSKeyedUnarchiver.unarchiveObject(with: bytes) as? T
 	}
 
 	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
@@ -318,11 +316,7 @@ final class ArchivedDropItemType: Codable {
 	#if MAINAPP || ACTIONEXTENSION
 
 	private func setBytes(object: Any, type: ClassType) {
-		let d = NSMutableData()
-		let k = NSKeyedArchiver(forWritingWith: d)
-		k.encode(object, forKey: type.rawValue)
-		k.finishEncoding()
-		bytes = d as Data
+		bytes = NSKeyedArchiver.archivedData(withRootObject: object)
 		classType = type
 	}
 
@@ -362,7 +356,11 @@ final class ArchivedDropItemType: Codable {
 				setDisplayIcon(image, 40, .fill)
 			}
 
-			if typeIdentifier == "public.vcard" {
+			if typeIdentifier == "public.url", let url = encodedUrl as URL? {
+				handleRemoteUrl(url)
+				return
+
+			} else if typeIdentifier == "public.vcard" {
 				if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
 					let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 					let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
@@ -433,22 +431,7 @@ final class ArchivedDropItemType: Codable {
 				log("      received remote url: \(item.absoluteString)")
 				setTitleInfo(item.absoluteString, 6)
 				setBytes(object: item as NSURL, type: .NSURL)
-				if let s = item.scheme, s.hasPrefix("http") {
-					fetchWebPreview(for: item) { [weak self] title, image in
-						if self?.loadingAborted ?? true { return }
-						self?.accessoryTitle = title ?? self?.accessoryTitle
-						if let image = image {
-							if image.size.height > 100 || image.size.width > 200 {
-								self?.setDisplayIcon(image, 30, .fit)
-							} else {
-								self?.setDisplayIcon(image, 30, .center)
-							}
-						}
-						self?.signalDone()
-					}
-				} else {
-					signalDone()
-				}
+				handleRemoteUrl(item)
 			}
 		} else if let item = item as? NSArray {
 			setBytes(object: item, type: .NSArray)
@@ -477,6 +460,25 @@ final class ArchivedDropItemType: Codable {
 			setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 			signalDone()
 			// TODO: generate analyitics report to record what type was received and what UTI
+		}
+	}
+
+	private func handleRemoteUrl(_ item: URL) {
+		if let s = item.scheme, s.hasPrefix("http") {
+			fetchWebPreview(for: item) { [weak self] title, image in
+				if self?.loadingAborted ?? true { return }
+				self?.accessoryTitle = title ?? self?.accessoryTitle
+				if let image = image {
+					if image.size.height > 100 || image.size.width > 200 {
+						self?.setDisplayIcon(image, 30, .fit)
+					} else {
+						self?.setDisplayIcon(image, 30, .center)
+					}
+				}
+				self?.signalDone()
+			}
+		} else {
+			signalDone()
 		}
 	}
 

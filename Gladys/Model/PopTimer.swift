@@ -10,9 +10,9 @@ final class PopTimer {
 		init(repeats: Bool, interval: TimeInterval, block: @escaping ()->Void) {
 
 			if repeats {
-				timer.scheduleRepeating(deadline: .now() + interval, interval: interval)
+				timer.schedule(deadline: .now() + interval, repeating: interval)
 			} else {
-				timer.scheduleOneshot(deadline: .now() + interval)
+				timer.schedule(deadline: .now() + interval)
 			}
 			timer.setEventHandler(handler: block)
 			timer.resume()

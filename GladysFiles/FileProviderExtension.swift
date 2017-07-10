@@ -125,12 +125,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 		log("File extension terminated")
 	}
 
-    // MARK: - Enumeration
-
-    override func enumerator(forContainerItemIdentifier containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
+    override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
 
 		switch containerItemIdentifier {
-		case .workingSet, .allDirectories, .rootContainer:
+		case .workingSet, .rootContainer:
 			return FileProviderEnumerator(relatedItem: nil, model: model)
 		default:
 			let i = (try? item(for: containerItemIdentifier)) as? FileProviderItem
