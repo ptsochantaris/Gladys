@@ -196,14 +196,14 @@ final class ArchivedDropItem: Codable {
 
 	var displayTitle: (String?, NSTextAlignment) {
 
-		if let suggestedName = suggestedName {
-			return (suggestedName, .center)
-		}
-
 		let highestPriorityItem = typeItems.max(by: { $0.displayTitlePriority < $1.displayTitlePriority })
 		let title = highestPriorityItem?.displayTitle
 		let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
-		return (title, alignment)
+		if let title = title {
+			return (title, alignment)
+		} else {
+			return (suggestedName, .center)
+		}
 	}
 
 	var accessoryTitle: String? {
