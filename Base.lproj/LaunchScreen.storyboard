@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.14"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -25,7 +24,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="b9H-D8-eYA">
-                                <rect key="frame" x="192" y="256" width="384" height="512"/>
+                                <rect key="frame" x="304" y="432" width="160" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="160" id="Dbb-0D-5dK"/>
+                                    <constraint firstAttribute="width" constant="160" id="Zy5-ES-ZzT"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -33,11 +36,9 @@
                             <constraint firstAttribute="trailing" secondItem="ZWG-NS-L2S" secondAttribute="trailing" id="ENg-LM-nrf"/>
                             <constraint firstItem="b9H-D8-eYA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="HNy-f8-BFo"/>
                             <constraint firstItem="b9H-D8-eYA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="HXx-ah-1Ay"/>
-                            <constraint firstItem="b9H-D8-eYA" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.5" id="Oaq-eU-Ztx"/>
                             <constraint firstAttribute="bottom" secondItem="ZWG-NS-L2S" secondAttribute="bottom" id="Srr-k1-IVg"/>
                             <constraint firstItem="ZWG-NS-L2S" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="gvL-GF-sbL"/>
                             <constraint firstItem="ZWG-NS-L2S" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="oG7-bv-bs5"/>
-                            <constraint firstItem="b9H-D8-eYA" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="0.5" id="wPp-z9-NK1"/>
                         </constraints>
                     </view>
                 </viewController>

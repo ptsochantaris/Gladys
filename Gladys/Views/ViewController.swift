@@ -8,7 +8,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
 	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
-	UICollectionViewDropDelegate, UICollectionViewDragDelegate {
+	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
 	@IBOutlet weak var countLabel: UIBarButtonItem!
@@ -113,6 +113,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		if needSave{
 			model.needsSave = true
+		} else {
+			updateEmptyView(animated: true)
 		}
 	}
 
@@ -157,6 +159,31 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	private var dimView: UIView?
+	func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+		if let d = dimView {
+			dimView = nil
+			UIView.animate(animations: {
+				d.alpha = 0
+			}) { finished in
+				d.removeFromSuperview()
+			}
+		}
+		return true
+	}
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		if dimView == nil {
+			let d = UIView(frame: .zero)
+			d.backgroundColor = UIColor(white: 0, alpha: 0.3)
+			d.alpha = 0
+			navigationController?.view.cover(with: d)
+			dimView = d
+			UIView.animate(animations: {
+				d.alpha = 1
+			})
+		}
+	}
+
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let item = model.filteredDrops[indexPath.item]
 		if item.isLoading {
@@ -172,6 +199,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			p.permittedArrowDirections = [.any]
 			p.sourceView = cell
 			p.sourceRect = cell.bounds.insetBy(dx: 5, dy: 0)
+			p.delegate = self
 			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
@@ -213,12 +241,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
-		n.addObserver(self, selector: #selector(updateTotals), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 
-		updateTotals()
+		didUpdateItems()
+		updateEmptyView(animated: false)
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
@@ -253,22 +282,53 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		} else {
 			archivedItemCollectionView.reloadData()
 		}
-		updateTotals()
+		didUpdateItems()
+		updateEmptyView(animated: true)
 	}
 
-	@objc private func updateTotals() {
+	private var emptyView: UIImageView?
+	@objc private func didUpdateItems() {
 		countLabel.title = "\(model.drops.count) Items"
 		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 		editButtonItem.isEnabled = model.drops.count > 0
 	}
 
+	private func updateEmptyView(animated: Bool) {
+		if model.drops.count == 0 && emptyView == nil {
+			let e = UIImageView(frame: .zero)
+			e.contentMode = .center
+			e.image = #imageLiteral(resourceName: "gladysImage").limited(to: CGSize(width: 160, height: 160), limitTo: 1, useScreenScale: true)
+			e.center(on: view)
+			emptyView = e
+
+			if animated {
+				e.alpha = 0
+				UIView.animate(animations: {
+					e.alpha = 1
+				})
+			}
+
+		} else if let e = emptyView, model.drops.count > 0 {
+			emptyView = nil
+			if animated {
+				UIView.animate(animations: {
+					e.alpha = 0
+				}) { finished in
+					e.removeFromSuperview()
+				}
+			} else {
+				e.removeFromSuperview()
+			}
+		}
+	}
+
 	override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
-		updateTotals()
 		navigationController?.setToolbarHidden(!editing, animated: animated)
 
 		UIView.performWithoutAnimation {
+			didUpdateItems()
 			for cell in archivedItemCollectionView.visibleCells as? [ArchivedItemCell] ?? [] {
 				cell.isEditing = editing
 			}
@@ -306,6 +366,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 			if let n = presentedViewController, n.modalPresentationStyle == .popover {
 				n.dismiss(animated: false)
+				if let d = dimView {
+					d.removeFromSuperview()
+					dimView = nil
+				}
 			}
 
 			archivedItemCollectionView.performBatchUpdates({})
@@ -331,6 +395,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 		item.delete()
 		if isEditing && model.filteredDrops.count == 0 {
+			updateEmptyView(animated: true)
+			view.layoutIfNeeded()
 			setEditing(false, animated: true)
 		}
 		model.needsSave = true

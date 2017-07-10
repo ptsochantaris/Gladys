@@ -13,6 +13,17 @@ extension UIView {
 		view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
 		view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
 	}
+
+	func center(on parentView: UIView) {
+		translatesAutoresizingMaskIntoConstraints = false
+		parentView.addSubview(self)
+		centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
+		centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
+	}
+
+	static func animate(animations: @escaping ()->Void, completion: ((Bool)->Void)? = nil) {
+		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: animations, completion: completion)
+	}
 }
 
 final class GladysImageView: UIImageView {
