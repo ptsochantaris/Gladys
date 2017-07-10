@@ -427,6 +427,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	/////////////////////////////
 
+	private var iapFetchCallbackCount: Int?
+	private var infiniteModeItem: SKProduct?
+
 	private func fetchIap() {
 		if !model.infiniteMode {
 			let r = SKProductsRequest(productIdentifiers: ["INFINITE"])
@@ -435,21 +438,35 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	private var infiniteModeItem: SKProduct?
 	func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
 		infiniteModeItem = response.products.first
+		iapFetchCompletion()
 	}
 
 	func request(_ request: SKRequest, didFailWithError error: Error) {
 		log("Error fetching IAP items: \(error.localizedDescription)")
+		iapFetchCompletion()
 	}
 
-	private func displayIAPRequest(newTotal: Int) {
-		var message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nHowever, we cannot seem to fetch the in-app purchase information for this at this time. Please check your internet connection and try again in a moment."
+	private func iapFetchCompletion() {
+		if let c = iapFetchCallbackCount {
+			iapFetchCallbackCount = nil
+			displayIAPRequest(newTotal: c)
+		}
+	}
+
+	func displayIAPRequest(newTotal: Int) {
+
+		guard model.infiniteMode == false else { return }
 
 		guard let infiniteModeItem = infiniteModeItem else {
-			let a = UIAlertController(title: "You need to expand Gladys", message: message, preferredStyle: .alert)
-			a.addAction(UIAlertAction(title: "OK", style: .cancel))
+			let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
+			let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
+			a.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { action in
+				self.iapFetchCallbackCount = newTotal
+				self.fetchIap()
+			}))
+			a.addAction(UIAlertAction(title: "Later", style: .cancel))
 			present(a, animated: true) {
 				self.fetchIap()
 			}
@@ -460,9 +477,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		f.numberStyle = .currency
 		f.locale = infiniteModeItem.priceLocale
 		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
-		message = "This operation would result in a total of \(newTotal) items, and Gladys holds up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
 
-		let a = UIAlertController(title: "Would you like to expand Gladys?", message: message, preferredStyle: .alert)
+		let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
 			let payment = SKPayment(product: infiniteModeItem)
 			SKPaymentQueue.default().add(payment)

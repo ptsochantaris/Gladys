@@ -14,6 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
+	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
+			let vc = (window?.rootViewController as? UINavigationController)?.topViewController as? ViewController
+			vc?.displayIAPRequest(newTotal: t)
+			return true
+		}
+		return false
+	}
+
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
 
 		if userActivity.activityType == CSSearchableItemActionType {

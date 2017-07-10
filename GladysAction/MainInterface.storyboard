@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Image-->
+        <scene sceneID="7MM-of-jgj">
+            <objects>
+                <viewController title="Image" id="ObA-dk-sSI" customClass="ActionRequestViewController" customModule="GladysAction" sceneMemberID="viewController">
+                    <layoutGuides/>
+                    <view key="view" contentMode="scaleToFill" id="zMn-AG-sqS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="RFu-pz-evy">
+                                <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="QQw-Qu-GXD">
+                                <rect key="frame" x="60" y="110" width="200" height="220"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="220" id="D3U-1n-34l"/>
+                                    <constraint firstAttribute="width" constant="200" id="wSa-be-pde"/>
+                                </constraints>
+                            </imageView>
+                            <navigationBar contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="NOA-Dm-cuz">
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <items>
+                                    <navigationItem id="3HJ-uW-3hn">
+                                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="cancel" id="WYi-yp-eM6">
+                                            <connections>
+                                                <action selector="cancelRequested:" destination="ObA-dk-sSI" id="Z0e-rz-3B5"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-t2-fVq">
+                                <rect key="frame" x="103" y="378.5" width="114" height="33"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <state key="normal" title="Expand Gladys"/>
+                                <connections>
+                                    <action selector="expandSelected:" destination="ObA-dk-sSI" eventType="touchUpInside" id="Vkx-nR-NHd"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HyJ-oj-52E">
+                                <rect key="frame" x="30" y="338" width="260" height="20.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="bottom" secondItem="VVe-Uw-JpX" secondAttribute="bottom" id="0lB-pB-HOQ"/>
+                            <constraint firstItem="VVe-Uw-JpX" firstAttribute="trailing" secondItem="NOA-Dm-cuz" secondAttribute="trailing" id="A05-Pj-hrr"/>
+                            <constraint firstItem="HyJ-oj-52E" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" constant="30" id="BZb-ab-hsO"/>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="top" secondItem="NOA-Dm-cuz" secondAttribute="bottom" id="Cig-NH-Y6J"/>
+                            <constraint firstItem="NOA-Dm-cuz" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" id="HxO-8t-aoh"/>
+                            <constraint firstItem="HyJ-oj-52E" firstAttribute="top" secondItem="QQw-Qu-GXD" secondAttribute="bottom" constant="8" id="Loj-4u-qUz"/>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="trailing" secondItem="VVe-Uw-JpX" secondAttribute="trailing" id="QOb-OG-LDz"/>
+                            <constraint firstItem="VVe-Uw-JpX" firstAttribute="trailing" secondItem="HyJ-oj-52E" secondAttribute="trailing" constant="30" id="Z7G-Sw-VwV"/>
+                            <constraint firstItem="Y1j-t2-fVq" firstAttribute="top" secondItem="HyJ-oj-52E" secondAttribute="bottom" constant="20" id="npQ-e0-hz8"/>
+                            <constraint firstItem="QQw-Qu-GXD" firstAttribute="centerX" secondItem="zMn-AG-sqS" secondAttribute="centerX" id="ocx-ot-U1Y"/>
+                            <constraint firstItem="QQw-Qu-GXD" firstAttribute="centerY" secondItem="zMn-AG-sqS" secondAttribute="centerY" constant="-20" id="sID-Ds-Zd3"/>
+                            <constraint firstItem="NOA-Dm-cuz" firstAttribute="top" secondItem="VVe-Uw-JpX" secondAttribute="top" id="we0-1t-bgp"/>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" id="wiH-mX-EYz"/>
+                            <constraint firstItem="Y1j-t2-fVq" firstAttribute="centerX" secondItem="HyJ-oj-52E" secondAttribute="centerX" id="yKV-Ja-Rah"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VVe-Uw-JpX"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="480"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="480"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="WYi-yp-eM6" id="bee-A9-ctK"/>
+                        <outlet property="expandButton" destination="Y1j-t2-fVq" id="ueE-2V-xab"/>
+                        <outlet property="imageCenter" destination="sID-Ds-Zd3" id="xf3-TE-RbT"/>
+                        <outlet property="imageDistance" destination="Loj-4u-qUz" id="Jda-0o-oka"/>
+                        <outlet property="imageHeight" destination="D3U-1n-34l" id="BJa-uz-npI"/>
+                        <outlet property="statusLabel" destination="HyJ-oj-52E" id="pPt-ah-ASv"/>
+                        <outlet property="view" destination="zMn-AG-sqS" id="Qma-de-2ek"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33.600000000000001" y="45.877061469265371"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="gladysImage" width="1024" height="1024"/>
+        <image name="paper" width="2100" height="1500"/>
+    </resources>
+    <color key="tintColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+</document>
