@@ -76,7 +76,16 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var encodedUrl: NSURL? {
-		return decode(NSURL.self)
+		if let u = decode(NSURL.self) {
+			return u
+		} else if let array = decode(NSArray.self) {
+			for item in array {
+				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+					return url
+				}
+			}
+		}
+		return nil
 	}
 
 	lazy var bytesPath: URL = {
@@ -229,11 +238,7 @@ final class ArchivedDropItemType: Codable {
 			return bytes as? T
 		}
 
-		let item = try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)
-		if let firstString = (item as? [AnyObject])?.first as? String, let url = URL(string: firstString) as? T {
-			return url
-		}
-		return item as? T
+		return (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) as? T
 	}
 
 	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
