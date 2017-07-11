@@ -27,7 +27,7 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+	private func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
 
 		if let item = item as? NSString {
 			log("      received string: \(item)")
@@ -221,7 +221,7 @@ extension ArchivedDropItemType {
 		signalDone()
 	}
 
-	func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
+	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
 		let result: UIImage
 		if contentMode == .center || contentMode == .circle {
 			result = icon
@@ -334,7 +334,7 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	func signalDone() {
+	private func signalDone() {
 		DispatchQueue.main.async {
 			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
 		}
