@@ -11,6 +11,22 @@ extension ArchivedDropItemType {
 		classType = type
 	}
 
+	func startIngest(provider: NSItemProvider) {
+		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in
+			guard let s = self, s.loadingAborted == false else { return }
+			if let error = error {
+				log(">> Error receiving item: \(error.localizedDescription)")
+				s.loadingError = error
+				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+				s.signalDone()
+			} else if let item = item {
+				let receivedTypeString = type(of: item)
+				log(">> Item name: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] class: [\(receivedTypeString)]")
+				s.ingest(item: item, from: provider)
+			}
+		}
+	}
+
 	func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
 
 		if let item = item as? NSString {

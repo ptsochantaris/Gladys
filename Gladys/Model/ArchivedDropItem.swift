@@ -35,9 +35,6 @@ final class ArchivedDropItem: Codable {
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		isLoading = false
-		#if MAINAPP || ACTIONEXTENSION
-		loadCount = 0
-		#endif
 	}
 
 	var oneTitle: String {
@@ -86,38 +83,39 @@ final class ArchivedDropItem: Codable {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
-#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
-	var isDeleting = false
-#endif
+	#if MAINAPP || ACTIONEXTENSION
 
-#if MAINAPP || ACTIONEXTENSION
+		var loadCount = 0
+		weak var delegate: LoadCompletionDelegate?
+		private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
 
-	var loadCount: Int
-	weak var delegate: LoadCompletionDelegate?
-	private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
+		init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
 
-	init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
+			let ids = provider.registeredTypeIdentifiers.filter({ typeIdentifier in
+				!ArchivedDropItem.blockedSuffixes.contains(where: { blockedSuffix in typeIdentifier.hasSuffix(blockedSuffix )})
+			})
 
-		let ids = provider.registeredTypeIdentifiers.filter({ typeIdentifier in
-			!ArchivedDropItem.blockedSuffixes.contains(where: { blockedSuffix in typeIdentifier.hasSuffix(blockedSuffix )})
-		})
+			uuid = UUID()
+			createdAt = Date()
+			suggestedName = provider.suggestedName
+			loadCount = ids.count
+			isLoading = true
+			allLoadedWell = true
+			self.delegate = delegate
 
-		uuid = UUID()
-		createdAt = Date()
-		suggestedName = provider.suggestedName
-		loadCount = ids.count
-		isLoading = true
-		allLoadedWell = true
-		self.delegate = delegate
-
-		typeItems = ids.map {
-			ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
+			typeItems = ids.map {
+				ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
+			}
 		}
-	}
 
-	func cancelIngest() {
-		typeItems.forEach { $0.cancelIngest() }
-	}
+		func cancelIngest() {
+			typeItems.forEach { $0.cancelIngest() }
+		}
 
-#endif
+	#endif
+
+
+	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
+		var isDeleting = false
+	#endif
 }
