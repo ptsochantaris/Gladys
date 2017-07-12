@@ -66,62 +66,6 @@ extension ArchivedDropItemType {
 			setBytes(object: item, original: originalData, type: .UIImage)
 			signalDone()
 
-		} else if let item = item as? Data {
-			log("      received data: \(item)")
-			classType = .NSData
-			bytes = item
-
-			if let image = UIImage(data: item) {
-				setDisplayIcon(image, 40, .fill)
-			}
-
-			if typeIdentifier == "public.url", let url = encodedUrl as URL? {
-				handleRemoteUrl(url)
-				return
-
-			} else if typeIdentifier == "public.vcard" {
-				if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
-					let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
-					let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
-					accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
-
-					if let imageData = person.imageData, let img = UIImage(data: imageData) {
-						setDisplayIcon(img, 9, .circle)
-					} else {
-						setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
-					}
-				}
-
-			} else if typeIdentifier == "public.utf8-plain-text" {
-				let s = String(data: item, encoding: .utf8)
-				setTitleInfo(s, 9)
-				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-
-			} else if typeIdentifier == "public.utf16-plain-text" {
-				let s = String(data: item, encoding: .utf16)
-				setTitleInfo(s, 8)
-				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-
-			} else if typeIdentifier == "public.email-message" {
-				setDisplayIcon (#imageLiteral(resourceName: "iconEmail"), 10, .center)
-
-			} else if typeIdentifier == "com.apple.mapkit.map-item" {
-				setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
-
-			} else if typeIdentifier.hasSuffix(".rtf") {
-				if let s = decode(NSAttributedString.self)?.string {
-					setTitleInfo(s, 4)
-				}
-				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			} else if typeIdentifier.hasSuffix(".rtfd") {
-				if let s = decode(NSAttributedString.self)?.string {
-					setTitleInfo(s, 4)
-				}
-				setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			}
-
-			signalDone()
-
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
 			setBytes(object: item, original: originalData, type: .MKMapItem)
@@ -173,12 +117,79 @@ extension ArchivedDropItemType {
 			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			signalDone()
 
+		} else if let item = item as? Data {
+			log("      received data: \(item)")
+			handleData(item)
+
 		} else {
-			setLoadingError("Do not know how to handle an item of class \(String(describing: type(of: item)))")
-			setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-			signalDone()
+			
+			log("      Do not know how to handle an item of class \(String(describing: type(of: item))), will store as raw data")
+			if let originalData = originalData {
+				log("      storing pre-encoded form")
+				handleData(originalData)
+			} else {
+				log("      will manually encode")
+				let keyedData = NSKeyedArchiver.archivedData(withRootObject: item)
+				handleData(keyedData)
+			}
 			// TODO: generate analyitics report to record what type was received and what UTI
 		}
+	}
+
+	private func handleData(_ item: Data) {
+		classType = .NSData
+		bytes = item
+
+		if let image = UIImage(data: item) {
+			setDisplayIcon(image, 40, .fill)
+		}
+
+		if typeIdentifier == "public.url", let url = encodedUrl as URL? {
+			handleRemoteUrl(url)
+			return
+
+		} else if typeIdentifier == "public.vcard" {
+			if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
+				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
+				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
+				accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
+
+				if let imageData = person.imageData, let img = UIImage(data: imageData) {
+					setDisplayIcon(img, 9, .circle)
+				} else {
+					setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
+				}
+			}
+
+		} else if typeIdentifier == "public.utf8-plain-text" {
+			let s = String(data: item, encoding: .utf8)
+			setTitleInfo(s, 9)
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+
+		} else if typeIdentifier == "public.utf16-plain-text" {
+			let s = String(data: item, encoding: .utf16)
+			setTitleInfo(s, 8)
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+
+		} else if typeIdentifier == "public.email-message" {
+			setDisplayIcon (#imageLiteral(resourceName: "iconEmail"), 10, .center)
+
+		} else if typeIdentifier == "com.apple.mapkit.map-item" {
+			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
+
+		} else if typeIdentifier.hasSuffix(".rtf") {
+			if let s = decode(NSAttributedString.self)?.string {
+				setTitleInfo(s, 4)
+			}
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+		} else if typeIdentifier.hasSuffix(".rtfd") {
+			if let s = decode(NSAttributedString.self)?.string {
+				setTitleInfo(s, 4)
+			}
+			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+		}
+
+		signalDone()
 	}
 
 	private func handleRemoteUrl(_ item: URL) {
