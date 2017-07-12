@@ -131,7 +131,6 @@ final class ArchivedDropItemType: Codable {
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
-	var ingestProgress: Progress?
 
 	var contentDescription: String? {
 		switch representedClass {
@@ -181,9 +180,10 @@ final class ArchivedDropItemType: Codable {
 	func decode() -> Any? {
 		guard let bytes = bytes else { return nil }
 
-		if representedClass == "NSData" {
-			return bytes
-		}
+		// Do not do this because there may be a URL hidden there
+		//if representedClass == "NSData" {
+			//return bytes
+		//}
 
 		if classWasWrapped {
 			return NSKeyedUnarchiver.unarchiveObject(with: bytes)

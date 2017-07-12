@@ -89,7 +89,7 @@ extension ArchivedDropItemType {
 
 				log("Requested item type: \(requestedClassType)")
 
-				if let item = self.decode() {
+				if let item = self.encodedUrl ?? self.decode() {
 					log("Delivering item type \(type(of: item))")
 					completion(item as? NSSecureCoding, nil)
 				} else {

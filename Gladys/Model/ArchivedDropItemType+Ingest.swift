@@ -6,9 +6,12 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	private func setBytes(object: NSSecureCoding, originalData: Data) {
-		if classWasWrapped {
+	private func setBytes(object: NSSecureCoding, originalData: Data?) {
+		if let originalData = originalData {
 			bytes = originalData
+		} else if let i = object as? NSURL {
+			let o = [i.absoluteString] // Safari-style
+			bytes = try? PropertyListSerialization.data(fromPropertyList: o, format: .binary, options: 0)
 		} else {
 			bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
 		}
@@ -17,30 +20,41 @@ extension ArchivedDropItemType {
 
 	func startIngest(provider: NSItemProvider) {
 
-		ingestProgress = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
+		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log(">> Error receiving item: \(error.localizedDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.signalDone()
-			} else if let data = data {
-				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] size: [\(data.count)]")
-				s.ingest(data: data, from: provider)
+			} else if let item = item {
+				let itemType = type(of: item)
+				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] type: [\(itemType)]")
+				s.ingest(item: item, from: provider)
 			}
 		}
 	}
 
-	private func ingest(data: Data, from provider: NSItemProvider) { // in thread!
+	private func ingest(item i: NSSecureCoding, from provider: NSItemProvider) { // in thread!
 
 		let item: NSSecureCoding
-		if let obj = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSSecureCoding {
-			log("      unwrapped keyed object: \(type(of:obj))")
-			item = obj
-			classWasWrapped = true
+		let data: Data?
+		if let d = i as? Data {
+
+			data = d
+			if let obj = NSKeyedUnarchiver.unarchiveObject(with: d) as? NSSecureCoding {
+				log("      unwrapped keyed object: \(type(of:obj))")
+				item = obj
+				classWasWrapped = true
+
+			} else {
+				log("      looks like raw data")
+				item = d as NSSecureCoding
+			}
+
 		} else {
-			log("      looks like raw data")
-			item = data as NSSecureCoding
+			data = nil
+			item = i
 		}
 
 		if let item = item as? NSString {
@@ -76,21 +90,13 @@ extension ArchivedDropItemType {
 
 		} else if let item = item as? URL {
 
-			if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
-				if typeIdentifier.hasSuffix("Location") {
-					setDisplayIcon(#imageLiteral(resourceName: "iconFolder"), 5, .center)
-				} else {
-					setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
-				}
-			} else {
-				setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-			}
+			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 
 			if item.isFileURL {
 				log("      will duplicate item at local path: \(item.path)")
 				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
 					if self?.loadingAborted ?? true { return }
-					self?.handleLocalFetch(url: url, error: error, originalData: data)
+					self?.handleLocalFetch(url: url, error: error)
 				}
 			} else {
 				log("      received remote url: \(item.absoluteString)")
@@ -126,9 +132,20 @@ extension ArchivedDropItemType {
 
 		} else {
 			let itemType = type(of: item)
-			log("      Do not know how to handle an item of class \(String(describing: itemType)), will store as raw data")
-			representedClass = NSStringFromClass(itemType)
-			handleData(data)
+			log("      Do not know how to handle an item of class \(String(describing: itemType)), will store")
+
+			if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
+				if typeIdentifier.hasSuffix("File") {
+					setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
+				} else {
+					setDisplayIcon(#imageLiteral(resourceName: "iconFolder"), 5, .center)
+				}
+			} else {
+				setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			}
+
+			setBytes(object: item, originalData: data)
+			signalDone()
 			// TODO: generate analytics report to record what type was received and what UTI
 		}
 	}
@@ -213,7 +230,7 @@ extension ArchivedDropItemType {
 		log("Error: \(message)")
 	}
 
-	private func handleLocalFetch(url: URL?, error: Error?, originalData: Data) {
+	private func handleLocalFetch(url: URL?, error: Error?) {
 		// in thread
 		if let url = url {
 			let localUrl = copyLocal(url)
@@ -222,11 +239,12 @@ extension ArchivedDropItemType {
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
 			} else {
-				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 0, .center)
+				setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			}
+
 			let p = localUrl.lastPathComponent
 			setTitleInfo(p, p.contains(".") ? 1 : 0)
-			setBytes(object: localUrl as NSURL, originalData: originalData)
+			setBytes(object: localUrl as NSURL, originalData: nil)
 
 		} else if let error = error {
 			log("Error fetching local data from url: \(error.localizedDescription)")
@@ -237,11 +255,7 @@ extension ArchivedDropItemType {
 
 	func cancelIngest() {
 		loadingAborted = true
-		if let ingestProgress = ingestProgress {
-			ingestProgress.cancel()
-		} else {
-			signalDone()
-		}
+		signalDone()
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
@@ -359,7 +373,6 @@ extension ArchivedDropItemType {
 
 	private func signalDone() {
 		DispatchQueue.main.async {
-			self.ingestProgress = nil
 			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
 		}
 	}
