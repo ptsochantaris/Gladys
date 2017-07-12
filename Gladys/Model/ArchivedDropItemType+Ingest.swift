@@ -6,8 +6,8 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	private func setBytes(object: Any, type: ClassType) {
-		bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
+	private func setBytes(object: NSSecureCoding, original: Data?, type: ClassType) {
+		bytes = original ?? (try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0))
 		classType = type
 	}
 
@@ -27,31 +27,43 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	private func ingest(item: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+	private func ingest(item i: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+
+		let item: NSSecureCoding
+		let originalData: Data?
+		if let d = i as? Data, let obj = NSKeyedUnarchiver.unarchiveObject(with: d) as? NSSecureCoding {
+			log("      unwrapped keyed object: \(type(of:obj))")
+			classWasWrapped = true
+			item = obj
+			originalData = d
+		} else {
+			item = i
+			originalData = nil
+		}
 
 		if let item = item as? NSString {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .NSString)
+			setBytes(object: item, original: originalData, type: .NSString)
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, type: .NSAttributedString)
+			setBytes(object: item, original: originalData, type: .NSAttributedString)
 			signalDone()
 
 		} else if let item = item as? UIColor {
 			log("      received color: \(item)")
-			setBytes(object: item, type: .UIColor)
+			setBytes(object: item, original: originalData, type: .UIColor)
 			signalDone()
 
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
-			setBytes(object: item, type: .UIImage)
+			setBytes(object: item, original: originalData, type: .UIImage)
 			signalDone()
 
 		} else if let item = item as? Data {
@@ -112,7 +124,7 @@ extension ArchivedDropItemType {
 
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
-			setBytes(object: item, type: .MKMapItem)
+			setBytes(object: item, original: originalData, type: .MKMapItem)
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
 			signalDone()
 
@@ -136,11 +148,11 @@ extension ArchivedDropItemType {
 				}
 			} else {
 				log("      received remote url: \(item.absoluteString)")
-				setBytes(object: item as NSURL, type: .NSURL)
+				setBytes(object: item as NSURL, original: originalData, type: .NSURL)
 				handleRemoteUrl(item)
 			}
 		} else if let item = item as? NSArray {
-			setBytes(object: item, type: .NSArray)
+			setBytes(object: item, original: originalData, type: .NSArray)
 			log("      received array: \(item)")
 			if item.count == 1 {
 				setTitleInfo("1 Item", 1)
@@ -151,7 +163,7 @@ extension ArchivedDropItemType {
 			signalDone()
 
 		} else if let item = item as? NSDictionary {
-			setBytes(object: item, type: .NSDictionary)
+			setBytes(object: item, original: originalData, type: .NSDictionary)
 			log("      received dictionary: \(item)")
 			if item.count == 1 {
 				setTitleInfo("1 Entry", 1)
@@ -207,7 +219,7 @@ extension ArchivedDropItemType {
 			}
 			let p = localUrl.lastPathComponent
 			setTitleInfo(p, p.contains(".") ? 1 : 0)
-			setBytes(object: localUrl as NSURL, type: .NSURL)
+			setBytes(object: localUrl as NSURL, original: nil, type: .NSURL)
 
 		} else if let error = error {
 			log("Error fetching local data from url: \(error.localizedDescription)")

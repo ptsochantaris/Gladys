@@ -47,14 +47,60 @@ extension ArchivedDropItemType {
 
 		let p = NSItemProvider()
 		p.suggestedName = oneTitle
-		register(with: p)
+		registerForDrag(with: p)
 
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = ["local_object": self]
 		return i
 	}
 
-	func register(with provider: NSItemProvider) {
+	func registerForDrag(with provider: NSItemProvider) {
+		if classWasWrapped {
+			registerWrapped(with: provider)
+		} else {
+			register(with: provider)
+		}
+	}
+
+	private func registerWrapped(with provider: NSItemProvider) {
+
+		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
+			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
+				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
+				if let decoded = decoded {
+					log("Responding with object type: \(type(of: decoded))")
+				} else {
+					log("Responding with nil object")
+				}
+				completion(decoded, nil)
+				return nil
+			}
+		}
+
+		if hasLocalFiles {
+			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
+				let decoded = self.encodedUrl as URL?
+				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
+				completion(decoded, false, nil)
+				return nil
+			}
+
+		} else if let bytes = bytes {
+
+			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
+				log("Responding with wrapped data block")
+				completion(bytes, nil)
+				return nil
+			}
+
+			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
+				log("Requested item type: \(requestedClassType), will only respond with wrapped data block, same way we got it")
+				completion(bytes as NSData, nil)
+			}
+		}
+	}
+
+	private func register(with provider: NSItemProvider) {
 
 		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
 			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in

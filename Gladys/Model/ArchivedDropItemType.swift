@@ -6,6 +6,7 @@ final class ArchivedDropItemType: Codable {
 	private enum CodingKeys : String, CodingKey {
 		case typeIdentifier
 		case classType
+		case classWasWrapped
 		case uuid
 		case parentUuid
 		case accessoryTitle
@@ -25,6 +26,7 @@ final class ArchivedDropItemType: Codable {
 		var v = encoder.container(keyedBy: CodingKeys.self)
 		try v.encode(typeIdentifier, forKey: .typeIdentifier)
 		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
+		try v.encode(classWasWrapped, forKey: .classWasWrapped)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(parentUuid, forKey: .parentUuid)
 		try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
@@ -50,6 +52,7 @@ final class ArchivedDropItemType: Codable {
 		if let typeValue = try v.decodeIfPresent(String.self, forKey: .classType) {
 			classType = ClassType(rawValue: typeValue)
 		}
+		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
 		hasLocalFiles = try v.decode(Bool.self, forKey: .hasLocalFiles)
@@ -115,6 +118,7 @@ final class ArchivedDropItemType: Codable {
 	let parentUuid: UUID
 	let createdAt: Date
 	var classType: ClassType?
+	var classWasWrapped: Bool
 	var hasLocalFiles: Bool
 	var loadingError: Error?
 
@@ -187,7 +191,11 @@ final class ArchivedDropItemType: Codable {
 			return bytes as? T
 		}
 
-		return (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) as? T
+		if classWasWrapped {
+			return NSKeyedUnarchiver.unarchiveObject(with: bytes) as? T
+		} else {
+			return (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) as? T
+		}
 	}
 
 	var displayIcon: UIImage? {
@@ -238,6 +246,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		hasLocalFiles = false
+		classWasWrapped = false
 		createdAt = Date()
 
 		startIngest(provider: provider)

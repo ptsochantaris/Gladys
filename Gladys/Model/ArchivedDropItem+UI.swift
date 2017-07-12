@@ -42,7 +42,7 @@ extension ArchivedDropItem {
 
 		let p = NSItemProvider()
 		p.suggestedName = suggestedName
-		typeItems.forEach { $0.register(with: p) }
+		typeItems.forEach { $0.registerForDrag(with: p) }
 
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = self
