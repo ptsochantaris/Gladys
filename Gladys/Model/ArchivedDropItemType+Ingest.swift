@@ -6,70 +6,72 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	private func setBytes(object: NSSecureCoding, original: Data?, type: ClassType) {
-		bytes = original ?? (try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0))
-		classType = type
+	private func setBytes(object: NSSecureCoding, originalData: Data) {
+		if classWasWrapped {
+			bytes = originalData
+		} else {
+			bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
+		}
+		representedClass = NSStringFromClass(type(of: object))
 	}
 
 	func startIngest(provider: NSItemProvider) {
-		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in
+
+		ingestProgress = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log(">> Error receiving item: \(error.localizedDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.signalDone()
-			} else if let item = item {
-				let receivedTypeString = type(of: item)
-				log(">> Item name: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] class: [\(receivedTypeString)]")
-				s.ingest(item: item, from: provider)
+			} else if let data = data {
+				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] size: [\(data.count)]")
+				s.ingest(data: data, from: provider)
 			}
 		}
 	}
 
-	private func ingest(item i: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+	private func ingest(data: Data, from provider: NSItemProvider) { // in thread!
 
 		let item: NSSecureCoding
-		let originalData: Data?
-		if let d = i as? Data, let obj = NSKeyedUnarchiver.unarchiveObject(with: d) as? NSSecureCoding {
+		if let obj = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSSecureCoding {
 			log("      unwrapped keyed object: \(type(of:obj))")
-			classWasWrapped = true
 			item = obj
-			originalData = d
+			classWasWrapped = true
 		} else {
-			item = i
-			originalData = nil
+			log("      looks like raw data")
+			item = data as NSSecureCoding
 		}
 
 		if let item = item as? NSString {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, original: originalData, type: .NSString)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, original: originalData, type: .NSAttributedString)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? UIColor {
 			log("      received color: \(item)")
-			setBytes(object: item, original: originalData, type: .UIColor)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
-			setBytes(object: item, original: originalData, type: .UIImage)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
-			setBytes(object: item, original: originalData, type: .MKMapItem)
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? URL {
@@ -88,15 +90,14 @@ extension ArchivedDropItemType {
 				log("      will duplicate item at local path: \(item.path)")
 				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
 					if self?.loadingAborted ?? true { return }
-					self?.handleLocalFetch(url: url, error: error)
+					self?.handleLocalFetch(url: url, error: error, originalData: data)
 				}
 			} else {
 				log("      received remote url: \(item.absoluteString)")
-				setBytes(object: item as NSURL, original: originalData, type: .NSURL)
+				setBytes(object: item as NSURL, originalData: data)
 				handleRemoteUrl(item)
 			}
 		} else if let item = item as? NSArray {
-			setBytes(object: item, original: originalData, type: .NSArray)
 			log("      received array: \(item)")
 			if item.count == 1 {
 				setTitleInfo("1 Item", 1)
@@ -104,10 +105,10 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Items", 1)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? NSDictionary {
-			setBytes(object: item, original: originalData, type: .NSDictionary)
 			log("      received dictionary: \(item)")
 			if item.count == 1 {
 				setTitleInfo("1 Entry", 1)
@@ -115,29 +116,24 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Entries", 1)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			setBytes(object: item, originalData: data)
 			signalDone()
 
 		} else if let item = item as? Data {
 			log("      received data: \(item)")
+			representedClass = "NSData"
 			handleData(item)
 
 		} else {
-			
-			log("      Do not know how to handle an item of class \(String(describing: type(of: item))), will store as raw data")
-			if let originalData = originalData {
-				log("      storing pre-encoded form")
-				handleData(originalData)
-			} else {
-				log("      will manually encode")
-				let keyedData = NSKeyedArchiver.archivedData(withRootObject: item)
-				handleData(keyedData)
-			}
-			// TODO: generate analyitics report to record what type was received and what UTI
+			let itemType = type(of: item)
+			log("      Do not know how to handle an item of class \(String(describing: itemType)), will store as raw data")
+			representedClass = NSStringFromClass(itemType)
+			handleData(data)
+			// TODO: generate analytics report to record what type was received and what UTI
 		}
 	}
 
 	private func handleData(_ item: Data) {
-		classType = .NSData
 		bytes = item
 
 		if let image = UIImage(data: item) {
@@ -178,12 +174,12 @@ extension ArchivedDropItemType {
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
 
 		} else if typeIdentifier.hasSuffix(".rtf") {
-			if let s = decode(NSAttributedString.self)?.string {
+			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 		} else if typeIdentifier.hasSuffix(".rtfd") {
-			if let s = decode(NSAttributedString.self)?.string {
+			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
@@ -217,7 +213,7 @@ extension ArchivedDropItemType {
 		log("Error: \(message)")
 	}
 
-	private func handleLocalFetch(url: URL?, error: Error?) {
+	private func handleLocalFetch(url: URL?, error: Error?, originalData: Data) {
 		// in thread
 		if let url = url {
 			let localUrl = copyLocal(url)
@@ -230,7 +226,7 @@ extension ArchivedDropItemType {
 			}
 			let p = localUrl.lastPathComponent
 			setTitleInfo(p, p.contains(".") ? 1 : 0)
-			setBytes(object: localUrl as NSURL, original: nil, type: .NSURL)
+			setBytes(object: localUrl as NSURL, originalData: originalData)
 
 		} else if let error = error {
 			log("Error fetching local data from url: \(error.localizedDescription)")
@@ -241,7 +237,11 @@ extension ArchivedDropItemType {
 
 	func cancelIngest() {
 		loadingAborted = true
-		signalDone()
+		if let ingestProgress = ingestProgress {
+			ingestProgress.cancel()
+		} else {
+			signalDone()
+		}
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
@@ -359,6 +359,7 @@ extension ArchivedDropItemType {
 
 	private func signalDone() {
 		DispatchQueue.main.async {
+			self.ingestProgress = nil
 			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
 		}
 	}

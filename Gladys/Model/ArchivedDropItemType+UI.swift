@@ -5,44 +5,6 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	private var objCType: AnyClass? {
-		guard let classType = classType else { return nil }
-		switch classType {
-		case .NSData: return NSData.self
-		case .NSString: return NSString.self
-		case .NSAttributedString: return NSAttributedString.self
-		case .UIColor: return UIColor.self
-		case .UIImage: return UIImage.self
-		case .MKMapItem: return MKMapItem.self
-		case .NSURL: return NSURL.self
-		case .NSArray: return NSArray.self
-		case .NSDictionary: return NSDictionary.self
-		}
-	}
-
-	private func decodedObject(for classType: ClassType) -> NSSecureCoding? {
-		switch classType {
-		case .NSString:
-			return decode(NSString.self)
-		case .NSAttributedString:
-			return decode(NSAttributedString.self)
-		case .UIImage:
-			return decode(UIImage.self)
-		case .UIColor:
-			return decode(UIColor.self)
-		case .NSData:
-			return decode(NSData.self)
-		case .MKMapItem:
-			return decode(MKMapItem.self)
-		case .NSArray:
-			return decode(NSArray.self)
-		case .NSDictionary:
-			return decode(NSDictionary.self)
-		case .NSURL:
-			return encodedUrl
-		}
-	}
-
 	var dragItem: UIDragItem {
 
 		let p = NSItemProvider()
@@ -64,15 +26,11 @@ extension ArchivedDropItemType {
 
 	private func registerWrapped(with provider: NSItemProvider) {
 
-		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
-			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
-				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
-				if let decoded = decoded {
-					log("Responding with object type: \(type(of: decoded))")
-				} else {
-					log("Responding with nil object")
-				}
-				completion(decoded, nil)
+		if let classType = NSClassFromString(representedClass) as? NSItemProviderWriting.Type {
+			provider.registerObject(ofClass: classType, visibility: .all) { (completion) -> Progress? in
+				let decoded = self.decode()
+				log("Responding with object type: \(type(of: decoded))")
+				completion(decoded as? NSItemProviderWriting, nil)
 				return nil
 			}
 		}
@@ -102,15 +60,11 @@ extension ArchivedDropItemType {
 
 	private func register(with provider: NSItemProvider) {
 
-		if let classType = classType, let myClass = objCType as? NSItemProviderWriting.Type {
-			provider.registerObject(ofClass: myClass, visibility: .all) { (completion) -> Progress? in
-				let decoded = self.decodedObject(for: classType) as? NSItemProviderWriting
-				if let decoded = decoded {
-					log("Responding with object type: \(type(of: decoded))")
-				} else {
-					log("Responding with nil object")
-				}
-				completion(decoded, nil)
+		if let classType = NSClassFromString(representedClass) as? NSItemProviderWriting.Type {
+			provider.registerObject(ofClass: classType, visibility: .all) { (completion) -> Progress? in
+				let decoded = self.decode()
+				log("Responding with object type: \(type(of: decoded))")
+				completion(decoded as? NSItemProviderWriting, nil)
 				return nil
 			}
 		}
@@ -133,20 +87,11 @@ extension ArchivedDropItemType {
 
 			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
 
-				let deliveredClassType: ClassType
-				if let requestedClassType = requestedClassType {
-					deliveredClassType = ClassType(rawValue: NSStringFromClass(requestedClassType)) ?? .NSData
-				} else if let classType = self.classType {
-					deliveredClassType = classType
-				} else {
-					deliveredClassType = .NSData
-				}
+				log("Requested item type: \(requestedClassType)")
 
-				log("Requested item type: \(requestedClassType), I have \(self.classType?.rawValue ?? "<unknown>"), will deliver: \(deliveredClassType.rawValue)")
-
-				if let item = self.decodedObject(for: deliveredClassType) {
-					log("Responding with item \(item)")
-					completion(item, nil)
+				if let item = self.decode() {
+					log("Delivering item type \(type(of: item))")
+					completion(item as? NSSecureCoding, nil)
 				} else {
 					log("Could not decode local data, responding with NSData item")
 					completion(bytes as NSData, nil)
@@ -160,11 +105,9 @@ extension ArchivedDropItemType {
 	}
 
 	var backgroundInfoObject: (Any?, Int) {
-		guard let classType = classType else { return (nil, 0) }
-
-		switch classType {
-		case .MKMapItem: return (decode(MKMapItem.self), 30)
-		case .UIColor: return (decode(UIColor.self), 10)
+		switch representedClass {
+		case "MKMapItem": return (decode() as? MKMapItem, 30)
+		case "UIColor": return (decode() as? UIColor, 10)
 		default: return (nil, 0)
 		}
 	}
@@ -175,13 +118,13 @@ extension ArchivedDropItemType {
 			return (contact, 12)
 		}
 
-		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode(MKMapItem.self) {
+		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
 			return (item, 15)
 		}
 
 		if let url = encodedUrl {
 
-			if classType == .NSURL {
+			if representedClass == "NSURL" {
 				return (url, 10)
 			}
 

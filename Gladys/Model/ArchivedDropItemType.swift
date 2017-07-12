@@ -5,7 +5,7 @@ final class ArchivedDropItemType: Codable {
 
 	private enum CodingKeys : String, CodingKey {
 		case typeIdentifier
-		case classType
+		case representedClass
 		case classWasWrapped
 		case uuid
 		case parentUuid
@@ -25,7 +25,7 @@ final class ArchivedDropItemType: Codable {
 	func encode(to encoder: Encoder) throws {
 		var v = encoder.container(keyedBy: CodingKeys.self)
 		try v.encode(typeIdentifier, forKey: .typeIdentifier)
-		try v.encodeIfPresent(classType?.rawValue, forKey: .classType)
+		try v.encode(representedClass, forKey: .representedClass)
 		try v.encode(classWasWrapped, forKey: .classWasWrapped)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(parentUuid, forKey: .parentUuid)
@@ -49,9 +49,7 @@ final class ArchivedDropItemType: Codable {
 	init(from decoder: Decoder) throws {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
-		if let typeValue = try v.decodeIfPresent(String.self, forKey: .classType) {
-			classType = ClassType(rawValue: typeValue)
-		}
+		representedClass = try v.decode(String.self, forKey: .representedClass)
 		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
@@ -73,9 +71,9 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var encodedUrl: NSURL? {
-		if let u = decode(NSURL.self) {
+		if let u = decode() as? NSURL {
 			return u
-		} else if let array = decode(NSArray.self) {
+		} else if let array = decode() as? NSArray {
 			for item in array {
 				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
 					return url
@@ -117,7 +115,7 @@ final class ArchivedDropItemType: Codable {
 	let uuid: UUID
 	let parentUuid: UUID
 	let createdAt: Date
-	var classType: ClassType?
+	var representedClass: String
 	var classWasWrapped: Bool
 	var hasLocalFiles: Bool
 	var loadingError: Error?
@@ -133,24 +131,20 @@ final class ArchivedDropItemType: Codable {
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
-
-	enum ClassType: String {
-		case NSString, NSAttributedString, UIColor, UIImage, NSData, MKMapItem, NSURL, NSArray, NSDictionary
-	}
+	var ingestProgress: Progress?
 
 	var contentDescription: String? {
-		guard let classType = classType else { return nil }
-
-		switch classType {
-		case .NSData: return "Raw Data"
-		case .NSString: return "Text"
-		case .NSAttributedString: return "Rich Text"
-		case .UIColor: return "Color"
-		case .UIImage: return "Image"
-		case .MKMapItem: return "Map Location"
-		case .NSArray: return "List"
-		case .NSDictionary: return "Associative List"
-		case .NSURL: return hasLocalFiles ? "File(s)" : "Link"
+		switch representedClass {
+		case "NSData": return "Raw Data"
+		case "NSString": return "Text"
+		case "NSAttributedString": return "Rich Text"
+		case "UIColor": return "Color"
+		case "UIImage": return "Image"
+		case "MKMapItem": return "Map Location"
+		case "NSArray": return "List"
+		case "NSDictionary": return "Associative List"
+		case "NSURL": return hasLocalFiles ? "File(s)" : "Link"
+		default: return "Data Object (\(representedClass))"
 		}
 	}
 
@@ -173,7 +167,7 @@ final class ArchivedDropItemType: Codable {
 			return 0
 		}
 
-		if classType == .NSURL && hasLocalFiles, let localUrl = encodedUrl as URL? {
+		if representedClass == "NSURL" && hasLocalFiles, let localUrl = encodedUrl as URL? {
 			return sizeItem(path: localUrl)
 		}
 
@@ -184,17 +178,19 @@ final class ArchivedDropItemType: Codable {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
-	func decode<T>(_ type: T.Type) -> T? where T: NSSecureCoding {
+	func decode() -> Any? {
 		guard let bytes = bytes else { return nil }
 
-		if type == NSData.self {
-			return bytes as? T
+		if representedClass == "NSData" {
+			return bytes
 		}
 
 		if classWasWrapped {
-			return NSKeyedUnarchiver.unarchiveObject(with: bytes) as? T
+			return NSKeyedUnarchiver.unarchiveObject(with: bytes)
+		} else if let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
+			return propertyList
 		} else {
-			return (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) as? T
+			return bytes
 		}
 	}
 
@@ -248,6 +244,7 @@ final class ArchivedDropItemType: Codable {
 		hasLocalFiles = false
 		classWasWrapped = false
 		createdAt = Date()
+		representedClass = ""
 
 		startIngest(provider: provider)
 	}
