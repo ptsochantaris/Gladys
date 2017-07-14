@@ -22,9 +22,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	override func viewDidLoad() {
 
-		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
-			loadCount += inputItem.attachments?.count ?? 0
-		}
+		loadCount = extensionContext?.inputItems.count ?? 0
 
 		if loadCount == 0 {
 			statusLabel?.text = "There don't seem to be any items offered by this app."
@@ -41,14 +39,16 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			return
 		}
 
-		statusLabel?.text = "Adding \(loadCount) items..."
-
+		var itemCount = 0
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
-			for provider in inputItem.attachments as? [NSItemProvider] ?? [] {
-				let newItem = ArchivedDropItem(provider: provider, delegate: self)
+			if let providers = inputItem.attachments as? [NSItemProvider] {
+				itemCount += providers.count
+				let newItem = ArchivedDropItem(providers: providers, delegate: self)
 				model.drops.insert(newItem, at: 0)
 			}
 		}
+
+		statusLabel?.text = "Adding \(itemCount) items..."
     }
 
 	@IBAction func expandSelected(_ sender: UIButton) {

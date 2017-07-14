@@ -98,7 +98,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 			} else {
 
-				let item = ArchivedDropItem(provider: dragItem.itemProvider, delegate: self)
+				let item = ArchivedDropItem(providers: [dragItem.itemProvider], delegate: self)
 				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
 
 				collectionView.performBatchUpdates({

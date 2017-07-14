@@ -5,7 +5,7 @@ final class ArchivedDropItem: Codable {
 
 	let suggestedName: String?
 	let uuid: UUID
-	var typeItems: [ArchivedDropItemType]!
+	var typeItems: [ArchivedDropItemType]
 	let createdAt:  Date
 	var allLoadedWell: Bool
 	var isLoading: Bool
@@ -89,22 +89,24 @@ final class ArchivedDropItem: Codable {
 		weak var delegate: LoadCompletionDelegate?
 		private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
 
-		init(provider: NSItemProvider, delegate: LoadCompletionDelegate?) {
-
-			let ids = provider.registeredTypeIdentifiers.filter({ typeIdentifier in
-				!ArchivedDropItem.blockedSuffixes.contains(where: { blockedSuffix in typeIdentifier.hasSuffix(blockedSuffix )})
-			})
+		init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) {
 
 			uuid = UUID()
 			createdAt = Date()
-			suggestedName = provider.suggestedName
-			loadCount = ids.count
+			suggestedName = providers.first!.suggestedName
 			isLoading = true
 			allLoadedWell = true
+			typeItems = [ArchivedDropItemType]()
 			self.delegate = delegate
 
-			typeItems = ids.map {
-				ArchivedDropItemType(provider: provider, typeIdentifier: $0, parentUuid: uuid, delegate: self)
+			for provider in providers {
+				for typeIdentifier in provider.registeredTypeIdentifiers {
+					if !ArchivedDropItem.blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) } ) {
+						loadCount += 1
+						let i = ArchivedDropItemType(provider: provider, typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
+						typeItems.append(i)
+					}
+				}
 			}
 		}
 
