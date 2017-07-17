@@ -504,6 +504,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"What can I hold for you?",
 		"Gimme.",
 		"How can I help?",
+		"Ready!",
 		]
 
 	func loadingProgress(sender: AnyObject) {

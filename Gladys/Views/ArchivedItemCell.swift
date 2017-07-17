@@ -14,11 +14,11 @@ extension UIView {
 		view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
 	}
 
-	func center(on parentView: UIView) {
+	func center(on parentView: UIView, offset: CGFloat = 0) {
 		translatesAutoresizingMaskIntoConstraints = false
 		parentView.addSubview(self)
 		centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
-		centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
+		centerYAnchor.constraint(equalTo: parentView.centerYAnchor, constant: offset).isActive = true
 	}
 
 	static func animate(animations: @escaping ()->Void, completion: ((Bool)->Void)? = nil) {
