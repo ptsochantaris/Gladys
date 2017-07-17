@@ -248,6 +248,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
+		welcomeMessage()
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
@@ -291,6 +292,29 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		countLabel.title = "\(model.drops.count) Items"
 		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 		editButtonItem.isEnabled = model.drops.count > 0
+	}
+
+	private func welcomeMessage() {
+		if let e = emptyView {
+			let l = UILabel()
+			l.translatesAutoresizingMaskIntoConstraints = false
+			l.font = UIFont.preferredFont(forTextStyle: .caption2)
+			l.textColor = .darkGray
+			l.textAlignment = .center
+			l.text = "Ready! Drop me stuff."
+			l.numberOfLines = 0
+			l.lineBreakMode = .byWordWrapping
+			view.addSubview(l)
+			l.topAnchor.constraint(equalTo: e.bottomAnchor, constant: 8).isActive = true
+			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
+			l.widthAnchor.constraint(equalTo: e.widthAnchor).isActive = true
+
+			UIView.animate(withDuration: 4, delay: 4, options: .curveEaseInOut, animations: {
+				l.alpha = 0
+			}, completion: { finished in
+				l.removeFromSuperview()
+			})
+		}
 	}
 
 	private func updateEmptyView(animated: Bool) {
