@@ -144,7 +144,8 @@ final class MiniMapView: UIImageView {
 }
 
 protocol ArchivedItemCellDelegate: class {
-	func deleteRequested(for: ArchivedDropItem)
+	func deleteRequested(for items: [ArchivedDropItem])
+	func deleteStatusChanged(for item: ArchivedDropItem, status: Bool)
 }
 
 final class ArchivedItemCell: UICollectionViewCell {
@@ -162,21 +163,31 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var editHolder: UIView?
 
 	@objc private func deleteSelected() {
-		if let archivedDropItem = archivedDropItem {
-			delegate?.deleteRequested(for: archivedDropItem)
+		if let archivedDropItem = archivedDropItem, let d = deleteButton {
+			d.isSelected = !d.isSelected
+			delegate?.deleteStatusChanged(for: archivedDropItem, status: d.isSelected)
 		}
 	}
 	
 	@IBAction func cancelSelected(_ sender: UIButton) {
 		if let archivedDropItem = archivedDropItem {
 			archivedDropItem.cancelIngest()
-			delegate?.deleteRequested(for: archivedDropItem)
+			delegate?.deleteRequested(for: [archivedDropItem])
 		}
 	}
 
 	override func tintColorDidChange() {
 		deleteButton?.tintColor = tintColor
 		cancelButton?.tintColor = tintColor
+	}
+
+	var isSelectedForDelete: Bool {
+		set {
+			deleteButton?.isSelected = newValue
+		}
+		get {
+			return deleteButton?.isSelected ?? false
+		}
 	}
 
 	var isEditing: Bool = false {
@@ -186,7 +197,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				let button = UIButton(frame: .zero)
 				button.translatesAutoresizingMaskIntoConstraints = false
 				button.tintColor = self.tintColor
-				button.setImage(#imageLiteral(resourceName: "iconDelete"), for: .normal)
+				button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
+				button.setImage(#imageLiteral(resourceName: "checkmarkSelected"), for: .selected)
 				button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
 				button.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
 

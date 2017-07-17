@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -105,8 +105,10 @@
                         </constraints>
                     </view>
                     <toolbarItems>
-                        <barButtonItem title="Count" style="plain" id="TxA-gi-n3z">
-                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <barButtonItem enabled="NO" title="Delete" id="MyX-3U-Yhw">
+                            <connections>
+                                <action selector="deleteButtonSelected:" destination="BYZ-38-t0r" id="AZn-Ox-DR8"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="2Jn-s2-2WY"/>
                         <barButtonItem title="Size" style="plain" id="1qG-Qk-AnU">
@@ -117,7 +119,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="archivedItemCollectionView" destination="90w-Xn-bmO" id="f5y-Uh-ajj"/>
-                        <outlet property="countLabel" destination="TxA-gi-n3z" id="6JK-VO-0Ua"/>
+                        <outlet property="deleteButton" destination="MyX-3U-Yhw" id="eUh-ub-Ifp"/>
                         <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
                     </connections>
                 </viewController>

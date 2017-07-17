@@ -11,8 +11,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
-	@IBOutlet weak var countLabel: UIBarButtonItem!
 	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
+	@IBOutlet weak var deleteButton: UIBarButtonItem!
 
 	private let model = Model()
 
@@ -55,8 +55,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
 		cell.lowMemoryMode = lowMemoryMode
-		cell.archivedDropItem = model.filteredDrops[indexPath.item]
+		let item = model.filteredDrops[indexPath.item]
+		cell.archivedDropItem = item
 		cell.isEditing = isEditing
+		cell.isSelectedForDelete = deletionCandidates?.contains(where: { $0 == item.uuid }) ?? false
 		cell.delegate = self
 		return cell
 	}
@@ -248,7 +250,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
-		welcomeMessage()
+		blurb("Ready! Drop me stuff.")
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
@@ -289,19 +291,19 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var emptyView: UIImageView?
 	@objc private func didUpdateItems() {
-		countLabel.title = "\(model.drops.count) Items"
-		totalSizeLabel.title = "Total Size: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+		totalSizeLabel.title = "\(model.drops.count) Items: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 		editButtonItem.isEnabled = model.drops.count > 0
+		deleteButton.isEnabled = (deletionCandidates?.count ?? 0) > 0
 	}
 
-	private func welcomeMessage() {
+	private func blurb(_ message: String) {
 		if let e = emptyView {
 			let l = UILabel()
 			l.translatesAutoresizingMaskIntoConstraints = false
 			l.font = UIFont.preferredFont(forTextStyle: .caption2)
 			l.textColor = .darkGray
 			l.textAlignment = .center
-			l.text = "Ready! Drop me stuff."
+			l.text = message
 			l.numberOfLines = 0
 			l.lineBreakMode = .byWordWrapping
 			view.addSubview(l)
@@ -309,7 +311,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
 			l.widthAnchor.constraint(equalTo: e.widthAnchor).isActive = true
 
-			UIView.animate(withDuration: 4, delay: 4, options: .curveEaseInOut, animations: {
+			UIView.animate(withDuration: 1, delay: 4, options: .curveEaseInOut, animations: {
 				l.alpha = 0
 			}, completion: { finished in
 				l.removeFromSuperview()
@@ -350,6 +352,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		super.setEditing(editing, animated: animated)
 
 		navigationController?.setToolbarHidden(!editing, animated: animated)
+		if editing {
+			deletionCandidates = [UUID]()
+		} else {
+			deletionCandidates = nil
+			deleteButton.isEnabled = false
+		}
 
 		UIView.performWithoutAnimation {
 			didUpdateItems()
@@ -403,25 +411,54 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	/////////////////////////////////
 
-	@objc private func deleteDetected(_ notification: Notification) {
-		if let item = notification.object as? ArchivedDropItem {
-			deleteRequested(for: item)
+	private var deletionCandidates: [UUID]?
+	@IBAction func deleteButtonSelected(_ sender: UIBarButtonItem) {
+		guard let candidates = deletionCandidates else { return }
+		deletionCandidates?.removeAll()
+
+		let itemsToDelete = model.drops.filter { item -> Bool in
+			candidates.contains(where: { $0 == item.uuid })
+		}
+		if itemsToDelete.count > 0 {
+			deleteRequested(for: itemsToDelete)
 		}
 	}
 
-	func deleteRequested(for item: ArchivedDropItem) {
-		let uuid = item.uuid
-		if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
-			model.removeItemFromList(uuid: uuid)
-			archivedItemCollectionView.performBatchUpdates({
-				self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
-			})
+	func deleteStatusChanged(for item: ArchivedDropItem, status: Bool) {
+		if status {
+			if deletionCandidates?.index(where: { $0 == item.uuid }) == nil {
+				deletionCandidates?.append(item.uuid)
+			}
+		} else {
+			deletionCandidates = deletionCandidates?.filter { $0 != item.uuid }
 		}
-		item.delete()
-		if isEditing && model.filteredDrops.count == 0 {
+		didUpdateItems()
+	}
+
+	@objc private func deleteDetected(_ notification: Notification) {
+		if let item = notification.object as? ArchivedDropItem {
+			deleteRequested(for: [item])
+		}
+	}
+
+	func deleteRequested(for items: [ArchivedDropItem]) {
+		for item in items {
+			let uuid = item.uuid
+			if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
+				model.removeItemFromList(uuid: uuid)
+				archivedItemCollectionView.performBatchUpdates({
+					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
+				})
+			}
+			item.delete()
+		}
+		if model.filteredDrops.count == 0 {
 			updateEmptyView(animated: true)
-			view.layoutIfNeeded()
-			setEditing(false, animated: true)
+			if isEditing {
+				view.layoutIfNeeded()
+				setEditing(false, animated: true)
+				blurb("Tidy!")
+			}
 		}
 		model.needsSave = true
 	}
