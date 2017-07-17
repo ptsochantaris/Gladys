@@ -192,6 +192,17 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			return
 		}
 
+		if isEditing {
+			if deletionCandidates?.index(where: { $0 == item.uuid }) == nil {
+				deletionCandidates?.append(item.uuid)
+			} else {
+				deletionCandidates = deletionCandidates?.filter { $0 != item.uuid }
+			}
+			didUpdateItems()
+			collectionView.reloadItems(at: [indexPath])
+			return
+		}
+
 		let n = storyboard?.instantiateViewController(withIdentifier: "DetailController") as! UINavigationController
 		let d = n.topViewController as! DetailController
 		d.item = item
@@ -272,6 +283,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				cell.reDecorate()
 			}
 		}
+
+		if emptyView != nil {
+			blurb(randomGreetLine)
+		}
 	}
 
 	deinit {
@@ -293,7 +308,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@objc private func didUpdateItems() {
 		totalSizeLabel.title = "\(model.drops.count) Items: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 		editButtonItem.isEnabled = model.drops.count > 0
-		deleteButton.isEnabled = (deletionCandidates?.count ?? 0) > 0
+
+		let count = (deletionCandidates?.count ?? 0)
+		deleteButton.isEnabled = count > 0
+		if count > 1 {
+			deleteButton.title = "Delete \(count) Items"
+		} else {
+			deleteButton.title = "Delete"
+		}
 	}
 
 	private func blurb(_ message: String) {
@@ -311,7 +333,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
 			l.widthAnchor.constraint(equalTo: e.widthAnchor).isActive = true
 
-			UIView.animate(withDuration: 1, delay: 4, options: .curveEaseInOut, animations: {
+			UIView.animate(withDuration: 1, delay: 3, options: .curveEaseInOut, animations: {
 				l.alpha = 0
 			}, completion: { finished in
 				l.removeFromSuperview()
@@ -424,17 +446,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	func deleteStatusChanged(for item: ArchivedDropItem, status: Bool) {
-		if status {
-			if deletionCandidates?.index(where: { $0 == item.uuid }) == nil {
-				deletionCandidates?.append(item.uuid)
-			}
-		} else {
-			deletionCandidates = deletionCandidates?.filter { $0 != item.uuid }
-		}
-		didUpdateItems()
-	}
-
 	@objc private func deleteDetected(_ notification: Notification) {
 		if let item = notification.object as? ArchivedDropItem {
 			deleteRequested(for: [item])
@@ -457,11 +468,43 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if isEditing {
 				view.layoutIfNeeded()
 				setEditing(false, animated: true)
-				blurb("Tidy!")
+				blurb(randomCleanLine)
 			}
 		}
 		model.needsSave = true
 	}
+
+	private var randomCleanLine: String {
+		let count = UInt32(ViewController.cleanLines.count)
+		return ViewController.cleanLines[Int(arc4random_uniform(count))]
+	}
+	private static let cleanLines = [
+		"Tidy!",
+		"Woosh!",
+		"Spotless!",
+		"Clean desk!",
+		"Neeext!",
+		"Peekaboo!",
+		"Cool!",
+		"Feels all empty now!",
+		"So much space!",
+	]
+
+	private var randomGreetLine: String {
+		let count = UInt32(ViewController.greetLines.count)
+		return ViewController.greetLines[Int(arc4random_uniform(count))]
+	}
+	private static let greetLines = [
+		"Drop me more stuff!",
+		"What's next?",
+		"Hey there.",
+		"Hi boss!",
+		"Feed me!",
+		"What's up?",
+		"What can I hold for you?",
+		"Gimme.",
+		"How can I help?",
+		]
 
 	func loadingProgress(sender: AnyObject) {
 		if let i = model.filteredDrops.index(where: { $0 === sender }) {

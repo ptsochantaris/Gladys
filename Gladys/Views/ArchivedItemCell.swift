@@ -145,7 +145,6 @@ final class MiniMapView: UIImageView {
 
 protocol ArchivedItemCellDelegate: class {
 	func deleteRequested(for items: [ArchivedDropItem])
-	func deleteStatusChanged(for item: ArchivedDropItem, status: Bool)
 }
 
 final class ArchivedItemCell: UICollectionViewCell {
@@ -159,16 +158,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	weak var delegate: ArchivedItemCellDelegate?
 
-	private var deleteButton: UIButton?
+	private var selectionImage: UIImageView?
 	private var editHolder: UIView?
 
-	@objc private func deleteSelected() {
-		if let archivedDropItem = archivedDropItem, let d = deleteButton {
-			d.isSelected = !d.isSelected
-			delegate?.deleteStatusChanged(for: archivedDropItem, status: d.isSelected)
-		}
-	}
-	
 	@IBAction func cancelSelected(_ sender: UIButton) {
 		if let archivedDropItem = archivedDropItem {
 			archivedDropItem.cancelIngest()
@@ -177,16 +169,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	override func tintColorDidChange() {
-		deleteButton?.tintColor = tintColor
+		selectionImage?.tintColor = tintColor
 		cancelButton?.tintColor = tintColor
 	}
 
 	var isSelectedForDelete: Bool {
 		set {
-			deleteButton?.isSelected = newValue
+			selectionImage?.isHighlighted = newValue
 		}
 		get {
-			return deleteButton?.isSelected ?? false
+			return selectionImage?.isHighlighted ?? false
 		}
 	}
 
@@ -194,13 +186,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 		didSet {
 			if isEditing && editHolder == nil && cancelButton.isHidden {
 
-				let button = UIButton(frame: .zero)
-				button.translatesAutoresizingMaskIntoConstraints = false
-				button.tintColor = self.tintColor
-				button.setImage(#imageLiteral(resourceName: "checkmark"), for: .normal)
-				button.setImage(#imageLiteral(resourceName: "checkmarkSelected"), for: .selected)
-				button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-				button.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
+				let img = UIImageView(frame: .zero)
+				img.translatesAutoresizingMaskIntoConstraints = false
+				img.tintColor = self.tintColor
+				img.contentMode = .center
+				img.image = #imageLiteral(resourceName: "checkmark")
+				img.highlightedImage = #imageLiteral(resourceName: "checkmarkSelected")
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
@@ -214,18 +205,19 @@ final class ArchivedItemCell: UICollectionViewCell {
 				holder.widthAnchor.constraint(equalToConstant: 50).isActive = true
 				holder.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
-				holder.addSubview(button)
-				button.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
-				button.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
-				holder.cover(with: button)
+				holder.addSubview(img)
+				img.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
+				img.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
+				img.widthAnchor.constraint(equalToConstant: img.image!.size.width).isActive = true
+				img.heightAnchor.constraint(equalToConstant: img.image!.size.height).isActive = true
 
-				deleteButton = button
+				selectionImage = img
 				editHolder = holder
 
 			} else if !isEditing, let h = editHolder {
 				h.removeFromSuperview()
+				selectionImage = nil
 				editHolder = nil
-				deleteButton = nil
 			}
 		}
 	}
