@@ -47,6 +47,9 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+			_ = f(p)
+		}
 		dismiss(animated: true)
 	}
 

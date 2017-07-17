@@ -238,6 +238,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		CSSearchableIndex.default().indexDelegate = model
 
+		navigationController?.navigationBar.titleTextAttributes = [
+			NSAttributedStringKey.foregroundColor.rawValue: UIColor.lightGray
+		]
+		navigationController?.navigationBar.largeTitleTextAttributes = [
+			.foregroundColor: UIColor.lightGray
+		]
+
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.dimsBackgroundDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false

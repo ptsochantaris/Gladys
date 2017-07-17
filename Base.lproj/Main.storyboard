@@ -267,14 +267,14 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="NnH-CH-Cw9">
-                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="1GB-Fa-pGA">
-                            <connections>
-                                <action selector="doneSelected:" destination="Ftr-GB-y6U" id="Tfb-QU-WjI"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Open" id="qFs-2B-sKz">
+                        <barButtonItem key="leftBarButtonItem" title="Open" id="qFs-2B-sKz">
                             <connections>
                                 <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="1GB-Fa-pGA">
+                            <connections>
+                                <action selector="doneSelected:" destination="Ftr-GB-y6U" id="Tfb-QU-WjI"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
