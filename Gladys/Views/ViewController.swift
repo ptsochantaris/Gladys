@@ -493,6 +493,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"Neeext!",
 		"Peekaboo!",
 		"Cool!",
+		"Zap!",
 		"Feels all empty now!",
 		"So much space!",
 	]
