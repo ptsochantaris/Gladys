@@ -47,10 +47,14 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
+		prepareForDismiss()
+		dismiss(animated: true)
+	}
+
+	private func prepareForDismiss() {
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
 			_ = f(p)
 		}
-		dismiss(animated: true)
 	}
 
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
@@ -63,6 +67,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
+		prepareForDismiss()
 		dismiss(animated: true) {
 			NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
 		}
@@ -109,12 +114,14 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
 		if session.localDragSession != nil {
+			prepareForDismiss()
 			dismiss(animated: true, completion: nil)
 		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
 		if session.localDragSession == nil {
+			prepareForDismiss()
 			dismiss(animated: true, completion: nil)
 		}
 	}
