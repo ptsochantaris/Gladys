@@ -389,9 +389,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1619E8211EFF3745000087DD /* Build configuration list for PBXNativeTarget "GladysFiles" */;
 			buildPhases = (
+				16C00B1E1F20030C00A88BCA /* Set Build Number */,
 				1619E80E1EFF3745000087DD /* Sources */,
 				1619E80F1EFF3745000087DD /* Frameworks */,
 				1619E8101EFF3745000087DD /* Resources */,
+				16C00B221F20038500A88BCA /* Restore Build Number */,
 			);
 			buildRules = (
 			);
@@ -406,9 +408,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16287AF11EFB03FD007188AE /* Build configuration list for PBXNativeTarget "GladysIndex" */;
 			buildPhases = (
+				16C00B1D1F2002EA00A88BCA /* Set Build Number */,
 				16287AE31EFB03FD007188AE /* Sources */,
 				16287AE41EFB03FD007188AE /* Frameworks */,
 				16287AE51EFB03FD007188AE /* Resources */,
+				16C00B211F20037900A88BCA /* Restore Build Number */,
 			);
 			buildRules = (
 			);
@@ -423,9 +427,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 164136991F09195000B34574 /* Build configuration list for PBXNativeTarget "GladysAction" */;
 			buildPhases = (
+				16C00B1F1F20031400A88BCA /* Set Build Number */,
 				164136891F09195000B34574 /* Sources */,
 				1641368A1F09195000B34574 /* Frameworks */,
 				1641368B1F09195000B34574 /* Resources */,
+				16C00B231F20039400A88BCA /* Restore Build Number */,
 			);
 			buildRules = (
 			);
@@ -459,6 +465,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
 			buildPhases = (
+				16C00B1C1F2002AB00A88BCA /* Set Build Number */,
 				1678F9C91EF475FE005697CB /* Sources */,
 				1678F9CA1EF475FE005697CB /* Frameworks */,
 				1678F9CB1EF475FE005697CB /* Resources */,
@@ -466,6 +473,7 @@
 				167574071F12C22500385079 /* Embed Frameworks */,
 				1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */,
 				16B552741F12E33200641009 /* Carthage Copy Files */,
+				16C00B201F20036400A88BCA /* Restore Build Number */,
 			);
 			buildRules = (
 			);
@@ -606,6 +614,118 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		16C00B1C1F2002AB00A88BCA /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git rev-list HEAD | wc -l | tr -d ' ')\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B1D1F2002EA00A88BCA /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git rev-list HEAD | wc -l | tr -d ' ')\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B1E1F20030C00A88BCA /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git rev-list HEAD | wc -l | tr -d ' ')\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B1F1F20031400A88BCA /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git rev-list HEAD | wc -l | tr -d ' ')\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B201F20036400A88BCA /* Restore Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion 1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B211F20037900A88BCA /* Restore Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion 1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B221F20038500A88BCA /* Restore Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion 1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		16C00B231F20039400A88BCA /* Restore Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to \"DEVELOPMENT\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion 1\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

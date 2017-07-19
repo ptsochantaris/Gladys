@@ -22,7 +22,7 @@ extension UIView {
 	}
 
 	static func animate(animations: @escaping ()->Void, completion: ((Bool)->Void)? = nil) {
-		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: animations, completion: completion)
+		UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: animations, completion: completion)
 	}
 }
 
