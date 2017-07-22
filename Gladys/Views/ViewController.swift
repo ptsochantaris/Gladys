@@ -21,12 +21,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	///////////////////////
 
 	private var bgTask: UIBackgroundTaskIdentifier?
-	private func startBgTask() {
-		log("Starting background ingest task")
-		bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
+	private func startBgTaskIfNeeded() {
+		if bgTask == nil {
+			log("Starting background ingest task")
+			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
+		}
 	}
-	private func endBgTask() {
-		if let b = bgTask {
+	private func endBgTaskIfNeeded() {
+		if loadCount == 0, let b = bgTask {
 			log("Ending background ingest task")
 			UIApplication.shared.endBackgroundTask(b)
 			bgTask = nil
@@ -66,10 +68,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
 		let insertCount = countInserts(in: coordinator.session)
-		if !model.infiniteMode && insertCount > 0 {
+		if !infiniteMode && insertCount > 0 {
 
 			let newTotal = model.drops.count + insertCount
-			if newTotal > model.nonInfiniteItemLimit {
+			if newTotal > nonInfiniteItemLimit {
 				displayIAPRequest(newTotal: newTotal)
 				return
 			}
@@ -109,26 +111,19 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				})
 
 				loadCount += 1
+				startBgTaskIfNeeded()
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 			}
 		}
 
 		if needSave{
-			model.needsSave = true
+			model.save()
 		} else {
 			updateEmptyView(animated: true)
 		}
 	}
 
-	private var loadCount = 0 {
-		didSet {
-			if loadCount > 0 && bgTask == nil {
-				startBgTask()
-			} else if loadCount == 0 && bgTask != nil {
-				endBgTask()
-			}
-		}
-	}
+	private var loadCount = 0
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -187,6 +182,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+		if collectionView.hasActiveDrag { return }
+
 		let item = model.filteredDrops[indexPath.item]
 		if item.isLoading {
 			return
@@ -226,6 +224,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		super.viewDidLoad()
 
 		ViewController.shared = self
+
+		model.beginMonitoringChanges()
 
 		navigationItem.rightBarButtonItem = editButtonItem
 
@@ -478,7 +478,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				blurb(randomCleanLine)
 			}
 		}
-		model.needsSave = true
+		model.save()
 	}
 
 	private var randomCleanLine: String {
@@ -545,8 +545,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 			loadCount -= 1
 			if loadCount == 0 {
-				model.needsSave = true
+				model.save()
 			}
+			endBgTaskIfNeeded()
 		}
 	}
 
@@ -610,7 +611,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	private var infiniteModeItem: SKProduct?
 
 	private func fetchIap() {
-		if !model.infiniteMode {
+		if !infiniteMode {
 			let r = SKProductsRequest(productIdentifiers: ["INFINITE"])
 			r.delegate = self
 			r.start()
@@ -636,10 +637,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	func displayIAPRequest(newTotal: Int) {
 
-		guard model.infiniteMode == false else { return }
+		guard infiniteMode == false else { return }
 
 		guard let infiniteModeItem = infiniteModeItem else {
-			let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
+			let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
 			let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
 			a.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { action in
 				self.iapFetchCallbackCount = newTotal
@@ -656,7 +657,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		f.numberStyle = .currency
 		f.locale = infiniteModeItem.priceLocale
 		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
-		let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
 
 		let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
@@ -677,7 +678,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-		if !model.infiniteMode {
+		if !infiniteMode {
 			let a = UIAlertController(title: "Purchase could not be restored", message: "Are you sure you purchased this from the App Store account that you are currently using?", preferredStyle: .alert)
 			a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			present(a, animated: true)
@@ -700,7 +701,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				present(a, animated: true)
 				SKPaymentQueue.default().finishTransaction(t)
 			case .purchased, .restored:
-				model.infiniteMode = verifyIapReceipt()
+				infiniteMode = verifyIapReceipt()
 				SKPaymentQueue.default().finishTransaction(t)
 				displayIapSuccess()
 			case .purchasing, .deferred:

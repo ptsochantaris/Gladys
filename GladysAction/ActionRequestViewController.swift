@@ -30,12 +30,12 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		}
 
 		let newTotal = model.drops.count + loadCount
-		if !model.infiniteMode && newTotal > model.nonInfiniteItemLimit {
+		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			imageHeight.constant = 60
 			imageCenter.constant = -110
 			imageDistance.constant = 40
 			expandButton.isHidden = false
-			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(model.nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
+			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
 			return
 		}
 
@@ -86,7 +86,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		if loadCount == 0 {
 			statusLabel?.text = "Saving..."
 			cancelButton?.isEnabled = false
-			model.needsSave = true
+			model.save()
 			extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
 	}

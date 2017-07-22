@@ -63,6 +63,17 @@
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
+		16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
+		16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
+		16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+MainApp.swift */; };
+		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
+		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
+		16EDB37C1F236412001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
+		16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
+		16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
+		16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
+		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
+		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,7 +117,7 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		16287AF21EFB03FD007188AE /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
@@ -119,7 +130,7 @@
 		};
 		167574071F12C22500385079 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -190,6 +201,11 @@
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
+		16EDB3761F2361EB001CC65C /* Model+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MainApp.swift"; sourceTree = "<group>"; };
+		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
+		16EDB37D1F23650A001CC65C /* Model+Saving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Saving.swift"; sourceTree = "<group>"; };
+		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -239,6 +255,7 @@
 		16101E8F1EF5A23000CCBD3C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */,
 				169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */,
 				169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */,
@@ -246,6 +263,10 @@
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
 				16A223E41EF67FC7009EEEBC /* Model.swift */,
+				16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */,
+				16EDB3761F2361EB001CC65C /* Model+MainApp.swift */,
+				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
+				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
 				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
 				169763131F15669000537776 /* ArchivedDropItemType+UI.swift */,
 				169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */,
@@ -546,10 +567,10 @@
 			projectRoot = "";
 			targets = (
 				1678F9CC1EF475FE005697CB /* Gladys */,
-				16287AE61EFB03FD007188AE /* GladysIndex */,
-				1619E8111EFF3745000087DD /* GladysFiles */,
-				1641368C1F09195000B34574 /* GladysAction */,
 				167573FE1F12C22500385079 /* GladysFramework */,
+				1619E8111EFF3745000087DD /* GladysFiles */,
+				16287AE61EFB03FD007188AE /* GladysIndex */,
+				1641368C1F09195000B34574 /* GladysAction */,
 			);
 		};
 /* End PBXProject section */
@@ -740,6 +761,8 @@
 				1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */,
 				1619E8251EFF3B54000087DD /* Types.swift in Sources */,
 				1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */,
+				16EDB37C1F236412001CC65C /* Model+SimpleCoordinator.swift in Sources */,
+				16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1619E8191EFF3745000087DD /* FileProviderEnumerator.swift in Sources */,
 				1619E8221EFF3A36000087DD /* Model.swift in Sources */,
 				1697631A1F15680600537776 /* ArchivedDropItem+Tagging.swift in Sources */,
@@ -751,9 +774,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
+				16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */,
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
+				16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				16287AF71EFB05E9007188AE /* Types.swift in Sources */,
 				16287AF51EFB05E0007188AE /* ArchivedDropItem.swift in Sources */,
 				16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */,
@@ -766,9 +791,12 @@
 			files = (
 				1604A3351F091D79005A477E /* Types.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
+				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
+				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
+				16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1697631F1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */,
 				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);
@@ -787,6 +815,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
+				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
@@ -798,7 +827,10 @@
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
 				169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
+				16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
+				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
+				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1697631E1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 			);
