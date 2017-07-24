@@ -239,7 +239,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		CSSearchableIndex.default().indexDelegate = model
 
 		navigationController?.navigationBar.titleTextAttributes = [
-			NSAttributedStringKey.foregroundColor.rawValue: UIColor.lightGray
+			.foregroundColor: UIColor.lightGray
 		]
 		navigationController?.navigationBar.largeTitleTextAttributes = [
 			.foregroundColor: UIColor.lightGray
@@ -664,10 +664,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let payment = SKPayment(product: infiniteModeItem)
 			SKPaymentQueue.default().add(payment)
 		}))
-		a.addAction(UIAlertAction(title: "Restore previous purchase.", style: .default, handler: { action in
+		a.addAction(UIAlertAction(title: "Restore previous purchase", style: .default, handler: { action in
 			SKPaymentQueue.default().restoreCompletedTransactions()
 		}))
-		a.addAction(UIAlertAction(title: "It's OK, I'll delete older stuff", style: .cancel))
+		a.addAction(UIAlertAction(title: "Never mind, I'll delete old stuff", style: .cancel))
 		present(a, animated: true)
 	}
 
