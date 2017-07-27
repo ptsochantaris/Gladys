@@ -43,8 +43,6 @@
 				<integer>99999</integer>
 			</dict>
 		</dict>
-		<key>NSExtensionFileProviderDocumentGroup</key>
-		<string>group.build.bru.Gladys</string>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>
 		<key>NSExtensionPointIdentifier</key>
