@@ -521,6 +521,11 @@
 				TargetAttributes = {
 					1619E8111EFF3745000087DD = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					16287AE61EFB03FD007188AE = {
 						CreatedOnToolsVersion = 9.0;
@@ -567,10 +572,10 @@
 			projectRoot = "";
 			targets = (
 				1678F9CC1EF475FE005697CB /* Gladys */,
-				167573FE1F12C22500385079 /* GladysFramework */,
 				1619E8111EFF3745000087DD /* GladysFiles */,
 				16287AE61EFB03FD007188AE /* GladysIndex */,
 				1641368C1F09195000B34574 /* GladysAction */,
+				167573FE1F12C22500385079 /* GladysFramework */,
 			);
 		};
 /* End PBXProject section */

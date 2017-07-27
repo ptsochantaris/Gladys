@@ -59,7 +59,7 @@ extension Model {
 			log("Error in saving coordination: \(e.localizedDescription)")
 		}
 
-		NSFileProviderManager.default.signalEnumerator(for: NSFileProviderItemIdentifier.rootContainer) { error in
+		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
 			if let e = error {
 				log("Error signalling change to file provider: \(e.localizedDescription)")
 			}

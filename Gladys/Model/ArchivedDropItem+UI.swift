@@ -18,7 +18,8 @@ extension ArchivedDropItem {
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
 		}
-		NSFileProviderManager.default.signalEnumerator(for: NSFileProviderItemIdentifier(uuid.uuidString)) { error in
+		let fileProviderId = NSFileProviderItemIdentifier(uuid.uuidString)
+		NSFileProviderManager.default.signalEnumerator(for: fileProviderId) { error in
 			if let e = error {
 				log("Error signalling deletion of item: \(e.localizedDescription)")
 			}
