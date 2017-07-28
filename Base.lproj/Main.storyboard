@@ -154,9 +154,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHF-2i-yuv">
                                 <rect key="frame" x="36" y="151.5" width="248" height="200"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjC-x2-xmz">
+                                        <rect key="frame" x="8" y="8" width="232" height="184"/>
+                                        <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfE-PE-TSW">
-                                        <rect key="frame" x="20" y="0.0" width="208" height="200"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <rect key="frame" x="20" y="20" width="208" height="160"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -167,12 +171,18 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="0jH-fe-ymm"/>
-                                    <constraint firstItem="xfE-PE-TSW" firstAttribute="leading" secondItem="eHF-2i-yuv" secondAttribute="leading" constant="20" id="2Lr-ZB-jQ1"/>
-                                    <constraint firstItem="xfE-PE-TSW" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="top" id="8MO-zK-oyf"/>
+                                    <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerY" secondItem="eHF-2i-yuv" secondAttribute="centerY" id="85L-pb-dtO"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="Dok-6f-GP1"/>
-                                    <constraint firstAttribute="trailing" secondItem="xfE-PE-TSW" secondAttribute="trailing" constant="20" id="FLu-ul-tlU"/>
-                                    <constraint firstAttribute="bottom" secondItem="xfE-PE-TSW" secondAttribute="bottom" id="S64-si-a9k"/>
+                                    <constraint firstAttribute="bottom" secondItem="YjC-x2-xmz" secondAttribute="bottom" constant="8" id="Ltj-ce-IZr"/>
+                                    <constraint firstItem="YjC-x2-xmz" firstAttribute="leading" secondItem="eHF-2i-yuv" secondAttribute="leading" constant="8" id="YO9-A2-cSz"/>
+                                    <constraint firstAttribute="bottom" secondItem="xfE-PE-TSW" secondAttribute="bottom" constant="20" id="cGG-ih-5aX"/>
+                                    <constraint firstItem="xfE-PE-TSW" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="top" constant="20" id="fM6-lH-0p0"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerY" secondItem="eHF-2i-yuv" secondAttribute="centerY" id="jLA-zY-I5U"/>
+                                    <constraint firstAttribute="trailing" secondItem="xfE-PE-TSW" secondAttribute="trailing" constant="20" id="lRZ-gk-10B"/>
+                                    <constraint firstItem="YjC-x2-xmz" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="top" constant="8" id="orR-U5-zzO"/>
+                                    <constraint firstAttribute="trailing" secondItem="YjC-x2-xmz" secondAttribute="trailing" constant="8" id="tiu-rh-Hdr"/>
+                                    <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="vww-sm-pP8"/>
+                                    <constraint firstItem="xfE-PE-TSW" firstAttribute="leading" secondItem="eHF-2i-yuv" secondAttribute="leading" constant="20" id="zzg-uJ-F4d"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export all curent items as an archive." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
@@ -213,6 +223,7 @@
                     <connections>
                         <outlet property="container" destination="eHF-2i-yuv" id="u8J-Qp-uha"/>
                         <outlet property="infoLabel" destination="xfE-PE-TSW" id="MFR-Rj-866"/>
+                        <outlet property="innerFrame" destination="YjC-x2-xmz" id="fhc-2f-KWD"/>
                         <outlet property="spinner" destination="Olv-Pc-Qy9" id="6r7-rx-Ua5"/>
                     </connections>
                 </viewController>

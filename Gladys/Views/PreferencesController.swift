@@ -58,6 +58,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	@IBOutlet weak var infoLabel: UILabel!
 	@IBOutlet weak var container: UIView!
+	@IBOutlet weak var innerFrame: UIView!
 	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
@@ -91,6 +92,9 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		container.layer.cornerRadius = 10
+		innerFrame.layer.cornerRadius = 5
 
 		let dragInteraction = UIDragInteraction(delegate: self)
 		container.addInteraction(dragInteraction)
