@@ -1,4 +1,5 @@
 import UIKit
+import StoreKit
 
 final class PreferencesController : UIViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
 
@@ -98,6 +99,21 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		externalDataUpdate()
+
+		if !infiniteMode {
+			let spacer1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+			let spacer2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+			let restore = UIBarButtonItem(title: "Restore Purchases", style: .plain, target: self, action: #selector(restorePurchases))
+			toolbarItems = [spacer1, restore, spacer2]
+			navigationController?.toolbar.tintColor = view.tintColor
+			navigationController?.isToolbarHidden = false
+		}
+	}
+
+	@objc private func restorePurchases() {
+		prepareForDismiss()
+		dismiss(animated: true)
+		SKPaymentQueue.default().restoreCompletedTransactions()
 	}
 
 	@objc private func externalDataUpdate() {
