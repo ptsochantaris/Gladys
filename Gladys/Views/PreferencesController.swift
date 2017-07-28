@@ -59,6 +59,24 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	@IBOutlet weak var container: UIView!
 	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
+	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
+		let a = UIAlertController(title: "Are you sure?", message: "This will remove all current items from your collection. This cannot be undone, are you sure?", preferredStyle: .alert)
+		a.addAction(UIAlertAction(title: "Delete All", style: .destructive, handler: { [weak self] action in
+			self?.deleteAllItems()
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		present(a, animated: true)
+	}
+
+	private func deleteAllItems() {
+		for item in model.drops {
+			item.delete()
+		}
+		model.drops.removeAll()
+		model.save()
+		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+	}
+
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
 		prepareForDismiss()
 		dismiss(animated: true)

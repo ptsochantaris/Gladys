@@ -142,11 +142,11 @@
                         <viewControllerLayoutGuide type="bottom" id="dbU-1S-2dG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag in an existing Gladys data archive info this area to import items from it." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
-                                <rect key="frame" x="36" y="371.5" width="248" height="30.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag in an existing Gladys archive into this area to merge its contents into the current items." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
+                                <rect key="frame" x="36" y="371.5" width="248" height="46.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -175,7 +175,7 @@
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerY" secondItem="eHF-2i-yuv" secondAttribute="centerY" id="jLA-zY-I5U"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export your whole archive as a data file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export all curent items as an archive." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
                                 <rect key="frame" x="36" y="101" width="248" height="30.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -196,13 +196,20 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="QWV-cP-YSZ">
+                        <barButtonItem key="leftBarButtonItem" title="Delete All" id="ipf-aG-KNc">
+                            <connections>
+                                <action selector="deleteAllItemsSelected:" destination="HJT-hG-46H" id="B6p-iF-cU4"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="aj9-up-Brs">
                             <connections>
                                 <action selector="doneSelected:" destination="HJT-hG-46H" id="vyJ-2F-NZq"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <value key="contentSizeForViewInPopover" type="size" width="320" height="390"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="480"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="480"/>
                     <connections>
                         <outlet property="container" destination="eHF-2i-yuv" id="u8J-Qp-uha"/>
                         <outlet property="infoLabel" destination="xfE-PE-TSW" id="MFR-Rj-866"/>
