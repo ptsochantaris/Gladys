@@ -23,6 +23,27 @@ extension Model {
 		}
 	}
 
+	func startupComplete() {
+
+		// cleanup, in case of previous crashes, cancelled transfers, etc
+
+		let fm = FileManager.default
+		let items = try! fm.contentsOfDirectory(at: Model.appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants)
+		let uuids = items.flatMap { UUID(uuidString: $0.lastPathComponent) }
+		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
+			for d in drops {
+				if d.uuid == uuid {
+					return false
+				}
+			}
+			return true
+		}
+		for uuid in nonExistingUUIDs {
+			let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
+			try! fm.removeItem(at: url)
+		}
+	}
+
 	func saveDone() {
 		Model.saveOverlap -= 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
@@ -143,5 +164,44 @@ extension Model {
 		func presentedItemDidChange() {
 			model?.reloadDataIfNeeded()
 		}
+	}
+
+	func importData(from url: URL) -> Bool {
+		NSLog("URL for importing: \(url.path)")
+
+		guard
+			let data = try? Data(contentsOf: url.appendingPathComponent("items.json"), options: [.alwaysMapped]),
+			let itemsToImport = try? JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+		else {
+			return false
+		}
+
+		let fm = FileManager.default
+		var itemsImported = false
+
+		for item in itemsToImport {
+			let uuid = item.uuid.uuidString
+
+			if drops.contains(where: { $0.uuid.uuidString == uuid }) {
+				continue
+			}
+
+			let remotePath = url.appendingPathComponent(uuid)
+			let localPath = Model.appStorageUrl.appendingPathComponent(uuid)
+			try! fm.moveItem(at: remotePath, to: localPath)
+			drops.append(item)
+
+			itemsImported = true
+		}
+
+		if itemsImported {
+			DispatchQueue.main.async {
+				self.save()
+				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+			}
+		}
+
+		try! fm.removeItem(at: url)
+		return true
 	}
 }

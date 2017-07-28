@@ -4,6 +4,17 @@ import CoreSpotlight
 import StoreKit
 import GladysFramework
 
+func genericAlert(title: String?, message: String?, on viewController: UIViewController) {
+	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
+	a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+
+	var finalVC: UIViewController! = viewController
+	while finalVC.presentedViewController != nil {
+		finalVC = finalVC.presentedViewController
+	}
+	finalVC.present(a, animated: true)
+}
+
 final class ViewController: UIViewController, UICollectionViewDelegate,
 	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
@@ -212,6 +223,26 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			p.sourceRect = cell.bounds.insetBy(dx: 5, dy: 0)
 			p.delegate = self
 			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
+			if traitCollection.horizontalSizeClass == .regular {
+				p.backgroundColor = c
+			} else {
+				n.view.backgroundColor = c
+			}
+		}
+	}
+
+	@IBAction func settingsSelected(_ sender: UIBarButtonItem) {
+		let n = storyboard?.instantiateViewController(withIdentifier: "PreferencesController") as! UINavigationController
+		let d = n.topViewController as! PreferencesController
+		d.model = model
+		n.modalPresentationStyle = .popover
+		navigationController?.visibleViewController?.present(n, animated: true)
+		if let p = n.popoverPresentationController {
+			p.permittedArrowDirections = [.up]
+			p.sourceRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 60))
+			p.sourceView = navigationController!.view
+			p.delegate = self
+			let c = UIColor(white: 249/255, alpha: 1)
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
 			} else {
@@ -530,9 +561,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if !success {
 				let (errorPrefix, error) = item.loadingError
 				if errorPrefix != nil || error != nil {
-					let a = UIAlertController(title: "Some data from \(item.oneTitle) could not be imported", message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")", preferredStyle: .alert)
-					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-					(presentedViewController?.presentedViewController ?? presentedViewController ?? self).present(a, animated: true)
+					genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
+						message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")",
+						on: self)
 				}
 			}
 
@@ -672,23 +703,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	private func displayIapSuccess() {
-		let a = UIAlertController(title: "You can now add unlimited items!", message: "Thank you for supporting Gladys!", preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-		present(a, animated: true)
+		genericAlert(title: "You can now add unlimited items!",
+		             message: "Thank you for supporting Gladys!",
+		             on: self)
 	}
 
 	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
 		if !infiniteMode {
-			let a = UIAlertController(title: "Purchase could not be restored", message: "Are you sure you purchased this from the App Store account that you are currently using?", preferredStyle: .alert)
-			a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-			present(a, animated: true)
+			genericAlert(title: "Purchase could not be restored",
+			             message: "Are you sure you purchased this from the App Store account that you are currently using?",
+			             on: self)
 		}
 	}
 
 	func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-		let a = UIAlertController(title: "There was an error restoring your purchase", message: error.localizedDescription, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-		present(a, animated: true)
+		genericAlert(title: "There was an error restoring your purchase",
+		             message: error.localizedDescription,
+		             on: self)
 	}
 
 	func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
@@ -696,9 +727,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			switch t.transactionState {
 			case .failed:
 				SKPaymentQueue.default().finishTransaction(t)
-				let a = UIAlertController(title: "There was an error completing this purchase", message: t.error?.localizedDescription, preferredStyle: .alert)
-				a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-				present(a, animated: true)
+				genericAlert(title: "There was an error completing this purchase",
+				             message: t.error?.localizedDescription,
+				             on: self)
 				SKPaymentQueue.default().finishTransaction(t)
 			case .purchased, .restored:
 				infiniteMode = verifyIapReceipt()

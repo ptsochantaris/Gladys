@@ -51,29 +51,19 @@ let dateFormatter: DateFormatter = {
 
 extension UIImage {
 
-	func writeBitmap(to path: String) {
-		let imageRef = cgImage!
-		let W = imageRef.width
-		let H =	imageRef.height
-		let byteCount = W * 4 * H
-		let c = CGContext(data: nil,
-		                  width: W,
-		                  height: H,
-		                  bitsPerComponent: 8,
-		                  bytesPerRow: W * 4,
-		                  space: CGColorSpaceCreateDeviceRGB(),
-		                  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
-		c.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
-
-		let F = open(path.cString(using: .utf8)!, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)
-		write(F, c.data!, byteCount)
-		close(F)
+	func writeBitmap(to url: URL) {
+		try? UIImagePNGRepresentation(self)?.write(to: url, options: [.atomic])
 	}
 
-	static func fromBitmap(at path: String, width: CGFloat, height: CGFloat, scale: CGFloat) -> UIImage {
+	static func fromBitmap(at url: URL, scale: CGFloat) -> UIImage? {
 
-		let W = Int(width * scale)
-		let H = Int(height * scale)
+		guard
+			let provider = CGDataProvider(url: url as CFURL),
+			let cgImage = CGImage(pngDataProviderSource: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
+			else { return nil }
+
+		let W = Int(cgImage.width)
+		let H = Int(cgImage.height)
 
 		let c = CGContext(data: nil,
 						  width: W,
@@ -83,11 +73,7 @@ extension UIImage {
 						  space: CGColorSpaceCreateDeviceRGB(),
 						  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
 
-		let byteCount = Int(W * H * 4)
-
-		let F = open(path.cString(using: .utf8)!, O_RDONLY)
-		read(F, c.data!, byteCount)
-		close(F)
+		c.draw(cgImage, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
 
 		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
 	}

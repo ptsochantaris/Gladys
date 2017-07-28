@@ -109,9 +109,9 @@ extension ArchivedDropItem {
 					} else {
 						message = "iOS does not recognise the type of this link"
 					}
-					let a = UIAlertController(title: "Can't Open", message: message, preferredStyle: .alert)
-					a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-					viewController.present(a, animated: true)
+					genericAlert(title: "Can't Open",
+					             message: message,
+					             on: viewController)
 				}
 			}
 		}

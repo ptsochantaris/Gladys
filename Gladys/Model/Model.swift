@@ -17,6 +17,7 @@ final class Model: NSObject {
 	override init() {
 		drops = Model.loadData(&dataFileLastModified) ?? [ArchivedDropItem]()
 		super.init()
+		startupComplete()
 	}
 
 	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {

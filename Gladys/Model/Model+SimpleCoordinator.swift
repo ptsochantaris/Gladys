@@ -10,4 +10,5 @@ extension Model {
 	func prepareToSave() {}
 	func saveDone() {}
 	func saveComplete() {}
+	func startupComplete() {}
 }

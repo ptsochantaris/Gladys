@@ -198,18 +198,13 @@ final class ArchivedDropItemType: Codable {
 		set {
 			let ipath = imagePath
 			if let n = newValue {
-				n.writeBitmap(to: ipath.path)
+				n.writeBitmap(to: ipath)
 			} else if FileManager.default.fileExists(atPath: ipath.path) {
 				try? FileManager.default.removeItem(at: ipath)
 			}
 		}
 		get {
-			let ipath = imagePath.path
-			if FileManager.default.fileExists(atPath: ipath) {
-				return UIImage.fromBitmap(at: ipath, width: displayIconWidth, height: displayIconHeight, scale: displayIconScale)
-			} else {
-				return nil
-			}
+			return UIImage.fromBitmap(at: imagePath, scale: displayIconScale)
 		}
 	}
 

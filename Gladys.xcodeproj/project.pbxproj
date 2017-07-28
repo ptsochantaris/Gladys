@@ -56,6 +56,7 @@
 		169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B552781F12E3F700641009 /* Fuzi.framework.dSYM in Carthage Copy Files */ = {isa = PBXBuildFile; fileRef = 16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */; };
 		16B5527E1F12E58300641009 /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16F21C171F12D1B40033FE8B /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -197,6 +198,9 @@
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
+		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
+		16AFEF9F1F2B2427008C2E20 /* gladysIcon320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gladysIcon320.png; sourceTree = "<group>"; };
+		16AFEFA01F2B2427008C2E20 /* gladysIcon64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gladysIcon64.png; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -363,6 +367,7 @@
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
 				16062E081EFE647800AB5353 /* DetailController.swift */,
 				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
+				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -373,6 +378,8 @@
 				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
 				1678F9DC1EF475FF005697CB /* Info.plist */,
 				1678F9D71EF475FF005697CB /* Assets.xcassets */,
+				16AFEFA01F2B2427008C2E20 /* gladysIcon64.png */,
+				16AFEF9F1F2B2427008C2E20 /* gladysIcon320.png */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
 			);
@@ -839,6 +846,7 @@
 				16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
+				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1697631E1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,

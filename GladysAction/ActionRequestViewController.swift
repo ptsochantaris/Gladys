@@ -48,7 +48,11 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			}
 		}
 
-		statusLabel?.text = "Adding \(itemCount) items..."
+		if itemCount > 1 {
+			statusLabel?.text = "Adding \(itemCount) items..."
+		} else {
+			statusLabel?.text = "Adding item..."
+		}
     }
 
 	@IBAction func expandSelected(_ sender: UIButton) {
