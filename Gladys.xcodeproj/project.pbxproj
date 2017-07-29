@@ -51,8 +51,6 @@
 		169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
 		169763181F1566DE00537776 /* ArchivedDropItemType+Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */; };
 		1697631A1F15680600537776 /* ArchivedDropItem+Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */; };
-		1697631E1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */; };
-		1697631F1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */; };
 		169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */; };
 		169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
@@ -77,6 +75,8 @@
 		16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
+		16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
+		16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,7 +193,6 @@
 		169763131F15669000537776 /* ArchivedDropItemType+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UI.swift"; sourceTree = "<group>"; };
 		169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Tagging.swift"; sourceTree = "<group>"; };
 		169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Tagging.swift"; sourceTree = "<group>"; };
-		1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Loading.swift"; sourceTree = "<group>"; };
 		169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+UI.swift"; sourceTree = "<group>"; };
 		169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Indexing.swift"; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
@@ -213,6 +212,7 @@
 		16EDB37D1F23650A001CC65C /* Model+Saving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Saving.swift"; sourceTree = "<group>"; };
 		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
+		16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Ingest.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,10 +266,10 @@
 				169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */,
 				169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */,
 				169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */,
+				16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */,
 				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
 				169763131F15669000537776 /* ArchivedDropItemType+UI.swift */,
 				169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */,
-				1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */,
 				169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
@@ -815,9 +815,9 @@
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
+				16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */,
-				1697631F1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */,
 				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -850,9 +850,9 @@
 				16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
+				16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
-				1697631E1F156C5800537776 /* ArchivedDropItemType+Loading.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

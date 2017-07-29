@@ -13,5 +13,8 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	}
 
 	func loadingProgress(sender: AnyObject) { }
-}
 
+	func cancelIngest() {
+		typeItems.forEach { $0.cancelIngest() }
+	}
+}

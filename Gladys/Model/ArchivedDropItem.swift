@@ -116,10 +116,6 @@ final class ArchivedDropItem: Codable {
 			}
 		}
 
-		func cancelIngest() {
-			typeItems.forEach { $0.cancelIngest() }
-		}
-
 	#endif
 
 
