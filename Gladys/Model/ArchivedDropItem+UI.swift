@@ -19,11 +19,7 @@ extension ArchivedDropItem {
 			try! f.removeItem(at: folderUrl)
 		}
 		let fileProviderId = NSFileProviderItemIdentifier(uuid.uuidString)
-		NSFileProviderManager.default.signalEnumerator(for: fileProviderId) { error in
-			if let e = error {
-				log("Error signalling deletion of item: \(e.localizedDescription)")
-			}
-		}
+		Model.signalFileExtension(for: fileProviderId)
 	}
 
 	var backgroundInfoObject: Any? {

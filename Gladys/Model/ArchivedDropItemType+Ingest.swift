@@ -6,18 +6,6 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	private func setBytes(object: NSSecureCoding, originalData: Data?) {
-		if let originalData = originalData {
-			bytes = originalData
-		} else if let i = object as? NSURL {
-			let o = [i.absoluteString] // Safari-style
-			bytes = try? PropertyListSerialization.data(fromPropertyList: o, format: .binary, options: 0)
-		} else {
-			bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
-		}
-		representedClass = NSStringFromClass(type(of: object))
-	}
-
 	func startIngest(provider: NSItemProvider) {
 
 		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in

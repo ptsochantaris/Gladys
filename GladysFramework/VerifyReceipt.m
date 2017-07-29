@@ -114,6 +114,11 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 	return [productIdentifier isEqualToString:@"INFINITE"];
 }
 
+#ifdef DEBUG
+BOOL verifyIapReceipt() {
+	return YES;
+}
+#else
 BOOL verifyIapReceipt() {
 
 	NSURL *dataUrl = [[NSBundle mainBundle] appStoreReceiptURL];
@@ -332,3 +337,5 @@ BOOL verifyIapReceipt() {
 
 	return YES;
 }
+#endif
+

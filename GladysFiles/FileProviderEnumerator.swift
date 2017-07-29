@@ -14,12 +14,12 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	init(relatedItem: FileProviderItem?, model: Model) { // nil is root
 		self.relatedItem = relatedItem
 		self.model = model
-		uuid = relatedItem?.item?.uuid.uuidString ?? relatedItem?.item?.uuid.uuidString ?? "root"
+		uuid = relatedItem?.dropItem?.uuid.uuidString ?? relatedItem?.dropItem?.uuid.uuidString ?? "root"
 
 		super.init()
 		if relatedItem == nil {
 			log("Enumerator created for root")
-		} else if relatedItem?.item == nil {
+		} else if relatedItem?.dropItem == nil {
 			log("Enumerator for \(uuid) created for type directory")
 		} else {
 			log("Enumerator for \(uuid) created for entity directory")
@@ -33,7 +33,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 		if relatedItem?.typeItem != nil {
 			log("Listing file")
-		} else if relatedItem?.item != nil {
+		} else if relatedItem?.dropItem != nil {
 			log("Listing entity directory")
 		} else {
 			log("Listing root")
@@ -44,7 +44,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		var items: [NSFileProviderItemProtocol]
 		if let fileItem = relatedItem?.typeItem {
 			items = [FileProviderItem(fileItem)]
-		} else if let dirItem = relatedItem?.item {
+		} else if let dirItem = relatedItem?.dropItem {
 			items = getItems(for: dirItem)
 		} else { // root or all dirs (same thing for us)
 			items = rootItems
@@ -81,7 +81,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		if relatedItem?.typeItem != nil {
 			log("Changes requested for enumerator of end-file, we never have any")
 
-		} else if relatedItem?.item != nil {
+		} else if relatedItem?.dropItem != nil {
 			log("Changes requested for enumerator of directory")
 
 			model.reloadDataIfNeeded()
@@ -90,7 +90,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 			if !newItemIds.contains(myId) { // I'm gone
 				var ids = [myId]
-				if let childrenIds = relatedItem?.item?.typeItems.map({ NSFileProviderItemIdentifier($0.uuid.uuidString) }) {
+				if let childrenIds = relatedItem?.dropItem?.typeItems.map({ NSFileProviderItemIdentifier($0.uuid.uuidString) }) {
 					ids.append(contentsOf: childrenIds)
 					observer.didDeleteItems(withIdentifiers: ids)
 					incrementAnchor()

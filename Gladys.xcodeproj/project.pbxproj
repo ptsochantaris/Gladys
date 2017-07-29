@@ -32,6 +32,8 @@
 		16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16287AF71EFB05E9007188AE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
+		163249A61F2C8DC500C58B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		163249A81F2C8DCC00C58B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		163845FC1EF8629700CB8D97 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -264,6 +266,11 @@
 				169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */,
 				169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */,
 				169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */,
+				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
+				169763131F15669000537776 /* ArchivedDropItemType+UI.swift */,
+				169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */,
+				1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */,
+				169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
 				16A223E41EF67FC7009EEEBC /* Model.swift */,
@@ -271,11 +278,6 @@
 				16EDB3761F2361EB001CC65C /* Model+MainApp.swift */,
 				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
 				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
-				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
-				169763131F15669000537776 /* ArchivedDropItemType+UI.swift */,
-				169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */,
-				169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */,
-				1697631D1F156C5800537776 /* ArchivedDropItemType+Loading.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -596,6 +598,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				163249A61F2C8DC500C58B27 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,6 +606,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				163249A81F2C8DCC00C58B27 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

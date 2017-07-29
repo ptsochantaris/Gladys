@@ -188,8 +188,13 @@ extension Model {
 
 			let remotePath = url.appendingPathComponent(uuid)
 			let localPath = Model.appStorageUrl.appendingPathComponent(uuid)
+
+			if fm.fileExists(atPath: localPath.path) {
+				try! fm.removeItem(at: localPath)
+			}
 			try! fm.moveItem(at: remotePath, to: localPath)
 			drops.append(item)
+			item.patchLocalUrls()
 
 			itemsImported = true
 		}

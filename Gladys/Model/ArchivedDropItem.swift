@@ -83,6 +83,12 @@ final class ArchivedDropItem: Codable {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
+	func patchLocalUrls() {
+		for item in typeItems {
+			item.patchLocalUrl()
+		}
+	}
+
 	#if MAINAPP || ACTIONEXTENSION
 
 		var loadCount = 0

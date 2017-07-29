@@ -70,6 +70,32 @@ final class ArchivedDropItemType: Codable {
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 	}
 
+	func patchLocalUrl() {
+		if hasLocalFiles, let encodedURL = encodedUrl, encodedURL.isFileURL, let currentPath = encodedURL.path {
+
+			let myPath = "\(parentUuid)/\(uuid)/"
+			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
+				let keep = currentPath.substring(from: indexUpToMyPath)
+				let correctUrl = Model.appStorageUrl.appendingPathComponent(keep) as NSURL
+				if encodedURL != correctUrl {
+					setBytes(object: correctUrl, originalData: nil)
+				}
+			}
+		}
+	}
+
+	func setBytes(object: NSSecureCoding, originalData: Data?) {
+		if let originalData = originalData {
+			bytes = originalData
+		} else if let i = object as? NSURL {
+			let o = [i.absoluteString] // Safari-style
+			bytes = try? PropertyListSerialization.data(fromPropertyList: o, format: .binary, options: 0)
+		} else {
+			bytes = try? PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
+		}
+		representedClass = NSStringFromClass(type(of: object))
+	}
+
 	var encodedUrl: NSURL? {
 		if let u = decode() as? NSURL {
 			return u
@@ -166,7 +192,7 @@ final class ArchivedDropItemType: Codable {
 			return 0
 		}
 
-		if representedClass == "NSURL" && hasLocalFiles, let localUrl = encodedUrl as URL? {
+		if hasLocalFiles, let localUrl = encodedUrl as URL? {
 			return sizeItem(path: localUrl)
 		}
 

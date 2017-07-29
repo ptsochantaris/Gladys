@@ -33,15 +33,13 @@ final class FileProviderExtension: NSFileProviderExtension {
             return nil
         }
 
-		var root = Model.appStorageUrl
-		if let directoryItem = fpi.item {
-			root.appendPathComponent(directoryItem.uuid.uuidString, isDirectory: true)
+		if let directoryItem = fpi.dropItem {
+			return directoryItem.folderUrl
 		} else if let fileItem = fpi.typeItem {
-			root.appendPathComponent(fileItem.parentUuid.uuidString, isDirectory: true)
-			root.appendPathComponent(fileItem.uuid.uuidString, isDirectory: true)
-			root.appendPathComponent("blob", isDirectory: false)
+			return fileItem.targetFileUrl
+		} else {
+			return Model.appStorageUrl
 		}
-        return root
     }
     
 	override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
@@ -73,9 +71,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func setTagData(_ tagData: Data?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		if let i = try? item(for: itemIdentifier) as? FileProviderItem {
-			i?.item?.tagData = tagData
-			i?.typeItem?.tagData = tagData
+		if let i = (try? item(for: itemIdentifier)) as? FileProviderItem {
+			i.dropItem?.tagData = tagData
+			i.typeItem?.tagData = tagData
 		}
 	}
 
@@ -89,7 +87,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				autoreleasepool {
 					log("Creating thumbnail for item \(itemID.rawValue)")
 					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
-						if let dir = fpi.item {
+						if let dir = fpi.dropItem {
 							let data = self.imageData(img: dir.displayIcon, size: mySize, contentMode: dir.displayMode)
 							perThumbnailCompletionHandler(itemID, data, nil)
 						} else if let file = fpi.typeItem, let img = file.displayIcon {
@@ -111,7 +109,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 15, userInfo: [ NSLocalizedDescriptionKey: "Item not found" ]))
 			return
 		}
-		guard let dir = fpi.item else {
+		guard let dir = fpi.dropItem else {
 			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 18, userInfo: [ NSLocalizedDescriptionKey: "Item not deletable" ]))
 			return
 		}

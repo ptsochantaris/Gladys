@@ -3,17 +3,17 @@ import FileProvider
 
 final class FileProviderItem: NSObject, NSFileProviderItem {
 
-	let item: ArchivedDropItem?
+	let dropItem: ArchivedDropItem?
 	let typeItem: ArchivedDropItemType?
 
 	init(_ i: ArchivedDropItem) { // directory
-		item = i
+		dropItem = i
 		typeItem = nil
 		super.init()
 	}
 
 	init(_ i: ArchivedDropItemType) { // file
-		item = nil
+		dropItem = nil
 		typeItem = i
 		super.init()
 	}
@@ -21,18 +21,18 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	var documentSize: NSNumber? {
 		if let typeItem = typeItem {
 			return NSNumber(value: typeItem.sizeInBytes)
-		} else if let item = item {
+		} else if let item = dropItem {
 			return NSNumber(value: item.sizeInBytes)
 		}
 		return nil
 	}
 
 	var tagData: Data? {
-		return item?.tagData ?? typeItem?.tagData
+		return dropItem?.tagData ?? typeItem?.tagData
 	}
 
 	var creationDate: Date? {
-		if let item = item {
+		if let item = dropItem {
 			return item.createdAt
 		} else if let typeItem = typeItem {
 			return typeItem.createdAt
@@ -50,7 +50,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	}
 
 	var childItemCount: NSNumber? {
-		if let item = item {
+		if let item = dropItem {
 			return NSNumber(value: item.typeItems.count)
 		} else {
 			return NSNumber(value: 0)
@@ -58,7 +58,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	}
 
     var itemIdentifier: NSFileProviderItemIdentifier {
-		if let item = item {
+		if let item = dropItem {
 			return NSFileProviderItemIdentifier(item.uuid.uuidString)
 		} else if let typeItem = typeItem {
 			return NSFileProviderItemIdentifier(typeItem.uuid.uuidString)
@@ -77,7 +77,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     var capabilities: NSFileProviderItemCapabilities {
 		if typeItem != nil {
 			return [.allowsReading]
-		} else if item != nil {
+		} else if dropItem != nil {
 			return [.allowsContentEnumerating, .allowsDeleting]
 		} else {
 			return [.allowsContentEnumerating]
@@ -85,7 +85,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     }
     
     var filename: String {
-		if let item = item {
+		if let item = dropItem {
 			return item.oneTitle
 		} else if let typeItem = typeItem {
 			var t = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
