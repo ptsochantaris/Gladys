@@ -221,18 +221,26 @@ extension ArchivedDropItemType {
 	private func handleLocalFetch(url: URL?, error: Error?) {
 		// in thread
 		if let url = url {
+
+			let p = url.lastPathComponent
+			setTitleInfo(p, p.contains(".") ? 1 : 0)
+
+			hasLocalFiles = typeIdentifier == "public.url"
+
 			let localUrl = copyLocal(url)
-			log("      received to local url: \(localUrl.path)")
+			if hasLocalFiles {
+				log("      received to local url and adjusted proxy link: \(localUrl.path)")
+				setBytes(object: localUrl as NSURL, originalData: nil)
+			} else {
+				log("      ingested as local object")
+				representedClass = "NSData"
+			}
 
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
 			} else {
 				setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			}
-
-			let p = localUrl.lastPathComponent
-			setTitleInfo(p, p.contains(".") ? 1 : 0)
-			setBytes(object: localUrl as NSURL, originalData: nil)
 
 		} else if let error = error {
 			log("Error fetching local data from url: \(error.localizedDescription)")
@@ -367,9 +375,7 @@ extension ArchivedDropItemType {
 
 	private func copyLocal(_ url: URL) -> URL {
 
-		hasLocalFiles = true
-
-		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
+		let newUrl = folderUrl.appendingPathComponent(hasLocalFiles ? url.lastPathComponent : "blob")
 		let f = FileManager.default
 		do {
 			if f.fileExists(atPath: newUrl.path) {

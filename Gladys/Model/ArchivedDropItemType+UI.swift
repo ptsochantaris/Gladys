@@ -17,14 +17,8 @@ extension ArchivedDropItemType {
 	}
 
 	func registerForDrag(with provider: NSItemProvider) {
-		if classWasWrapped {
-			registerWrapped(with: provider)
-		} else {
-			register(with: provider)
-		}
-	}
 
-	private func registerWrapped(with provider: NSItemProvider) {
+		guard let bytes = bytes else { return }
 
 		if let classType = NSClassFromString(representedClass) as? NSItemProviderWriting.Type {
 			provider.registerObject(ofClass: classType, visibility: .all) { (completion) -> Progress? in
@@ -35,67 +29,32 @@ extension ArchivedDropItemType {
 			}
 		}
 
-		if hasLocalFiles {
-			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
-				let decoded = self.encodedUrl as URL?
-				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
-				completion(decoded, false, nil)
-				return nil
-			}
+		provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
+			let decoded = self.targetFileUrl
+			log("Responding with file url: \(decoded.absoluteString)")
+			completion(decoded, false, nil)
+			return nil
+		}
 
-		} else if let bytes = bytes {
+		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
+			log("Responding with data block")
+			completion(bytes, nil)
+			return nil
+		}
 
-			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
-				log("Responding with wrapped data block")
-				completion(bytes, nil)
-				return nil
-			}
+		provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
 
-			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
-				log("Requested item type: \(requestedClassType), will only respond with wrapped data block, same way we got it")
+			log("Requested item type: \(requestedClassType)")
+
+			if self.classWasWrapped {
+				log("Will only respond with wrapped data block, same way we got it")
 				completion(bytes as NSData, nil)
-			}
-		}
-	}
-
-	private func register(with provider: NSItemProvider) {
-
-		if let classType = NSClassFromString(representedClass) as? NSItemProviderWriting.Type {
-			provider.registerObject(ofClass: classType, visibility: .all) { (completion) -> Progress? in
-				let decoded = self.decode()
-				log("Responding with object type: \(type(of: decoded))")
-				completion(decoded as? NSItemProviderWriting, nil)
-				return nil
-			}
-		}
-
-		if hasLocalFiles {
-			provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
-				let decoded = self.encodedUrl as URL?
-				log("Responding with file url: \(decoded?.absoluteString ?? "<nil>")")
-				completion(decoded, false, nil)
-				return nil
-			}
-
-		} else if let bytes = bytes {
-
-			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
-				log("Responding with data block")
-				completion(bytes, nil)
-				return nil
-			}
-
-			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
-
-				log("Requested item type: \(requestedClassType)")
-
-				if let item = self.encodedUrl ?? self.decode() {
-					log("Delivering item type \(type(of: item))")
-					completion(item as? NSSecureCoding, nil)
-				} else {
-					log("Could not decode local data, responding with NSData item")
-					completion(bytes as NSData, nil)
-				}
+			} else if let item = self.encodedUrl ?? self.decode() {
+				log("Delivering item type \(type(of: item))")
+				completion(item as? NSSecureCoding, nil)
+			} else {
+				log("Responding with raw data")
+				completion(bytes as NSData, nil)
 			}
 		}
 	}

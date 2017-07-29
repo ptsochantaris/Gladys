@@ -136,6 +136,13 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	var targetFileUrl: URL {
+		if hasLocalFiles, let url = encodedUrl, url.isFileURL {
+			return url as URL
+		}
+		return bytesPath
+	}
+
 	let typeIdentifier: String
 	var accessoryTitle: String?
 	let uuid: UUID
