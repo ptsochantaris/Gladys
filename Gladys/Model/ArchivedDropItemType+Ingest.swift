@@ -77,20 +77,8 @@ extension ArchivedDropItemType {
 			signalDone()
 
 		} else if let item = item as? URL {
+			handleUrl(item, data, provider)
 
-			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-
-			if item.isFileURL {
-				log("      will duplicate item at local path: \(item.path)")
-				provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
-					if self?.loadingAborted ?? true { return }
-					self?.handleLocalFetch(url: url, error: error)
-				}
-			} else {
-				log("      received remote url: \(item.absoluteString)")
-				setBytes(object: item as NSURL, originalData: data)
-				handleRemoteUrl(item)
-			}
 		} else if let item = item as? NSArray {
 			log("      received array: \(item)")
 			if item.count == 1 {
@@ -116,7 +104,7 @@ extension ArchivedDropItemType {
 		} else if let item = item as? Data {
 			log("      received data: \(item)")
 			representedClass = "NSData"
-			handleData(item)
+			handleData(item, provider)
 
 		} else {
 			let itemType = type(of: item)
@@ -138,18 +126,45 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	private func handleData(_ item: Data) {
+	private func handleUrl(_ item: URL, _ data: Data?, _ provider: NSItemProvider) {
+		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+		if item.isFileURL {
+			log("      will duplicate item at local path: \(item.path)")
+			provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
+				if self?.loadingAborted ?? true { return }
+				self?.handleLocalFetch(url: url, error: error)
+			}
+		} else {
+			log("      received remote url: \(item.absoluteString)")
+			setBytes(object: item as NSURL, originalData: data)
+			setTitleInfo(item.absoluteString, 6)
+			if let s = item.scheme, s.hasPrefix("http") {
+				fetchWebPreview(for: item) { [weak self] title, image in
+					if self?.loadingAborted ?? true { return }
+					self?.accessoryTitle = title ?? self?.accessoryTitle
+					if let image = image {
+						if image.size.height > 100 || image.size.width > 200 {
+							self?.setDisplayIcon(image, 30, .fit)
+						} else {
+							self?.setDisplayIcon(image, 30, .center)
+						}
+					}
+					self?.signalDone()
+				}
+			} else {
+				signalDone()
+			}
+		}
+	}
+
+	private func handleData(_ item: Data, _ provider: NSItemProvider) {
 		bytes = item
 
 		if let image = UIImage(data: item) {
 			setDisplayIcon(image, 40, .fill)
 		}
 
-		if typeIdentifier == "public.url", let url = encodedUrl as URL? {
-			handleRemoteUrl(url)
-			return
-
-		} else if typeIdentifier == "public.vcard" {
+		if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
 				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
@@ -183,34 +198,19 @@ extension ArchivedDropItemType {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+
 		} else if typeIdentifier.hasSuffix(".rtfd") {
 			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+
+		} else if let url = encodedUrl {
+			handleUrl(url as URL, item, provider)
+			return
 		}
 
 		signalDone()
-	}
-
-	private func handleRemoteUrl(_ item: URL) {
-		setTitleInfo(item.absoluteString, 6)
-		if let s = item.scheme, s.hasPrefix("http") {
-			fetchWebPreview(for: item) { [weak self] title, image in
-				if self?.loadingAborted ?? true { return }
-				self?.accessoryTitle = title ?? self?.accessoryTitle
-				if let image = image {
-					if image.size.height > 100 || image.size.width > 200 {
-						self?.setDisplayIcon(image, 30, .fit)
-					} else {
-						self?.setDisplayIcon(image, 30, .center)
-					}
-				}
-				self?.signalDone()
-			}
-		} else {
-			signalDone()
-		}
 	}
 
 	private func setLoadingError(_ message: String) {
@@ -225,7 +225,10 @@ extension ArchivedDropItemType {
 			let p = url.lastPathComponent
 			setTitleInfo(p, p.contains(".") ? 1 : 0)
 
-			hasLocalFiles = typeIdentifier == "public.url"
+			var pointingAtDirectory: ObjCBool = false
+			FileManager.default.fileExists(atPath: url.path, isDirectory: &pointingAtDirectory)
+
+			hasLocalFiles = pointingAtDirectory.boolValue || (typeIdentifier == "public.url")
 
 			let localUrl = copyLocal(url)
 			if hasLocalFiles {
@@ -239,7 +242,7 @@ extension ArchivedDropItemType {
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
 			} else {
-				setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
+				setDisplayIcon(pointingAtDirectory.boolValue ? #imageLiteral(resourceName: "iconFolder") : #imageLiteral(resourceName: "iconBlock"), 5, .center)
 			}
 
 		} else if let error = error {
@@ -375,7 +378,7 @@ extension ArchivedDropItemType {
 
 	private func copyLocal(_ url: URL) -> URL {
 
-		let newUrl = folderUrl.appendingPathComponent(hasLocalFiles ? url.lastPathComponent : "blob")
+		let newUrl = hasLocalFiles ? folderUrl.appendingPathComponent(url.lastPathComponent) : bytesPath
 		let f = FileManager.default
 		do {
 			if f.fileExists(atPath: newUrl.path) {

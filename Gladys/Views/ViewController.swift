@@ -242,7 +242,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			p.sourceRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 60))
 			p.sourceView = navigationController!.view
 			p.delegate = self
-			let c = UIColor(white: 249/255, alpha: 1)
+			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
 			} else {
