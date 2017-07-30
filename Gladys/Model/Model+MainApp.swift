@@ -166,47 +166,52 @@ extension Model {
 		}
 	}
 
-	func importData(from url: URL) -> Bool {
+	func importData(from url: URL, completion: @escaping (Bool)->Void) {
 		NSLog("URL for importing: \(url.path)")
+
+		let fm = FileManager.default
+		defer {
+			try? fm.removeItem(at: url)
+		}
 
 		guard
 			let data = try? Data(contentsOf: url.appendingPathComponent("items.json"), options: [.alwaysMapped]),
-			let itemsToImport = try? JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+			let itemsInPackage = try? JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 		else {
-			return false
+			completion(false)
+			return
 		}
 
-		let fm = FileManager.default
-		var itemsImported = false
+		let itemsToImport = itemsInPackage.filter { !drops.contains($0) }
+
+		if itemsToImport.count == 0 {
+			completion(true)
+			return
+		}
+
+		drops.insert(contentsOf: itemsToImport, at: 0)
 
 		for item in itemsToImport {
+
 			let uuid = item.uuid.uuidString
 
-			if drops.contains(where: { $0.uuid.uuidString == uuid }) {
-				continue
-			}
-
-			let remotePath = url.appendingPathComponent(uuid)
 			let localPath = Model.appStorageUrl.appendingPathComponent(uuid)
-
 			if fm.fileExists(atPath: localPath.path) {
 				try! fm.removeItem(at: localPath)
 			}
-			try! fm.moveItem(at: remotePath, to: localPath)
-			drops.append(item)
-			item.patchLocalUrls()
 
-			itemsImported = true
+			let remotePath = url.appendingPathComponent(uuid)
+			try! fm.moveItem(at: remotePath, to: localPath)
+
+			item.patchLocalUrls()
 		}
 
-		if itemsImported {
+		reIndex(items: itemsToImport) {
 			DispatchQueue.main.async {
 				self.save()
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+				completion(true)
 			}
 		}
-
-		try! fm.removeItem(at: url)
-		return true
 	}
 }

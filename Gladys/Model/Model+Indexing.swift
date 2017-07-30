@@ -3,7 +3,7 @@ import CoreSpotlight
 
 extension Model: CSSearchableIndexDelegate {
 
-	private func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
+	func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
 
 		let group = DispatchGroup()
 		for _ in 0 ..< items.count {
@@ -53,7 +53,6 @@ extension Model: CSSearchableIndexDelegate {
 	}
 
 	func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
-		// TODO actually implement this (test by dragging a JPEG into Files)
 		if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let url = item.url(for: typeIdentifier) {
 			return url as URL
 		}

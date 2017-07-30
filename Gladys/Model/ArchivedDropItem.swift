@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class ArchivedDropItem: Codable {
+final class ArchivedDropItem: Codable, Equatable {
 
 	let suggestedName: String?
 	let uuid: UUID
@@ -35,6 +35,10 @@ final class ArchivedDropItem: Codable {
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		isLoading = false
+	}
+
+	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
+		return lhs.uuid == rhs.uuid
 	}
 
 	var oneTitle: String {

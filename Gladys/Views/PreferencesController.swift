@@ -28,9 +28,14 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 			infoLabel.text = nil
 			spinner.startAnimating()
 			p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
-				if let url = url, self.model.importData(from: url) {
-					DispatchQueue.main.async {
-						self.externalDataUpdate()
+				if let url = url {
+					self.model.importData(from: url) { success in
+						DispatchQueue.main.async {
+							if !success {
+								genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
+							}
+							self.externalDataUpdate()
+						}
 					}
 				} else {
 					DispatchQueue.main.async {
