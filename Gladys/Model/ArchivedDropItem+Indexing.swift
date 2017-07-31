@@ -5,8 +5,12 @@ extension ArchivedDropItem {
 	func makeIndex(completion: ((Bool)->Void)? = nil) {
 
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
-		attributes.title = displayTitle.0
-		attributes.contentDescription = accessoryTitle
+		if let a = accessoryTitle {
+			attributes.title = a
+			attributes.contentDescription = displayTitle.0
+		} else {
+			attributes.title = displayTitle.0
+		}
 		attributes.thumbnailURL = imagePath
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
