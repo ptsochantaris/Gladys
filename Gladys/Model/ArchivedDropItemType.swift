@@ -143,6 +143,16 @@ final class ArchivedDropItemType: Codable {
 		return bytesPath
 	}
 
+	var bytesForDragging: Data? {
+		if hasLocalFiles, let url = encodedUrl as URL? {
+			// TODO - if dir, zip it
+			if let data = try? Data(contentsOf: url, options: [.alwaysMapped]) {
+				return data
+			}
+		}
+		return bytes
+	}
+
 	let typeIdentifier: String
 	var accessoryTitle: String?
 	let uuid: UUID
@@ -167,7 +177,7 @@ final class ArchivedDropItemType: Codable {
 
 	var contentDescription: String? {
 		switch representedClass {
-		case "NSData": return "Raw Data"
+		case "NSData": return "Data"
 		case "NSString": return "Text"
 		case "NSAttributedString": return "Rich Text"
 		case "UIColor": return "Color"
@@ -199,11 +209,11 @@ final class ArchivedDropItemType: Codable {
 			return 0
 		}
 
-		if hasLocalFiles, let localUrl = encodedUrl as URL? {
-			return sizeItem(path: localUrl)
+		var total = sizeItem(path: bytesPath)
+		if hasLocalFiles {
+			total += sizeItem(path: targetFileUrl)
 		}
-
-		return sizeItem(path: bytesPath)
+		return total
 	}
 
 	var sizeDescription: String? {

@@ -49,6 +49,11 @@ final class ArchivedDropItem: Codable, Equatable {
 		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
+	var imagePath: URL? {
+		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		return highestPriorityIconItem?.imagePath
+	}
+
 	var displayIcon: UIImage {
 		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
 		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
@@ -80,7 +85,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	}()
 
 	func bytes(for type: String) -> Data? {
-		return typeItems.first(where: { $0.typeIdentifier == type })?.bytes
+		return typeItems.first(where: { $0.typeIdentifier == type })?.bytesForDragging
 	}
 
 	func url(for type: String) -> NSURL? {

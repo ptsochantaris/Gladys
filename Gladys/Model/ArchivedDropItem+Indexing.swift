@@ -4,12 +4,10 @@ import CoreSpotlight
 extension ArchivedDropItem {
 	func makeIndex(completion: ((Bool)->Void)? = nil) {
 
-		guard let firstItem = typeItems.first else { return }
-
-		let attributes = CSSearchableItemAttributeSet(itemContentType: firstItem.typeIdentifier)
+		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
 		attributes.title = displayTitle.0
 		attributes.contentDescription = accessoryTitle
-		attributes.thumbnailURL = firstItem.imagePath
+		attributes.thumbnailURL = imagePath
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
 		attributes.addedDate = createdAt

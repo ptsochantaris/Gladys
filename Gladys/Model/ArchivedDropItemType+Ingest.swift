@@ -222,22 +222,17 @@ extension ArchivedDropItemType {
 		// in thread
 		if let url = url {
 
+			hasLocalFiles = true
+
 			let p = url.lastPathComponent
 			setTitleInfo(p, p.contains(".") ? 1 : 0)
 
 			var pointingAtDirectory: ObjCBool = false
 			FileManager.default.fileExists(atPath: url.path, isDirectory: &pointingAtDirectory)
 
-			hasLocalFiles = pointingAtDirectory.boolValue || (typeIdentifier == "public.url")
-
 			let localUrl = copyLocal(url)
-			if hasLocalFiles {
-				log("      received to local url and adjusted proxy link: \(localUrl.path)")
-				setBytes(object: localUrl as NSURL, originalData: nil)
-			} else {
-				log("      ingested as local object")
-				representedClass = "NSData"
-			}
+			log("      received to local url and adjusted proxy link: \(localUrl.path)")
+			setBytes(object: localUrl as NSURL, originalData: nil)
 
 			if let image = UIImage(contentsOfFile: localUrl.path) {
 				setDisplayIcon(image, 10, .fill)
@@ -378,7 +373,7 @@ extension ArchivedDropItemType {
 
 	private func copyLocal(_ url: URL) -> URL {
 
-		let newUrl = hasLocalFiles ? folderUrl.appendingPathComponent(url.lastPathComponent) : bytesPath
+		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
 		let f = FileManager.default
 		do {
 			if f.fileExists(atPath: newUrl.path) {

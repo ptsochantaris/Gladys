@@ -12,7 +12,7 @@ extension ArchivedDropItemType {
 		registerForDrag(with: p)
 
 		let i = UIDragItem(itemProvider: p)
-		i.localObject = ["local_object": self]
+		i.localObject = self
 		return i
 	}
 
@@ -38,7 +38,7 @@ extension ArchivedDropItemType {
 
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
 			log("Responding with data block")
-			completion(bytes, nil)
+			completion(self.bytesForDragging, nil)
 			return nil
 		}
 
@@ -46,12 +46,9 @@ extension ArchivedDropItemType {
 
 			log("Requested item type: \(requestedClassType)")
 
-			if self.classWasWrapped {
-				log("Will only respond with wrapped data block, same way we got it")
-				completion(bytes as NSData, nil)
-			} else if let item = self.encodedUrl ?? self.decode() {
-				log("Delivering item type \(type(of: item))")
-				completion(item as? NSSecureCoding, nil)
+			if let item = self.encodedUrl ?? self.decode(), let i = item as? NSSecureCoding {
+				log("Delivering item type \(type(of: i))")
+				completion(i, nil)
 			} else {
 				log("Responding with raw data")
 				completion(bytes as NSData, nil)
