@@ -322,7 +322,7 @@ extension ArchivedDropItemType {
 							let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
 							var rank = isTouch ? 10 : 1
 							if let sizes = node.attr("sizes") {
-								let numbers = sizes.split(separator: "x").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+								let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
 								if numbers.count > 1 {
 									rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
 								}

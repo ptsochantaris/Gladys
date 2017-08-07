@@ -75,7 +75,7 @@ final class ArchivedDropItemType: Codable {
 
 			let myPath = "\(parentUuid)/\(uuid)/"
 			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
-				let keep = currentPath.substring(from: indexUpToMyPath)
+				let keep = String(currentPath[indexUpToMyPath...])
 				let correctUrl = Model.appStorageUrl.appendingPathComponent(keep) as NSURL
 				if encodedURL != correctUrl {
 					setBytes(object: correctUrl, originalData: nil)
