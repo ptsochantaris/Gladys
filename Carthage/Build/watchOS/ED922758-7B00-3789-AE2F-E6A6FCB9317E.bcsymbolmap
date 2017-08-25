@@ -190,8 +190,8 @@ __T0So19NSRegularExpressionCMF
 __T0So19NSRegularExpressionC7OptionsVMB
 __T0So19NSRegularExpressionC15MatchingOptionsVMB
 _objc_classes
-___profc_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
-___profd_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
+___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
+___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
 ___profc__T04Fuzi10XMLElementC8childrenSayACGfg
 ___profd__T04Fuzi10XMLElementC8childrenSayACGfg
 ___profc__T04Fuzi10XMLElementC10childNodesSayAA7XMLNodeCGSaySC14xmlElementTypeVG7ofTypes_tF
@@ -206,29 +206,29 @@ ___profc__T04Fuzi10XMLElementC9subscriptSSSgSScfg
 ___profd__T04Fuzi10XMLElementC9subscriptSSSgSScfg
 ___profc__T04Fuzi10XMLElementC4attrSSSgSS_AE9namespacetF
 ___profd__T04Fuzi10XMLElementC4attrSSSgSS_AE9namespacetF
-___profc_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesV4nextSpySC8_xmlNodeVGSgyF
-___profd_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesV4nextSpySC8_xmlNodeVGSgyF
+___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesV4nextSpySC8_xmlNodeVGSgyF
+___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesV4nextSpySC8_xmlNodeVGSgyF
 ___profc__T04Fuzi10XMLElementC10firstChildACSgSS3tag_SSSg11inNamespacetF
 ___profd__T04Fuzi10XMLElementC10firstChildACSgSS3tag_SSSg11inNamespacetF
-___profc_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesVACSpySC8_xmlNodeVGSg4head_SaySC0D11ElementTypeVG5typestcfC
-___profd_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesVACSpySC8_xmlNodeVGSg4head_SaySC0D11ElementTypeVG5typestcfC
-___profc_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSpyxGSglF
-___profd_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSpyxGSglF
+___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesVACSpySC8_xmlNodeVGSg4head_SaySC0D11ElementTypeVG5typestcfC
+___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi12LinkedCNodesVACSpySC8_xmlNodeVGSg4head_SaySC0D11ElementTypeVG5typestcfC
+___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSpyxGSglF
+___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSpyxGSglF
 ___profc__T0SC14xmlElementTypeV4FuziE0B0ABfgZ
 ___profd__T0SC14xmlElementTypeV4FuziE0B0ABfgZ
 ___profc__T04Fuzi2teoiSbSC14xmlElementTypeV_ADtF
 ___profd__T04Fuzi2teoiSbSC14xmlElementTypeV_ADtF
-___profc_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
-___profd_/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
-Apple LLVM version 9.0.0 (clang-900.0.34.2)
--emit-bc "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift" "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift" -target armv7k-apple-watchos2.0 -enable-objc-interop -sdk /Applications/Xcode-beta.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.0.sdk -I /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos -I "/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/libxml2" -F /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos -application-extension -g -import-underlying-module -module-cache-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/ModuleCache -profile-generate -profile-coverage-mapping -swift-version 3 -serialize-debugging-options -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/swift-overrides.hmap -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-generated-files.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-own-target-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/all-product-headers.yaml -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-project-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos/include -Xcc -I/Applications/Xcode-beta.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.0.sdk/usr/include/libxml2 -Xcc "-I/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Fuzi" -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/DerivedSources/armv7k -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/DerivedSources -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/unextended-module-overlay.yaml -Xcc "-working-directory/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi" -emit-module-doc-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi.swiftdoc -serialize-diagnostics-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.dia -O -module-name Fuzi -emit-module-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi.swiftmodule -emit-objc-header-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi-Swift.h -emit-dependencies-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.d -num-threads 8 -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Node.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/NodeSet.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Error.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Document.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Helpers.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Queryable.bc -resource-dir /Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift
+___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
+___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
+Apple LLVM version 9.0.0 (clang-900.0.36)
+-emit-bc /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift -target armv7k-apple-watchos2.0 -enable-objc-interop -sdk /Applications/Xcode-beta.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.0.sdk -I /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos -I /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/libxml2 -F /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos -application-extension -g -import-underlying-module -module-cache-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/ModuleCache -profile-generate -profile-coverage-mapping -swift-version 3 -serialize-debugging-options -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/swift-overrides.hmap -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-generated-files.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-own-target-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/all-product-headers.yaml -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Fuzi-project-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Products/Release-watchos/include -Xcc -I/Applications/Xcode-beta.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.0.sdk/usr/include/libxml2 -Xcc -I/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Fuzi -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/DerivedSources/armv7k -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/DerivedSources -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/unextended-module-overlay.yaml -Xcc -working-directory/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi -emit-module-doc-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi.swiftdoc -serialize-diagnostics-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.dia -O -module-name Fuzi -emit-module-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi.swiftmodule -emit-objc-header-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Fuzi-Swift.h -emit-dependencies-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.d -num-threads 8 -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Element.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Node.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/NodeSet.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Error.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Document.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Helpers.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/Objects-normal/armv7k/Queryable.bc -resource-dir /Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift
 <swift-imported-modules>
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi
-Apple Swift version 4.0 effective-3.2 (swiftlang-900.0.59 clang-900.0.34.2)
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi
+Apple Swift version 4.0 effective-3.2 (swiftlang-900.0.63.10 clang-900.0.36)
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift
 init
 Element.swift
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources
 _T0s16IndexingIteratorVyxGs0B8Protocolss14_IndexableBaseRzlsADP4next7ElementQzSgyFTWSaySo19NSRegularExpressionC15MatchingOptionsVG_Tg5
 next
 _T0Sis9EquatablessAAP2eeoiSbx_xtFZTW
@@ -517,7 +517,7 @@ __T0SC7_xmlDtdVMn
 __T0SC7_xmlDtdVN
 __T0SQys13OpaquePointerVGML
 __T0SC8_xmlNodeVMB
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift
 get_field_types__xmlDtd
 _T0SQySpySC7_xmlDocVGGMa
 _T0SpySC7_xmlDocVGMa
@@ -770,7 +770,7 @@ __T04Fuzi7NodeSetCs8SequenceAAMA
 __T04Fuzi7NodeSetCs14_IndexableBaseAAMA
 __T0SC11_xmlNodeSetVMB
 __T0SC15_xmlXPathObjectVMB
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift
 NodeSet.swift
 objectdestroy.14
 objectdestroy.11
@@ -942,7 +942,7 @@ __T04Fuzi8XMLErrorOMf
 __T04Fuzi8XMLErrorOMF
 __T0Si4code_SS7messagetML
 __T04Fuzi8XMLErrorOmML
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift
 lastError
 Error.swift
 _T04Fuzi8XMLErrorO9lastErrorA2C07defaultD0_tFZSSyKXKfu_
@@ -1011,7 +1011,7 @@ __T0s23_ContiguousArrayStorageCys4Int8VGML
 __T0So15NumberFormatterCMF
 __T0So13DateFormatterCMF
 __T0SC7_xmlDocVMB
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift
 _T04Fuzi12HTMLDocumentCMa
 get_field_types_HTMLDocument
 _T04Fuzi11XMLDocumentCMa
@@ -1094,7 +1094,7 @@ __T0S2SSgSS9UTF16ViewVcfCTfq4gd_n
 __T0SS4FuziE9subscriptSSSC8_NSRangeVcfgTf4xx_n
 __T04Fuzi12LinkedCNodesVMF
 __T0SC14xmlElementTypeVMB
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift
 Helpers.swift
 _T0SS9UTF16ViewV5indexSS5IndexVAE_Si8offsetBytFTfq4xnd_n
 _T0SS5IndexV13encodedOffsetSifgTfq4x_n
@@ -1174,7 +1174,7 @@ __T0So20NSTextCheckingResultCML
 __T0s17_HeapBufferHeaderVys07_StringB5IVarsVGML
 __T0s13ManagedBufferCys05_HeapB6HeaderVys07_StringB5IVarsVGs6UInt16VGML
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCN
-/Volumes/UserData/ptsochantaris/Library/Mobile Documents/com~apple~CloudDocs/iOS Development/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift
+/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift
 Queryable.swift
 _T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMa
 get_field_types_RegexConstants
@@ -1310,5 +1310,5 @@ doubleValue.get
 _T04Fuzi19XPathFunctionResultC11doubleValueSdfgSdycfU_
 boolValue.get
 _T04Fuzi19XPathFunctionResultC9boolValueSbfgSbycfU_
-Apple LLVM version 9.0.0 (clang-900.0.34.1)
+Apple LLVM version 9.0.0 (clang-900.0.35)
 /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-watchos/Fuzi.build/DerivedSources/Fuzi_vers.c
