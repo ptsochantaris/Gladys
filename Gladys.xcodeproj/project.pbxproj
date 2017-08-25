@@ -585,9 +585,9 @@
 			projectRoot = "";
 			targets = (
 				1678F9CC1EF475FE005697CB /* Gladys */,
-				1619E8111EFF3745000087DD /* GladysFiles */,
 				16287AE61EFB03FD007188AE /* GladysIndex */,
 				1641368C1F09195000B34574 /* GladysAction */,
+				1619E8111EFF3745000087DD /* GladysFiles */,
 				167573FE1F12C22500385079 /* GladysFramework */,
 			);
 		};
@@ -1057,14 +1057,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/GladysFramework/openssl/includes";
 				INFOPLIST_FILE = GladysFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1229,14 +1227,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/GladysFramework/openssl/includes";
 				INFOPLIST_FILE = GladysFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

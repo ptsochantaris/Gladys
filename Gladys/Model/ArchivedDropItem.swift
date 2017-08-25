@@ -102,7 +102,7 @@ final class ArchivedDropItem: Codable, Equatable {
 
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
-		private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider"]
+		private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
 
 		init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) {
 

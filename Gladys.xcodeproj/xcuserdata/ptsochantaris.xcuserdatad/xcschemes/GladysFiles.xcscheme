@@ -69,8 +69,12 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "build.bru.Gladys"
+         RemotePath = "/var/containers/Bundle/Application/04792B55-0F06-4683-8D6E-9309A21C66EC/Gladys.app">
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
@@ -78,7 +82,7 @@
             BlueprintName = "Gladys"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
