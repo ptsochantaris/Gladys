@@ -20,7 +20,8 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	@IBOutlet weak var imageDistance: NSLayoutConstraint!
 	@IBOutlet weak var expandButton: UIButton!
 
-	override func viewDidLoad() {
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 
 		loadCount = extensionContext?.inputItems.count ?? 0
 
