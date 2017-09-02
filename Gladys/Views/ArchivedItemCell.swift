@@ -232,6 +232,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	private let borderView = UIView()
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = true
@@ -244,7 +246,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		b.layer.cornerRadius = 10
 		backgroundView = b
 
-		let borderView = UIView()
 		borderView.backgroundColor = .white
 		borderView.layer.cornerRadius = 10
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
@@ -393,10 +394,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	func flash() {
 		UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
-			self.backgroundColor = .red
+			self.borderView.backgroundColor = .red
 		}) { finished in
 			UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
-				self.backgroundColor = .white
+				self.borderView.backgroundColor = .white
 			}) { finished in
 			}
 		}

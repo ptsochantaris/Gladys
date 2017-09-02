@@ -42,16 +42,19 @@ extension ArchivedDropItemType {
 			return nil
 		}
 
-		provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
+		if !hasLocalFiles {
 
-			log("Requested item type: \(requestedClassType)")
+			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
 
-			if let item = self.encodedUrl ?? self.decode(), let i = item as? NSSecureCoding {
-				log("Delivering item type \(type(of: i))")
-				completion(i, nil)
-			} else {
-				log("Responding with raw data")
-				completion(bytes as NSData, nil)
+				log("Requested item type: \(requestedClassType)")
+
+				if let item = self.encodedUrl ?? self.decode(), let i = item as? NSSecureCoding {
+					log("Delivering item type \(type(of: i))")
+					completion(i, nil)
+				} else {
+					log("Responding with raw data")
+					completion(bytes as NSData, nil)
+				}
 			}
 		}
 	}
