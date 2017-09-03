@@ -110,7 +110,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 				observer.didUpdate(createdItems)
 			}
 
-			let deletedItemIds = oldItemIds.filter({ !newItemIds.contains($0) })
+			let deletedItemIds = oldItemIds.filter { !newItemIds.contains($0) }
 			if deletedItemIds.count > 0 {
 				observer.didDeleteItems(withIdentifiers: deletedItemIds)
 			}

@@ -60,6 +60,7 @@ final class FileProviderExtension: NSFileProviderExtension {
     }
 
     override func itemChanged(at url: URL) {
+		log("Item changed: \(url.path)")
     }
 
     override func stopProvidingItem(at url: URL) {

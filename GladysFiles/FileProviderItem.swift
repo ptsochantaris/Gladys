@@ -21,8 +21,8 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	var documentSize: NSNumber? {
 		if let typeItem = typeItem {
 			return NSNumber(value: typeItem.sizeInBytes)
-		} else if let item = dropItem {
-			return NSNumber(value: item.sizeInBytes)
+		} else if let dropItem = dropItem {
+			return NSNumber(value: dropItem.sizeInBytes)
 		}
 		return nil
 	}
@@ -32,13 +32,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	}
 
 	var creationDate: Date? {
-		if let item = dropItem {
-			return item.createdAt
-		} else if let typeItem = typeItem {
-			return typeItem.createdAt
-		} else {
-			return nil
-		}
+		return dropItem?.createdAt ?? typeItem?.createdAt
 	}
 
 	var isUploaded: Bool {
@@ -50,16 +44,16 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	}
 
 	var childItemCount: NSNumber? {
-		if let item = dropItem {
-			return NSNumber(value: item.typeItems.count)
+		if let dropItem = dropItem {
+			return NSNumber(value: dropItem.typeItems.count)
 		} else {
 			return NSNumber(value: 0)
 		}
 	}
 
     var itemIdentifier: NSFileProviderItemIdentifier {
-		if let item = dropItem {
-			return NSFileProviderItemIdentifier(item.uuid.uuidString)
+		if let dropItem = dropItem {
+			return NSFileProviderItemIdentifier(dropItem.uuid.uuidString)
 		} else if let typeItem = typeItem {
 			return NSFileProviderItemIdentifier(typeItem.uuid.uuidString)
 		} else {
@@ -70,30 +64,28 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     var parentItemIdentifier: NSFileProviderItemIdentifier {
 		if let typeItem = typeItem {
 			return NSFileProviderItemIdentifier(typeItem.parentUuid.uuidString)
+		} else {
+			return NSFileProviderItemIdentifier.rootContainer
 		}
-		return NSFileProviderItemIdentifier.rootContainer
     }
     
     var capabilities: NSFileProviderItemCapabilities {
 		if typeItem != nil {
 			return [.allowsReading]
 		} else if dropItem != nil {
-			return [.allowsContentEnumerating, .allowsDeleting]
+			return [.allowsReading, .allowsDeleting]
 		} else {
-			return [.allowsContentEnumerating]
+			return [.allowsReading]
 		}
     }
     
     var filename: String {
-		if let item = dropItem {
-			return item.oneTitle
+		if let dropItem = dropItem {
+			return dropItem.oneTitle
+
 		} else if let typeItem = typeItem {
-			var t = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
-			let c = t.components(separatedBy: "-")
-			if c.count > 1, c.first == "public", let l = c.last {
-				t = t.appending(".\(l)")
-			}
-			return t
+			return typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+
 		} else {
 			return "<no name>"
 		}
