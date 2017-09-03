@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Gladys-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
+                            <collectionView clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -98,6 +95,7 @@
                                 </cells>
                             </collectionView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="iPl-vG-1da"/>
                     </view>
                     <toolbarItems>
                         <barButtonItem enabled="NO" title="Delete" id="MyX-3U-Yhw">
@@ -110,7 +108,7 @@
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
+                    <navigationItem key="navigationItem" title="Gladys" largeTitleDisplayMode="never" id="99e-Fx-10u">
                         <barButtonItem key="leftBarButtonItem" title="Settings" id="8HU-04-Ir2">
                             <connections>
                                 <action selector="settingsSelected:" destination="BYZ-38-t0r" id="WDL-Ci-NBB"/>
@@ -132,10 +130,6 @@
         <scene sceneID="UOX-0n-X4D">
             <objects>
                 <viewController id="HJT-hG-46H" customClass="PreferencesController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lCH-fx-MQV"/>
-                        <viewControllerLayoutGuide type="bottom" id="dbU-1S-2dG"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -194,11 +188,12 @@
                             <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="20" id="Id3-0l-h2p"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eHF-2i-yuv" secondAttribute="trailing" constant="20" id="Kmc-7x-z5u"/>
                             <constraint firstItem="OxZ-BU-EoU" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="aXs-bU-lW9"/>
-                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="lCH-fx-MQV" secondAttribute="bottom" constant="37" id="ddM-ZR-lUi"/>
+                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="37" id="ddM-ZR-lUi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="20" id="q4O-tH-cpU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="HiR-cx-G23" secondAttribute="trailing" constant="20" id="q4x-sw-MAu"/>
                             <constraint firstItem="eHF-2i-yuv" firstAttribute="top" secondItem="OxZ-BU-EoU" secondAttribute="bottom" constant="20" id="wYh-34-wH0"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="wBp-li-D4L"/>
                     </view>
                     <navigationItem key="navigationItem" id="QWV-cP-YSZ">
                         <barButtonItem key="leftBarButtonItem" title="Delete All" id="ipf-aG-KNc">
@@ -229,17 +224,14 @@
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
             <objects>
-                <viewController id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="zTY-6k-9fV"/>
-                        <viewControllerLayoutGuide type="bottom" id="xdK-pS-qQl"/>
-                    </layoutGuides>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o6P-jX-a91">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="151" sectionHeaderHeight="14" sectionFooterHeight="14" translatesAutoresizingMaskIntoConstraints="NO" id="gOE-Fp-Sbs">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="151" sectionHeaderHeight="14" sectionFooterHeight="14" translatesAutoresizingMaskIntoConstraints="NO" id="gOE-Fp-Sbs">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="KDa-Aj-nZK">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -343,12 +335,7 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="gOE-Fp-Sbs" secondAttribute="trailing" id="6UN-jZ-cfZ"/>
-                            <constraint firstItem="gOE-Fp-Sbs" firstAttribute="leading" secondItem="o6P-jX-a91" secondAttribute="leading" id="7us-uO-G2Y"/>
-                            <constraint firstItem="gOE-Fp-Sbs" firstAttribute="top" secondItem="o6P-jX-a91" secondAttribute="top" id="fRP-Co-K81"/>
-                            <constraint firstAttribute="bottom" secondItem="gOE-Fp-Sbs" secondAttribute="bottom" id="gi9-Hy-Cv8"/>
-                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="kBf-EA-UxQ"/>
                     </view>
                     <toolbarItems>
                         <barButtonItem image="iconDeleteSmall" id="mOK-KI-1To">
@@ -407,6 +394,7 @@
                         <constraint firstItem="l07-os-d4P" firstAttribute="leading" secondItem="fN7-m2-srM" secondAttribute="leading" id="OFd-J4-JRY"/>
                         <constraint firstItem="l07-os-d4P" firstAttribute="top" secondItem="fN7-m2-srM" secondAttribute="top" id="v1h-ef-AP5"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="00w-AT-PRi"/>
                 </view>
             </objects>
             <point key="canvasLocation" x="2452.5" y="135.21126760563379"/>

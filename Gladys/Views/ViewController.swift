@@ -303,6 +303,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
+
+		navigationItem.largeTitleDisplayMode = .automatic
 	}
 
 	private var lowMemoryMode = false
