@@ -449,24 +449,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	private var lastSize: CGSize?
+	private var lastSize = CGSize.zero
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+
 		let boundsSize = view.bounds.size
-		if let lastSize = lastSize {
-			if lastSize == boundsSize { return }
+		if lastSize == boundsSize { return }
+		lastSize = boundsSize
 
-			if let n = presentedViewController, n.modalPresentationStyle == .popover {
-				n.dismiss(animated: false)
-				if let d = dimView {
-					d.removeFromSuperview()
-					dimView = nil
-				}
+		if let n = presentedViewController, n.modalPresentationStyle == .popover {
+			n.dismiss(animated: false)
+			if let d = dimView {
+				d.removeFromSuperview()
+				dimView = nil
 			}
-
-			archivedItemCollectionView.performBatchUpdates({})
 		}
-		lastSize = view.bounds.size
+
+		archivedItemCollectionView.performBatchUpdates({})
 	}
 
 	/////////////////////////////////
