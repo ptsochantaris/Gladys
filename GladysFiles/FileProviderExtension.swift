@@ -55,13 +55,15 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
     
     override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {
+		log("Starting provision: \(url.path)")
 		completionHandler?(nil)
     }
 
     override func itemChanged(at url: URL) {
     }
-    
+
     override func stopProvidingItem(at url: URL) {
+		log("Stopping provision: \(url.path)")
     }
 
 	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
@@ -74,6 +76,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		if let i = (try? item(for: itemIdentifier)) as? FileProviderItem {
 			i.dropItem?.tagData = tagData
 			i.typeItem?.tagData = tagData
+			model.save()
 		}
 	}
 

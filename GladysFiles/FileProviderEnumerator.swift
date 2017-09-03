@@ -14,7 +14,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	init(relatedItem: FileProviderItem?, model: Model) { // nil is root
 		self.relatedItem = relatedItem
 		self.model = model
-		uuid = relatedItem?.dropItem?.uuid.uuidString ?? relatedItem?.dropItem?.uuid.uuidString ?? "root"
+		uuid = relatedItem?.dropItem?.uuid.uuidString ?? relatedItem?.typeItem?.uuid.uuidString ?? "root"
 
 		super.init()
 		if relatedItem == nil {
@@ -32,9 +32,9 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 
 		if relatedItem?.typeItem != nil {
-			log("Listing file")
+			log("Listing file \(uuid)")
 		} else if relatedItem?.dropItem != nil {
-			log("Listing entity directory")
+			log("Listing directory \(uuid)")
 		} else {
 			log("Listing root")
 		}
@@ -46,7 +46,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			items = [FileProviderItem(fileItem)]
 		} else if let dirItem = relatedItem?.dropItem {
 			items = getItems(for: dirItem)
-		} else { // root or all dirs (same thing for us)
+		} else { // root or working set (same thing for us)
 			items = rootItems
 		}
 		observer.didEnumerate(items)
@@ -79,10 +79,10 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
 		if relatedItem?.typeItem != nil {
-			log("Changes requested for enumerator of end-file, we never have any")
+			log("Enumerate changes for file \(uuid), we never have any, will report no changes")
 
 		} else if relatedItem?.dropItem != nil {
-			log("Changes requested for enumerator of directory")
+			log("Enumerating changes for directory \(uuid)")
 
 			model.reloadDataIfNeeded()
 			let newItemIds = rootItems.map { $0.itemIdentifier }
