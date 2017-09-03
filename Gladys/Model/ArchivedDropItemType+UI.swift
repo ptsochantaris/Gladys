@@ -18,44 +18,10 @@ extension ArchivedDropItemType {
 
 	func registerForDrag(with provider: NSItemProvider) {
 
-		guard let bytes = bytes else { return }
-
-		if let classType = NSClassFromString(representedClass) as? NSItemProviderWriting.Type {
-			provider.registerObject(ofClass: classType, visibility: .all) { (completion) -> Progress? in
-				let decoded = self.decode()
-				log("Responding with object type: \(type(of: decoded))")
-				completion(decoded as? NSItemProviderWriting, nil)
-				return nil
-			}
-		}
-
-		provider.registerFileRepresentation(forTypeIdentifier: typeIdentifier, fileOptions: [], visibility: .all) { (completion) -> Progress? in
-			let decoded = self.targetFileUrl
-			log("Responding with file url: \(decoded.absoluteString)")
-			completion(decoded, false, nil)
-			return nil
-		}
-
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
 			log("Responding with data block")
-			completion(self.bytesForDragging, nil)
+			completion(self.bytes, nil)
 			return nil
-		}
-
-		if !hasLocalFiles {
-
-			provider.registerItem(forTypeIdentifier: typeIdentifier) { completion, requestedClassType, options in
-
-				log("Requested item type: \(requestedClassType)")
-
-				if let item = self.encodedUrl ?? self.decode(), let i = item as? NSSecureCoding {
-					log("Delivering item type \(type(of: i))")
-					completion(i, nil)
-				} else {
-					log("Responding with raw data")
-					completion(bytes as NSData, nil)
-				}
-			}
 		}
 	}
 

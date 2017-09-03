@@ -202,8 +202,6 @@ extension Model {
 
 			let remotePath = url.appendingPathComponent(uuid)
 			try! fm.moveItem(at: remotePath, to: localPath)
-
-			item.patchLocalUrls()
 		}
 
 		reIndex(items: itemsToImport) {

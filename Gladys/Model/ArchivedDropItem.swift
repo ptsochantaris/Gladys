@@ -85,17 +85,11 @@ final class ArchivedDropItem: Codable, Equatable {
 	}()
 
 	func bytes(for type: String) -> Data? {
-		return typeItems.first(where: { $0.typeIdentifier == type })?.bytesForDragging
+		return typeItems.first(where: { $0.typeIdentifier == type })?.bytes
 	}
 
 	func url(for type: String) -> NSURL? {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
-	}
-
-	func patchLocalUrls() {
-		for item in typeItems {
-			item.patchLocalUrl()
-		}
 	}
 
 	#if MAINAPP || ACTIONEXTENSION

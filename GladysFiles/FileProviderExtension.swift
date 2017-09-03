@@ -36,7 +36,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		if let directoryItem = fpi.dropItem {
 			return directoryItem.folderUrl
 		} else if let fileItem = fpi.typeItem {
-			return fileItem.targetFileUrl
+			return fileItem.bytesPath
 		} else {
 			return Model.appStorageUrl
 		}

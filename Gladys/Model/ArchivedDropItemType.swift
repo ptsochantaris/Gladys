@@ -18,7 +18,6 @@ final class ArchivedDropItemType: Codable {
 		case displayIconScale
 		case displayIconWidth
 		case displayIconHeight
-		case hasLocalFiles
 		case createdAt
 	}
 
@@ -38,7 +37,6 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconScale, forKey: .displayIconScale)
 		try v.encode(displayIconWidth, forKey: .displayIconWidth)
 		try v.encode(displayIconHeight, forKey: .displayIconHeight)
-		try v.encode(hasLocalFiles, forKey: .hasLocalFiles)
 		try v.encode(createdAt, forKey: .createdAt)
 	}
 
@@ -53,7 +51,6 @@ final class ArchivedDropItemType: Codable {
 		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
-		hasLocalFiles = try v.decode(Bool.self, forKey: .hasLocalFiles)
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
@@ -68,20 +65,6 @@ final class ArchivedDropItemType: Codable {
 
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
-	}
-
-	func patchLocalUrl() {
-		if hasLocalFiles, let encodedURL = encodedUrl, encodedURL.isFileURL, let currentPath = encodedURL.path {
-
-			let myPath = "\(parentUuid)/\(uuid)/"
-			if let indexUpToMyPath = currentPath.range(of: myPath)?.lowerBound {
-				let keep = String(currentPath[indexUpToMyPath...])
-				let correctUrl = Model.appStorageUrl.appendingPathComponent(keep) as NSURL
-				if encodedURL != correctUrl {
-					setBytes(object: correctUrl, originalData: nil)
-				}
-			}
-		}
 	}
 
 	func setBytes(object: NSSecureCoding, originalData: Data?) {
@@ -136,23 +119,6 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var targetFileUrl: URL {
-		if hasLocalFiles, let url = encodedUrl, url.isFileURL {
-			return url as URL
-		}
-		return bytesPath
-	}
-
-	var bytesForDragging: Data? {
-		if hasLocalFiles, let url = encodedUrl as URL? {
-			// TODO - if dir, zip it
-			if let data = try? Data(contentsOf: url, options: [.alwaysMapped]) {
-				return data
-			}
-		}
-		return bytes
-	}
-
 	let typeIdentifier: String
 	var accessoryTitle: String?
 	let uuid: UUID
@@ -160,7 +126,6 @@ final class ArchivedDropItemType: Codable {
 	let createdAt: Date
 	var representedClass: String
 	var classWasWrapped: Bool
-	var hasLocalFiles: Bool
 	var loadingError: Error?
 
 	// transient / ui
@@ -185,7 +150,7 @@ final class ArchivedDropItemType: Codable {
 		case "MKMapItem": return "Map Location"
 		case "NSArray": return "List"
 		case "NSDictionary": return "Associative List"
-		case "NSURL": return hasLocalFiles ? "File(s)" : "Link"
+		case "NSURL": return "Link"
 		default: return "Data Object (\(representedClass))"
 		}
 	}
@@ -209,11 +174,7 @@ final class ArchivedDropItemType: Codable {
 			return 0
 		}
 
-		var total = sizeItem(path: bytesPath)
-		if hasLocalFiles {
-			total += sizeItem(path: targetFileUrl)
-		}
-		return total
+		return sizeItem(path: bytesPath)
 	}
 
 	var sizeDescription: String? {
@@ -229,7 +190,7 @@ final class ArchivedDropItemType: Codable {
 		//}
 
 		if classWasWrapped {
-			return NSKeyedUnarchiver.unarchiveObject(with: bytes)
+			return try! NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(bytes)
 		} else if let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {
@@ -279,7 +240,6 @@ final class ArchivedDropItemType: Codable {
 		displayIconScale = 1
 		displayIconWidth = 0
 		displayIconHeight = 0
-		hasLocalFiles = false
 		classWasWrapped = false
 		createdAt = Date()
 		representedClass = ""

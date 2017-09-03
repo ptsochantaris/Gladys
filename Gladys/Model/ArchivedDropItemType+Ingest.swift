@@ -8,41 +8,31 @@ extension ArchivedDropItemType {
 
 	func startIngest(provider: NSItemProvider) {
 
-		provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { [weak self] item, error in
+		provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log(">> Error receiving item: \(error.localizedDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.signalDone()
-			} else if let item = item {
-				let itemType = type(of: item)
-				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)] type: [\(itemType)]")
-				s.ingest(item: item, from: provider)
+			} else if let data = data {
+				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
+				s.ingest(data: data, from: provider)
 			}
 		}
 	}
 
-	private func ingest(item i: NSSecureCoding, from provider: NSItemProvider) { // in thread!
+	private func ingest(data: Data, from provider: NSItemProvider) { // in thread!
 
 		let item: NSSecureCoding
-		let data: Data?
-		if let d = i as? Data {
-
-			data = d
-			if let obj = NSKeyedUnarchiver.unarchiveObject(with: d) as? NSSecureCoding {
-				log("      unwrapped keyed object: \(type(of:obj))")
-				item = obj
-				classWasWrapped = true
-
-			} else {
-				log("      looks like raw data")
-				item = d as NSSecureCoding
-			}
+		if let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
+			log("      unwrapped keyed object: \(type(of:obj))")
+			item = obj
+			classWasWrapped = true
 
 		} else {
-			data = nil
-			item = i
+			log("      looks like raw data")
+			item = data as NSSecureCoding
 		}
 
 		if let item = item as? NSString {
@@ -101,59 +91,37 @@ extension ArchivedDropItemType {
 			setBytes(object: item, originalData: data)
 			signalDone()
 
-		} else if let item = item as? Data {
-			log("      received data: \(item)")
-			representedClass = "NSData"
-			handleData(item, provider)
-
 		} else {
-			let itemType = type(of: item)
-			log("      Do not know how to handle an item of class \(String(describing: itemType)), will store")
-
-			if typeIdentifier.hasPrefix("com.apple.DocumentManager.uti.FPItem") {
-				if typeIdentifier.hasSuffix("File") {
-					setDisplayIcon (#imageLiteral(resourceName: "iconBlock"), 5, .center)
-				} else {
-					setDisplayIcon(#imageLiteral(resourceName: "iconFolder"), 5, .center)
-				}
-			} else {
-				setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			}
-
-			setBytes(object: item, originalData: data)
-			signalDone()
-			// TODO: generate analytics report to record what type was received and what UTI
+			log("      received data: \(data)")
+			representedClass = "NSData"
+			handleData(data, provider)
 		}
 	}
 
 	private func handleUrl(_ item: URL, _ data: Data?, _ provider: NSItemProvider) {
 		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 		if item.isFileURL {
-			log("      will duplicate item at local path: \(item.path)")
-			provider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] url, error in
+			signalDone()
+			return
+		}
+		log("      received remote url: \(item.absoluteString)")
+		setBytes(object: item as NSURL, originalData: data)
+		setTitleInfo(item.absoluteString, 6)
+		if let s = item.scheme, s.hasPrefix("http") {
+			fetchWebPreview(for: item) { [weak self] title, image in
 				if self?.loadingAborted ?? true { return }
-				self?.handleLocalFetch(url: url, error: error)
+				self?.accessoryTitle = title ?? self?.accessoryTitle
+				if let image = image {
+					if image.size.height > 100 || image.size.width > 200 {
+						self?.setDisplayIcon(image, 30, .fit)
+					} else {
+						self?.setDisplayIcon(image, 30, .center)
+					}
+				}
+				self?.signalDone()
 			}
 		} else {
-			log("      received remote url: \(item.absoluteString)")
-			setBytes(object: item as NSURL, originalData: data)
-			setTitleInfo(item.absoluteString, 6)
-			if let s = item.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: item) { [weak self] title, image in
-					if self?.loadingAborted ?? true { return }
-					self?.accessoryTitle = title ?? self?.accessoryTitle
-					if let image = image {
-						if image.size.height > 100 || image.size.width > 200 {
-							self?.setDisplayIcon(image, 30, .fit)
-						} else {
-							self?.setDisplayIcon(image, 30, .center)
-						}
-					}
-					self?.signalDone()
-				}
-			} else {
-				signalDone()
-			}
+			signalDone()
 		}
 	}
 
@@ -164,7 +132,10 @@ extension ArchivedDropItemType {
 			setDisplayIcon(image, 40, .fill)
 		}
 
-		if typeIdentifier == "public.vcard" {
+		if typeIdentifier == "public.folder" {
+			setDisplayIcon (#imageLiteral(resourceName: "iconFolder"), 5, .center)
+
+		} else if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
 				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
@@ -216,35 +187,6 @@ extension ArchivedDropItemType {
 	private func setLoadingError(_ message: String) {
 		loadingError = NSError(domain: "build.build.Gladys.loadingError", code: 5, userInfo: [NSLocalizedDescriptionKey: message])
 		log("Error: \(message)")
-	}
-
-	private func handleLocalFetch(url: URL?, error: Error?) {
-		// in thread
-		if let url = url {
-
-			hasLocalFiles = true
-
-			let p = url.lastPathComponent
-			setTitleInfo(p, p.contains(".") ? 1 : 0)
-
-			var pointingAtDirectory: ObjCBool = false
-			FileManager.default.fileExists(atPath: url.path, isDirectory: &pointingAtDirectory)
-
-			let localUrl = copyLocal(url)
-			log("      received to local url and adjusted proxy link: \(localUrl.path)")
-			setBytes(object: localUrl as NSURL, originalData: nil)
-
-			if let image = UIImage(contentsOfFile: localUrl.path) {
-				setDisplayIcon(image, 10, .fill)
-			} else {
-				setDisplayIcon(pointingAtDirectory.boolValue ? #imageLiteral(resourceName: "iconFolder") : #imageLiteral(resourceName: "iconBlock"), 5, .center)
-			}
-
-		} else if let error = error {
-			log("Error fetching local data from url: \(error.localizedDescription)")
-			loadingError = error
-		}
-		signalDone()
 	}
 
 	func cancelIngest() {
