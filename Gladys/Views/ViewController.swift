@@ -509,6 +509,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				setEditing(false, animated: true)
 				blurb(randomCleanLine)
 			}
+		} else {
+			if isEditing {
+				setEditing(false, animated: true)
+			}
 		}
 		model.save()
 	}
@@ -637,7 +641,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}, completion: nil)
 	}
 
-	/////////////////////////////
+	///////////////////////////// IAP
 
 	private var iapFetchCallbackCount: Int?
 	private var infiniteModeItem: SKProduct?
