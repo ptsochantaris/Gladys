@@ -57,7 +57,6 @@
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
-		16B552781F12E3F700641009 /* Fuzi.framework.dSYM in Carthage Copy Files */ = {isa = PBXBuildFile; fileRef = 16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */; };
 		16B5527E1F12E58300641009 /* Fuzi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16F21C171F12D1B40033FE8B /* Fuzi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -141,17 +140,6 @@
 				16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		16B552741F12E33200641009 /* Carthage Copy Files */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-				16B552781F12E3F700641009 /* Fuzi.framework.dSYM in Carthage Copy Files */,
-			);
-			name = "Carthage Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -501,8 +489,7 @@
 				1678F9CB1EF475FE005697CB /* Resources */,
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
-				1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */,
-				16B552741F12E33200641009 /* Carthage Copy Files */,
+				1645F2D01F12DE0B00CF6506 /* Carthage Strip And Copy Frameworks */,
 				16C00B201F20036400A88BCA /* Restore Build Number */,
 			);
 			buildRules = (
@@ -640,7 +627,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1645F2D01F12DE0B00CF6506 /* Carthage Strip Frameworks */ = {
+		1645F2D01F12DE0B00CF6506 /* Carthage Strip And Copy Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -648,7 +635,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Fuzi.framework",
 			);
-			name = "Carthage Strip Frameworks";
+			name = "Carthage Strip And Copy Frameworks";
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Fuzi.framework",
 			);
