@@ -119,7 +119,7 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	let typeIdentifier: String
+	var typeIdentifier: String
 	var accessoryTitle: String?
 	let uuid: UUID
 	let parentUuid: UUID

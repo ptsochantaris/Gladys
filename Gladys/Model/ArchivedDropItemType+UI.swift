@@ -17,7 +17,6 @@ extension ArchivedDropItemType {
 	}
 
 	func registerForDrag(with provider: NSItemProvider) {
-
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
 			log("Responding with data block")
 			completion(self.bytes, nil)

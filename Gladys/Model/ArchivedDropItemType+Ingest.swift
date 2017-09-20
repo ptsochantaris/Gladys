@@ -133,6 +133,7 @@ extension ArchivedDropItemType {
 		}
 
 		if typeIdentifier == "public.folder" {
+			typeIdentifier = "public.zip-archive"
 			setDisplayIcon (#imageLiteral(resourceName: "iconFolder"), 5, .center)
 
 		} else if typeIdentifier == "public.vcard" {

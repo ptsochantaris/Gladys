@@ -10,7 +10,7 @@
 			<key>CFBundleTypeIconFiles</key>
 			<array>
 				<string>gladysIcon320</string>
-				<string>gladysIcon320</string>
+				<string>gladysIcon64</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>Gladys Archive</string>
