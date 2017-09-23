@@ -6,8 +6,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	var item: ArchivedDropItem!
 
 	@IBOutlet weak var table: UITableView!
-	@IBOutlet weak var titleLabel: UILabel!
-	@IBOutlet weak var header: UIView!
 	@IBOutlet weak var openButton: UIBarButtonItem!
 	@IBOutlet weak var dateItem: UIBarButtonItem!
 	@IBOutlet var dateLabel: UILabel!
@@ -21,8 +19,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.dragDelegate = self
 		table.dropDelegate = self
 
-		titleLabel.text = item.oneTitle
-		titleLabel.textAlignment = item.displayTitle.1
 		openButton.isEnabled = item.canOpen
 
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
@@ -31,14 +27,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.backgroundColor = .clear
 		table.separatorStyle = .none
 		view.backgroundColor = .clear
-	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		let newSize = header.systemLayoutSizeFitting(CGSize(width: view.bounds.size.width, height: 0),
-		                                             withHorizontalFittingPriority: .required,
-		                                             verticalFittingPriority: .fittingSizeLevel)
-		header.frame = CGRect(origin: .zero, size: newSize)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +41,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
+		preferredContentSize = CGSize(width: 320, height: 600)
 		present(a, animated: true)
 	}
 
@@ -61,7 +50,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
-		NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
+		NotificationCenter.default.post(name: .DeleteSelected, object: item)
 	}
 
 	//////////////////////////////////
@@ -71,32 +60,58 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return item.typeItems.count
+		return item.typeItems.count + 1
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return item.typeItems[section].contentDescription
+		if section > 0 {
+			return item.typeItems[section-1].contentDescription
+		} else {
+			return nil
+		}
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-		let typeEntry = item.typeItems[indexPath.section]
-		if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
-			cell.name.text = "\"\(title)\""
-			cell.name.textAlignment = typeEntry.displayTitleAlignment
-		} else if typeEntry.dataExists {
-			cell.name.text = "<Binary Data>"
+
+		if indexPath.section == 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
+			cell.label.text = item.oneTitle
+			cell.label.textAlignment = item.displayTitle.1
+			return cell
+
 		} else {
-			cell.name.text = "<Data Error>"
+
+			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
+			let typeEntry = item.typeItems[indexPath.section-1]
+			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
+				cell.name.text = "\"\(title)\""
+				cell.name.textAlignment = typeEntry.displayTitleAlignment
+			} else if typeEntry.dataExists {
+				cell.name.text = "<Binary Data>"
+			} else {
+				cell.name.text = "<Data Error>"
+			}
+			cell.type.text = typeEntry.typeIdentifier
+			cell.size.text = typeEntry.sizeDescription
+			return cell
 		}
-		cell.type.text = typeEntry.typeIdentifier
-		cell.size.text = typeEntry.sizeDescription
-		return cell
+	}
+
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if section == 0 {
+			return 20
+		} else {
+			return 34
+		}
 	}
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		let typeItem = item.typeItems[indexPath.section]
-		return [typeItem.dragItem]
+		if indexPath.section > 0 {
+			let typeItem = item.typeItems[indexPath.section-1]
+			return [typeItem.dragItem]
+		} else {
+			return []
+		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
