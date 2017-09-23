@@ -19,6 +19,8 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	}
 
 	func reIngest(delegate: LoadCompletionDelegate) {
+		isLoading = true
+		loadCount = typeItems.count
 		self.delegate = delegate
 		typeItems.forEach { $0.reIngest(delegate: self) }
 	}
