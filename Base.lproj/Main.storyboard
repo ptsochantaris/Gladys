@@ -180,13 +180,21 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aAg-TL-ZfU">
+                                <rect key="frame" x="281" y="457.5" width="31" height="14.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="eHF-2i-yuv" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="6hD-VL-b9m"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" secondItem="aAg-TL-ZfU" secondAttribute="bottom" constant="8" id="DPc-dM-Z4V"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="DlO-IY-L3z"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="20" id="Id3-0l-h2p"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eHF-2i-yuv" secondAttribute="trailing" constant="20" id="Kmc-7x-z5u"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="trailing" secondItem="aAg-TL-ZfU" secondAttribute="trailing" constant="8" id="Pg8-OO-Lj3"/>
                             <constraint firstItem="OxZ-BU-EoU" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="aXs-bU-lW9"/>
                             <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="37" id="ddM-ZR-lUi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="20" id="q4O-tH-cpU"/>
@@ -215,6 +223,7 @@
                         <outlet property="infoLabel" destination="xfE-PE-TSW" id="MFR-Rj-866"/>
                         <outlet property="innerFrame" destination="YjC-x2-xmz" id="fhc-2f-KWD"/>
                         <outlet property="spinner" destination="Olv-Pc-Qy9" id="6r7-rx-Ua5"/>
+                        <outlet property="versionLabel" destination="aAg-TL-ZfU" id="Phc-Xz-5zV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>

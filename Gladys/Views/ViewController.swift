@@ -246,6 +246,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
+				d.navigationItem.rightBarButtonItem = nil
 			} else {
 				n.view.backgroundColor = c
 			}

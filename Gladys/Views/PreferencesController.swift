@@ -96,6 +96,8 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		}
 	}
 
+	@IBOutlet weak var versionLabel: UILabel!
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -106,6 +108,8 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		container.addInteraction(dragInteraction)
 		let dropInteraction = UIDropInteraction(delegate: self)
 		container.addInteraction(dropInteraction)
+
+		versionLabel.text = "v" + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		externalDataUpdate()
