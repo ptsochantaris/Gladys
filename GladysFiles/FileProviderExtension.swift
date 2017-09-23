@@ -41,7 +41,17 @@ final class FileProviderExtension: NSFileProviderExtension {
 			return Model.appStorageUrl
 		}
     }
-    
+
+	private func fileItem(at url: URL) -> FileProviderItem? {
+		let urlComponents = url.pathComponents
+		if let lastComponent = urlComponents.last, urlComponents.count > 2 {
+			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
+			let identifier = NSFileProviderItemIdentifier(uuidString)
+			return (try? item(for: identifier)) as? FileProviderItem
+		}
+		return nil
+	}
+
 	override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
 		let urlComponents = url.pathComponents
 		if let lastComponent = urlComponents.last, urlComponents.count > 2 {
@@ -61,6 +71,12 @@ final class FileProviderExtension: NSFileProviderExtension {
 
     override func itemChanged(at url: URL) {
 		log("Item changed: \(url.path)")
+		if let fi = fileItem(at: url), let parentUuid = fi.typeItem?.parentUuid, let parent = model.drops.first(where: { $0.uuid == parentUuid }) {
+			log("Identified as child of local item \(parent.uuid)")
+			parent.needsReIngest = true
+			model.save()
+			return
+		}
     }
 
     override func stopProvidingItem(at url: URL) {

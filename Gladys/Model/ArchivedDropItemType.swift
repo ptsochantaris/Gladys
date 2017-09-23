@@ -129,7 +129,9 @@ final class ArchivedDropItemType: Codable {
 
 	var contentDescription: String? {
 
-		switch typeIdentifier.lowercased() {
+		let id = typeIdentifier.lowercased()
+
+		switch id {
 		case "public.item": return "Item"
 		case "public.content": return "Content"
 		case "public.composite-content": return "Mixed Content"
@@ -257,9 +259,9 @@ final class ArchivedDropItemType: Codable {
 		case "com.microsoft.powerpoint.ppt": return "Microsoft PowerPoint Presentation"
 		case "com.microsoft.word.wordml": return "Microsoft Word 2003 XML Document"
 		case "com.apple.keynote.key": return "Keynote Document"
-		case "com.apple.iWork.Keynote.key": return "Keynote Document"
+		case "com.apple.iwork.Keynote.key": return "Keynote Document"
 		case "com.apple.keynote.kth": return "Keynote Document"
-		case "com.apple.iWork.Keynote.kth": return "Keynote Theme"
+		case "com.apple.iwork.Keynote.kth": return "Keynote Theme"
 		case "org.openxmlformats.openxml": return "Office Open XML"
 		case "org.openxmlformats.wordprocessingml.document": return "Office Open XML Word Processor Document"
 		case "org.openxmlformats.wordprocessingml.document.macroenabled": return "Office Open XML Word Processor Document (+macros)"
@@ -293,6 +295,18 @@ final class ArchivedDropItemType: Codable {
 		case "org.oasis-open.opendocument.text-master": return "Open Document Text Master"
 		case "org.oasis-open.opendocument.text-web": return "Open Document HTML Template"
 		default: break
+		}
+
+		if id.hasPrefix("com.apple.") {
+			if id.contains(".iwork.") {
+				if id.contains(".numbers") { return "Numbers Document" }
+				if id.contains(".pages") { return "Pages Document" }
+				if id.contains(".keynote") { return "Keynote Document" }
+			}
+		}
+
+		if id.hasSuffix(".markdown") {
+			return "Markdown Text"
 		}
 
 		switch representedClass {

@@ -343,6 +343,17 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 		didUpdateItems()
 		updateEmptyView(animated: true)
+		syncModal()
+	}
+
+	private func syncModal() {
+		if let d = currentDetailView {
+			if !model.drops.contains(where: { $0.uuid == d.item.uuid }) {
+				d.done()
+				return
+			}
+			d.reload()
+		}
 	}
 
 	private var emptyView: UIImageView?
@@ -356,6 +367,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			deleteButton.title = "Delete \(count) Items"
 		} else {
 			deleteButton.title = "Delete"
+		}
+
+		let itemsToReIngest = model.drops.filter({ $0.needsReIngest })
+		for item in itemsToReIngest {
+			loadCount += 1
+			startBgTaskIfNeeded()
+			item.reIngest(delegate: self)
 		}
 	}
 
@@ -492,17 +510,31 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	private var currentDetailView: DetailController? {
+		return (presentedViewController as? UINavigationController)?.topViewController as? DetailController
+	}
+
 	func deleteRequested(for items: [ArchivedDropItem]) {
+
+		let detailController = currentDetailView
+
 		for item in items {
 			let uuid = item.uuid
+
+			if let d = detailController, d.item.uuid == uuid {
+				d.done()
+			}
+
 			if let i = model.filteredDrops.index(where: { $0.uuid == uuid }) {
 				model.removeItemFromList(uuid: uuid)
 				archivedItemCollectionView.performBatchUpdates({
 					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
 				})
 			}
+
 			item.delete()
 		}
+
 		if model.filteredDrops.count == 0 {
 			updateEmptyView(animated: true)
 			if isEditing {
@@ -531,6 +563,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"Peekaboo!",
 		"Cool!",
 		"Zap!",
+		"Nice!",
 		"Feels all empty now!",
 		"So much space!",
 	]
@@ -548,6 +581,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"What's up?",
 		"What can I hold for you?",
 		"Gimme.",
+		"Quiet day?",
 		"How can I help?",
 		"Ready!",
 		]
@@ -573,6 +607,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				}
 			}
 
+			item.needsReIngest = false
 			item.makeIndex()
 
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {
@@ -583,6 +618,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			loadCount -= 1
 			if loadCount == 0 {
 				model.save()
+				syncModal()
 			}
 			endBgTaskIfNeeded()
 		}

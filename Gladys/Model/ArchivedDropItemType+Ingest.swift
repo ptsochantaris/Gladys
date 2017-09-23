@@ -17,12 +17,21 @@ extension ArchivedDropItemType {
 				s.signalDone()
 			} else if let data = data {
 				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
-				s.ingest(data: data, from: provider)
+				s.ingest(data: data)
 			}
 		}
 	}
 
-	private func ingest(data: Data, from provider: NSItemProvider) { // in thread!
+	func reIngest(delegate: LoadCompletionDelegate) {
+		self.delegate = delegate
+		if loadingError == nil, let bytesCopy = bytes {
+			DispatchQueue.global(qos: .background).async {
+				self.ingest(data: bytesCopy)
+			}
+		}
+	}
+
+	private func ingest(data: Data) { // in thread!
 
 		let item: NSSecureCoding
 		if let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
@@ -72,7 +81,7 @@ extension ArchivedDropItemType {
 			signalDone()
 
 		} else if let item = item as? URL {
-			handleUrl(item, data, provider)
+			handleUrl(item, data)
 
 		} else if let item = item as? NSArray {
 			log("      received array: \(item)")
@@ -101,12 +110,12 @@ extension ArchivedDropItemType {
 		} else {
 			log("      received data: \(data)")
 			representedClass = "NSData"
-			handleData(data, provider)
+			handleData(data)
 		}
 	}
 
 
-	private func handleUrl(_ item: URL, _ data: Data, _ provider: NSItemProvider) {
+	private func handleUrl(_ item: URL, _ data: Data) {
 
 		bytes = data
 		setTitleInfo(item.absoluteString, 6)
@@ -139,7 +148,7 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	private func handleData(_ data: Data, _ provider: NSItemProvider) {
+	private func handleData(_ data: Data) {
 		bytes = data
 
 		if let image = UIImage(data: data) {
@@ -192,7 +201,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if let url = encodedUrl {
-			handleUrl(url as URL, data, provider)
+			handleUrl(url as URL, data)
 			return
 		}
 
