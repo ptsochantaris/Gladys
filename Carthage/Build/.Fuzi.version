@@ -1,18 +1,9 @@
 {
+  "commitish" : "1.0.1",
   "iOS" : [
     {
-      "hash" : "62d825aed068d0a21667ce56b767ea59a9ebe570f03879b83c5e2fcb250a191a",
+      "hash" : "785f8659ed955b749f6742ca130355b0574fdc44d3bd3ef40e5886213117ef0c",
       "name" : "Fuzi"
     }
-  ],
-  "commitish" : "1.0.1",
-  "watchOS" : [
-
-  ],
-  "tvOS" : [
-
-  ],
-  "Mac" : [
-
   ]
 }

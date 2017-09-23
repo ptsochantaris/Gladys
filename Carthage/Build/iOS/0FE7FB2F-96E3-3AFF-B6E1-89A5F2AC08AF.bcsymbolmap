@@ -163,7 +163,6 @@ __T04Fuzi10XMLElementC0024numberValuestorage_wnAHf029_B88E2E60F33FA03EC6C8B76C07
 __T04Fuzi10XMLElementC0022dateValuestorage_riAIe029_B88E2E60F33FA03EC6C8B76C07B1K1FLL10Foundation4DateVSgSgvWvd
 __T04Fuzi10XMLElementCML
 __T04Fuzi10XMLElementCMf
-__T04Fuzi10XMLElementCMF
 __swift_FORCE_LOAD_$_swiftFoundation_$_Fuzi
 __swift_FORCE_LOAD_$_swiftObjectiveC_$_Fuzi
 __swift_FORCE_LOAD_$_swiftDarwin_$_Fuzi
@@ -180,21 +179,7 @@ __T010Foundation4DateVSgSgML
 __T010Foundation4DateVSgML
 __T0s23_ContiguousArrayStorageCy4Fuzi7XMLNodeCGML
 __T0s23_ContiguousArrayStorageCy4Fuzi10XMLElementCGML
-__T0SC14xmlElementTypeVs16RawRepresentable7libxml2MA
-__T0SC16ComparisonResultOs16RawRepresentable10FoundationMA
-__T0So19NSRegularExpressionC7OptionsVs25ExpressibleByArrayLiteral10FoundationMA
-__T0So19NSRegularExpressionC7OptionsVs10SetAlgebra10FoundationMA
-__T0So19NSRegularExpressionC15MatchingOptionsVs25ExpressibleByArrayLiteral10FoundationMA
-__T0So19NSRegularExpressionC15MatchingOptionsVs10SetAlgebra10FoundationMA
-__T0So19NSRegularExpressionC7OptionsVs16RawRepresentable10FoundationMA
-__T0So19NSRegularExpressionC7OptionsVs9OptionSet10FoundationMA
-__T0So19NSRegularExpressionC15MatchingOptionsVs16RawRepresentable10FoundationMA
-__T0So19NSRegularExpressionC15MatchingOptionsVs9OptionSet10FoundationMA
 ___swift_reflection_version
-__T0So8NSNumberCMF
-__T0So19NSRegularExpressionCMF
-__T0So19NSRegularExpressionC7OptionsVMB
-__T0So19NSRegularExpressionC15MatchingOptionsVMB
 _objc_classes
 ___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
 ___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi3xsxopSSSgSPyxGSglF
@@ -227,7 +212,7 @@ ___profd__T04Fuzi2teoiSbSC14xmlElementTypeV_ADtF
 ___profc_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
 ___profd_/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift:_T04Fuzi8cXMLNodeSbSpySC8_xmlNodeVGSg_SS10matchesTagSSSg11inNamespacetF
 Apple LLVM version 9.0.0 (clang-900.0.37)
--emit-bc /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift -target arm64-apple-ios8.0 -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk -I /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos -I /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/libxml2 -F /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos -application-extension -g -import-underlying-module -module-cache-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/ModuleCache -profile-generate -profile-coverage-mapping -swift-version 3 -serialize-debugging-options -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/swift-overrides.hmap -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-generated-files.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-own-target-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/all-product-headers.yaml -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-project-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos/include -Xcc -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/usr/include/libxml2 -Xcc -I/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Fuzi -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/DerivedSources/arm64 -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/DerivedSources -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/unextended-module-overlay.yaml -Xcc -working-directory/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi -emit-module-doc-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi.swiftdoc -serialize-diagnostics-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.dia -O -module-name Fuzi -emit-module-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi.swiftmodule -emit-objc-header-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi-Swift.h -emit-dependencies-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.d -num-threads 8 -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Node.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/NodeSet.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Error.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Document.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Helpers.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Queryable.bc -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift
+-emit-bc /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Element.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Queryable.swift -target arm64-apple-ios8.0 -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk -I /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos -I /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/libxml2 -F /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos -application-extension -g -import-underlying-module -module-cache-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/ModuleCache -profile-generate -profile-coverage-mapping -swift-version 3 -serialize-debugging-options -disable-reflection-metadata -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/swift-overrides.hmap -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-generated-files.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-own-target-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/all-product-headers.yaml -Xcc -iquote -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Fuzi-project-headers.hmap -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Products/Release-iphoneos/include -Xcc -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/usr/include/libxml2 -Xcc -I/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Fuzi -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/DerivedSources/arm64 -Xcc -I/Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/DerivedSources -Xcc -ivfsoverlay -Xcc /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/unextended-module-overlay.yaml -Xcc -working-directory/Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi -emit-module-doc-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi.swiftdoc -serialize-diagnostics-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.dia -O -module-name Fuzi -emit-module-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi.swiftmodule -emit-objc-header-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Fuzi-Swift.h -emit-dependencies-path /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.d -num-threads 8 -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Element.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Node.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/NodeSet.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Error.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Document.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Helpers.bc -o /Volumes/UserData/ptsochantaris/Library/Caches/org.carthage.CarthageKit/DerivedData/9.0_9A235/Fuzi/1.0.1/Build/Intermediates.noindex/Fuzi.build/Release-iphoneos/Fuzi.build/Objects-normal/arm64/Queryable.bc -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift
 <swift-imported-modules>
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi
 Apple Swift version 4.0 effective-3.2 (swiftlang-900.0.65 clang-900.0.37)
@@ -479,7 +464,6 @@ __T04Fuzi7XMLNodeC0019rawXMLstorage_BJEEd33_45A243929436977443968909047B692BLLSS
 __T04Fuzi7XMLNodeC5cNodeSpySC04_xmlC0VGvWvd
 __T04Fuzi7XMLNodeCML
 __T04Fuzi7XMLNodeCMf
-__T04Fuzi7XMLNodeCMF
 __T0SiSgML
 __T04Fuzi10XMLElementCSgSgML
 __T04Fuzi10XMLElementCSgML
@@ -525,7 +509,6 @@ __T0SC7_xmlDtdVWV
 __T0SC7_xmlDtdVMn
 __T0SC7_xmlDtdVN
 __T0SQys13OpaquePointerVGML
-__T0SC8_xmlNodeVMB
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Node.swift
 get_field_types__xmlDtd
 _T0SQySpySC7_xmlDocVGGMa
@@ -746,11 +729,9 @@ __T04Fuzi7NodeSetC01cbC0SpySC04_xmlbC0VGSgvWvd
 __T04Fuzi7NodeSetC8documentSQyAA11XMLDocumentCGvWvd
 __T04Fuzi7NodeSetCML
 __T04Fuzi7NodeSetCMf
-__T04Fuzi7NodeSetCMF
 __T04Fuzi12XPathNodeSetC01cB033_ABB47922B8C42878EFAFFD076E627AF3LLSpySC04_xmlB6ObjectVGSgvWvd
 __T04Fuzi12XPathNodeSetCML
 __T04Fuzi12XPathNodeSetCMf
-__T04Fuzi12XPathNodeSetCMF
 __T0SpySC15_xmlXPathObjectVGSgML
 __T0SpySC15_xmlXPathObjectVGML
 __T0SC15_xmlXPathObjectVML
@@ -773,16 +754,10 @@ __T0SpySC8_xmlNodeVGSgML
 __T0SpySC11_xmlNodeSetVGSgML
 __T0SQy4Fuzi11XMLDocumentCGML
 __T0s23_ContiguousArrayStorageCys5SliceVy4Fuzi7NodeSetCGGML
-__T04Fuzi7NodeSetCs10CollectionAAMA
-__T04Fuzi7NodeSetCs10_IndexableAAMA
-__T04Fuzi7NodeSetCs8SequenceAAMA
-__T04Fuzi7NodeSetCs14_IndexableBaseAAMA
-__T0SC11_xmlNodeSetVMB
-__T0SC15_xmlXPathObjectVMB
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/NodeSet.swift
 NodeSet.swift
-objectdestroy.14
-objectdestroy.11
+objectdestroy.12
+objectdestroy.10
 _T0s22_ContiguousArrayBufferVAByxGSi19_uninitializedCount_Si15minimumCapacitytcfC4Fuzi10XMLElementC_Tg5Tf4nnd_n
 prefix
 formIndex
@@ -950,7 +925,6 @@ _swift_rt_swift_storeEnumTagSinglePayload
 __T04Fuzi8XMLErrorO9lastErrorA2C07defaultD0_tFZTf4gd_n
 __T04Fuzi8XMLErrorOWV
 __T04Fuzi8XMLErrorOMf
-__T04Fuzi8XMLErrorOMF
 __T0Si4code_SS7messagetML
 __T04Fuzi8XMLErrorOmML
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Error.swift
@@ -1001,10 +975,8 @@ __T04Fuzi11XMLDocumentC9cDocument33_A7587B54FC91508C310D7D9A9E31E8E2LLSpySC7_xml
 __T04Fuzi11XMLDocumentC17defaultNamespacess10DictionaryVyS2SGvWvd
 __T04Fuzi11XMLDocumentCML
 __T04Fuzi11XMLDocumentCMf
-__T04Fuzi11XMLDocumentCMF
 __T04Fuzi12HTMLDocumentCML
 __T04Fuzi12HTMLDocumentCMf
-__T04Fuzi12HTMLDocumentCMF
 __T0SS10FoundationE8EncodingVSgML
 __T0So15NumberFormatterCSgML
 __T0So15NumberFormatterCML
@@ -1012,9 +984,6 @@ __T0So13DateFormatterCSgML
 __T0So13DateFormatterCML
 __T0s37_HashableTypedNativeDictionaryStorageCyS2SGML
 __T0s23_ContiguousArrayStorageCys4Int8VGML
-__T0So15NumberFormatterCMF
-__T0So13DateFormatterCMF
-__T0SC7_xmlDocVMB
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Document.swift
 _T04Fuzi12HTMLDocumentCMa
 get_field_types_HTMLDocument
@@ -1086,8 +1055,6 @@ __T04Fuzi11XMLDocumentCs28CustomDebugStringConvertibleAAsADP16debugDescriptionSS
 __T04Fuzi11XMLDocumentCs23CustomStringConvertibleAAsADP11descriptionSSfgTWTm
 __T04Fuzi12LinkedCNodesV4nextSpySC8_xmlNodeVGSgyF
 __T04Fuzi12LinkedCNodesVs16IteratorProtocolAAsADP4next7ElementQzSgyFTW
-__T04Fuzi12LinkedCNodesVMF
-__T0SC14xmlElementTypeVMB
 /Volumes/UserData/ptsochantaris/Documents/Gladys/Carthage/Checkouts/Fuzi/Sources/Helpers.swift
 _T04Fuzi11XMLDocumentCs28CustomDebugStringConvertibleAAWa
 Helpers.swift
@@ -1148,19 +1115,16 @@ __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMa
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLC02idB0So19NSRegularExpressionCvZ
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLC05classB0So19NSRegularExpressionCvZ
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLC09attributeB0So19NSRegularExpressionCvZ
-__T04Fuzi9Queryable_pMF
 __T04Fuzi19XPathFunctionResultC0022boolValuestorage_riAIe33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLSbSgvWvd
 __T04Fuzi19XPathFunctionResultC0024doubleValuestorage_wnAHf33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLSdSgvWvd
 __T04Fuzi19XPathFunctionResultC0024stringValuestorage_wnAHf33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLSSSgvWvd
 __T04Fuzi19XPathFunctionResultC01cB033_EFCFDABBC19A6AC171FF6706F1D8B4CCLLSpySC04_xmlB6ObjectVGvWvd
 __T04Fuzi19XPathFunctionResultCML
 __T04Fuzi19XPathFunctionResultCMf
-__T04Fuzi19XPathFunctionResultCMF
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMm
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMn
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCML
 __T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMf
-__T04Fuzi14RegexConstants33_EFCFDABBC19A6AC171FF6706F1D8B4CCLLCMF
 __T0SbSgML
 __T0SdSgML
 __T0s23_ContiguousArrayStorageCySSGML
