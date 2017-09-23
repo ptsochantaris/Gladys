@@ -43,7 +43,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		preferredContentSize = table.sizeThatFits(CGSize(width: 320, height: 5000))
+		table.layoutIfNeeded()
+		preferredContentSize = table.contentSize
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
@@ -63,7 +64,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {
-		item.tryOpen(in: self.navigationController!)
+		item.tryOpen(in: navigationController!)
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
@@ -84,7 +85,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return item.typeItems[section].typeIdentifier
+		return item.typeItems[section].contentDescription
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -98,7 +99,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		} else {
 			cell.name.text = "<Data Error>"
 		}
-		cell.type.text = typeEntry.contentDescription
+		cell.type.text = typeEntry.typeIdentifier
 		cell.size.text = typeEntry.sizeDescription
 		return cell
 	}

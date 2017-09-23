@@ -225,6 +225,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
+				d.navigationItem.rightBarButtonItem = nil
 			} else {
 				n.view.backgroundColor = c
 			}

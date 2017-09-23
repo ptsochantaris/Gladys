@@ -39,31 +39,36 @@ extension ArchivedDropItemType {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, originalData: data)
+			representedClass = "NSString"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
-			setBytes(object: item, originalData: data)
+			representedClass = "NSAttributedString"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? UIColor {
 			log("      received color: \(item)")
-			setBytes(object: item, originalData: data)
+			representedClass = "UIColor"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
-			setBytes(object: item, originalData: data)
+			representedClass = "UIImage"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
 			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
-			setBytes(object: item, originalData: data)
+			representedClass = "MKMapItem"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? URL {
@@ -77,7 +82,8 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Items", 1)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			setBytes(object: item, originalData: data)
+			representedClass = "NSArray"
+			bytes = data
 			signalDone()
 
 		} else if let item = item as? NSDictionary {
@@ -88,7 +94,8 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Entries", 1)
 			}
 			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			setBytes(object: item, originalData: data)
+			representedClass = "NSDictionary"
+			bytes = data
 			signalDone()
 
 		} else {
@@ -98,37 +105,44 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	private func handleUrl(_ item: URL, _ data: Data?, _ provider: NSItemProvider) {
-		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+
+	private func handleUrl(_ item: URL, _ data: Data, _ provider: NSItemProvider) {
+
+		bytes = data
+		setTitleInfo(item.absoluteString, 6)
+		representedClass = "URL"
+
 		if item.isFileURL {
+			log("      received local file url: \(item.absoluteString)")
+			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			signalDone()
 			return
-		}
-		log("      received remote url: \(item.absoluteString)")
-		setBytes(object: item as NSURL, originalData: data)
-		setTitleInfo(item.absoluteString, 6)
-		if let s = item.scheme, s.hasPrefix("http") {
-			fetchWebPreview(for: item) { [weak self] title, image in
-				if self?.loadingAborted ?? true { return }
-				self?.accessoryTitle = title ?? self?.accessoryTitle
-				if let image = image {
-					if image.size.height > 100 || image.size.width > 200 {
-						self?.setDisplayIcon(image, 30, .fit)
-					} else {
-						self?.setDisplayIcon(image, 30, .center)
-					}
-				}
-				self?.signalDone()
-			}
 		} else {
-			signalDone()
+			log("      received remote url: \(item.absoluteString)")
+			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+			if let s = item.scheme, s.hasPrefix("http") {
+				fetchWebPreview(for: item) { [weak self] title, image in
+					if self?.loadingAborted ?? true { return }
+					self?.accessoryTitle = title ?? self?.accessoryTitle
+					if let image = image {
+						if image.size.height > 100 || image.size.width > 200 {
+							self?.setDisplayIcon(image, 30, .fit)
+						} else {
+							self?.setDisplayIcon(image, 30, .center)
+						}
+					}
+					self?.signalDone()
+				}
+			} else {
+				signalDone()
+			}
 		}
 	}
 
-	private func handleData(_ item: Data, _ provider: NSItemProvider) {
-		bytes = item
+	private func handleData(_ data: Data, _ provider: NSItemProvider) {
+		bytes = data
 
-		if let image = UIImage(data: item) {
+		if let image = UIImage(data: data) {
 			setDisplayIcon(image, 40, .fill)
 		}
 
@@ -137,7 +151,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon (#imageLiteral(resourceName: "iconFolder"), 5, .center)
 
 		} else if typeIdentifier == "public.vcard" {
-			if let contacts = try? CNContactVCardSerialization.contacts(with: item), let person = contacts.first {
+			if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
 				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
 				accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
@@ -150,12 +164,12 @@ extension ArchivedDropItemType {
 			}
 
 		} else if typeIdentifier == "public.utf8-plain-text" {
-			let s = String(data: item, encoding: .utf8)
+			let s = String(data: data, encoding: .utf8)
 			setTitleInfo(s, 9)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if typeIdentifier == "public.utf16-plain-text" {
-			let s = String(data: item, encoding: .utf16)
+			let s = String(data: data, encoding: .utf16)
 			setTitleInfo(s, 8)
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
@@ -178,7 +192,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if let url = encodedUrl {
-			handleUrl(url as URL, item, provider)
+			handleUrl(url as URL, data, provider)
 			return
 		}
 
