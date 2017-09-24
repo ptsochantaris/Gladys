@@ -50,7 +50,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
-		NotificationCenter.default.post(name: .DeleteSelected, object: item)
+		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
+			NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
 	}
 
 	//////////////////////////////////

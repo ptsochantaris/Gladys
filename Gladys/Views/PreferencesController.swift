@@ -68,7 +68,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
-		let a = UIAlertController(title: "Are you sure?", message: "This will remove all current items from your collection. This cannot be undone, are you sure?", preferredStyle: .alert)
+		let a = UIAlertController(title: "Are you sure?", message: "This will remove all items from your collection. This cannot be undone.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Delete All", style: .destructive, handler: { [weak self] action in
 			self?.deleteAllItems()
 		}))
@@ -86,17 +86,20 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		prepareForDismiss()
-		dismiss(animated: true)
+		done()
 	}
 
-	private func prepareForDismiss() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
+	@IBOutlet weak var versionLabel: UIBarButtonItem!
+	@IBOutlet weak var deleteAll: UIBarButtonItem!
+
+	@IBAction func aboutSelected(_ sender: UIBarButtonItem) {
+		let u = URL(string: "https://bru.build/app/gladys")!
+		UIApplication.shared.open(u, options: [:]) { success in
+			if success {
+				self.done()
+			}
 		}
 	}
-
-	@IBOutlet weak var versionLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -109,7 +112,9 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		let dropInteraction = UIDropInteraction(delegate: self)
 		container.addInteraction(dropInteraction)
 
-		versionLabel.text = "v" + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+		versionLabel.title = "v\(v) (\(b))"
 
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		externalDataUpdate()
@@ -124,14 +129,36 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		}
 	}
 
-	@objc private func restorePurchases() {
-		prepareForDismiss()
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		let s = view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
+		                                     withHorizontalFittingPriority: .required,
+		                                     verticalFittingPriority: .fittingSizeLevel)
+		preferredContentSize = s
+	}
+
+	private func done() {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+			_ = f(p)
+		}
 		dismiss(animated: true)
+	}
+
+	@objc private func restorePurchases() {
+		done()
 		SKPaymentQueue.default().restoreCompletedTransactions()
 	}
 
 	@objc private func externalDataUpdate() {
 		spinner.stopAnimating()
-		infoLabel.text = "\(model.drops.count) Items\n" + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+		let count = model.drops.count
+		if count > 0 {
+			let size = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+			infoLabel.text = "\(count) Items\n\(size)"
+			deleteAll.isEnabled = true
+		} else {
+			infoLabel.text = "No Items"
+			deleteAll.isEnabled = false
+		}
 	}
 }

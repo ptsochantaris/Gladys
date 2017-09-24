@@ -297,6 +297,12 @@ final class ArchivedDropItemType: Codable {
 		default: break
 		}
 
+		if id.hasSuffix("-source") && id.hasPrefix("public."),
+			let lastComponent = id.components(separatedBy: ".").last,
+			let lang = lastComponent.components(separatedBy: "-").first {
+			return lang.capitalized + " Source"
+		}
+
 		if id.hasPrefix("com.apple.") {
 			if id.contains(".iwork.") {
 				if id.contains(".numbers") { return "Numbers Document" }

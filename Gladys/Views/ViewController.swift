@@ -150,8 +150,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-		if countInserts(in: session) > 0 {
-			resetSearch()
+		resetForDragEntry(session: session)
+	}
+
+	func resetForDragEntry(session: UIDropSession) {
+		if currentDetailView != nil {
+			if countInserts(in: session) > 0 {
+				resetSearch()
+			}
+			dismissAnyPopOver()
+		}
+	}
+
+	func dismissAnyPopOver() {
+		if let p = presentedViewController, let pc = p.popoverPresentationController {
+			if popoverPresentationControllerShouldDismissPopover(pc) {
+				p.dismiss(animated: true)
+			}
 		}
 	}
 
@@ -167,28 +182,20 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	private var dimView: UIView?
+	private var dimView: DimView?
 	func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
 		if let d = dimView {
 			dimView = nil
-			UIView.animate(animations: {
-				d.alpha = 0
-			}) { finished in
-				d.removeFromSuperview()
-			}
+			d.dismiss()
 		}
 		return true
 	}
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		if dimView == nil {
-			let d = UIView(frame: .zero)
-			d.backgroundColor = UIColor(white: 0, alpha: 0.3)
-			d.alpha = 0
+			let d = DimView()
 			navigationController?.view.cover(with: d)
 			dimView = d
-			UIView.animate(animations: {
-				d.alpha = 1
-			})
+			popoverPresentationController.passthroughViews = [d]
 		}
 	}
 
@@ -239,8 +246,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.modalPresentationStyle = .popover
 		navigationController?.visibleViewController?.present(n, animated: true)
 		if let p = n.popoverPresentationController {
-			p.permittedArrowDirections = [.up]
-			p.sourceRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 60))
+			p.permittedArrowDirections = [.any]
+			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
 			p.sourceView = navigationController!.view
 			p.delegate = self
 			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
@@ -251,6 +258,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				n.view.backgroundColor = c
 			}
 		}
+	}
+
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		navigationItem.largeTitleDisplayMode = .never
+		navigationItem.largeTitleDisplayMode = .automatic
 	}
 
 	override func viewDidLoad() {
@@ -305,8 +318,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
-
-		navigationItem.largeTitleDisplayMode = .automatic
 	}
 
 	private var lowMemoryMode = false
@@ -393,11 +404,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
 			l.widthAnchor.constraint(equalTo: e.widthAnchor).isActive = true
 
-			UIView.animate(withDuration: 1, delay: 3, options: .curveEaseInOut, animations: {
-				l.alpha = 0
-			}, completion: { finished in
-				l.removeFromSuperview()
-			})
+			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+				UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {
+					l.alpha = 0
+				}, completion: { finished in
+					l.removeFromSuperview()
+				})
+			}
 		}
 	}
 
@@ -494,7 +507,29 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var deletionCandidates: [UUID]?
 	@IBAction func deleteButtonSelected(_ sender: UIBarButtonItem) {
-		guard let candidates = deletionCandidates else { return }
+		guard let candidates = deletionCandidates, candidates.count > 0 else { return }
+
+		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
+		a.addAction(UIAlertAction(title: msg, style: .destructive, handler: { action in
+			if let p = a.popoverPresentationController {
+				_ = self.popoverPresentationControllerShouldDismissPopover(p)
+			}
+			self.proceedWithDelete()
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		a.modalPresentationStyle = .popover
+		navigationController?.visibleViewController?.present(a, animated: true)
+		if let p = a.popoverPresentationController {
+			p.permittedArrowDirections = [.any]
+			p.sourceRect = CGRect(origin: CGPoint(x: 0, y: view.bounds.size.height-44), size: CGSize(width: 100, height: 44))
+			p.sourceView = navigationController!.view
+			p.delegate = self
+		}
+	}
+
+	private func proceedWithDelete() {
+		guard let candidates = deletionCandidates, candidates.count > 0 else { return }
 		deletionCandidates?.removeAll()
 
 		let itemsToDelete = model.drops.filter { item -> Bool in
@@ -541,8 +576,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if isEditing {
 				view.layoutIfNeeded()
 				setEditing(false, animated: true)
-				blurb(randomCleanLine)
 			}
+			blurb(randomCleanLine)
 		} else {
 			if isEditing {
 				setEditing(false, animated: true)
