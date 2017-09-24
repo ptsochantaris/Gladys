@@ -272,8 +272,46 @@
                                             <outlet property="label" destination="pph-lh-lXf" id="BZr-ai-CaQ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoteCell" id="flY-P9-4rB" customClass="NoteCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="206.5" width="320" height="151"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="flY-P9-4rB" id="lkd-RA-F4O">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="150.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" text="Notes text" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crv-5h-2hZ">
+                                                    <rect key="frame" x="8" y="0.0" width="304" height="150.5"/>
+                                                    <color key="textColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="flY-P9-4rB" id="AWg-lR-Hgc"/>
+                                                    </connections>
+                                                </textView>
+                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Note" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORD-vD-01W">
+                                                    <rect key="frame" x="134" y="67.5" width="53" height="14.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <color key="textColor" red="0.5764203667640686" green="0.093400068581104279" blue="0.069711051881313324" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ORD-vD-01W" firstAttribute="centerX" secondItem="lkd-RA-F4O" secondAttribute="centerX" id="EJc-5u-vls"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="crv-5h-2hZ" secondAttribute="trailing" id="LfU-nc-u10"/>
+                                                <constraint firstAttribute="bottom" secondItem="crv-5h-2hZ" secondAttribute="bottom" id="UF8-QU-ud3"/>
+                                                <constraint firstItem="ORD-vD-01W" firstAttribute="centerY" secondItem="lkd-RA-F4O" secondAttribute="centerY" id="W1N-Kh-epj"/>
+                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="leading" secondItem="lkd-RA-F4O" secondAttribute="leadingMargin" id="e8l-qL-odU"/>
+                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="top" secondItem="lkd-RA-F4O" secondAttribute="top" id="hoA-9d-Zzv"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="placeholder" destination="ORD-vD-01W" id="9on-85-PeR"/>
+                                            <outlet property="textView" destination="crv-5h-2hZ" id="hgE-Ob-kH8"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="357.5" width="320" height="151"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="150.5"/>

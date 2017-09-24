@@ -30,7 +30,8 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 			spinner.startAnimating()
 			p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
 				if let url = url {
-					self.model.importData(from: url) { success in
+					let model = ViewController.shared.model
+					model.importData(from: url) { success in
 						DispatchQueue.main.async {
 							if !success {
 								genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
@@ -60,8 +61,6 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	//////////////////////////////////
 
-	var model: Model!
-
 	@IBOutlet weak var infoLabel: UILabel!
 	@IBOutlet weak var container: UIView!
 	@IBOutlet weak var innerFrame: UIView!
@@ -77,6 +76,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	}
 
 	private func deleteAllItems() {
+		let model = ViewController.shared.model
 		for item in model.drops {
 			item.delete()
 		}
@@ -151,6 +151,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	@objc private func externalDataUpdate() {
 		spinner.stopAnimating()
+		let model = ViewController.shared.model
 		let count = model.drops.count
 		if count > 0 {
 			let size = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)

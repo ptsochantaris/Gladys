@@ -46,6 +46,7 @@
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
 		167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABEC81F7770DF0075E0E8 /* DimView.swift */; };
+		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
 		169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
 		169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763131F15669000537776 /* ArchivedDropItemType+UI.swift */; };
 		169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
@@ -183,6 +184,7 @@
 		167A18D41F128A9300B7F0AF /* VerifyReceipt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerifyReceipt.m; sourceTree = "<group>"; };
 		167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		167ABEC81F7770DF0075E0E8 /* DimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
+		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Ingest.swift"; sourceTree = "<group>"; };
 		169763131F15669000537776 /* ArchivedDropItemType+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UI.swift"; sourceTree = "<group>"; };
 		169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Tagging.swift"; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
 				1619B60A1F76EC2F005CF414 /* HeaderCell.swift */,
 				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
+				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -928,6 +931,7 @@
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
+				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
 				163845FC1EF8629700CB8D97 /* Types.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,

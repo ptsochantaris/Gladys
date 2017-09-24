@@ -27,10 +27,26 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		table.backgroundColor = .clear
 		table.separatorStyle = .none
 		view.backgroundColor = .clear
+
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
+	}
+
+	@objc private func keyboardHiding(_ notification: Notification) {
+		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
+			view.endEditing(false)
+		}
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		sizeWindow()
+	}
+
+	private func sizeWindow() {
 		table.layoutIfNeeded()
 		preferredContentSize = table.contentSize
 	}
@@ -59,21 +75,47 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	//////////////////////////////////
+
+	func reload() {
+		table.reloadData()
+	}
+
+	func done() {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+			_ = f(p)
+		}
+		dismiss(animated: true)
+	}
+
+	//////////////////////////////////
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return item.typeItems.count + 1
+		return item.typeItems.count + 2
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if section > 0 {
-			return item.typeItems[section-1].contentDescription
-		} else {
+		if section < 2 {
 			return nil
+		} else {
+			return item.typeItems[section-2].contentDescription
 		}
+	}
+
+	private func cellNeedsResize(caretRect: CGRect?) {
+		UIView.setAnimationsEnabled(false)
+		table.beginUpdates()
+		if let caretRect = caretRect {
+			table.scrollRectToVisible(caretRect, animated: false)
+		} else {
+			table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+		}
+		table.endUpdates()
+		UIView.setAnimationsEnabled(true)
+		sizeWindow()
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -84,10 +126,18 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			cell.label.textAlignment = item.displayTitle.1
 			return cell
 
+		} else if indexPath.section == 1 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
+			cell.item = item
+			cell.resizeCallback = { [weak self] caretRect in
+				self?.cellNeedsResize(caretRect: caretRect)
+			}
+			return cell
+
 		} else {
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-			let typeEntry = item.typeItems[indexPath.section-1]
+			let typeEntry = item.typeItems[indexPath.section-2]
 			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
@@ -105,17 +155,27 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		if section == 0 {
 			return 20
+		} else if section == 1 {
+			return CGFloat.leastNonzeroMagnitude
 		} else {
 			return 34
 		}
 	}
 
-	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		if indexPath.section > 0 {
-			let typeItem = item.typeItems[indexPath.section-1]
-			return [typeItem.dragItem]
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		if section < 2 {
+			return CGFloat.leastNonzeroMagnitude
 		} else {
+			return 0
+		}
+	}
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if indexPath.section < 2 {
 			return []
+		} else {
+			let typeItem = item.typeItems[indexPath.section-2]
+			return [typeItem.dragItem]
 		}
 	}
 
@@ -136,15 +196,4 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
-
-	func reload() {
-		table.reloadData()
-	}
-
-	func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
-	}
 }

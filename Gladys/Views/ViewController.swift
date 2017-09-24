@@ -25,7 +25,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet weak var deleteButton: UIBarButtonItem!
 
-	private let model = Model()
+	let model = Model()
 
 	static var shared: ViewController!
 
@@ -227,7 +227,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
 			p.permittedArrowDirections = [.any]
 			p.sourceView = cell
-			p.sourceRect = cell.bounds.insetBy(dx: 5, dy: 0)
+			p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 			p.delegate = self
 			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
 			if traitCollection.horizontalSizeClass == .regular {
@@ -242,7 +242,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@IBAction func settingsSelected(_ sender: UIBarButtonItem) {
 		let n = storyboard?.instantiateViewController(withIdentifier: "PreferencesController") as! UINavigationController
 		let d = n.topViewController as! PreferencesController
-		d.model = model
 		n.modalPresentationStyle = .popover
 		navigationController?.visibleViewController?.present(n, animated: true)
 		if let p = n.popoverPresentationController {

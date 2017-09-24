@@ -10,6 +10,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	var allLoadedWell: Bool
 	var isLoading: Bool
 	var needsReIngest: Bool
+	var note: String
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -18,6 +19,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case uuid
 		case allLoadedWell
 		case needsReIngest
+		case note
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -28,6 +30,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(typeItems, forKey: .typeItems)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(needsReIngest, forKey: .needsReIngest)
+		try v.encode(note, forKey: .note)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -38,6 +41,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
+		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		isLoading = false
 	}
 
@@ -110,6 +114,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			isLoading = true
 			allLoadedWell = true
 			needsReIngest = false
+			note = ""
 			typeItems = [ArchivedDropItemType]()
 			self.delegate = delegate
 
