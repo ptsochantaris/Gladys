@@ -28,7 +28,7 @@ extension Model {
 		// cleanup, in case of previous crashes, cancelled transfers, etc
 
 		let fm = FileManager.default
-		let items = try! fm.contentsOfDirectory(at: Model.appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants)
+		guard let items = try? fm.contentsOfDirectory(at: Model.appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
 		let uuids = items.flatMap { UUID(uuidString: $0.lastPathComponent) }
 		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
 			for d in drops {
@@ -40,7 +40,7 @@ extension Model {
 		}
 		for uuid in nonExistingUUIDs {
 			let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
-			try! fm.removeItem(at: url)
+			try? fm.removeItem(at: url)
 		}
 	}
 
