@@ -116,7 +116,7 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 
 #ifdef DEBUG
 BOOL verifyIapReceipt() {
-	return YES;
+	return NO;
 }
 #else
 BOOL verifyIapReceipt() {

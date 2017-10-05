@@ -750,7 +750,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		guard infiniteMode == false else { return }
 
 		guard let infiniteModeItem = infiniteModeItem else {
-			let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
+			let message: String
+			if newTotal == -1 {
+				message = "We cannot seem to fetch the in-app purchase information at this time. Please check your Internet connection and try again in a moment."
+			} else {
+				message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
+			}
 			let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
 			a.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { action in
 				self.iapFetchCallbackCount = newTotal
@@ -767,7 +772,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		f.numberStyle = .currency
 		f.locale = infiniteModeItem.priceLocale
 		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
-		let message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		let message: String
+		if newTotal == -1 {
+			message = "You can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		} else {
+			message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+		}
 
 		let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
@@ -777,7 +787,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		a.addAction(UIAlertAction(title: "Restore previous purchase", style: .default, handler: { action in
 			SKPaymentQueue.default().restoreCompletedTransactions()
 		}))
-		a.addAction(UIAlertAction(title: "Never mind, I'll delete old stuff", style: .cancel))
+		if newTotal == -1 {
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		} else {
+			a.addAction(UIAlertAction(title: "Never mind, I'll delete old stuff", style: .cancel))
+		}
 		present(a, animated: true)
 	}
 

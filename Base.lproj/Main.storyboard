@@ -197,13 +197,13 @@
                         <viewLayoutGuide key="safeArea" id="wBp-li-D4L"/>
                     </view>
                     <toolbarItems>
+                        <barButtonItem enabled="NO" title="Version" style="plain" id="8xq-af-34d"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Prg-Vb-Cts"/>
                         <barButtonItem title="About" style="plain" id="Vmc-Hi-57M">
                             <connections>
-                                <action selector="aboutSelected:" destination="HJT-hG-46H" id="CaZ-P3-6oF"/>
+                                <segue destination="3Cr-dT-I5Y" kind="show" identifier="showAbout" id="XzD-Lg-sg6"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Prg-Vb-Cts"/>
-                        <barButtonItem enabled="NO" title="Version" style="plain" id="8xq-af-34d"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="QWV-cP-YSZ">
                         <barButtonItem key="leftBarButtonItem" title="Delete All" id="ipf-aG-KNc">
@@ -232,6 +232,70 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2452.5" y="-630.63380281690138"/>
+        </scene>
+        <!--About Controller-->
+        <scene sceneID="mHF-aQ-il8">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="3Cr-dT-I5Y" customClass="AboutController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6e9-dF-Uv9">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Gdd-eU-gY3">
+                                <rect key="frame" x="10" y="84" width="300" height="372"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="200" id="Xsy-cM-XaU"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
+                                        <rect key="frame" x="0.0" y="220" width="300" height="30"/>
+                                        <state key="normal" title="Unlimited Mode"/>
+                                        <connections>
+                                            <action selector="unlimitedSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="czo-Mh-n6e"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
+                                        <rect key="frame" x="0.0" y="270" width="300" height="30"/>
+                                        <state key="normal" title="Gladys Web Site"/>
+                                        <connections>
+                                            <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
+                                        <rect key="frame" x="0.0" y="320" width="300" height="52"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gdd-eU-gY3" secondAttribute="bottom" id="7dO-PL-bGx"/>
+                            <constraint firstItem="Gdd-eU-gY3" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" constant="20" id="hN1-Y3-m23"/>
+                            <constraint firstItem="Gdd-eU-gY3" firstAttribute="leading" secondItem="J9I-Dy-W9t" secondAttribute="leading" constant="10" id="koU-0e-qXr"/>
+                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="trailing" secondItem="Gdd-eU-gY3" secondAttribute="trailing" constant="10" id="wjH-bY-2Xm"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="J9I-Dy-W9t"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="IwC-N7-oaE">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="6KI-Rn-fhA">
+                            <connections>
+                                <action selector="doneSelected:" destination="3Cr-dT-I5Y" id="ngW-BO-5dE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="unlimitedButton" destination="BHy-ip-KBG" id="Tin-2n-3KA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3307.5" y="-631.69014084507046"/>
         </scene>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
@@ -459,7 +523,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -524,6 +588,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="gladysImage" width="1024" height="1024"/>
         <image name="iconDeleteSmall" width="18" height="22"/>
         <image name="settings" width="23" height="22"/>
     </resources>

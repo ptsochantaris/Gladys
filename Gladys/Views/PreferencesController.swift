@@ -1,6 +1,5 @@
 
 import UIKit
-import StoreKit
 
 final class PreferencesController : UIViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
 
@@ -92,15 +91,6 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	@IBOutlet weak var versionLabel: UIBarButtonItem!
 	@IBOutlet weak var deleteAll: UIBarButtonItem!
 
-	@IBAction func aboutSelected(_ sender: UIBarButtonItem) {
-		let u = URL(string: "https://bru.build/app/gladys")!
-		UIApplication.shared.open(u, options: [:]) { success in
-			if success {
-				self.done()
-			}
-		}
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -118,23 +108,6 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		externalDataUpdate()
-
-		if !infiniteMode {
-			let spacer1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-			let spacer2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-			let restore = UIBarButtonItem(title: "Restore Purchases", style: .plain, target: self, action: #selector(restorePurchases))
-			toolbarItems = [spacer1, restore, spacer2]
-			navigationController?.toolbar.tintColor = view.tintColor
-			navigationController?.isToolbarHidden = false
-		}
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		let s = view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
-		                                     withHorizontalFittingPriority: .required,
-		                                     verticalFittingPriority: .fittingSizeLevel)
-		preferredContentSize = s
 	}
 
 	private func done() {
@@ -142,11 +115,6 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 			_ = f(p)
 		}
 		dismiss(animated: true)
-	}
-
-	@objc private func restorePurchases() {
-		done()
-		SKPaymentQueue.default().restoreCompletedTransactions()
 	}
 
 	@objc private func externalDataUpdate() {
@@ -160,6 +128,14 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		} else {
 			infoLabel.text = "No Items"
 			deleteAll.isEnabled = false
+		}
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "showAbout" {
+			if navigationItem.rightBarButtonItem == nil {
+				segue.destination.navigationItem.rightBarButtonItem = nil
+			}
 		}
 	}
 }
