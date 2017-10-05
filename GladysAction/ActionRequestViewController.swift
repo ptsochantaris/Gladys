@@ -36,7 +36,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			imageCenter.constant = -110
 			imageDistance.constant = 40
 			expandButton.isHidden = false
-			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
+			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
 			return
 		}
 

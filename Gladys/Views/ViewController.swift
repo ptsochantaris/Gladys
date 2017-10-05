@@ -776,7 +776,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if newTotal == -1 {
 			message = "You can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
 		} else {
-			message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
+			message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
 		}
 
 		let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
