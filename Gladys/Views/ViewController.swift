@@ -163,7 +163,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func dismissAnyPopOver() {
-		if let p = presentedViewController, let pc = p.popoverPresentationController {
+		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
 			if popoverPresentationControllerShouldDismissPopover(pc) {
 				p.dismiss(animated: true)
 			}
@@ -493,13 +493,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
 
-		if let n = presentedViewController, n.modalPresentationStyle == .popover {
-			n.dismiss(animated: false)
-			if let d = dimView {
-				d.removeFromSuperview()
-				dimView = nil
-			}
-		}
+		dismissAnyPopOver()
 
 		archivedItemCollectionView.performBatchUpdates({})
 	}
