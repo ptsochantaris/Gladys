@@ -319,6 +319,24 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		SKPaymentQueue.default().add(self)
 		fetchIap()
+
+		checkForUpgrade()
+	}
+
+	private func checkForUpgrade() {
+		let previousBuild = UserDefaults.standard.string(forKey: "LastRanVersion")
+		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+		if previousBuild != currentBuild {
+			migrateVersion()
+			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
+			UserDefaults.standard.synchronize()
+		}
+	}
+
+	private func migrateVersion() {
+		for item in model.drops {
+			item.makeIndex()
+		}
 	}
 
 	private var lowMemoryMode = false
