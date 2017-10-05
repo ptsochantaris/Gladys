@@ -110,6 +110,18 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		externalDataUpdate()
 	}
 
+	private var firstView = true
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if firstView {
+			let s = view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
+			                                     withHorizontalFittingPriority: .required,
+			                                     verticalFittingPriority: .fittingSizeLevel)
+			preferredContentSize = s
+			firstView = false
+		}
+	}
+
 	private func done() {
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
 			_ = f(p)

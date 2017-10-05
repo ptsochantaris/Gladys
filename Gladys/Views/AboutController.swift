@@ -18,6 +18,18 @@ final class AboutController: UIViewController {
 		unlimitedButton.isHidden = infiniteMode
 	}
 
+	private var firstView = true
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if firstView {
+			let s = view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
+												 withHorizontalFittingPriority: .required,
+												 verticalFittingPriority: .fittingSizeLevel)
+			preferredContentSize = s
+			firstView = false
+		}
+	}
+
 	@IBAction func aboutSelected(_ sender: UIButton) {
 		let u = URL(string: "https://bru.build/app/gladys")!
 		UIApplication.shared.open(u, options: [:]) { success in
