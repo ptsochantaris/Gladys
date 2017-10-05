@@ -155,10 +155,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	func resetForDragEntry(session: UIDropSession) {
 		if currentDetailView != nil {
-			if countInserts(in: session) > 0 {
-				resetSearch()
-			}
 			dismissAnyPopOver()
+		}
+		if countInserts(in: session) > 0 {
+			resetSearch()
 		}
 	}
 
@@ -195,7 +195,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let d = DimView()
 			navigationController?.view.cover(with: d)
 			dimView = d
-			popoverPresentationController.passthroughViews = [d]
+			if !(navigationItem.searchController?.isActive ?? false) {
+				popoverPresentationController.passthroughViews = [d]
+			}
 		}
 	}
 
@@ -298,7 +300,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 
-		searchTimer = PopTimer(timeInterval: 0.3) { [weak self, weak searchController] in
+		searchTimer = PopTimer(timeInterval: 0.4) { [weak self, weak searchController] in
 			self?.model.filter = searchController?.searchBar.text
 		}
 

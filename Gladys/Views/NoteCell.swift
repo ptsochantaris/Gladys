@@ -81,7 +81,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		dirty = false
 
 		item.note = textView.text
-		ViewController.shared.model.save()
+		item.makeIndex { _ in
+			ViewController.shared.model.save()
+		}
 
 		resizeCallback?(nil)
 		placeholder.isHidden = textView.hasText
