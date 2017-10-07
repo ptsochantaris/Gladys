@@ -11,6 +11,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	var isLoading: Bool
 	var needsReIngest: Bool
 	var note: String
+	var titleOverride: String
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -20,6 +21,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case allLoadedWell
 		case needsReIngest
 		case note
+		case titleOverride
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -31,6 +33,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(needsReIngest, forKey: .needsReIngest)
 		try v.encode(note, forKey: .note)
+		try v.encode(titleOverride, forKey: .titleOverride)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -42,6 +45,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
+		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		isLoading = false
 	}
 
@@ -85,7 +89,11 @@ final class ArchivedDropItem: Codable, Equatable {
 	}
 
 	var accessoryTitle: String? {
-		return typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle
+		if titleOverride.isEmpty {
+			return typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle
+		} else {
+			return titleOverride
+		}
 	}
 
 	lazy var folderUrl: URL = {
@@ -114,6 +122,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			isLoading = true
 			allLoadedWell = true
 			needsReIngest = false
+			titleOverride = ""
 			note = ""
 			typeItems = [ArchivedDropItemType]()
 			self.delegate = delegate
@@ -130,7 +139,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		}
 
 	#endif
-
 
 	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
 		var isDeleting = false

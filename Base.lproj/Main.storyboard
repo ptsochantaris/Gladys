@@ -305,9 +305,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="151" sectionHeaderHeight="14" sectionFooterHeight="14" translatesAutoresizingMaskIntoConstraints="NO" id="gOE-Fp-Sbs">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="151" sectionHeaderHeight="14" sectionFooterHeight="14" translatesAutoresizingMaskIntoConstraints="NO" id="gOE-Fp-Sbs">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="ucz-Df-3Uv" customClass="HeaderCell" customModule="Gladys" customModuleProvider="target">
@@ -317,23 +316,26 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="150.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pph-lh-lXf">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" text="Notes text" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1hY-R9-9dr">
                                                     <rect key="frame" x="8" y="0.0" width="304" height="150.5"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="ucz-Df-3Uv" id="EYj-jp-2KX"/>
+                                                    </connections>
+                                                </textView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="pph-lh-lXf" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leadingMargin" id="1Cq-JN-YLq"/>
-                                                <constraint firstAttribute="bottom" secondItem="pph-lh-lXf" secondAttribute="bottom" id="2fD-eI-e6S"/>
-                                                <constraint firstItem="pph-lh-lXf" firstAttribute="top" secondItem="2po-Br-7Vd" secondAttribute="top" id="g3c-iM-dhc"/>
-                                                <constraint firstItem="pph-lh-lXf" firstAttribute="trailing" secondItem="2po-Br-7Vd" secondAttribute="trailingMargin" id="sYL-F9-sNH"/>
+                                                <constraint firstAttribute="bottom" secondItem="1hY-R9-9dr" secondAttribute="bottom" id="1DJ-gq-5oH"/>
+                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="top" secondItem="2po-Br-7Vd" secondAttribute="top" id="aH9-bv-R2a"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1hY-R9-9dr" secondAttribute="trailing" id="hTP-YF-VvG"/>
+                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leadingMargin" id="mAJ-2f-oGX"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <outlet property="label" destination="pph-lh-lXf" id="BZr-ai-CaQ"/>
+                                            <outlet property="label" destination="1hY-R9-9dr" id="ho2-up-QuW"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoteCell" id="flY-P9-4rB" customClass="NoteCell" customModule="Gladys" customModuleProvider="target">
@@ -455,6 +457,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="gOE-Fp-Sbs" firstAttribute="top" secondItem="o6P-jX-a91" secondAttribute="top" id="EAu-0I-6C3"/>
+                            <constraint firstItem="gOE-Fp-Sbs" firstAttribute="leading" secondItem="kBf-EA-UxQ" secondAttribute="leading" id="O9G-Ez-p3r"/>
+                            <constraint firstAttribute="bottom" secondItem="gOE-Fp-Sbs" secondAttribute="bottom" id="khd-zL-t7T"/>
+                            <constraint firstItem="gOE-Fp-Sbs" firstAttribute="trailing" secondItem="kBf-EA-UxQ" secondAttribute="trailing" id="som-Cy-dFk"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="kBf-EA-UxQ"/>
                     </view>
                     <toolbarItems>
@@ -473,6 +481,7 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="NnH-CH-Cw9">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Open" id="qFs-2B-sKz">
                             <connections>
                                 <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
@@ -523,7 +532,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

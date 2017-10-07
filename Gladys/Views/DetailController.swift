@@ -41,9 +41,13 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	private var firstAppearance = true
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		sizeWindow()
+		if firstAppearance {
+			sizeWindow()
+			firstAppearance = false
+		}
 	}
 
 	private func sizeWindow() {
@@ -57,7 +61,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
-		preferredContentSize = CGSize(width: 320, height: 600)
+		preferredContentSize = CGSize(width: preferredContentSize.width, height: 600)
 		present(a, animated: true)
 	}
 
@@ -88,7 +92,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	//////////////////////////////////
-	
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
@@ -122,8 +126,10 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
-			cell.label.text = item.oneTitle
-			cell.label.textAlignment = item.displayTitle.1
+			cell.item = item
+			cell.resizeCallback = { [weak self] caretRect in
+				self?.cellNeedsResize(caretRect: caretRect)
+			}
 			return cell
 
 		} else if indexPath.section == 1 {

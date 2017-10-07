@@ -365,6 +365,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	func reloadItemView() {
+		archivedItemCollectionView.reloadData()
+	}
+
 	@objc private func externalDataUpdate() {
 		if model.isFiltering {
 			model.filter = nil
