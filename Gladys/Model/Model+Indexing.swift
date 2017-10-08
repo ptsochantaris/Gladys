@@ -3,7 +3,7 @@ import CoreSpotlight
 
 extension Model: CSSearchableIndexDelegate {
 
-	func reIndex(items: [ArchivedDropItem], completion: @escaping ()->Void) {
+	func reIndex(items: [ArchivedDropItem], completion: (()->Void)? = nil) {
 
 		let group = DispatchGroup()
 		for _ in 0 ..< items.count {
@@ -19,7 +19,7 @@ extension Model: CSSearchableIndexDelegate {
 			}
 		}
 		group.notify(queue: bgQueue) {
-			completion()
+			completion?()
 		}
 	}
 

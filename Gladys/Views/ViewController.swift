@@ -329,9 +329,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if previousBuild != currentBuild {
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
-			for item in model.drops {
-				item.makeIndex()
-			}
+			model.reIndex(items: model.drops, completion: nil)
 		}
 	}
 

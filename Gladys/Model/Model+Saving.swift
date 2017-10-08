@@ -14,6 +14,12 @@ extension Model {
 
 	private static let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
+	func afterSave(completion: @escaping ()->Void) {
+		Model.saveQueue.async {
+			completion()
+		}
+	}
+
 	private func _save() {
 
 		let start = Date()

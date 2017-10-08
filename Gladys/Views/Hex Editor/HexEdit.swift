@@ -173,6 +173,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 
 	private var lastSize = CGSize.zero
 
+	override var preferredContentSize: CGSize {
+		didSet {
+			navigationController?.preferredContentSize = preferredContentSize
+		}
+	}
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		if lastSize != view.frame.size && !view.frame.isEmpty {

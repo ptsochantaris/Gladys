@@ -74,6 +74,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		if let fi = fileItem(at: url), let parentUuid = fi.typeItem?.parentUuid, let parent = model.drops.first(where: { $0.uuid == parentUuid }) {
 			log("Identified as child of local item \(parent.uuid)")
 			parent.needsReIngest = true
+			parent.updatedAt = Date()
 			model.save()
 			return
 		}

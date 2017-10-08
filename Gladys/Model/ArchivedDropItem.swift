@@ -7,6 +7,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	let uuid: UUID
 	var typeItems: [ArchivedDropItemType]
 	let createdAt:  Date
+	var updatedAt: Date
 	var allLoadedWell: Bool
 	var isLoading: Bool
 	var needsReIngest: Bool
@@ -17,6 +18,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case suggestedName
 		case typeItems
 		case createdAt
+		case updatedAt
 		case uuid
 		case allLoadedWell
 		case needsReIngest
@@ -28,6 +30,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		var v = encoder.container(keyedBy: CodingKeys.self)
 		try v.encodeIfPresent(suggestedName, forKey: .suggestedName)
 		try v.encode(createdAt, forKey: .createdAt)
+		try v.encode(updatedAt, forKey: .updatedAt)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(typeItems, forKey: .typeItems)
 		try v.encode(allLoadedWell, forKey: .allLoadedWell)
@@ -40,6 +43,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
 		createdAt = try v.decode(Date.self, forKey: .createdAt)
+		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .distantPast
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
@@ -118,6 +122,7 @@ final class ArchivedDropItem: Codable, Equatable {
 
 			uuid = UUID()
 			createdAt = Date()
+			updatedAt = createdAt
 			suggestedName = providers.first!.suggestedName
 			isLoading = true
 			allLoadedWell = true

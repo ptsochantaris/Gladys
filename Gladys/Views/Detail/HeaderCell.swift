@@ -84,13 +84,19 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		} else {
 			item.titleOverride = newText
 		}
+		item.updatedAt = Date()
 		label.text = item.oneTitle
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)
 		resizeCallback?(nil)
 		
-		item.makeIndex { _ in
-			ViewController.shared.model.save()
+		item.makeIndex()
+		
+		let s = ViewController.shared!
+		s.model.save()
+		s.model.afterSave {
+			let fileProviderId = NSFileProviderItemIdentifier(item.uuid.uuidString)
+			Model.signalFileExtension(for: fileProviderId)
 		}
 	}
 }

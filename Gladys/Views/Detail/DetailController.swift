@@ -31,6 +31,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
 	}
 
+	override var preferredContentSize: CGSize {
+		didSet {
+			navigationController?.preferredContentSize = preferredContentSize
+		}
+	}
+
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)
@@ -41,27 +47,33 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	private var firstAppearance = true
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		if firstAppearance {
-			sizeWindow()
-			firstAppearance = false
-		}
+		sizeWindow()
 	}
 
 	private func sizeWindow() {
-		table.layoutIfNeeded()
-		preferredContentSize = table.contentSize
+		if sharing {
+			preferredContentSize = CGSize(width: 320, height: max(preferredContentSize.height, 500))
+		} else {
+			table.layoutIfNeeded()
+			preferredContentSize = table.contentSize
+		}
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
 		done()
 	}
 
+	var sharing = false
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
+		sharing = true
+		sizeWindow()
 		let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
-		preferredContentSize = CGSize(width: preferredContentSize.width, height: 600)
+		a.completionWithItemsHandler = { _, _, _,_ in
+			self.sharing = false
+			self.sizeWindow()
+		}
 		present(a, animated: true)
 	}
 

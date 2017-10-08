@@ -81,11 +81,11 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		dirty = false
 
 		item.note = textView.text
+		item.updatedAt = Date()
 		placeholder.isHidden = textView.hasText
 		resizeCallback?(nil)
 
-		item.makeIndex { _ in
-			ViewController.shared.model.save()
-		}
+		item.makeIndex()
+		ViewController.shared.model.save()
 	}
 }

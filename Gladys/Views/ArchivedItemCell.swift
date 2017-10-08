@@ -301,7 +301,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			} else {
 				hideImage = false
 
-				let cacheKey = item.uuid.uuidString as NSString
+				let cacheKey = "\(item.uuid.uuidString) \(item.updatedAt.timeIntervalSinceReferenceDate)" as NSString
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
 					image.image = cachedImage
 				} else {
