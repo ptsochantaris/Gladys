@@ -28,7 +28,7 @@ final class GridLayout: UICollectionViewLayout {
 		super.invalidateLayout()
 		if let c = collectionView {
 			width = c.bounds.width
-			itemsPerRow = width > 640 ? 16 : width > 320 ? 12 : 8
+			itemsPerRow = width > 640 ? 16 : width > 480 ? 12 : 8
 			cellSide = (width / CGFloat(itemsPerRow)).rounded(.down)
 			offset = ((width - (CGFloat(itemsPerRow) * cellSide)) * 0.5).rounded(.down)
 		}

@@ -42,8 +42,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	private var firstAppearance = true
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
 		if firstAppearance {
 			sizeWindow()
 			firstAppearance = false
