@@ -57,7 +57,7 @@ final class GridLayout: UICollectionViewLayout {
 		let count = collectionView?.numberOfItems(inSection: 0) ?? 0
 
 		var ips = [UICollectionViewLayoutAttributes]()
-		for f in minIndex ..< min(count, maxIndex) {
+		for f in min(count, minIndex) ..< min(count, maxIndex) {
 			if let a = layoutAttributesForItem(at: IndexPath(item: f, section: 0)) {
 				ips.append(a)
 			}

@@ -555,11 +555,11 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqu-FV-J7n">
                                 <rect key="frame" x="0.0" y="64" width="320" height="460"/>
-                                <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewLayout key="collectionViewLayout" id="5nK-jh-NtK" customClass="GridLayout" customModule="FEFF" customModuleProvider="target"/>
+                                <collectionViewLayout key="collectionViewLayout" id="5nK-jh-NtK" customClass="GridLayout" customModule="Gladys" customModuleProvider="target"/>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ByteCell" id="w7h-0F-LGz" customClass="ByteCell" customModule="FEFF" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ByteCell" id="w7h-0F-LGz" customClass="ByteCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -587,7 +587,9 @@
                                             <constraint firstAttribute="bottom" secondItem="Hww-8H-o4g" secondAttribute="bottom" id="E35-ah-lVD"/>
                                             <constraint firstItem="FXQ-bG-Jdn" firstAttribute="leading" secondItem="w7h-0F-LGz" secondAttribute="leading" constant="3" id="HKk-Al-rA5"/>
                                             <constraint firstItem="Hww-8H-o4g" firstAttribute="top" secondItem="w7h-0F-LGz" secondAttribute="top" id="Ra2-QI-vPy"/>
+                                            <constraint firstAttribute="trailing" secondItem="FXQ-bG-Jdn" secondAttribute="trailing" priority="250" id="XxZ-QV-uVe"/>
                                             <constraint firstItem="Hww-8H-o4g" firstAttribute="leading" secondItem="w7h-0F-LGz" secondAttribute="leading" id="es9-am-RnH"/>
+                                            <constraint firstAttribute="bottom" secondItem="FXQ-bG-Jdn" secondAttribute="bottom" priority="250" id="lMw-rS-UVK"/>
                                             <constraint firstAttribute="trailing" secondItem="Hww-8H-o4g" secondAttribute="trailing" id="tP5-O4-Ua2"/>
                                         </constraints>
                                         <connections>
@@ -595,7 +597,7 @@
                                             <outlet property="letter" destination="FXQ-bG-Jdn" id="c2L-dB-WRp"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AsciiCell" id="4es-iI-WOb" customClass="AsciiCell" customModule="FEFF" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AsciiCell" id="4es-iI-WOb" customClass="AsciiCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="67.5" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -619,12 +621,14 @@
                                         </view>
                                         <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Hnn-MC-DZY" secondAttribute="trailing" priority="250" id="3Go-iU-uD8"/>
                                             <constraint firstItem="Hnn-MC-DZY" firstAttribute="top" secondItem="4es-iI-WOb" secondAttribute="top" constant="2" id="5oA-kh-UFS"/>
                                             <constraint firstItem="BcV-HJ-RFX" firstAttribute="top" secondItem="4es-iI-WOb" secondAttribute="top" id="9i8-Be-NPv"/>
                                             <constraint firstAttribute="trailing" secondItem="BcV-HJ-RFX" secondAttribute="trailing" id="O0q-pO-RoG"/>
                                             <constraint firstItem="BcV-HJ-RFX" firstAttribute="leading" secondItem="4es-iI-WOb" secondAttribute="leading" id="awB-ix-VgX"/>
                                             <constraint firstItem="Hnn-MC-DZY" firstAttribute="leading" secondItem="4es-iI-WOb" secondAttribute="leading" constant="3" id="bZh-qU-MRF"/>
                                             <constraint firstAttribute="bottom" secondItem="BcV-HJ-RFX" secondAttribute="bottom" id="jNP-hX-aV0"/>
+                                            <constraint firstAttribute="bottom" secondItem="Hnn-MC-DZY" secondAttribute="bottom" priority="250" id="u4J-tL-iPR"/>
                                         </constraints>
                                         <size key="customSize" width="50" height="50"/>
                                         <connections>
@@ -916,7 +920,8 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
