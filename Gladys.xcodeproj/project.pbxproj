@@ -286,6 +286,17 @@
 			path = "Hex Editor";
 			sourceTree = "<group>";
 		};
+		160707A51F8AAC52003B856A /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				16062E081EFE647800AB5353 /* DetailController.swift */,
+				1619B60A1F76EC2F005CF414 /* HeaderCell.swift */,
+				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
+				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
 		16101E8F1EF5A23000CCBD3C /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -393,16 +404,13 @@
 		16D2C7111EF5A6D3009B97F9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				160707A51F8AAC52003B856A /* Detail */,
 				1607079A1F8A3676003B856A /* Hex Editor */,
 				1678F9D01EF475FE005697CB /* AppDelegate.swift */,
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
-				16062E081EFE647800AB5353 /* DetailController.swift */,
-				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
 				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
-				1619B60A1F76EC2F005CF414 /* HeaderCell.swift */,
 				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
-				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 				16D829121F86D3DD00CF06FF /* AboutController.swift */,
 			);
 			path = Views;

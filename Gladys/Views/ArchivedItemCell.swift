@@ -240,7 +240,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 		borderView.layer.cornerRadius = 10
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
 
-		NotificationCenter.default.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
+		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
 	}
 
 	deinit {
@@ -261,6 +263,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var existingMapView: MiniMapView?
 
 	var lowMemoryMode = false
+
+	@objc private func itemModified(_ notification: Notification) {
+		if (notification.object as? ArchivedDropItem) == archivedDropItem {
+			reDecorate()
+		}
+	}
 
 	func reDecorate() {
 		if lowMemoryMode {

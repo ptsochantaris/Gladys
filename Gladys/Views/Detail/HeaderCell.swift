@@ -76,19 +76,21 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		if !dirty { return }
 		dirty = false
 
-		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-		if newText.isEmpty || newText == item?.oneTitle {
-			item?.titleOverride = ""
-		} else {
-			item?.titleOverride = newText
-		}
-		label.text = item?.oneTitle
+		guard let item = item else { return }
 
-		item?.makeIndex { _ in
+		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+		if newText.isEmpty || newText == item.oneTitle {
+			item.titleOverride = ""
+		} else {
+			item.titleOverride = newText
+		}
+		label.text = item.oneTitle
+
+		NotificationCenter.default.post(name: .ItemModified, object: item)
+		resizeCallback?(nil)
+		
+		item.makeIndex { _ in
 			ViewController.shared.model.save()
 		}
-		ViewController.shared.reloadItemView()
-		resizeCallback?(nil)
 	}
-
 }
