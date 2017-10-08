@@ -30,15 +30,13 @@ final class ByteCell: UICollectionViewCell {
 	override var isSelected: Bool {
 		didSet {
 			if isSelected {
-				letter.textColor = backgroundColor
-				label.textColor = backgroundColor
+				letter.textColor = .lightGray
+				label.textColor = .white
 				label.backgroundColor = .darkGray
-				layer.borderColor = backgroundColor?.cgColor
 			} else {
 				letter.textColor = .gray
 				label.textColor = .darkGray
-				label.backgroundColor = backgroundColor
-				layer.borderColor = UIColor.lightGray.cgColor
+				label.backgroundColor = .clear
 			}
 		}
 	}

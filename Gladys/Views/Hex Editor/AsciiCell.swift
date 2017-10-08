@@ -30,15 +30,13 @@ final class AsciiCell: UICollectionViewCell {
 	override var isSelected: Bool {
 		didSet {
 			if isSelected {
-				label.textColor = backgroundColor
-				letter.textColor = backgroundColor
+				label.textColor = .lightGray
+				letter.textColor = .white
 				letter.backgroundColor = .darkGray
-				layer.borderColor = backgroundColor?.cgColor
 			} else {
 				label.textColor = .gray
 				letter.textColor = .darkGray
-				letter.backgroundColor = backgroundColor
-				layer.borderColor = UIColor.lightGray.cgColor
+				letter.backgroundColor = .clear
 			}
 		}
 	}

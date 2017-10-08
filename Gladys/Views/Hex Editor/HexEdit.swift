@@ -39,6 +39,8 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		super.viewDidLoad()
 		grid.allowsMultipleSelection = true
 
+		grid.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+
 		let selectionRecognizer = PanDirectionGestureRecognizer(direction: .horizontal, target: self, action: #selector(selectionPanned(_:)))
 		grid.addGestureRecognizer(selectionRecognizer)
 		navigationController?.interactivePopGestureRecognizer?.require(toFail: selectionRecognizer)
