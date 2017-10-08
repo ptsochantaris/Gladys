@@ -222,16 +222,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	override func dragStateDidChange(_ dragState: UICollectionViewCellDragState) {
-		super.dragStateDidChange(dragState)
-		switch dragState {
-		case .dragging, .lifting:
-			backgroundView?.alpha = 0
-		case .none:
-			backgroundView?.alpha = 1
-		}
-	}
-
 	private let borderView = UIView()
 
 	override func awakeFromNib() {

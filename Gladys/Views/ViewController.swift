@@ -327,15 +327,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let previousBuild = UserDefaults.standard.string(forKey: "LastRanVersion")
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
 		if previousBuild != currentBuild {
-			migrateVersion()
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
-		}
-	}
-
-	private func migrateVersion() {
-		for item in model.drops {
-			item.makeIndex()
+			for item in model.drops {
+				item.makeIndex()
+			}
 		}
 	}
 
@@ -505,6 +501,27 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let third = ((view.bounds.size.width - extras) / 2.0).rounded(.down)
 			return CGSize(width: third, height: third)
 		}
+	}
+
+	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
+		if let cell = archivedItemCollectionView.cellForItem(at: indexPath) as? ArchivedItemCell, let b = cell.backgroundView {
+			let corner = b.layer.cornerRadius
+			let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
+			let params = UIDragPreviewParameters()
+			params.backgroundColor = .clear
+			params.visiblePath = path
+			return params
+		} else {
+			return nil
+		}
+	}
+
+	func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+		return dragParameters(for: indexPath)
+	}
+
+	func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+		return dragParameters(for: indexPath)
 	}
 
 	private var lastSize = CGSize.zero

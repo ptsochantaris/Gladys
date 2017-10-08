@@ -145,12 +145,17 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 			let typeEntry = item.typeItems[indexPath.section-2]
 			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
+				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
 			} else if typeEntry.dataExists {
-				cell.name.text = "<Binary Data>"
+				cell.name.alpha = 0.7
+				cell.name.text = "Binary Data"
+				cell.name.textAlignment = .center
 			} else {
-				cell.name.text = "<Data Error>"
+				cell.name.alpha = 0.7
+				cell.name.text = "Loading Error"
+				cell.name.textAlignment = .center
 			}
 			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
@@ -160,11 +165,11 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		if section == 0 {
-			return 20
+			return 10
 		} else if section == 1 {
 			return CGFloat.leastNonzeroMagnitude
 		} else {
-			return 34
+			return 33
 		}
 	}
 
@@ -202,4 +207,24 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	}
 
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
+
+	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
+		if let cell = table.cellForRow(at: indexPath) as? DetailCell {
+			let path = UIBezierPath(roundedRect: cell.borderView.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
+			let p = UIDragPreviewParameters()
+			p.backgroundColor = .clear
+			p.visiblePath = path
+			return p
+		} else {
+			return nil
+		}
+	}
+
+	func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+		return dragParameters(for: indexPath)
+	}
+
+	func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+		return dragParameters(for: indexPath)
+	}
 }
