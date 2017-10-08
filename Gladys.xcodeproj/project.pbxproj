@@ -15,6 +15,12 @@
 		1605C5FC1F13A95600F54B19 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */; };
 		16062E091EFE647800AB5353 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E081EFE647800AB5353 /* DetailController.swift */; };
 		16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E0B1EFE705800AB5353 /* DetailCell.swift */; };
+		160707991F8A35D0003B856A /* HexEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707981F8A35D0003B856A /* HexEdit.swift */; };
+		1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079B1F8A386E003B856A /* PanDirectionGestureRecognizer.swift */; };
+		1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079D1F8A38B5003B856A /* AsciiCell.swift */; };
+		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
+		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
+		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
@@ -154,6 +160,12 @@
 		1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16062E081EFE647800AB5353 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		16062E0B1EFE705800AB5353 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
+		160707981F8A35D0003B856A /* HexEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexEdit.swift; sourceTree = "<group>"; };
+		1607079B1F8A386E003B856A /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanDirectionGestureRecognizer.swift; sourceTree = "<group>"; };
+		1607079D1F8A38B5003B856A /* AsciiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsciiCell.swift; sourceTree = "<group>"; };
+		1607079E1F8A38B5003B856A /* ByteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCell.swift; sourceTree = "<group>"; };
+		160707A11F8A3915003B856A /* DataInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInspector.swift; sourceTree = "<group>"; };
+		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
@@ -261,6 +273,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1607079A1F8A3676003B856A /* Hex Editor */ = {
+			isa = PBXGroup;
+			children = (
+				160707981F8A35D0003B856A /* HexEdit.swift */,
+				160707A31F8A3BAF003B856A /* GridLayout.swift */,
+				1607079B1F8A386E003B856A /* PanDirectionGestureRecognizer.swift */,
+				1607079D1F8A38B5003B856A /* AsciiCell.swift */,
+				1607079E1F8A38B5003B856A /* ByteCell.swift */,
+				160707A11F8A3915003B856A /* DataInspector.swift */,
+			);
+			path = "Hex Editor";
+			sourceTree = "<group>";
+		};
 		16101E8F1EF5A23000CCBD3C /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,6 +393,7 @@
 		16D2C7111EF5A6D3009B97F9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1607079A1F8A3676003B856A /* Hex Editor */,
 				1678F9D01EF475FE005697CB /* AppDelegate.swift */,
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
@@ -929,16 +955,21 @@
 			files = (
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
+				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
+				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */,
+				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
+				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
 				163845FC1EF8629700CB8D97 /* Types.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
+				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
 				169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
@@ -949,6 +980,7 @@
 				16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
+				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 			);

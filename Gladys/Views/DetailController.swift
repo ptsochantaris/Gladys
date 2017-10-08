@@ -148,18 +148,36 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
+				cell.selectionCallback = nil
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
 				cell.name.text = "Binary Data"
 				cell.name.textAlignment = .center
+				cell.selectionCallback = { [weak self] in
+					self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
+				}
 			} else {
 				cell.name.alpha = 0.7
 				cell.name.text = "Loading Error"
 				cell.name.textAlignment = .center
+				cell.selectionCallback = nil
 			}
 			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
 			return cell
+		}
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "hexEdit",
+			let typeEntry = sender as? ArchivedDropItemType,
+			let e = segue.destination as? HexEdit {
+			
+			e.bytes = typeEntry.bytes ?? Data()
+			
+			let f = ByteCountFormatter()
+			let size = f.string(fromByteCount: Int64(e.bytes.count))
+			e.title = typeEntry.oneTitle + " (\(size))"
 		}
 	}
 
