@@ -73,9 +73,9 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		let start = String(firstItem, radix: 16, uppercase: true)
 		let end = String(lastItem, radix: 16, uppercase: true)
 		if start == end {
-			addressLabel.text = "#\(start)"
+			addressLabel.text = "0x\(start)"
 		} else {
-			addressLabel.text = "#\(start) - #\(end)"
+			addressLabel.text = "0x\(start) - 0x\(end)"
 		}
 	}
 
@@ -173,10 +173,10 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		if lastSize != view.frame.size {
+		if lastSize != view.frame.size && !view.frame.isEmpty {
 			lastSize = view.frame.size
+			preferredContentSize = CGSize(width: preferredContentSize.width, height: grid.collectionViewLayout.collectionViewContentSize.height)
 			grid.collectionViewLayout.invalidateLayout()
-			grid.reloadData()
 		}
 	}
 }
