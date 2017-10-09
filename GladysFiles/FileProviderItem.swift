@@ -81,7 +81,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     
     var filename: String {
 		if let dropItem = dropItem {
-			return dropItem.oneTitle
+			return dropItem.oneTitle.replacingOccurrences(of: ".", with: " ")
 
 		} else if let typeItem = typeItem {
 			return typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")

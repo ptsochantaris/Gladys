@@ -98,7 +98,6 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 					relatedItem = meAfter
 					observer.didUpdate([meAfter])
 					incrementAnchor()
-					oldItemIds2Items = Dictionary(uniqueKeysWithValues: rootItems.map { ($0.itemIdentifier, $0) })
 				}
 			} else { // I'm gone
 				var ids = [NSFileProviderItemIdentifier(uuid)]
@@ -106,7 +105,6 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 				ids.append(contentsOf: childrenIds)
 				observer.didDeleteItems(withIdentifiers: ids)
 				incrementAnchor()
-				oldItemIds2Items = Dictionary(uniqueKeysWithValues: rootItems.map { ($0.itemIdentifier, $0) })
 			}
 
 		} else {

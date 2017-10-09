@@ -94,9 +94,5 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		
 		let s = ViewController.shared!
 		s.model.save()
-		s.model.afterSave {
-			let fileProviderId = NSFileProviderItemIdentifier(item.uuid.uuidString)
-			Model.signalFileExtension(for: fileProviderId)
-		}
 	}
 }
