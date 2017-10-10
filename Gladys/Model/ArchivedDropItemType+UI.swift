@@ -17,10 +17,14 @@ extension ArchivedDropItemType {
 	}
 
 	func registerForDrag(with provider: NSItemProvider) {
-		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { (completion) -> Progress? in
-			log("Responding with data block")
-			completion(self.bytes, nil)
-			return nil
+		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
+			let p = Progress(totalUnitCount: 1)
+			p.completedUnitCount = 1
+			DispatchQueue.global(qos: .userInitiated).async {
+				log("Responding with data block")
+				completion(self.bytes, nil)
+			}
+			return p
 		}
 	}
 

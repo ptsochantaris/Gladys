@@ -9,29 +9,38 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
 		i.registerFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive", fileOptions: [], visibility: .all) { completion -> Progress? in
-			// TODO show progress and run action in other thread
 
-			DispatchQueue.main.async {
-				self.spinner.startAnimating()
-				self.infoLabel.isHidden = true
-			}
+			let p = Progress(totalUnitCount: 2)
 
-			let fm = FileManager.default
-			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Exported Data")
-			if fm.fileExists(atPath: tempPath.path) {
+			DispatchQueue.global(qos: .userInitiated).async {
+
+				DispatchQueue.main.async {
+					self.spinner.startAnimating()
+					self.infoLabel.isHidden = true
+				}
+
+				let fm = FileManager.default
+				let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Exported Data")
+				if fm.fileExists(atPath: tempPath.path) {
+					try! fm.removeItem(at: tempPath)
+				}
+
+				p.completedUnitCount += 1
+
+				try! fm.copyItem(at: Model.appStorageUrl, to: tempPath)
+
+				p.completedUnitCount += 1
+
+				completion(tempPath, false, nil)
 				try! fm.removeItem(at: tempPath)
-			}
-			try! fm.copyItem(at: Model.appStorageUrl, to: tempPath)
 
-			completion(tempPath, false, nil)
-			try! fm.removeItem(at: tempPath)
-
-			DispatchQueue.main.async {
-				self.spinner.stopAnimating()
-				self.infoLabel.isHidden = false
+				DispatchQueue.main.async {
+					self.spinner.stopAnimating()
+					self.infoLabel.isHidden = false
+				}
 			}
 
-			return nil
+			return p
 		}
 		return [UIDragItem(itemProvider: i)]
 	}
@@ -40,45 +49,54 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys.zip"
 		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
-			// TODO show progress and run action in other thread
 
-			DispatchQueue.main.async {
-				self.zipSpinner.startAnimating()
-				self.zipLabel.isHidden = true
-			}
+			let dropsCopy = ViewController.shared.model.drops
+			let itemCount = Int64(1 + dropsCopy.count)
+			let p = Progress(totalUnitCount: itemCount)
 
-			let fm = FileManager.default
-			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
-			if fm.fileExists(atPath: tempPath.path) {
-				try! fm.removeItem(at: tempPath)
-			}
+			DispatchQueue.global(qos: .userInitiated).async {
 
-			if let archive = Archive(url: tempPath, accessMode: .create) {
-				for item in ViewController.shared.model.drops {
-					let dir = item.oneTitle.replacingOccurrences(of: ".", with: " ")
-					for typeItem in item.typeItems {
-						guard let bytes = typeItem.bytes else { continue }
-						let name = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
-						var path = "\(dir)/\(name)"
-						if let ext = typeItem.fileExtension {
-							path += ".\(ext)"
+				DispatchQueue.main.async {
+					self.zipSpinner.startAnimating()
+					self.zipLabel.isHidden = true
+				}
+
+				let fm = FileManager.default
+				let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
+				if fm.fileExists(atPath: tempPath.path) {
+					try! fm.removeItem(at: tempPath)
+				}
+
+				p.completedUnitCount += 1
+
+				if let archive = Archive(url: tempPath, accessMode: .create) {
+					for item in dropsCopy {
+						let dir = item.oneTitle.replacingOccurrences(of: ".", with: " ")
+						for typeItem in item.typeItems {
+							guard let bytes = typeItem.bytes else { continue }
+							let name = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+							var path = "\(dir)/\(name)"
+							if let ext = typeItem.fileExtension {
+								path += ".\(ext)"
+							}
+							try? archive.addEntry(with: path, type: .file, uncompressedSize: UInt32(bytes.count)) { pos, size -> Data in
+								return bytes[pos ..< pos+size]
+							}
 						}
-						try? archive.addEntry(with: path, type: .file, uncompressedSize: UInt32(bytes.count)) { pos, size -> Data in
-							return bytes[pos ..< pos+size]
-						}
+						p.completedUnitCount += 1
 					}
+				}
+
+				completion(tempPath, false, nil)
+				try! fm.removeItem(at: tempPath)
+
+				DispatchQueue.main.async {
+					self.zipSpinner.stopAnimating()
+					self.zipLabel.isHidden = false
 				}
 			}
 
-			completion(tempPath, false, nil)
-			try! fm.removeItem(at: tempPath)
-
-			DispatchQueue.main.async {
-				self.zipSpinner.stopAnimating()
-				self.zipLabel.isHidden = false
-			}
-
-			return nil
+			return p
 		}
 		return [UIDragItem(itemProvider: i)]
 	}
