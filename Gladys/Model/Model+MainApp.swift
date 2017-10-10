@@ -182,16 +182,21 @@ extension Model {
 			return
 		}
 
-		let itemsToImport = itemsInPackage.filter { !drops.contains($0) }
+		var itemsImported = 0
 
-		if itemsToImport.count == 0 {
-			completion(true)
-			return
-		}
+		for item in itemsInPackage.reversed() {
 
-		drops.insert(contentsOf: itemsToImport, at: 0)
+			if let i = drops.index(of: item) {
+				if drops[i].updatedAt >= item.updatedAt {
+					continue
+				}
+				drops[i] = item
+			} else {
+				drops.insert(item, at: 0)
+			}
 
-		for item in itemsToImport {
+			itemsImported += 1
+			item.needsReIngest = true
 
 			let uuid = item.uuid.uuidString
 
@@ -204,12 +209,12 @@ extension Model {
 			try! fm.moveItem(at: remotePath, to: localPath)
 		}
 
-		reIndex(items: itemsToImport) {
-			DispatchQueue.main.async {
+		DispatchQueue.main.async {
+			if itemsImported > 0 {
 				self.save()
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-				completion(true)
 			}
+			completion(true)
 		}
 	}
 }

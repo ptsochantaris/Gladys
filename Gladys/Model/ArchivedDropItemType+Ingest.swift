@@ -235,12 +235,19 @@ extension ArchivedDropItemType {
 		displayIcon = result
 	}
 
+	private static func webRequest(for url: URL) -> URLRequest {
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+
+		var request = URLRequest(url: url)
+		request.setValue("Gladys/\(v) (iOS; iOS)", forHTTPHeaderField: "User-Agent")
+		return request
+	}
+
 	private func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, UIImage?)->Void) {
 
 		// in thread!!
 
-		var request = URLRequest(url: url)
-		request.setValue("Gladys/1.0.0 (iOS; iOS)", forHTTPHeaderField: "User-Agent")
+		var request = ArchivedDropItemType.webRequest(for: url)
 
 		if testing {
 
@@ -302,7 +309,6 @@ extension ArchivedDropItemType {
 						}
 					}
 
-					var iconImage: UIImage?
 					var iconUrl: URL?
 					if let i = URL(string: largestImagePath), i.scheme != nil {
 						iconUrl = i
@@ -313,11 +319,9 @@ extension ArchivedDropItemType {
 						}
 					}
 
-					if let url = iconUrl, let data = try? Data(contentsOf: url, options: []), let image = UIImage(data: data) {
-						iconImage = image
+					ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
+						completion(title, newImage)
 					}
-
-					completion(title, iconImage)
 
 				} else if let error = error {
 					log("Error while fetching title URL: \(error.localizedDescription)")
@@ -329,6 +333,18 @@ extension ArchivedDropItemType {
 			}
 			fetch.resume()
 		}
+	}
+
+	private static func fetchImage(url: URL?, completion: @escaping (UIImage?)->Void) {
+		guard let url = url else { completion(nil); return }
+		let request = ArchivedDropItemType.webRequest(for: url)
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let data = data {
+				completion(UIImage(data: data))
+			} else {
+				log("Error fetching site icon from \(url)")
+			}
+		}.resume()
 	}
 
 	private func signalDone() {

@@ -394,7 +394,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			deleteButton.title = "Delete"
 		}
 
-		let itemsToReIngest = model.drops.filter({ $0.needsReIngest })
+		let itemsToReIngest = model.drops.filter { $0.needsReIngest && !$0.isLoading }
 		for item in itemsToReIngest {
 			loadCount += 1
 			startBgTaskIfNeeded()

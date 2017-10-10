@@ -70,6 +70,7 @@ final class FileProviderExtension: NSFileProviderExtension {
     }
 
     override func itemChanged(at url: URL) {
+		if url.lastPathComponent == "items.json" { return }
 		log("Item changed: \(url.path)")
 		if let fi = fileItem(at: url), let parentUuid = fi.typeItem?.parentUuid, let parent = model.drops.first(where: { $0.uuid == parentUuid }) {
 			log("Identified as child of local item \(parent.uuid)")
