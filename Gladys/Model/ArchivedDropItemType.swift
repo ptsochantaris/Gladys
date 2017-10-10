@@ -136,6 +136,12 @@ final class ArchivedDropItemType: Codable {
 				return t
 			}
 		}
+		if typeIdentifier == "public.url" {
+			return "url"
+		}
+		if typeIdentifier.hasSuffix("-plain-text") {
+			return "txt"
+		}
 		return nil
 	}
 
