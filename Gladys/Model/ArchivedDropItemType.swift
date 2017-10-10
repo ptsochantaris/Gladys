@@ -1,5 +1,6 @@
 
 import UIKit
+import MobileCoreServices
 
 final class ArchivedDropItemType: Codable {
 
@@ -127,7 +128,25 @@ final class ArchivedDropItemType: Codable {
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
 
+	var fileExtension: String? {
+		let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
+		if let tag = tag {
+			let t = tag as String
+			if !t.isEmpty {
+				return t
+			}
+		}
+		return nil
+	}
+
 	var contentDescription: String? {
+
+		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
+			let t = desc as String
+			if !t.isEmpty {
+				return t
+			}
+		}
 
 		let id = typeIdentifier.lowercased()
 
@@ -158,8 +177,8 @@ final class ArchivedDropItemType: Codable {
 		case "public.xml": return "XML"
 		case "public.xhtml": return "XHTML"
 		case "com.adobe.pdf": return "Adobe PDF"
-		case "com.apple.rtfd": return "Rich Text Directory"
-		case "com.apple.flat-rtfd": return "Rich Text"
+		case "com.apple.rtfd": return "Rich Text With Attachments Directory"
+		case "com.apple.flat-rtfd": return "Rich Text With Attachments"
 		case "com.apple.webarchive": return "Web Archive"
 		case "com.adobe.postscript": return "PostScript"
 		case "com.adobe.encapsulated-postscript": return "Encapsulated PostScript"

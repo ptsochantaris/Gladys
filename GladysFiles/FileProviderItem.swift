@@ -84,7 +84,12 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 			return dropItem.oneTitle.replacingOccurrences(of: ".", with: " ")
 
 		} else if let typeItem = typeItem {
-			return typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+			let tid = typeItem.typeIdentifier
+			let filename = tid.replacingOccurrences(of: ".", with: "-")
+			if let e = typeItem.fileExtension {
+				return "\(filename).\(e)"
+			}
+			return filename
 
 		} else {
 			return "<no name>"
