@@ -78,7 +78,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 			return [.allowsReading]
 		}
     }
-    
+
     var filename: String {
 		if let dropItem = dropItem {
 			return dropItem.oneTitle.replacingOccurrences(of: ".", with: " ")

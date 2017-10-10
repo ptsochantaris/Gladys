@@ -6,6 +6,7 @@ inhibit_all_warnings!
 
 target 'Gladys' do
   pod 'Fuzi', '~> 2'
+  pod 'ZIPFoundation'
 end
 
 target 'GladysAction' do

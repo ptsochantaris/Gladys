@@ -136,35 +136,35 @@
             <objects>
                 <viewController id="HJT-hG-46H" customClass="PreferencesController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="493"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag an existing Gladys archive into this area to merge its contents into the current items." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
-                                <rect key="frame" x="36" y="366.5" width="248" height="46.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
+                                <rect key="frame" x="36" y="422.5" width="248" height="14.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHF-2i-yuv">
-                                <rect key="frame" x="36" y="140.5" width="248" height="200"/>
+                                <rect key="frame" x="36" y="134.5" width="248" height="150"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjC-x2-xmz">
-                                        <rect key="frame" x="8" y="8" width="232" height="184"/>
+                                        <rect key="frame" x="8" y="8" width="232" height="134"/>
                                         <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfE-PE-TSW">
-                                        <rect key="frame" x="20" y="20" width="208" height="160"/>
+                                        <rect key="frame" x="20" y="20" width="208" height="110"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Olv-Pc-Qy9">
-                                        <rect key="frame" x="114" y="90" width="20" height="20"/>
+                                        <rect key="frame" x="114" y="65" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="0jH-fe-ymm"/>
+                                    <constraint firstAttribute="height" constant="150" id="0jH-fe-ymm"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerY" secondItem="eHF-2i-yuv" secondAttribute="centerY" id="85L-pb-dtO"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="Dok-6f-GP1"/>
                                     <constraint firstAttribute="bottom" secondItem="YjC-x2-xmz" secondAttribute="bottom" constant="8" id="Ltj-ce-IZr"/>
@@ -180,7 +180,47 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export all current items as an archive." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
-                                <rect key="frame" x="36" y="90" width="248" height="30.5"/>
+                                <rect key="frame" x="36" y="96" width="248" height="30.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="emb-Ou-BQ2" userLabel="ZIP Container">
+                                <rect key="frame" x="36" y="354.5" width="248" height="60"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60f-T2-TvR">
+                                        <rect key="frame" x="8" y="8" width="232" height="44"/>
+                                        <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ZIP" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cpG-o8-mOo">
+                                        <rect key="frame" x="20" y="20" width="208" height="20"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="g0B-rC-HOO">
+                                        <rect key="frame" x="114" y="20" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="cpG-o8-mOo" firstAttribute="leading" secondItem="emb-Ou-BQ2" secondAttribute="leading" constant="20" id="5Bx-od-Xem"/>
+                                    <constraint firstItem="g0B-rC-HOO" firstAttribute="centerX" secondItem="emb-Ou-BQ2" secondAttribute="centerX" id="7iM-ss-PBI"/>
+                                    <constraint firstAttribute="bottom" secondItem="60f-T2-TvR" secondAttribute="bottom" constant="8" id="Eh6-jO-3fN"/>
+                                    <constraint firstItem="cpG-o8-mOo" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="top" constant="20" id="HZc-Wc-IuE"/>
+                                    <constraint firstItem="60f-T2-TvR" firstAttribute="leading" secondItem="emb-Ou-BQ2" secondAttribute="leading" constant="8" id="JfG-lc-CZy"/>
+                                    <constraint firstAttribute="trailing" secondItem="cpG-o8-mOo" secondAttribute="trailing" constant="20" id="WYc-Rw-w5d"/>
+                                    <constraint firstAttribute="height" constant="60" id="a13-mO-71B"/>
+                                    <constraint firstItem="g0B-rC-HOO" firstAttribute="centerX" secondItem="emb-Ou-BQ2" secondAttribute="centerX" id="b4P-8t-VPm"/>
+                                    <constraint firstItem="g0B-rC-HOO" firstAttribute="centerY" secondItem="emb-Ou-BQ2" secondAttribute="centerY" id="bBV-2w-cYg"/>
+                                    <constraint firstItem="60f-T2-TvR" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="top" constant="8" id="q0P-e4-ykC"/>
+                                    <constraint firstAttribute="bottom" secondItem="cpG-o8-mOo" secondAttribute="bottom" constant="20" id="tgx-aC-aLA"/>
+                                    <constraint firstItem="g0B-rC-HOO" firstAttribute="centerY" secondItem="emb-Ou-BQ2" secondAttribute="centerY" id="uWx-G6-N14"/>
+                                    <constraint firstAttribute="trailing" secondItem="60f-T2-TvR" secondAttribute="trailing" constant="8" id="v76-0C-Rxs"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag an existing Gladys archive above to merge its contents into your current items." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
+                                <rect key="frame" x="36" y="292" width="248" height="30.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -188,16 +228,22 @@
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="emb-Ou-BQ2" firstAttribute="top" secondItem="HiR-cx-G23" secondAttribute="bottom" constant="32" id="2lN-I4-7U4"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ZOF-Yb-WSo" secondAttribute="bottom" constant="32" id="6Mt-mT-acy"/>
                             <constraint firstItem="eHF-2i-yuv" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="6hD-VL-b9m"/>
+                            <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="8" id="6uD-hY-ehB"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="DlO-IY-L3z"/>
-                            <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="26" id="Id3-0l-h2p"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="trailing" secondItem="emb-Ou-BQ2" secondAttribute="trailing" constant="36" id="GDc-R7-Su5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eHF-2i-yuv" secondAttribute="trailing" constant="20" id="Kmc-7x-z5u"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="trailing" secondItem="ZOF-Yb-WSo" secondAttribute="trailing" constant="36" id="PTa-nY-N0n"/>
+                            <constraint firstItem="ZOF-Yb-WSo" firstAttribute="leading" secondItem="wBp-li-D4L" secondAttribute="leading" constant="36" id="ZA9-ZB-W3r"/>
                             <constraint firstItem="OxZ-BU-EoU" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="aXs-bU-lW9"/>
-                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="26" id="ddM-ZR-lUi"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="HiR-cx-G23" secondAttribute="bottom" constant="80" id="obZ-bb-JSV"/>
+                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="32" id="ddM-ZR-lUi"/>
+                            <constraint firstItem="emb-Ou-BQ2" firstAttribute="leading" secondItem="wBp-li-D4L" secondAttribute="leading" constant="36" id="n9i-qN-ShL"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="20" id="q4O-tH-cpU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="HiR-cx-G23" secondAttribute="trailing" constant="20" id="q4x-sw-MAu"/>
-                            <constraint firstItem="eHF-2i-yuv" firstAttribute="top" secondItem="OxZ-BU-EoU" secondAttribute="bottom" constant="20" id="wYh-34-wH0"/>
+                            <constraint firstItem="ZOF-Yb-WSo" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="bottom" constant="8" id="sRd-iX-tGn"/>
+                            <constraint firstItem="eHF-2i-yuv" firstAttribute="top" secondItem="OxZ-BU-EoU" secondAttribute="bottom" constant="8" id="wYh-34-wH0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wBp-li-D4L"/>
                     </view>
@@ -224,7 +270,6 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="493"/>
                     <connections>
                         <outlet property="container" destination="eHF-2i-yuv" id="u8J-Qp-uha"/>
                         <outlet property="deleteAll" destination="ipf-aG-KNc" id="9Gf-1n-u0u"/>
@@ -232,6 +277,10 @@
                         <outlet property="innerFrame" destination="YjC-x2-xmz" id="fhc-2f-KWD"/>
                         <outlet property="spinner" destination="Olv-Pc-Qy9" id="6r7-rx-Ua5"/>
                         <outlet property="versionLabel" destination="8xq-af-34d" id="dne-01-qQa"/>
+                        <outlet property="zipContainer" destination="emb-Ou-BQ2" id="nFc-hZ-pg5"/>
+                        <outlet property="zipInnerFrame" destination="60f-T2-TvR" id="bl6-RI-mTU"/>
+                        <outlet property="zipLabel" destination="cpG-o8-mOo" id="QsM-ih-1Y2"/>
+                        <outlet property="zipSpinner" destination="g0B-rC-HOO" id="qUw-6p-bn6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -891,7 +940,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

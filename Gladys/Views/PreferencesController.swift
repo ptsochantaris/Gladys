@@ -1,15 +1,22 @@
 
 import UIKit
+import MobileCoreServices
+import ZIPFoundation
 
 final class PreferencesController : UIViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
 
-	func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()
-		let fileName = "Gladys Archive.gladysArchive"
-		i.suggestedName = fileName
+		i.suggestedName = "Gladys Archive.gladysArchive"
 		i.registerFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive", fileOptions: [], visibility: .all) { completion -> Progress? in
-			let fm = FileManager.default
+			// TODO show progress and run action in other thread
 
+			DispatchQueue.main.async {
+				self.spinner.startAnimating()
+				self.infoLabel.isHidden = true
+			}
+
+			let fm = FileManager.default
 			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Exported Data")
 			if fm.fileExists(atPath: tempPath.path) {
 				try! fm.removeItem(at: tempPath)
@@ -18,9 +25,72 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 			completion(tempPath, false, nil)
 			try! fm.removeItem(at: tempPath)
+
+			DispatchQueue.main.async {
+				self.spinner.stopAnimating()
+				self.infoLabel.isHidden = false
+			}
+
 			return nil
 		}
 		return [UIDragItem(itemProvider: i)]
+	}
+
+	private var zipDragItems: [UIDragItem] {
+		let i = NSItemProvider()
+		i.suggestedName = "Gladys.zip"
+		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
+			// TODO show progress and run action in other thread
+
+			DispatchQueue.main.async {
+				self.zipSpinner.startAnimating()
+				self.zipLabel.isHidden = true
+			}
+
+			let fm = FileManager.default
+			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
+			if fm.fileExists(atPath: tempPath.path) {
+				try! fm.removeItem(at: tempPath)
+			}
+
+			if let archive = Archive(url: tempPath, accessMode: .create) {
+				for item in ViewController.shared.model.drops {
+					let dir = item.oneTitle.replacingOccurrences(of: ".", with: " ")
+					for typeItem in item.typeItems {
+						guard let bytes = typeItem.bytes else { continue }
+						let name = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
+						var path = "\(dir)/\(name)"
+						if let ext = typeItem.fileExtension {
+							path += ".\(ext)"
+						}
+						try? archive.addEntry(with: path, type: .file, uncompressedSize: UInt32(bytes.count)) { pos, size -> Data in
+							return bytes[pos ..< pos+size]
+						}
+					}
+				}
+			}
+
+			completion(tempPath, false, nil)
+			try! fm.removeItem(at: tempPath)
+
+			DispatchQueue.main.async {
+				self.zipSpinner.stopAnimating()
+				self.zipLabel.isHidden = false
+			}
+
+			return nil
+		}
+		return [UIDragItem(itemProvider: i)]
+	}
+
+	func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+		if interaction.view == container {
+			return archiveDragItems
+		} else if interaction.view == zipContainer {
+			return zipDragItems
+		} else {
+			return []
+		}
 	}
 
 	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
@@ -65,6 +135,11 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	@IBOutlet weak var innerFrame: UIView!
 	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
+	@IBOutlet var zipContainer: UIView!
+	@IBOutlet var zipInnerFrame: UIView!
+	@IBOutlet var zipLabel: UILabel!
+	@IBOutlet var zipSpinner: UIActivityIndicatorView!
+
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove all items from your collection. This cannot be undone.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Delete All", style: .destructive, handler: { [weak self] action in
@@ -97,10 +172,16 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		container.layer.cornerRadius = 10
 		innerFrame.layer.cornerRadius = 5
 
+		zipContainer.layer.cornerRadius = 10
+		zipInnerFrame.layer.cornerRadius = 5
+
 		let dragInteraction = UIDragInteraction(delegate: self)
 		container.addInteraction(dragInteraction)
 		let dropInteraction = UIDropInteraction(delegate: self)
 		container.addInteraction(dropInteraction)
+
+		let zipDragInteraction = UIDragInteraction(delegate: self)
+		zipContainer.addInteraction(zipDragInteraction)
 
 		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
 		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
