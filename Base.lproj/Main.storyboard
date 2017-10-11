@@ -717,8 +717,8 @@
                     <navigationItem key="navigationItem" id="6jK-Pp-2Ba"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="addressButton" destination="Zt2-rP-yni" id="CFD-Oc-StL"/>
                         <outlet property="addressItem" destination="mls-SP-eXy" id="ygk-KK-3VI"/>
-                        <outlet property="addressLabel" destination="T9e-u9-gqe" id="JiX-eP-JLa"/>
                         <outlet property="addressViewHolder" destination="pwH-vt-qkJ" id="K9Z-w8-aHv"/>
                         <outlet property="ascii" destination="tkW-TX-Wxg" id="BPe-6X-hTD"/>
                         <outlet property="asciiModeButton" destination="tkW-TX-Wxg" id="ULk-5U-Any"/>
@@ -731,18 +731,20 @@
                     <rect key="frame" x="0.0" y="0.0" width="223" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T9e-u9-gqe">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zt2-rP-yni">
                             <rect key="frame" x="0.0" y="0.0" width="223" height="44"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                            <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <state key="normal" title="Address"/>
+                            <connections>
+                                <action selector="addressSelected:" destination="OAS-3C-tPm" eventType="touchUpInside" id="xfk-md-SnV"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="T9e-u9-gqe" secondAttribute="bottom" id="2Ns-YO-iSK"/>
-                        <constraint firstItem="T9e-u9-gqe" firstAttribute="top" secondItem="pwH-vt-qkJ" secondAttribute="top" id="a9h-o9-rbV"/>
-                        <constraint firstItem="T9e-u9-gqe" firstAttribute="leading" secondItem="pwH-vt-qkJ" secondAttribute="leading" id="lL5-uI-8C2"/>
-                        <constraint firstAttribute="trailing" secondItem="T9e-u9-gqe" secondAttribute="trailing" id="vZ2-Wm-wvc"/>
+                        <constraint firstItem="WIP-XK-jIa" firstAttribute="trailing" secondItem="Zt2-rP-yni" secondAttribute="trailing" priority="750" id="7fv-nj-pDc"/>
+                        <constraint firstItem="WIP-XK-jIa" firstAttribute="bottom" secondItem="Zt2-rP-yni" secondAttribute="bottom" priority="750" id="LN4-MT-byL"/>
+                        <constraint firstItem="Zt2-rP-yni" firstAttribute="leading" secondItem="WIP-XK-jIa" secondAttribute="leading" priority="750" id="Ro9-xr-QpA"/>
+                        <constraint firstItem="Zt2-rP-yni" firstAttribute="top" secondItem="WIP-XK-jIa" secondAttribute="top" priority="750" id="hJr-mP-PHP"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="WIP-XK-jIa"/>
                 </view>

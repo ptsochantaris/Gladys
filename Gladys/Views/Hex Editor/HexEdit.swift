@@ -13,7 +13,7 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 	var bytes: Data!
 
 	@IBOutlet var addressViewHolder: UIView!
-	@IBOutlet var addressLabel: UILabel!
+	@IBOutlet var addressButton: UIButton!
 	@IBOutlet var addressItem: UIBarButtonItem!
 	@IBOutlet weak var grid: UICollectionView!
 	@IBOutlet weak var inspectorButton: UIBarButtonItem!
@@ -45,7 +45,7 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		grid.addGestureRecognizer(selectionRecognizer)
 		navigationController?.interactivePopGestureRecognizer?.require(toFail: selectionRecognizer)
 
-		addressLabel.text = nil
+		addressButton.setTitle("No selection", for: .normal)
 		addressItem.customView = addressViewHolder
 
 		asciiModeButton.title = asciiMode ? "HEX" : "ASCII"
@@ -75,9 +75,9 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		let start = String(firstItem, radix: 16, uppercase: true)
 		let end = String(lastItem, radix: 16, uppercase: true)
 		if start == end {
-			addressLabel.text = "0x\(start)"
+			addressButton.setTitle("0x\(start)", for: .normal)
 		} else {
-			addressLabel.text = "0x\(start) - 0x\(end)"
+			addressButton.setTitle("0x\(start) - 0x\(end)", for: .normal)
 		}
 	}
 
@@ -101,7 +101,7 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 			grid.deselectItem(at: ip, animated: false)
 		}
 		inspectorButton.isEnabled = false
-		addressLabel.text = nil
+		addressButton.setTitle("No selection", for: .normal)
 	}
 
 	private var firstSelectedIndexPath: IndexPath?
@@ -167,6 +167,28 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		for i in selectedIndexes ?? [] {
 			grid.selectItem(at: i, animated: false, scrollPosition: .centeredHorizontally)
 		}
+	}
+
+	@IBAction func addressSelected(_ sender: Any) {
+		let a = UIAlertController(title: "Jump To Address", message: nil, preferredStyle: .alert)
+		a.addTextField { field in
+			let ip = self.grid.indexPathsForSelectedItems ?? self.grid.indexPathsForVisibleItems
+			if let f = ip.first {
+				field.text = String(f.item, radix: 16, uppercase: true)
+			}
+		}
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+			if let address = Int(a.textFields?.first?.text ?? "", radix: 16) {
+				let finalAddress = min(address, self.bytes.count-1)
+				let newIP = IndexPath(item: finalAddress, section: 0)
+				self.clearSelection()
+				self.grid.selectItem(at: newIP, animated: false, scrollPosition: .centeredVertically)
+				let hexFinal = String(finalAddress, radix: 16, uppercase: true)
+				self.addressButton.setTitle("0x\(hexFinal)", for: .normal)
+			}
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
 	}
 
 	///////////////////////////////////
