@@ -718,8 +718,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let ip = IndexPath(item: i, section: 0)
 			archivedItemCollectionView.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-				let cell = self.archivedItemCollectionView.cellForItem(at: ip) as! ArchivedItemCell
-				cell.flash()
+				if let cell = self.archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
+					cell.flash()
+				}
 				self.archivedItemCollectionView.isUserInteractionEnabled = true
 			}
 		}
