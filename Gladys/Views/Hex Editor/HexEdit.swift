@@ -45,13 +45,13 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		grid.addGestureRecognizer(selectionRecognizer)
 		navigationController?.interactivePopGestureRecognizer?.require(toFail: selectionRecognizer)
 
-		addressButton.setTitle("No selection", for: .normal)
 		addressItem.customView = addressViewHolder
-
 		asciiModeButton.title = asciiMode ? "HEX" : "ASCII"
+		clearSelection()
 	}
 
-	private func selectCell(at point: CGPoint) {
+	private func selectCell(at point: CGPoint, animated: Bool) {
+
 		guard let indexPath = grid.indexPathForItem(at: point) else { return }
 		if firstSelectedIndexPath == nil {
 			firstSelectedIndexPath = indexPath
@@ -72,6 +72,9 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 			i.bytes = selectedBytes
 		}
 
+		if !animated {
+			UIView.setAnimationsEnabled(false)
+		}
 		let start = String(firstItem, radix: 16, uppercase: true)
 		let end = String(lastItem, radix: 16, uppercase: true)
 		if start == end {
@@ -79,12 +82,16 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		} else {
 			addressButton.setTitle("0x\(start) - 0x\(end)", for: .normal)
 		}
+		if !animated {
+			addressButton.layoutIfNeeded()
+			UIView.setAnimationsEnabled(true)
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if let point = collectionView.cellForItem(at: indexPath)?.frame.origin {
 			clearSelection()
-			selectCell(at: point)
+			selectCell(at: point, animated: true)
 		}
 	}
 
@@ -101,7 +108,7 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 			grid.deselectItem(at: ip, animated: false)
 		}
 		inspectorButton.isEnabled = false
-		addressButton.setTitle("No selection", for: .normal)
+		addressButton.setTitle("Jump To Address", for: .normal)
 	}
 
 	private var firstSelectedIndexPath: IndexPath?
@@ -111,9 +118,9 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		case .began:
 			clearSelection()
 			let l = recognizer.location(in: grid)
-			selectCell(at: l)
+			selectCell(at: l, animated: true)
 		case .changed:
-			selectCell(at: recognizer.location(in: grid))
+			selectCell(at: recognizer.location(in: grid), animated: false)
 		default:
 			break
 		}

@@ -741,10 +741,10 @@
                         </button>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="WIP-XK-jIa" firstAttribute="trailing" secondItem="Zt2-rP-yni" secondAttribute="trailing" priority="750" id="7fv-nj-pDc"/>
-                        <constraint firstItem="WIP-XK-jIa" firstAttribute="bottom" secondItem="Zt2-rP-yni" secondAttribute="bottom" priority="750" id="LN4-MT-byL"/>
-                        <constraint firstItem="Zt2-rP-yni" firstAttribute="leading" secondItem="WIP-XK-jIa" secondAttribute="leading" priority="750" id="Ro9-xr-QpA"/>
-                        <constraint firstItem="Zt2-rP-yni" firstAttribute="top" secondItem="WIP-XK-jIa" secondAttribute="top" priority="750" id="hJr-mP-PHP"/>
+                        <constraint firstItem="WIP-XK-jIa" firstAttribute="trailing" secondItem="Zt2-rP-yni" secondAttribute="trailing" id="7fv-nj-pDc"/>
+                        <constraint firstItem="WIP-XK-jIa" firstAttribute="bottom" secondItem="Zt2-rP-yni" secondAttribute="bottom" id="LN4-MT-byL"/>
+                        <constraint firstItem="Zt2-rP-yni" firstAttribute="leading" secondItem="WIP-XK-jIa" secondAttribute="leading" id="Ro9-xr-QpA"/>
+                        <constraint firstItem="Zt2-rP-yni" firstAttribute="top" secondItem="WIP-XK-jIa" secondAttribute="top" id="hJr-mP-PHP"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="WIP-XK-jIa"/>
                 </view>
