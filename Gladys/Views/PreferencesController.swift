@@ -62,7 +62,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 				DispatchQueue.main.async {
 					self.zipSpinner.startAnimating()
-					self.zipLabel.isHidden = true
+					self.zipImage.isHidden = true
 				}
 
 				let fm = FileManager.default
@@ -75,10 +75,20 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 				if let archive = Archive(url: tempPath, accessMode: .create) {
 					for item in dropsCopy {
-						let dir = item.oneTitle.replacingOccurrences(of: ".", with: " ")
+						var dir = item.oneTitle
+						if let url = URL(string: dir) {
+							if let host = url.host {
+								dir = host + "-" + url.path.split(separator: "/").joined(separator: "-")
+							} else {
+								dir = url.path.split(separator: "/").joined(separator: "-")
+							}
+						} else {
+							dir = dir.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
+						}
 						for typeItem in item.typeItems {
-							let name = typeItem.typeIdentifier.replacingOccurrences(of: ".", with: "-")
-							var path = "\(dir)/\(name)"
+							let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
+
+							var path = "\(dir)/\(dir) (\(d))"
 							if let ext = typeItem.fileExtension {
 								path += ".\(ext)"
 							}
@@ -105,7 +115,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 				DispatchQueue.main.async {
 					self.zipSpinner.stopAnimating()
-					self.zipLabel.isHidden = false
+					self.zipImage.isHidden = false
 				}
 			}
 
@@ -168,8 +178,8 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	@IBOutlet var zipContainer: UIView!
 	@IBOutlet var zipInnerFrame: UIView!
-	@IBOutlet var zipLabel: UILabel!
 	@IBOutlet var zipSpinner: UIActivityIndicatorView!
+	@IBOutlet var zipImage: UIImageView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove all items from your collection. This cannot be undone.", preferredStyle: .alert)

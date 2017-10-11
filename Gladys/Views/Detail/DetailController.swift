@@ -189,7 +189,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
-			e.title = (typeEntry.contentDescription ?? typeEntry.oneTitle) + " (\(size))"
+			e.title = typeEntry.contentDescription + " (\(size))"
 		}
 	}
 

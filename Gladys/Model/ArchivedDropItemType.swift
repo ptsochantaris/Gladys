@@ -145,7 +145,7 @@ final class ArchivedDropItemType: Codable {
 		return nil
 	}
 
-	var contentDescription: String? {
+	var typeDescription: String? {
 
 		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
 			let t = desc as String
@@ -353,7 +353,11 @@ final class ArchivedDropItemType: Codable {
 		default: break
 		}
 
-		return "Other (\(representedClass))"
+		return nil
+	}
+
+	var contentDescription: String {
+		return typeDescription ?? "Other (\(representedClass))"
 	}
 
 	var sizeInBytes: Int64 {
@@ -422,8 +426,12 @@ final class ArchivedDropItemType: Codable {
 		return url
 	}()
 
+	var filenameTypeIdentifier: String {
+		return typeIdentifier.replacingOccurrences(of: ".", with: "-")
+	}
+
 	var oneTitle: String {
-		return accessoryTitle ?? displayTitle ?? typeIdentifier.replacingOccurrences(of: ".", with: "-")
+		return accessoryTitle ?? displayTitle ?? filenameTypeIdentifier
 	}
 
 	#if MAINAPP || ACTIONEXTENSION

@@ -157,7 +157,10 @@ extension ArchivedDropItemType {
 
 		if typeIdentifier == "public.folder" {
 			typeIdentifier = "public.zip-archive"
-			setDisplayIcon (#imageLiteral(resourceName: "iconFolder"), 5, .center)
+		}
+
+		if typeIdentifier.hasSuffix("-archive") {
+			setDisplayIcon (#imageLiteral(resourceName: "zip"), 50, .center)
 
 		} else if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
