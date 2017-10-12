@@ -44,8 +44,9 @@ final class ArchivedDropItem: Codable, Equatable {
 	init(from decoder: Decoder) throws {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
-		createdAt = try v.decode(Date.self, forKey: .createdAt)
-		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .distantPast
+		let c = try v.decode(Date.self, forKey: .createdAt)
+		createdAt = c
+		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
 		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)

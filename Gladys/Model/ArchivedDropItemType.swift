@@ -61,8 +61,9 @@ final class ArchivedDropItemType: Codable {
 		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
 		displayIconWidth = try v.decode(CGFloat.self, forKey: .displayIconWidth)
 		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
-		createdAt = try v.decode(Date.self, forKey: .createdAt)
-		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .distantPast
+		let c = try v.decode(Date.self, forKey: .createdAt)
+		createdAt = c
+		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
 		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
