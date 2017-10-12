@@ -35,6 +35,10 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return dropItem?.createdAt ?? typeItem?.createdAt
 	}
 
+	var contentModificationDate: Date? {
+		return dropItem?.updatedAt ?? typeItem?.updatedAt
+	}
+
 	var isUploaded: Bool {
 		return true
 	}

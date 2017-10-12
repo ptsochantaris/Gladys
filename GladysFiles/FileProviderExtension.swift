@@ -72,8 +72,9 @@ final class FileProviderExtension: NSFileProviderExtension {
     override func itemChanged(at url: URL) {
 		if url.lastPathComponent == "items.json" { return }
 		log("Item changed: \(url.path)")
-		if let fi = fileItem(at: url), let parentUuid = fi.typeItem?.parentUuid, let parent = model.drops.first(where: { $0.uuid == parentUuid }) {
-			log("Identified as child of local item \(parent.uuid)")
+		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = model.drops.first(where: { $0.uuid == typeItem.parentUuid }) {
+			log("Identified as child of local item \(typeItem.parentUuid)")
+			typeItem.updatedAt = Date()
 			parent.needsReIngest = true
 			parent.updatedAt = Date()
 			model.save()
@@ -102,21 +103,20 @@ final class FileProviderExtension: NSFileProviderExtension {
 	override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
 
-		let queue = DispatchQueue(label: "build.bru.thumbnails", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
-		queue.async {
+		DispatchQueue.global(qos: .background).async {
 			let mySize = CGSize(width: 256, height: 256)
 			for itemID in itemIdentifiers {
 				autoreleasepool {
 					log("Creating thumbnail for item \(itemID.rawValue)")
+					var data: Data?
 					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
 						if let dir = fpi.dropItem {
-							let data = self.imageData(img: dir.displayIcon, size: mySize, contentMode: dir.displayMode)
-							perThumbnailCompletionHandler(itemID, data, nil)
+							data = self.imageData(img: dir.displayIcon, size: mySize, contentMode: dir.displayMode)
 						} else if let file = fpi.typeItem, let img = file.displayIcon {
-							let data = self.imageData(img: img, size: mySize, contentMode: file.displayIconContentMode)
-							perThumbnailCompletionHandler(itemID, data, nil)
+							data = self.imageData(img: img, size: mySize, contentMode: file.displayIconContentMode)
 						}
 					}
+					perThumbnailCompletionHandler(itemID, data, nil)
 					progress.completedUnitCount += 1
 				}
 			}

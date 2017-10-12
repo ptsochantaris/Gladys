@@ -20,6 +20,7 @@ final class ArchivedDropItemType: Codable {
 		case displayIconWidth
 		case displayIconHeight
 		case createdAt
+		case updatedAt
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -39,6 +40,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconWidth, forKey: .displayIconWidth)
 		try v.encode(displayIconHeight, forKey: .displayIconHeight)
 		try v.encode(createdAt, forKey: .createdAt)
+		try v.encode(updatedAt, forKey: .updatedAt)
 	}
 
 	lazy var imagePath: URL = {
@@ -60,6 +62,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconWidth = try v.decode(CGFloat.self, forKey: .displayIconWidth)
 		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
 		createdAt = try v.decode(Date.self, forKey: .createdAt)
+		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? .distantPast
 
 		let a = try v.decode(Int.self, forKey: .displayTitleAlignment)
 		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
@@ -112,6 +115,7 @@ final class ArchivedDropItemType: Codable {
 	let uuid: UUID
 	let parentUuid: UUID
 	let createdAt: Date
+	var updatedAt: Date
 	var representedClass: String
 	var classWasWrapped: Bool
 	var loadingError: Error?
@@ -451,6 +455,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconHeight = 0
 		classWasWrapped = false
 		createdAt = Date()
+		updatedAt = createdAt
 		representedClass = ""
 	}
 	#endif
