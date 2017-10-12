@@ -54,7 +54,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 		i.suggestedName = "Gladys.zip"
 		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
 
-			let dropsCopy = ViewController.shared.model.drops
+			let dropsCopy = ViewController.shared.model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
 			let itemCount = Int64(1 + dropsCopy.count)
 			let p = Progress(totalUnitCount: itemCount)
 

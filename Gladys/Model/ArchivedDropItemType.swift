@@ -435,7 +435,7 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	#if MAINAPP || ACTIONEXTENSION
-	init(provider: NSItemProvider, typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
+	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 
 		self.typeIdentifier = typeIdentifier
 		self.delegate = delegate
@@ -452,8 +452,6 @@ final class ArchivedDropItemType: Codable {
 		classWasWrapped = false
 		createdAt = Date()
 		representedClass = ""
-
-		startIngest(provider: provider)
 	}
 	#endif
 }

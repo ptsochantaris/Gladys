@@ -9,10 +9,12 @@ final class ArchivedDropItem: Codable, Equatable {
 	let createdAt:  Date
 	var updatedAt: Date
 	var allLoadedWell: Bool
-	var isLoading: Bool
 	var needsReIngest: Bool
 	var note: String
 	var titleOverride: String
+
+	// Transient
+	var loadingProgress: Progress?
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -50,7 +52,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
-		isLoading = false
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -116,7 +117,6 @@ final class ArchivedDropItem: Codable, Equatable {
 
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
-		private static let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
 
 		init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) {
 
@@ -124,7 +124,6 @@ final class ArchivedDropItem: Codable, Equatable {
 			createdAt = Date()
 			updatedAt = createdAt
 			suggestedName = providers.first!.suggestedName
-			isLoading = true
 			allLoadedWell = true
 			needsReIngest = false
 			titleOverride = ""
@@ -132,15 +131,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			typeItems = [ArchivedDropItemType]()
 			self.delegate = delegate
 
-			for provider in providers {
-				for typeIdentifier in provider.registeredTypeIdentifiers {
-					if !ArchivedDropItem.blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) } ) {
-						loadCount += 1
-						let i = ArchivedDropItemType(provider: provider, typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
-						typeItems.append(i)
-					}
-				}
-			}
+			loadingProgress = startIngest(providers: providers)
 		}
 
 	#endif

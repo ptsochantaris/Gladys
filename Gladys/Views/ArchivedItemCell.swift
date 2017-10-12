@@ -162,6 +162,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var editHolder: UIView?
 
 	@IBAction func cancelSelected(_ sender: UIButton) {
+		observingProgress = nil
 		if let archivedDropItem = archivedDropItem {
 			archivedDropItem.cancelIngest()
 			delegate?.deleteRequested(for: [archivedDropItem])
@@ -254,10 +255,26 @@ final class ArchivedItemCell: UICollectionViewCell {
 		reDecorate()
 	}
 
+	private var observingProgress: NSKeyValueObservation?
+
 	var archivedDropItem: ArchivedDropItem? {
 		didSet {
+			if let p = archivedDropItem?.loadingProgress {
+				observingProgress = p.observe(\.fractionCompleted, options: [.new]) { prog, change in
+					DispatchQueue.main.async {
+						self.reDecorate()
+					}
+				}
+			} else {
+				observingProgress = nil
+			}
 			reDecorate()
 		}
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		observingProgress = nil
 	}
 
 	private var existingMapView: MiniMapView?
@@ -292,14 +309,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		if let item = item {
 
-			if item.isLoading {
-				let count = item.loadCount
-				label.text = count > 1 ? "\(count) items left to transfer" : "Completing transfer"
+			if let progress = item.loadingProgress {
+				let p = (progress.fractionCompleted * 100.0).rounded(.up)
+				label.text = "\(p)% complete"
 				hideCancel = false
 				showSpinner = true
 				image.image = nil
+
 			} else {
+
 				hideImage = false
+				observingProgress = nil
 
 				let cacheKey = "\(item.uuid.uuidString) \(item.updatedAt.timeIntervalSinceReferenceDate)" as NSString
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
@@ -368,6 +388,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		} else { // item is nil
 			label.text = nil
 			image.image = nil
+			observingProgress = nil
 		}
 
 		if !wantMapView, let e = existingMapView {

@@ -13,7 +13,6 @@ enum ArchivedDropItemDisplayType: Int {
 
 protocol LoadCompletionDelegate: class {
 	func loadCompleted(sender: AnyObject, success: Bool)
-	func loadingProgress(sender: AnyObject)
 }
 
 extension FileManager {

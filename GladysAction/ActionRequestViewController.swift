@@ -73,7 +73,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	@IBAction func cancelRequested(_ sender: UIBarButtonItem) {
 
-		let loadingItems = model.drops.filter({ $0.isLoading })
+		let loadingItems = model.drops.filter { $0.loadingProgress != nil }
 		for loadingItem in loadingItems {
 			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
@@ -95,7 +95,5 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
 	}
-
-	func loadingProgress(sender: AnyObject) {}
 }
 

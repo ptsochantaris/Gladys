@@ -18,7 +18,7 @@ extension Model {
 
 		let start = Date()
 
-		let itemsToSave = drops.filter { !$0.isLoading && !$0.isDeleting }
+		let itemsToSave = drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
 
 		prepareToSave()
 

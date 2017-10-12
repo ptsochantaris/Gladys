@@ -206,7 +206,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if collectionView.hasActiveDrag { return }
 
 		let item = model.filteredDrops[indexPath.item]
-		if item.isLoading {
+		if item.loadingProgress != nil {
 			return
 		}
 
@@ -329,7 +329,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if previousBuild != currentBuild {
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
-			model.reIndex(items: model.drops, completion: nil)
+			// Not needed since 1.0.4
+			//model.reIndex(items: model.drops, completion: nil)
 		}
 	}
 
@@ -394,7 +395,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			deleteButton.title = "Delete"
 		}
 
-		let itemsToReIngest = model.drops.filter { $0.needsReIngest && !$0.isLoading }
+		let itemsToReIngest = model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
 		for item in itemsToReIngest {
 			loadCount += 1
 			startBgTaskIfNeeded()
@@ -649,15 +650,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"How can I help?",
 		"Ready!",
 		]
-
-	func loadingProgress(sender: AnyObject) {
-		if let i = model.filteredDrops.index(where: { $0 === sender }) {
-			let ip = IndexPath(item: i, section: 0)
-			if let cell = archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
-				cell.reDecorate()
-			}
-		}
-	}
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
 

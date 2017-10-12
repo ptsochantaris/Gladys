@@ -6,9 +6,9 @@ import Contacts
 
 extension ArchivedDropItemType {
 
-	func startIngest(provider: NSItemProvider) {
+	func startIngest(provider: NSItemProvider) -> Progress {
 
-		provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
+		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log(">> Error receiving item: \(error.localizedDescription)")
@@ -20,15 +20,21 @@ extension ArchivedDropItemType {
 				s.ingest(data: data)
 			}
 		}
+		return p
 	}
 
-	func reIngest(delegate: LoadCompletionDelegate) {
+	func reIngest(delegate: LoadCompletionDelegate) -> Progress {
 		self.delegate = delegate
+		let p = Progress(totalUnitCount: 1)
 		if loadingError == nil, let bytesCopy = bytes {
 			DispatchQueue.global(qos: .background).async {
 				self.ingest(data: bytesCopy)
+				p.completedUnitCount = 1
 			}
+		} else {
+			p.completedUnitCount = 1
 		}
+		return p
 	}
 
 	private func ingest(data: Data) { // in thread!
