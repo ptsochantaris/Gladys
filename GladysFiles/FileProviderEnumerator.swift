@@ -35,7 +35,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 
-		var items: [NSFileProviderItemProtocol]
+		let items: [FileProviderItem]
 		if let dirItem = dropItem {
 			log("Listing directory \(uuid)")
 			if sortByDate {
@@ -78,26 +78,40 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		model.reloadDataIfNeeded()
 
 		if let d = dropItem {
-			log("Enumerating changes for directory \(uuid)")
+			//log("Enumerating changes for directory \(uuid)")
 
 			let meAfter = rootItems.first { $0.dropItem?.uuid.uuidString == uuid }
 
-			if let meAfter = meAfter { // I exist, have I changed?
-				if d.updatedAt != meAfter.dropItem?.updatedAt, let newDropItem = meAfter.dropItem {
-					dropItem = newDropItem
-					observer.didUpdate([meAfter])
+			if let meAfter = meAfter, let newDropItem = meAfter.dropItem { // I exist, have I changed?
+				var updatedItems = [FileProviderItem]()
+				for newTypeItem in newDropItem.typeItems {
+					if let previousTypeItem = dropItem?.typeItems.first(where: { $0.uuid == newTypeItem.uuid }), previousTypeItem.modifiedInFiles || previousTypeItem.updatedAt != newTypeItem.updatedAt {
+						updatedItems.append(FileProviderItem(newTypeItem))
+						newTypeItem.modifiedInFiles = false
+					}
+				}
+				dropItem = newDropItem
+				if updatedItems.count > 0 {
+					for item in updatedItems {
+						log("Signalling update of item \(item.itemIdentifier.rawValue)")
+					}
+					observer.didUpdate(updatedItems)
 					incrementAnchor()
 				}
+
 			} else { // I'm gone
 				var ids = [NSFileProviderItemIdentifier(uuid)]
 				let childrenIds = d.typeItems.map { NSFileProviderItemIdentifier($0.uuid.uuidString) }
 				ids.append(contentsOf: childrenIds)
+				for id in ids {
+					log("Signalling deletion of item \(id.rawValue)")
+				}
 				observer.didDeleteItems(withIdentifiers: ids)
 				incrementAnchor()
 			}
 
 		} else {
-			log("Enumerating changes for root")
+			//log("Enumerating changes for root")
 
 			let newItemIds2Items = Dictionary(uniqueKeysWithValues: rootItems.map { ($0.itemIdentifier, $0) })
 
@@ -106,11 +120,17 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 				return oldItem == nil || oldItem?.dropItem?.updatedAt != newItem.dropItem?.updatedAt
 			}
 			if updatedItemIds2Items.count > 0 {
+				for id in updatedItemIds2Items.keys {
+					log("Signalling update of directory \(id.rawValue)")
+				}
 				observer.didUpdate(Array(updatedItemIds2Items.values))
 			}
 
 			let deletedItemIds = oldItemIds2Items!.keys.filter { !newItemIds2Items.keys.contains($0) }
 			if deletedItemIds.count > 0 {
+				for id in deletedItemIds {
+					log("Signalling deletion of directory \(id.rawValue)")
+				}
 				observer.didDeleteItems(withIdentifiers: deletedItemIds)
 			}
 

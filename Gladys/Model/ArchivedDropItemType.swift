@@ -133,6 +133,9 @@ final class ArchivedDropItemType: Codable {
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
 
+	// transient / files
+	var modifiedInFiles = false
+
 	var fileExtension: String? {
 		let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
 		if let tag = tag {

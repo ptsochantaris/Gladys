@@ -39,6 +39,17 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return dropItem?.updatedAt ?? typeItem?.updatedAt
 	}
 
+	var versionIdentifier: Data? {
+		if let m = contentModificationDate {
+			return String(m.timeIntervalSinceReferenceDate).data(using: .utf8)
+		}
+		return nil
+	}
+
+	var isMostRecentVersionDownloaded: Bool {
+		return true
+	}
+
 	var isUploaded: Bool {
 		return true
 	}
