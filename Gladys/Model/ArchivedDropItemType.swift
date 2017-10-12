@@ -88,13 +88,13 @@ final class ArchivedDropItemType: Codable {
 	var bytes: Data? {
 		set {
 			let byteLocation = bytesPath
-			if newValue == nil {
+			if newValue == nil || loadingAborted {
 				let f = FileManager.default
 				if f.fileExists(atPath: byteLocation.path) {
-					try! f.removeItem(at: byteLocation)
+					try? f.removeItem(at: byteLocation)
 				}
 			} else {
-				try! newValue?.write(to: byteLocation, options: [.atomic])
+				try? newValue?.write(to: byteLocation, options: [.atomic])
 			}
 		}
 		get {

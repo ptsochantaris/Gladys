@@ -153,7 +153,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var labelDistance: NSLayoutConstraint!
 	@IBOutlet weak var accessoryLabel: UILabel!
 	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
-	@IBOutlet var spinner: UIActivityIndicatorView!
+	@IBOutlet var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
 
 	weak var delegate: ArchivedItemCellDelegate?
@@ -162,8 +162,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var editHolder: UIView?
 
 	@IBAction func cancelSelected(_ sender: UIButton) {
-		observingProgress = nil
-		if let archivedDropItem = archivedDropItem {
+		progressView.observedProgress = nil
+		if let archivedDropItem = archivedDropItem, archivedDropItem.loadingProgress != nil {
 			archivedDropItem.cancelIngest()
 			delegate?.deleteRequested(for: [archivedDropItem])
 		}
@@ -255,26 +255,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 		reDecorate()
 	}
 
-	private var observingProgress: NSKeyValueObservation?
-
 	var archivedDropItem: ArchivedDropItem? {
 		didSet {
-			if let p = archivedDropItem?.loadingProgress {
-				observingProgress = p.observe(\.fractionCompleted, options: [.new]) { prog, change in
-					DispatchQueue.main.async {
-						self.reDecorate()
-					}
-				}
-			} else {
-				observingProgress = nil
-			}
 			reDecorate()
 		}
 	}
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		observingProgress = nil
+		progressView.observedProgress = nil
+		progressView.progress = 0
 	}
 
 	private var existingMapView: MiniMapView?
@@ -302,7 +292,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var wantMapView = false
 		var hideCancel = true
 		var hideImage = true
-		var showSpinner = false
 
 		var accessoryLabelText: String?
 		var accessoryLabelDistanceConstant: CGFloat = 0
@@ -310,16 +299,15 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if let item = item {
 
 			if let progress = item.loadingProgress {
-				let p = (progress.fractionCompleted * 100.0).rounded(.up)
-				label.text = "\(p)% complete"
 				hideCancel = false
-				showSpinner = true
+				progressView.observedProgress = progress
 				image.image = nil
+				label.text = nil
 
 			} else {
 
 				hideImage = false
-				observingProgress = nil
+				progressView.observedProgress = nil
 
 				let cacheKey = "\(item.uuid.uuidString) \(item.updatedAt.timeIntervalSinceReferenceDate)" as NSString
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
@@ -388,7 +376,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		} else { // item is nil
 			label.text = nil
 			image.image = nil
-			observingProgress = nil
+			progressView.observedProgress = nil
 		}
 
 		if !wantMapView, let e = existingMapView {
@@ -396,12 +384,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			existingMapView = nil
 		}
 
-		if showSpinner && !spinner.isAnimating {
-			spinner.startAnimating()
-		} else if !showSpinner && spinner.isAnimating {
-			spinner.stopAnimating()
-		}
-		
+		progressView.isHidden = progressView.observedProgress == nil
 		accessoryLabel.text = accessoryLabelText
 		labelDistance.constant = (label.text == nil) ? 0 : 8
 		accessoryLabelDistance.constant = accessoryLabelDistanceConstant
