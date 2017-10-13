@@ -69,12 +69,11 @@ extension Model {
 				}
 			}
 
-			signalFileExtension(for: .rootContainer)
 			for id in idsToNotifyFileExtension {
 				signalFileExtension(for: NSFileProviderItemIdentifier(id.uuidString))
 			}
-
 			idsToNotifyFileExtension.removeAll()
+			signalFileExtension(for: .rootContainer)
 		}
 	}
 	

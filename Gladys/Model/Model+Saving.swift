@@ -49,8 +49,8 @@ extension Model {
 
 	private func coordinatedSave(data: Data) {
 		var coordinationError: NSError?
-		Model.coordinator.coordinate(writingItemAt: Model.fileUrl, options: .forReplacing, error: &coordinationError) { url in
-			try! data.write(to: url, options: .atomic)
+		Model.coordinator.coordinate(writingItemAt: Model.fileUrl, options: [], error: &coordinationError) { url in
+			try! data.write(to: url, options: [])
 			if let dataModified = Model.modificationDate(for: url) {
 				dataFileLastModified = dataModified
 			}

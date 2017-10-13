@@ -1,8 +1,6 @@
 
 import FileProvider
 
-let modelAccessQueue = DispatchQueue(label: "build.bru.Gladys.fileprovider.model.queue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
-
 class CommonEnumerator: NSObject {
 	fileprivate let uuid: String
 	fileprivate let model: Model
