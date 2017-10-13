@@ -36,6 +36,10 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return dropItem?.tagData ?? typeItem?.tagData
 	}
 
+	var favoriteRank: NSNumber? {
+		return dropItem?.favoriteRank
+	}
+
 	var creationDate: Date? {
 		return dropItem?.createdAt ?? typeItem?.createdAt
 	}

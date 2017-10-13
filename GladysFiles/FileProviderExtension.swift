@@ -8,19 +8,22 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
-		let dropsCopy = model.drops
 		let uuid = identifier.rawValue
 
-		for item in dropsCopy {
+		for item in model.drops {
 			if item.uuid.uuidString == uuid {
 				return FileProviderItem(item)
 			}
 		}
 
-		for item in dropsCopy {
+		for item in model.drops {
 			for typeItem in item.typeItems {
 				if typeItem.uuid.uuidString == uuid {
-					return FileProviderItem(typeItem)
+					if item.typeItems.count == 1 {
+						return FileProviderItem(item)
+					} else {
+						return FileProviderItem(typeItem)
+					}
 				}
 			}
 		}
@@ -108,11 +111,32 @@ final class FileProviderExtension: NSFileProviderExtension {
 		return UIImagePNGRepresentation(scaledImage)
 	}
 
+	override func setFavoriteRank(_ favoriteRank: NSNumber?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
+		do {
+			if let i = try item(for: itemIdentifier) as? FileProviderItem {
+				i.dropItem?.favoriteRank = favoriteRank
+				model.save()
+				completionHandler(i, nil)
+			} else {
+				completionHandler(nil, NSFileProviderError(.noSuchItem))
+			}
+		} catch {
+			completionHandler(nil, error)
+		}
+	}
+
 	override func setTagData(_ tagData: Data?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		if let i = (try? item(for: itemIdentifier)) as? FileProviderItem {
-			i.dropItem?.tagData = tagData
-			i.typeItem?.tagData = tagData
-			model.save()
+		do {
+			if let i = try item(for: itemIdentifier) as? FileProviderItem {
+				i.dropItem?.tagData = tagData
+				i.typeItem?.tagData = tagData
+				model.save()
+				completionHandler(i, nil)
+			} else {
+				completionHandler(nil, NSFileProviderError(.noSuchItem))
+			}
+		} catch {
+			completionHandler(nil, error)
 		}
 	}
 

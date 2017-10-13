@@ -10,13 +10,13 @@ extension ArchivedDropItemType {
 	var tagData: Data? {
 		set {
 			let location = tagDataPath
-			if newValue == nil {
+			if let newValue = newValue {
+				try! newValue.write(to: location, options: .atomic)
+			} else {
 				let f = FileManager.default
 				if f.fileExists(atPath: location.path) {
 					try! f.removeItem(at: location)
 				}
-			} else {
-				try! newValue?.write(to: location, options: .atomic)
 			}
 		}
 		get {
