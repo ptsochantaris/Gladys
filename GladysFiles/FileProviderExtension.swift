@@ -2,9 +2,9 @@
 import FileProvider
 import UIKit
 
+let model = Model()
+
 final class FileProviderExtension: NSFileProviderExtension {
-    
-	private let model = Model()
 
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
@@ -25,7 +25,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 		}
 
-		throw NSError(domain: "build.bru.Gladys.error", code: 2, userInfo: [ NSLocalizedDescriptionKey: "Could not find item with identifier \(identifier.rawValue)" ])
+		throw NSFileProviderError(.noSuchItem)
 	}
 
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
@@ -143,20 +143,24 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
-		guard let fpi = (try? item(for: itemIdentifier)) as? FileProviderItem else {
-			completionHandler(NSFileProviderError(.noSuchItem))
-			return
-		}
-		guard let dir = fpi.dropItem else {
-			completionHandler(NSFileProviderError(.noSuchItem))
-			return
-		}
-		if let i = model.drops.index(where: { $0 === dir }) {
-			model.drops.remove(at: i)
-			model.save()
-			completionHandler(nil)
-		} else {
-			completionHandler(NSFileProviderError(.noSuchItem))
+		do {
+			guard let fpi = try item(for: itemIdentifier) as? FileProviderItem else {
+				completionHandler(NSFileProviderError(.noSuchItem))
+				return
+			}
+			guard let uuid = fpi.dropItem?.uuid ?? fpi.typeItem?.parentUuid else {
+				completionHandler(NSFileProviderError(.noSuchItem))
+				return
+			}
+			if let i = model.drops.index(where: { $0.uuid == uuid }) {
+				model.drops.remove(at: i)
+				model.save()
+				completionHandler(nil)
+			} else {
+				completionHandler(NSFileProviderError(.noSuchItem))
+			}
+		} catch {
+			completionHandler(error)
 		}
 	}
 
@@ -168,12 +172,12 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		switch containerItemIdentifier {
 		case .workingSet:
-			return WorkingSetEnumerator(model: model)
+			return WorkingSetEnumerator()
 		case .rootContainer:
-			return RootEnumerator(model: model)
+			return RootEnumerator()
 		default:
 			if let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem {
-				return DirectoryEnumerator(dropItem: i, model: model)
+				return DropItemEnumerator(dropItem: i)
 			} else {
 				throw NSFileProviderError(.noSuchItem)
 			}

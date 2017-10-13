@@ -155,7 +155,7 @@ final class ArchivedDropItemType: Codable {
 		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
 			let t = desc as String
 			if !t.isEmpty {
-				return t
+				return t.capitalized
 			}
 		}
 

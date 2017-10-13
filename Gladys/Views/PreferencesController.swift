@@ -85,25 +85,14 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 						} else {
 							dir = dir.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
 						}
-						for typeItem in item.typeItems {
-							let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
+						if item.typeItems.count == 1 {
+							let typeItem = item.typeItems.first!
+							self.addItem(typeItem, to: dir, in: archive)
 
-							var path = "\(dir)/\(dir) (\(d))"
-							if let ext = typeItem.fileExtension {
-								path += ".\(ext)"
-							}
-							var bytes: Data?
-							if typeItem.typeIdentifier == "public.url", let url = typeItem.encodedUrl, let data = self.makeLink(url as URL).data(using: .utf8) {
-								bytes = data
-							} else if typeItem.classWasWrapped {
-								if typeItem.representedClass == "__NSCFString", let string = typeItem.decode() as? String, let data = string.data(using: .utf8) {
-									bytes = data
-								}
-							}
-							if let B = bytes ?? typeItem.bytes {
-								try? archive.addEntry(with: path, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
-									return B[pos ..< pos+size]
-								}
+						} else {
+							for typeItem in item.typeItems {
+								let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
+								self.addItem(typeItem, to: "\(dir)/\(d)", in: archive)
 							}
 						}
 						p.completedUnitCount += 1
@@ -122,6 +111,31 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 			return p
 		}
 		return [UIDragItem(itemProvider: i)]
+	}
+
+	private func addItem(_ typeItem: ArchivedDropItemType, to path: String, in archive: Archive) {
+		var path = path
+		if let ext = typeItem.fileExtension {
+			path += ".\(ext)"
+		}
+		var bytes: Data?
+		if typeItem.typeIdentifier == "public.url",
+			let url = typeItem.encodedUrl,
+			let data = makeLink(url as URL).data(using: .utf8) {
+
+			bytes = data
+
+		} else if typeItem.classWasWrapped {
+			if typeItem.representedClass == "__NSCFString", let string = typeItem.decode() as? String, let data = string.data(using: .utf8) {
+				bytes = data
+			}
+		}
+		if let B = bytes ?? typeItem.bytes {
+			try? archive.addEntry(with: path, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
+				return B[pos ..< pos+size]
+			}
+		}
+
 	}
 
 	func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {

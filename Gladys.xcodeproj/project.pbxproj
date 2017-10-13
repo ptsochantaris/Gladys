@@ -27,7 +27,7 @@
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8141EFF3745000087DD /* FileProviderExtension.swift */; };
 		1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8161EFF3745000087DD /* FileProviderItem.swift */; };
-		1619E8191EFF3745000087DD /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8181EFF3745000087DD /* FileProviderEnumerator.swift */; };
+		1619E8191EFF3745000087DD /* DropItemEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8181EFF3745000087DD /* DropItemEnumerator.swift */; };
 		1619E81E1EFF3745000087DD /* GladysFiles.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1619E8121EFF3745000087DD /* GladysFiles.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1619E8221EFF3A36000087DD /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
@@ -40,6 +40,9 @@
 		16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16287AF71EFB05E9007188AE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
+		162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC51F9147E300410447 /* CommonEnumerator.swift */; };
+		162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */; };
+		162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC91F9147F900410447 /* RootEnumerator.swift */; };
 		163249A61F2C8DC500C58B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		163249A81F2C8DCC00C58B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		163845FC1EF8629700CB8D97 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
@@ -173,12 +176,15 @@
 		1619E8121EFF3745000087DD /* GladysFiles.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysFiles.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1619E8141EFF3745000087DD /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderExtension.swift; sourceTree = "<group>"; };
 		1619E8161EFF3745000087DD /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
-		1619E8181EFF3745000087DD /* FileProviderEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderEnumerator.swift; sourceTree = "<group>"; };
+		1619E8181EFF3745000087DD /* DropItemEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropItemEnumerator.swift; sourceTree = "<group>"; };
 		1619E81A1EFF3745000087DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1619E81B1EFF3745000087DD /* GladysFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysFiles.entitlements; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		162CCCC51F9147E300410447 /* CommonEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEnumerator.swift; sourceTree = "<group>"; };
+		162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingSetEnumerator.swift; sourceTree = "<group>"; };
+		162CCCC91F9147F900410447 /* RootEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootEnumerator.swift; sourceTree = "<group>"; };
 		163845FB1EF8629700CB8D97 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		1641368D1F09195000B34574 /* GladysAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
@@ -326,11 +332,14 @@
 			isa = PBXGroup;
 			children = (
 				1619E8141EFF3745000087DD /* FileProviderExtension.swift */,
-				1619E8161EFF3745000087DD /* FileProviderItem.swift */,
-				1619E8181EFF3745000087DD /* FileProviderEnumerator.swift */,
 				160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */,
+				1619E8161EFF3745000087DD /* FileProviderItem.swift */,
 				1619E81A1EFF3745000087DD /* Info.plist */,
 				1619E81B1EFF3745000087DD /* GladysFiles.entitlements */,
+				162CCCC51F9147E300410447 /* CommonEnumerator.swift */,
+				162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */,
+				1619E8181EFF3745000087DD /* DropItemEnumerator.swift */,
+				162CCCC91F9147F900410447 /* RootEnumerator.swift */,
 			);
 			path = GladysFiles;
 			sourceTree = "<group>";
@@ -906,15 +915,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */,
 				1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */,
+				162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */,
 				160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */,
 				169763181F1566DE00537776 /* ArchivedDropItemType+Tagging.swift in Sources */,
+				162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */,
 				1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */,
 				1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */,
 				1619E8251EFF3B54000087DD /* Types.swift in Sources */,
 				1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */,
 				16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */,
-				1619E8191EFF3745000087DD /* FileProviderEnumerator.swift in Sources */,
+				1619E8191EFF3745000087DD /* DropItemEnumerator.swift in Sources */,
 				1619E8221EFF3A36000087DD /* Model.swift in Sources */,
 				1697631A1F15680600537776 /* ArchivedDropItem+Tagging.swift in Sources */,
 			);
