@@ -53,7 +53,7 @@ final class DropItemEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			children = newChildren
 			if updatedItems.count > 0 {
 				for item in updatedItems {
-					log("Signalling update of item \(item.itemIdentifier.rawValue)")
+					log("Signalling update of type item \(item.itemIdentifier.rawValue)")
 				}
 				observer.didUpdate(updatedItems)
 				incrementAnchor()

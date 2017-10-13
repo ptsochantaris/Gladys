@@ -49,7 +49,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 		}
 		if updatedItemIds2Items.count > 0 {
 			for id in updatedItemIds2Items.keys {
-				log("Signalling update of directory \(id.rawValue)")
+				log("Signalling update of item \(id.rawValue)")
 			}
 			observer.didUpdate(Array(updatedItemIds2Items.values))
 			incrementAnchor()
@@ -58,7 +58,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 		let deletedItemIds = oldItemIds2Dates!.keys.filter { !newItemIds2Items.keys.contains($0) }
 		if deletedItemIds.count > 0 {
 			for id in deletedItemIds {
-				log("Signalling deletion of directory \(id.rawValue)")
+				log("Signalling deletion of item \(id.rawValue)")
 			}
 			observer.didDeleteItems(withIdentifiers: deletedItemIds)
 			incrementAnchor()
