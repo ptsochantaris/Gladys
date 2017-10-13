@@ -387,6 +387,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		totalSizeLabel.title = "\(model.drops.count) Items: " + diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 		editButtonItem.isEnabled = model.drops.count > 0
 
+		deletionCandidates = deletionCandidates?.filter { uuid in model.drops.contains(where: { $0.uuid == uuid }) }
+
 		let count = (deletionCandidates?.count ?? 0)
 		deleteButton.isEnabled = count > 0
 		if count > 1 {
@@ -559,7 +561,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private func proceedWithDelete() {
 		guard let candidates = deletionCandidates, candidates.count > 0 else { return }
-		deletionCandidates?.removeAll()
 
 		let itemsToDelete = model.drops.filter { item -> Bool in
 			candidates.contains(where: { $0 == item.uuid })
@@ -567,6 +568,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if itemsToDelete.count > 0 {
 			deleteRequested(for: itemsToDelete)
 		}
+
+		deletionCandidates?.removeAll()
 	}
 
 	@objc private func deleteDetected(_ notification: Notification) {
