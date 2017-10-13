@@ -30,7 +30,8 @@ final class Model: NSObject {
 		var res: [ArchivedDropItem]?
 
 		var coordinationError: NSError?
-		coordinator.coordinate(readingItemAt: Model.fileUrl, options: [], error: &coordinationError) { url in
+		// withoutChanges because we only signal the provider after we have saved
+		coordinator.coordinate(readingItemAt: Model.fileUrl, options: .withoutChanges, error: &coordinationError) { url in
 
 			if FileManager.default.fileExists(atPath: url.path) {
 				do {

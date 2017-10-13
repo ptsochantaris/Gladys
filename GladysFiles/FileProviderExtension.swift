@@ -164,7 +164,9 @@ final class FileProviderExtension: NSFileProviderExtension {
     override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
 
 		switch containerItemIdentifier {
-		case .workingSet, .rootContainer:
+		case .workingSet:
+			return WorkingSetEnumerator(model: model)
+		case .rootContainer:
 			return RootEnumerator(model: model)
 		default:
 			if let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem {

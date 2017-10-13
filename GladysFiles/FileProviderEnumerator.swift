@@ -21,13 +21,26 @@ class CommonEnumerator: NSObject {
 		completionHandler(currentAnchor)
 	}
 
-	func incrementAnchor() {
-		let newAnchorCount = Int64(String(data: currentAnchor.rawValue, encoding: .utf8)!)! + 1
-		currentAnchor = NSFileProviderSyncAnchor(String(newAnchorCount).data(using: .utf8)!)
-	}
-
 	deinit {
 		log("Enumerator for \(uuid) shut down")
+	}
+}
+
+final class WorkingSetEnumerator: CommonEnumerator, NSFileProviderEnumerator {
+
+	init(model: Model) {
+		super.init(model: model, uuid: NSFileProviderItemIdentifier.workingSet.rawValue)
+		log("Enumerator created for working set")
+	}
+
+	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
+		observer.finishEnumerating(upTo: nil)
+	}
+
+	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
+		log("Listing changes for working set from anchor: \(String(data: syncAnchor.rawValue, encoding: .utf8)!)")
+		currentAnchor = syncAnchor
+		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
 	}
 }
 
@@ -36,7 +49,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	private var oldItemIds2Dates: Dictionary<NSFileProviderItemIdentifier, Date>!
 
 	init(model: Model) {
-		super.init(model: model, uuid: "root")
+		super.init(model: model, uuid: NSFileProviderItemIdentifier.rootContainer.rawValue)
 		log("Enumerator created for root")
 		refreshCurrentDates()
 	}
@@ -46,7 +59,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			self._enumerateItems(for: observer, startingAt: page)
 		}
 	}
-	func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
+	private func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 		log("Listing root")
 		model.reloadDataIfNeeded()
@@ -67,8 +80,8 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			self._enumerateChanges(for: observer, from: syncAnchor)
 		}
 	}
-	func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-		log("Listing changes for root")
+	private func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
+		log("Listing changes for root from anchor: \(String(data: syncAnchor.rawValue, encoding: .utf8)!)")
 		model.reloadDataIfNeeded()
 
 		let newItemIds2Items = Dictionary(uniqueKeysWithValues: dirItems.map { ($0.itemIdentifier, $0) })
@@ -94,7 +107,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 
 		refreshCurrentDates()
 
-		incrementAnchor()
+		currentAnchor = syncAnchor
 		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
 	}
 
@@ -118,7 +131,7 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			self._enumerateItems(for: observer, startingAt: page)
 		}
 	}
-	func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
+	private func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 		log("Listing directory \(uuid)")
 		model.reloadDataIfNeeded()
@@ -138,8 +151,8 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			self._enumerateChanges(for: observer, from: syncAnchor)
 		}
 	}
-	func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-		log("Listing changes for directory \(uuid)")
+	private func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
+		log("Listing changes for directory \(uuid) from anchor: \(String(data: syncAnchor.rawValue, encoding: .utf8)!)")
 		model.reloadDataIfNeeded()
 
 		let newDropItem = model.drops.first { $0.uuid.uuidString == uuid }
@@ -170,7 +183,7 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 			observer.didDeleteItems(withIdentifiers: ids)
 		}
 
-		incrementAnchor()
+		currentAnchor = syncAnchor
 		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
     }
 }
