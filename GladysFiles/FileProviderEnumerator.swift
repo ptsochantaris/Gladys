@@ -135,8 +135,8 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
 			if updatedItemIds2Items.count > 0 || deletedItemIds.count > 0 {
 				incrementAnchor()
-				oldItemIds2Items = newItemIds2Items
 			}
+			oldItemIds2Items = newItemIds2Items
 		}
 
 		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
