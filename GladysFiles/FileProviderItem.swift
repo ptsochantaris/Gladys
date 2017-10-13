@@ -5,27 +5,21 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 
 	let dropItem: ArchivedDropItem?
 	let typeItem: ArchivedDropItemType?
-	private let parentUUID: UUID?
-	private var titleOverride: String
 
 	init(_ i: ArchivedDropItem) {
-		titleOverride = i.oneTitle.replacingOccurrences(of: ".", with: " ")
 		if i.typeItems.count == 1 {
-			dropItem = nil
+			dropItem = i
 			typeItem = i.typeItems.first
 		} else {
 			dropItem = i
 			typeItem = nil
 		}
-		parentUUID = nil
 		super.init()
 	}
 
 	init(_ i: ArchivedDropItemType) {
-		titleOverride = i.oneTitle.replacingOccurrences(of: ".", with: " ")
 		dropItem = nil
 		typeItem = i
-		parentUUID = i.parentUuid
 		super.init()
 	}
 
@@ -71,24 +65,28 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 
 	var childItemCount: NSNumber? {
 		if let dropItem = dropItem {
-			return NSNumber(value: dropItem.typeItems.count)
+			let count = dropItem.typeItems.count
+			if count == 1 {
+				return NSNumber(value: 0)
+			}
+			return NSNumber(value: count)
 		} else {
 			return NSNumber(value: 0)
 		}
 	}
 
     var itemIdentifier: NSFileProviderItemIdentifier {
-		if let dropItem = dropItem {
-			return NSFileProviderItemIdentifier(dropItem.uuid.uuidString)
-		} else if let typeItem = typeItem {
+		if let typeItem = typeItem {
 			return NSFileProviderItemIdentifier(typeItem.uuid.uuidString)
+		} else if let dropItem = dropItem {
+			return NSFileProviderItemIdentifier(dropItem.uuid.uuidString)
 		} else {
 			return NSFileProviderItemIdentifier.rootContainer
 		}
     }
 
     var parentItemIdentifier: NSFileProviderItemIdentifier {
-		if let p = parentUUID {
+		if dropItem == nil, let p = typeItem?.parentUuid {
 			return NSFileProviderItemIdentifier(p.uuidString)
 		} else {
 			return NSFileProviderItemIdentifier.rootContainer
@@ -97,7 +95,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     
     var capabilities: NSFileProviderItemCapabilities {
 		if typeItem != nil {
-			if parentUUID == nil {
+			if dropItem != nil {
 				return [.allowsReading, .allowsWriting, .allowsDeleting]
 			} else {
 				return [.allowsReading, .allowsWriting]
@@ -110,20 +108,16 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     }
 
     var filename: String {
-		if dropItem != nil {
-			return titleOverride
+		if let d = dropItem {
+			return d.oneTitle
 
 		} else if let typeItem = typeItem {
-			if parentUUID == nil {
-				return titleOverride
 
-			} else {
-				let filename = typeItem.contentDescription
-				if let e = typeItem.fileExtension {
-					return "\(filename).\(e)"
-				}
-				return filename
+			let filename = typeItem.contentDescription
+			if let e = typeItem.fileExtension {
+				return "\(filename).\(e)"
 			}
+			return filename
 
 		} else {
 			return "<no name>"
