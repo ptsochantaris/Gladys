@@ -4,6 +4,7 @@ import Foundation
 final class Model: NSObject {
 
 	var drops: [ArchivedDropItem]
+	var idsToNotifyFileExtension = Set<UUID>()
 	var dataFileLastModified = Date.distantPast
 
 	static var appStorageUrl: URL = {

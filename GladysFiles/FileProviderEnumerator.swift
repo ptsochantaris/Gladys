@@ -78,16 +78,15 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 		model.reloadDataIfNeeded()
 
 		if let d = dropItem {
-			//log("Enumerating changes for directory \(uuid)")
+			log("Enumerating changes for directory \(uuid)")
 
 			let meAfter = rootItems.first { $0.dropItem?.uuid.uuidString == uuid }
 
 			if let meAfter = meAfter, let newDropItem = meAfter.dropItem { // I exist, have I changed?
 				var updatedItems = [FileProviderItem]()
 				for newTypeItem in newDropItem.typeItems {
-					if let previousTypeItem = dropItem?.typeItems.first(where: { $0.uuid == newTypeItem.uuid }), previousTypeItem.modifiedInFiles || previousTypeItem.updatedAt != newTypeItem.updatedAt {
+					if let previousTypeItem = dropItem?.typeItems.first(where: { $0.uuid == newTypeItem.uuid }), previousTypeItem.updatedAt != newTypeItem.updatedAt {
 						updatedItems.append(FileProviderItem(newTypeItem))
-						newTypeItem.modifiedInFiles = false
 					}
 				}
 				dropItem = newDropItem
@@ -111,7 +110,7 @@ final class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 			}
 
 		} else {
-			//log("Enumerating changes for root")
+			log("Enumerating changes for root")
 
 			let newItemIds2Items = Dictionary(uniqueKeysWithValues: rootItems.map { ($0.itemIdentifier, $0) })
 

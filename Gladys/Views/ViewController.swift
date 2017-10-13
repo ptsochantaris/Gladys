@@ -118,6 +118,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: destinationIndexPath.item)
+					self.model.idsToNotifyFileExtension.insert(item.uuid)
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -399,6 +400,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		for item in itemsToReIngest {
 			loadCount += 1
 			startBgTaskIfNeeded()
+			model.idsToNotifyFileExtension.insert(item.uuid)
+			for typeItem in item.typeItems {
+				model.idsToNotifyFileExtension.insert(typeItem.uuid)
+			}
 			item.reIngest(delegate: self)
 		}
 	}

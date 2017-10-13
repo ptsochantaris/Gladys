@@ -86,7 +86,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     
     var capabilities: NSFileProviderItemCapabilities {
 		if typeItem != nil {
-			return [.allowsReading]
+			return [.allowsReading, .allowsWriting]
 		} else if dropItem != nil {
 			return [.allowsReading, .allowsDeleting]
 		} else {

@@ -82,6 +82,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 		item.note = textView.text
 		item.updatedAt = Date()
+		ViewController.shared.model.idsToNotifyFileExtension.insert(item.uuid)
 		placeholder.isHidden = textView.hasText
 		resizeCallback?(nil)
 

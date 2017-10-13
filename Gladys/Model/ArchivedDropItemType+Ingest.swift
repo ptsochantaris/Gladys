@@ -27,6 +27,7 @@ extension ArchivedDropItemType {
 		self.delegate = delegate
 		let p = Progress(totalUnitCount: 1)
 		if loadingError == nil, let bytesCopy = bytes {
+			updatedAt = Date()
 			DispatchQueue.global(qos: .background).async {
 				self.ingest(data: bytesCopy)
 				p.completedUnitCount = 1

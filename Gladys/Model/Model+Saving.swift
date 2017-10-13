@@ -47,14 +47,6 @@ extension Model {
 		}
 	}
 
-	static func signalFileExtension(for identifier: NSFileProviderItemIdentifier) {
-		NSFileProviderManager.default.signalEnumerator(for: identifier) { error in
-			if let e = error {
-				log("Error signalling change to file provider for change to item ID '\(identifier.rawValue)': \(e.localizedDescription)")
-			}
-		}
-	}
-
 	private func coordinatedSave(data: Data) {
 		var coordinationError: NSError?
 		Model.coordinator.coordinate(writingItemAt: Model.fileUrl, options: .forReplacing, error: &coordinationError) { url in
@@ -65,8 +57,6 @@ extension Model {
 		}
 		if let e = coordinationError {
 			log("Error in saving coordination: \(e.localizedDescription)")
-		} else {
-			Model.signalFileExtension(for: .rootContainer)
 		}
 	}
 }
