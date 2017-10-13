@@ -44,6 +44,7 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 		log("Listing root")
+		model.reloadDataIfNeeded()
 		observer.didEnumerate(dirItems)
 		observer.finishEnumerating(upTo: nil)
 	}
@@ -57,10 +58,8 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	}
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-
+		log("Listing changes for root")
 		model.reloadDataIfNeeded()
-
-		log("Enumerating changes for root")
 
 		let newItemIds2Items = Dictionary(uniqueKeysWithValues: dirItems.map { ($0.itemIdentifier, $0) })
 
@@ -106,10 +105,9 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	}
 
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
-
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
-
 		log("Listing directory \(uuid)")
+		model.reloadDataIfNeeded()
 
 		let items: [FileProviderItem]
 		if sortByDate {
@@ -122,10 +120,8 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
     }
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-
+		log("Listing changes for directory \(uuid)")
 		model.reloadDataIfNeeded()
-
-		log("Enumerating changes for directory \(uuid)")
 
 		let newDropItem = model.drops.first { $0.uuid.uuidString == uuid }
 

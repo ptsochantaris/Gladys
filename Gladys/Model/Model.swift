@@ -21,6 +21,10 @@ final class Model: NSObject {
 		startupComplete()
 	}
 
+	static func modificationDate(for url: URL) -> Date? {
+		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
+	}
+
 	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {
 		
 		var res: [ArchivedDropItem]?
@@ -33,7 +37,7 @@ final class Model: NSObject {
 				do {
 
 					var shouldLoad = true
-					if let dataModified = (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date {
+					if let dataModified = modificationDate(for: url) {
 						if dataModified == dataFileLastModified {
 							shouldLoad = false
 						} else {
@@ -41,7 +45,7 @@ final class Model: NSObject {
 						}
 					}
 					if shouldLoad {
-						log("Needed to reload data")
+						log("Needed to reload data, new file date: \(dataFileLastModified)")
 						let data = try Data(contentsOf: url, options: [.alwaysMapped])
 						res = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 					}

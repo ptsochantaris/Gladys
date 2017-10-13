@@ -1,8 +1,11 @@
 import Foundation
+import FileProvider
 
 extension Model {
 	static var coordinator: NSFileCoordinator {
-		return NSFileCoordinator(filePresenter: nil)
+		let coordinator = NSFileCoordinator(filePresenter: nil)
+		coordinator.purposeIdentifier = NSFileProviderManager.default.providerIdentifier
+		return coordinator
 	}
 
 	func prepareToSave() {}

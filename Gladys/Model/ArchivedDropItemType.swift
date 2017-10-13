@@ -98,7 +98,7 @@ final class ArchivedDropItemType: Codable {
 					try? f.removeItem(at: byteLocation)
 				}
 			} else {
-				try? newValue?.write(to: byteLocation, options: [.atomic])
+				try? newValue?.write(to: byteLocation, options: .atomic)
 			}
 		}
 		get {

@@ -21,6 +21,7 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
+		160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
@@ -76,7 +77,6 @@
 		16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+MainApp.swift */; };
 		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
-		16EDB37C1F236412001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
@@ -166,6 +166,7 @@
 		1607079E1F8A38B5003B856A /* ByteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCell.swift; sourceTree = "<group>"; };
 		160707A11F8A3915003B856A /* DataInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInspector.swift; sourceTree = "<group>"; };
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
+		160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+FileProviderCoordinator.swift"; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
@@ -327,6 +328,7 @@
 				1619E8141EFF3745000087DD /* FileProviderExtension.swift */,
 				1619E8161EFF3745000087DD /* FileProviderItem.swift */,
 				1619E8181EFF3745000087DD /* FileProviderEnumerator.swift */,
+				160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */,
 				1619E81A1EFF3745000087DD /* Info.plist */,
 				1619E81B1EFF3745000087DD /* GladysFiles.entitlements */,
 			);
@@ -905,12 +907,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */,
+				160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */,
 				169763181F1566DE00537776 /* ArchivedDropItemType+Tagging.swift in Sources */,
 				1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */,
 				1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */,
 				1619E8251EFF3B54000087DD /* Types.swift in Sources */,
 				1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */,
-				16EDB37C1F236412001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1619E8191EFF3745000087DD /* FileProviderEnumerator.swift in Sources */,
 				1619E8221EFF3A36000087DD /* Model.swift in Sources */,

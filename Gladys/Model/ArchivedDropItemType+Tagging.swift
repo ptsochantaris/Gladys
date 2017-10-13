@@ -16,7 +16,7 @@ extension ArchivedDropItemType {
 					try! f.removeItem(at: location)
 				}
 			} else {
-				try! newValue?.write(to: location, options: [.atomic])
+				try! newValue?.write(to: location, options: .atomic)
 			}
 		}
 		get {
