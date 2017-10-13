@@ -65,8 +65,8 @@ final class Model: NSObject {
 
 	func reloadDataIfNeeded() {
 		if let d = Model.loadData(&dataFileLastModified) {
+			drops = d
 			DispatchQueue.main.async {
-				self.drops = d
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			}
 		}
