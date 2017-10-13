@@ -1,6 +1,8 @@
 
 import FileProvider
 
+let modelAccessQueue = DispatchQueue(label: "build.bru.Gladys.fileprovider.model.queue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+
 class CommonEnumerator: NSObject {
 	fileprivate let uuid: String
 	fileprivate let model: Model
@@ -42,6 +44,11 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	}
 
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
+		modelAccessQueue.async {
+			self._enumerateItems(for: observer, startingAt: page)
+		}
+	}
+	func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 		log("Listing root")
 		model.reloadDataIfNeeded()
@@ -58,6 +65,11 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	}
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
+		modelAccessQueue.async {
+			self._enumerateChanges(for: observer, from: syncAnchor)
+		}
+	}
+	func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
 		log("Listing changes for root")
 		model.reloadDataIfNeeded()
 
@@ -72,7 +84,6 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 				log("Signalling update of directory \(id.rawValue)")
 			}
 			observer.didUpdate(Array(updatedItemIds2Items.values))
-			incrementAnchor()
 		}
 
 		let deletedItemIds = oldItemIds2Dates!.keys.filter { !newItemIds2Items.keys.contains($0) }
@@ -81,11 +92,11 @@ final class RootEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 				log("Signalling deletion of directory \(id.rawValue)")
 			}
 			observer.didDeleteItems(withIdentifiers: deletedItemIds)
-			incrementAnchor()
 		}
 
 		refreshCurrentDates()
 
+		incrementAnchor()
 		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
 	}
 
@@ -105,6 +116,11 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 	}
 
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
+		modelAccessQueue.async {
+			self._enumerateItems(for: observer, startingAt: page)
+		}
+	}
+	func _enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
 		sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 		log("Listing directory \(uuid)")
 		model.reloadDataIfNeeded()
@@ -120,6 +136,11 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
     }
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
+		modelAccessQueue.async {
+			self._enumerateChanges(for: observer, from: syncAnchor)
+		}
+	}
+	func _enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
 		log("Listing changes for directory \(uuid)")
 		model.reloadDataIfNeeded()
 
@@ -139,7 +160,6 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 					log("Signalling update of item \(item.itemIdentifier.rawValue)")
 				}
 				observer.didUpdate(updatedItems)
-				incrementAnchor()
 			}
 
 		} else { // I'm gone
@@ -150,9 +170,9 @@ final class DirectoryEnumerator: CommonEnumerator, NSFileProviderEnumerator {
 				log("Signalling deletion of item \(id.rawValue)")
 			}
 			observer.didDeleteItems(withIdentifiers: ids)
-			incrementAnchor()
 		}
 
+		incrementAnchor()
 		observer.finishEnumeratingChanges(upTo: currentAnchor, moreComing: false)
     }
 }
