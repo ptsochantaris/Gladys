@@ -159,7 +159,9 @@ extension ArchivedDropItemType {
 	private func handleData(_ data: Data) {
 		bytes = data
 
+		var hasPreviewImage = false
 		if let image = UIImage(data: data) {
+			hasPreviewImage = true
 			setDisplayIcon(image, 40, .fill)
 		}
 
@@ -215,7 +217,7 @@ extension ArchivedDropItemType {
 		} else if typeConforms(to: kUTTypeText as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
-		} else if typeConforms(to: kUTTypeImage as CFString) {
+		} else if !hasPreviewImage && typeConforms(to: kUTTypeImage as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
 		} else if typeConforms(to: kUTTypeVideo as CFString) {
