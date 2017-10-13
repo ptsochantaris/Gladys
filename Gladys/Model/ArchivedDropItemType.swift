@@ -361,6 +361,10 @@ final class ArchivedDropItemType: Codable {
 		return nil
 	}
 
+	func typeConforms(to parent: CFString) -> Bool {
+		return UTTypeConformsTo(typeIdentifier as CFString, parent)
+	}
+
 	var contentDescription: String {
 		return typeDescription ?? "Other (\(representedClass))"
 	}

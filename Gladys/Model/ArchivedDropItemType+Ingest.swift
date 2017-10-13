@@ -3,6 +3,7 @@ import UIKit
 import Fuzi
 import MapKit
 import Contacts
+import MobileCoreServices
 
 extension ArchivedDropItemType {
 
@@ -54,7 +55,7 @@ extension ArchivedDropItemType {
 		if let item = item as? NSString {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = "NSString"
 			bytes = data
 			signalDone()
@@ -62,7 +63,7 @@ extension ArchivedDropItemType {
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = "NSAttributedString"
 			bytes = data
 			signalDone()
@@ -82,7 +83,7 @@ extension ArchivedDropItemType {
 
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
-			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 10, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
 			representedClass = "MKMapItem"
 			bytes = data
 			signalDone()
@@ -97,7 +98,7 @@ extension ArchivedDropItemType {
 			} else {
 				setTitleInfo("\(item.count) Items", 1)
 			}
-			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = "NSArray"
 			bytes = data
 			signalDone()
@@ -109,7 +110,7 @@ extension ArchivedDropItemType {
 			} else {
 				setTitleInfo("\(item.count) Entries", 1)
 			}
-			setDisplayIcon (#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = "NSDictionary"
 			bytes = data
 			signalDone()
@@ -166,10 +167,7 @@ extension ArchivedDropItemType {
 			typeIdentifier = "public.zip-archive"
 		}
 
-		if typeIdentifier.hasSuffix("-archive") {
-			setDisplayIcon (#imageLiteral(resourceName: "zip"), 50, .center)
-
-		} else if typeIdentifier == "public.vcard" {
+		if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
 				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
@@ -185,34 +183,49 @@ extension ArchivedDropItemType {
 		} else if typeIdentifier == "public.utf8-plain-text" {
 			let s = String(data: data, encoding: .utf8)
 			setTitleInfo(s, 9)
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if typeIdentifier == "public.utf16-plain-text" {
 			let s = String(data: data, encoding: .utf16)
 			setTitleInfo(s, 8)
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if typeIdentifier == "public.email-message" {
-			setDisplayIcon (#imageLiteral(resourceName: "iconEmail"), 10, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
 
 		} else if typeIdentifier == "com.apple.mapkit.map-item" {
-			setDisplayIcon (#imageLiteral(resourceName: "iconMap"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
 
 		} else if typeIdentifier.hasSuffix(".rtf") {
 			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if typeIdentifier.hasSuffix(".rtfd") {
 			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
-			setDisplayIcon (#imageLiteral(resourceName: "iconText"), 5, .center)
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if let url = encodedUrl {
 			handleUrl(url as URL, data)
-			return
+			return // important
+
+		} else if typeConforms(to: kUTTypeText as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+
+		} else if typeConforms(to: kUTTypeImage as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
+
+		} else if typeConforms(to: kUTTypeVideo as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
+
+		} else if typeConforms(to: kUTTypeArchive as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "zip"), 50, .center)
+
+		} else if typeConforms(to: kUTTypeAudio as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
 		}
 
 		signalDone()
