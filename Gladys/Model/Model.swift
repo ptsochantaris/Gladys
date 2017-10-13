@@ -26,6 +26,7 @@ final class Model: NSObject {
 		var res: [ArchivedDropItem]?
 
 		var coordinationError: NSError?
+		// withoutChanges because we only signal the provider after we have saved
 		coordinator.coordinate(readingItemAt: Model.fileUrl, options: .withoutChanges, error: &coordinationError) { url in
 
 			if FileManager.default.fileExists(atPath: url.path) {
@@ -60,8 +61,10 @@ final class Model: NSObject {
 
 	func reloadDataIfNeeded() {
 		if let d = Model.loadData(&dataFileLastModified) {
-			drops = d
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+			DispatchQueue.main.async {
+				self.drops = d
+				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+			}
 		}
 	}
 }

@@ -165,10 +165,13 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		switch containerItemIdentifier {
 		case .workingSet, .rootContainer:
-			return FileProviderEnumerator(dropItem: nil, model: model)
+			return RootEnumerator(model: model)
 		default:
-			let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem
-			return FileProviderEnumerator(dropItem: i, model: model)
+			if let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem {
+				return DirectoryEnumerator(dropItem: i, model: model)
+			} else {
+				throw NSFileProviderError(.noSuchItem)
+			}
 		}
     }
 

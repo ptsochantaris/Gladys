@@ -27,6 +27,7 @@ extension ArchivedDropItem {
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
 		attributes.addedDate = createdAt
+		attributes.contentModificationDate = updatedAt
 
 		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
 		CSSearchableIndex.default().indexSearchableItems([item], completionHandler: { error in
