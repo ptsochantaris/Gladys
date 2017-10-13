@@ -18,7 +18,6 @@ extension ArchivedDropItem {
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)
 		}
-		ViewController.shared.model.idsToNotifyFileExtension.insert(uuid)
 	}
 
 	var backgroundInfoObject: Any? {

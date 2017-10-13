@@ -57,24 +57,6 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-
-		if idsToNotifyFileExtension.count > 0 {
-			log("Signalling file provider")
-
-			func signalFileExtension(for identifier: NSFileProviderItemIdentifier) {
-				NSFileProviderManager.default.signalEnumerator(for: identifier) { error in
-					if let e = error {
-						log("Error signalling change to file provider for change to item ID '\(identifier.rawValue)': \(e.localizedDescription)")
-					}
-				}
-			}
-
-			for id in idsToNotifyFileExtension {
-				signalFileExtension(for: NSFileProviderItemIdentifier(id.uuidString))
-			}
-			idsToNotifyFileExtension.removeAll()
-			signalFileExtension(for: .rootContainer)
-		}
 	}
 	
 	func beginMonitoringChanges() {
@@ -182,6 +164,10 @@ extension Model {
 		func presentedItemDidChange() {
 			model?.reloadDataIfNeeded()
 		}
+	}
+
+	func reloadCompleted() {
+		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	func importData(from url: URL, completion: @escaping (Bool)->Void) {

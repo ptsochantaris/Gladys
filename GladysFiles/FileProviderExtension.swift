@@ -144,16 +144,19 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
 		guard let fpi = (try? item(for: itemIdentifier)) as? FileProviderItem else {
-			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 15, userInfo: [ NSLocalizedDescriptionKey: "Item not found" ]))
+			completionHandler(NSFileProviderError(.noSuchItem))
 			return
 		}
 		guard let dir = fpi.dropItem else {
-			completionHandler(NSError(domain: "build.bru.Gladys.error", code: 18, userInfo: [ NSLocalizedDescriptionKey: "Item not deletable" ]))
+			completionHandler(NSFileProviderError(.noSuchItem))
 			return
 		}
 		if let i = model.drops.index(where: { $0 === dir }) {
 			model.drops.remove(at: i)
 			model.save()
+			completionHandler(nil)
+		} else {
+			completionHandler(NSFileProviderError(.noSuchItem))
 		}
 	}
 
@@ -176,40 +179,4 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 		}
     }
-
-	override func createDirectory(withName directoryName: String, inParentItemIdentifier parentItemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func importDocument(at fileURL: URL, toParentItemIdentifier parentItemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func renameItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, toName itemName: String, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func reparentItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, toParentItemWithIdentifier parentItemIdentifier: NSFileProviderItemIdentifier, newName: String?, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func setFavoriteRank(_ favoriteRank: NSNumber?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func setLastUsedDate(_ lastUsedDate: Date?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func trashItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func untrashItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, toParentItemIdentifier parentItemIdentifier: NSFileProviderItemIdentifier?, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-		completionHandler(nil, nil)
-	}
-
-	override func supportedServiceSources(for itemIdentifier: NSFileProviderItemIdentifier) throws -> [NSFileProviderServiceSource] {
-		return []
-	}
 }

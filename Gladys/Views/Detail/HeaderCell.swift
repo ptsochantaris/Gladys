@@ -85,7 +85,6 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 			item.titleOverride = newText
 		}
 		item.updatedAt = Date()
-		ViewController.shared.model.idsToNotifyFileExtension.insert(item.uuid)
 		label.text = item.oneTitle
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)
