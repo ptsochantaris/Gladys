@@ -12,7 +12,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 	private var oldItemIds2Dates: Dictionary<NSFileProviderItemIdentifier, Date>!
 
 	private func refreshCurrentDates() {
-		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0.contentModificationDate ?? .distantPast) })
+		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0.gladysModificationDate ?? .distantPast) })
 	}
 
 	init(uuid: String) {
@@ -48,7 +48,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 		let updatedItemIds2Items = newItemIds2Items.filter { id, newItem -> Bool in
 			let oldDate = oldItemIds2Dates![id]
-			return oldDate == nil || oldDate != newItem.contentModificationDate
+			return oldDate == nil || oldDate != newItem.gladysModificationDate
 		}
 		if updatedItemIds2Items.count > 0 {
 			for id in updatedItemIds2Items.keys {

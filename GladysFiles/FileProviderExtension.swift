@@ -128,6 +128,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
 				model.save()
+				Model.signalWorkingSetChange()
 				completionHandler(i, nil)
 			} else {
 				completionHandler(nil, NSFileProviderError(.noSuchItem))

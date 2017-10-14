@@ -2,7 +2,7 @@
 import Foundation
 
 extension ArchivedDropItem {
-	private var tagDataPath: URL {
+	var tagDataPath: URL {
 		return folderUrl.appendingPathComponent("tags", isDirectory: false)
 	}
 

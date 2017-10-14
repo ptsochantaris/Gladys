@@ -39,11 +39,24 @@ extension Model {
 		NSFileCoordinator.addFilePresenter(fileExtensionPresenter)
 	}
 
-	func reloadCompleted() {
+	static func signalRootChange() {
 		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
 			if let e = error {
 				log("Error signalling: \(e.localizedDescription)")
 			}
 		}
+	}
+
+	static func signalWorkingSetChange() {
+		NSFileProviderManager.default.signalEnumerator(for: .workingSet) { error in
+			if let e = error {
+				log("Error signalling: \(e.localizedDescription)")
+			}
+		}
+	}
+
+	func reloadCompleted() {
+		Model.signalRootChange()
+		Model.signalWorkingSetChange()
 	}
 }

@@ -52,6 +52,16 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return dropItem?.updatedAt ?? typeItem?.updatedAt
 	}
 
+	var gladysModificationDate: Date? {
+		var date = contentModificationDate ?? .distantPast
+		if dropItem?.tagData != nil, let path = dropItem?.tagDataPath, let d = Model.modificationDate(for: path) {
+			date = max(date, d)
+		} else if typeItem?.tagData != nil, let path = typeItem?.tagDataPath, let d = Model.modificationDate(for: path) {
+			date = max(date, d)
+		}
+		return date
+	}
+
 	var versionIdentifier: Data? {
 		if let m = contentModificationDate {
 			return String(m.timeIntervalSinceReferenceDate).data(using: .utf8)
