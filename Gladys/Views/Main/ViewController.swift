@@ -24,6 +24,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
 	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet weak var deleteButton: UIBarButtonItem!
+	@IBOutlet weak var labelsButton: UIBarButtonItem!
 
 	let model = Model()
 
@@ -162,8 +163,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	func dismissAnyPopOver() {
+	func dismissAnyPopOver(except titleToExclude: String? = nil) {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
+
+			if let t = titleToExclude, (p as? UINavigationController)?.topViewController?.navigationItem.title == t {
+				return
+			}
+
 			if popoverPresentationControllerShouldDismissPopover(pc) {
 				p.dismiss(animated: true)
 			}
@@ -188,6 +194,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			dimView = nil
 			d.dismiss()
 		}
+
 		return true
 	}
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
@@ -197,6 +204,26 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			dimView = d
 			if !(navigationItem.searchController?.isActive ?? false) {
 				popoverPresentationController.passthroughViews = [d]
+			}
+		}
+	}
+
+	private var patternColor: UIColor {
+		return UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "showLabels",
+			let n = segue.destination as? UINavigationController,
+			let d = n.topViewController,
+			let p = n.popoverPresentationController {
+
+			p.delegate = self
+			if traitCollection.horizontalSizeClass == .regular {
+				p.backgroundColor = patternColor
+				d.navigationItem.rightBarButtonItem = nil
+			} else {
+				n.view.backgroundColor = patternColor
 			}
 		}
 	}
@@ -231,7 +258,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			p.sourceView = cell
 			p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 			p.delegate = self
-			let c = UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
+			let c = patternColor
 			if traitCollection.horizontalSizeClass == .regular {
 				p.backgroundColor = c
 				d.navigationItem.rightBarButtonItem = nil
@@ -307,8 +334,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		navigationController?.setToolbarHidden(true, animated: false)
 
 		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(searchUpdated), name: .LabelSelectionChanged, object: nil)
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(rebuildLabels), name: .LabelsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
@@ -403,6 +432,16 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			startBgTaskIfNeeded()
 			item.reIngest(delegate: self)
 		}
+
+		rebuildLabels()
+	}
+
+	@objc private func rebuildLabels() {
+		var labels = Set<String>()
+		for item in model.drops {
+			item.labels.forEach { labels.insert($0) }
+		}
+		log("Labels refreshed: \(labels.count) unique labels")
 	}
 
 	private func blurb(_ message: String) {
@@ -733,7 +772,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		dismissAnyPopOver()
+		dismissAnyPopOver(except: "Labels")
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: nil)

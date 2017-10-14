@@ -153,7 +153,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var labelDistance: NSLayoutConstraint!
 	@IBOutlet weak var accessoryLabel: UILabel!
 	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
-	@IBOutlet var progressView: UIProgressView!
+	@IBOutlet weak var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
 
 	weak var delegate: ArchivedItemCellDelegate?

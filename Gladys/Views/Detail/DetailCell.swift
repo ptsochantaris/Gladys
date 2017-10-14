@@ -7,7 +7,7 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var size: UILabel!
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet weak var nameHolder: UIView!
-	@IBOutlet var inspectButton: UIButton!
+	@IBOutlet weak var inspectButton: UIButton!
 
 	var selectionCallback: (()->Void)? {
 		didSet {

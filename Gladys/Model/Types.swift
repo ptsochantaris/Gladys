@@ -37,6 +37,8 @@ extension Notification.Name {
 	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
 	static let LowMemoryModeOn = Notification.Name("LowMemoryModeOn")
 	static let ItemModified = Notification.Name("ItemModified")
+	static let LabelsUpdated = Notification.Name("LabelsUpdated")
+	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
 }
 
 let diskSizeFormatter = ByteCountFormatter()

@@ -190,10 +190,10 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	@IBOutlet weak var innerFrame: UIView!
 	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
-	@IBOutlet var zipContainer: UIView!
-	@IBOutlet var zipInnerFrame: UIView!
-	@IBOutlet var zipSpinner: UIActivityIndicatorView!
-	@IBOutlet var zipImage: UIImageView!
+	@IBOutlet weak var zipContainer: UIView!
+	@IBOutlet weak var zipInnerFrame: UIView!
+	@IBOutlet weak var zipSpinner: UIActivityIndicatorView!
+	@IBOutlet weak var zipImage: UIImageView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove all items from your collection. This cannot be undone.", preferredStyle: .alert)

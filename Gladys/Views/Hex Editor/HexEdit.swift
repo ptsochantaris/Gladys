@@ -12,12 +12,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 
 	var bytes: Data!
 
-	@IBOutlet var addressViewHolder: UIView!
-	@IBOutlet var addressButton: UIButton!
-	@IBOutlet var addressItem: UIBarButtonItem!
+	@IBOutlet weak var addressViewHolder: UIView!
+	@IBOutlet weak var addressButton: UIButton!
+	@IBOutlet weak var addressItem: UIBarButtonItem!
 	@IBOutlet weak var grid: UICollectionView!
 	@IBOutlet weak var inspectorButton: UIBarButtonItem!
-	@IBOutlet var asciiModeButton: UIBarButtonItem!
+	@IBOutlet weak var asciiModeButton: UIBarButtonItem!
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return bytes.count

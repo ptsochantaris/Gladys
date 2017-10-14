@@ -13,8 +13,8 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	private var loadCount = 0
 	private let model = Model()
 
-	@IBOutlet var statusLabel: UILabel?
-	@IBOutlet var cancelButton: UIBarButtonItem?
+	@IBOutlet weak var statusLabel: UILabel?
+	@IBOutlet weak var cancelButton: UIBarButtonItem?
 	@IBOutlet weak var imageHeight: NSLayoutConstraint!
 	@IBOutlet weak var imageCenter: NSLayoutConstraint!
 	@IBOutlet weak var imageDistance: NSLayoutConstraint!

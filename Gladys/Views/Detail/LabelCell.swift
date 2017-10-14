@@ -10,8 +10,8 @@ import UIKit
 
 final class LabelCell: UITableViewCell {
 	
-	@IBOutlet var labelHolder: UIView!
-	@IBOutlet var labelText: UILabel!
+	@IBOutlet weak var labelHolder: UIView!
+	@IBOutlet weak var labelText: UILabel!
 
 	override func tintColorDidChange() {
 		labelText.tintColor = tintColor

@@ -73,6 +73,10 @@
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16C08ABA1F76C41600FDF720 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166AEB3D1F696B5400A77D16 /* openssl.framework */; };
 		16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */; };
+		16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7A91F72579E00CD1C11 /* gladysIcon320.png */; };
+		16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */; };
+		16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */; };
+		16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -159,8 +163,8 @@
 
 /* Begin PBXFileReference section */
 		1604A3331F091ABC005A477E /* GladysAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysAction.entitlements; sourceTree = "<group>"; };
-		1605A7A91F72579E00CD1C11 /* gladysIcon320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gladysIcon320.png; sourceTree = "<group>"; };
-		1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gladysIcon64.png; sourceTree = "<group>"; };
+		1605A7A91F72579E00CD1C11 /* gladysIcon320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon320.png; path = Gladys/gladysIcon320.png; sourceTree = "<group>"; };
+		1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon64.png; path = Gladys/gladysIcon64.png; sourceTree = "<group>"; };
 		1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16062E081EFE647800AB5353 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		16062E0B1EFE705800AB5353 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
@@ -219,6 +223,8 @@
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
+		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
+		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -415,17 +421,43 @@
 			path = Gladys;
 			sourceTree = "<group>";
 		};
-		16D2C7111EF5A6D3009B97F9 /* Views */ = {
+		16C4BAA01F9294420012C9E0 /* Prefs */ = {
 			isa = PBXGroup;
 			children = (
-				160707A51F8AAC52003B856A /* Detail */,
-				1607079A1F8A3676003B856A /* Hex Editor */,
+				16D829121F86D3DD00CF06FF /* AboutController.swift */,
+				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
+			);
+			path = Prefs;
+			sourceTree = "<group>";
+		};
+		16C4BAA11F9294580012C9E0 /* Main */ = {
+			isa = PBXGroup;
+			children = (
 				1678F9D01EF475FE005697CB /* AppDelegate.swift */,
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
-				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
 				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
-				16D829121F86D3DD00CF06FF /* AboutController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		16C4BAA91F929AC80012C9E0 /* Labels */ = {
+			isa = PBXGroup;
+			children = (
+				16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */,
+				16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */,
+			);
+			path = Labels;
+			sourceTree = "<group>";
+		};
+		16D2C7111EF5A6D3009B97F9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				16C4BAA91F929AC80012C9E0 /* Labels */,
+				16C4BAA11F9294580012C9E0 /* Main */,
+				16C4BAA01F9294420012C9E0 /* Prefs */,
+				160707A51F8AAC52003B856A /* Detail */,
+				1607079A1F8A3676003B856A /* Hex Editor */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -706,7 +738,9 @@
 			files = (
 				16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */,
 				1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */,
+				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
+				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -995,10 +1029,12 @@
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
 				163845FC1EF8629700CB8D97 /* Types.swift in Sources */,
+				16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
+				16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */,
 				169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,

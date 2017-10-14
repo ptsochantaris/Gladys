@@ -93,7 +93,7 @@ extension Model {
 			if let f = filter, !f.isEmpty {
 				Model.cachedFilteredDrops = []
 				let criterion = "\"*\(f)*\"cd"
-				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)", attributes: nil)
+				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
 				q.foundItemsHandler = { items in
 					DispatchQueue.main.async {
 						let uuids = items.map { $0.uniqueIdentifier }
@@ -121,11 +121,27 @@ extension Model {
 			}
 		}
 	}
+
+	// TODO: optimise!
 	var filteredDrops: [ArchivedDropItem] {
+		let result: [ArchivedDropItem]
 		if let f = Model.cachedFilteredDrops {
-			return f
+			result = f
 		} else {
-			return drops
+			result = drops
+		}
+		let enabledLabels = LabelSelector.toggles.flatMap { $0.enabled ? $0.name : nil }
+		if enabledLabels.count > 0 {
+			return result.filter { item in
+				for l in item.labels {
+					if enabledLabels.contains(l) {
+						return true
+					}
+				}
+				return false
+			}
+		} else {
+			return result
 		}
 	}
 	
