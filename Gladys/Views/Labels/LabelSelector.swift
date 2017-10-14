@@ -42,9 +42,9 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	}
 
 	@IBAction func clearAllSelected(_ sender: UIBarButtonItem) {
+		ViewController.shared.model.disableAllLabels()
 		for i in table.indexPathsForSelectedRows ?? [] {
 			table.deselectRow(at: i, animated: false)
-			Model.labelToggles[i.row].enabled = false
 		}
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 	}

@@ -92,6 +92,18 @@ extension Model {
 		return Model.labelToggles.contains(where: { $0.enabled })
 	}
 
+	func disableAllLabels() {
+		Model.labelToggles = Model.labelToggles.map {
+			if $0.enabled {
+				var l = $0
+				l.enabled = false
+				return l
+			} else {
+				return $0
+			}
+		}
+	}
+
 	private func rebuildLabels() {
 		var counts = [String:Int]()
 		for item in drops {

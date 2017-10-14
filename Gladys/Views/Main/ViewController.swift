@@ -155,7 +155,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func resetForDragEntry(session: UIDropSession) {
-		if currentDetailView != nil {
+		if currentDetailView != nil || currentLabelSelector != nil {
 			dismissAnyPopOver()
 		}
 		if countInserts(in: session) > 0 {
@@ -163,13 +163,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	func dismissAnyPopOver(except titleToExclude: String? = nil) {
+	func dismissAnyPopOver() {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
-
-			if let t = titleToExclude, (p as? UINavigationController)?.topViewController?.navigationItem.title == t {
-				return
-			}
-
 			if popoverPresentationControllerShouldDismissPopover(pc) {
 				p.dismiss(animated: true)
 			}
@@ -337,7 +332,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(searchUpdated), name: .LabelSelectionChanged, object: nil)
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
-		n.addObserver(self, selector: #selector(rebuildLabels), name: .LabelsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
@@ -433,15 +427,15 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			item.reIngest(delegate: self)
 		}
 
-		rebuildLabels()
+		labelSelectionChanged()
 	}
 
-	@objc private func rebuildLabels() {
-		var labels = Set<String>()
-		for item in model.drops {
-			item.labels.forEach { labels.insert($0) }
+	private func labelSelectionChanged() {
+		if model.isFilteringLabels {
+			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
+		} else {
+			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
 		}
-		log("Labels refreshed: \(labels.count) unique labels")
 	}
 
 	private func blurb(_ message: String) {
@@ -621,6 +615,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return (presentedViewController as? UINavigationController)?.topViewController as? DetailController
 	}
 
+	private var currentLabelSelector: LabelSelector? {
+		return (presentedViewController as? UINavigationController)?.topViewController as? LabelSelector
+	}
+
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
 		let detailController = currentDetailView
@@ -737,7 +735,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			s.searchResultsUpdater = nil
 			s.delegate = nil
 
-			model.filter = nil
+			model.disableAllLabels()
+			labelSelectionChanged()
+			if model.filter != nil {
+				model.filter = nil
+			} else {
+				archivedItemCollectionView.reloadData()
+			}
 			s.searchBar.text = nil
 			s.isActive = false
 
@@ -773,12 +777,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		dismissAnyPopOver(except: "Labels")
-		if model.isFilteringLabels {
-			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
-		} else {
-			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
+		if currentDetailView != nil || currentLabelSelector != nil {
+			dismissAnyPopOver()
 		}
+		labelSelectionChanged()
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		})
