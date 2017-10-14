@@ -23,6 +23,10 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		super.init()
 	}
 
+	var fileSystemURL: URL? {
+		return typeItem?.bytesPath ?? dropItem?.folderUrl
+	}
+
 	var documentSize: NSNumber? {
 		if let typeItem = typeItem {
 			return NSNumber(value: typeItem.sizeInBytes)

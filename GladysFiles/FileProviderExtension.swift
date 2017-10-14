@@ -6,6 +6,7 @@ let model = Model()
 
 final class FileProviderExtension: NSFileProviderExtension {
 
+	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
 		let uuid = identifier.rawValue
@@ -32,39 +33,35 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
-        guard let fpi = (try? item(for: identifier)) as? FileProviderItem else {
-            return nil
-        }
-
-		if let directoryItem = fpi.dropItem {
-			return directoryItem.folderUrl
-		} else if let fileItem = fpi.typeItem {
-			return fileItem.bytesPath
-		} else {
-			return Model.appStorageUrl
+		do {
+			if let fpi = try item(for: identifier) as? FileProviderItem {
+				return fpi.fileSystemURL
+			}
+		} catch {
+			log("Error getting URL for item with ID \(identifier): \(error.localizedDescription)")
 		}
+		return nil
     }
 
 	private func fileItem(at url: URL) -> FileProviderItem? {
 		let urlComponents = url.pathComponents
-		if let lastComponent = urlComponents.last, urlComponents.count > 2 {
+		if let lastComponent = urlComponents.last, urlComponents.count > 1 {
+			if lastComponent == "items.json" {
+				return nil
+			}
 			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
 			let identifier = NSFileProviderItemIdentifier(uuidString)
-			return (try? item(for: identifier)) as? FileProviderItem
+			do {
+				return try item(for: identifier) as? FileProviderItem
+			} catch {
+				log("Error locating file item at \(url): \(error.localizedDescription)")
+			}
 		}
 		return nil
 	}
 
 	override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
-		let urlComponents = url.pathComponents
-		if let lastComponent = urlComponents.last, urlComponents.count > 2 {
-			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
-			let identifier = NSFileProviderItemIdentifier(uuidString)
-			if (try? item(for: identifier)) != nil {
-				return identifier
-			}
-		}
-		return NSFileProviderItemIdentifier.rootContainer
+		return fileItem(at: url)?.itemIdentifier
 	}
     
     override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {
