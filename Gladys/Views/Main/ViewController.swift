@@ -180,7 +180,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if countInserts(in: session) > 0 {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
-			if model.isFiltering {
+			if model.isFiltering || model.isFilteringLabels {
 				return UICollectionViewDropProposal(operation: .forbidden)
 			} else {
 				return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
@@ -690,6 +690,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"Gimme.",
 		"Quiet day?",
 		"How can I help?",
+		"Howdy!",
 		"Ready!",
 		]
 
@@ -773,9 +774,14 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
 		dismissAnyPopOver(except: "Labels")
+		if model.isFilteringLabels {
+			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
+		} else {
+			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
+		}
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
-		}, completion: nil)
+		})
 	}
 
 	///////////////////////////// IAP

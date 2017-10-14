@@ -42,6 +42,8 @@ extension Model {
 			let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
 			try? fm.removeItem(at: url)
 		}
+
+		rebuildLabels()
 	}
 
 	func saveDone() {
@@ -73,9 +75,43 @@ extension Model {
 	}
 	
 	////////////////////////// Filtering
-	
+
+	struct LabelToggle {
+		let name: String
+		let count: Int
+		var enabled: Bool
+	}
+
+	static var labelToggles = [LabelToggle]()
+
 	var isFiltering: Bool {
 		return Model.currentFilterQuery != nil
+	}
+
+	var isFilteringLabels: Bool {
+		return Model.labelToggles.contains(where: { $0.enabled })
+	}
+
+	private func rebuildLabels() {
+		var counts = [String:Int]()
+		for item in drops {
+			item.labels.forEach {
+				if let c = counts[$0] {
+					counts[$0] = c+1
+				} else {
+					counts[$0] = 1
+				}
+			}
+		}
+
+		let previous = Model.labelToggles
+		Model.labelToggles.removeAll()
+		for (label, count) in counts {
+			let previousEnabled = (previous.first { $0.enabled == true && $0.name == label } != nil)
+			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled)
+			Model.labelToggles.append(toggle)
+		}
+		Model.labelToggles.sort { $0.name < $1.name }
 	}
 	
 	var filter: String? {
@@ -130,7 +166,7 @@ extension Model {
 		} else {
 			result = drops
 		}
-		let enabledLabels = LabelSelector.toggles.flatMap { $0.enabled ? $0.name : nil }
+		let enabledLabels = Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
 		if enabledLabels.count > 0 {
 			return result.filter { item in
 				for l in item.labels {
@@ -183,6 +219,7 @@ extension Model {
 	}
 
 	func reloadCompleted() {
+		rebuildLabels()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
