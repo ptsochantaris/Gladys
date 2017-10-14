@@ -134,15 +134,15 @@ extension Model {
 			guard Model.modelFilter != newValue else {
 				return
 			}
-			forceUpdateFilter(with: newValue)
+			forceUpdateFilter(with: newValue, signalUpdate: true)
 		}
 	}
 
-	func forceUpdateFilter() {
-		forceUpdateFilter(with: Model.modelFilter)
+	func forceUpdateFilter(signalUpdate: Bool) {
+		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate)
 	}
 
-	private func forceUpdateFilter(with newValue: String?) {
+	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
 		Model.currentFilterQuery?.cancel()
 		Model.modelFilter = newValue
 
@@ -155,7 +155,9 @@ extension Model {
 					let uuids = items.map { $0.uniqueIdentifier }
 					let items = self.postLabelDrops.filter { uuids.contains($0.uuid.uuidString) }
 					Model.cachedFilteredDrops?.append(contentsOf: items)
-					NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+					if signalUpdate {
+						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+					}
 				}
 			}
 			q.completionHandler = { error in
@@ -163,7 +165,7 @@ extension Model {
 					log("Search error: \(error.localizedDescription)")
 				}
 				DispatchQueue.main.async {
-					if Model.cachedFilteredDrops?.isEmpty ?? true {
+					if signalUpdate, Model.cachedFilteredDrops?.isEmpty ?? true {
 						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 					}
 				}
@@ -173,8 +175,26 @@ extension Model {
 		} else {
 			Model.cachedFilteredDrops = postLabelDrops
 			Model.currentFilterQuery = nil
-			NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+			if signalUpdate {
+				NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+			}
 		}
+	}
+
+	func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
+		guard isFiltering || isFilteringLabels else {
+			return index
+		}
+		if drops.count == 0 {
+			return 0
+		}
+		let closestItem: ArchivedDropItem
+		if index >= filteredDrops.count {
+			closestItem = filteredDrops.last!
+		} else {
+			closestItem = filteredDrops[index]
+		}
+		return drops.index(of: closestItem) ?? 0
 	}
 
 	var enabledLabels: [String] {

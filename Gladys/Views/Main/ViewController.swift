@@ -105,7 +105,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: previousIndex.item)
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
-					self.model.forceUpdateFilter()
+					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
@@ -116,11 +116,17 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			} else {
 
 				let item = ArchivedDropItem(providers: [dragItem.itemProvider], delegate: self)
-				let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: model.drops.count, section: 0)
+				var dataIndex = coordinator.destinationIndexPath?.item ?? model.filteredDrops.count
+				let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+
+				if model.isFilteringLabels {
+					dataIndex = model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+					item.labels = model.enabledLabels
+				}
 
 				collectionView.performBatchUpdates({
-					self.model.drops.insert(item, at: destinationIndexPath.item)
-					self.model.forceUpdateFilter()
+					self.model.drops.insert(item, at: dataIndex)
+					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -161,7 +167,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			dismissAnyPopOver()
 		}
 		if countInserts(in: session) > 0 {
-			resetSearch(andLabels: true)
+			resetSearch(andLabels: false)
 		}
 	}
 
@@ -386,7 +392,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func externalDataUpdate() {
-		model.forceUpdateFilter()
+		model.forceUpdateFilter(signalUpdate: true)
 		didUpdateItems()
 		updateEmptyView(animated: true)
 		syncModal()
@@ -428,7 +434,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func labelSelectionChanged() {
-		model.forceUpdateFilter()
+		model.forceUpdateFilter(signalUpdate: true)
 		updateLabelIcon()
 	}
 
@@ -743,7 +749,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				model.disableAllLabels()
 				updateLabelIcon()
 				if model.filter == nil {
-					model.forceUpdateFilter()
+					model.forceUpdateFilter(signalUpdate: true)
 				}
 			}
 
