@@ -8,10 +8,25 @@ final class WorkingSetEnumerator: CommonEnumerator {
 	}
 
 	override var fileItems: [FileProviderItem] {
+
+		var taggedItems = [FileProviderItem]()
+		for drop in model.drops {
+			if drop.hasTagData {
+				taggedItems.append(FileProviderItem(drop))
+			}
+			if drop.typeItems.count > 1 {
+				for typeItem in drop.typeItems {
+					if typeItem.hasTagData {
+						taggedItems.append(FileProviderItem(typeItem))
+					}
+				}
+			}
+		}
+
 		if sortByDate {
-			return model.drops.sorted { $0.createdAt < $1.createdAt }.filter { $0.tagData != nil }.map { FileProviderItem($0) }
+			return taggedItems.sorted { $0.contentModificationDate ?? .distantPast < $1.contentModificationDate ?? .distantPast }
 		} else {
-			return model.drops.sorted { $0.oneTitle < $1.oneTitle }.filter { $0.tagData != nil }.map { FileProviderItem($0) }
+			return taggedItems.sorted { $0.filename < $1.filename }
 		}
 	}
 }

@@ -6,6 +6,10 @@ extension ArchivedDropItem {
 		return folderUrl.appendingPathComponent("tags", isDirectory: false)
 	}
 
+	var hasTagData: Bool {
+		return FileManager.default.fileExists(atPath: tagDataPath.path)
+	}
+
 	var tagData: Data? {
 		set {
 			let location = tagDataPath
