@@ -12,6 +12,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	var needsReIngest: Bool
 	var note: String
 	var titleOverride: String
+	var labels: [String]
 
 	// Transient
 	var loadingProgress: Progress?
@@ -26,6 +27,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case needsReIngest
 		case note
 		case titleOverride
+		case labels
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -39,6 +41,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(needsReIngest, forKey: .needsReIngest)
 		try v.encode(note, forKey: .note)
 		try v.encode(titleOverride, forKey: .titleOverride)
+		try v.encode(labels, forKey: .labels)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -53,6 +56,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
+		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -129,6 +133,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			needsReIngest = false
 			titleOverride = ""
 			note = ""
+			labels = []
 			typeItems = [ArchivedDropItemType]()
 			self.delegate = delegate
 

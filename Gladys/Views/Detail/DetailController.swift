@@ -106,18 +106,23 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	//////////////////////////////////
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section == 2 {
+			return item.labels.count + 1
+		}
 		return 1
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return item.typeItems.count + 2
+		return item.typeItems.count + 3
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section < 2 {
 			return nil
+		} else if section == 2 {
+			return "Labels"
 		} else {
-			return item.typeItems[section-2].contentDescription
+			return item.typeItems[section-3].contentDescription
 		}
 	}
 
@@ -152,10 +157,19 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			}
 			return cell
 
+		} else if indexPath.section == 2 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "LabelCell", for: indexPath) as! LabelCell
+			if indexPath.row < item.labels.count {
+				cell.label = item.labels[indexPath.row]
+			} else {
+				cell.label = nil
+			}
+			return cell
+
 		} else {
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-			let typeEntry = item.typeItems[indexPath.section-2]
+			let typeEntry = item.typeItems[indexPath.section-3]
 			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
@@ -178,6 +192,24 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			cell.size.text = typeEntry.sizeDescription
 			return cell
 		}
+	}
+
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		if indexPath.section == 2 && indexPath.row < item.labels.count {
+			return .delete
+		}
+		return .none
+	}
+
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			item.labels.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .automatic)
+		}
+	}
+
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return indexPath.section == 2
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -214,13 +246,27 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		if indexPath.section < 2 {
 			return []
+		} else if indexPath.section == 2 {
+			if let i = item.dragItem(forLabelIndex: indexPath.row) {
+				return [i]
+			} else {
+				return []
+			}
 		} else {
-			let typeItem = item.typeItems[indexPath.section-2]
+			let typeItem = item.typeItems[indexPath.section-3]
 			return [typeItem.dragItem]
 		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+		if let d = destinationIndexPath,
+			d.section == 2,
+			d.row < item.labels.count,
+			session.canLoadObjects(ofClass: String.self),
+			session.localDragSession != nil {
+
+			return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+		}
 		return UITableViewDropProposal(operation: .cancel)
 	}
 
@@ -236,11 +282,60 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		}
 	}
 
-	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
+	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+
+		for coordinatorItem in coordinator.items {
+			let dragItem = coordinatorItem.dragItem
+			if dragItem.localObject != nil {
+				guard
+					let destinationIndexPath = coordinator.destinationIndexPath,
+					let previousIndex = coordinatorItem.sourceIndexPath else { return }
+
+				let existingLabel = dragItem.localObject as? String
+				if previousIndex.section == 2 {
+					item.labels.remove(at: previousIndex.row)
+					item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+					tableView.performBatchUpdates({
+						tableView.reloadData()
+					})
+				} else {
+					item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+					tableView.performBatchUpdates({
+						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
+					})
+				}
+
+				if existingLabel == nil {
+					_ = dragItem.itemProvider.loadObject(ofClass: String.self, completionHandler: { newLabel, error in
+						if let newLabel = newLabel {
+							DispatchQueue.main.async {
+								self.item.labels[destinationIndexPath.row] = newLabel
+								tableView.performBatchUpdates({
+									tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
+								})
+								ViewController.shared.model.save()
+							}
+						}
+					})
+				} else {
+					ViewController.shared.model.save()
+				}
+
+				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
+			}
+		}
+	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-		if let cell = table.cellForRow(at: indexPath) as? DetailCell {
+		let cell = table.cellForRow(at: indexPath)
+		if let cell = cell as? DetailCell {
 			let path = UIBezierPath(roundedRect: cell.borderView.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
+			let p = UIDragPreviewParameters()
+			p.backgroundColor = .clear
+			p.visiblePath = path
+			return p
+		} else if let cell = cell as? LabelCell {
+			let path = UIBezierPath(roundedRect: cell.labelHolder.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
 			let p = UIDragPreviewParameters()
 			p.backgroundColor = .clear
 			p.visiblePath = path
@@ -256,5 +351,48 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 
 	func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
 		return dragParameters(for: indexPath)
+	}
+
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		view.endEditing(false)
+		guard indexPath.section == 2 else {
+			tableView.deselectRow(at: indexPath, animated: false)
+			return
+		}
+
+		var existingText: String?
+		var title: String
+		if indexPath.row < item.labels.count {
+			title = "Edit Label"
+			existingText = item.labels[indexPath.row]
+		} else {
+			title = "Add Label"
+		}
+
+		let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+
+		a.addTextField { field in
+			field.placeholder = "Label Text"
+			field.text = existingText
+		}
+
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+			if let l = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !l.isEmpty {
+				if indexPath.row < self.item.labels.count {
+					self.item.labels[indexPath.row] = l
+					tableView.reloadRows(at: [indexPath], with: .automatic)
+				} else {
+					self.item.labels.append(l)
+					tableView.insertRows(at: [indexPath], with: .automatic)
+				}
+				ViewController.shared.model.save()
+			}
+		}))
+
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+		present(a, animated: true) {
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
 	}
 }

@@ -72,6 +72,7 @@
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16C08ABA1F76C41600FDF720 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166AEB3D1F696B5400A77D16 /* openssl.framework */; };
+		16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -217,6 +218,7 @@
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
+		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -300,6 +302,7 @@
 				1619B60A1F76EC2F005CF414 /* HeaderCell.swift */,
 				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
+				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -978,6 +981,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
+				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,

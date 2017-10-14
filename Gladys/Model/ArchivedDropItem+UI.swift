@@ -4,6 +4,7 @@ import MapKit
 import Contacts
 import ContactsUI
 import CoreSpotlight
+import MobileCoreServices
 
 extension ArchivedDropItem {
 
@@ -41,6 +42,20 @@ extension ArchivedDropItem {
 
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = self
+		return i
+	}
+
+	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
+
+		guard index < labels.count else {
+			return nil
+		}
+
+		let label = labels[index]
+
+		let p = NSItemProvider(item: label as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
+		let i = UIDragItem(itemProvider: p)
+		i.localObject = label
 		return i
 	}
 
