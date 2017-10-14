@@ -205,6 +205,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		if editingStyle == .delete {
 			item.labels.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
+			ViewController.shared.model.save()
 		}
 	}
 

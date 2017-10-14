@@ -33,7 +33,7 @@ final class LabelCell: UITableViewCell {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		labelHolder.layer.cornerRadius = 10
+		labelHolder.layer.cornerRadius = 15
 	}
 
 	override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -45,7 +45,6 @@ final class LabelCell: UITableViewCell {
 	}
 
 	private func strongMode(_ on: Bool) {
-		selectedBackgroundView?.alpha = 0
 		labelHolder.layer.borderColor = (labelText.isHighlighted ? labelText.highlightedTextColor : labelText.textColor)?.cgColor
 		labelHolder.layer.borderWidth = on ? 0.5 :  0
 	}

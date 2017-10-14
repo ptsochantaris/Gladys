@@ -23,6 +23,11 @@ extension ArchivedDropItem {
 				attributes.contentDescription = note
 			}
 		}
+
+		if labels.count > 0 {
+			attributes.keywords = labels
+		}
+
 		attributes.thumbnailURL = imagePath
 		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
 		attributes.userCurated = true
