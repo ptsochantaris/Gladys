@@ -191,10 +191,14 @@ extension Model {
 		let closestItem: ArchivedDropItem
 		if index >= filteredDrops.count {
 			closestItem = filteredDrops.last!
+			if let i = drops.index(of: closestItem) {
+				return i+1
+			}
+			return 0
 		} else {
 			closestItem = filteredDrops[index]
+			return drops.index(of: closestItem) ?? 0
 		}
-		return drops.index(of: closestItem) ?? 0
 	}
 
 	var enabledLabels: [String] {

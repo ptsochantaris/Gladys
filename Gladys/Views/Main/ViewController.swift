@@ -126,7 +126,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: dataIndex)
-					self.model.forceUpdateFilter(signalUpdate: false)
+					if model.isFilteringLabels {
+						self.model.forceUpdateFilter(signalUpdate: false)
+					}
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
