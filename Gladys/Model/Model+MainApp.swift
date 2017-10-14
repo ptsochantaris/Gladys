@@ -196,10 +196,6 @@ extension Model {
 		}
 	}
 
-	func invalidateCache() {
-		Model.cachedFilteredDrops = nil
-	}
-
 	var filteredDrops: [ArchivedDropItem] {
 		if let f = Model.cachedFilteredDrops {
 			return f

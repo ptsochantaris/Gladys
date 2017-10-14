@@ -105,7 +105,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: previousIndex.item)
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
-					self.model.invalidateCache()
+					self.model.forceUpdateFilter()
 					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
@@ -120,7 +120,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: destinationIndexPath.item)
-					self.model.invalidateCache()
+					self.model.forceUpdateFilter()
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -386,8 +386,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func externalDataUpdate() {
-		resetSearch(andLabels: true)
-		model.invalidateCache()
+		model.forceUpdateFilter()
 		didUpdateItems()
 		updateEmptyView(animated: true)
 		syncModal()
