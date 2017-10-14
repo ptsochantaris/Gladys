@@ -93,7 +93,7 @@ extension Model {
 			if let f = filter, !f.isEmpty {
 				Model.cachedFilteredDrops = []
 				let criterion = "\"*\(f)*\"cd"
-				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
+				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)", attributes: nil)
 				q.foundItemsHandler = { items in
 					DispatchQueue.main.async {
 						let uuids = items.map { $0.uniqueIdentifier }

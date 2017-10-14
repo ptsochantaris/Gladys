@@ -275,6 +275,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		}
 	}
 
+	private func makeIndexAndSaveItem() {
+		item.makeIndex() { _ in
+			ViewController.shared.model.save()
+		}
+	}
+
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
 
 		for coordinatorItem in coordinator.items {
@@ -306,12 +312,12 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 								tableView.performBatchUpdates({
 									tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
 								})
-								ViewController.shared.model.save()
+								self.makeIndexAndSaveItem()
 							}
 						}
 					})
 				} else {
-					ViewController.shared.model.save()
+					self.makeIndexAndSaveItem()
 				}
 
 				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
@@ -378,7 +384,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 					self.item.labels.append(l)
 					tableView.insertRows(at: [indexPath], with: .automatic)
 				}
-				ViewController.shared.model.save()
+				self.makeIndexAndSaveItem()
 			}
 		}))
 

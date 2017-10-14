@@ -733,6 +733,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
+		dismissAnyPopOver()
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		}, completion: nil)
