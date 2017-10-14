@@ -3,14 +3,14 @@ import FileProvider
 
 final class DropItemEnumerator: CommonEnumerator {
 
-	private var dropItem: ArchivedDropItem
-
 	init(dropItem: ArchivedDropItem) {
-		self.dropItem = dropItem
 		super.init(uuid: dropItem.uuid.uuidString)
 	}
 
 	override var fileItems: [FileProviderItem] {
+		guard let dropItem = model.drops.first(where: { $0.uuid.uuidString == uuid }) else {
+			return []
+		}
 		if sortByDate {
 			return dropItem.typeItems.sorted { $0.updatedAt < $1.updatedAt }.map { FileProviderItem($0) }
 		} else {

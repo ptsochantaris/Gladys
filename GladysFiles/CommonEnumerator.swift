@@ -5,7 +5,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 	var sortByDate = false
 
-	private let uuid: String
+	let uuid: String
 
 	private var currentAnchor = NSFileProviderSyncAnchor("0".data(using: .utf8)!)
 
