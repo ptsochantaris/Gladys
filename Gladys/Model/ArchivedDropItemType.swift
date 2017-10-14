@@ -132,6 +132,7 @@ final class ArchivedDropItemType: Codable {
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
+	var ingestCompletion: (()->Void)?
 
 	var fileExtension: String? {
 		let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()

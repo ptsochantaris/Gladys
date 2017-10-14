@@ -9,37 +9,46 @@ extension ArchivedDropItemType {
 
 	func startIngest(provider: NSItemProvider) -> Progress {
 
+		let overallProgress = Progress(totalUnitCount: 3)
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
 				log(">> Error receiving item: \(error.localizedDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-				s.signalDone()
+				s.completeIngest()
+				overallProgress.completedUnitCount += 1
 			} else if let data = data {
 				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
-				s.ingest(data: data)
+				s.ingest(data: data) {
+					overallProgress.completedUnitCount += 1
+				}
 			}
 		}
-		return p
+		overallProgress.addChild(p, withPendingUnitCount: 2)
+		return overallProgress
 	}
 
 	func reIngest(delegate: LoadCompletionDelegate) -> Progress {
 		self.delegate = delegate
-		let p = Progress(totalUnitCount: 1)
+		let overallProgress = Progress(totalUnitCount: 3)
+		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
 			updatedAt = Date()
 			DispatchQueue.global(qos: .background).async {
-				self.ingest(data: bytesCopy)
-				p.completedUnitCount = 1
+				self.ingest(data: bytesCopy) {
+					overallProgress.completedUnitCount += 1
+				}
 			}
 		} else {
-			p.completedUnitCount = 1
+			overallProgress.completedUnitCount += 1
 		}
-		return p
+		return overallProgress
 	}
 
-	private func ingest(data: Data) { // in thread!
+	private func ingest(data: Data, completion: @escaping ()->Void) { // in thread!
+
+		ingestCompletion = completion
 
 		let item: NSSecureCoding
 		if let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
@@ -58,7 +67,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = "NSString"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
@@ -66,27 +75,27 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = "NSAttributedString"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? UIColor {
 			log("      received color: \(item)")
 			representedClass = "UIColor"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
 			representedClass = "UIImage"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
 			representedClass = "MKMapItem"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? URL {
 			handleUrl(item, data)
@@ -101,7 +110,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = "NSArray"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else if let item = item as? NSDictionary {
 			log("      received dictionary: \(item)")
@@ -113,7 +122,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = "NSDictionary"
 			bytes = data
-			signalDone()
+			completeIngest()
 
 		} else {
 			log("      received data: \(data)")
@@ -132,7 +141,7 @@ extension ArchivedDropItemType {
 		if item.isFileURL {
 			log("      received local file url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-			signalDone()
+			completeIngest()
 			return
 		} else {
 			log("      received remote url: \(item.absoluteString)")
@@ -148,10 +157,10 @@ extension ArchivedDropItemType {
 							self?.setDisplayIcon(image, 30, .center)
 						}
 					}
-					self?.signalDone()
+					self?.completeIngest()
 				}
 			} else {
-				signalDone()
+				completeIngest()
 			}
 		}
 	}
@@ -230,7 +239,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
 		}
 
-		signalDone()
+		completeIngest()
 	}
 
 	private func setLoadingError(_ message: String) {
@@ -240,7 +249,7 @@ extension ArchivedDropItemType {
 
 	func cancelIngest() {
 		loadingAborted = true
-		signalDone()
+		completeIngest()
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
@@ -372,9 +381,12 @@ extension ArchivedDropItemType {
 		}.resume()
 	}
 
-	private func signalDone() {
+	private func completeIngest() {
+		let callback = ingestCompletion
+		ingestCompletion = nil
 		DispatchQueue.main.async {
 			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
+			callback?()
 		}
 	}
 
