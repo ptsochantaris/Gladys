@@ -24,10 +24,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
 		dateItem.customView = dateLabelHolder
 
-		table.backgroundColor = .clear
-		table.separatorStyle = .none
-		view.backgroundColor = .clear
-
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
 	}
 
@@ -207,10 +203,6 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			tableView.deleteRows(at: [indexPath], with: .automatic)
 			ViewController.shared.model.save()
 		}
-	}
-
-	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 2
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
