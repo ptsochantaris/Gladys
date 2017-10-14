@@ -16,12 +16,15 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		var count = 0
+		var enabled = false
 		for toggle in Model.labelToggles {
 			if toggle.enabled {
+				enabled = true
 				table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
 			}
 			count += 1
 		}
+		clearAllButton.isEnabled = enabled
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,7 +49,13 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		for i in table.indexPathsForSelectedRows ?? [] {
 			table.deselectRow(at: i, animated: false)
 		}
+		updates()
+		done()
+	}
+
+	private func updates() {
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+		clearAllButton.isEnabled = ViewController.shared.model.isFilteringLabels
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -55,7 +64,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		if !newState {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
-		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+		updates()
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {

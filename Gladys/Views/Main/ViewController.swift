@@ -105,6 +105,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: previousIndex.item)
 					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
+					self.model.invalidateCache()
 					collectionView.deleteItems(at: [previousIndex])
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
@@ -119,6 +120,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: destinationIndexPath.item)
+					self.model.invalidateCache()
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -159,7 +161,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			dismissAnyPopOver()
 		}
 		if countInserts(in: session) > 0 {
-			resetSearch()
+			resetSearch(andLabels: true)
 		}
 	}
 
@@ -329,7 +331,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		navigationController?.setToolbarHidden(true, animated: false)
 
 		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(searchUpdated), name: .LabelSelectionChanged, object: nil)
+		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
@@ -384,12 +386,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func externalDataUpdate() {
-		if model.isFiltering {
-			model.filter = nil
-			model.filter = self.navigationItem.searchController?.searchBar.text
-		} else {
-			archivedItemCollectionView.reloadData()
-		}
+		resetSearch(andLabels: true)
+		model.invalidateCache()
 		didUpdateItems()
 		updateEmptyView(animated: true)
 		syncModal()
@@ -427,14 +425,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			item.reIngest(delegate: self)
 		}
 
-		labelSelectionChanged()
+		updateLabelIcon()
 	}
 
-	private func labelSelectionChanged() {
+	@objc private func labelSelectionChanged() {
+		model.forceUpdateFilter()
+		updateLabelIcon()
+	}
+
+	private func updateLabelIcon() {
 		if model.isFilteringLabels {
 			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
+			title = model.enabledLabels.joined(separator: ", ")
 		} else {
 			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
+			title = "Gladys"
 		}
 	}
 
@@ -730,18 +735,20 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	private func resetSearch() {
+	private func resetSearch(andLabels: Bool) {
 		if let s = navigationItem.searchController {
 			s.searchResultsUpdater = nil
 			s.delegate = nil
 
-			model.disableAllLabels()
-			labelSelectionChanged()
-			if model.filter != nil {
-				model.filter = nil
-			} else {
-				archivedItemCollectionView.reloadData()
+			if andLabels {
+				model.disableAllLabels()
+				updateLabelIcon()
+				if model.filter == nil {
+					model.forceUpdateFilter()
+				}
 			}
+
+			model.filter = nil
 			s.searchBar.text = nil
 			s.isActive = false
 
@@ -751,7 +758,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func highlightItem(with identifier: String) {
-		resetSearch()
+		resetSearch(andLabels: true)
 		archivedItemCollectionView.isUserInteractionEnabled = false
 		if let i = model.drops.index(where: { $0.uuid.uuidString == identifier }) {
 			let ip = IndexPath(item: i, section: 0)
@@ -766,7 +773,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func willDismissSearchController(_ searchController: UISearchController) {
-		resetSearch()
+		resetSearch(andLabels: false)
 	}
 
 	private var searchTimer: PopTimer!
@@ -777,10 +784,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		if currentDetailView != nil || currentLabelSelector != nil {
+		if currentDetailView != nil {
 			dismissAnyPopOver()
 		}
-		labelSelectionChanged()
+		updateLabelIcon()
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		})

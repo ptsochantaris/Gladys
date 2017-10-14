@@ -84,10 +84,6 @@ extension Model {
 
 	static var labelToggles = [LabelToggle]()
 
-	var isFiltering: Bool {
-		return Model.currentFilterQuery != nil
-	}
-
 	var isFilteringLabels: Bool {
 		return Model.labelToggles.contains(where: { $0.enabled })
 	}
@@ -104,7 +100,7 @@ extension Model {
 		}
 	}
 
-	private func rebuildLabels() {
+	func rebuildLabels() {
 		var counts = [String:Int]()
 		for item in drops {
 			item.labels.forEach {
@@ -125,7 +121,11 @@ extension Model {
 		}
 		Model.labelToggles.sort { $0.name < $1.name }
 	}
-	
+
+	var isFiltering: Bool {
+		return Model.currentFilterQuery != nil
+	}
+
 	var filter: String? {
 		get {
 			return Model.modelFilter
@@ -134,53 +134,56 @@ extension Model {
 			guard Model.modelFilter != newValue else {
 				return
 			}
-			
-			Model.currentFilterQuery?.cancel()
-			Model.modelFilter = newValue
-			
-			if let f = filter, !f.isEmpty {
-				Model.cachedFilteredDrops = []
-				let criterion = "\"*\(f)*\"cd"
-				let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
-				q.foundItemsHandler = { items in
-					DispatchQueue.main.async {
-						let uuids = items.map { $0.uniqueIdentifier }
-						let items = self.drops.filter { uuids.contains($0.uuid.uuidString) }
-						Model.cachedFilteredDrops?.append(contentsOf: items)
-						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-					}
-				}
-				q.completionHandler = { error in
-					if let error = error {
-						log("Search error: \(error.localizedDescription)")
-					}
-					DispatchQueue.main.async {
-						if Model.cachedFilteredDrops?.isEmpty ?? true {
-							NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-						}
-					}
-				}
-				Model.currentFilterQuery = q
-				q.start()
-			} else {
-				Model.cachedFilteredDrops = nil
-				Model.currentFilterQuery = nil
-				NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-			}
+			forceUpdateFilter(with: newValue)
 		}
 	}
 
-	// TODO: optimise!
-	var filteredDrops: [ArchivedDropItem] {
-		let result: [ArchivedDropItem]
-		if let f = Model.cachedFilteredDrops {
-			result = f
+	func forceUpdateFilter() {
+		forceUpdateFilter(with: Model.modelFilter)
+	}
+
+	private func forceUpdateFilter(with newValue: String?) {
+		Model.currentFilterQuery?.cancel()
+		Model.modelFilter = newValue
+
+		if let f = filter, !f.isEmpty {
+			Model.cachedFilteredDrops = []
+			let criterion = "\"*\(f)*\"cd"
+			let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
+			q.foundItemsHandler = { items in
+				DispatchQueue.main.async {
+					let uuids = items.map { $0.uniqueIdentifier }
+					let items = self.postLabelDrops.filter { uuids.contains($0.uuid.uuidString) }
+					Model.cachedFilteredDrops?.append(contentsOf: items)
+					NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+				}
+			}
+			q.completionHandler = { error in
+				if let error = error {
+					log("Search error: \(error.localizedDescription)")
+				}
+				DispatchQueue.main.async {
+					if Model.cachedFilteredDrops?.isEmpty ?? true {
+						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+					}
+				}
+			}
+			Model.currentFilterQuery = q
+			q.start()
 		} else {
-			result = drops
+			Model.cachedFilteredDrops = postLabelDrops
+			Model.currentFilterQuery = nil
+			NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 		}
-		let enabledLabels = Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
+	}
+
+	var enabledLabels: [String] {
+		return Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
+	}
+
+	private var postLabelDrops: [ArchivedDropItem] {
 		if enabledLabels.count > 0 {
-			return result.filter { item in
+			return drops.filter { item in
 				for l in item.labels {
 					if enabledLabels.contains(l) {
 						return true
@@ -189,7 +192,19 @@ extension Model {
 				return false
 			}
 		} else {
-			return result
+			return drops
+		}
+	}
+
+	func invalidateCache() {
+		Model.cachedFilteredDrops = nil
+	}
+
+	var filteredDrops: [ArchivedDropItem] {
+		if let f = Model.cachedFilteredDrops {
+			return f
+		} else {
+			return drops
 		}
 	}
 	

@@ -201,8 +201,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		if editingStyle == .delete {
 			item.labels.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
+			ViewController.shared.model.rebuildLabels()
 			ViewController.shared.model.save()
-			NotificationCenter.default.post(name: .LabelsUpdated, object: nil)
 		}
 	}
 
@@ -313,14 +313,14 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 								tableView.performBatchUpdates({
 									tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
 								})
+								ViewController.shared.model.rebuildLabels()
 								self.makeIndexAndSaveItem()
-								NotificationCenter.default.post(name: .LabelsUpdated, object: nil)
 							}
 						}
 					})
 				} else {
+					ViewController.shared.model.rebuildLabels()
 					self.makeIndexAndSaveItem()
-					NotificationCenter.default.post(name: .LabelsUpdated, object: nil)
 				}
 
 				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
@@ -387,8 +387,8 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 					self.item.labels.append(l)
 					tableView.insertRows(at: [indexPath], with: .automatic)
 				}
+				ViewController.shared.model.rebuildLabels()
 				self.makeIndexAndSaveItem()
-				NotificationCenter.default.post(name: .LabelsUpdated, object: nil)
 			}
 		}))
 
