@@ -1,7 +1,9 @@
 
 import UIKit
 
-final class DetailController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
+final class DetailController: UIViewController,
+	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -216,6 +218,26 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.contentDescription + " (\(size))"
+
+		} else if segue.identifier == "addLabel",
+			let indexPath = sender as? IndexPath,
+			let n = segue.destination as? UINavigationController,
+			let p = n.popoverPresentationController,
+			let d = n.topViewController as? AddLabelController {
+
+			if let cell = table.cellForRow(at: indexPath) {
+				p.sourceView = cell
+				p.sourceRect = cell.bounds.insetBy(dx: 30, dy: 15)
+			}
+			d.delegate = self
+			p.delegate = self
+			if indexPath.row < item.labels.count {
+				d.title = "Edit Label"
+				d.label = item.labels[indexPath.row]
+			} else {
+				d.title = "Add Label"
+			}
+
 		}
 	}
 
@@ -362,41 +384,30 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 			return
 		}
 
-		var existingText: String?
-		var title: String
-		if indexPath.row < item.labels.count {
-			title = "Edit Label"
-			existingText = item.labels[indexPath.row]
+		performSegue(withIdentifier: "addLabel", sender: indexPath)
+	}
+
+	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?) {
+
+		addLabelController.dismiss(animated: true, completion: nil)
+
+		guard let indexPath = table.indexPathForSelectedRow else { return }
+		table.deselectRow(at: indexPath, animated: true)
+
+		guard let didEnterLabel = didEnterLabel, !didEnterLabel.isEmpty else { return }
+
+		if indexPath.row < self.item.labels.count {
+			item.labels[indexPath.row] = didEnterLabel
+			table.reloadRows(at: [indexPath], with: .automatic)
 		} else {
-			title = "Add Label"
+			item.labels.append(didEnterLabel)
+			table.insertRows(at: [indexPath], with: .automatic)
 		}
+		ViewController.shared.model.rebuildLabels()
+		makeIndexAndSaveItem()
+	}
 
-		let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-
-		a.addTextField { field in
-			field.autocapitalizationType = .sentences
-			field.placeholder = "Label Text"
-			field.text = existingText
-		}
-
-		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-			if let l = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !l.isEmpty {
-				if indexPath.row < self.item.labels.count {
-					self.item.labels[indexPath.row] = l
-					tableView.reloadRows(at: [indexPath], with: .automatic)
-				} else {
-					self.item.labels.append(l)
-					tableView.insertRows(at: [indexPath], with: .automatic)
-				}
-				ViewController.shared.model.rebuildLabels()
-				self.makeIndexAndSaveItem()
-			}
-		}))
-
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-
-		present(a, animated: true) {
-			tableView.deselectRow(at: indexPath, animated: true)
-		}
+	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+		return .none
 	}
 }
