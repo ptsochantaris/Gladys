@@ -41,11 +41,8 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.tintColor = view.tintColor
 		searchController.hidesNavigationBarDuringPresentation = false
+		navigationItem.hidesSearchBarWhenScrolling = false
 		navigationItem.searchController = searchController
-
-		layoutTimer = PopTimer(timeInterval: 1) { [weak self] in
-			self?.sizeWindow()
-		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -53,10 +50,25 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		if !LabelSelector.filter.isEmpty {
 			navigationItem.searchController?.searchBar.text = LabelSelector.filter
 			navigationItem.searchController?.isActive = true
-			view.layoutIfNeeded()
+			table.contentOffset = .zero
 		}
-		table.layoutIfNeeded()
 		sizeWindow()
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		sizeWindow()
+	}
+
+	private func sizeWindow() {
+		if table.isHidden {
+			navigationController?.preferredContentSize = CGSize(width: 240, height: 240)
+		} else {
+			navigationController!.view.layoutIfNeeded()
+			let n = navigationController!.navigationBar
+			let full = table.contentSize.height + n.frame.size.height + 8
+			navigationController!.preferredContentSize = CGSize(width: 240, height: full)
+		}
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -83,11 +95,9 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 
 	@IBAction func clearAllSelected(_ sender: UIBarButtonItem) {
 		ViewController.shared.model.disableAllLabels()
-		for i in table.indexPathsForSelectedRows ?? [] {
-			table.deselectRow(at: i, animated: false)
-		}
 		updates()
 		done()
+		LabelSelector.filter = ""
 	}
 
 	private func updates() {
@@ -110,19 +120,27 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	}
 
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label from any item that contains it.", preferredStyle: .alert)
+		let toggle = filteredToggles[indexPath.row]
+		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
 			guard let s = self else { return }
-			let toggle = s.filteredToggles[indexPath.row]
 			ViewController.shared.model.removeLabel(toggle.name)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
-			if tableView.numberOfRows(inSection: 0) == 0 {
+			if Model.labelToggles.count == 0 {
 				tableView.isHidden = true
-				self?.emptyLabel.isHidden = false
+				s.emptyLabel.isHidden = false
+				s.clearAllButton.isEnabled = false
+			}
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+				s.sizeWindow()
 			}
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-		present(a, animated: true)
+		if navigationItem.searchController?.isActive ?? false {
+			navigationItem.searchController?.present(a, animated: true)
+		} else {
+			present(a, animated: true)
+		}
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
@@ -133,30 +151,12 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
 			_ = f(p)
 		}
+		if navigationItem.searchController?.isActive ?? false {
+			navigationItem.searchController?.delegate = nil
+			navigationItem.searchController?.searchResultsUpdater = nil
+			navigationItem.searchController?.dismiss(animated: false)
+		}
 		dismiss(animated: true)
-	}
-
-	private var layoutTimer: PopTimer!
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		layoutTimer.push()
-	}
-
-	private func sizeWindow() {
-		if table.numberOfRows(inSection: 0) > 0 {
-			let full = table.contentSize.height
-			log("H: \(full)")
-			preferredContentSize = CGSize(width: 240, height: full)
-		} else {
-			preferredContentSize = CGSize(width: 240, height: 240)
-		}
-	}
-
-	override var preferredContentSize: CGSize {
-		didSet {
-			navigationController?.preferredContentSize = preferredContentSize
-		}
 	}
 
 	/////////////// search
@@ -174,12 +174,19 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	func willDismissSearchController(_ searchController: UISearchController) {
 		LabelSelector.filter = ""
 		table.reloadData()
-		layoutTimer.push()
+	}
+
+	func didDismissSearchController(_ searchController: UISearchController) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.sizeWindow()
+		}
 	}
 
 	func updateSearchResults(for searchController: UISearchController) {
 		LabelSelector.filter = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 		table.reloadData()
-		layoutTimer.push()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.sizeWindow()
+		}
 	}
 }
