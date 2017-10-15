@@ -32,6 +32,8 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			emptyLabel.isHidden = true
 		}
 
+		table.tableFooterView = UIView()
+
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.dimsBackgroundDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -40,6 +42,21 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		searchController.searchBar.tintColor = view.tintColor
 		searchController.hidesNavigationBarDuringPresentation = false
 		navigationItem.searchController = searchController
+
+		layoutTimer = PopTimer(timeInterval: 1) { [weak self] in
+			self?.sizeWindow()
+		}
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if !LabelSelector.filter.isEmpty {
+			navigationItem.searchController?.searchBar.text = LabelSelector.filter
+			navigationItem.searchController?.isActive = true
+			view.layoutIfNeeded()
+		}
+		table.layoutIfNeeded()
+		sizeWindow()
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -103,7 +120,6 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 				tableView.isHidden = true
 				self?.emptyLabel.isHidden = false
 			}
-			self?.sizeWindow()
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(a, animated: true)
@@ -120,15 +136,18 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		dismiss(animated: true)
 	}
 
+	private var layoutTimer: PopTimer!
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		sizeWindow()
+		layoutTimer.push()
 	}
 
 	private func sizeWindow() {
 		if table.numberOfRows(inSection: 0) > 0 {
-			table.layoutIfNeeded()
-			preferredContentSize = table.contentSize
+			let full = table.contentSize.height
+			log("H: \(full)")
+			preferredContentSize = CGSize(width: 240, height: full)
 		} else {
 			preferredContentSize = CGSize(width: 240, height: 240)
 		}
@@ -142,23 +161,25 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 
 	/////////////// search
 
-	private var filter = ""
+	static private var filter = ""
 
 	var filteredToggles: [Model.LabelToggle] {
-		if filter.isEmpty {
+		if LabelSelector.filter.isEmpty {
 			return Model.labelToggles
 		} else {
-			return Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(filter) }
+			return Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
 		}
 	}
 
 	func willDismissSearchController(_ searchController: UISearchController) {
-		filter = ""
+		LabelSelector.filter = ""
 		table.reloadData()
+		layoutTimer.push()
 	}
 
 	func updateSearchResults(for searchController: UISearchController) {
-		filter = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+		LabelSelector.filter = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 		table.reloadData()
+		layoutTimer.push()
 	}
 }

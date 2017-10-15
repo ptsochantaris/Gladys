@@ -176,7 +176,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	func dismissAnyPopOver() {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
 			if popoverPresentationControllerShouldDismissPopover(pc) {
-				p.dismiss(animated: true)
+				dismiss(animated: true)
 			}
 		}
 	}
