@@ -351,7 +351,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
-		n.addObserver(self, selector: #selector(pasteboardChange), name: .UIPasteboardChanged, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 
 		didUpdateItems()
@@ -362,22 +361,23 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
-		pasteboardChange()
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
-	@objc private func pasteboardChange() {
-		pasteButton.isEnabled = UIPasteboard.general.itemProviders.count > 0
-	}
-
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
+
+		let providers = UIPasteboard.general.itemProviders
+		if providers.count == 0 {
+			genericAlert(title: "Clipboard Empty", message: "There is currently nothing in the clipboard.", on: self)
+			return
+		}
 
 		if checkInfiniteMode(for: 1) {
 			return
 		}
 
-		let item = ArchivedDropItem(providers: UIPasteboard.general.itemProviders, delegate: self)
+		let item = ArchivedDropItem(providers: providers, delegate: self)
 
 		if model.isFilteringLabels {
 			item.labels = model.enabledLabelsForItems
