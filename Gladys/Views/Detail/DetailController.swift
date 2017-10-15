@@ -229,6 +229,7 @@ final class DetailController: UIViewController,
 				p.sourceView = cell
 				p.sourceRect = cell.bounds.insetBy(dx: 30, dy: 15)
 			}
+			p.permittedArrowDirections = [.left, .right]
 			d.delegate = self
 			p.delegate = self
 			if indexPath.row < item.labels.count {

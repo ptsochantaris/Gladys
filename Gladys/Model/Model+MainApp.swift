@@ -80,6 +80,7 @@ extension Model {
 		let name: String
 		let count: Int
 		var enabled: Bool
+		let emptyChecker: Bool
 	}
 
 	static var labelToggles = [LabelToggle]()
@@ -102,6 +103,7 @@ extension Model {
 
 	func rebuildLabels() {
 		var counts = [String:Int]()
+		var noLabelCount = 0
 		for item in drops {
 			item.labels.forEach {
 				if let c = counts[$0] {
@@ -110,16 +112,25 @@ extension Model {
 					counts[$0] = 1
 				}
 			}
+			if item.labels.count == 0 {
+				noLabelCount += 1
+			}
 		}
 
 		let previous = Model.labelToggles
 		Model.labelToggles.removeAll()
 		for (label, count) in counts {
 			let previousEnabled = (previous.first { $0.enabled == true && $0.name == label } != nil)
-			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled)
+			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
 			Model.labelToggles.append(toggle)
 		}
-		Model.labelToggles.sort { $0.name < $1.name }
+		if Model.labelToggles.count > 0 {
+			Model.labelToggles.sort { $0.name < $1.name }
+
+			let name = "Items with no labels"
+			let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
+			Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+		}
 	}
 
 	var enabledLabels: [String] {
@@ -229,17 +240,20 @@ extension Model {
 	}
 
 	private var postLabelDrops: [ArchivedDropItem] {
-		if enabledLabels.count > 0 {
-			return drops.filter { item in
-				for l in item.labels {
-					if enabledLabels.contains(l) {
+		let enabledToggles = Model.labelToggles.filter { $0.enabled }
+		if enabledToggles.count == 0 { return drops }
+
+		return drops.filter { item in
+			for toggle in enabledToggles {
+				if toggle.emptyChecker {
+					if item.labels.count == 0 {
 						return true
 					}
+				} else if item.labels.contains(toggle.name) {
+					return true
 				}
-				return false
 			}
-		} else {
-			return drops
+			return false
 		}
 	}
 
