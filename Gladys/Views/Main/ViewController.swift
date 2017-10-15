@@ -220,16 +220,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "showLabels",
 			let n = segue.destination as? UINavigationController,
-			let d = n.topViewController,
 			let p = n.popoverPresentationController {
 
 			p.delegate = self
-			if traitCollection.horizontalSizeClass == .regular {
-				p.backgroundColor = patternColor
-				d.navigationItem.rightBarButtonItem = nil
-			} else {
-				n.view.backgroundColor = patternColor
-			}
+			p.backgroundColor = patternColor
 		}
 	}
 

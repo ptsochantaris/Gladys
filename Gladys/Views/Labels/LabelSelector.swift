@@ -114,7 +114,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			table.layoutIfNeeded()
 			preferredContentSize = table.contentSize
 		} else {
-			preferredContentSize = CGSize(width: 320, height: 240)
+			preferredContentSize = CGSize(width: 240, height: 240)
 		}
 	}
 
@@ -122,5 +122,9 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		didSet {
 			navigationController?.preferredContentSize = preferredContentSize
 		}
+	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+		return .none
 	}
 }

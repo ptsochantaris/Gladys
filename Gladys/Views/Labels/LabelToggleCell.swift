@@ -11,9 +11,9 @@ import UIKit
 final class LabelToggleCell: UITableViewCell {
 	@IBOutlet weak var labelCount: UILabel!
 	@IBOutlet weak var labelName: UILabel!
-	@IBOutlet weak var labelCheck: UIImageView!
 
 	override func setSelected(_ selected: Bool, animated: Bool) {
 		accessoryType = selected ? .checkmark : .none
+		labelName.textColor = selected ? .darkText : .darkGray
 	}
 }
