@@ -104,18 +104,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if let existingItem = dragItem.localObject as? ArchivedDropItem {
 
 				guard
-					let destinationIndexPath = coordinator.destinationIndexPath,
-					let previousIndex = coordinatorItem.sourceIndexPath else { return }
+					let filteredDestinationIndexPath = coordinator.destinationIndexPath,
+					let sourceIndex = model.drops.index(of: existingItem),
+					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { return }
+
+				let destinationIndex = model.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
 
 				collectionView.performBatchUpdates({
-					self.model.drops.remove(at: previousIndex.item)
-					self.model.drops.insert(existingItem, at: destinationIndexPath.item)
+					self.model.drops.remove(at: sourceIndex)
+					self.model.drops.insert(existingItem, at: destinationIndex)
 					self.model.forceUpdateFilter(signalUpdate: false)
-					collectionView.deleteItems(at: [previousIndex])
-					collectionView.insertItems(at: [destinationIndexPath])
+					collectionView.deleteItems(at: [filteredPreviousIndex])
+					collectionView.insertItems(at: [filteredDestinationIndexPath])
 				})
 
-				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				coordinator.drop(dragItem, toItemAt: filteredDestinationIndexPath)
 				needSave = true
 
 			} else {
@@ -188,7 +191,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if countInserts(in: session) > 0 {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
-			if model.isFiltering || model.isFilteringLabels {
+			if model.isFiltering {
 				return UICollectionViewDropProposal(operation: .forbidden)
 			} else {
 				return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
