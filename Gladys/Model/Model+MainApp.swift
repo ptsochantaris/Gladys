@@ -122,6 +122,16 @@ extension Model {
 		Model.labelToggles.sort { $0.name < $1.name }
 	}
 
+	var enabledLabels: [String] {
+		return Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
+	}
+
+	func updateLabel(_ label: LabelToggle) {
+		if let i = Model.labelToggles.index(where: { $0.name == label.name }) {
+			Model.labelToggles[i] = label
+		}
+	}
+
 	var isFiltering: Bool {
 		return Model.currentFilterQuery != nil
 	}
@@ -216,10 +226,6 @@ extension Model {
 			closestItem = filteredDrops[index]
 			return drops.index(of: closestItem) ?? 0
 		}
-	}
-
-	var enabledLabels: [String] {
-		return Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
 	}
 
 	private var postLabelDrops: [ArchivedDropItem] {

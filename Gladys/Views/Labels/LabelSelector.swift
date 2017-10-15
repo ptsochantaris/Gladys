@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDataSource {
+final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet var clearAllButton: UIBarButtonItem!
@@ -18,7 +18,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		super.viewDidLoad()
 		var count = 0
 		var enabled = false
-		for toggle in Model.labelToggles {
+		for toggle in filteredToggles {
 			if toggle.enabled {
 				enabled = true
 				table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
@@ -26,20 +26,29 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			count += 1
 		}
 		clearAllButton.isEnabled = enabled
-		if Model.labelToggles.count == 0 {
+		if filteredToggles.count == 0 {
 			table.isHidden = true
 		} else {
 			emptyLabel.isHidden = true
 		}
+
+		let searchController = UISearchController(searchResultsController: nil)
+		searchController.dimsBackgroundDuringPresentation = false
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.delegate = self
+		searchController.searchResultsUpdater = self
+		searchController.searchBar.tintColor = view.tintColor
+		searchController.hidesNavigationBarDuringPresentation = false
+		navigationItem.searchController = searchController
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return Model.labelToggles.count
+		return filteredToggles.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelToggleCell") as! LabelToggleCell
-		let toggle = Model.labelToggles[indexPath.row]
+		let toggle = filteredToggles[indexPath.row]
 		cell.labelName.text = toggle.name
 		let c = toggle.count
 		if c == 1 {
@@ -48,6 +57,11 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			cell.labelCount.text = "\(c) items"
 		}
 		return cell
+	}
+
+	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		let toggle = filteredToggles[indexPath.row]
+		cell.setSelected(toggle.enabled, animated: false)
 	}
 
 	@IBAction func clearAllSelected(_ sender: UIBarButtonItem) {
@@ -65,9 +79,10 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let newState = !Model.labelToggles[indexPath.row].enabled
-		Model.labelToggles[indexPath.row].enabled = newState
-		if !newState {
+		var newState = filteredToggles[indexPath.row]
+		newState.enabled = !newState.enabled
+		ViewController.shared.model.updateLabel(newState)
+		if !newState.enabled {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
 		updates()
@@ -80,7 +95,8 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
-			let toggle = Model.labelToggles[indexPath.row]
+			guard let s = self else { return }
+			let toggle = s.filteredToggles[indexPath.row]
 			ViewController.shared.model.removeLabel(toggle.name)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
 			if tableView.numberOfRows(inSection: 0) == 0 {
@@ -122,5 +138,27 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		didSet {
 			navigationController?.preferredContentSize = preferredContentSize
 		}
+	}
+
+	/////////////// search
+
+	private var filter = ""
+
+	var filteredToggles: [Model.LabelToggle] {
+		if filter.isEmpty {
+			return Model.labelToggles
+		} else {
+			return Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(filter) }
+		}
+	}
+
+	func willDismissSearchController(_ searchController: UISearchController) {
+		filter = ""
+		table.reloadData()
+	}
+
+	func updateSearchResults(for searchController: UISearchController) {
+		filter = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+		table.reloadData()
 	}
 }

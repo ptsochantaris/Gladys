@@ -40,7 +40,11 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	}
 
 	var filteredToggles: [String] {
-		return Model.labelToggles.flatMap { $0.name.hasPrefix(filter) ? $0.name : nil }
+		if filter.isEmpty {
+			return Model.labelToggles.map { $0.name }
+		} else {
+			return Model.labelToggles.flatMap { $0.name.localizedCaseInsensitiveContains(filter) ? $0.name : nil }
+		}
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
