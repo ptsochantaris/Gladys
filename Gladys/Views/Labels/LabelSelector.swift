@@ -12,6 +12,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet var clearAllButton: UIBarButtonItem!
+	@IBOutlet weak var emptyLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -25,6 +26,11 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			count += 1
 		}
 		clearAllButton.isEnabled = enabled
+		if Model.labelToggles.count == 0 {
+			table.isHidden = true
+		} else {
+			emptyLabel.isHidden = true
+		}
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,6 +73,26 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		updates()
 	}
 
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		return .delete
+	}
+
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label from any item that contains it.", preferredStyle: .alert)
+		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
+			let toggle = Model.labelToggles[indexPath.row]
+			ViewController.shared.model.removeLabel(toggle.name)
+			tableView.deleteRows(at: [indexPath], with: .automatic)
+			if tableView.numberOfRows(inSection: 0) == 0 {
+				tableView.isHidden = true
+				self?.emptyLabel.isHidden = false
+			}
+			self?.sizeWindow()
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+		present(a, animated: true)
+	}
+
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
 		done()
 	}
@@ -84,8 +110,12 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	}
 
 	private func sizeWindow() {
-		table.layoutIfNeeded()
-		preferredContentSize = table.contentSize
+		if table.numberOfRows(inSection: 0) > 0 {
+			table.layoutIfNeeded()
+			preferredContentSize = table.contentSize
+		} else {
+			preferredContentSize = CGSize(width: 320, height: 320)
+		}
 	}
 
 	override var preferredContentSize: CGSize {

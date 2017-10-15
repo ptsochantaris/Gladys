@@ -181,6 +181,23 @@ extension Model {
 		}
 	}
 
+	func removeLabel(_ label : String) {
+		var itemsNeedingReIndex = [ArchivedDropItem]()
+		for i in drops {
+			if i.labels.contains(label) {
+				i.labels = i.labels.filter { $0 != label }
+				itemsNeedingReIndex.append(i)
+			}
+		}
+		if itemsNeedingReIndex.count > 0 {
+			rebuildLabels()
+			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+			reIndex(items: itemsNeedingReIndex) {
+				self.save()
+			}
+		}
+	}
+
 	func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
 		guard isFiltering || isFilteringLabels else {
 			return index
