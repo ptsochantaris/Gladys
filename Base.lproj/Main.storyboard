@@ -234,7 +234,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="BE5-Vu-R9c"/>
                     </view>
                     <navigationItem key="navigationItem" id="chA-4W-j4z">
-                        <barButtonItem key="rightBarButtonItem" title="Clear All" id="odU-hR-vng">
+                        <barButtonItem key="rightBarButtonItem" title="Show All" id="odU-hR-vng">
                             <connections>
                                 <action selector="clearAllSelected:" destination="XPV-LI-EHc" id="E48-hS-zQu"/>
                             </connections>

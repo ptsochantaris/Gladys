@@ -126,11 +126,10 @@ extension Model {
 		}
 		if Model.labelToggles.count > 0 {
 			Model.labelToggles.sort { $0.name < $1.name }
-			if noLabelCount > 0 {
-				let name = "Items with no labels"
-				let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
-				Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
-			}
+			
+			let name = "Items with no labels"
+			let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
+			Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
 		}
 	}
 

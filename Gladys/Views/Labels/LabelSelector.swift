@@ -17,15 +17,13 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		var count = 0
-		var enabled = false
 		for toggle in filteredToggles {
 			if toggle.enabled {
-				enabled = true
 				table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
 			}
 			count += 1
 		}
-		clearAllButton.isEnabled = enabled
+		clearAllButton.isEnabled = ViewController.shared.model.isFilteringLabels
 		if filteredToggles.count == 0 {
 			table.isHidden = true
 			navigationController?.setNavigationBarHidden(true, animated: false)
@@ -166,11 +164,13 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	static private var filter = ""
 
 	var filteredToggles: [Model.LabelToggle] {
+		let items: [Model.LabelToggle]
 		if LabelSelector.filter.isEmpty {
-			return Model.labelToggles
+			items = Model.labelToggles
 		} else {
-			return Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
+			items = Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
 		}
+		return items.filter { !$0.emptyChecker || $0.enabled || $0.count > 0 }
 	}
 
 	func willDismissSearchController(_ searchController: UISearchController) {
