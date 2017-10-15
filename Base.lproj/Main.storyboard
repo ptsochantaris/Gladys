@@ -183,6 +183,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="BIL-f2-cgn" firstAttribute="top" secondItem="fje-lK-u5A" secondAttribute="topMargin" id="2yI-0E-8Cd"/>
                                                 <constraint firstItem="phz-mJ-ghT" firstAttribute="top" secondItem="BIL-f2-cgn" secondAttribute="bottom" id="44Q-3g-rGc"/>
@@ -196,6 +197,7 @@
                                                 <constraint firstItem="phz-mJ-ghT" firstAttribute="leading" secondItem="fje-lK-u5A" secondAttribute="leadingMargin" id="mBl-IY-juQ"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="labelCount" destination="phz-mJ-ghT" id="nvY-FT-gxx"/>
                                             <outlet property="labelName" destination="BIL-f2-cgn" id="9uu-ef-Z0F"/>
@@ -1210,15 +1212,16 @@ Selecting them will show only items that contain these labels.</string>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Label Text" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GVu-Zi-Qac">
                                             <rect key="frame" x="20" y="17" width="200" height="30"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                                             <connections>
                                                 <outlet property="delegate" destination="LcG-xH-YOk" id="rGf-Yw-oqc"/>
                                             </connections>
                                         </textField>
                                     </subviews>
-                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="GVu-Zi-Qac" secondAttribute="trailing" constant="20" id="cQM-bz-4jY"/>
                                         <constraint firstItem="GVu-Zi-Qac" firstAttribute="leading" secondItem="Mic-z7-bJ0" secondAttribute="leading" constant="20" id="nJ4-Wq-b7b"/>
@@ -1240,6 +1243,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="9cb-Wp-vWd" firstAttribute="leading" secondItem="vaV-Ip-Y59" secondAttribute="leadingMargin" id="8bs-3m-Hy2"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="9cb-Wp-vWd" secondAttribute="trailing" id="M2F-PV-7uo"/>
@@ -1247,6 +1251,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <constraint firstAttribute="bottomMargin" secondItem="9cb-Wp-vWd" secondAttribute="bottom" constant="4" id="wDM-8m-bUS"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="labelName" destination="9cb-Wp-vWd" id="GB0-FL-DEg"/>
                                         </connections>
@@ -1269,9 +1274,10 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="Twd-vq-Fdb"/>
                     </view>
                     <navigationItem key="navigationItem" title="Add Label" id="PmO-Cr-LsN"/>
-                    <value key="contentSizeForViewInPopover" type="size" width="240" height="240"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="240" height="380"/>
                     <size key="freeformSize" width="240" height="240"/>
                     <connections>
+                        <outlet property="headerLabel" destination="AtT-St-LNd" id="RVI-Yq-1Zi"/>
                         <outlet property="headerView" destination="zEp-E7-r97" id="b8M-d8-5WA"/>
                         <outlet property="labelText" destination="GVu-Zi-Qac" id="ev5-OV-ycK"/>
                     </connections>
@@ -1282,15 +1288,16 @@ Selecting them will show only items that contain these labels.</string>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Existing Labels" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AtT-St-LNd">
-                            <rect key="frame" x="16" y="13" width="102.5" height="18"/>
+                            <rect key="frame" x="16" y="13" width="208" height="18"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="AtT-St-LNd" firstAttribute="centerY" secondItem="zEp-E7-r97" secondAttribute="centerY" id="7DB-cq-5Pz"/>
+                        <constraint firstItem="rij-Sw-Lt9" firstAttribute="trailing" secondItem="AtT-St-LNd" secondAttribute="trailing" constant="16" id="Ksc-zh-osX"/>
                         <constraint firstItem="AtT-St-LNd" firstAttribute="leading" secondItem="rij-Sw-Lt9" secondAttribute="leading" constant="16" id="moz-LK-2hx"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="rij-Sw-Lt9"/>

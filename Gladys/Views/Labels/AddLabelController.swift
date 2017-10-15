@@ -21,6 +21,7 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	weak var delegate: AddLabelControllerDelegate?
 
 	@IBOutlet var headerView: UIView!
+	@IBOutlet weak var headerLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -29,7 +30,7 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		navigationController?.preferredContentSize = CGSize(width: preferredContentSize.width, height: 240)
+		navigationController?.setNavigationBarHidden(true, animated: false)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -51,7 +52,7 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		labelText.text = Model.labelToggles[indexPath.row].name
 		dirty = true
-		labelText.resignFirstResponder()
+		dismiss(animated: true, completion: nil)
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -63,11 +64,10 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	}
 
 	private var dirty = false
-	private var finished = false
 
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		if string == "\n" {
-			textField.resignFirstResponder()
+			dismiss(animated: true, completion: nil)
 			return false
 		} else {
 			dirty = true
@@ -75,15 +75,15 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 		}
 	}
 
-	func textFieldDidEndEditing(_ textField: UITextField) {
-		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
-		delegate?.addLabelController(self, didEnterLabel: result)
-		dirty = false
-	}
-
 	override func viewWillDisappear(_ animated: Bool) {
 		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
-		delegate?.addLabelController(self, didEnterLabel: result)
 		dirty = false
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.delegate?.addLabelController(self, didEnterLabel: result)
+		}
+	}
+
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		headerLabel.alpha = 2.0 - min(2, max(0, scrollView.contentOffset.y / 48.0))
 	}
 }

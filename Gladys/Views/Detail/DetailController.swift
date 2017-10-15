@@ -389,22 +389,20 @@ final class DetailController: UIViewController,
 
 	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?) {
 
-		addLabelController.dismiss(animated: true, completion: nil)
-
-		guard let indexPath = table.indexPathForSelectedRow else { return }
+		guard let indexPath = self.table.indexPathForSelectedRow else { return }
 		table.deselectRow(at: indexPath, animated: true)
 
 		guard let didEnterLabel = didEnterLabel, !didEnterLabel.isEmpty else { return }
 
 		if indexPath.row < self.item.labels.count {
-			item.labels[indexPath.row] = didEnterLabel
-			table.reloadRows(at: [indexPath], with: .automatic)
+			self.item.labels[indexPath.row] = didEnterLabel
+			self.table.reloadRows(at: [indexPath], with: .automatic)
 		} else {
-			item.labels.append(didEnterLabel)
-			table.insertRows(at: [indexPath], with: .automatic)
+			self.item.labels.append(didEnterLabel)
+			self.table.insertRows(at: [indexPath], with: .automatic)
 		}
 		ViewController.shared.model.rebuildLabels()
-		makeIndexAndSaveItem()
+		self.makeIndexAndSaveItem()
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {

@@ -264,7 +264,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let p = n.popoverPresentationController {
 
 			p.delegate = self
-			p.backgroundColor = patternColor
 		}
 	}
 
