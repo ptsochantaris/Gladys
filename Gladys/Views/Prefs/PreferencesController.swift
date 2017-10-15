@@ -206,12 +206,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 	private func deleteAllItems() {
 		let model = ViewController.shared.model
-		for item in model.drops {
-			item.delete()
-		}
-		model.drops.removeAll()
-		model.save()
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+		model.resetEverything()
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {

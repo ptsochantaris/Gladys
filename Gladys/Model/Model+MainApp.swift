@@ -126,10 +126,11 @@ extension Model {
 		}
 		if Model.labelToggles.count > 0 {
 			Model.labelToggles.sort { $0.name < $1.name }
-
-			let name = "Items with no labels"
-			let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
-			Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+			if noLabelCount > 0 {
+				let name = "Items with no labels"
+				let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
+				Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+			}
 		}
 	}
 
@@ -255,6 +256,18 @@ extension Model {
 			}
 			return false
 		}
+	}
+
+	func resetEverything() {
+		for item in drops {
+			item.delete()
+		}
+		drops.removeAll()
+		rebuildLabels()
+		Model.modelFilter = nil
+		Model.cachedFilteredDrops = nil
+		save()
+		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	var filteredDrops: [ArchivedDropItem] {

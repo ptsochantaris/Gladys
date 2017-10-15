@@ -126,9 +126,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: dataIndex)
-					if model.isFilteringLabels {
-						self.model.forceUpdateFilter(signalUpdate: false)
-					}
+					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -445,6 +443,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
 			title = "Gladys"
 		}
+		labelsButton.isEnabled = model.drops.count > 0
 	}
 
 	private func blurb(_ message: String) {
