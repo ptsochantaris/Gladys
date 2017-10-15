@@ -115,7 +115,8 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 	}
 
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-		return .delete
+		let toggle = filteredToggles[indexPath.row]
+		return toggle.emptyChecker ? .none : .delete
 	}
 
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -124,12 +125,13 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
 			guard let s = self else { return }
 			ViewController.shared.model.removeLabel(toggle.name)
-			tableView.deleteRows(at: [indexPath], with: .automatic)
 			if Model.labelToggles.count == 0 {
 				tableView.isHidden = true
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
 				s.navigationController?.setNavigationBarHidden(true, animated: false)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .automatic)
 			}
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 				s.sizeWindow()

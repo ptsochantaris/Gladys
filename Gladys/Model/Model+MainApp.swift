@@ -211,6 +211,7 @@ extension Model {
 				itemsNeedingReIndex.append(i)
 			}
 		}
+		rebuildLabels()
 		if itemsNeedingReIndex.count > 0 {
 			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 			reIndex(items: itemsNeedingReIndex) {

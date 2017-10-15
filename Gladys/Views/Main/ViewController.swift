@@ -301,7 +301,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		model.beginMonitoringChanges()
 
-		navigationItem.rightBarButtonItem = editButtonItem
+		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
@@ -340,6 +340,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
+		n.addObserver(self, selector: #selector(pasteboardChange), name: .UIPasteboardChanged, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -349,6 +350,32 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
+	}
+
+	@IBOutlet weak var pasteButton: UIBarButtonItem!
+
+	@objc private func pasteboardChange() {
+		pasteButton.isEnabled = UIPasteboard.general.itemProviders.count > 0
+	}
+
+	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
+		let item = ArchivedDropItem(providers: UIPasteboard.general.itemProviders, delegate: self)
+		var dataIndex = model.filteredDrops.count
+		let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+
+		if model.isFilteringLabels {
+			dataIndex = model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+			item.labels = model.enabledLabels
+		}
+
+		archivedItemCollectionView.performBatchUpdates({
+			self.model.drops.insert(item, at: dataIndex)
+			self.model.forceUpdateFilter(signalUpdate: false)
+			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+		})
+
+		loadCount += 1
+		startBgTaskIfNeeded()
 	}
 
 	private func checkForUpgrade() {

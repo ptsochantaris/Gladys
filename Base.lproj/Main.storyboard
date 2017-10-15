@@ -127,20 +127,26 @@
                                     </segue>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="labels-unselected" id="rde-vn-hL8">
+                            <barButtonItem image="paste" id="jsK-Yx-Re8">
                                 <connections>
-                                    <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <action selector="pasteSelected:" destination="BYZ-38-t0r" id="Z8T-pE-mzS"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" image="labels-unselected" id="rde-vn-hL8">
+                            <connections>
+                                <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="archivedItemCollectionView" destination="90w-Xn-bmO" id="f5y-Uh-ajj"/>
                         <outlet property="deleteButton" destination="MyX-3U-Yhw" id="eUh-ub-Ifp"/>
                         <outlet property="labelsButton" destination="rde-vn-hL8" id="JRS-KK-Z2o"/>
+                        <outlet property="pasteButton" destination="jsK-Yx-Re8" id="yO8-FE-HnX"/>
                         <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
                         <segue destination="Oc1-Re-hdt" kind="popoverPresentation" identifier="showDetail" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorView="90w-Xn-bmO" id="OWZ-Tj-VMX">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -234,7 +240,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="BE5-Vu-R9c"/>
                     </view>
                     <navigationItem key="navigationItem" id="chA-4W-j4z">
-                        <barButtonItem key="rightBarButtonItem" title="Show All" id="odU-hR-vng">
+                        <barButtonItem key="rightBarButtonItem" title="Show All Items" id="odU-hR-vng">
                             <connections>
                                 <action selector="clearAllSelected:" destination="XPV-LI-EHc" id="E48-hS-zQu"/>
                             </connections>
@@ -1332,6 +1338,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconDeleteSmall" width="18" height="22"/>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>
+        <image name="paste" width="22" height="28"/>
         <image name="settings" width="23" height="22"/>
         <image name="zip" width="20" height="28"/>
     </resources>
