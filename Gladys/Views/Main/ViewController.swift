@@ -77,16 +77,21 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return cell
 	}
 
-	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-
-		let insertCount = countInserts(in: coordinator.session)
+	private func checkInfiniteMode(for insertCount: Int) -> Bool {
 		if !infiniteMode && insertCount > 0 {
-
 			let newTotal = model.drops.count + insertCount
 			if newTotal > nonInfiniteItemLimit {
 				displayIAPRequest(newTotal: newTotal)
-				return
+				return true
 			}
+		}
+		return false
+	}
+
+	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+
+		if checkInfiniteMode(for: countInserts(in: coordinator.session)) {
+			return
 		}
 
 		var needSave = false
@@ -341,6 +346,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(pasteboardChange), name: .UIPasteboardChanged, object: nil)
+		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -350,6 +356,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
+		pasteboardChange()
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
@@ -359,23 +366,32 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
+
+		if checkInfiniteMode(for: 1) {
+			return
+		}
+
 		let item = ArchivedDropItem(providers: UIPasteboard.general.itemProviders, delegate: self)
-		var dataIndex = model.filteredDrops.count
-		let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
 		if model.isFilteringLabels {
-			dataIndex = model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
 			item.labels = model.enabledLabels
 		}
 
 		archivedItemCollectionView.performBatchUpdates({
-			self.model.drops.insert(item, at: dataIndex)
+			self.model.drops.insert(item, at: 0)
 			self.model.forceUpdateFilter(signalUpdate: false)
+			let destinationIndexPath = IndexPath(item: 0, section: 0)
 			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
 		})
 
 		loadCount += 1
 		startBgTaskIfNeeded()
+	}
+
+	@objc private func detailViewClosing() {
+		if model.isFilteringLabels {
+			model.forceUpdateFilter(signalUpdate: true)
+		}
 	}
 
 	private func checkForUpgrade() {

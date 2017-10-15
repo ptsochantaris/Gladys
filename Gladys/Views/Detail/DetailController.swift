@@ -45,6 +45,13 @@ final class DetailController: UIViewController,
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		if navigationController?.isBeingDismissed ?? false {
+			NotificationCenter.default.post(name: .DetailViewClosing, object: nil)
+		}
+	}
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		sizeWindow()
