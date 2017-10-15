@@ -210,8 +210,8 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOj-EL-dRw">
-                                <rect key="frame" x="30" y="44" width="180" height="196"/>
-                                <string key="text">Labels which you add to items will appear in this panel. 
+                                <rect key="frame" x="30" y="0.0" width="180" height="240"/>
+                                <string key="text">You can add labels to items, and they will appear here.
 
 Selecting them will show only items that contain these labels.</string>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
@@ -222,9 +222,9 @@ Selecting them will show only items that contain these labels.</string>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="BE5-Vu-R9c" firstAttribute="bottom" secondItem="9At-u8-ZrJ" secondAttribute="bottom" id="8Jj-3h-ghd"/>
-                            <constraint firstItem="BE5-Vu-R9c" firstAttribute="bottom" secondItem="YOj-EL-dRw" secondAttribute="bottom" id="XrU-AJ-Z0Q"/>
+                            <constraint firstAttribute="bottom" secondItem="YOj-EL-dRw" secondAttribute="bottom" id="XrU-AJ-Z0Q"/>
                             <constraint firstItem="9At-u8-ZrJ" firstAttribute="leading" secondItem="BE5-Vu-R9c" secondAttribute="leading" id="bcc-80-aIw"/>
-                            <constraint firstItem="YOj-EL-dRw" firstAttribute="top" secondItem="BE5-Vu-R9c" secondAttribute="top" id="igw-jh-xkC"/>
+                            <constraint firstItem="YOj-EL-dRw" firstAttribute="top" secondItem="9l2-YE-hbb" secondAttribute="top" id="igw-jh-xkC"/>
                             <constraint firstItem="9At-u8-ZrJ" firstAttribute="top" secondItem="BE5-Vu-R9c" secondAttribute="top" id="mHF-Ew-hTT"/>
                             <constraint firstItem="BE5-Vu-R9c" firstAttribute="trailing" secondItem="YOj-EL-dRw" secondAttribute="trailing" constant="30" id="nAK-Pm-IqA"/>
                             <constraint firstItem="YOj-EL-dRw" firstAttribute="leading" secondItem="BE5-Vu-R9c" secondAttribute="leading" constant="30" id="s4Z-TV-i9z"/>
@@ -1112,7 +1112,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1210,7 +1210,7 @@ Selecting them will show only items that contain these labels.</string>
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="65"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Label Text" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GVu-Zi-Qac">
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GVu-Zi-Qac">
                                             <rect key="frame" x="20" y="17" width="200" height="30"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="textColor"/>

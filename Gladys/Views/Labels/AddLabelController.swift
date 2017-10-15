@@ -32,6 +32,9 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: false)
+
+		let h: CGFloat = Model.labelToggles.count == 0 ? 67 : 320
+		preferredContentSize = CGSize(width: preferredContentSize.width, height: h)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -44,6 +47,14 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 			return Model.labelToggles.map { $0.name }
 		} else {
 			return Model.labelToggles.flatMap { $0.name.localizedCaseInsensitiveContains(filter) ? $0.name : nil }
+		}
+	}
+
+	func numberOfSections(in tableView: UITableView) -> Int {
+		if Model.labelToggles.count == 0 {
+			return 0
+		} else {
+			return 1
 		}
 	}
 

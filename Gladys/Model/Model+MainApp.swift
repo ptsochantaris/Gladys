@@ -366,6 +366,7 @@ extension Model {
 		DispatchQueue.main.async {
 			if itemsImported > 0 {
 				self.save()
+				self.rebuildLabels()
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			}
 			completion(true)

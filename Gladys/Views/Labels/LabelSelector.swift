@@ -28,21 +28,23 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		clearAllButton.isEnabled = enabled
 		if filteredToggles.count == 0 {
 			table.isHidden = true
+			navigationController?.setNavigationBarHidden(true, animated: false)
+
 		} else {
 			emptyLabel.isHidden = true
+
+			let searchController = UISearchController(searchResultsController: nil)
+			searchController.dimsBackgroundDuringPresentation = false
+			searchController.obscuresBackgroundDuringPresentation = false
+			searchController.delegate = self
+			searchController.searchResultsUpdater = self
+			searchController.searchBar.tintColor = view.tintColor
+			searchController.hidesNavigationBarDuringPresentation = false
+			navigationItem.hidesSearchBarWhenScrolling = false
+			navigationItem.searchController = searchController
 		}
 
 		table.tableFooterView = UIView()
-
-		let searchController = UISearchController(searchResultsController: nil)
-		searchController.dimsBackgroundDuringPresentation = false
-		searchController.obscuresBackgroundDuringPresentation = false
-		searchController.delegate = self
-		searchController.searchResultsUpdater = self
-		searchController.searchBar.tintColor = view.tintColor
-		searchController.hidesNavigationBarDuringPresentation = false
-		navigationItem.hidesSearchBarWhenScrolling = false
-		navigationItem.searchController = searchController
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -50,7 +52,6 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 		if !LabelSelector.filter.isEmpty {
 			navigationItem.searchController?.searchBar.text = LabelSelector.filter
 			navigationItem.searchController?.isActive = true
-			table.contentOffset = .zero
 		}
 		sizeWindow()
 	}
@@ -130,6 +131,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 				tableView.isHidden = true
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
+				s.navigationController?.setNavigationBarHidden(true, animated: false)
 			}
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 				s.sizeWindow()
