@@ -126,7 +126,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 				if model.isFilteringLabels {
 					dataIndex = model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-					item.labels = model.enabledLabels
+					item.labels = model.enabledLabelsForItems
 				}
 
 				collectionView.performBatchUpdates({
@@ -267,6 +267,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			let p = n.popoverPresentationController {
 
 			p.delegate = self
+			if isEditing {
+				setEditing(false, animated: true)
+			}
 		}
 	}
 
@@ -374,7 +377,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		let item = ArchivedDropItem(providers: UIPasteboard.general.itemProviders, delegate: self)
 
 		if model.isFilteringLabels {
-			item.labels = model.enabledLabels
+			item.labels = model.enabledLabelsForItems
 		}
 
 		archivedItemCollectionView.performBatchUpdates({
@@ -481,7 +484,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	private func updateLabelIcon() {
 		if model.isFilteringLabels {
 			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
-			title = model.enabledLabels.joined(separator: ", ")
+			title = model.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
 			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
 			title = "Gladys"

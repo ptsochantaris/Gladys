@@ -134,7 +134,11 @@ extension Model {
 		}
 	}
 
-	var enabledLabels: [String] {
+	var enabledLabelsForItems: [String] {
+		return Model.labelToggles.flatMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
+	}
+
+	var enabledLabelsForTitles: [String] {
 		return Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
 	}
 
