@@ -1280,6 +1280,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="headerLabel" destination="AtT-St-LNd" id="RVI-Yq-1Zi"/>
                         <outlet property="headerView" destination="zEp-E7-r97" id="b8M-d8-5WA"/>
                         <outlet property="labelText" destination="GVu-Zi-Qac" id="ev5-OV-ycK"/>
+                        <outlet property="table" destination="4al-cC-IGv" id="HDn-ja-4tW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X48-NN-Ja9" userLabel="First Responder" sceneMemberID="firstResponder"/>

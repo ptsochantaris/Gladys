@@ -15,6 +15,7 @@ protocol AddLabelControllerDelegate: class {
 final class AddLabelController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
 	@IBOutlet weak var labelText: UITextField!
+	@IBOutlet weak var table: UITableView!
 
 	var label: String?
 
@@ -38,19 +39,23 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 		labelText.becomeFirstResponder()
 	}
 
+	var filteredToggles: [String] {
+		return Model.labelToggles.flatMap { $0.name.hasPrefix(filter) ? $0.name : nil }
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return Model.labelToggles.count
+		return filteredToggles.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelListCell") as! LabelListCell
-		let toggle = Model.labelToggles[indexPath.row]
-		cell.labelName.text = toggle.name
+		let toggle = filteredToggles[indexPath.row]
+		cell.labelName.text = toggle
 		return cell
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		labelText.text = Model.labelToggles[indexPath.row].name
+		labelText.text = filteredToggles[indexPath.row]
 		dirty = true
 		dismiss(animated: true, completion: nil)
 	}
@@ -71,7 +76,21 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 			return false
 		} else {
 			dirty = true
+			if let t = textField.text as NSString? {
+				filter = t.replacingCharacters(in: range, with: string)
+				if filter.isEmpty {
+					headerLabel.text = "Existing Labels"
+				} else {
+					headerLabel.text = "Suggested"
+				}
+			}
 			return true
+		}
+	}
+
+	var filter = "" {
+		didSet {
+			table.reloadData()
 		}
 	}
 
