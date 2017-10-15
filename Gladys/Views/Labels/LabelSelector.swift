@@ -123,8 +123,4 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			navigationController?.preferredContentSize = preferredContentSize
 		}
 	}
-
-	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-		return .none
-	}
 }

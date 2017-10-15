@@ -218,7 +218,48 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showLabels",
+
+		if segue.identifier == "showPreferences",
+			let n = segue.destination as? UINavigationController,
+			let d = n.topViewController as? PreferencesController,
+			let p = n.popoverPresentationController {
+
+			p.permittedArrowDirections = [.any]
+			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
+			p.sourceView = navigationController!.view
+			p.delegate = self
+			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
+			if traitCollection.horizontalSizeClass == .regular {
+				p.backgroundColor = c
+				d.navigationItem.rightBarButtonItem = nil
+			} else {
+				n.view.backgroundColor = c
+			}
+
+		} else if segue.identifier == "showDetail",
+			let item = sender as? ArchivedDropItem,
+			let index = model.filteredDrops.index(of: item),
+			let n = segue.destination as? UINavigationController,
+			let d = n.topViewController as? DetailController,
+			let p = n.popoverPresentationController {
+
+			d.item = item
+			let indexPath = IndexPath(item: index, section: 0)
+			if let cell = archivedItemCollectionView.cellForItem(at: indexPath) {
+				p.permittedArrowDirections = [.any]
+				p.sourceView = cell
+				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
+				p.delegate = self
+				let c = patternColor
+				if traitCollection.horizontalSizeClass == .regular {
+					p.backgroundColor = c
+					d.navigationItem.rightBarButtonItem = nil
+				} else {
+					n.view.backgroundColor = c
+				}
+			}
+
+		} else if segue.identifier == "showLabels",
 			let n = segue.destination as? UINavigationController,
 			let p = n.popoverPresentationController {
 
@@ -247,44 +288,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			return
 		}
 
-		let n = storyboard?.instantiateViewController(withIdentifier: "DetailController") as! UINavigationController
-		let d = n.topViewController as! DetailController
-		d.item = item
-		n.modalPresentationStyle = .popover
-		navigationController?.visibleViewController?.present(n, animated: true)
-		if let p = n.popoverPresentationController, let cell = collectionView.cellForItem(at: indexPath) {
-			p.permittedArrowDirections = [.any]
-			p.sourceView = cell
-			p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
-			p.delegate = self
-			let c = patternColor
-			if traitCollection.horizontalSizeClass == .regular {
-				p.backgroundColor = c
-				d.navigationItem.rightBarButtonItem = nil
-			} else {
-				n.view.backgroundColor = c
-			}
-		}
-	}
-
-	@IBAction func settingsSelected(_ sender: UIBarButtonItem) {
-		let n = storyboard?.instantiateViewController(withIdentifier: "PreferencesController") as! UINavigationController
-		let d = n.topViewController as! PreferencesController
-		n.modalPresentationStyle = .popover
-		navigationController?.visibleViewController?.present(n, animated: true)
-		if let p = n.popoverPresentationController {
-			p.permittedArrowDirections = [.any]
-			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
-			p.sourceView = navigationController!.view
-			p.delegate = self
-			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
-			if traitCollection.horizontalSizeClass == .regular {
-				p.backgroundColor = c
-				d.navigationItem.rightBarButtonItem = nil
-			} else {
-				n.view.backgroundColor = c
-			}
-		}
+		performSegue(withIdentifier: "showDetail", sender: item)
 	}
 
 	override func awakeFromNib() {
@@ -912,5 +916,18 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		if let n = controller.presentedViewController as? UINavigationController, n.topViewController is LabelSelector {
+			return .none
+		} else {
+			return .overCurrentContext
+		}
+	}
 }
 
+final class ShowDetailSegue: UIStoryboardSegue {
+	override func perform() {
+		(source.presentedViewController ?? source).present(destination, animated: true)
+	}
+}
