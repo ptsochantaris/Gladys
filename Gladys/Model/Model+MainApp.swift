@@ -21,6 +21,7 @@ extension Model {
 			log("Starting save queue background task")
 			Model.saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
 		}
+		rebuildLabels()
 	}
 
 	func startupComplete() {
@@ -101,7 +102,7 @@ extension Model {
 		}
 	}
 
-	func rebuildLabels() {
+	private func rebuildLabels() {
 		var counts = [String:Int]()
 		var noLabelCount = 0
 		for item in drops {
@@ -211,7 +212,6 @@ extension Model {
 			}
 		}
 		if itemsNeedingReIndex.count > 0 {
-			rebuildLabels()
 			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 			reIndex(items: itemsNeedingReIndex) {
 				self.save()
@@ -262,7 +262,6 @@ extension Model {
 			item.delete()
 		}
 		drops.removeAll()
-		rebuildLabels()
 		Model.modelFilter = nil
 		Model.cachedFilteredDrops = nil
 		save()
@@ -365,7 +364,6 @@ extension Model {
 		DispatchQueue.main.async {
 			if itemsImported > 0 {
 				self.save()
-				self.rebuildLabels()
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			}
 			completion(true)

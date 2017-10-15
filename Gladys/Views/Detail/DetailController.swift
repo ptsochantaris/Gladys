@@ -203,7 +203,6 @@ final class DetailController: UIViewController,
 		if editingStyle == .delete {
 			item.labels.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
-			ViewController.shared.model.rebuildLabels()
 			ViewController.shared.model.save()
 		}
 	}
@@ -336,13 +335,11 @@ final class DetailController: UIViewController,
 								tableView.performBatchUpdates({
 									tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
 								})
-								ViewController.shared.model.rebuildLabels()
 								self.makeIndexAndSaveItem()
 							}
 						}
 					})
 				} else {
-					ViewController.shared.model.rebuildLabels()
 					self.makeIndexAndSaveItem()
 				}
 
@@ -402,7 +399,6 @@ final class DetailController: UIViewController,
 			self.item.labels.append(didEnterLabel)
 			self.table.insertRows(at: [indexPath], with: .automatic)
 		}
-		ViewController.shared.model.rebuildLabels()
 		self.makeIndexAndSaveItem()
 	}
 
