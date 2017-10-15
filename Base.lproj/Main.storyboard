@@ -571,7 +571,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <rect key="frame" x="24" y="4" width="272" height="71.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FVY-cq-wvt">
-                                                            <rect key="frame" x="12" y="8" width="248" height="55.5"/>
+                                                            <rect key="frame" x="14" y="8" width="244" height="55.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -581,8 +581,8 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraints>
                                                         <constraint firstItem="FVY-cq-wvt" firstAttribute="top" secondItem="dJ8-xe-pgl" secondAttribute="topMargin" id="2QD-kR-y09"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="FVY-cq-wvt" secondAttribute="bottom" id="3cp-Q8-rot"/>
-                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="leading" secondItem="dJ8-xe-pgl" secondAttribute="leadingMargin" id="ChC-LF-vg0"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="FVY-cq-wvt" secondAttribute="trailing" id="eOQ-jd-yj3"/>
+                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="leading" secondItem="dJ8-xe-pgl" secondAttribute="leadingMargin" constant="2" id="ChC-LF-vg0"/>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="FVY-cq-wvt" secondAttribute="trailing" constant="2" id="eOQ-jd-yj3"/>
                                                     </constraints>
                                                     <edgeInsets key="layoutMargins" top="8" left="12" bottom="8" right="12"/>
                                                 </view>

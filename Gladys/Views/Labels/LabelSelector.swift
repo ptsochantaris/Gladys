@@ -114,7 +114,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			table.layoutIfNeeded()
 			preferredContentSize = table.contentSize
 		} else {
-			preferredContentSize = CGSize(width: 320, height: 320)
+			preferredContentSize = CGSize(width: 320, height: 240)
 		}
 	}
 

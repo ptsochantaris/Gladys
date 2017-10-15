@@ -374,6 +374,7 @@ final class DetailController: UIViewController, UITableViewDelegate, UITableView
 		let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
 
 		a.addTextField { field in
+			field.autocapitalizationType = .sentences
 			field.placeholder = "Label Text"
 			field.text = existingText
 		}
