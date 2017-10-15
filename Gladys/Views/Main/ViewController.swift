@@ -388,6 +388,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			self.model.forceUpdateFilter(signalUpdate: false)
 			let destinationIndexPath = IndexPath(item: 0, section: 0)
 			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+			archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
 		})
 
 		loadCount += 1
