@@ -82,6 +82,15 @@ final class DetailController: UIViewController,
 		present(a, animated: true)
 	}
 
+	@IBAction func copySelected(_ sender: UIBarButtonItem) {
+		item.copyToPasteboard()
+		let a = UIAlertController(title: nil, message: "Copied to clipboard", preferredStyle: .alert)
+		present(a, animated: true)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			a.dismiss(animated: true)
+		}
+	}
+
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {
 		item.tryOpen(in: navigationController!)
 	}

@@ -34,15 +34,21 @@ extension ArchivedDropItem {
 		return currentItem
 	}
 
-	var dragItem: UIDragItem {
-
+	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = suggestedName
-		typeItems.forEach { $0.registerForDrag(with: p) }
+		typeItems.forEach { $0.register(with: p) }
+		return p
+	}
 
-		let i = UIDragItem(itemProvider: p)
+	var dragItem: UIDragItem {
+		let i = UIDragItem(itemProvider: itemProvider)
 		i.localObject = self
 		return i
+	}
+
+	func copyToPasteboard() {
+		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
 	}
 
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {

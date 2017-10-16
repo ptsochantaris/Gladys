@@ -9,14 +9,14 @@ extension ArchivedDropItemType {
 
 		let p = NSItemProvider()
 		p.suggestedName = oneTitle
-		registerForDrag(with: p)
+		register(with: p)
 
 		let i = UIDragItem(itemProvider: p)
 		i.localObject = self
 		return i
 	}
 
-	func registerForDrag(with provider: NSItemProvider) {
+	func register(with provider: NSItemProvider) {
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
 			let p = Progress(totalUnitCount: 1)
 			p.completedUnitCount = 1
