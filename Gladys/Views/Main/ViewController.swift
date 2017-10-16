@@ -358,7 +358,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		let providers = UIPasteboard.general.itemProviders
 		if providers.count == 0 {
-			genericAlert(title: "Clipboard Empty", message: "There is currently nothing in the clipboard.", on: self)
+			genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
 			return
 		}
 
@@ -397,8 +397,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if previousBuild != currentBuild {
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
-			// Not needed since 1.0.4
-			//model.reIndex(items: model.drops, completion: nil)
+			model.reIndex(items: model.drops, completion: nil)
 		}
 	}
 

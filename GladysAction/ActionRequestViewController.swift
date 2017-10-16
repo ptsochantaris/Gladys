@@ -20,6 +20,8 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	@IBOutlet weak var imageDistance: NSLayoutConstraint!
 	@IBOutlet weak var expandButton: UIButton!
 
+	private var newItems = [ArchivedDropItem]()
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
@@ -46,6 +48,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 				itemCount += providers.count
 				let newItem = ArchivedDropItem(providers: providers, delegate: self)
 				model.drops.insert(newItem, at: 0)
+				newItems.append(newItem)
 			}
 		}
 
@@ -91,8 +94,10 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		if loadCount == 0 {
 			statusLabel?.text = "Saving..."
 			cancelButton?.isEnabled = false
-			model.save()
-			extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+			model.reIndex(items: newItems) {
+				self.model.save()
+				self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+			}
 		}
 	}
 }

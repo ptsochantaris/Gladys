@@ -69,6 +69,8 @@
 		169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
+		16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -996,6 +998,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1604A3351F091D79005A477E /* Types.swift in Sources */,
+				16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
 				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
@@ -1004,6 +1007,7 @@
 				16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */,
+				16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */,
 				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
