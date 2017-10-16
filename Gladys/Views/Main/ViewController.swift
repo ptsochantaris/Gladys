@@ -113,7 +113,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				collectionView.performBatchUpdates({
 					self.model.drops.remove(at: sourceIndex)
 					self.model.drops.insert(existingItem, at: destinationIndex)
-					self.model.forceUpdateFilter(signalUpdate: false, completion: nil)
+					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.deleteItems(at: [filteredPreviousIndex])
 					collectionView.insertItems(at: [filteredDestinationIndexPath])
 				})
@@ -132,9 +132,10 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 					item.labels = model.enabledLabelsForItems
 				}
 
+				// TODO: can reorider text search now
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: dataIndex)
-					self.model.forceUpdateFilter(signalUpdate: false, completion: nil)
+					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
@@ -183,11 +184,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		if countInserts(in: session) > 0 {
 			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		} else {
-			if model.isFiltering {
-				return UICollectionViewDropProposal(operation: .forbidden)
-			} else {
-				return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-			}
+			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 		}
 	}
 
@@ -343,7 +340,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
-		n.addObserver(self, selector: #selector(detailViewClosing(_:)), name: .DetailViewClosing, object: nil)
+		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -379,7 +376,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		archivedItemCollectionView.performBatchUpdates({
 			self.model.drops.insert(item, at: 0)
-			self.model.forceUpdateFilter(signalUpdate: false, completion: nil)
+			self.model.forceUpdateFilter(signalUpdate: false)
 			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
 		})
 
@@ -390,14 +387,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		startBgTaskIfNeeded()
 	}
 
-	@objc private func detailViewClosing(_ notification: Notification) {
-		if let dirty = notification.userInfo?["dirty"] as? Bool, dirty {
-			model.forceUpdateFilter(signalUpdate: true) {
-				if self.model.filteredDrops.count == 0 {
-					self.resetSearch(andLabels: true)
-				}
-			}
-		}
+	@objc private func detailViewClosing() {
+		ensureNoEmptySearchResult()
 	}
 
 	private func checkForUpgrade() {
@@ -438,11 +429,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func externalDataUpdate() {
-		model.forceUpdateFilter(signalUpdate: true) {
-			self.didUpdateItems()
-			self.updateEmptyView(animated: true)
-			self.syncModal()
-		}
+		model.forceUpdateFilter(signalUpdate: false) // will force below
+		searchUpdated()
+		didUpdateItems()
+		updateEmptyView(animated: true)
+		syncModal()
 	}
 
 	private func syncModal() {
@@ -481,9 +472,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	@objc private func labelSelectionChanged() {
-		model.forceUpdateFilter(signalUpdate: true) {
-			self.updateLabelIcon()
-		}
+		model.forceUpdateFilter(signalUpdate: true)
+		updateLabelIcon()
 	}
 
 	private func updateLabelIcon() {
@@ -714,18 +704,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		model.save()
 
-		if model.isFilteringLabels || model.isFiltering {
-			model.forceUpdateFilter(signalUpdate: true) {
-				self.deleteCompletion()
-			}
-		} else {
-			deleteCompletion()
-		}
-	}
+		ensureNoEmptySearchResult()
 
-	private func deleteCompletion() {
 		if model.filteredDrops.count == 0 {
-			resetSearch(andLabels: true)
 			updateEmptyView(animated: true)
 			if isEditing {
 				view.layoutIfNeeded()
@@ -736,6 +717,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if isEditing {
 				setEditing(false, animated: true)
 			}
+		}
+	}
+
+	private func ensureNoEmptySearchResult() {
+		model.forceUpdateFilter(signalUpdate: true)
+		if model.filteredDrops.count == 0 && (model.isFilteringText || model.isFilteringLabels) {
+			resetSearch(andLabels: true)
 		}
 	}
 
@@ -822,8 +810,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if andLabels {
 				model.disableAllLabels()
 				updateLabelIcon()
-				if model.filter == nil {
-					model.forceUpdateFilter(signalUpdate: true, completion: nil)
+				if model.filter == nil { // because the next line won't have any effect if its already nil
+					model.forceUpdateFilter(signalUpdate: true)
 				}
 			}
 

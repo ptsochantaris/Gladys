@@ -148,7 +148,7 @@ extension Model {
 		}
 	}
 
-	var isFiltering: Bool {
+	var isFilteringText: Bool {
 		return Model.currentFilterQuery != nil
 	}
 
@@ -160,52 +160,56 @@ extension Model {
 			guard Model.modelFilter != newValue else {
 				return
 			}
-			forceUpdateFilter(with: newValue, signalUpdate: true, completion: nil)
+			forceUpdateFilter(with: newValue, signalUpdate: true)
 		}
 	}
 
-	func forceUpdateFilter(signalUpdate: Bool, completion: (()->Void)?) {
-		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate, completion: completion)
+	func forceUpdateFilter(signalUpdate: Bool) {
+		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate)
 	}
 
-	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool, completion: (()->Void)?) {
-		Model.currentFilterQuery?.cancel()
+	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
+		Model.currentFilterQuery = nil
 		Model.modelFilter = newValue
 
+		let olduuids = filteredUuids
+
 		if let f = filter, !f.isEmpty {
-			Model.cachedFilteredDrops = []
+
+			var replacementResults = [String]()
+
+			let group = DispatchGroup()
+			group.enter()
+
 			let criterion = "\"*\(f)*\"cd"
 			let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
 			q.foundItemsHandler = { items in
-				DispatchQueue.main.async {
-					let uuids = items.map { $0.uniqueIdentifier }
-					let items = self.postLabelDrops.filter { uuids.contains($0.uuid.uuidString) }
-					Model.cachedFilteredDrops?.append(contentsOf: items)
-					if signalUpdate {
-						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-					}
-				}
+				let uuids = items.map { $0.uniqueIdentifier }
+				replacementResults.append(contentsOf: uuids)
 			}
 			q.completionHandler = { error in
 				if let error = error {
 					log("Search error: \(error.localizedDescription)")
 				}
-				DispatchQueue.main.async {
-					if signalUpdate, Model.cachedFilteredDrops?.isEmpty ?? true {
-						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-					}
-					completion?()
-				}
+				group.leave()
 			}
 			Model.currentFilterQuery = q
+
 			q.start()
+			group.wait()
+
+			Model.cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
 		} else {
 			Model.cachedFilteredDrops = postLabelDrops
-			Model.currentFilterQuery = nil
-			if signalUpdate {
-				NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
-			}
 		}
+
+		if signalUpdate && olduuids != filteredUuids {
+			NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+		}
+	}
+
+	private var filteredUuids: [String] {
+		return Model.cachedFilteredDrops?.map({ $0.uuid.uuidString }) ?? []
 	}
 
 	func removeLabel(_ label : String) {
@@ -226,7 +230,7 @@ extension Model {
 	}
 
 	func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
-		guard isFiltering || isFilteringLabels else {
+		guard isFilteringText || isFilteringLabels else {
 			return index
 		}
 		if drops.count == 0 {

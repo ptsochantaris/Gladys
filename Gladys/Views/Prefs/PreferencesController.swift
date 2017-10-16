@@ -205,8 +205,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 	}
 
 	private func deleteAllItems() {
-		let model = ViewController.shared.model
-		model.resetEverything()
+		ViewController.shared.model.resetEverything()
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {

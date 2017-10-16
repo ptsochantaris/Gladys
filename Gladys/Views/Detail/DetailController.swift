@@ -5,12 +5,7 @@ final class DetailController: UIViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
 	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
 
-	var item: ArchivedDropItem! {
-		didSet {
-			updatedAt = item.updatedAt
-		}
-	}
-	private var updatedAt = Date.distantPast
+	var item: ArchivedDropItem!
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet weak var openButton: UIBarButtonItem!
@@ -53,7 +48,7 @@ final class DetailController: UIViewController,
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		if navigationController?.isBeingDismissed ?? false {
-			NotificationCenter.default.post(name: .DetailViewClosing, object: nil, userInfo: ["dirty": updatedAt != item.updatedAt])
+			NotificationCenter.default.post(name: .DetailViewClosing, object: nil, userInfo: nil)
 		}
 	}
 
@@ -94,7 +89,6 @@ final class DetailController: UIViewController,
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
-			self.updatedAt = self.item.updatedAt // ensure not dirty, will be deleted otherwise
 			NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
