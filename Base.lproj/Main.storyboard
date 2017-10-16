@@ -1344,7 +1344,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>
         <image name="paste" width="22" height="28"/>
-        <image name="pasteSmall" width="18" height="22"/>
+        <image name="pasteSmall" width="16" height="22"/>
         <image name="settings" width="23" height="22"/>
         <image name="zip" width="20" height="28"/>
     </resources>
