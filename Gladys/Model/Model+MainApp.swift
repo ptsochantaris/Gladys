@@ -87,7 +87,7 @@ extension Model {
 	static var labelToggles = [LabelToggle]()
 
 	var isFilteringLabels: Bool {
-		return Model.labelToggles.contains(where: { $0.enabled })
+		return Model.labelToggles.contains { $0.enabled }
 	}
 
 	func disableAllLabels() {
@@ -160,15 +160,15 @@ extension Model {
 			guard Model.modelFilter != newValue else {
 				return
 			}
-			forceUpdateFilter(with: newValue, signalUpdate: true)
+			forceUpdateFilter(with: newValue, signalUpdate: true, completion: nil)
 		}
 	}
 
-	func forceUpdateFilter(signalUpdate: Bool) {
-		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate)
+	func forceUpdateFilter(signalUpdate: Bool, completion: (()->Void)?) {
+		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate, completion: completion)
 	}
 
-	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
+	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool, completion: (()->Void)?) {
 		Model.currentFilterQuery?.cancel()
 		Model.modelFilter = newValue
 
@@ -194,6 +194,7 @@ extension Model {
 					if signalUpdate, Model.cachedFilteredDrops?.isEmpty ?? true {
 						NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
 					}
+					completion?()
 				}
 			}
 			Model.currentFilterQuery = q
