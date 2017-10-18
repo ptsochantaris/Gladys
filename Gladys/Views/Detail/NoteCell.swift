@@ -88,4 +88,39 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		item.makeIndex()
 		ViewController.shared.model.save()
 	}
+
+	/////////////////////////////////////
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return placeholder.isHidden ? "Note" : "Add Note"
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return textView.accessibilityValue
+		}
+	}
+
+	override var accessibilityHint: String? {
+		set {}
+		get {
+			return placeholder.isHidden ? "Select to edit" : "Select to add a note"
+		}
+	}
+
+	override func accessibilityActivate() -> Bool {
+		textView.becomeFirstResponder()
+		return true
+	}
+
+	override var isAccessibilityElement: Bool {
+		set {}
+		get {
+			return true
+		}
+	}
 }

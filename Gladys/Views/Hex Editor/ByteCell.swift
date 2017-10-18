@@ -15,7 +15,9 @@ final class ByteCell: UICollectionViewCell {
 
 	var byte: UInt8 = 0 {
 		didSet {
-			label.text = String(format: "%02X", byte)
+			let b = String(format: "%02X", byte)
+			label.text = b
+			accessibilityValue = b
 			letter.text = String(bytes: [byte], encoding: .nonLossyASCII)
 		}
 	}
@@ -25,6 +27,7 @@ final class ByteCell: UICollectionViewCell {
 		layer.borderWidth = 0.25
 		layer.borderColor = UIColor.lightGray.cgColor
 		letter.textColor = .gray
+		isAccessibilityElement = true
 	}
 
 	override var isSelected: Bool {

@@ -404,5 +404,35 @@ final class ArchivedItemCell: UICollectionViewCell {
 			}
 		}
 	}
+
+	/////////////////////////////////////////
+
+	override var isAccessibilityElement: Bool {
+		set {}
+		get {
+			return true
+		}
+	}
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return accessoryLabel.text
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, label.text].flatMap { $0 }.joined(separator: "\n")
+		}
+	}
+
+	override var accessibilityTraits: UIAccessibilityTraits {
+		set {}
+		get {
+			return isSelectedForDelete ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone
+		}
+	}
 }
 

@@ -16,7 +16,9 @@ final class AsciiCell: UICollectionViewCell {
 	var byte: UInt8 = 0 {
 		didSet {
 			label.text = String(format: "%02X", byte)
-			letter.text = String(bytes: [byte], encoding: .nonLossyASCII)
+			let t = String(bytes: [byte], encoding: .nonLossyASCII)
+			letter.text = t
+			accessibilityValue = t
 		}
 	}
 
@@ -25,6 +27,7 @@ final class AsciiCell: UICollectionViewCell {
 		layer.borderWidth = 0.25
 		layer.borderColor = UIColor.lightGray.cgColor
 		label.textColor = .gray
+		isAccessibilityElement = true
 	}
 
 	override var isSelected: Bool {

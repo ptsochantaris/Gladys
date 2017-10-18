@@ -48,4 +48,32 @@ final class LabelCell: UITableViewCell {
 		labelHolder.layer.borderColor = (labelText.isHighlighted ? labelText.highlightedTextColor : labelText.textColor)?.cgColor
 		labelHolder.layer.borderWidth = on ? 0.5 :  0
 	}
+
+	/////////////////////////////////////
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return labelText.accessibilityValue
+		}
+	}
+
+	override var accessibilityHint: String? {
+		set {}
+		get {
+			return labelText.isHighlighted ? "Select to add a new label" : "Select to edit"
+		}
+	}
+
+	override func accessibilityActivate() -> Bool {
+		labelText.becomeFirstResponder()
+		return true
+	}
+
+	override var isAccessibilityElement: Bool {
+		set {}
+		get {
+			return true
+		}
+	}
 }

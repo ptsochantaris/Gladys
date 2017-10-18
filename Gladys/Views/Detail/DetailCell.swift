@@ -22,6 +22,8 @@ final class DetailCell: UITableViewCell {
 		borderView.layer.cornerRadius = 10
 		nameHolder.layer.cornerRadius = 5
 
+		inspectButton.accessibilityLabel = "Inspect raw data"
+
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
 		b.backgroundColor = .lightGray
@@ -44,4 +46,55 @@ final class DetailCell: UITableViewCell {
 		selectionCallback?()
 	}
 
+	/////////////////////////////////////
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return type.text
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			if inspectButton.isHidden {
+				return "\(size.text ?? ""), Contents: \(name.text ?? "")"
+			} else {
+				return "\(size.text ?? ""), Binary data"
+			}
+		}
+	}
+
+	override var accessibilityHint: String? {
+		set {}
+		get {
+			return inspectButton.isHidden ? nil : "Select to inspect"
+		}
+	}
+
+	override func accessibilityActivate() -> Bool {
+		if !inspectButton.isHidden {
+			inspectSelected(inspectButton)
+		}
+		return true
+	}
+
+	override var accessibilityTraits: UIAccessibilityTraits {
+		get {
+			if inspectButton.isHidden {
+				return UIAccessibilityTraitStaticText
+			} else {
+				return UIAccessibilityTraitButton
+			}
+		}
+		set {}
+	}
+
+	override var isAccessibilityElement: Bool {
+		set {}
+		get {
+			return true
+		}
+	}
 }

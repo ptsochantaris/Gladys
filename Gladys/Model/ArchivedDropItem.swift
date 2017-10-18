@@ -81,6 +81,11 @@ final class ArchivedDropItem: Codable, Equatable {
 		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 	}
 
+	var dominantTypeDescription: String? {
+		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		return highestPriorityIconItem?.typeDescription
+	}
+
 	var displayMode: ArchivedDropItemDisplayType {
 		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
 		return highestPriorityIconItem?.displayIconContentMode ?? .center

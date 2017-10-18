@@ -93,4 +93,39 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		item.makeIndex()
 		ViewController.shared.model.save()
 	}
+
+	/////////////////////////////////////
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return "Title"
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return label.accessibilityValue
+		}
+	}
+
+	override var accessibilityHint: String? {
+		set {}
+		get {
+			return "Select to edit"
+		}
+	}
+
+	override func accessibilityActivate() -> Bool {
+		label.becomeFirstResponder()
+		return true
+	}
+
+	override var isAccessibilityElement: Bool {
+		set {}
+		get {
+			return true
+		}
+	}
 }

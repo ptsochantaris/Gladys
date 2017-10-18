@@ -12,6 +12,9 @@ final class DetailController: UIViewController,
 	@IBOutlet weak var dateItem: UIBarButtonItem!
 	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var dateLabelHolder: UIView!
+	@IBOutlet weak var deleteButton: UIBarButtonItem!
+	@IBOutlet weak var copyButton: UIBarButtonItem!
+	@IBOutlet weak var shareButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -20,6 +23,10 @@ final class DetailController: UIViewController,
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
+
+		deleteButton.accessibilityLabel = "Delete item"
+		copyButton.accessibilityLabel = "Copy item to clipboard"
+		shareButton.accessibilityLabel = "Share"
 
 		openButton.isEnabled = item.canOpen
 

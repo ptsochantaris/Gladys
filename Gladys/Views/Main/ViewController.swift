@@ -25,6 +25,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet weak var deleteButton: UIBarButtonItem!
 	@IBOutlet weak var labelsButton: UIBarButtonItem!
+	@IBOutlet weak var settingsButton: UIBarButtonItem!
 
 	let model = Model()
 
@@ -292,6 +293,8 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		super.awakeFromNib()
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.largeTitleDisplayMode = .automatic
+		pasteButton.accessibilityLabel = "Paste from clipboard"
+		settingsButton.accessibilityLabel = "Options"
 	}
 
 	override func viewDidLoad() {
@@ -309,6 +312,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		archivedItemCollectionView.accessibilityLabel = "Items"
 
 		CSSearchableIndex.default().indexDelegate = model
 
@@ -468,6 +472,15 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		updateLabelIcon()
+
+		let c = model.filteredDrops.count
+		if c > 1 {
+			archivedItemCollectionView.accessibilityValue = "\(c)"
+		} else if c == 1 {
+			archivedItemCollectionView.accessibilityValue = "1"
+		} else {
+			archivedItemCollectionView.accessibilityValue = "Empty"
+		}
 	}
 
 	@objc private func labelSelectionChanged() {
@@ -478,9 +491,13 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	private func updateLabelIcon() {
 		if model.isFilteringLabels {
 			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
+			labelsButton.accessibilityLabel = "Labels"
+			labelsButton.accessibilityValue = "Active"
 			title = model.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
 			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
+			labelsButton.accessibilityLabel = "Labels"
+			labelsButton.accessibilityValue = "Inactive"
 			title = "Gladys"
 		}
 		labelsButton.isEnabled = model.drops.count > 0

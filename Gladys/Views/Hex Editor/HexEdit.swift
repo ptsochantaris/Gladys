@@ -39,6 +39,9 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		super.viewDidLoad()
 		grid.allowsMultipleSelection = true
 
+		inspectorButton.accessibilityLabel = "Inspect selection"
+		addressItem.accessibilityLabel = "Selected addresses"
+
 		grid.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 
 		let selectionRecognizer = PanDirectionGestureRecognizer(direction: .horizontal, target: self, action: #selector(selectionPanned(_:)))

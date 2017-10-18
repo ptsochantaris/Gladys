@@ -256,6 +256,12 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		externalDataUpdate()
+
+		container.isAccessibilityElement = true
+		container.accessibilityLabel = "Import and export area"
+
+		zipContainer.isAccessibilityElement = true
+		zipContainer.accessibilityLabel = "ZIP Data"
 	}
 
 	private var firstView = true
@@ -289,6 +295,7 @@ final class PreferencesController : UIViewController, UIDragInteractionDelegate,
 			infoLabel.text = "No Items"
 			deleteAll.isEnabled = false
 		}
+		container.accessibilityValue = infoLabel.text
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
