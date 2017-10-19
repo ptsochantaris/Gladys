@@ -18,7 +18,7 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 final class ViewController: UIViewController, UICollectionViewDelegate,
 	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
-	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
+	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIDropInteractionDelegate,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -182,11 +182,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if countInserts(in: session) > 0 {
-			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
-		} else {
-			return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-		}
+		return UICollectionViewDropProposal(operation: operation(for: session), intent: .insertAtDestinationIndexPath)
+	}
+
+	private func operation(for session: UIDropSession) -> UIDropOperation {
+		return countInserts(in: session) > 0 ? .copy : .move
 	}
 
 	private var dimView: DimView?
@@ -301,6 +301,27 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		settingsButton.accessibilityLabel = "Options"
 	}
 
+	@objc private func voiceOverStatusChanged() {
+		let itemsBackground = archivedItemCollectionView.backgroundView as! UIImageView
+		let on = UIAccessibilityIsVoiceOverRunning()
+
+		if on == itemsBackground.isUserInteractionEnabled { return }
+
+		itemsBackground.isAccessibilityElement = on
+		itemsBackground.isUserInteractionEnabled = on
+
+		if on {
+			itemsBackground.accessibilityLabel = "Drop Zone"
+			let dropInteraction = UIDropInteraction(delegate: self)
+			itemsBackground.addInteraction(dropInteraction)
+		} else {
+			itemsBackground.accessibilityLabel = nil
+			for i in itemsBackground.interactions {
+				itemsBackground.removeInteraction(i)
+			}
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -310,12 +331,16 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
+		let itemsBackground = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		itemsBackground.accessibilityTraits = UIAccessibilityTraitNone
+		itemsBackground.isUserInteractionEnabled = false
+
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
-		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		archivedItemCollectionView.backgroundView = itemsBackground
 		archivedItemCollectionView.accessibilityLabel = "Items"
 
 		CSSearchableIndex.default().indexDelegate = model
@@ -349,6 +374,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
+		n.addObserver(self, selector: #selector(voiceOverStatusChanged), name: .UIAccessibilityVoiceOverStatusDidChange, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -358,6 +384,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
+		voiceOverStatusChanged()
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
@@ -508,6 +535,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			l.text = message
 			l.numberOfLines = 0
 			l.lineBreakMode = .byWordWrapping
+			l.isAccessibilityElement = false
 			view.addSubview(l)
 			l.topAnchor.constraint(equalTo: e.bottomAnchor, constant: 8).isActive = true
 			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
@@ -526,6 +554,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 	private func updateEmptyView(animated: Bool) {
 		if model.drops.count == 0 && emptyView == nil {
 			let e = UIImageView(frame: .zero)
+			e.isAccessibilityElement = false
 			e.contentMode = .center
 			e.image = #imageLiteral(resourceName: "gladysImage").limited(to: CGSize(width: 160, height: 160), limitTo: 1, useScreenScale: true)
 			e.center(on: view)
@@ -1021,6 +1050,60 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			return .none
 		} else {
 			return .overCurrentContext
+		}
+	}
+
+	///////////////////////////////// Accessible drop (hack)
+
+	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+		return UIDropProposal(operation: operation(for: session))
+	}
+
+	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+
+		if checkInfiniteMode(for: countInserts(in: session)) {
+			return
+		}
+		
+		var needSave = false
+		session.progressIndicatorStyle = .none
+		
+		for dragItem in session.items {
+
+			if let existingItem = dragItem.localObject as? ArchivedDropItem {
+				needSave = true
+				archivedItemCollectionView.performBatchUpdates({
+					if let sourceIndex = self.model.drops.index(of: existingItem) {
+						self.model.drops.remove(at: sourceIndex)
+						self.model.drops.append(existingItem)
+						self.model.forceUpdateFilter(signalUpdate: false)
+						self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
+					}
+				})
+
+			} else {
+				
+				let item = ArchivedDropItem(providers: [dragItem.itemProvider], delegate: self)
+
+				if model.isFilteringLabels {
+					item.labels = model.enabledLabelsForItems
+				}
+				
+				archivedItemCollectionView.performBatchUpdates({
+					self.model.drops.append(item)
+					self.model.forceUpdateFilter(signalUpdate: false)
+					self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
+				})
+				
+				loadCount += 1
+				startBgTaskIfNeeded()
+			}
+		}
+		
+		if needSave{
+			model.save()
+		} else {
+			updateEmptyView(animated: true)
 		}
 	}
 }
