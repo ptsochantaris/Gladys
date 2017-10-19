@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
+final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
 
 	var bytes: Data!
 
@@ -62,8 +62,6 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		guard let indexPath = grid.indexPathForItem(at: point) else {
 			return
 		}
-
-		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, nil)
 
 		if firstSelectedIndexPath == nil {
 			firstSelectedIndexPath = indexPath

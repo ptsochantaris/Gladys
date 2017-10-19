@@ -3,7 +3,7 @@ import UIKit
 import MobileCoreServices
 import ZIPFoundation
 
-final class PreferencesController : UIViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
+final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
 
 	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()

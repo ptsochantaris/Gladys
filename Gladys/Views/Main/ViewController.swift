@@ -198,6 +198,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		return true
 	}
+	func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+		accessibilityFocusMostRecentCellOrNearest()
+	}
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		if dimView == nil {
 			let d = DimView()
@@ -283,10 +286,11 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			}
 			didUpdateItems()
 			collectionView.reloadItems(at: [indexPath])
-			return
-		}
 
-		performSegue(withIdentifier: "showDetail", sender: item)
+		} else {
+			mostRecentIndexPathActioned = indexPath
+			performSegue(withIdentifier: "showDetail", sender: item)
+		}
 	}
 
 	override func awakeFromNib() {
@@ -312,6 +316,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		archivedItemCollectionView.accessibilityLabel = "Items"
 
 		CSSearchableIndex.default().indexDelegate = model
 
@@ -471,10 +476,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		updateLabelIcon()
-
-		archivedItemCollectionView.isAccessibilityElement = model.filteredDrops.count == 0
-		archivedItemCollectionView.accessibilityLabel = "Items"
-		archivedItemCollectionView.accessibilityValue = model.filteredDrops.count == 0 ? "Empty" : nil
 	}
 
 	@objc private func labelSelectionChanged() {
@@ -717,6 +718,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		ensureNoEmptySearchResult()
 
 		if model.filteredDrops.count == 0 {
+			mostRecentIndexPathActioned = nil
 			updateEmptyView(animated: true)
 			if isEditing {
 				view.layoutIfNeeded()
@@ -727,6 +729,28 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if isEditing {
 				setEditing(false, animated: true)
 			}
+		}
+
+		accessibilityFocusMostRecentCellOrNearest()
+	}
+
+	private var mostRecentIndexPathActioned: IndexPath?
+	private var closestIndexPathSinceLast: IndexPath? {
+		let count = model.filteredDrops.count
+		if count == 0 {
+			return nil
+		}
+		guard let mostRecentIndexPathActioned = mostRecentIndexPathActioned else { return nil }
+		if count > mostRecentIndexPathActioned.item {
+			return mostRecentIndexPathActioned
+		}
+		return IndexPath(item: count-1, section: 0)
+	}
+	private func accessibilityFocusMostRecentCellOrNearest() {
+		if let ip = closestIndexPathSinceLast, let cell = archivedItemCollectionView.cellForItem(at: ip) {
+			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, cell)
+		} else {
+			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, archivedItemCollectionView)
 		}
 	}
 
@@ -752,6 +776,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"Zap!",
 		"Nice!",
 		"Feels all empty now!",
+		"Very Zen!",
 		"So much space!",
 	]
 
@@ -772,7 +797,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		"How can I help?",
 		"Howdy!",
 		"Ready!",
-		]
+	]
 
 	func loadCompleted(sender: AnyObject, success: Bool) {
 
@@ -790,8 +815,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			item.makeIndex()
 
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {
-				let ip = [IndexPath(item: i, section: 0)]
-				archivedItemCollectionView.reloadItems(at: ip)
+				mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
+				archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
+				accessibilityFocusMostRecentCellOrNearest()
 			}
 
 			loadCount -= 1
@@ -799,6 +825,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				model.save()
 				syncModal()
 			}
+
 			endBgTaskIfNeeded()
 		}
 	}

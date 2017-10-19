@@ -65,11 +65,6 @@ final class LabelCell: UITableViewCell {
 		}
 	}
 
-	override func accessibilityActivate() -> Bool {
-		labelText.becomeFirstResponder()
-		return true
-	}
-
 	override var isAccessibilityElement: Bool {
 		set {}
 		get {

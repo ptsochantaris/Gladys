@@ -9,7 +9,7 @@
 import UIKit
 import StoreKit
 
-final class AboutController: UIViewController {
+final class AboutController: GladysViewController {
 
 	@IBOutlet weak var unlimitedButton: UIButton!
 

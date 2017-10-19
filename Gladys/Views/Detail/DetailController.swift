@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class DetailController: UIViewController,
+final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
 	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
 

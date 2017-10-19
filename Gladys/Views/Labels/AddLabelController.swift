@@ -12,7 +12,7 @@ protocol AddLabelControllerDelegate: class {
 	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?)
 }
 
-final class AddLabelController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+final class AddLabelController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
 	@IBOutlet weak var labelText: UITextField!
 	@IBOutlet weak var table: UITableView!
@@ -110,6 +110,7 @@ final class AddLabelController: UIViewController, UITableViewDelegate, UITableVi
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
 		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
 		dirty = false
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

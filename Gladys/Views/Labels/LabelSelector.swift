@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
+final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
 
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet var clearAllButton: UIBarButtonItem!
@@ -52,6 +52,10 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 			navigationItem.searchController?.isActive = true
 		}
 		sizeWindow()
+	}
+
+	override var initialAccessibilityElement: UIView {
+		return filteredToggles.count == 0 ? emptyLabel : table
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -130,6 +134,7 @@ final class LabelSelector: UIViewController, UITableViewDelegate, UITableViewDat
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
 				s.navigationController?.setNavigationBarHidden(true, animated: false)
+				UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, s.emptyLabel)
 			} else {
 				tableView.deleteRows(at: [indexPath], with: .automatic)
 			}

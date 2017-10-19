@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class DataInspector: UIViewController {
+final class DataInspector: GladysViewController {
 
 	static func setBool(_ name: String, _ value: Bool) {
 		UserDefaults.standard.set(value, forKey: name)
@@ -63,23 +63,60 @@ final class DataInspector: UIViewController {
 	@IBOutlet weak var signedSwitch: UISwitch!
 	@IBOutlet weak var littleEndianSwitch: UISwitch!
 	@IBOutlet weak var decimalSwitch: UISwitch!
+	@IBOutlet weak var decimalLabel: UILabel!
+	@IBOutlet weak var hexadecimalLabel: UILabel!
+	@IBOutlet weak var bigEndian: UILabel!
+	@IBOutlet weak var littleEndian: UILabel!
+	@IBOutlet weak var signedLabel: UILabel!
+	@IBOutlet weak var unsignedLabel: UILabel!
+
+	var signedAccessibility: UIAccessibilityElement!
+	var endianAccessibility: UIAccessibilityElement!
+	var decimalAccessibility: UIAccessibilityElement!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		signedSwitch.isOn = DataInspector.signedSwitchOn
-		signedSwitch.addTarget(self, action: #selector(updateBytes), for: .valueChanged)
+		signedSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
 		signedSwitch.onTintColor = view.tintColor
 
 		littleEndianSwitch.isOn = DataInspector.littleEndianSwitchOn
-		littleEndianSwitch.addTarget(self, action: #selector(updateBytes), for: .valueChanged)
+		littleEndianSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
 		littleEndianSwitch.onTintColor = view.tintColor
 
 		decimalSwitch.isOn = DataInspector.decimalSwitchOn
-		decimalSwitch.addTarget(self, action: #selector(updateBytes), for: .valueChanged)
+		decimalSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
 		decimalSwitch.onTintColor = view.tintColor
 
-		updateBytes()
+		signedAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		signedAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		signedAccessibility.accessibilityFrameInContainerSpace = [signedLabel, unsignedLabel].reduce(signedSwitch.frame) { frame, view -> CGRect in
+			return frame.union(view.frame)
+		}
+
+		endianAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		endianAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		endianAccessibility.accessibilityFrameInContainerSpace = [littleEndian, bigEndian].reduce(littleEndianSwitch.frame) { frame, view -> CGRect in
+			return frame.union(view.frame)
+		}
+
+		decimalAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		decimalAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		decimalAccessibility.accessibilityFrameInContainerSpace = [decimalLabel, hexadecimalLabel].reduce(decimalSwitch.frame) { frame, view -> CGRect in
+			return frame.union(view.frame)
+		}
+
+		view.accessibilityElements = [bit16, bit32, bit64, signedAccessibility, endianAccessibility, decimalAccessibility]
+		switchesChanged()
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		let w = UIApplication.shared.windows.first!
+		signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: w)
+		endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: w)
+		decimalAccessibility.accessibilityActivationPoint = view.convert(decimalSwitch.center, to: w)
 	}
 
 	@objc private func updateBytes() {
@@ -112,6 +149,20 @@ final class DataInspector: UIViewController {
             bit64.text = signedSwitch.isOn ? calculate(UInt64.self) : calculate(Int64.self)
 			bit64.alpha = 1
 		}
+
+		bit16.accessibilityLabel = "16-bit"
+		bit16.accessibilityValue = bit16.text
+		bit32.accessibilityLabel = "32-bit"
+		bit32.accessibilityValue = bit32.text
+		bit64.accessibilityLabel = "64-bit"
+		bit64.accessibilityValue = bit64.text
+	}
+
+	@objc private func switchesChanged() {
+		updateBytes()
+		signedAccessibility.accessibilityValue = signedSwitch.isOn ? "Un-signed" : "Signed"
+		endianAccessibility.accessibilityValue = littleEndianSwitch.isOn ? "Big-endian" : "Little-endian"
+		decimalAccessibility.accessibilityValue = decimalSwitch.isOn ? "Hexadecimal" : "Decimal"
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

@@ -940,7 +940,7 @@ Selecting them will show only items that contain these labels.</string>
         <!--Data Inspector-->
         <scene sceneID="Vh6-0C-4We">
             <objects>
-                <viewController id="FAN-hL-Hea" customClass="DataInspector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Data Inspector" id="FAN-hL-Hea" customClass="DataInspector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zZA-YO-pgO">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1108,13 +1108,19 @@ Selecting them will show only items that contain these labels.</string>
                     </view>
                     <size key="freeformSize" width="300" height="300"/>
                     <connections>
+                        <outlet property="bigEndian" destination="5g8-sf-0Bs" id="NAd-Kj-EDh"/>
                         <outlet property="bit16" destination="eBx-Ix-5ZD" id="xXp-bf-XdB"/>
                         <outlet property="bit32" destination="WTD-OI-yBq" id="2Fd-a8-f5e"/>
                         <outlet property="bit64" destination="UFn-zf-npO" id="7LE-4C-rhF"/>
+                        <outlet property="decimalLabel" destination="8kg-J0-GaZ" id="yjk-bI-qpc"/>
                         <outlet property="decimalSwitch" destination="cWP-6y-u15" id="Fl2-qk-EIM"/>
+                        <outlet property="hexadecimalLabel" destination="oLL-Im-spq" id="ns5-4d-5dv"/>
+                        <outlet property="littleEndian" destination="hvC-6U-8Fr" id="hJC-oK-Mzb"/>
                         <outlet property="littleEndianSwitch" destination="dRd-B9-Eez" id="cGp-fO-Hzd"/>
                         <outlet property="scrollView" destination="rXg-dS-YHQ" id="VuN-DI-nbd"/>
+                        <outlet property="signedLabel" destination="NSM-Mj-7do" id="Ny6-Nk-rEU"/>
                         <outlet property="signedSwitch" destination="E7G-HI-NQu" id="CRP-c7-GEQ"/>
+                        <outlet property="unsignedLabel" destination="vSX-LB-Cru" id="bXX-8K-Fwl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZtC-km-u0Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
