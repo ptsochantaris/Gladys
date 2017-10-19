@@ -27,10 +27,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		if asciiMode {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AsciiCell", for: indexPath) as! AsciiCell
 			cell.byte = bytes[indexPath.item]
+			cell.address = Int64(indexPath.item)
 			return cell
 		} else {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ByteCell", for: indexPath) as! ByteCell
 			cell.byte = bytes[indexPath.item]
+			cell.address = Int64(indexPath.item)
 			return cell
 		}
 	}
@@ -43,6 +45,8 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		addressItem.accessibilityLabel = "Selected addresses"
 
 		grid.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		grid.accessibilityTraits |= UIAccessibilityTraitAllowsDirectInteraction
+		grid.accessibilityLabel = "Data grid"
 
 		let selectionRecognizer = PanDirectionGestureRecognizer(direction: .horizontal, target: self, action: #selector(selectionPanned(_:)))
 		grid.addGestureRecognizer(selectionRecognizer)
@@ -55,7 +59,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 
 	private func selectCell(at point: CGPoint, animated: Bool) {
 
-		guard let indexPath = grid.indexPathForItem(at: point) else { return }
+		guard let indexPath = grid.indexPathForItem(at: point) else {
+			return
+		}
+
+		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, nil)
+
 		if firstSelectedIndexPath == nil {
 			firstSelectedIndexPath = indexPath
 		}
@@ -63,7 +72,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		let firstItem = min(indexPath.item, firstSelectedIndexPath!.item)
 		let lastItem = max(indexPath.item, firstSelectedIndexPath!.item)
 
-		for ip in grid.indexPathsForSelectedItems ?? [] {
+		let selectedPaths = grid.indexPathsForSelectedItems?.sorted() ?? []
+		if selectedPaths.first?.item == firstItem && selectedPaths.last?.item == lastItem {
+			return
+		}
+
+		for ip in selectedPaths {
 			grid.deselectItem(at: ip, animated: false)
 		}
 
@@ -82,8 +96,12 @@ final class HexEdit: UIViewController, UICollectionViewDataSource, UICollectionV
 		let end = String(lastItem, radix: 16, uppercase: true)
 		if start == end {
 			addressButton.setTitle("0x\(start)", for: .normal)
+			addressButton.accessibilityLabel = "Location \(start)"
 		} else {
-			addressButton.setTitle("0x\(start) - 0x\(end)", for: .normal)
+			let newTitle = "0x\(start) - 0x\(end)"
+			addressButton.setTitle(newTitle, for: .normal)
+			addressButton.accessibilityLabel = "Locations \(start) until \(end)"
+			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, addressButton.accessibilityValue)
 		}
 		if !animated {
 			addressButton.layoutIfNeeded()

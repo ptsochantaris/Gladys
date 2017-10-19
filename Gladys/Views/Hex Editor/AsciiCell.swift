@@ -13,6 +13,22 @@ final class AsciiCell: UICollectionViewCell {
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var letter: UILabel!
 
+	var address: Int64 = 0
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return letter.text
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return String(format: "Location %X", address)
+		}
+	}
+
 	var byte: UInt8 = 0 {
 		didSet {
 			label.text = String(format: "%02X", byte)

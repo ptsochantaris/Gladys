@@ -13,11 +13,25 @@ final class ByteCell: UICollectionViewCell {
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var letter: UILabel!
 
+	var address: Int64 = 0
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			return label.text
+		}
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return String(format: "Location %X", address)
+		}
+	}
+
 	var byte: UInt8 = 0 {
 		didSet {
-			let b = String(format: "%02X", byte)
-			label.text = b
-			accessibilityValue = b
+			label.text = String(format: "%02X", byte)
 			letter.text = String(bytes: [byte], encoding: .nonLossyASCII)
 		}
 	}
@@ -28,6 +42,7 @@ final class ByteCell: UICollectionViewCell {
 		layer.borderColor = UIColor.lightGray.cgColor
 		letter.textColor = .gray
 		isAccessibilityElement = true
+		accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
 	}
 
 	override var isSelected: Bool {

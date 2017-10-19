@@ -312,7 +312,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
-		archivedItemCollectionView.accessibilityLabel = "Items"
 
 		CSSearchableIndex.default().indexDelegate = model
 
@@ -473,14 +472,9 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		updateLabelIcon()
 
-		let c = model.filteredDrops.count
-		if c > 1 {
-			archivedItemCollectionView.accessibilityValue = "\(c)"
-		} else if c == 1 {
-			archivedItemCollectionView.accessibilityValue = "1"
-		} else {
-			archivedItemCollectionView.accessibilityValue = "Empty"
-		}
+		archivedItemCollectionView.isAccessibilityElement = model.filteredDrops.count == 0
+		archivedItemCollectionView.accessibilityLabel = "Items"
+		archivedItemCollectionView.accessibilityValue = model.filteredDrops.count == 0 ? "Empty" : nil
 	}
 
 	@objc private func labelSelectionChanged() {
