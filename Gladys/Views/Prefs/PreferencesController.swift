@@ -170,7 +170,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		if let p = session.items.first?.itemProvider {
 			infoLabel.text = nil
 			spinner.startAnimating()
-			p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
+			let progress = p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
 				if let url = url {
 					let model = ViewController.shared.model
 					model.importData(from: url) { success in
@@ -183,9 +183,18 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 					}
 				} else {
 					DispatchQueue.main.async {
-						genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
+						if let e = error {
+							genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.localizedDescription)", on: self)
+						} else {
+							genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
+						}
 						self.externalDataUpdate()
 					}
+				}
+			}
+			progress.cancellationHandler = {
+				DispatchQueue.main.async {
+					self.externalDataUpdate()
 				}
 			}
 		}
