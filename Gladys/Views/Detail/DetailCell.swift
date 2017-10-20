@@ -58,7 +58,7 @@ final class DetailCell: UITableViewCell {
 	override var accessibilityValue: String? {
 		set {}
 		get {
-			if inspectButton.isHidden {
+			if inspectButton.alpha == 0 {
 				return "\(size.text ?? ""), Contents: \(name.text ?? "")"
 			} else {
 				return "\(size.text ?? ""), Binary data"
@@ -69,12 +69,12 @@ final class DetailCell: UITableViewCell {
 	override var accessibilityHint: String? {
 		set {}
 		get {
-			return inspectButton.isHidden ? nil : "Select to inspect"
+			return inspectButton.alpha == 0 ? nil : "Select to inspect"
 		}
 	}
 
 	override func accessibilityActivate() -> Bool {
-		if !inspectButton.isHidden {
+		if inspectButton.alpha != 0 {
 			inspectSelected(inspectButton)
 		}
 		return true
@@ -82,7 +82,7 @@ final class DetailCell: UITableViewCell {
 
 	override var accessibilityTraits: UIAccessibilityTraits {
 		get {
-			if inspectButton.isHidden {
+			if inspectButton.alpha == 0 {
 				return UIAccessibilityTraitStaticText
 			} else {
 				return UIAccessibilityTraitButton
