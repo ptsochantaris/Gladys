@@ -99,7 +99,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 			let newTitle = "0x\(start) - 0x\(end)"
 			addressButton.setTitle(newTitle, for: .normal)
 			addressButton.accessibilityLabel = "Locations \(start) until \(end)"
-			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, addressButton.accessibilityValue)
+			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, addressButton.accessibilityLabel)
 		}
 		if !animated {
 			addressButton.layoutIfNeeded()
