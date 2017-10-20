@@ -77,12 +77,13 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 	func textViewDidEndEditing(_ textView: UITextView) {
 
+		placeholder.isHidden = textView.hasText
+
 		if !dirty { return }
 		dirty = false
 
 		item.note = textView.text
 		item.updatedAt = Date()
-		placeholder.isHidden = textView.hasText
 		resizeCallback?(nil)
 
 		item.makeIndex()

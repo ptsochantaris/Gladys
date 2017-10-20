@@ -252,7 +252,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			d.item = item
 			let indexPath = IndexPath(item: index, section: 0)
 			if let cell = archivedItemCollectionView.cellForItem(at: indexPath) {
-				p.permittedArrowDirections = [.any]
+				p.permittedArrowDirections = [.down, .left, .right]
 				p.sourceView = cell
 				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 				p.delegate = self
