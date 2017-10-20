@@ -170,7 +170,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		if let p = session.items.first?.itemProvider {
 			infoLabel.text = nil
 			spinner.startAnimating()
+			var cancelled = false
 			let progress = p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
+				if cancelled {
+					DispatchQueue.main.async {
+						self.externalDataUpdate()
+					}
+					return
+				}
 				if let url = url {
 					let model = ViewController.shared.model
 					model.importData(from: url) { success in
@@ -193,6 +200,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				}
 			}
 			progress.cancellationHandler = {
+				cancelled = true
 				DispatchQueue.main.async {
 					self.externalDataUpdate()
 				}
