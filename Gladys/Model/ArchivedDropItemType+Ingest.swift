@@ -410,7 +410,7 @@ extension ArchivedDropItemType {
 
 		let alignment: NSTextAlignment
 		let finalText: String?
-		if let text = text, text.characters.count > 200 {
+		if let text = text, text.count > 200 {
 			alignment = .justified
 			finalText = text.replacingOccurrences(of: "\n", with: " ")
 		} else {

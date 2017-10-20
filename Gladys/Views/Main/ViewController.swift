@@ -15,10 +15,10 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 	finalVC.present(a, animated: true)
 }
 
-final class ViewController: UIViewController, UICollectionViewDelegate,
+final class ViewController: GladysViewController, UICollectionViewDelegate,
 	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
-	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIDropInteractionDelegate,
+	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -78,6 +78,17 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		return cell
 	}
 
+	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+		let center = cell.center
+		let x = center.x
+		let y = center.y
+		let w = cell.frame.size.width
+		cell.accessibilityDropPointDescriptors = [
+			UIAccessibilityLocationDescriptor(name: "Drop after item", point: CGPoint(x: x + w, y: y), in: collectionView),
+			UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
+		]
+	}
+
 	private func checkInfiniteMode(for insertCount: Int) -> Bool {
 		if !infiniteMode && insertCount > 0 {
 			let newTotal = model.drops.count + insertCount
@@ -107,7 +118,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 				guard
 					let filteredDestinationIndexPath = coordinator.destinationIndexPath,
 					let sourceIndex = model.drops.index(of: existingItem),
-					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { return }
+					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { continue }
 
 				let destinationIndex = model.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
 
@@ -133,7 +144,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 					item.labels = model.enabledLabelsForItems
 				}
 
-				// TODO: can reorider text search now
 				collectionView.performBatchUpdates({
 					self.model.drops.insert(item, at: dataIndex)
 					self.model.forceUpdateFilter(signalUpdate: false)
@@ -197,9 +207,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		return true
-	}
-	func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-		accessibilityFocusMostRecentCellOrNearest()
 	}
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		if dimView == nil {
@@ -301,27 +308,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		settingsButton.accessibilityLabel = "Options"
 	}
 
-	@objc private func voiceOverStatusChanged() {
-		let itemsBackground = archivedItemCollectionView.backgroundView as! UIImageView
-		let on = UIAccessibilityIsVoiceOverRunning()
-
-		if on == itemsBackground.isUserInteractionEnabled { return }
-
-		itemsBackground.isAccessibilityElement = on
-		itemsBackground.isUserInteractionEnabled = on
-
-		if on {
-			itemsBackground.accessibilityLabel = "Drop Zone"
-			let dropInteraction = UIDropInteraction(delegate: self)
-			itemsBackground.addInteraction(dropInteraction)
-		} else {
-			itemsBackground.accessibilityLabel = nil
-			for i in itemsBackground.interactions {
-				itemsBackground.removeInteraction(i)
-			}
-		}
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -331,16 +317,12 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 
 		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
-		let itemsBackground = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
-		itemsBackground.accessibilityTraits = UIAccessibilityTraitNone
-		itemsBackground.isUserInteractionEnabled = false
-
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
 		archivedItemCollectionView.reorderingCadence = .immediate
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
-		archivedItemCollectionView.backgroundView = itemsBackground
+		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 		archivedItemCollectionView.accessibilityLabel = "Items"
 
 		CSSearchableIndex.default().indexDelegate = model
@@ -374,7 +356,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
-		n.addObserver(self, selector: #selector(voiceOverStatusChanged), name: .UIAccessibilityVoiceOverStatusDidChange, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -384,7 +365,6 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
-		voiceOverStatusChanged()
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
@@ -503,6 +483,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		updateLabelIcon()
+		archivedItemCollectionView.isAccessibilityElement = model.filteredDrops.count == 0
 	}
 
 	@objc private func labelSelectionChanged() {
@@ -760,27 +741,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 
-		accessibilityFocusMostRecentCellOrNearest()
-	}
-
-	private var mostRecentIndexPathActioned: IndexPath?
-	private var closestIndexPathSinceLast: IndexPath? {
-		let count = model.filteredDrops.count
-		if count == 0 {
-			return nil
-		}
-		guard let mostRecentIndexPathActioned = mostRecentIndexPathActioned else { return nil }
-		if count > mostRecentIndexPathActioned.item {
-			return mostRecentIndexPathActioned
-		}
-		return IndexPath(item: count-1, section: 0)
-	}
-	private func accessibilityFocusMostRecentCellOrNearest() {
-		if let ip = closestIndexPathSinceLast, let cell = archivedItemCollectionView.cellForItem(at: ip) {
-			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, cell)
-		} else {
-			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, archivedItemCollectionView)
-		}
+		focusInitialAccessibilityElement()
 	}
 
 	private func ensureNoEmptySearchResult() {
@@ -846,7 +807,7 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {
 				mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 				archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
-				accessibilityFocusMostRecentCellOrNearest()
+				focusInitialAccessibilityElement()
 			}
 
 			loadCount -= 1
@@ -1053,57 +1014,27 @@ final class ViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	///////////////////////////////// Accessible drop (hack)
+	///////////////////////////// Accessibility
 
-	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-		return UIDropProposal(operation: operation(for: session))
+	private var mostRecentIndexPathActioned: IndexPath?
+
+	private var closestIndexPathSinceLast: IndexPath? {
+		let count = model.filteredDrops.count
+		if count == 0 {
+			return nil
+		}
+		guard let mostRecentIndexPathActioned = mostRecentIndexPathActioned else { return nil }
+		if count > mostRecentIndexPathActioned.item {
+			return mostRecentIndexPathActioned
+		}
+		return IndexPath(item: count-1, section: 0)
 	}
 
-	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-
-		if checkInfiniteMode(for: countInserts(in: session)) {
-			return
-		}
-		
-		var needSave = false
-		session.progressIndicatorStyle = .none
-		
-		for dragItem in session.items {
-
-			if let existingItem = dragItem.localObject as? ArchivedDropItem {
-				needSave = true
-				archivedItemCollectionView.performBatchUpdates({
-					if let sourceIndex = self.model.drops.index(of: existingItem) {
-						self.model.drops.remove(at: sourceIndex)
-						self.model.drops.append(existingItem)
-						self.model.forceUpdateFilter(signalUpdate: false)
-						self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
-					}
-				})
-
-			} else {
-				
-				let item = ArchivedDropItem(providers: [dragItem.itemProvider], delegate: self)
-
-				if model.isFilteringLabels {
-					item.labels = model.enabledLabelsForItems
-				}
-				
-				archivedItemCollectionView.performBatchUpdates({
-					self.model.drops.append(item)
-					self.model.forceUpdateFilter(signalUpdate: false)
-					self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
-				})
-				
-				loadCount += 1
-				startBgTaskIfNeeded()
-			}
-		}
-		
-		if needSave{
-			model.save()
+	override var initialAccessibilityElement: UIView {
+		if let ip = closestIndexPathSinceLast, let cell = archivedItemCollectionView.cellForItem(at: ip) {
+			return cell
 		} else {
-			updateEmptyView(animated: true)
+			return archivedItemCollectionView
 		}
 	}
 }

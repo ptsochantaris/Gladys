@@ -14,6 +14,10 @@ class GladysViewController: UIViewController {
 		return navigationController?.navigationBar ?? view
 	}
 
+	func focusInitialAccessibilityElement() {
+		UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, initialAccessibilityElement)
+	}
+
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if popoverPresenter != nil {
