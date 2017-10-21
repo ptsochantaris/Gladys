@@ -324,6 +324,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 		archivedItemCollectionView.accessibilityLabel = "Items"
+		archivedItemCollectionView.dragInteractionEnabled = true
 
 		CSSearchableIndex.default().indexDelegate = model
 

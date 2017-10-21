@@ -3,44 +3,50 @@ import UIKit
 import MobileCoreServices
 import ZIPFoundation
 
-final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate {
+final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
+
+	@discardableResult
+	private func createArchive(completion: @escaping (URL)->Void) -> Progress {
+		let p = Progress(totalUnitCount: 2)
+
+		DispatchQueue.main.async {
+			self.spinner.startAnimating()
+			self.infoLabel.isHidden = true
+		}
+
+		DispatchQueue.global(qos: .userInitiated).async {
+
+			let fm = FileManager.default
+			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys Archive.gladysArchive")
+			if fm.fileExists(atPath: tempPath.path) {
+				try! fm.removeItem(at: tempPath)
+			}
+
+			p.completedUnitCount += 1
+
+			try! fm.copyItem(at: Model.appStorageUrl, to: tempPath)
+
+			p.completedUnitCount += 1
+
+			completion(tempPath)
+
+			DispatchQueue.main.async {
+				self.spinner.stopAnimating()
+				self.infoLabel.isHidden = false
+			}
+		}
+
+		return p
+	}
 
 	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
 		i.registerFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive", fileOptions: [], visibility: .all) { completion -> Progress? in
-
-			let p = Progress(totalUnitCount: 2)
-
-			DispatchQueue.global(qos: .userInitiated).async {
-
-				DispatchQueue.main.async {
-					self.spinner.startAnimating()
-					self.infoLabel.isHidden = true
-				}
-
-				let fm = FileManager.default
-				let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Exported Data")
-				if fm.fileExists(atPath: tempPath.path) {
-					try! fm.removeItem(at: tempPath)
-				}
-
-				p.completedUnitCount += 1
-
-				try! fm.copyItem(at: Model.appStorageUrl, to: tempPath)
-
-				p.completedUnitCount += 1
-
-				completion(tempPath, false, nil)
-				try! fm.removeItem(at: tempPath)
-
-				DispatchQueue.main.async {
-					self.spinner.stopAnimating()
-					self.infoLabel.isHidden = false
-				}
+			return self.createArchive { url in
+				completion(url, false, nil)
+				try! FileManager.default.removeItem(at: url)
 			}
-
-			return p
 		}
 		return [UIDragItem(itemProvider: i)]
 	}
@@ -58,66 +64,75 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		return string
 	}
 
+	@discardableResult
+	private func createZip(completion: @escaping (URL)->Void) -> Progress {
+
+		DispatchQueue.main.async {
+			self.zipSpinner.startAnimating()
+			self.zipImage.isHidden = true
+		}
+
+		let dropsCopy = ViewController.shared.model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
+		let itemCount = Int64(1 + dropsCopy.count)
+		let p = Progress(totalUnitCount: itemCount)
+
+		let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
+
+		DispatchQueue.global(qos: .userInitiated).async {
+
+			let fm = FileManager.default
+			if fm.fileExists(atPath: tempPath.path) {
+				try! fm.removeItem(at: tempPath)
+			}
+
+			p.completedUnitCount += 1
+
+			if let archive = Archive(url: tempPath, accessMode: .create) {
+				for item in dropsCopy {
+					var dir = item.oneTitle
+					if let url = URL(string: dir) {
+						if let host = url.host {
+							dir = host + "-" + url.path.split(separator: "/").joined(separator: "-")
+						} else {
+							dir = url.path.split(separator: "/").joined(separator: "-")
+						}
+					} else {
+						dir = dir.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
+					}
+					if item.typeItems.count == 1 {
+						let typeItem = item.typeItems.first!
+						self.addItem(typeItem, directory: nil, name: dir, in: archive)
+
+					} else {
+						for typeItem in item.typeItems {
+							let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
+							self.addItem(typeItem, directory: dir, name: d, in: archive)
+						}
+					}
+					p.completedUnitCount += 1
+				}
+			}
+
+			completion(tempPath)
+
+			DispatchQueue.main.async {
+				self.zipSpinner.stopAnimating()
+				self.zipImage.isHidden = false
+			}
+
+		}
+
+		return p
+	}
+
 	private var zipDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys.zip"
 		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
-
-			let dropsCopy = ViewController.shared.model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
-			let itemCount = Int64(1 + dropsCopy.count)
-			let p = Progress(totalUnitCount: itemCount)
-
-			DispatchQueue.global(qos: .userInitiated).async {
-
-				DispatchQueue.main.async {
-					self.zipSpinner.startAnimating()
-					self.zipImage.isHidden = true
-				}
-
-				let fm = FileManager.default
-				let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
-				if fm.fileExists(atPath: tempPath.path) {
-					try! fm.removeItem(at: tempPath)
-				}
-
-				p.completedUnitCount += 1
-
-				if let archive = Archive(url: tempPath, accessMode: .create) {
-					for item in dropsCopy {
-						var dir = item.oneTitle
-						if let url = URL(string: dir) {
-							if let host = url.host {
-								dir = host + "-" + url.path.split(separator: "/").joined(separator: "-")
-							} else {
-								dir = url.path.split(separator: "/").joined(separator: "-")
-							}
-						} else {
-							dir = dir.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
-						}
-						if item.typeItems.count == 1 {
-							let typeItem = item.typeItems.first!
-							self.addItem(typeItem, directory: nil, name: dir, in: archive)
-
-						} else {
-							for typeItem in item.typeItems {
-								let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
-								self.addItem(typeItem, directory: dir, name: d, in: archive)
-							}
-						}
-						p.completedUnitCount += 1
-					}
-				}
-
-				completion(tempPath, false, nil)
-				try! fm.removeItem(at: tempPath)
-
-				DispatchQueue.main.async {
-					self.zipSpinner.stopAnimating()
-					self.zipImage.isHidden = false
-				}
+			return self.createZip { url in
+				completion(url, false, nil)
+				try! FileManager.default.removeItem(at: url)
 			}
-
-			return p
 		}
 		return [UIDragItem(itemProvider: i)]
 	}
@@ -179,15 +194,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 					return
 				}
 				if let url = url {
-					let model = ViewController.shared.model
-					model.importData(from: url) { success in
-						DispatchQueue.main.async {
-							if !success {
-								genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
-							}
-							self.externalDataUpdate()
-						}
-					}
+					self.importArchive(from: url)
 				} else {
 					DispatchQueue.main.async {
 						if let e = error {
@@ -220,6 +227,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	//////////////////////////////////
 
+	@IBOutlet weak var topLabel: UILabel!
+	@IBOutlet weak var bottomLabel: UILabel!
+	@IBOutlet weak var zipLabel: UILabel!
+
 	@IBOutlet weak var infoLabel: UILabel!
 	@IBOutlet weak var container: UIView!
 	@IBOutlet weak var innerFrame: UIView!
@@ -231,6 +242,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@IBOutlet weak var zipImage: UIImageView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
+		if spinner.isAnimating || zipSpinner.isAnimating {
+			return
+		}
+
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove all items from your collection. This cannot be undone.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Delete All", style: .destructive, handler: { [weak self] action in
 			self?.deleteAllItems()
@@ -279,6 +294,21 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 		zipContainer.isAccessibilityElement = true
 		zipContainer.accessibilityLabel = "ZIP Data"
+
+		if !dragInteraction.isEnabled { // System cannot do drag and drop
+			topLabel.isHidden = true
+			bottomLabel.text = "Export or import all your items from/to an archive."
+			zipLabel.text = "Save a ZIP file with all your items."
+
+			let importExportButton = UIButton()
+			importExportButton.addTarget(self, action: #selector(importExportSelected), for: .touchUpInside)
+			container.cover(with: importExportButton)
+
+			let zipButton = UIButton()
+			zipButton.addTarget(self, action: #selector(zipSelected), for: .touchUpInside)
+			zipContainer.cover(with: zipButton)
+
+		}
 	}
 
 	private var firstView = true
@@ -320,6 +350,88 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			if navigationItem.rightBarButtonItem == nil {
 				segue.destination.navigationItem.rightBarButtonItem = nil
 			}
+		}
+	}
+
+	///////////////////////////////////
+
+	private var exportingFileURL: URL?
+
+	@objc private func importExportSelected() {
+		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default, handler: { action in
+			self.importSelected()
+		}))
+		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default, handler: { action in
+			self.exportSelected()
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
+	}
+
+	private func exportSelected() {
+		createArchive { url in
+			self.export(to: url)
+		}
+	}
+
+	private func importSelected() {
+		let p = UIDocumentPickerViewController(documentTypes: ["build.bru.gladys.archive"], in: .import)
+		p.delegate = self
+		present(p, animated: true)
+	}
+
+	private func importArchive(from url: URL) {
+		let model = ViewController.shared.model
+		model.importData(from: url) { success in
+			DispatchQueue.main.async {
+				if !success {
+					genericAlert(title: "Could not import data", message: "Contents were corrupted", on: self)
+				}
+				self.externalDataUpdate()
+			}
+		}
+	}
+
+	private func export(to url: URL) {
+		DispatchQueue.main.async {
+			self.exportingFileURL = url
+			let p = UIDocumentPickerViewController(url: url, in: .exportToService)
+			p.delegate = self
+			self.present(p, animated: true)
+		}
+	}
+
+	@objc private func zipSelected() {
+		createZip { url in
+			self.export(to: url)
+		}
+	}
+
+	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+		if exportingFileURL != nil {
+			manualExportDone()
+		} else {
+			infoLabel.text = nil
+			spinner.startAnimating()
+			DispatchQueue.global(qos: .userInitiated).async {
+				self.importArchive(from: urls.first!)
+			}
+		}
+		controller.dismiss(animated: true)
+	}
+
+	func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+		manualExportDone()
+		controller.dismiss(animated: true)
+	}
+
+	private func manualExportDone() {
+		if let e = exportingFileURL {
+			DispatchQueue.main.async {
+				try? FileManager.default.removeItem(at: e)
+			}
+			exportingFileURL = nil
 		}
 	}
 }

@@ -23,6 +23,7 @@ final class DetailController: GladysViewController,
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
+		table.dragInteractionEnabled = true
 
 		deleteButton.accessibilityLabel = "Delete item"
 		copyButton.accessibilityLabel = "Copy item to clipboard"
