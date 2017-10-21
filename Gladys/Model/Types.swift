@@ -40,6 +40,7 @@ extension Notification.Name {
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")
 	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
 	static let DetailViewClosing = Notification.Name("DetailViewClosing")
+	static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
 }
 
 let diskSizeFormatter = ByteCountFormatter()

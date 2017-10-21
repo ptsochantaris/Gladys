@@ -241,6 +241,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@IBOutlet weak var zipSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var zipImage: UIImageView!
 
+	@IBOutlet weak var icloudLabel: UILabel!
+	@IBOutlet weak var icloudSwitch: UISwitch!
+	@IBOutlet weak var icloudHolder: UIView!
+	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
+	// TODO: accessibility
+
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		if spinner.isAnimating || zipSpinner.isAnimating {
 			return
@@ -267,6 +273,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		icloudSwitch.isOn = CloudManager.syncSwitchedOn
+		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
+		icloudSwitch.tintColor = view.tintColor
+		icloudSwitch.onTintColor = view.tintColor
+		icloudTransitionChanged()
 
 		container.layer.cornerRadius = 10
 		innerFrame.layer.cornerRadius = 5
@@ -307,7 +319,47 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			let zipButton = UIButton()
 			zipButton.addTarget(self, action: #selector(zipSelected), for: .touchUpInside)
 			zipContainer.cover(with: zipButton)
+		}
 
+		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func icloudTransitionChanged() {
+		if CloudManager.syncTransitioning {
+			icloudSwitch.isEnabled = false
+			icloudLabel.isHidden = true
+			icloudSpinner.startAnimating()
+		} else {
+			icloudSwitch.isEnabled = true
+			icloudLabel.isHidden = false
+			icloudSpinner.stopAnimating()
+			icloudSwitch.isOn = CloudManager.syncSwitchedOn
+		}
+	}
+
+	@objc private func icloudSwitchChanged() {
+		if icloudSpinner.isAnimating { return }
+
+		if icloudSwitch.isOn {
+			CloudManager.activate { error in
+				DispatchQueue.main.async {
+					if let error = error {
+						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
+					}
+				}
+			}
+		} else {
+			CloudManager.deactivate { error in
+				DispatchQueue.main.async {
+					if let error = error {
+						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
+					}
+				}
+			}
 		}
 	}
 

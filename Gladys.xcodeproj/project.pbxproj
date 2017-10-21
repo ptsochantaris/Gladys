@@ -96,6 +96,7 @@
 		16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
+		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		527CA18CF4A2617DFCFB09DE /* Pods_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501C0EF1E6D9591705C4ACD6 /* Pods_Gladys.framework */; };
@@ -244,6 +245,7 @@
 		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
 		16EDB37D1F23650A001CC65C /* Model+Saving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Saving.swift"; sourceTree = "<group>"; };
 		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
+		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Ingest.swift"; sourceTree = "<group>"; };
 		501C0EF1E6D9591705C4ACD6 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -448,6 +450,7 @@
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
 				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
+				16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -685,6 +688,9 @@
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -1038,6 +1044,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
+				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,

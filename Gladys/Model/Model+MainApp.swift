@@ -45,6 +45,14 @@ extension Model {
 		}
 
 		rebuildLabels()
+
+		if CloudManager.syncSwitchedOn {
+			CloudManager.activate { error in
+				if let error = error {
+					log("Cloud activation error: \(error.localizedDescription)")
+				}
+			}
+		}
 	}
 
 	func saveDone() {
