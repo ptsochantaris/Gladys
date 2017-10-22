@@ -43,7 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.pullAndPush()
+		CloudManager.pullAndPush { error in
+			if let error = error {
+				log("Error in foregrounding sync: \(error.localizedDescription)")
+			}
+		}
 	}
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

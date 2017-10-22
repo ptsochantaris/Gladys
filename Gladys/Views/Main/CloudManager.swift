@@ -13,8 +13,6 @@ final class CloudManager {
 
 	private static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
-	static var db: CKDatabase?
-
 	static func activate(completion: @escaping (Error?)->Void) {
 
 		if syncSwitchedOn {
@@ -53,9 +51,9 @@ final class CloudManager {
 					log("Cloud sync deactivation failed")
 					completion(error)
 				} else {
+					deletionQueue.removeAll()
 					zoneChangeTokens = [:]
 					dbChangeToken = nil
-					db = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in ViewController.shared.model.drops {
@@ -231,36 +229,44 @@ final class CloudManager {
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
 			log("Received zone change push")
-			pullAndPush()
+			pullAndPush { error in
+				if error != nil {
+					completionHandler(.failed)
+				} else {
+					completionHandler(.newData)
+				}
+			}
 		}
 	}
 
-	static func pullAndPush() {
-		stateDirty = false
-
-		if !CloudManager.syncSwitchedOn { return }
+	static func pullAndPush(completion: @escaping (Error?)->Void) {
+		if !CloudManager.syncSwitchedOn { completion(nil); return }
 		
 		if pullAndPushing {
 			stateDirty = true
 			return
-		} else {
-			pullAndPushing = true
 		}
+
+		pullAndPushing = true
+		stateDirty = false
 
 		CloudManager.fetchDatabaseChanges { error in
 			if let error = error {
-				log("Could not perform startup pull: \(error.localizedDescription)")
+				log("Could not perform pull: \(error.localizedDescription)")
 				pullAndPushing = false
+				completion(error)
 			} else {
 				CloudManager.sendUpdatesUp { changes, error in
 					if let error = error {
-						log("Could not perform startup push: \(error.localizedDescription)")
+						log("Could not perform push: \(error.localizedDescription)")
 						pullAndPushing = false
+						completion(error)
 					} else {
 						if stateDirty {
-							pullAndPush()
+							pullAndPush(completion: completion)
 						} else {
 							pullAndPushing = false
+							completion(nil)
 						}
 					}
 				}
@@ -287,14 +293,10 @@ final class CloudManager {
 			let d = UserDefaults.standard
 			d.set(newValue, forKey: "syncSwitchedOn")
 			d.synchronize()
-
-			if newValue == false {
-				deletionQueue = Set<String>()
-			}
 		}
 	}
 
-	static var dbChangeToken: CKServerChangeToken? {
+	private static var dbChangeToken: CKServerChangeToken? {
 		get {
 			if let d = UserDefaults.standard.data(forKey: "dbChangeToken") {
 				return NSKeyedUnarchiver.unarchiveObject(with: d) as? CKServerChangeToken
@@ -314,7 +316,7 @@ final class CloudManager {
 		}
 	}
 
-	static var zoneChangeTokens: [CKRecordZoneID: CKServerChangeToken] {
+	private static var zoneChangeTokens: [CKRecordZoneID: CKServerChangeToken] {
 		get {
 			if let d = UserDefaults.standard.data(forKey: "zoneChangeTokens") {
 				return NSKeyedUnarchiver.unarchiveObject(with: d) as? [CKRecordZoneID: CKServerChangeToken] ?? [:]
@@ -365,14 +367,13 @@ final class CloudManager {
 
 		var recordsToPush = [CKRecord]()
 		for item in ViewController.shared.model.drops {
-			if let itemRecord = item.populatedCloudKitRecord {
+			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
 				if itemRecord.recordChangeTag == nil {
 					for type in item.typeItems {
 						recordsToPush.append(type.newCloudKitRecord)
 					}
 				}
 				recordsToPush.append(itemRecord)
-				deletionQueue.remove(item.uuid.uuidString)
 			}
 		}
 
@@ -381,6 +382,7 @@ final class CloudManager {
 
 		if recordsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
+			completion(false, nil)
 			return
 		} else {
 			log("Pushing up \(recordsToPush.count) changes and \(recordsToDelete.count) deletions")
@@ -407,6 +409,11 @@ final class CloudManager {
 		}
 		operation.modifyRecordsCompletionBlock = { updatedRecords, deletedIds, error in
 			DispatchQueue.main.async {
+				if error == nil {
+					for r in recordsToDelete {
+						deletionQueue.remove(r.recordName)
+					}
+				}
 				completion(changes, error)
 			}
 		}
