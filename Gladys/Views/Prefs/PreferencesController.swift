@@ -276,7 +276,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
-		icloudSwitch.tintColor = view.tintColor
+		icloudSwitch.tintColor = UIColor.lightGray
 		icloudSwitch.onTintColor = view.tintColor
 		icloudTransitionChanged()
 
@@ -331,11 +331,11 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@objc private func icloudTransitionChanged() {
 		if CloudManager.syncTransitioning || CloudManager.syncing {
 			icloudSwitch.isEnabled = false
-			icloudLabel.isHidden = true
+			icloudLabel.text = CloudManager.syncTransitioning ? "Changing..." : "Updating Data..."
 			icloudSpinner.startAnimating()
 		} else {
 			icloudSwitch.isEnabled = true
-			icloudLabel.isHidden = false
+			icloudLabel.text = "iCloud Sync"
 			icloudSpinner.stopAnimating()
 			icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		}

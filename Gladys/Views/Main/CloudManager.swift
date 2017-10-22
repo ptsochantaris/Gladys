@@ -246,8 +246,16 @@ final class CloudManager {
 			return
 		}
 
+		let bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
+
 		syncing = true
 		syncDirty = false
+
+		func endBgTask() {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+				UIApplication.shared.endBackgroundTask(bgTask)
+			}
+		}
 
 		func send() {
 			CloudManager.sendUpdatesUp { changes, error in
@@ -256,12 +264,15 @@ final class CloudManager {
 					log("Could not perform push: \(error.localizedDescription)")
 					syncing = false
 					completion(previousOrCurrentChanges, error)
+					endBgTask()
 				} else {
 					if syncDirty {
 						sync(force: true, completion: completion)
+						endBgTask()
 					} else {
 						syncing = false
 						completion(previousOrCurrentChanges, nil)
+						endBgTask()
 					}
 				}
 			}
@@ -275,6 +286,7 @@ final class CloudManager {
 					log("Could not perform pull: \(error.localizedDescription)")
 					syncing = false
 					completion(previouslySentChanges, error)
+					endBgTask()
 				} else {
 					send()
 				}
