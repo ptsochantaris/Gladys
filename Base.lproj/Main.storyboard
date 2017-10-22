@@ -350,8 +350,8 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="iCloud Sync" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                <rect key="frame" x="109.5" y="397" width="91.5" height="20.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
+                                <rect key="frame" x="54" y="397" width="147" height="21"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -384,6 +384,7 @@ Selecting them will show only items that contain these labels.</string>
                             <constraint firstItem="ZOF-Yb-WSo" firstAttribute="centerX" secondItem="JfA-bI-JxR" secondAttribute="centerX" id="fvc-P4-4fK"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="20" id="q4O-tH-cpU"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="width" secondItem="eHF-2i-yuv" secondAttribute="width" id="r42-BK-6ag"/>
+                            <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="KV3-RU-Hot" secondAttribute="leading" id="rCE-hj-jAO"/>
                             <constraint firstItem="ZOF-Yb-WSo" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="bottom" constant="8" id="sRd-iX-tGn"/>
                             <constraint firstItem="ZOF-Yb-WSo" firstAttribute="width" secondItem="emb-Ou-BQ2" secondAttribute="width" id="sye-Xi-BF9"/>
                             <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="V6J-fH-sQH" secondAttribute="bottom" priority="750" constant="60" id="wWJ-O4-DuZ"/>
@@ -436,7 +437,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4209.375" y="144.71830985915494"/>
+            <point key="canvasLocation" x="4209" y="144"/>
         </scene>
         <!--About Controller-->
         <scene sceneID="mHF-aQ-il8">

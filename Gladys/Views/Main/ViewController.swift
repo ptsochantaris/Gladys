@@ -144,9 +144,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 				}
 
 				collectionView.performBatchUpdates({
+					collectionView.isAccessibilityElement = false
 					self.model.drops.insert(item, at: dataIndex)
 					self.model.forceUpdateFilter(signalUpdate: false)
 					collectionView.insertItems(at: [destinationIndexPath])
+				}, completion: { finished in
+					self.mostRecentIndexPathActioned = destinationIndexPath
+					self.focusInitialAccessibilityElement()
 				})
 
 				loadingUUIDs.insert(item.uuid)
@@ -392,9 +396,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			self.model.drops.insert(item, at: 0)
 			self.model.forceUpdateFilter(signalUpdate: false)
 			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+		}, completion: { finished in
+			self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
+			self.mostRecentIndexPathActioned = destinationIndexPath
+			self.focusInitialAccessibilityElement()
 		})
 
-		archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
 		updateEmptyView(animated: true)
 
 		loadingUUIDs.insert(item.uuid)
@@ -798,6 +805,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			loadingUUIDs.remove(item.uuid)
 			if loadingUUIDs.count == 0 {
 				model.save()
+				UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
 			}
 
 			endBgTaskIfNeeded()

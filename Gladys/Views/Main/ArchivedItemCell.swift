@@ -401,6 +401,15 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	/////////////////////////////////////////
 
+	override func accessibilityActivate() -> Bool {
+		if archivedDropItem?.loadingProgress != nil {
+			cancelSelected(cancelButton)
+			return true
+		} else {
+			return super.accessibilityActivate()
+		}
+	}
+
 	override var isAccessibilityElement: Bool {
 		set {}
 		get {
@@ -411,14 +420,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityLabel: String? {
 		set {}
 		get {
-			return accessoryLabel.text
+			if archivedDropItem?.loadingProgress == nil {
+				return accessoryLabel.text
+			}
+			return nil
 		}
 	}
 
 	override var accessibilityValue: String? {
 		set {}
 		get {
-			return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, label.text].flatMap { $0 }.joined(separator: "\n")
+			if archivedDropItem?.loadingProgress != nil {
+				return "Processing item. Activate to cancel."
+			} else {
+				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, label.text].flatMap { $0 }.joined(separator: "\n")
+			}
 		}
 	}
 
