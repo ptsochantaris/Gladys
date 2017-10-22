@@ -16,7 +16,7 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 }
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
-	ArchivedItemCellDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
+	LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
 	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
@@ -41,7 +41,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		}
 	}
 	private func endBgTaskIfNeeded() {
-		if loadCount == 0, let b = bgTask {
+		if loadingUUIDs.count == 0, let b = bgTask {
 			log("Ending background ingest task")
 			UIApplication.shared.endBackgroundTask(b)
 			bgTask = nil
@@ -74,7 +74,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		cell.archivedDropItem = item
 		cell.isEditing = isEditing
 		cell.isSelectedForDelete = deletionCandidates?.contains(where: { $0 == item.uuid }) ?? false
-		cell.delegate = self
 		return cell
 	}
 
@@ -150,7 +149,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 					collectionView.insertItems(at: [destinationIndexPath])
 				})
 
-				loadCount += 1
+				loadingUUIDs.insert(item.uuid)
 				startBgTaskIfNeeded()
 				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
 			}
@@ -163,7 +162,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		}
 	}
 
-	private var loadCount = 0
+	private var loadingUUIDs = Set<UUID>()
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -353,7 +352,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
 		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
-		n.addObserver(self, selector: #selector(deleteDetected(_:)), name: .DeleteSelected, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
@@ -399,7 +397,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
 		updateEmptyView(animated: true)
 
-		loadCount += 1
+		loadingUUIDs.insert(item.uuid)
 		startBgTaskIfNeeded()
 	}
 
@@ -478,7 +476,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 		let itemsToReIngest = model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
 		for item in itemsToReIngest {
-			loadCount += 1
+			loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()
 			item.reIngest(delegate: self)
 		}
@@ -676,12 +674,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		deletionCandidates?.removeAll()
 	}
 
-	@objc private func deleteDetected(_ notification: Notification) {
-		if let item = notification.object as? ArchivedDropItem {
-			deleteRequested(for: [item])
-		}
-	}
-
 	private var firstPresentedNavigationController: UINavigationController? {
 		return (presentedViewController?.presentedViewController?.presentedViewController ?? presentedViewController?.presentedViewController ?? presentedViewController) as? UINavigationController
 	}
@@ -803,6 +795,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			}
 
 			item.needsReIngest = false
+			if !item.needsCloudPush && item.cloudKitRecord == nil {
+				item.needsCloudPush = true
+			}
 			item.makeIndex()
 
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {
@@ -811,8 +806,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 				focusInitialAccessibilityElement()
 			}
 
-			loadCount -= 1
-			if loadCount == 0 {
+			loadingUUIDs.remove(item.uuid)
+			if loadingUUIDs.count == 0 {
 				model.save()
 				syncModal()
 			}

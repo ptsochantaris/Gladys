@@ -106,7 +106,7 @@ final class DetailController: GladysViewController,
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
-			NotificationCenter.default.post(name: .DeleteSelected, object: self.item)
+			ViewController.shared.deleteRequested(for: [self.item])
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)

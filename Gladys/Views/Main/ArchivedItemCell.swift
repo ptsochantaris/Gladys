@@ -143,10 +143,6 @@ final class MiniMapView: UIImageView {
 	}
 }
 
-protocol ArchivedItemCellDelegate: class {
-	func deleteRequested(for items: [ArchivedDropItem])
-}
-
 final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var image: GladysImageView!
 	@IBOutlet weak var label: UILabel!
@@ -156,8 +152,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
 
-	weak var delegate: ArchivedItemCellDelegate?
-
 	private var selectionImage: UIImageView?
 	private var editHolder: UIView?
 
@@ -165,7 +159,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.observedProgress = nil
 		if let archivedDropItem = archivedDropItem, archivedDropItem.loadingProgress != nil {
 			archivedDropItem.cancelIngest()
-			delegate?.deleteRequested(for: [archivedDropItem])
+			ViewController.shared.deleteRequested(for: [archivedDropItem])
 		}
 	}
 

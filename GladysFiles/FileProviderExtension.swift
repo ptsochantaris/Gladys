@@ -69,25 +69,6 @@ final class FileProviderExtension: NSFileProviderExtension {
 		completionHandler?(nil)
     }
 
-	override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-		log("Providing placeholder: \(url.path)")
-
-		guard let identifier = persistentIdentifierForItem(at: url) else {
-			completionHandler(NSFileProviderError(.noSuchItem))
-			return
-		}
-
-		do {
-			let fileProviderItem = try item(for: identifier)
-			let placeholderURL = NSFileProviderManager.placeholderURL(for: url)
-			try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
-			completionHandler(nil)
-		}
-		catch let error {
-			completionHandler(error)
-		}
-	}
-
     override func itemChanged(at url: URL) {
 		if url.lastPathComponent == "items.json" { return }
 		if url.lastPathComponent == "ck-delete-queue" { return }

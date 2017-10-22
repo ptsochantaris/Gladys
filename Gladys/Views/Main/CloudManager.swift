@@ -40,7 +40,7 @@ final class CloudManager {
 
 	static func deactivate(completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
-		let ms = CKModifySubscriptionsOperation(subscriptionsToSave:nil, subscriptionIDsToDelete: ["private-changes"])
+		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: ["private-changes"])
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			DispatchQueue.main.async {
 				if let error = error {
@@ -130,6 +130,9 @@ final class CloudManager {
 
 		var lookup = zoneChangeTokens
 		var changes = false
+		var newDrops = [CKRecord]()
+		var newTypeItemsToHookOntoDrops = [CKRecord]()
+
 		let changeTokenOptionsList = ids.map { zoneId -> (CKRecordZoneID, CKFetchRecordZoneChangesOptions) in
 			let o = CKFetchRecordZoneChangesOptions()
 			if let changeToken = lookup[zoneId] {
@@ -140,26 +143,31 @@ final class CloudManager {
 		let d = Dictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions>(uniqueKeysWithValues: changeTokenOptionsList)
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: ids, optionsByRecordZoneID: d)
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
+			if recordType != "ArchivedDropItem" { return }
 			let itemUUID = recordId.recordName
-			log("Record \(recordType) deleted: \(itemUUID)")
 			DispatchQueue.main.async {
+				log("Record \(recordType) deleted: \(itemUUID)")
 				if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
-					item.delete()
-					changes = true
+					ViewController.shared.deleteRequested(for: [item])
 				}
 			}
 		}
 		operation.recordChangedBlock = { record in
 			DispatchQueue.main.async {
-				let itemUUID = record.recordID.recordName
-				if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
-					log("Will update existing local item for cloud record \(itemUUID)")
-					item.cloudKitUpdate(from: record)
-				} else {
-					log("Will create new local item for cloud record \(itemUUID)")
-					// TODO: handle new item!
+				if record.recordType == "ArchivedDropItem" {
+					let itemUUID = record.recordID.recordName
+					if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+						log("Will update existing local item for cloud record \(itemUUID)")
+						item.cloudKitUpdate(from: record)
+					} else {
+						log("Will create new local item for cloud record \(itemUUID)")
+						newDrops.append(record)
+					}
+					changes = true
+				} else if record.recordType == "ArchivedDropItemType" {
+					log("Received a child item: \(record.recordID.recordName)")
+					newTypeItemsToHookOntoDrops.append(record)
 				}
-				changes = true
 			}
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
@@ -169,7 +177,13 @@ final class CloudManager {
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
 				if changes {
-					ViewController.shared.model.save()
+					for dropRecord in newDrops {
+						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
+					}
+					if newDrops.count == 0 { // was only deletions, let's save
+						ViewController.shared.model.save()
+					}
+					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
 				if let error = error {
 					finalCompletion(error)
@@ -181,6 +195,19 @@ final class CloudManager {
 			}
 		}
 		go(operation)
+	}
+
+	private static func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
+		let childrenOfThisItem = drawChildrenFrom.filter {
+			if let ref = $0["parent"] as? CKReference {
+				if ref.recordID == record.recordID {
+					return true
+				}
+			}
+			return false
+		}
+		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
+		ViewController.shared.model.drops.insert(item, at: 0)
 	}
 
 	private static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
@@ -327,7 +354,17 @@ final class CloudManager {
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }
 
-		let recordsToPush = ViewController.shared.model.drops.flatMap { $0.populatedCloudKitRecord }
+		var recordsToPush = [CKRecord]()
+		for item in ViewController.shared.model.drops {
+			if let itemRecord = item.populatedCloudKitRecord {
+				if itemRecord.recordChangeTag == nil {
+					for type in item.typeItems {
+						recordsToPush.append(type.newCloudKitRecord)
+					}
+				}
+				recordsToPush.append(itemRecord)
+			}
+		}
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToPush, recordIDsToDelete: recordsToDelete)
 		var changes = false
 		operation.perRecordCompletionBlock = { record, error in

@@ -67,33 +67,41 @@ extension ArchivedDropItemType {
 		return (nil, 0)
 	}
 
-	var cloudKitDataPath: URL {
-		return self.folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-	}
+	////////////////////////////////////////////////////////////////
 
-	var cloudKitRecord: CKRecord? {
-		get {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
-				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKRecord
-			} else {
-				return nil
-			}
+	var newCloudKitRecord: CKRecord {
+
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems",
+		                            ownerName: CKCurrentUserDefaultName)
+
+		let record = CKRecord(recordType: "ArchivedDropItemType",
+		                      recordID: CKRecordID(recordName: uuid.uuidString,
+		                                           zoneID: zoneId))
+
+		let parentId = CKRecordID(recordName: parentUuid.uuidString, zoneID: zoneId)
+		record["parent"] = CKReference(recordID: parentId, action: CKReferenceAction.deleteSelf)
+
+		if bytes != nil {
+			record["bytes"] = CKAsset(fileURL: bytesPath)
 		}
-		set {
-			let recordLocation = cloudKitDataPath
-			if newValue == nil || loadingAborted {
-				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
-				}
-			} else {
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
-				try? data.write(to: recordLocation, options: .atomic)
-			}
-		}
+
+		record["createdAt"] = createdAt as NSDate
+		record["updatedAt"] = updatedAt as NSDate
+		record["typeIdentifier"] = typeIdentifier as NSString
+		record["representedClass"] = representedClass as NSString
+		record["classWasWrapped"] = NSNumber(value: classWasWrapped ? 1 : 0)
+		record["accessoryTitle"] = accessoryTitle as NSString?
+		record["displayTitle"] = displayTitle as NSString?
+		record["displayTitleAlignment"] = NSNumber(value: displayTitleAlignment.rawValue)
+		record["displayTitlePriority"] = NSNumber(value: displayTitlePriority)
+		record["displayTitleAlignment"] = NSNumber(value: displayTitleAlignment.rawValue)
+		record["displayTitlePriority"] = NSNumber(value: displayTitlePriority)
+		record["displayIconPriority"] = NSNumber(value: displayIconPriority)
+		record["displayIconContentMode"] = NSNumber(value: displayIconContentMode.rawValue)
+		record["displayIconScale"] = NSNumber(value: Double(displayIconScale))
+		record["displayIconWidth"] = NSNumber(value: Double(displayIconWidth))
+		record["displayIconHeight"] = NSNumber(value: Double(displayIconHeight))
+
+		return record
 	}
 }

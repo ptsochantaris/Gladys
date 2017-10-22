@@ -1,5 +1,8 @@
 
 import UIKit
+#if MAINAPP
+	import CloudKit
+#endif
 
 final class ArchivedDropItem: Codable, Equatable {
 
@@ -155,6 +158,30 @@ final class ArchivedDropItem: Codable, Equatable {
 			loadingProgress = startIngest(providers: providers)
 		}
 
+	#endif
+
+	#if MAINAPP
+		init(from record: CKRecord, children: [CKRecord]) {
+			let myUUID = UUID(uuidString: record.recordID.recordName)!
+			uuid = myUUID
+			createdAt = record["createdAt"] as! Date
+			updatedAt = record["updatedAt"] as! Date
+			suggestedName = record["suggestedName"] as? String
+			titleOverride = record["titleOverride"] as! String
+			note = record["note"] as! String
+			labels = (record["labels"] as? [String]) ?? []
+			needsReIngest = true
+			allLoadedWell = true
+			needsCloudPush = false
+			typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
+			cloudKitRecord = record
+
+			for item in typeItems {
+				item.delegate = self
+			}
+
+			reIngest(delegate: ViewController.shared)
+		}
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER

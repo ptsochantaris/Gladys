@@ -72,7 +72,7 @@
       <RemoteRunnable
          runnableDebuggingMode = "0"
          BundleIdentifier = "build.bru.Gladys"
-         RemotePath = "/var/containers/Bundle/Application/04792B55-0F06-4683-8D6E-9309A21C66EC/Gladys.app">
+         RemotePath = "/var/containers/Bundle/Application/FA153F4F-2F0A-4E56-8999-1BF8C1C9432A/Gladys.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

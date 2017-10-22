@@ -349,14 +349,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				DispatchQueue.main.async {
 					if let error = error {
 						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
-					} else {
-						let localOnlyRecords = ViewController.shared.model.drops.filter { $0.cloudKitRecord == nil }
-						if localOnlyRecords.count > 0 {
-							for item in localOnlyRecords {
-								item.needsCloudPush = true
-							}
-							ViewController.shared.model.save()
-						}
 					}
 				}
 			}

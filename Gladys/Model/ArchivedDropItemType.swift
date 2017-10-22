@@ -1,6 +1,9 @@
 
 import UIKit
 import MobileCoreServices
+#if MAINAPP
+	import CloudKit
+#endif
 
 final class ArchivedDropItemType: Codable {
 
@@ -463,6 +466,32 @@ final class ArchivedDropItemType: Codable {
 		createdAt = Date()
 		updatedAt = createdAt
 		representedClass = ""
+	}
+	#endif
+
+	#if MAINAPP
+	init(from record: CKRecord, parentUuid: UUID) {
+
+		self.parentUuid = parentUuid
+
+		let myUUID = record.recordID.recordName
+		uuid = UUID(uuidString: myUUID)!
+		createdAt = record["createdAt"] as! Date
+		updatedAt = record["updatedAt"] as! Date
+
+		typeIdentifier = record["typeIdentifier"] as! String
+		displayIconPriority = record["displayIconPriority"] as! Int
+		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: record["displayIconContentMode"] as! Int)!
+		displayTitlePriority = record["displayTitlePriority"] as! Int
+		displayTitleAlignment = NSTextAlignment(rawValue: record["displayTitleAlignment"] as! Int)!
+		displayIconScale = record["displayIconScale"] as! CGFloat
+		displayIconWidth = record["displayIconWidth"] as! CGFloat
+		displayIconHeight = record["displayIconHeight"] as! CGFloat
+		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
+		representedClass = record["representedClass"] as! String
+		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
+			try? FileManager.default.moveItem(at: assetURL, to: bytesPath)
+		}
 	}
 	#endif
 }
