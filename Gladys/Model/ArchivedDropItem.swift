@@ -10,6 +10,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	var updatedAt: Date
 	var allLoadedWell: Bool
 	var needsReIngest: Bool
+	var needsCloudPush: Bool
 	var note: String
 	var titleOverride: String
 	var labels: [String]
@@ -28,6 +29,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case note
 		case titleOverride
 		case labels
+		case needsCloudPush
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -42,6 +44,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(note, forKey: .note)
 		try v.encode(titleOverride, forKey: .titleOverride)
 		try v.encode(labels, forKey: .labels)
+		try v.encode(needsCloudPush, forKey: .needsCloudPush)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -57,6 +60,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
+		needsCloudPush = try v.decodeIfPresent(Bool.self, forKey: .needsCloudPush) ?? false
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -123,6 +127,11 @@ final class ArchivedDropItem: Codable, Equatable {
 		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
 	}
 
+	func markUpdated() {
+		updatedAt = Date()
+		needsCloudPush = true
+	}
+
 	#if MAINAPP || ACTIONEXTENSION
 
 		var loadCount = 0
@@ -135,7 +144,8 @@ final class ArchivedDropItem: Codable, Equatable {
 			updatedAt = createdAt
 			suggestedName = providers.first!.suggestedName
 			allLoadedWell = true
-			needsReIngest = false
+			needsReIngest = true
+			needsCloudPush = true
 			titleOverride = ""
 			note = ""
 			labels = []

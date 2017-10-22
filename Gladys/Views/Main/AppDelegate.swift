@@ -48,6 +48,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
 		log("Failed to register for remote notifications")
+		if CloudManager.syncSwitchedOn && application.applicationState != .active {
+			CloudManager.tryToFetchLatestData()
+		}
 	}
 
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

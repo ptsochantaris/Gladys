@@ -2,6 +2,7 @@
 import UIKit
 import MapKit
 import Contacts
+import CloudKit
 
 extension ArchivedDropItemType {
 
@@ -64,5 +65,35 @@ extension ArchivedDropItemType {
 		}
 
 		return (nil, 0)
+	}
+
+	var cloudKitDataPath: URL {
+		return self.folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+	}
+
+	var cloudKitRecord: CKRecord? {
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKRecord
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitDataPath
+			if newValue == nil || loadingAborted {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				try? data.write(to: recordLocation, options: .atomic)
+			}
+		}
 	}
 }

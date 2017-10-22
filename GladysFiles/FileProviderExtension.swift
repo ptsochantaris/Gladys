@@ -90,6 +90,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
     override func itemChanged(at url: URL) {
 		if url.lastPathComponent == "items.json" { return }
+		if url.lastPathComponent == "ck-delete-queue" { return }
 		log("Item changed: \(url.path)")
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = model.drops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")

@@ -323,7 +323,7 @@ final class DetailController: GladysViewController,
 	}
 
 	private func makeIndexAndSaveItem() {
-		item.updatedAt = Date()
+		item.markUpdated()
 		item.makeIndex() { _ in
 			ViewController.shared.model.save()
 		}

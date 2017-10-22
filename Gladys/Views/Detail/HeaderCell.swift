@@ -84,7 +84,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		} else {
 			item.titleOverride = newText
 		}
-		item.updatedAt = Date()
+		item.markUpdated()
 		label.text = item.oneTitle
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)

@@ -21,7 +21,10 @@ final class CloudManager {
 			DispatchQueue.main.async {
 				if status == .available {
 					log("User has iCloud, can activate cloud sync")
-					proceedWithActivation(completion: completion)
+					proceedWithActivation { error in
+						completion(error)
+						syncTransitioning = false
+					}
 				} else {
 					syncTransitioning = false
 					log("User not logged into iCloud")
@@ -49,6 +52,11 @@ final class CloudManager {
 					db = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
+					for item in ViewController.shared.model.drops {
+						item.cloudKitRecord = nil
+						item.needsCloudPush = false
+					}
+					ViewController.shared.model.save()
 					log("Cloud sync deactivation complete")
 					completion(nil)
 				}
@@ -67,7 +75,6 @@ final class CloudManager {
 		}
 
 		if syncSwitchedOn {
-			syncTransitioning = false
 			completion(nil)
 			return
 		}
@@ -84,7 +91,6 @@ final class CloudManager {
 		operation.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
 				DispatchQueue.main.async {
-					syncTransitioning = false
 					completion(error)
 				}
 			} else {
@@ -93,13 +99,11 @@ final class CloudManager {
 						if let error = error {
 							deactivate { _ in
 								DispatchQueue.main.async {
-									syncTransitioning = false
 									completion(error)
 								}
 							}
 						} else {
 							syncSwitchedOn = true
-							syncTransitioning = false
 							completion(nil)
 						}
 					}
@@ -119,13 +123,13 @@ final class CloudManager {
 		guard ids.count > 0 else {
 			log("No zone changes, hence no record changes")
 			DispatchQueue.main.async {
-				syncTransitioning = false
 				finalCompletion(nil)
 			}
 			return
 		}
 
 		var lookup = zoneChangeTokens
+		var changes = false
 		let changeTokenOptionsList = ids.map { zoneId -> (CKRecordZoneID, CKFetchRecordZoneChangesOptions) in
 			let o = CKFetchRecordZoneChangesOptions()
 			if let changeToken = lookup[zoneId] {
@@ -136,10 +140,27 @@ final class CloudManager {
 		let d = Dictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions>(uniqueKeysWithValues: changeTokenOptionsList)
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: ids, optionsByRecordZoneID: d)
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-			log("Record \(recordType) deleted: \(recordId.recordName)")
+			let itemUUID = recordId.recordName
+			log("Record \(recordType) deleted: \(itemUUID)")
+			DispatchQueue.main.async {
+				if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+					item.delete()
+					changes = true
+				}
+			}
 		}
 		operation.recordChangedBlock = { record in
-			log("Record \(record.recordType) changed: \(record.recordID.recordName)")
+			DispatchQueue.main.async {
+				let itemUUID = record.recordID.recordName
+				if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+					log("Will update existing local item for cloud record \(itemUUID)")
+					item.cloudKitUpdate(from: record)
+				} else {
+					log("Will create new local item for cloud record \(itemUUID)")
+					// TODO: handle new item!
+				}
+				changes = true
+			}
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
 			lookup[zoneId] = token
@@ -147,7 +168,9 @@ final class CloudManager {
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
-				syncTransitioning = false
+				if changes {
+					ViewController.shared.model.save()
+				}
 				if let error = error {
 					finalCompletion(error)
 				} else {
@@ -170,7 +193,6 @@ final class CloudManager {
 		operation.fetchDatabaseChangesCompletionBlock = { serverChangeToken, moreComing, error in
 			if let error = error {
 				DispatchQueue.main.async {
-					syncTransitioning = false
 					finalCompletion(error)
 				}
 			} else {
@@ -199,6 +221,14 @@ final class CloudManager {
 		}
 	}
 
+	static func tryToFetchLatestData() {
+		fetchDatabaseChanges { error in
+			if let error = error {
+				log("Manual fetch failed: \(error.localizedDescription)")
+			}
+		}
+	}
+
 	/////////////////////////////////////////////
 
 	static var syncTransitioning = false {
@@ -218,6 +248,10 @@ final class CloudManager {
 			let d = UserDefaults.standard
 			d.set(newValue, forKey: "syncSwitchedOn")
 			d.synchronize()
+
+			if newValue == false {
+				deletionQueue = []
+			}
 		}
 	}
 
@@ -255,6 +289,72 @@ final class CloudManager {
 			d.set(data, forKey: "zoneChangeTokens")
 			d.synchronize()
 		}
+	}
+
+	///////////////////////////////////
+
+	private static var deleteQueuePath: URL {
+		return Model.appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
+	}
+
+	private static var deletionQueue: [String] {
+		get {
+			let recordLocation = deleteQueuePath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				return (NSKeyedUnarchiver.unarchiveObject(with: data) as? [String]) ?? []
+			} else {
+				return []
+			}
+		}
+		set {
+			let recordLocation = deleteQueuePath
+			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
+			try? data.write(to: recordLocation, options: .atomic)
+		}
+	}
+
+
+	static func markAsDeleted(uuid: UUID) {
+		if syncSwitchedOn {
+			deletionQueue.append(uuid.uuidString)
+		}
+	}
+
+	static func sendUpdatesUp() {
+		if !syncSwitchedOn { return }
+
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }
+
+		let recordsToPush = ViewController.shared.model.drops.flatMap { $0.populatedCloudKitRecord }
+		let operation = CKModifyRecordsOperation(recordsToSave: recordsToPush, recordIDsToDelete: recordsToDelete)
+		var changes = false
+		operation.perRecordCompletionBlock = { record, error in
+			let itemUUID = record.recordID.recordName
+			DispatchQueue.main.async {
+				if let error = error {
+					log("Error updating cloud record for item \(itemUUID): \(error.localizedDescription)")
+				} else if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+					item.needsCloudPush = false
+					item.cloudKitRecord = record
+					changes = true
+					log("Updated cloud record \(itemUUID)")
+				} else if let i = deletionQueue.index(of: itemUUID) {
+					deletionQueue.remove(at: i)
+					changes = true
+					log("Deleted cloud record \(itemUUID)")
+				}
+			}
+		}
+		operation.modifyRecordsCompletionBlock = { updatedRecords, deletedIds, error in
+			DispatchQueue.main.async {
+				if changes {
+					ViewController.shared.model.save()
+				}
+			}
+		}
+		go(operation)
 	}
 
 	///////////////////////////////////

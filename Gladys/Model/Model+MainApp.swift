@@ -50,6 +50,8 @@ extension Model {
 			CloudManager.activate { error in
 				if let error = error {
 					log("Cloud activation error: \(error.localizedDescription)")
+				} else {
+					CloudManager.sendUpdatesUp()
 				}
 			}
 		}
@@ -68,6 +70,7 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
+		CloudManager.sendUpdatesUp()
 	}
 	
 	func beginMonitoringChanges() {

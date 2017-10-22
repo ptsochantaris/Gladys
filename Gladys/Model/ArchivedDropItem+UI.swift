@@ -1,6 +1,7 @@
 
 import UIKit
 import MapKit
+import CloudKit
 import Contacts
 import ContactsUI
 import CoreSpotlight
@@ -10,6 +11,7 @@ extension ArchivedDropItem {
 
 	func delete() {
 		isDeleting = true
+		CloudManager.markAsDeleted(uuid: uuid)
 		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
 			if let error = error {
 				log("Error while deleting an index \(error)")
@@ -139,5 +141,79 @@ extension ArchivedDropItem {
 			}
 		}
 		return (nil, nil)
+	}
+
+	//////////////////////////////////////////
+
+	var cloudKitDataPath: URL {
+		return self.folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+	}
+
+	var cloudKitRecord: CKRecord? {
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKRecord(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitDataPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			}
+		}
+	}
+
+	func cloudKitUpdate(from record: CKRecord) {
+		if let x = record["updatedAt"] as? Date {
+			updatedAt = x
+		}
+		if let x = record["note"] as? String {
+			note = x
+		}
+		if let x = record["titleOverride"] as? String {
+			titleOverride = x
+		}
+		if let x = record["labels"] as? [String] {
+			labels = x
+		}
+		cloudKitRecord = record
+		needsReIngest = true
+	}
+
+	var populatedCloudKitRecord: CKRecord? {
+
+		guard needsCloudPush && allLoadedWell && !needsReIngest && !isDeleting else { return nil }
+
+		let record = cloudKitRecord ??
+			CKRecord(recordType: "ArchivedDropItem",
+			         recordID: CKRecordID(recordName: uuid.uuidString,
+			                              zoneID: CKRecordZoneID(zoneName: "archivedDropItems",
+			                                                     ownerName: CKCurrentUserDefaultName)))
+
+		record["suggestedName"] = suggestedName as NSString?
+		record["createdAt"] = createdAt as NSDate
+		record["updatedAt"] = updatedAt as NSDate
+		record["note"] = note as NSString
+		record["titleOverride"] = titleOverride as NSString
+		if labels.isEmpty {
+			record["labels"] = nil
+		} else {
+			record["labels"] = labels as NSArray
+		}
+		return record
 	}
 }

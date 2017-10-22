@@ -83,7 +83,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		dirty = false
 
 		item.note = textView.text
-		item.updatedAt = Date()
+		item.markUpdated()
 		resizeCallback?(nil)
 
 		item.makeIndex()
