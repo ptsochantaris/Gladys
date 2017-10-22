@@ -34,7 +34,14 @@ final class DetailController: GladysViewController,
 		dateLabel.text = "Added " + dateFormatter.string(from: item.createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: item.sizeInBytes)
 		dateItem.customView = dateLabelHolder
 
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
+		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+	}
+
+	@objc private func externalDataUpdate() {
+		table.reloadData()
+		sizeWindow()
 	}
 
 	override var preferredContentSize: CGSize {
@@ -113,10 +120,6 @@ final class DetailController: GladysViewController,
 	}
 
 	//////////////////////////////////
-
-	func reload() {
-		table.reloadData()
-	}
 
 	func done() {
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {

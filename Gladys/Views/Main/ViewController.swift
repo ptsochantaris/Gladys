@@ -446,17 +446,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		searchUpdated()
 		didUpdateItems()
 		updateEmptyView(animated: true)
-		syncModal()
-	}
-
-	private func syncModal() {
-		if let d = currentDetailView {
-			if !model.drops.contains(where: { $0.uuid == d.item.uuid }) {
-				d.done()
-				return
-			}
-			d.reload()
-		}
 	}
 
 	private var emptyView: UIImageView?
@@ -809,7 +798,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			loadingUUIDs.remove(item.uuid)
 			if loadingUUIDs.count == 0 {
 				model.save()
-				syncModal()
 			}
 
 			endBgTaskIfNeeded()
@@ -874,9 +862,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 	private var dragActionInProgress = false
 	@objc func searchUpdated() {
-		if currentDetailView != nil {
-			dismissAnyPopOver()
-		}
 		updateLabelIcon()
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))

@@ -178,18 +178,10 @@ extension ArchivedDropItem {
 	}
 
 	func cloudKitUpdate(from record: CKRecord) {
-		if let x = record["updatedAt"] as? Date {
-			updatedAt = x
-		}
-		if let x = record["note"] as? String {
-			note = x
-		}
-		if let x = record["titleOverride"] as? String {
-			titleOverride = x
-		}
-		if let x = record["labels"] as? [String] {
-			labels = x
-		}
+		updatedAt = record["updatedAt"] as! Date
+		note = record["note"] as! String
+		titleOverride = record["titleOverride"] as! String
+		labels = (record["labels"] as? [String]) ?? []
 		cloudKitRecord = record
 		needsReIngest = true
 	}
