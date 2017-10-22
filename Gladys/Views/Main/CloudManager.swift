@@ -220,8 +220,7 @@ final class CloudManager {
 		go(operation)
 	}
 
-	private static var stateDirty = false
-	static var pullAndPushing = false
+	private static var syncDirty = false
 
 	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		if !syncSwitchedOn { return }
@@ -229,7 +228,7 @@ final class CloudManager {
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
 			log("Received zone change push")
-			pullAndPush { error in
+			sync { changes, error in
 				if error != nil {
 					completionHandler(.failed)
 				} else {
@@ -239,36 +238,45 @@ final class CloudManager {
 		}
 	}
 
-	static func pullAndPush(completion: @escaping (Error?)->Void) {
-		if !CloudManager.syncSwitchedOn { completion(nil); return }
+	static func sync(force: Bool = false, onlySend: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
+		if !CloudManager.syncSwitchedOn { completion(previouslySentChanges, nil); return }
 		
-		if pullAndPushing {
-			stateDirty = true
+		if syncing && !force {
+			syncDirty = true
 			return
 		}
 
-		pullAndPushing = true
-		stateDirty = false
+		syncing = true
+		syncDirty = false
 
-		CloudManager.fetchDatabaseChanges { error in
-			if let error = error {
-				log("Could not perform pull: \(error.localizedDescription)")
-				pullAndPushing = false
-				completion(error)
-			} else {
-				CloudManager.sendUpdatesUp { changes, error in
-					if let error = error {
-						log("Could not perform push: \(error.localizedDescription)")
-						pullAndPushing = false
-						completion(error)
+		func send() {
+			CloudManager.sendUpdatesUp { changes, error in
+				let previousOrCurrentChanges = previouslySentChanges || changes
+				if let error = error {
+					log("Could not perform push: \(error.localizedDescription)")
+					syncing = false
+					completion(previousOrCurrentChanges, error)
+				} else {
+					if syncDirty {
+						sync(force: true, completion: completion)
 					} else {
-						if stateDirty {
-							pullAndPush(completion: completion)
-						} else {
-							pullAndPushing = false
-							completion(nil)
-						}
+						syncing = false
+						completion(previousOrCurrentChanges, nil)
 					}
+				}
+			}
+		}
+
+		if onlySend {
+			send()
+		} else {
+			CloudManager.fetchDatabaseChanges { error in
+				if let error = error {
+					log("Could not perform pull: \(error.localizedDescription)")
+					syncing = false
+					completion(previouslySentChanges, error)
+				} else {
+					send()
 				}
 			}
 		}
@@ -279,6 +287,14 @@ final class CloudManager {
 	static var syncTransitioning = false {
 		didSet {
 			if syncTransitioning != oldValue {
+				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+			}
+		}
+	}
+
+	static var syncing = false {
+		didSet {
+			if syncing != oldValue {
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 			}
 		}
@@ -362,7 +378,7 @@ final class CloudManager {
 		}
 	}
 
-	static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
+	private static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
 		if !syncSwitchedOn { return }
 
 		var recordsToPush = [CKRecord]()

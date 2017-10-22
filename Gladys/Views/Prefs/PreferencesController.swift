@@ -329,7 +329,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	@objc private func icloudTransitionChanged() {
-		if CloudManager.syncTransitioning {
+		if CloudManager.syncTransitioning || CloudManager.syncing {
 			icloudSwitch.isEnabled = false
 			icloudLabel.isHidden = true
 			icloudSpinner.startAnimating()

@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.pullAndPush { error in
+		CloudManager.sync { changes, error in
 			if let error = error {
 				log("Error in foregrounding sync: \(error.localizedDescription)")
 			}

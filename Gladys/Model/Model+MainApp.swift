@@ -46,7 +46,7 @@ extension Model {
 
 		rebuildLabels()
 
-		CloudManager.pullAndPush { error in
+		CloudManager.sync { changes, error in
 			if let error = error {
 				log("Error in startup sync: \(error.localizedDescription)")
 			}
@@ -66,7 +66,7 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sendUpdatesUp { changes, error in
+		CloudManager.sync(onlySend: true) { changes, error in
 			if changes {
 				self.save()
 			}
