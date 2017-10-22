@@ -16,6 +16,12 @@ final class CloudManager {
 	static var db: CKDatabase?
 
 	static func activate(completion: @escaping (Error?)->Void) {
+
+		if syncSwitchedOn {
+			completion(nil)
+			return
+		}
+
 		syncTransitioning = true
 		container.accountStatus { status, error in
 			DispatchQueue.main.async {
@@ -68,18 +74,7 @@ final class CloudManager {
 
 	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
 
-		db = container.privateCloudDatabase
-
-		if !UIApplication.shared.isRegisteredForRemoteNotifications {
-			UIApplication.shared.registerForRemoteNotifications()
-		}
-
-		if syncSwitchedOn {
-			completion(nil)
-			return
-		}
-
-		///////////// First sync
+		UIApplication.shared.registerForRemoteNotifications()
 
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.shouldSendContentAvailable = true
@@ -95,17 +90,13 @@ final class CloudManager {
 				}
 			} else {
 				fetchDatabaseChanges { error in
-					DispatchQueue.main.async {
-						if let error = error {
-							deactivate { _ in
-								DispatchQueue.main.async {
-									completion(error)
-								}
-							}
-						} else {
-							syncSwitchedOn = true
-							completion(nil)
+					if let error = error {
+						DispatchQueue.main.async {
+							completion(error)
 						}
+					} else {
+						syncSwitchedOn = true
+						completion(nil)
 					}
 				}
 			}
@@ -114,8 +105,8 @@ final class CloudManager {
 	}
 
 	private static func go(_ operation: CKDatabaseOperation) {
-		operation.qualityOfService = .userInitiated
-		db?.add(operation)
+		//operation.qualityOfService = .userInitiated
+		container.privateCloudDatabase.add(operation)
 	}
 
 	private static func fetchZoneChanges(ids: [CKRecordZoneID], finalCompletion: @escaping (Error?)->Void) {
@@ -180,7 +171,7 @@ final class CloudManager {
 					for dropRecord in newDrops {
 						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
 					}
-					if newDrops.count == 0 { // was only deletions, let's save
+					if newDrops.count == 0 { // was only deletions, let's save, otherwise ingestion will cause save later on
 						ViewController.shared.model.save()
 					}
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
@@ -231,27 +222,48 @@ final class CloudManager {
 		go(operation)
 	}
 
+	private static var stateDirty = false
+	static var pullAndPushing = false
+
 	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		if !syncSwitchedOn { return }
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
 			log("Received zone change push")
-			fetchDatabaseChanges { error in
-				if let error = error {
-					log("Database fetch error after push: \(error.localizedDescription)")
-					completionHandler(.failed)
-				} else {
-					completionHandler(.newData)
-				}
-			}
+			pullAndPush()
 		}
 	}
 
-	static func tryToFetchLatestData() {
-		fetchDatabaseChanges { error in
+	static func pullAndPush() {
+		stateDirty = false
+
+		if !CloudManager.syncSwitchedOn { return }
+		
+		if pullAndPushing {
+			stateDirty = true
+			return
+		} else {
+			pullAndPushing = true
+		}
+
+		CloudManager.fetchDatabaseChanges { error in
 			if let error = error {
-				log("Manual fetch failed: \(error.localizedDescription)")
+				log("Could not perform startup pull: \(error.localizedDescription)")
+				pullAndPushing = false
+			} else {
+				CloudManager.sendUpdatesUp { changes, error in
+					if let error = error {
+						log("Could not perform startup push: \(error.localizedDescription)")
+						pullAndPushing = false
+					} else {
+						if stateDirty {
+							pullAndPush()
+						} else {
+							pullAndPushing = false
+						}
+					}
+				}
 			}
 		}
 	}
@@ -277,7 +289,7 @@ final class CloudManager {
 			d.synchronize()
 
 			if newValue == false {
-				deletionQueue = []
+				deletionQueue = Set<String>()
 			}
 		}
 	}
@@ -324,12 +336,12 @@ final class CloudManager {
 		return Model.appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
 	}
 
-	private static var deletionQueue: [String] {
+	private static var deletionQueue: Set<String> {
 		get {
 			let recordLocation = deleteQueuePath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
-				return (NSKeyedUnarchiver.unarchiveObject(with: data) as? [String]) ?? []
+				return (NSKeyedUnarchiver.unarchiveObject(with: data) as? Set<String>) ?? []
 			} else {
 				return []
 			}
@@ -344,15 +356,12 @@ final class CloudManager {
 
 	static func markAsDeleted(uuid: UUID) {
 		if syncSwitchedOn {
-			deletionQueue.append(uuid.uuidString)
+			deletionQueue.insert(uuid.uuidString)
 		}
 	}
 
-	static func sendUpdatesUp() {
+	static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
 		if !syncSwitchedOn { return }
-
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }
 
 		var recordsToPush = [CKRecord]()
 		for item in ViewController.shared.model.drops {
@@ -363,8 +372,20 @@ final class CloudManager {
 					}
 				}
 				recordsToPush.append(itemRecord)
+				deletionQueue.remove(item.uuid.uuidString)
 			}
 		}
+
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }
+
+		if recordsToPush.count == 0 && recordsToDelete.count == 0 {
+			log("No further changes to push up")
+			return
+		} else {
+			log("Pushing up \(recordsToPush.count) changes and \(recordsToDelete.count) deletions")
+		}
+
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToPush, recordIDsToDelete: recordsToDelete)
 		var changes = false
 		operation.perRecordCompletionBlock = { record, error in
@@ -377,8 +398,8 @@ final class CloudManager {
 					item.cloudKitRecord = record
 					changes = true
 					log("Updated cloud record \(itemUUID)")
-				} else if let i = deletionQueue.index(of: itemUUID) {
-					deletionQueue.remove(at: i)
+				} else if deletionQueue.contains(itemUUID) {
+					deletionQueue.remove(itemUUID)
 					changes = true
 					log("Deleted cloud record \(itemUUID)")
 				}
@@ -386,9 +407,7 @@ final class CloudManager {
 		}
 		operation.modifyRecordsCompletionBlock = { updatedRecords, deletedIds, error in
 			DispatchQueue.main.async {
-				if changes {
-					ViewController.shared.model.save()
-				}
+				completion(changes, error)
 			}
 		}
 		go(operation)

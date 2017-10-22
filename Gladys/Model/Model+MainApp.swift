@@ -46,15 +46,7 @@ extension Model {
 
 		rebuildLabels()
 
-		if CloudManager.syncSwitchedOn {
-			CloudManager.activate { error in
-				if let error = error {
-					log("Cloud activation error: \(error.localizedDescription)")
-				} else {
-					CloudManager.sendUpdatesUp()
-				}
-			}
-		}
+		CloudManager.pullAndPush()
 	}
 
 	func saveDone() {
@@ -70,7 +62,11 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sendUpdatesUp()
+		CloudManager.sendUpdatesUp { changes, error in
+			if changes {
+				self.save()
+			}
+		}
 	}
 	
 	func beginMonitoringChanges() {

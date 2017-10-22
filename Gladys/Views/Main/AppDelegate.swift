@@ -42,15 +42,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return false
 	}
 
+	func applicationWillEnterForeground(_ application: UIApplication) {
+		CloudManager.pullAndPush()
+	}
+
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		log("Registered for remote notifications")
 	}
 
 	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
 		log("Failed to register for remote notifications")
-		if CloudManager.syncSwitchedOn && application.applicationState != .active {
-			CloudManager.tryToFetchLatestData()
-		}
 	}
 
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
