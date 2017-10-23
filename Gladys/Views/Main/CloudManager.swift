@@ -9,6 +9,20 @@
 import UIKit
 import CloudKit
 
+extension Array {
+	func bunch(maxSize: Int) -> [[Element]] {
+		var pos = 0
+		var res = [[Element]]()
+		while pos < count {
+			let end = Swift.min(count, pos + maxSize)
+			let a = self[pos ..< end]
+			res.append(Array(a))
+			pos += maxSize
+		}
+		return res
+	}
+}
+
 final class CloudManager {
 
 	private static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
@@ -103,7 +117,6 @@ final class CloudManager {
 	}
 
 	private static func go(_ operation: CKDatabaseOperation) {
-		//operation.qualityOfService = .userInitiated
 		container.privateCloudDatabase.add(operation)
 	}
 
@@ -393,60 +406,95 @@ final class CloudManager {
 	private static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
 		if !syncSwitchedOn { return }
 
-		var recordsToPush = [CKRecord]()
+		var payloadsToPush = [[CKRecord]]()
 		for item in ViewController.shared.model.drops {
 			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
+				var payload = [CKRecord]()
 				if itemRecord.recordChangeTag == nil {
 					for type in item.typeItems {
-						recordsToPush.append(type.populatedCloudKitRecord)
+						payload.append(type.populatedCloudKitRecord)
 					}
 				}
-				recordsToPush.append(itemRecord)
+				payload.append(itemRecord)
+				payloadsToPush.append(payload)
 			}
 		}
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }
+		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 
-		if recordsToPush.count == 0 && recordsToDelete.count == 0 {
+		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
 			completion(false, nil)
 			return
-		} else {
-			log("Pushing up \(recordsToPush.count) changes and \(recordsToDelete.count) deletions")
 		}
 
-		let operation = CKModifyRecordsOperation(recordsToSave: recordsToPush, recordIDsToDelete: recordsToDelete)
-		operation.savePolicy = .allKeys
 		var changes = false
-		operation.perRecordCompletionBlock = { record, error in
-			let itemUUID = record.recordID.recordName
-			DispatchQueue.main.async {
-				if let error = error {
-					log("Error updating cloud record for item \(itemUUID): \(error.localizedDescription)")
-				} else if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
-					item.needsCloudPush = false
-					item.cloudKitRecord = record
-					changes = true
-					log("Updated cloud record \(itemUUID)")
-				} else if deletionQueue.contains(itemUUID) {
-					deletionQueue.remove(itemUUID)
-					changes = true
-					log("Deleted cloud record \(itemUUID)")
-				}
-			}
-		}
-		operation.modifyRecordsCompletionBlock = { updatedRecords, deletedIds, error in
-			DispatchQueue.main.async {
-				if error == nil {
-					for r in recordsToDelete {
-						deletionQueue.remove(r.recordName)
+		var latestError: Error?
+		var operations = [CKDatabaseOperation]()
+
+		log("Pushing up \(recordsToDelete.count) item deletion blocks")
+
+		for recordIdList in recordsToDelete {
+			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
+			operation.savePolicy = .allKeys
+			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
+				DispatchQueue.main.async {
+					if let error = error {
+						latestError = error
+						log("Error deleting items: \(error.localizedDescription)")
+					}
+					for uuid in (deletedRecordIds?.map({ $0.recordName })) ?? [] {
+						if deletionQueue.contains(uuid) {
+							deletionQueue.remove(uuid)
+							log("Deleted cloud record \(uuid)")
+							changes = true
+						}
 					}
 				}
-				completion(changes, error)
+			}
+			operations.append(operation)
+		}
+
+		log("Pushing up \(payloadsToPush.count) item blocks")
+
+		for recordList in payloadsToPush {
+			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
+			operation.savePolicy = .allKeys
+			operation.isAtomic = true
+			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
+				DispatchQueue.main.async {
+					if let error = error {
+						log("Error updating cloud records: \(error.localizedDescription)")
+						latestError = error
+					}
+					for record in updatedRecords ?? [] {
+						let itemUUID = record.recordID.recordName
+						if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+							item.needsCloudPush = false
+							item.cloudKitRecord = record
+							changes = true
+							log("Updated \(record.recordType) cloud record \(itemUUID)")
+						}
+					}
+				}
+			}
+			operations.append(operation)
+		}
+
+		let group = DispatchGroup()
+		operations.forEach {
+			group.enter()
+			$0.completionBlock = {
+				group.leave()
 			}
 		}
-		go(operation)
+		group.notify(queue: DispatchQueue.main) {
+			completion(changes, latestError)
+		}
+		operations.forEach {
+			go($0)
+		}
 	}
 
 	///////////////////////////////////
