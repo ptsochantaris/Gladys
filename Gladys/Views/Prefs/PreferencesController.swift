@@ -243,9 +243,18 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@IBOutlet weak var icloudLabel: UILabel!
 	@IBOutlet weak var icloudSwitch: UISwitch!
-	@IBOutlet weak var icloudHolder: UIView!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
+	@IBOutlet weak var updateNowButton: UIButton!
 	// TODO: accessibility
+
+	@IBAction func updateNowSelected(_ sender: UIButton) {
+		CloudManager.sync { [weak self] changes, error in
+			guard let s = self else { return }
+			if let error = error {
+				genericAlert(title: "Sync Error", message: error.localizedDescription, on: s)
+			}
+		}
+	}
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		if spinner.isAnimating || zipSpinner.isAnimating {
@@ -278,7 +287,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
 		icloudSwitch.tintColor = UIColor.lightGray
 		icloudSwitch.onTintColor = view.tintColor
-		icloudTransitionChanged()
+		updateiCloudControls()
 
 		container.layer.cornerRadius = 10
 		innerFrame.layer.cornerRadius = 5
@@ -329,12 +338,26 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	@objc private func icloudTransitionChanged() {
-		if CloudManager.syncTransitioning || CloudManager.syncing {
+		updateiCloudControls()
+		UIView.animate(animations: {
+			self.view.layoutIfNeeded()
+		}, completion: nil)
+	}
+
+	private func updateiCloudControls() {
+		updateNowButton.isHidden = !CloudManager.syncSwitchedOn
+		if CloudManager.syncTransitioning {
 			icloudSwitch.isEnabled = false
-			icloudLabel.text = CloudManager.syncTransitioning ? "Changing..." : "Updating Data..."
+			icloudLabel.text = CloudManager.syncSwitchedOn ? "Deactinvating" : "Activating"
+			icloudSpinner.startAnimating()
+		} else if CloudManager.syncing {
+			icloudSwitch.isEnabled = false
+			updateNowButton.isEnabled = false
+			icloudLabel.text = "Updating Data"
 			icloudSpinner.startAnimating()
 		} else {
 			icloudSwitch.isEnabled = true
+			updateNowButton.isEnabled = true
 			icloudLabel.text = "iCloud Sync"
 			icloudSpinner.stopAnimating()
 			icloudSwitch.isOn = CloudManager.syncSwitchedOn

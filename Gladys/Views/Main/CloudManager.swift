@@ -417,6 +417,7 @@ final class CloudManager {
 		}
 
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToPush, recordIDsToDelete: recordsToDelete)
+		operation.savePolicy = .allKeys
 		var changes = false
 		operation.perRecordCompletionBlock = { record, error in
 			let itemUUID = record.recordID.recordName
