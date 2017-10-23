@@ -1,6 +1,8 @@
 
 import Foundation
-import FileProvider
+#if MAINAPP || FILEPROVIDER
+	import FileProvider
+#endif
 
 final class Model: NSObject {
 
@@ -8,7 +10,11 @@ final class Model: NSObject {
 	var dataFileLastModified = Date.distantPast
 
 	static var appStorageUrl: URL = {
-		return NSFileProviderManager.default.documentStorageURL
+		#if MAINAPP || FILEPROVIDER
+			return NSFileProviderManager.default.documentStorageURL
+		#else
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!.appendingPathComponent("File Provider Storage")
+		#endif
 	}()
 
 	static var fileUrl: URL = {
