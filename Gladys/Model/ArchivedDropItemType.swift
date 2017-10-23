@@ -491,7 +491,12 @@ final class ArchivedDropItemType: Codable {
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
-			try? FileManager.default.copyItem(at: assetURL, to: bytesPath)
+			let path = bytesPath
+			let f = FileManager.default
+			if f.fileExists(atPath: path.path) {
+				try? f.removeItem(at: path)
+			}
+			try? f.copyItem(at: assetURL, to: path)
 		}
 		cloudKitRecord = record
 	}
