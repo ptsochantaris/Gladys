@@ -67,6 +67,7 @@ final class CloudManager {
 				} else {
 					deletionQueue.removeAll()
 					zoneChangeTokens = [:]
+					uuidSequence = nil
 					dbChangeToken = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
@@ -132,6 +133,7 @@ final class CloudManager {
 
 		var lookup = zoneChangeTokens
 		var changes = false
+		var updatedSequence = false
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
 
@@ -167,8 +169,20 @@ final class CloudManager {
 					}
 					changes = true
 				} else if record.recordType == "ArchivedDropItemType" {
-					log("Received a child item: \(record.recordID.recordName)")
-					newTypeItemsToHookOntoDrops.append(record)
+					let itemUUID = record.recordID.recordName
+					if let typeItem = ViewController.shared.model.drops.flatMap({$0.typeItems.first(where: { $0.uuid.uuidString == itemUUID }) }).first {
+						log("Will update existing local type data: \(itemUUID)")
+						typeItem.cloudKitUpdate(from: record)
+						changes = true
+					} else {
+						log("Will create new local type data: \(itemUUID)")
+						newTypeItemsToHookOntoDrops.append(record)
+					}
+				} else if record.recordType == "PositionList", let newUUIDlist = record["positionList"] as? [String], newUUIDlist != (uuidSequence ?? []) {
+					log("Received an updated position list record")
+					uuidSequence = newUUIDlist
+					changes = true
+					updatedSequence = true
 				}
 			}
 		}
@@ -185,7 +199,11 @@ final class CloudManager {
 					if newDrops.count == 0 { // was only deletions, let's save, otherwise ingestion will cause save later on
 						ViewController.shared.model.save()
 					}
-					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+					if updatedSequence {
+						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
+					} else {
+						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+					}
 				}
 				if let error = error {
 					finalCompletion(error)
@@ -373,6 +391,26 @@ final class CloudManager {
 		}
 	}
 
+	static var uuidSequence: [String]? {
+		get {
+			if let d = UserDefaults.standard.data(forKey: "uuidSequence") {
+				return NSKeyedUnarchiver.unarchiveObject(with: d) as? [String]
+			} else {
+				return nil
+			}
+		}
+		set {
+			let d = UserDefaults.standard
+			if let n = newValue {
+				let data = NSKeyedArchiver.archivedData(withRootObject: n)
+				d.set(data, forKey: "uuidSequence")
+			} else {
+				d.removeObject(forKey: "uuidSequence")
+			}
+			d.synchronize()
+		}
+	}
+
 	///////////////////////////////////
 
 	private static var deleteQueuePath: URL {
@@ -406,21 +444,27 @@ final class CloudManager {
 	private static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
 		if !syncSwitchedOn { return }
 
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		var payloadsToPush = [[CKRecord]]()
+
+		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
+		if (uuidSequence ?? []) != currentUUIDSequence {
+			let record = CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
+			record["positionList"] = currentUUIDSequence as NSArray
+			payloadsToPush.append([record])
+		}
+
 		for item in ViewController.shared.model.drops {
 			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
 				var payload = [CKRecord]()
-				if itemRecord.recordChangeTag == nil {
-					for type in item.typeItems {
-						payload.append(type.populatedCloudKitRecord)
-					}
+				for type in item.typeItems {
+					payload.append(type.populatedCloudKitRecord)
 				}
 				payload.append(itemRecord)
 				payloadsToPush.append(payload)
 			}
 		}
 
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
@@ -470,7 +514,10 @@ final class CloudManager {
 					}
 					for record in updatedRecords ?? [] {
 						let itemUUID = record.recordID.recordName
-						if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+						if itemUUID == "PositionList" {
+							uuidSequence = currentUUIDSequence
+							log("Updated cloud item position list record")
+						} else if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
 							item.needsCloudPush = false
 							item.cloudKitRecord = record
 							changes = true

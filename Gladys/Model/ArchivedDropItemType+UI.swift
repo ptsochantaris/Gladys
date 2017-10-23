@@ -69,14 +69,58 @@ extension ArchivedDropItemType {
 
 	////////////////////////////////////////////////////////////////
 
+	var cloudKitDataPath: URL {
+		return self.folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+	}
+
+	var cloudKitRecord: CKRecord? {
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKRecord(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitDataPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			}
+		}
+	}
+
+	func cloudKitUpdate(from record: CKRecord) {
+		updatedAt = record["updatedAt"] as! Date
+		typeIdentifier = record["typeIdentifier"] as! String
+		representedClass = record["representedClass"] as! String
+		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
+		accessoryTitle = record["accessoryTitle"] as? String
+		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
+			try? FileManager.default.copyItem(at: assetURL, to: bytesPath)
+		}
+		cloudKitRecord = record
+	}
+	
 	var populatedCloudKitRecord: CKRecord {
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems",
 		                            ownerName: CKCurrentUserDefaultName)
 
-		let record = CKRecord(recordType: "ArchivedDropItemType",
-		                      recordID: CKRecordID(recordName: uuid.uuidString,
-		                                           zoneID: zoneId))
+		let record = cloudKitRecord ?? CKRecord(recordType: "ArchivedDropItemType",
+		                                        recordID: CKRecordID(recordName: uuid.uuidString,
+		                                                             zoneID: zoneId))
 
 		let parentId = CKRecordID(recordName: parentUuid.uuidString, zoneID: zoneId)
 		record["parent"] = CKReference(recordID: parentId, action: CKReferenceAction.deleteSelf)

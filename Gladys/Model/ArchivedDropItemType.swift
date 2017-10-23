@@ -493,6 +493,7 @@ final class ArchivedDropItemType: Codable {
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
 			try? FileManager.default.copyItem(at: assetURL, to: bytesPath)
 		}
+		cloudKitRecord = record
 	}
 	#endif
 }

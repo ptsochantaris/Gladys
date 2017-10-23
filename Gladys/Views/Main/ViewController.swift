@@ -303,6 +303,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		}
 	}
 
+	@objc private func itemPositionsReceived() {
+		if let sequence = CloudManager.uuidSequence {
+			model.drops = sequence.flatMap { uuid -> ArchivedDropItem? in
+				return model.drops.first { $0.uuid.uuidString == uuid }
+			}
+			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+			model.save()
+		}
+	}
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		navigationItem.largeTitleDisplayMode = .never
@@ -359,6 +369,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
+		n.addObserver(self, selector: #selector(itemPositionsReceived), name: .CloudManagerUpdatedUUIDSequence, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
