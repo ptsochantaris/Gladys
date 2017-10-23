@@ -8,7 +8,7 @@ final class DropItemEnumerator: CommonEnumerator {
 	}
 
 	override var fileItems: [FileProviderItem] {
-		guard let dropItem = model.drops.first(where: { $0.uuid.uuidString == uuid }) else {
+		guard let dropItem = undeletedDrops.first(where: { $0.uuid.uuidString == uuid }) else {
 			return []
 		}
 		if sortByDate {

@@ -3,7 +3,7 @@ import CoreSpotlight
 
 extension Model: CSSearchableIndexDelegate {
 
-	func reIndex(items: [ArchivedDropItem], completion: (()->Void)? = nil) {
+	func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex = CSSearchableIndex.default(), completion: (()->Void)? = nil) {
 
 		let group = DispatchGroup()
 		for _ in 0 ..< items.count {
@@ -13,7 +13,7 @@ extension Model: CSSearchableIndexDelegate {
 		let bgQueue = DispatchQueue.global(qos: .background)
 		bgQueue.async {
 			for item in items {
-				item.makeIndex { success in
+				item.makeIndex(in: index) { success in
 					group.leave() // re-index completion
 				}
 			}
@@ -25,11 +25,11 @@ extension Model: CSSearchableIndexDelegate {
 
 	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
 		let existingItems = drops
-		CSSearchableIndex.default().deleteAllSearchableItems { error in
+		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
 				log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
 			}
-			self.reIndex(items: existingItems, completion: acknowledgementHandler)
+			self.reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 
@@ -37,11 +37,11 @@ extension Model: CSSearchableIndexDelegate {
 		let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }
 		let currentItemIds = drops.map { $0.uuid.uuidString }
 		let deletedItems = identifiers.filter { currentItemIds.contains($0) }
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: deletedItems) { error in
+		searchableIndex.deleteSearchableItems(withIdentifiers: deletedItems) { error in
 			if let error = error {
 				log("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
 			}
-			self.reIndex(items: existingItems, completion: acknowledgementHandler)
+			self.reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 

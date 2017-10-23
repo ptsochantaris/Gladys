@@ -429,7 +429,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		if previousBuild != currentBuild {
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
-			model.reIndex(items: model.drops, completion: nil)
+			model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {})
 		}
 	}
 
@@ -459,11 +459,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	private func detectExternalDeletions() {
+		let itemsToDelete = model.drops.filter { $0.needsDeletion }
+		ViewController.shared.deleteRequested(for: itemsToDelete)
+	}
+
 	@objc private func externalDataUpdate() {
 		model.forceUpdateFilter(signalUpdate: false) // will force below
 		searchUpdated()
 		didUpdateItems()
 		updateEmptyView(animated: true)
+		detectExternalDeletions()
 	}
 
 	private var emptyView: UIImageView?
@@ -630,6 +636,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		return dragParameters(for: indexPath)
 	}
 
+	private var firstAppearance = true
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if firstAppearance {
+			firstAppearance = false
+			detectExternalDeletions()
+		}
+	}
+
 	private var lastSize = CGSize.zero
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
@@ -639,8 +654,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		lastSize = boundsSize
 
 		dismissAnyPopOver()
-
-		archivedItemCollectionView.performBatchUpdates({})
 	}
 
 	/////////////////////////////////

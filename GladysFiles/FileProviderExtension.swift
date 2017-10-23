@@ -4,6 +4,10 @@ import UIKit
 
 let model = Model()
 
+var undeletedDrops: [ArchivedDropItem] {
+	return model.drops.filter { !$0.needsDeletion }
+}
+
 final class FileProviderExtension: NSFileProviderExtension {
 
 	@discardableResult
@@ -11,13 +15,15 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		let uuid = identifier.rawValue
 
-		for item in model.drops {
+		let drops = undeletedDrops
+
+		for item in drops {
 			if item.uuid.uuidString == uuid {
 				return FileProviderItem(item)
 			}
 		}
 
-		for item in model.drops {
+		for item in drops {
 			for typeItem in item.typeItems {
 				if typeItem.uuid.uuidString == uuid {
 					if item.typeItems.count == 1 {
@@ -73,7 +79,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		if url.lastPathComponent == "items.json" { return }
 		if url.lastPathComponent == "ck-delete-queue" { return }
 		log("Item changed: \(url.path)")
-		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = model.drops.first(where: { $0.uuid == typeItem.parentUuid }) {
+		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = undeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			parent.needsReIngest = true
 			model.save()
@@ -157,7 +163,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				return
 			}
 			if let i = model.drops.index(where: { $0.uuid == uuid }) {
-				model.drops.remove(at: i)
+				model.drops[i].needsDeletion = true
 				model.save()
 				completionHandler(nil)
 			} else {

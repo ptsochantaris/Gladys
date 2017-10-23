@@ -14,6 +14,7 @@ final class ArchivedDropItem: Codable, Equatable {
 	var allLoadedWell: Bool
 	var needsReIngest: Bool
 	var needsCloudPush: Bool
+	var needsDeletion: Bool
 	var note: String
 	var titleOverride: String
 	var labels: [String]
@@ -33,6 +34,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		case titleOverride
 		case labels
 		case needsCloudPush
+		case needsDeletion
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -48,6 +50,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(titleOverride, forKey: .titleOverride)
 		try v.encode(labels, forKey: .labels)
 		try v.encode(needsCloudPush, forKey: .needsCloudPush)
+		try v.encode(needsDeletion, forKey: .needsDeletion)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -64,6 +67,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
 		needsCloudPush = try v.decodeIfPresent(Bool.self, forKey: .needsCloudPush) ?? false
+		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -149,6 +153,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			allLoadedWell = true
 			needsReIngest = true
 			needsCloudPush = true
+			needsDeletion = false
 			titleOverride = ""
 			note = ""
 			labels = []
@@ -173,6 +178,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			needsReIngest = true
 			allLoadedWell = true
 			needsCloudPush = false
+			needsDeletion = false
 			typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
 			cloudKitRecord = record
 
