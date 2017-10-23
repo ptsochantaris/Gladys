@@ -398,7 +398,7 @@ final class CloudManager {
 			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
 				if itemRecord.recordChangeTag == nil {
 					for type in item.typeItems {
-						recordsToPush.append(type.newCloudKitRecord)
+						recordsToPush.append(type.populatedCloudKitRecord)
 					}
 				}
 				recordsToPush.append(itemRecord)

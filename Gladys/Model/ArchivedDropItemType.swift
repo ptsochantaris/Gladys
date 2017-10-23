@@ -474,23 +474,24 @@ final class ArchivedDropItemType: Codable {
 
 		self.parentUuid = parentUuid
 
+		displayIconPriority = 0
+		displayIconContentMode = .center
+		displayTitlePriority = 0
+		displayTitleAlignment = .center
+		displayIconScale = 1
+		displayIconWidth = 0
+		displayIconHeight = 0
+
 		let myUUID = record.recordID.recordName
 		uuid = UUID(uuidString: myUUID)!
 		createdAt = record["createdAt"] as! Date
 		updatedAt = record["updatedAt"] as! Date
-
 		typeIdentifier = record["typeIdentifier"] as! String
-		displayIconPriority = record["displayIconPriority"] as! Int
-		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: record["displayIconContentMode"] as! Int)!
-		displayTitlePriority = record["displayTitlePriority"] as! Int
-		displayTitleAlignment = NSTextAlignment(rawValue: record["displayTitleAlignment"] as! Int)!
-		displayIconScale = record["displayIconScale"] as! CGFloat
-		displayIconWidth = record["displayIconWidth"] as! CGFloat
-		displayIconHeight = record["displayIconHeight"] as! CGFloat
-		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		representedClass = record["representedClass"] as! String
+		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
+		accessoryTitle = record["accessoryTitle"] as? String
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
-			try? FileManager.default.moveItem(at: assetURL, to: bytesPath)
+			try? FileManager.default.copyItem(at: assetURL, to: bytesPath)
 		}
 	}
 	#endif

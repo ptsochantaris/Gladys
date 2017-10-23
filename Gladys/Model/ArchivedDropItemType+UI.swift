@@ -69,7 +69,7 @@ extension ArchivedDropItemType {
 
 	////////////////////////////////////////////////////////////////
 
-	var newCloudKitRecord: CKRecord {
+	var populatedCloudKitRecord: CKRecord {
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems",
 		                            ownerName: CKCurrentUserDefaultName)
@@ -91,16 +91,6 @@ extension ArchivedDropItemType {
 		record["representedClass"] = representedClass as NSString
 		record["classWasWrapped"] = NSNumber(value: classWasWrapped ? 1 : 0)
 		record["accessoryTitle"] = accessoryTitle as NSString?
-		record["displayTitle"] = displayTitle as NSString?
-		record["displayTitleAlignment"] = NSNumber(value: displayTitleAlignment.rawValue)
-		record["displayTitlePriority"] = NSNumber(value: displayTitlePriority)
-		record["displayTitleAlignment"] = NSNumber(value: displayTitleAlignment.rawValue)
-		record["displayTitlePriority"] = NSNumber(value: displayTitlePriority)
-		record["displayIconPriority"] = NSNumber(value: displayIconPriority)
-		record["displayIconContentMode"] = NSNumber(value: displayIconContentMode.rawValue)
-		record["displayIconScale"] = NSNumber(value: Double(displayIconScale))
-		record["displayIconWidth"] = NSNumber(value: Double(displayIconWidth))
-		record["displayIconHeight"] = NSNumber(value: Double(displayIconHeight))
 
 		return record
 	}
