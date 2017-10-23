@@ -445,24 +445,21 @@ final class CloudManager {
 		if !syncSwitchedOn { return }
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		var payloadsToPush = [[CKRecord]]()
+
+		var payloadsToPush = ViewController.shared.model.drops.flatMap { item -> [CKRecord]? in
+			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
+				var payload = item.typeItems.map { $0.populatedCloudKitRecord }
+				payload.append(itemRecord)
+				return payload
+			}
+			return nil
+		}
 
 		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
 		if (uuidSequence ?? []) != currentUUIDSequence {
 			let record = CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])
-		}
-
-		for item in ViewController.shared.model.drops {
-			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
-				var payload = [CKRecord]()
-				for type in item.typeItems {
-					payload.append(type.populatedCloudKitRecord)
-				}
-				payload.append(itemRecord)
-				payloadsToPush.append(payload)
-			}
 		}
 
 		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)

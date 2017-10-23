@@ -427,9 +427,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		let previousBuild = UserDefaults.standard.string(forKey: "LastRanVersion")
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
 		if previousBuild != currentBuild {
-			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
-			UserDefaults.standard.synchronize()
-			model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {})
+			model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
+				UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
+				UserDefaults.standard.synchronize()
+			})
 		}
 	}
 
