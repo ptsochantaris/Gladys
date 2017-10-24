@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if CloudManager.syncSwitchedOn && !UIApplication.shared.isRegisteredForRemoteNotifications {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
+		log("Initial reachability status: \(reachability.status.name)")
 		return true
 	}
 

@@ -288,8 +288,16 @@ final class CloudManager {
 	}
 
 	static func sync(force: Bool = false, onlySend: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
-		if !CloudManager.syncSwitchedOn { completion(previouslySentChanges, nil); return }
-		
+		if !CloudManager.syncSwitchedOn {
+			completion(previouslySentChanges, nil)
+			return
+		}
+
+		if onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
+			completion(previouslySentChanges, nil)
+			return
+		}
+
 		if syncing && !force {
 			syncDirty = true
 			return
@@ -371,6 +379,18 @@ final class CloudManager {
 		set {
 			let d = UserDefaults.standard
 			d.set(newValue, forKey: "syncSwitchedOn")
+			d.synchronize()
+		}
+	}
+
+	static var onlySyncOverWiFi: Bool {
+		get {
+			return UserDefaults.standard.bool(forKey: "onlySyncOverWiFi")
+		}
+
+		set {
+			let d = UserDefaults.standard
+			d.set(newValue, forKey: "onlySyncOverWiFi")
 			d.synchronize()
 		}
 	}
