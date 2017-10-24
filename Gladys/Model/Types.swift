@@ -56,7 +56,9 @@ let dateFormatter: DateFormatter = {
 extension UIImage {
 
 	func writeBitmap(to url: URL) {
-		try? UIImagePNGRepresentation(self)?.write(to: url, options: .atomic)
+		DispatchQueue.main.async { // TODO improve
+			try? UIImagePNGRepresentation(self)?.write(to: url, options: .atomic)
+		}
 	}
 
 	static func fromBitmap(at url: URL, scale: CGFloat) -> UIImage? {
