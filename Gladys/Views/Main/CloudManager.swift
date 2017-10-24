@@ -331,6 +331,7 @@ final class CloudManager {
 		didSet {
 			if syncTransitioning != oldValue {
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
 			}
 		}
 	}
@@ -339,6 +340,7 @@ final class CloudManager {
 		didSet {
 			if syncing != oldValue {
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
 			}
 		}
 	}
@@ -446,8 +448,10 @@ final class CloudManager {
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
+		let deletionIdsSnapshot = deletionQueue
+
 		var payloadsToPush = ViewController.shared.model.drops.flatMap { item -> [CKRecord]? in
-			if let itemRecord = item.populatedCloudKitRecord, !deletionQueue.contains(item.uuid.uuidString) {
+			if let itemRecord = item.populatedCloudKitRecord, !deletionIdsSnapshot.contains(item.uuid.uuidString) {
 				var payload = item.typeItems.map { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
 				return payload
@@ -462,7 +466,7 @@ final class CloudManager {
 			payloadsToPush.append([record])
 		}
 
-		let recordsToDelete = deletionQueue.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
+		let recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
@@ -486,7 +490,7 @@ final class CloudManager {
 						log("Error deleting items: \(error.localizedDescription)")
 					}
 					for uuid in (deletedRecordIds?.map({ $0.recordName })) ?? [] {
-						if deletionQueue.contains(uuid) {
+						if deletionIdsSnapshot.contains(uuid) {
 							deletionQueue.remove(uuid)
 							log("Deleted cloud record \(uuid)")
 							changes = true
