@@ -313,7 +313,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							let img = item.displayIcon
 							ArchivedItemCell.displayIconCache.setObject(img, forKey: cacheKey)
-							DispatchQueue.main.async { [weak self] in
+							DispatchQueue.main.sync { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
 									self?.image.image = img
 								}

@@ -8,7 +8,6 @@ import MobileCoreServices
 extension ArchivedDropItemType {
 
 	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate) -> Progress {
-
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
