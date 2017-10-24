@@ -14,6 +14,8 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var updateNowButton: UIButton!
+	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
+
 	// TODO: accessibility
 
 	@IBAction func updateNowSelected(_ sender: UIButton) {
@@ -25,15 +27,26 @@ final class iCloudController: GladysViewController {
 		}
 	}
 
+	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
+		CloudManager.onlySyncOverWiFi = sender.isOn
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
 
 		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
+
 		icloudSwitch.tintColor = UIColor.lightGray
 		icloudSwitch.onTintColor = view.tintColor
+
+		limitToWiFiSwitch.tintColor = UIColor.lightGray
+		limitToWiFiSwitch.onTintColor = view.tintColor
+
 		updateiCloudControls()
 	}
 

@@ -414,11 +414,17 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
+                                <rect key="frame" x="208" y="185" width="51" height="31"/>
+                                <connections>
+                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
+                                </connections>
+                            </switch>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nlm-oQ-xuJ">
-                                <rect key="frame" x="64" y="94" width="192.5" height="395"/>
+                                <rect key="frame" x="100.5" y="114" width="192.5" height="50.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="3Er-Qy-nKD">
-                                        <rect key="frame" x="0.0" y="172.5" width="91.5" height="50.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="91.5" height="50.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
                                                 <rect key="frame" x="0.0" y="0.0" width="91.5" height="20.5"/>
@@ -436,19 +442,30 @@ Selecting them will show only items that contain these labels.</string>
                                         </subviews>
                                     </stackView>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                        <rect key="frame" x="107.5" y="182" width="51" height="31"/>
+                                        <rect key="frame" x="107.5" y="10" width="51" height="31"/>
                                     </switch>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                        <rect key="frame" x="172.5" y="187.5" width="20" height="20"/>
+                                        <rect key="frame" x="172.5" y="15.5" width="20" height="20"/>
                                         <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
                                 </subviews>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Only sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
+                                <rect key="frame" x="20" y="190.5" width="172" height="20.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="centerX" secondItem="tAZ-V3-BEv" secondAttribute="centerX" id="2BL-H7-a87"/>
-                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="30" id="ZBc-ys-RZc"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" secondItem="nlm-oQ-xuJ" secondAttribute="bottom" constant="30" id="yfH-U3-DjX"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="i3g-cz-xkx" secondAttribute="bottom" priority="750" constant="50" id="BMg-yt-7uY"/>
+                            <constraint firstAttribute="trailing" secondItem="i3g-cz-xkx" secondAttribute="trailing" constant="63" id="QmL-Rw-uca"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="trailing" secondItem="bc6-6V-O7h" secondAttribute="trailing" id="Ukq-qK-d8g"/>
+                            <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="Zd8-0D-tCL"/>
+                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="50" id="euz-8e-KUo"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="h33-TR-LYu"/>
+                            <constraint firstItem="i3g-cz-xkx" firstAttribute="top" secondItem="V6J-fH-sQH" secondAttribute="bottom" constant="30" id="rPS-HK-Nfd"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="20" id="t8F-2l-IKE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
@@ -463,12 +480,13 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
+                        <outlet property="limitToWiFiSwitch" destination="i3g-cz-xkx" id="bwk-rQ-871"/>
                         <outlet property="updateNowButton" destination="Ndv-l7-Q9k" id="QOB-8t-kR4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5136" y="-1279"/>
+            <point key="canvasLocation" x="5135.625" y="-1279.2253521126761"/>
         </scene>
         <!--About Controller-->
         <scene sceneID="mHF-aQ-il8">
