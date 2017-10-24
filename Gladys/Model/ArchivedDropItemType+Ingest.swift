@@ -34,7 +34,6 @@ extension ArchivedDropItemType {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
-			updatedAt = Date()
 			DispatchQueue.global(qos: .background).async {
 				self.ingest(data: bytesCopy) {
 					overallProgress.completedUnitCount += 1

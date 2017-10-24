@@ -38,6 +38,13 @@ final class FileProviderExtension: NSFileProviderExtension {
 		throw NSFileProviderError(.noSuchItem)
 	}
 
+	private func saveModel(completion: (()->Void)? = nil) {
+		DispatchQueue.main.async {
+			Model.oneTimeSaveCallback = completion
+			model.save()
+		}
+	}
+
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
 		do {
 			if let fpi = try item(for: identifier) as? FileProviderItem {
@@ -81,8 +88,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 		log("Item changed: \(url.path)")
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = undeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
+			typeItem.updatedAt = Date()
+			parent.markUpdated()
 			parent.needsReIngest = true
-			model.save()
+			saveModel()
 		}
     }
 
@@ -100,8 +109,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 		do {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem {
 				i.dropItem?.favoriteRank = favoriteRank
-				model.save()
-				completionHandler(i, nil)
+				saveModel {
+					completionHandler(i, nil)
+				}
 			} else {
 				completionHandler(nil, NSFileProviderError(.noSuchItem))
 			}
@@ -115,9 +125,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem {
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
-				model.save()
-				Model.signalWorkingSetChange()
-				completionHandler(i, nil)
+				saveModel {
+					Model.signalWorkingSetChange()
+					completionHandler(i, nil)
+				}
 			} else {
 				completionHandler(nil, NSFileProviderError(.noSuchItem))
 			}
@@ -164,10 +175,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 			if let i = model.drops.index(where: { $0.uuid == uuid }) {
 				model.drops[i].needsDeletion = true
-				DispatchQueue.main.async {
-					model.save()
+				saveModel {
+					completionHandler(nil)
 				}
-				completionHandler(nil)
 			} else {
 				completionHandler(NSFileProviderError(.noSuchItem))
 			}

@@ -370,6 +370,7 @@ extension Model {
 
 			itemsImported += 1
 			item.needsReIngest = true
+			item.needsCloudPush = CloudManager.syncSwitchedOn
 
 			let uuid = item.uuid.uuidString
 

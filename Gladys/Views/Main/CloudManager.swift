@@ -23,6 +23,24 @@ extension Array {
 	}
 }
 
+extension Array where Element == [CKRecord] {
+	func flatBunch(minSize: Int) -> [[CKRecord]] {
+		var result = [[CKRecord]]()
+		var newChild = [CKRecord]()
+		for childArray in self {
+			newChild.append(contentsOf: childArray)
+			if newChild.count >= minSize {
+				result.append(newChild)
+				newChild.removeAll(keepingCapacity: true)
+			}
+		}
+		if newChild.count > 0 {
+			result.append(newChild)
+		}
+		return result
+	}
+}
+
 final class CloudManager {
 
 	private static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
@@ -457,7 +475,7 @@ final class CloudManager {
 				return payload
 			}
 			return nil
-		}
+		}.flatBunch(minSize: 10)
 
 		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
 		if (uuidSequence ?? []) != currentUUIDSequence {

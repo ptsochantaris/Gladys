@@ -824,9 +824,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			}
 
 			item.needsReIngest = false
-			if !item.needsCloudPush && item.cloudKitRecord == nil {
-				item.needsCloudPush = true
-			}
 			item.makeIndex()
 
 			if let i = model.filteredDrops.index(where: { $0 === sender }) {

@@ -152,7 +152,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			suggestedName = providers.first!.suggestedName
 			allLoadedWell = true
 			needsReIngest = true
-			needsCloudPush = true
+			needsCloudPush = false
 			needsDeletion = false
 			titleOverride = ""
 			note = ""
