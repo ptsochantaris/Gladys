@@ -23,6 +23,10 @@ extension ArchivedDropItem {
 		}
 	}
 
+	var shouldDisplayLoading: Bool {
+		return needsReIngest || loadingProgress != nil
+	}
+
 	var backgroundInfoObject: Any? {
 		var currentItem: Any?
 		var currentPriority = -1

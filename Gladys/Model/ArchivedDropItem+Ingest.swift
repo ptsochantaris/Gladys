@@ -9,6 +9,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		if loadCount == 0 {
 			loadingProgress = nil
 			delegate?.loadCompleted(sender: self, success: allLoadedWell)
+			delegate = nil
 		}
 	}
 
@@ -28,7 +29,8 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
-	func startIngest(providers: [NSItemProvider]) -> Progress {
+	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) -> Progress {
+		self.delegate = delegate
 		var progressChildren = [Progress]()
 
 		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
@@ -38,7 +40,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 				if !blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) } ) {
 					loadCount += 1
 					let i = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
-					let p = i.startIngest(provider: provider)
+					let p = i.startIngest(provider: provider, delegate: self)
 					progressChildren.append(p)
 					typeItems.append(i)
 				}

@@ -720,6 +720,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		var detailController = currentDetailView
 
 		for item in items {
+
+			if item.shouldDisplayLoading {
+				item.cancelIngest()
+			}
+
 			let uuid = item.uuid
 
 			if let d = detailController, d.item.uuid == uuid {

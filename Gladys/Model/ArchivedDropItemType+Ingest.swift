@@ -7,8 +7,9 @@ import MobileCoreServices
 
 extension ArchivedDropItemType {
 
-	func startIngest(provider: NSItemProvider) -> Progress {
+	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate) -> Progress {
 
+		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
@@ -386,6 +387,7 @@ extension ArchivedDropItemType {
 		ingestCompletion = nil
 		DispatchQueue.main.async {
 			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
+			self.delegate = nil
 			callback?()
 		}
 	}

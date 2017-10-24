@@ -158,9 +158,8 @@ final class ArchivedDropItem: Codable, Equatable {
 			note = ""
 			labels = []
 			typeItems = [ArchivedDropItemType]()
-			self.delegate = delegate
-
-			loadingProgress = startIngest(providers: providers)
+	
+			loadingProgress = startIngest(providers: providers, delegate: delegate)
 		}
 
 	#endif
@@ -181,12 +180,6 @@ final class ArchivedDropItem: Codable, Equatable {
 			needsDeletion = false
 			typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
 			cloudKitRecord = record
-
-			for item in typeItems {
-				item.delegate = self
-			}
-
-			reIngest(delegate: ViewController.shared)
 		}
 	#endif
 

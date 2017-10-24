@@ -157,8 +157,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	@IBAction func cancelSelected(_ sender: UIButton) {
 		progressView.observedProgress = nil
-		if let archivedDropItem = archivedDropItem, archivedDropItem.loadingProgress != nil {
-			archivedDropItem.cancelIngest()
+		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
 		}
 	}
@@ -286,15 +285,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var wantMapView = false
 		var hideCancel = true
 		var hideImage = true
+		var hideProgress = true
 
 		var accessoryLabelText: String?
 		var accessoryLabelDistanceConstant: CGFloat = 0
 
 		if let item = item {
 
-			if let progress = item.loadingProgress {
+			if item.shouldDisplayLoading {
 				hideCancel = false
-				progressView.observedProgress = progress
+				hideProgress = false
+				progressView.observedProgress = item.loadingProgress
 				image.image = nil
 				label.text = nil
 
@@ -312,7 +313,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							let img = item.displayIcon
 							ArchivedItemCell.displayIconCache.setObject(img, forKey: cacheKey)
-							DispatchQueue.main.sync { [weak self] in
+							DispatchQueue.main.async { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
 									self?.image.image = img
 								}
@@ -378,7 +379,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			existingMapView = nil
 		}
 
-		progressView.isHidden = progressView.observedProgress == nil
+		progressView.isHidden = hideProgress
 		accessoryLabel.text = accessoryLabelText
 		labelDistance.constant = (label.text == nil) ? 0 : 8
 		accessoryLabelDistance.constant = accessoryLabelDistanceConstant
@@ -402,7 +403,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	/////////////////////////////////////////
 
 	override func accessibilityActivate() -> Bool {
-		if archivedDropItem?.loadingProgress != nil {
+		if shouldDisplayLoading {
 			cancelSelected(cancelButton)
 			return true
 		} else {
@@ -420,7 +421,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityLabel: String? {
 		set {}
 		get {
-			if archivedDropItem?.loadingProgress == nil {
+			if shouldDisplayLoading {
 				return accessoryLabel.text
 			}
 			return nil
@@ -430,7 +431,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityValue: String? {
 		set {}
 		get {
-			if archivedDropItem?.loadingProgress != nil {
+			if shouldDisplayLoading {
 				return "Processing item. Activate to cancel."
 			} else {
 				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, label.text].flatMap { $0 }.joined(separator: "\n")
@@ -443,6 +444,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		get {
 			return isSelectedForDelete ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone
 		}
+	}
+
+	private var shouldDisplayLoading: Bool {
+		return archivedDropItem?.shouldDisplayLoading ?? false
 	}
 }
 
