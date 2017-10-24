@@ -19,6 +19,11 @@ final class iCloudController: GladysViewController {
 	// TODO: accessibility
 
 	@IBAction func updateNowSelected(_ sender: UIButton) {
+		if reachability.status == .NotReachable {
+			genericAlert(title: "Network Not Available", message: "Please check your network connection", on: self)
+			return
+		}
+		
 		CloudManager.sync { [weak self] changes, error in
 			guard let s = self else { return }
 			if let error = error {
