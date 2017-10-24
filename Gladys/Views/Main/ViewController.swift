@@ -229,20 +229,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		if segue.identifier == "showPreferences",
-			let n = segue.destination as? UINavigationController,
-			let d = n.topViewController as? PreferencesController,
-			let p = n.popoverPresentationController {
+			let t = segue.destination as? UITabBarController,
+			let p = t.popoverPresentationController {
 
 			p.permittedArrowDirections = [.any]
 			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
 			p.sourceView = navigationController!.view
 			p.delegate = self
-			let c = UIColor(red: 246/255, green: 246/255, blue: 248/255, alpha: 1)
-			if traitCollection.horizontalSizeClass == .regular {
-				p.backgroundColor = c
-				d.navigationItem.rightBarButtonItem = nil
-			} else {
-				n.view.backgroundColor = c
+
+			let c = patternColor
+
+			for n in t.viewControllers ?? [] {
+				if let d = (n as? UINavigationController)?.topViewController {
+					if traitCollection.horizontalSizeClass == .regular {
+						p.backgroundColor = c
+						d.navigationItem.rightBarButtonItem = nil
+					} else {
+						n.view.backgroundColor = c
+					}
+				}
 			}
 
 		} else if segue.identifier == "showDetail",
@@ -699,7 +704,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	}
 
 	private var firstPresentedNavigationController: UINavigationController? {
-		return (presentedViewController?.presentedViewController?.presentedViewController ?? presentedViewController?.presentedViewController ?? presentedViewController) as? UINavigationController
+		let v = presentedViewController?.presentedViewController?.presentedViewController ?? presentedViewController?.presentedViewController ?? presentedViewController
+		if let v = v as? UINavigationController {
+			return v
+		} else if let v = v as? UITabBarController {
+			return v.selectedViewController as? UINavigationController
+		}
+		return nil
 	}
 
 	private var currentDetailView: DetailController? {

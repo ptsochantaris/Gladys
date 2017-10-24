@@ -122,7 +122,7 @@
                         <leftBarButtonItems>
                             <barButtonItem image="settings" id="8HU-04-Ir2">
                                 <connections>
-                                    <segue destination="bQ0-lQ-Akd" kind="popoverPresentation" identifier="showPreferences" popoverAnchorBarButtonItem="8HU-04-Ir2" id="cZU-UX-k5o">
+                                    <segue destination="QNh-jL-bwn" kind="popoverPresentation" identifier="showPreferences" popoverAnchorBarButtonItem="8HU-04-Ir2" id="cZU-UX-k5o">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
                                 </connections>
@@ -268,31 +268,31 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
-                                <rect key="frame" x="46" y="394" width="228" height="14.5"/>
+                                <rect key="frame" x="46" y="424" width="228" height="14.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHF-2i-yuv">
-                                <rect key="frame" x="46" y="122.5" width="228" height="90"/>
+                                <rect key="frame" x="46" y="132.5" width="228" height="100"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjC-x2-xmz">
-                                        <rect key="frame" x="8" y="8" width="212" height="74"/>
+                                        <rect key="frame" x="8" y="8" width="212" height="84"/>
                                         <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfE-PE-TSW">
-                                        <rect key="frame" x="20" y="20" width="188" height="50"/>
+                                        <rect key="frame" x="20" y="20" width="188" height="60"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Olv-Pc-Qy9">
-                                        <rect key="frame" x="104" y="35" width="20" height="20"/>
+                                        <rect key="frame" x="104" y="40" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="90" id="0jH-fe-ymm"/>
+                                    <constraint firstAttribute="height" constant="100" id="0jH-fe-ymm"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerY" secondItem="eHF-2i-yuv" secondAttribute="centerY" id="85L-pb-dtO"/>
                                     <constraint firstItem="Olv-Pc-Qy9" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="Dok-6f-GP1"/>
                                     <constraint firstAttribute="bottom" secondItem="YjC-x2-xmz" secondAttribute="bottom" constant="8" id="Ltj-ce-IZr"/>
@@ -308,23 +308,23 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export all your items as an archive." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
-                                <rect key="frame" x="36" y="84" width="248" height="30.5"/>
+                                <rect key="frame" x="36" y="94" width="248" height="30.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="emb-Ou-BQ2" userLabel="ZIP Container">
-                                <rect key="frame" x="46" y="296.5" width="228" height="90"/>
+                                <rect key="frame" x="46" y="316.5" width="228" height="100"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60f-T2-TvR">
-                                        <rect key="frame" x="8" y="8" width="212" height="74"/>
+                                        <rect key="frame" x="8" y="8" width="212" height="84"/>
                                         <color key="backgroundColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="g0B-rC-HOO">
-                                        <rect key="frame" x="104" y="35" width="20" height="20"/>
+                                        <rect key="frame" x="104" y="40" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zip" translatesAutoresizingMaskIntoConstraints="NO" id="KV3-RU-Hot">
-                                        <rect key="frame" x="8" y="8" width="212" height="74"/>
+                                        <rect key="frame" x="8" y="8" width="212" height="84"/>
                                         <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                 </subviews>
@@ -345,57 +345,24 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag in an existing Gladys archive above to merge its contents into your current items." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
-                                <rect key="frame" x="46" y="220" width="228" height="46.5"/>
+                                <rect key="frame" x="46" y="240" width="228" height="46.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nlm-oQ-xuJ">
-                                <rect key="frame" x="64" y="438.5" width="192.5" height="50.5"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="3Er-Qy-nKD">
-                                        <rect key="frame" x="0.0" y="0.0" width="91.5" height="50.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                                <rect key="frame" x="0.0" y="0.0" width="91.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ndv-l7-Q9k">
-                                                <rect key="frame" x="6.5" y="20.5" width="85" height="30"/>
-                                                <state key="normal" title="Update Now"/>
-                                                <connections>
-                                                    <action selector="updateNowSelected:" destination="HJT-hG-46H" eventType="touchUpInside" id="J4x-Dj-ut1"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                        <rect key="frame" x="107.5" y="10" width="51" height="31"/>
-                                    </switch>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                        <rect key="frame" x="172.5" y="15.5" width="20" height="20"/>
-                                        <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                            </stackView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="emb-Ou-BQ2" firstAttribute="top" secondItem="HiR-cx-G23" secondAttribute="bottom" constant="30" id="2lN-I4-7U4"/>
                             <constraint firstItem="emb-Ou-BQ2" firstAttribute="height" secondItem="eHF-2i-yuv" secondAttribute="height" id="5zd-tm-5sU"/>
-                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="20" id="6UP-rS-55P"/>
+                            <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" constant="30" id="6UP-rS-55P"/>
                             <constraint firstItem="eHF-2i-yuv" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="30" id="6hD-VL-b9m"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="8" id="6uD-hY-ehB"/>
                             <constraint firstItem="emb-Ou-BQ2" firstAttribute="centerX" secondItem="wBp-li-D4L" secondAttribute="centerX" id="HRU-VK-Vzx"/>
+                            <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ZOF-Yb-WSo" secondAttribute="bottom" priority="750" constant="30" id="IOq-6V-efP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eHF-2i-yuv" secondAttribute="trailing" constant="30" id="Kmc-7x-z5u"/>
                             <constraint firstItem="emb-Ou-BQ2" firstAttribute="width" secondItem="eHF-2i-yuv" secondAttribute="width" id="UUM-x1-Jzy"/>
                             <constraint firstItem="OxZ-BU-EoU" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leadingMargin" constant="20" id="aXs-bU-lW9"/>
                             <constraint firstItem="ZOF-Yb-WSo" firstAttribute="centerX" secondItem="JfA-bI-JxR" secondAttribute="centerX" id="fvc-P4-4fK"/>
-                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="top" secondItem="ZOF-Yb-WSo" secondAttribute="bottom" constant="30" id="hkL-sy-BVH"/>
-                            <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="nlm-oQ-xuJ" secondAttribute="bottom" priority="750" constant="50" id="i55-tr-S2j"/>
-                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="centerX" secondItem="JfA-bI-JxR" secondAttribute="centerX" id="ljt-cY-NXE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="20" id="q4O-tH-cpU"/>
                             <constraint firstItem="HiR-cx-G23" firstAttribute="width" secondItem="eHF-2i-yuv" secondAttribute="width" id="r42-BK-6ag"/>
                             <constraint firstItem="ZOF-Yb-WSo" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="bottom" constant="8" id="sRd-iX-tGn"/>
@@ -405,15 +372,7 @@ Selecting them will show only items that contain these labels.</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wBp-li-D4L"/>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem enabled="NO" title="Version" style="plain" id="8xq-af-34d"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Prg-Vb-Cts"/>
-                        <barButtonItem title="About" style="plain" id="Vmc-Hi-57M">
-                            <connections>
-                                <segue destination="3Cr-dT-I5Y" kind="show" identifier="showAbout" id="XzD-Lg-sg6"/>
-                            </connections>
-                        </barButtonItem>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="QWV-cP-YSZ">
                         <barButtonItem key="leftBarButtonItem" title="Delete All" id="ipf-aG-KNc">
                             <connections>
@@ -432,15 +391,10 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="bottomLabel" destination="HiR-cx-G23" id="H70-4h-zjd"/>
                         <outlet property="container" destination="eHF-2i-yuv" id="u8J-Qp-uha"/>
                         <outlet property="deleteAll" destination="ipf-aG-KNc" id="9Gf-1n-u0u"/>
-                        <outlet property="icloudLabel" destination="bc6-6V-O7h" id="pyo-kI-32f"/>
-                        <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="xPi-j9-VGA"/>
-                        <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="ZYy-i7-gxW"/>
                         <outlet property="infoLabel" destination="xfE-PE-TSW" id="MFR-Rj-866"/>
                         <outlet property="innerFrame" destination="YjC-x2-xmz" id="fhc-2f-KWD"/>
                         <outlet property="spinner" destination="Olv-Pc-Qy9" id="6r7-rx-Ua5"/>
                         <outlet property="topLabel" destination="OxZ-BU-EoU" id="S2W-4x-WAf"/>
-                        <outlet property="updateNowButton" destination="Ndv-l7-Q9k" id="EO4-Ya-m2w"/>
-                        <outlet property="versionLabel" destination="8xq-af-34d" id="dne-01-qQa"/>
                         <outlet property="zipContainer" destination="emb-Ou-BQ2" id="nFc-hZ-pg5"/>
                         <outlet property="zipImage" destination="KV3-RU-Hot" id="ftt-df-3Lo"/>
                         <outlet property="zipInnerFrame" destination="60f-T2-TvR" id="bl6-RI-mTU"/>
@@ -450,41 +404,105 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4207.5" y="143.66197183098592"/>
+            <point key="canvasLocation" x="5136" y="-567"/>
+        </scene>
+        <!--iCloud Controller-->
+        <scene sceneID="9V7-zs-8tY">
+            <objects>
+                <viewController id="PmV-gD-gyX" customClass="iCloudController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tAZ-V3-BEv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nlm-oQ-xuJ">
+                                <rect key="frame" x="64" y="94" width="192.5" height="395"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="3Er-Qy-nKD">
+                                        <rect key="frame" x="0.0" y="172.5" width="91.5" height="50.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
+                                                <rect key="frame" x="0.0" y="0.0" width="91.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ndv-l7-Q9k">
+                                                <rect key="frame" x="6.5" y="20.5" width="85" height="30"/>
+                                                <state key="normal" title="Update Now"/>
+                                                <connections>
+                                                    <action selector="updateNowSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="0GP-Sj-rdn"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
+                                        <rect key="frame" x="107.5" y="182" width="51" height="31"/>
+                                    </switch>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
+                                        <rect key="frame" x="172.5" y="187.5" width="20" height="20"/>
+                                        <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="centerX" secondItem="tAZ-V3-BEv" secondAttribute="centerX" id="2BL-H7-a87"/>
+                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="30" id="ZBc-ys-RZc"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" secondItem="nlm-oQ-xuJ" secondAttribute="bottom" constant="30" id="yfH-U3-DjX"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="fpO-3k-GDD">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="2tt-ZI-Tzq">
+                            <connections>
+                                <action selector="doneSelected:" destination="PmV-gD-gyX" id="lh0-7p-mdb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
+                        <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
+                        <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
+                        <outlet property="updateNowButton" destination="Ndv-l7-Q9k" id="QOB-8t-kR4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5136" y="-1279"/>
         </scene>
         <!--About Controller-->
         <scene sceneID="mHF-aQ-il8">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="3Cr-dT-I5Y" customClass="AboutController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="3Cr-dT-I5Y" customClass="AboutController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6e9-dF-Uv9">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Gdd-eU-gY3">
-                                <rect key="frame" x="0.0" y="84" width="1024" height="336"/>
+                                <rect key="frame" x="10" y="94" width="300" height="372"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
-                                        <rect key="frame" x="0.0" y="0.0" width="1024" height="200"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="Xsy-cM-XaU"/>
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
-                                        <rect key="frame" x="0.0" y="220" width="1024" height="30"/>
+                                        <rect key="frame" x="0.0" y="220" width="300" height="30"/>
                                         <state key="normal" title="Unlimited Mode"/>
                                         <connections>
                                             <action selector="unlimitedSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="czo-Mh-n6e"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
-                                        <rect key="frame" x="0.0" y="270" width="1024" height="30"/>
+                                        <rect key="frame" x="0.0" y="270" width="300" height="30"/>
                                         <state key="normal" title="Gladys Web Site"/>
                                         <connections>
                                             <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
-                                        <rect key="frame" x="0.0" y="320" width="1024" height="16"/>
+                                        <rect key="frame" x="0.0" y="320" width="300" height="52"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -492,16 +510,16 @@ Selecting them will show only items that contain these labels.</string>
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gdd-eU-gY3" secondAttribute="bottom" id="7dO-PL-bGx"/>
-                            <constraint firstItem="Gdd-eU-gY3" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" constant="20" id="hN1-Y3-m23"/>
+                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gdd-eU-gY3" secondAttribute="bottom" priority="750" constant="30" id="7dO-PL-bGx"/>
+                            <constraint firstItem="Gdd-eU-gY3" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" constant="30" id="hN1-Y3-m23"/>
                             <constraint firstItem="Gdd-eU-gY3" firstAttribute="leading" secondItem="J9I-Dy-W9t" secondAttribute="leading" constant="10" id="koU-0e-qXr"/>
                             <constraint firstItem="J9I-Dy-W9t" firstAttribute="trailing" secondItem="Gdd-eU-gY3" secondAttribute="trailing" constant="10" id="wjH-bY-2Xm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="J9I-Dy-W9t"/>
                     </view>
                     <navigationItem key="navigationItem" id="IwC-N7-oaE">
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" title="Version" id="1U2-0T-zYK"/>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="6KI-Rn-fhA">
                             <connections>
                                 <action selector="doneSelected:" destination="3Cr-dT-I5Y" id="ngW-BO-5dE"/>
@@ -510,6 +528,7 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationItem>
                     <connections>
                         <outlet property="unlimitedButton" destination="BHy-ip-KBG" id="Tin-2n-3KA"/>
+                        <outlet property="versionLabel" destination="1U2-0T-zYK" id="R8u-bm-Nqj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1215,28 +1234,6 @@ Selecting them will show only items that contain these labels.</string>
             <point key="canvasLocation" x="3274" y="937"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="its-JD-VWE">
-            <objects>
-                <navigationController storyboardIdentifier="PreferencesController" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="bQ0-lQ-Akd" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MPz-38-p4G">
-                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="acY-kZ-aZu">
-                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </toolbar>
-                    <connections>
-                        <segue destination="HJT-hG-46H" kind="relationship" relationship="rootViewController" id="HRx-I9-6ET"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XHD-hQ-pmo" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3274" y="145"/>
-        </scene>
-        <!--Navigation Controller-->
         <scene sceneID="Xit-Aa-9Lp">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kOO-aA-zkg" sceneMemberID="viewController">
@@ -1385,11 +1382,91 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="4211" y="1570"/>
         </scene>
+        <!--Self Sizing Tab Controller-->
+        <scene sceneID="Jqy-hX-Bs4">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="QNh-jL-bwn" customClass="SelfSizingTabController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="byX-iS-CAU">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Kg5-Qo-U6i" kind="relationship" relationship="viewControllers" id="NCu-NS-Fkx"/>
+                        <segue destination="wKP-Xm-ons" kind="relationship" relationship="viewControllers" id="FAm-i6-Cyj"/>
+                        <segue destination="aBx-VL-b2z" kind="relationship" relationship="viewControllers" id="GvH-BY-6Bp"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tUy-6c-BrF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3253" y="145"/>
+        </scene>
+        <!--About-->
+        <scene sceneID="tM9-q2-qE9">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="aBx-VL-b2z" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="About" image="iconInfo" id="vNp-At-z1r"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VPN-Uw-zMu">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3Cr-dT-I5Y" kind="relationship" relationship="rootViewController" id="8jx-bn-szJ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LFc-vi-fq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4211" y="145"/>
+        </scene>
+        <!--Import Export-->
+        <scene sceneID="Rve-eS-w8H">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Kg5-Qo-U6i" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Import Export" image="iconImportExport" id="2sK-Vn-8Vx"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8SF-jr-j4p">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="HJT-hG-46H" kind="relationship" relationship="rootViewController" id="wjX-Cz-C1M"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2GO-xc-lCS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4211" y="-567"/>
+        </scene>
+        <!--iCloud Sync-->
+        <scene sceneID="cvH-2z-bBX">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wKP-Xm-ons" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="iCloud Sync" image="iconCloud" id="h1d-kQ-Ggr"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tYd-gc-96P">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="PmV-gD-gyX" kind="relationship" relationship="rootViewController" id="M2W-D5-PUM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x1I-GH-nXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4211" y="-1279"/>
+        </scene>
     </scenes>
     <resources>
         <image name="details" width="22" height="15"/>
         <image name="gladysImage" width="1024" height="1024"/>
+        <image name="iconCloud" width="28" height="18"/>
         <image name="iconDeleteSmall" width="18" height="22"/>
+        <image name="iconImportExport" width="28" height="28"/>
+        <image name="iconInfo" width="28" height="28"/>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>
         <image name="paste" width="22" height="28"/>

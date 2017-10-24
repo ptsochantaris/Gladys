@@ -82,6 +82,8 @@
 		16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */; };
 		16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */; };
 		16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */; };
+		16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */; };
+		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -236,6 +238,8 @@
 		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
+		16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudController.swift; sourceTree = "<group>"; };
+		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -441,6 +445,8 @@
 			children = (
 				16D829121F86D3DD00CF06FF /* AboutController.swift */,
 				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
+				16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */,
+				16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */,
 			);
 			path = Prefs;
 			sourceTree = "<group>";
@@ -1047,10 +1053,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
+				16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
+				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,

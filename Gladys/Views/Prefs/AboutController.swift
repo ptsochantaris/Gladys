@@ -12,22 +12,16 @@ import StoreKit
 final class AboutController: GladysViewController {
 
 	@IBOutlet weak var unlimitedButton: UIButton!
+	@IBOutlet weak var versionLabel: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		unlimitedButton.isHidden = infiniteMode
-	}
 
-	private var firstView = true
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		if firstView {
-			let s = view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
-												 withHorizontalFittingPriority: .required,
-												 verticalFittingPriority: .fittingSizeLevel)
-			preferredContentSize = s
-			firstView = false
-		}
+		unlimitedButton.isHidden = infiniteMode
+
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+		versionLabel.title = "v\(v) (\(b))"
 	}
 
 	@IBAction func aboutSelected(_ sender: UIButton) {
