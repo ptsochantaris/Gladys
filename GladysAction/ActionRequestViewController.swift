@@ -94,9 +94,13 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		if loadCount == 0 {
 			statusLabel?.text = "Saving..."
 			cancelButton?.isEnabled = false
-			model.reIndex(items: newItems) {
-				self.model.save()
+			Model.oneTimeSaveCallback = {
 				self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+			}
+			model.reIndex(items: newItems) {
+				DispatchQueue.main.async {
+					self.model.save()
+				}
 			}
 		}
 	}

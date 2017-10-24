@@ -164,7 +164,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 			if let i = model.drops.index(where: { $0.uuid == uuid }) {
 				model.drops[i].needsDeletion = true
-				model.save()
+				DispatchQueue.main.async {
+					model.save()
+				}
 				completionHandler(nil)
 			} else {
 				completionHandler(NSFileProviderError(.noSuchItem))

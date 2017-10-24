@@ -50,6 +50,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+		if CloudManager.syncSwitchedOn && !UIApplication.shared.isRegisteredForRemoteNotifications {
+			UIApplication.shared.registerForRemoteNotifications()
+		}
+		return true
+	}
+
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		log("Registered for remote notifications")
 	}

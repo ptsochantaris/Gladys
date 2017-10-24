@@ -462,7 +462,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 	private func detectExternalDeletions() {
 		let itemsToDelete = model.drops.filter { $0.needsDeletion }
-		ViewController.shared.deleteRequested(for: itemsToDelete)
+		if itemsToDelete.count > 0 {
+			deleteRequested(for: itemsToDelete)
+		}
 	}
 
 	@objc private func externalDataUpdate() {
@@ -520,8 +522,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	}
 
 	private func blurb(_ message: String) {
-		if let e = emptyView {
+		if let e = emptyView, !view.subviews.contains(where: { $0.tag == 9265 }) {
 			let l = UILabel()
+			l.tag = 9265
 			l.translatesAutoresizingMaskIntoConstraints = false
 			l.font = UIFont.preferredFont(forTextStyle: .caption2)
 			l.textColor = .darkGray

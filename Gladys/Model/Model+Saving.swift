@@ -3,8 +3,10 @@ import UIKit
 extension Model {
 	private static var isSaving = false
 	static var needsAnotherSave = false
+	static var oneTimeSaveCallback: (()->Void)?
 
 	func save() {
+		assert(Thread.isMainThread)
 		if Model.isSaving {
 			Model.needsAnotherSave = true
 		} else {
@@ -41,6 +43,8 @@ extension Model {
 				} else {
 					Model.isSaving = false
 					self.saveComplete()
+					Model.oneTimeSaveCallback?()
+					Model.oneTimeSaveCallback = nil
 				}
 				self.saveDone()
 			}
