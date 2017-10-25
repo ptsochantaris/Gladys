@@ -364,7 +364,7 @@ extension Model {
 
 			itemsImported += 1
 			item.needsReIngest = true
-			item.needsCloudPush = CloudManager.syncSwitchedOn
+			item.markUpdated()
 
 			let uuid = item.uuid.uuidString
 

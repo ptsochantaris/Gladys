@@ -168,9 +168,17 @@ final class CloudManager {
 			if recordType != "ArchivedDropItem" { return }
 			let itemUUID = recordId.recordName
 			DispatchQueue.main.async {
-				log("Record \(recordType) deleted: \(itemUUID)")
+				log("Record \(recordType) deletion: \(itemUUID)")
 				if let item = ViewController.shared.model.item(uuid: itemUUID) {
-					ViewController.shared.deleteRequested(for: [item])
+					if item.updatedAt < lastFetchDate {
+						ViewController.shared.deleteRequested(for: [item])
+						log("Clear to delete")
+					} else {
+						log("Will not delete local item as it's been modified since last refresh, will recreate back in cloud")
+						syncDirty = true
+						syncForceOrderSend = true
+						item.needsCloudPush = true
+					}
 				}
 			}
 		}
@@ -179,19 +187,28 @@ final class CloudManager {
 				if record.recordType == "ArchivedDropItem" {
 					let itemUUID = record.recordID.recordName
 					if let item = ViewController.shared.model.item(uuid: itemUUID) {
-						log("Will update existing local item for cloud record \(itemUUID)")
-						item.cloudKitUpdate(from: record)
+						if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
+							log("Update but no changes to item record \(itemUUID)")
+						} else {
+							log("Will update existing local item for cloud record \(itemUUID)")
+							item.cloudKitUpdate(from: record)
+							changes = true
+						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
+						changes = true
 					}
-					changes = true
 				} else if record.recordType == "ArchivedDropItemType" {
 					let itemUUID = record.recordID.recordName
 					if let typeItem = ViewController.shared.model.drops.flatMap({$0.typeItems.first(where: { $0.uuid.uuidString == itemUUID }) }).first {
-						log("Will update existing local type data: \(itemUUID)")
-						typeItem.cloudKitUpdate(from: record)
-						changes = true
+						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
+							log("Update but no changes to item type record \(itemUUID)")
+						} else {
+							log("Will update existing local type data: \(itemUUID)")
+							typeItem.cloudKitUpdate(from: record)
+							changes = true
+						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
@@ -206,7 +223,7 @@ final class CloudManager {
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
 			lookup[zoneId] = token
-			log("Zone \(zoneId.zoneName) changes complete")
+			log("Zone \(zoneId.zoneName) changes fetch complete")
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
@@ -228,6 +245,7 @@ final class CloudManager {
 				} else {
 					log("Received record changes")
 					self.zoneChangeTokens = lookup
+					self.lastFetchDate = Date()
 					finalCompletion(nil)
 				}
 			}
@@ -270,6 +288,7 @@ final class CloudManager {
 	}
 
 	private static var syncDirty = false
+	private static var syncForceOrderSend = false
 
 	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		if !syncSwitchedOn { return }
@@ -288,7 +307,7 @@ final class CloudManager {
 	}
 
 	static func sync(force: Bool = false, onlySend: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
-		if !CloudManager.syncSwitchedOn {
+		if !syncSwitchedOn {
 			completion(previouslySentChanges, nil)
 			return
 		}
@@ -300,6 +319,7 @@ final class CloudManager {
 
 		if syncing && !force {
 			syncDirty = true
+			completion(previouslySentChanges, nil)
 			return
 		}
 
@@ -324,7 +344,7 @@ final class CloudManager {
 			endBgTask()
 		}
 
-		CloudManager.sendUpdatesUp { changes, error in
+		sendUpdatesUp { changes, error in
 			let previousOrCurrentChanges = previouslySentChanges || changes
 			if let error = error {
 				log("Could not perform push: \(error.localizedDescription)")
@@ -334,7 +354,7 @@ final class CloudManager {
 			} else if onlySend {
 				syncDone(previousOrCurrentChanges)
 			} else {
-				CloudManager.fetchDatabaseChanges { error in
+				fetchDatabaseChanges { error in
 					if let error = error {
 						log("Could not perform pull: \(error.localizedDescription)")
 						syncing = false
@@ -365,6 +385,18 @@ final class CloudManager {
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
 			}
+		}
+	}
+
+	static var lastFetchDate: Date {
+		get {
+			return UserDefaults.standard.object(forKey: "lastFetchDate") as? Date ?? .distantPast
+		}
+
+		set {
+			let d = UserDefaults.standard
+			d.set(newValue, forKey: "lastFetchDate")
+			d.synchronize()
 		}
 	}
 
@@ -504,7 +536,7 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
-		if (uuidSequence ?? []) != currentUUIDSequence {
+		if syncForceOrderSend || (uuidSequence ?? []) != currentUUIDSequence {
 			let record = CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])
@@ -526,7 +558,7 @@ final class CloudManager {
 
 		for recordIdList in recordsToDelete {
 			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
-			operation.savePolicy = .changedKeys
+			operation.savePolicy = .allKeys
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
 					if let error = error {
@@ -549,7 +581,7 @@ final class CloudManager {
 
 		for recordList in payloadsToPush {
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
-			operation.savePolicy = .changedKeys
+			operation.savePolicy = .allKeys
 			operation.isAtomic = true
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
@@ -561,12 +593,13 @@ final class CloudManager {
 						let itemUUID = record.recordID.recordName
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
-							log("Updated cloud item position list record")
+							syncForceOrderSend = false
+							log("Sent updated cloud item position list record")
 						} else if let item = ViewController.shared.model.item(uuid: itemUUID) {
 							item.needsCloudPush = false
 							item.cloudKitRecord = record
 							changes = true
-							log("Updated \(record.recordType) cloud record \(itemUUID)")
+							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
 						}
 					}
 				}
