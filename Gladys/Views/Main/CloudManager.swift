@@ -85,6 +85,7 @@ final class CloudManager {
 				} else {
 					deletionQueue.removeAll()
 					zoneChangeTokens = [:]
+					lastFetchDate = .distantPast
 					uuidSequence = nil
 					dbChangeToken = nil
 					syncSwitchedOn = false
@@ -144,6 +145,7 @@ final class CloudManager {
 		guard ids.count > 0 else {
 			log("No zone changes, hence no record changes")
 			DispatchQueue.main.async {
+				self.lastFetchDate = Date()
 				finalCompletion(nil)
 			}
 			return
@@ -289,6 +291,28 @@ final class CloudManager {
 
 	private static var syncDirty = false
 	private static var syncForceOrderSend = false
+
+	private static let agoFormatter: DateComponentsFormatter = {
+		let f = DateComponentsFormatter()
+		f.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute, .second]
+		f.unitsStyle = .abbreviated
+		f.maximumUnitCount = 2
+		return f
+	}()
+	static var syncString: String {
+		if syncing {
+			return "Syncing"
+		}
+
+		let i = -lastFetchDate.timeIntervalSinceNow
+		if i < 1.0 {
+			return "Synced"
+		} else if lastFetchDate != .distantPast, let s = agoFormatter.string(from: i) {
+			return "Synced \(s) ago"
+		} else {
+			return "Never"
+		}
+	}
 
 	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		if !syncSwitchedOn { return }
@@ -619,6 +643,21 @@ final class CloudManager {
 		}
 		operations.forEach {
 			go($0)
+		}
+	}
+
+	///////////////////////////////////
+
+	static func tryManualSync(from vc: UIViewController) {
+		if reachability.status == .NotReachable {
+			genericAlert(title: "Network Not Available", message: "Please check your network connection", on: vc)
+			return
+		}
+
+		CloudManager.sync { changes, error in
+			if let error = error {
+				genericAlert(title: "Sync Error", message: error.localizedDescription, on: vc)
+			}
 		}
 	}
 

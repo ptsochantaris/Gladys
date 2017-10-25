@@ -414,60 +414,46 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                <rect key="frame" x="221" y="245" width="51" height="31"/>
-                                <connections>
-                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
-                                </connections>
-                            </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                <rect key="frame" x="30" y="239" width="175" height="42.5"/>
+                                <rect key="frame" x="40" y="229.5" width="156" height="42.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nlm-oQ-xuJ">
-                                <rect key="frame" x="113.5" y="164" width="156.5" height="50.5"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="3Er-Qy-nKD">
-                                        <rect key="frame" x="0.0" y="0.0" width="91.5" height="50.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                                <rect key="frame" x="0.0" y="0.0" width="91.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ndv-l7-Q9k">
-                                                <rect key="frame" x="6.5" y="20.5" width="85" height="30"/>
-                                                <state key="normal" title="Update Now"/>
-                                                <connections>
-                                                    <action selector="updateNowSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="0GP-Sj-rdn"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                        <rect key="frame" x="107.5" y="10" width="51" height="31"/>
-                                    </switch>
-                                </subviews>
-                            </stackView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                <rect key="frame" x="284" y="179" width="20" height="20"/>
+                                <rect key="frame" x="284" y="169" width="20" height="20"/>
                                 <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
+                                <rect key="frame" x="40" y="169" width="156" height="20.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
+                                <rect key="frame" x="221" y="164" width="51" height="31"/>
+                            </switch>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
+                                <rect key="frame" x="221" y="235" width="51" height="31"/>
+                                <connections>
+                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="14" id="4iJ-we-pJx"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="guO-CQ-KTM" secondAttribute="bottom" priority="750" constant="100" id="Xo9-pM-va6"/>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="bPO-np-ws5"/>
-                            <constraint firstItem="nlm-oQ-xuJ" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="100" id="euz-8e-KUo"/>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="trailing" secondItem="bc6-6V-O7h" secondAttribute="trailing" id="fXI-61-mhM"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="nlm-oQ-xuJ" secondAttribute="trailing" constant="50" id="g8e-jA-G5x"/>
-                            <constraint firstItem="i3g-cz-xkx" firstAttribute="top" secondItem="V6J-fH-sQH" secondAttribute="bottom" constant="40" id="gaC-IG-zf3"/>
-                            <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="iyw-7X-Q4U"/>
-                            <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="jdM-b7-wqa"/>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="30" id="mO3-Ep-w1d"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="50" id="9Wa-2H-dSI"/>
+                            <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="JgK-jj-6sV"/>
+                            <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="14" id="KnE-Xl-LnX"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="QKf-Fo-ZMH"/>
+                            <constraint firstItem="bc6-6V-O7h" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="dTy-8w-XcM"/>
+                            <constraint firstItem="V6J-fH-sQH" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="100" id="hXr-3L-QWB"/>
+                            <constraint firstItem="i3g-cz-xkx" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="trailing" constant="25" id="kTc-kV-VqV"/>
+                            <constraint firstItem="i3g-cz-xkx" firstAttribute="top" secondItem="V6J-fH-sQH" secondAttribute="bottom" constant="40" id="kdt-s9-n6a"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="40" id="mO3-Ep-w1d"/>
+                            <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="leading" id="odW-4u-ch3"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="i3g-cz-xkx" secondAttribute="bottom" priority="750" constant="253" id="p6y-jK-Jg4"/>
+                            <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="vYg-pg-Ye0"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="i3g-cz-xkx" secondAttribute="trailing" constant="50" id="zLN-YY-CPa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
@@ -483,7 +469,6 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
                         <outlet property="limitToWiFiSwitch" destination="i3g-cz-xkx" id="bwk-rQ-871"/>
-                        <outlet property="updateNowButton" destination="Ndv-l7-Q9k" id="QOB-8t-kR4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>

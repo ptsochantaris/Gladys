@@ -13,24 +13,8 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudLabel: UILabel!
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
-	@IBOutlet weak var updateNowButton: UIButton!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
-
 	// TODO: accessibility
-
-	@IBAction func updateNowSelected(_ sender: UIButton) {
-		if reachability.status == .NotReachable {
-			genericAlert(title: "Network Not Available", message: "Please check your network connection", on: self)
-			return
-		}
-		
-		CloudManager.sync { [weak self] changes, error in
-			guard let s = self else { return }
-			if let error = error {
-				genericAlert(title: "Sync Error", message: error.localizedDescription, on: s)
-			}
-		}
-	}
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
@@ -63,19 +47,16 @@ final class iCloudController: GladysViewController {
 	}
 
 	private func updateiCloudControls() {
-		updateNowButton.isHidden = !CloudManager.syncSwitchedOn
 		if CloudManager.syncTransitioning {
 			icloudSwitch.isEnabled = false
 			icloudLabel.text = CloudManager.syncSwitchedOn ? "Deactinvating" : "Activating"
 			icloudSpinner.startAnimating()
 		} else if CloudManager.syncing {
 			icloudSwitch.isEnabled = false
-			updateNowButton.isEnabled = false
 			icloudLabel.text = "Updating Data"
 			icloudSpinner.startAnimating()
 		} else {
 			icloudSwitch.isEnabled = true
-			updateNowButton.isEnabled = true
 			icloudLabel.text = "iCloud Sync"
 			icloudSpinner.stopAnimating()
 			icloudSwitch.isOn = CloudManager.syncSwitchedOn

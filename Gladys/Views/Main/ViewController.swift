@@ -377,6 +377,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(itemPositionsReceived), name: .CloudManagerUpdatedUUIDSequence, object: nil)
+		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -386,6 +387,49 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
+		cloudStatusChanged()
+	}
+
+	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
+		guard let r = archivedItemCollectionView.refreshControl else { return }
+		if r.isRefreshing && !CloudManager.syncing {
+			CloudManager.tryManualSync(from: self)
+		} else {
+			r.beginRefreshing()
+		}
+	}
+
+	@objc private func cloudStatusChanged() {
+		if CloudManager.syncSwitchedOn && archivedItemCollectionView.refreshControl == nil {
+			let refresh = UIRefreshControl()
+			refresh.tintColor = view.tintColor
+			refresh.addTarget(self, action: #selector(refreshControlChanged(_:)), for: .valueChanged)
+			archivedItemCollectionView.refreshControl = refresh
+
+			navigationController?.view.layoutIfNeeded()
+
+		} else if !CloudManager.syncSwitchedOn && archivedItemCollectionView.refreshControl != nil {
+			archivedItemCollectionView.refreshControl = nil
+		}
+
+		if let r = archivedItemCollectionView.refreshControl {
+			if r.isRefreshing && !CloudManager.syncing {
+				r.endRefreshing()
+			} else if !r.isRefreshing && CloudManager.syncing {
+				r.beginRefreshing()
+			}
+			lastSyncUpdate()
+		}
+	}
+
+	private func lastSyncUpdate() {
+		if let r = archivedItemCollectionView.refreshControl {
+			r.attributedTitle = NSAttributedString(string: CloudManager.syncString)
+		}
+	}
+
+	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+		lastSyncUpdate()
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
@@ -652,6 +696,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		super.viewDidAppear(animated)
 		if firstAppearance {
 			firstAppearance = false
+			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
 		}
 	}
