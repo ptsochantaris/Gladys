@@ -311,7 +311,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	@objc private func itemPositionsReceived() {
 		if let sequence = CloudManager.uuidSequence {
 			model.drops = sequence.flatMap { uuid -> ArchivedDropItem? in
-				return model.drops.first { $0.uuid.uuidString == uuid }
+				return model.item(uuid: uuid)
 			}
 			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			model.save()
@@ -384,6 +384,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		fetchIap()
 
 		checkForUpgrade()
+
+		initialSync()
+	}
+
+	private func initialSync() {
+		CloudManager.sync { changes, error in
+			if let error = error {
+				log("Error in startup sync: \(error.localizedDescription)")
+			}
+		}
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!

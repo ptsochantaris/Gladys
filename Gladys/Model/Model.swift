@@ -31,6 +31,11 @@ final class Model: NSObject {
 		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
 	}
 
+	func item(uuid: String) -> ArchivedDropItem? {
+		let uuidData = UUID(uuidString: uuid)
+		return drops.first { $0.uuid == uuidData }
+	}
+
 	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {
 		
 		var res: [ArchivedDropItem]?

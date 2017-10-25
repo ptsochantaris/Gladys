@@ -13,19 +13,19 @@ final class FileProviderExtension: NSFileProviderExtension {
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
-		let uuid = identifier.rawValue
+		let uuid = UUID(uuidString: identifier.rawValue)
 
 		let drops = undeletedDrops
 
 		for item in drops {
-			if item.uuid.uuidString == uuid {
+			if item.uuid == uuid {
 				return FileProviderItem(item)
 			}
 		}
 
 		for item in drops {
 			for typeItem in item.typeItems {
-				if typeItem.uuid.uuidString == uuid {
+				if typeItem.uuid == uuid {
 					if item.typeItems.count == 1 {
 						return FileProviderItem(item)
 					} else {

@@ -169,7 +169,7 @@ final class CloudManager {
 			let itemUUID = recordId.recordName
 			DispatchQueue.main.async {
 				log("Record \(recordType) deleted: \(itemUUID)")
-				if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+				if let item = ViewController.shared.model.item(uuid: itemUUID) {
 					ViewController.shared.deleteRequested(for: [item])
 				}
 			}
@@ -178,7 +178,7 @@ final class CloudManager {
 			DispatchQueue.main.async {
 				if record.recordType == "ArchivedDropItem" {
 					let itemUUID = record.recordID.recordName
-					if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+					if let item = ViewController.shared.model.item(uuid: itemUUID) {
 						log("Will update existing local item for cloud record \(itemUUID)")
 						item.cloudKitUpdate(from: record)
 					} else {
@@ -314,38 +314,35 @@ final class CloudManager {
 			}
 		}
 
-		func send() {
-			CloudManager.sendUpdatesUp { changes, error in
-				let previousOrCurrentChanges = previouslySentChanges || changes
-				if let error = error {
-					log("Could not perform push: \(error.localizedDescription)")
-					syncing = false
-					completion(previousOrCurrentChanges, error)
-					endBgTask()
-				} else {
-					if syncDirty {
-						sync(force: true, completion: completion)
-						endBgTask()
-					} else {
-						syncing = false
-						completion(previousOrCurrentChanges, nil)
-						endBgTask()
-					}
-				}
+		func syncDone(_ thereWereChanges: Bool) {
+			if syncDirty {
+				sync(force: true, previouslySentChanges: thereWereChanges, completion: completion)
+			} else {
+				syncing = false
+				completion(thereWereChanges, nil)
 			}
+			endBgTask()
 		}
 
-		if onlySend {
-			send()
-		} else {
-			CloudManager.fetchDatabaseChanges { error in
-				if let error = error {
-					log("Could not perform pull: \(error.localizedDescription)")
-					syncing = false
-					completion(previouslySentChanges, error)
-					endBgTask()
-				} else {
-					send()
+		CloudManager.sendUpdatesUp { changes, error in
+			let previousOrCurrentChanges = previouslySentChanges || changes
+			if let error = error {
+				log("Could not perform push: \(error.localizedDescription)")
+				syncing = false
+				completion(previousOrCurrentChanges, error)
+				endBgTask()
+			} else if onlySend {
+				syncDone(previousOrCurrentChanges)
+			} else {
+				CloudManager.fetchDatabaseChanges { error in
+					if let error = error {
+						log("Could not perform pull: \(error.localizedDescription)")
+						syncing = false
+						completion(previouslySentChanges, error)
+						endBgTask()
+					} else {
+						syncDone(previousOrCurrentChanges)
+					}
 				}
 			}
 		}
@@ -486,16 +483,25 @@ final class CloudManager {
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
-		let deletionIdsSnapshot = deletionQueue
-
+		var idsToPush = [String]()
 		var payloadsToPush = ViewController.shared.model.drops.flatMap { item -> [CKRecord]? in
-			if let itemRecord = item.populatedCloudKitRecord, !deletionIdsSnapshot.contains(item.uuid.uuidString) {
+			if let itemRecord = item.populatedCloudKitRecord {
 				var payload = item.typeItems.map { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
+				idsToPush.append(item.uuid.uuidString)
 				return payload
 			}
 			return nil
 		}.flatBunch(minSize: 10)
+
+		var deletionIdsSnapshot = deletionQueue
+		if idsToPush.count > 0 {
+			let previousCount = deletionIdsSnapshot.count
+			deletionIdsSnapshot = deletionIdsSnapshot.filter { !idsToPush.contains($0) }
+			if deletionIdsSnapshot.count != previousCount {
+				deletionQueue = deletionIdsSnapshot
+			}
+		}
 
 		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
 		if (uuidSequence ?? []) != currentUUIDSequence {
@@ -520,7 +526,7 @@ final class CloudManager {
 
 		for recordIdList in recordsToDelete {
 			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
-			operation.savePolicy = .allKeys
+			operation.savePolicy = .changedKeys
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
 					if let error = error {
@@ -543,7 +549,7 @@ final class CloudManager {
 
 		for recordList in payloadsToPush {
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
-			operation.savePolicy = .allKeys
+			operation.savePolicy = .changedKeys
 			operation.isAtomic = true
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
@@ -556,7 +562,7 @@ final class CloudManager {
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
 							log("Updated cloud item position list record")
-						} else if let item = ViewController.shared.model.drops.first(where: { $0.uuid.uuidString == itemUUID }) {
+						} else if let item = ViewController.shared.model.item(uuid: itemUUID) {
 							item.needsCloudPush = false
 							item.cloudKitRecord = record
 							changes = true

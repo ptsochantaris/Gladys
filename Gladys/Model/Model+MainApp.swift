@@ -45,12 +45,6 @@ extension Model {
 		}
 
 		rebuildLabels()
-
-		CloudManager.sync { changes, error in
-			if let error = error {
-				log("Error in startup sync: \(error.localizedDescription)")
-			}
-		}
 	}
 
 	func saveDone() {
