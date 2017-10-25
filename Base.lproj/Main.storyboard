@@ -414,6 +414,12 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
+                                <rect key="frame" x="221" y="235" width="51" height="31"/>
+                                <connections>
+                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
+                                </connections>
+                            </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
                                 <rect key="frame" x="40" y="229.5" width="156" height="42.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -433,17 +439,23 @@ Selecting them will show only items that contain these labels.</string>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
                                 <rect key="frame" x="221" y="164" width="51" height="31"/>
                             </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                <rect key="frame" x="221" y="235" width="51" height="31"/>
-                                <connections>
-                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
-                                </connections>
-                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Items sync automatically, but you can force a refresh by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
+                                <rect key="frame" x="60" y="312" width="200" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="hZp-ez-qqA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="50" id="9Wa-2H-dSI"/>
+                            <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="xdt-ru-gMc" secondAttribute="centerX" id="E3M-Xx-ubr"/>
+                            <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="guO-CQ-KTM" secondAttribute="bottom" constant="40" id="Im2-19-uJV"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="JgK-jj-6sV"/>
                             <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="14" id="KnE-Xl-LnX"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="cSP-79-0Wg" secondAttribute="bottom" priority="750" constant="69" id="Lg0-g7-TkF"/>
                             <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="QKf-Fo-ZMH"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="dTy-8w-XcM"/>
                             <constraint firstItem="V6J-fH-sQH" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="100" id="hXr-3L-QWB"/>
@@ -451,7 +463,6 @@ Selecting them will show only items that contain these labels.</string>
                             <constraint firstItem="i3g-cz-xkx" firstAttribute="top" secondItem="V6J-fH-sQH" secondAttribute="bottom" constant="40" id="kdt-s9-n6a"/>
                             <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="40" id="mO3-Ep-w1d"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="leading" id="odW-4u-ch3"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="i3g-cz-xkx" secondAttribute="bottom" priority="750" constant="253" id="p6y-jK-Jg4"/>
                             <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="vYg-pg-Ye0"/>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="i3g-cz-xkx" secondAttribute="trailing" constant="50" id="zLN-YY-CPa"/>
                         </constraints>
@@ -465,6 +476,7 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="detailsLabel" destination="cSP-79-0Wg" id="ee0-Uw-fQ9"/>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
