@@ -21,7 +21,9 @@ class Reachability {
 		var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
 
 		if (SCNetworkReachabilitySetCallback(reachability, { target, flags, info in
-			NotificationCenter.default.post(name: .ReachabilityChangedNotification, object: nil)
+			let newStatus = Reachability.status(from: flags)
+			log("Rechability changed: \(newStatus.name)")
+			NotificationCenter.default.post(name: .ReachabilityChangedNotification, object: newStatus)
 		}, &context)) {
 			if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.commonModes.rawValue)) {
 				log("Reachability monitoring active")
@@ -41,24 +43,27 @@ class Reachability {
 		SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.commonModes.rawValue)
 	}
 
-	var status: NetworkStatus {
-
-		var flags = SCNetworkReachabilityFlags()
+	private static func status(from flags: SCNetworkReachabilityFlags) -> NetworkStatus {
 		var returnValue = NetworkStatus.NotReachable
+		if flags.contains(.reachable) {
 
-		if SCNetworkReachabilityGetFlags(reachability, &flags) {
-			if flags.contains(.reachable) {
+			if !flags.contains(.connectionRequired) { returnValue = .ReachableViaWiFi }
 
-				if !flags.contains(.connectionRequired) { returnValue = .ReachableViaWiFi }
-
-				if flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic) {
-					if !flags.contains(.interventionRequired) { returnValue = .ReachableViaWiFi }
-				}
-
-				if flags.contains(.isWWAN) { returnValue = .ReachableViaWWAN }
+			if flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic) {
+				if !flags.contains(.interventionRequired) { returnValue = .ReachableViaWiFi }
 			}
-		}
 
+			if flags.contains(.isWWAN) { returnValue = .ReachableViaWWAN }
+		}
 		return returnValue
+	}
+
+	var status: NetworkStatus {
+		var flags = SCNetworkReachabilityFlags()
+		if SCNetworkReachabilityGetFlags(reachability, &flags) {
+			return Reachability.status(from: flags)
+		} else {
+			return NetworkStatus.NotReachable
+		}
 	}
 }

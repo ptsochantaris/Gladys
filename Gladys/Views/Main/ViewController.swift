@@ -663,6 +663,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		lastSize = boundsSize
 
 		dismissAnyPopOver()
+		archivedItemCollectionView.performBatchUpdates({})
 	}
 
 	/////////////////////////////////
