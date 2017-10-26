@@ -42,12 +42,12 @@ final class CloudManager {
 		}
 	}
 
-	static func deactivate(completion: @escaping (Error?)->Void) {
+	static func deactivate(force: Bool, completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
 		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: ["private-changes"])
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			DispatchQueue.main.async {
-				if let error = error {
+				if let error = error, !force {
 					log("Cloud sync deactivation failed")
 					completion(error)
 				} else {
@@ -61,6 +61,9 @@ final class CloudManager {
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in ViewController.shared.model.drops {
 						item.cloudKitRecord = nil
+						for typeItem in item.typeItems {
+							typeItem.cloudKitRecord = nil
+						}
 					}
 					ViewController.shared.model.save()
 					log("Cloud sync deactivation complete")
@@ -82,26 +85,32 @@ final class CloudManager {
 		let subscription = CKDatabaseSubscription(subscriptionID: "private-changes")
 		subscription.notificationInfo = notificationInfo
 
-		let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
-		operation.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+		let zone = CKRecordZone(zoneName: "archivedDropItems")
+		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
+		createZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
+				log("Error while creating zone: \(error.localizedDescription)")
 				DispatchQueue.main.async {
 					completion(error)
 				}
-			} else {
-				fetchDatabaseChanges { error in
-					if let error = error {
-						DispatchQueue.main.async {
-							completion(error)
-						}
-					} else {
-						syncSwitchedOn = true
-						completion(nil)
-					}
+			}
+		}
+
+		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
+		subscribeToZone.addDependency(createZone)
+		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+			DispatchQueue.main.async {
+				if let error = error {
+					completion(error)
+				} else {
+					syncSwitchedOn = true
+					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
 			}
 		}
-		go(operation)
+
+		go(createZone)
+		go(subscribeToZone)
 	}
 
 	private static func go(_ operation: CKDatabaseOperation) {
@@ -198,8 +207,13 @@ final class CloudManager {
 			}
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
-			lookup[zoneId] = token
-			log("Zone \(zoneId.zoneName) changes fetch complete")
+			if (error as? CKError)?.code == .changeTokenExpired {
+				lookup[zoneId] = nil
+				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
+			} else {
+				lookup[zoneId] = token
+				log("Zone \(zoneId.zoneName) changes fetch complete")
+			}
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
@@ -251,6 +265,10 @@ final class CloudManager {
 		}
 		operation.fetchDatabaseChangesCompletionBlock = { serverChangeToken, moreComing, error in
 			if let error = error {
+				if (error as? CKError)?.code == .changeTokenExpired {
+					dbChangeToken = nil
+					log("Zone log could not be retrieved because token was stale, will retry")
+				}
 				DispatchQueue.main.async {
 					finalCompletion(error)
 				}
@@ -305,6 +323,71 @@ final class CloudManager {
 	}
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
+		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
+			guard let ckError = error as? CKError else {
+				completion(error)
+				return
+			}
+
+			switch ckError.code {
+
+			case .notAuthenticated,
+			     .managedAccountRestricted,
+			     .missingEntitlement,
+			     .zoneNotFound,
+			     .incompatibleVersion,
+			     .userDeletedZone,
+			     .badDatabase,
+			     .badContainer:
+
+				// shutdown
+				deactivate(force: true) { _ in
+					completion(error)
+					if let e = error {
+						genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.localizedDescription)\"", on: ViewController.shared)
+					}
+				}
+
+			case .assetFileModified,
+			     .changeTokenExpired,
+			     .requestRateLimited,
+			     .serverResponseLost,
+			     .serviceUnavailable,
+			     .zoneBusy:
+
+				let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 3.0
+				DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
+					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+				}
+
+			case .alreadyShared,
+			     .assetFileNotFound,
+			     .batchRequestFailed,
+			     .constraintViolation,
+			     .internalError,
+			     .invalidArguments,
+			     .limitExceeded,
+			     .permissionFailure,
+			     .participantMayNeedVerification,
+			     .quotaExceeded,
+			     .referenceViolation,
+			     .serverRejectedRequest,
+			     .tooManyParticipants,
+			     .operationCancelled,
+			     .resultsTruncated,
+			     .unknownItem,
+			     .serverRecordChanged,
+			     .networkFailure,
+			     .networkUnavailable,
+			     .partialFailure:
+
+				// regular failure
+				completion(error)
+			}
+		}
+	}
+
+	static private func _sync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn {
 			completion(nil)
 			return
@@ -658,26 +741,6 @@ final class CloudManager {
 			if let error = error {
 				genericAlert(title: "Sync Error", message: error.localizedDescription, on: vc)
 			}
-		}
-	}
-
-	///////////////////////////////////
-
-	private let statusListener = CloudStatusListener()
-	private class CloudStatusListener {
-		init() {
-			NotificationCenter.default.addObserver(self, selector: #selector(iCloudStatusChanged(_:)), name: .CKAccountChanged, object: nil)
-		}
-		@objc private func iCloudStatusChanged(_ notification: Notification) {
-			container.accountStatus { status, error in
-				if status != .available {
-					log("iCloud deactivated on this device, shutting down sync")
-					deactivate { _ in }
-				}
-			}
-		}
-		deinit {
-			NotificationCenter.default.removeObserver(self)
 		}
 	}
 }

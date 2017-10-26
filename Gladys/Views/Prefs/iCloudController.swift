@@ -83,7 +83,7 @@ final class iCloudController: GladysViewController {
 				proceedWithActivation()
 			}
 		} else if CloudManager.syncSwitchedOn {
-			CloudManager.deactivate { error in
+			CloudManager.deactivate(force: false) { error in
 				DispatchQueue.main.async {
 					if let error = error {
 						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
