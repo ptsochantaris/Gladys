@@ -149,38 +149,6 @@ extension ArchivedDropItem {
 
 	//////////////////////////////////////////
 
-	var cloudKitDataPath: URL {
-		return self.folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-	}
-
-	var cloudKitRecord: CKRecord? {
-		get {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				return CKRecord(coder: coder)
-			} else {
-				return nil
-			}
-		}
-		set {
-			let recordLocation = cloudKitDataPath
-			if newValue == nil {
-				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
-				}
-			} else {
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
-			}
-		}
-	}
-
 	func cloudKitUpdate(from record: CKRecord) {
 		updatedAt = record["updatedAt"] as! Date
 		note = record["note"] as! String
@@ -192,7 +160,7 @@ extension ArchivedDropItem {
 
 	var populatedCloudKitRecord: CKRecord? {
 
-		guard (needsCloudPush || cloudKitRecord==nil) && !needsDeletion && !isDeleting else { return nil }
+		guard needsCloudPush && !needsDeletion && !isDeleting else { return nil }
 
 		let record = cloudKitRecord ??
 			CKRecord(recordType: "ArchivedDropItem",

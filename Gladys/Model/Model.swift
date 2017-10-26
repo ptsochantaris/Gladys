@@ -36,6 +36,13 @@ final class Model: NSObject {
 		return drops.first { $0.uuid == uuidData }
 	}
 
+	func typeItem(uuid: String) -> ArchivedDropItemType? {
+		let uuidData = UUID(uuidString: uuid)
+		return drops.flatMap({
+			$0.typeItems.first { $0.uuid == uuidData }
+		}).first
+	}
+
 	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {
 		
 		var res: [ArchivedDropItem]?

@@ -1,8 +1,6 @@
 
 import UIKit
-#if MAINAPP
-	import CloudKit
-#endif
+import CloudKit
 
 final class ArchivedDropItem: Codable, Equatable {
 
@@ -13,7 +11,6 @@ final class ArchivedDropItem: Codable, Equatable {
 	var updatedAt: Date
 	var allLoadedWell: Bool
 	var needsReIngest: Bool
-	var needsCloudPush: Bool
 	var needsDeletion: Bool
 	var note: String
 	var titleOverride: String
@@ -33,7 +30,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		case note
 		case titleOverride
 		case labels
-		case needsCloudPush
 		case needsDeletion
 	}
 
@@ -49,7 +45,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(note, forKey: .note)
 		try v.encode(titleOverride, forKey: .titleOverride)
 		try v.encode(labels, forKey: .labels)
-		try v.encode(needsCloudPush, forKey: .needsCloudPush)
 		try v.encode(needsDeletion, forKey: .needsDeletion)
 	}
 
@@ -66,7 +61,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
-		needsCloudPush = try v.decodeIfPresent(Bool.self, forKey: .needsCloudPush) ?? false
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
 	}
 
@@ -152,7 +146,6 @@ final class ArchivedDropItem: Codable, Equatable {
 			suggestedName = providers.first!.suggestedName
 			allLoadedWell = true
 			needsReIngest = true
-			needsCloudPush = false
 			needsDeletion = false
 			titleOverride = ""
 			note = ""
@@ -164,26 +157,86 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	#endif
 
-	#if MAINAPP
-		init(from record: CKRecord, children: [CKRecord]) {
-			let myUUID = UUID(uuidString: record.recordID.recordName)!
-			uuid = myUUID
-			createdAt = record["createdAt"] as! Date
-			updatedAt = record["updatedAt"] as! Date
-			suggestedName = record["suggestedName"] as? String
-			titleOverride = record["titleOverride"] as! String
-			note = record["note"] as! String
-			labels = (record["labels"] as? [String]) ?? []
-			needsReIngest = true
-			allLoadedWell = true
-			needsCloudPush = false
-			needsDeletion = false
-			typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
-			cloudKitRecord = record
-		}
-	#endif
+	init(from record: CKRecord, children: [CKRecord]) {
+		let myUUID = UUID(uuidString: record.recordID.recordName)!
+		uuid = myUUID
+		createdAt = record["createdAt"] as! Date
+		updatedAt = record["updatedAt"] as! Date
+		suggestedName = record["suggestedName"] as? String
+		titleOverride = record["titleOverride"] as! String
+		note = record["note"] as! String
+		labels = (record["labels"] as? [String]) ?? []
+		needsReIngest = true
+		allLoadedWell = true
+		needsDeletion = false
+		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
+		cloudKitRecord = record
+	}
 
 	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
 		var isDeleting = false
 	#endif
+
+	private var cloudKitDataPath: URL {
+		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+	}
+
+	var needsCloudPush: Bool {
+		set {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				_ = recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					if newValue {
+						let data = "true".data(using: .utf8)!
+						_ = data.withUnsafeBytes { bytes in
+							setxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", bytes, data.count, 0, 0)
+						}
+					} else {
+						removexattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", 0)
+					}
+				}
+			}
+		}
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					let length = getxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", nil, 0, 0, 0)
+					return length > 0
+				}
+			} else {
+				return true
+			}
+		}
+	}
+
+	var cloudKitRecord: CKRecord? {
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKRecord(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitDataPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+
+				needsCloudPush = false
+			}
+		}
+	}
 }

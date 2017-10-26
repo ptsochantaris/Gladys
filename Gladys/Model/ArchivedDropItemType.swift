@@ -1,9 +1,7 @@
 
 import UIKit
 import MobileCoreServices
-#if MAINAPP
-	import CloudKit
-#endif
+import CloudKit
 
 final class ArchivedDropItemType: Codable {
 
@@ -443,6 +441,11 @@ final class ArchivedDropItemType: Codable {
 		return accessoryTitle ?? displayTitle ?? filenameTypeIdentifier
 	}
 
+	func markUpdated() {
+		updatedAt = Date()
+		needsCloudPush = true
+	}
+
 	#if MAINAPP || ACTIONEXTENSION
 	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 
@@ -465,7 +468,6 @@ final class ArchivedDropItemType: Codable {
 	}
 	#endif
 
-	#if MAINAPP
 	init(from record: CKRecord, parentUuid: UUID) {
 
 		self.parentUuid = parentUuid
@@ -496,6 +498,66 @@ final class ArchivedDropItemType: Codable {
 		}
 		cloudKitRecord = record
 	}
-	#endif
+
+	private var cloudKitDataPath: URL {
+		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+	}
+
+	var needsCloudPush: Bool {
+		set {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				_ = recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					if newValue {
+						let data = "true".data(using: .utf8)!
+						_ = data.withUnsafeBytes { bytes in
+							setxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", bytes, data.count, 0, 0)
+						}
+					} else {
+						removexattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", 0)
+					}
+				}
+			}
+		}
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					let length = getxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", nil, 0, 0, 0)
+					return length > 0
+				}
+			} else {
+				return true
+			}
+		}
+	}
+
+	var cloudKitRecord: CKRecord? {
+		get {
+			let recordLocation = cloudKitDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKRecord(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitDataPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			}
+		}
+	}
 }
 

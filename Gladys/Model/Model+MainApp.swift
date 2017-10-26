@@ -60,9 +60,9 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sync { changes, error in
-			if changes {
-				self.save()
+		CloudManager.sync { error in
+			if let error = error {
+				log("Error in push after safe: \(error.localizedDescription)")
 			}
 		}
 	}

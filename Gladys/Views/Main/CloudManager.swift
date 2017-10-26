@@ -60,7 +60,6 @@ final class CloudManager {
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in ViewController.shared.model.drops {
 						item.cloudKitRecord = nil
-						item.needsCloudPush = false
 					}
 					ViewController.shared.model.save()
 					log("Cloud sync deactivation complete")
@@ -172,7 +171,7 @@ final class CloudManager {
 					}
 				} else if record.recordType == "ArchivedDropItemType" {
 					let itemUUID = record.recordID.recordName
-					if let typeItem = ViewController.shared.model.drops.flatMap({$0.typeItems.first(where: { $0.uuid.uuidString == itemUUID }) }).first {
+					if let typeItem = ViewController.shared.model.typeItem(uuid: itemUUID) {
 						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item type record \(itemUUID)")
 						} else {
@@ -288,7 +287,7 @@ final class CloudManager {
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
 			log("Received zone change push")
-			sync { changes, error in
+			sync { error in
 				if error != nil {
 					completionHandler(.failed)
 				} else {
@@ -298,20 +297,20 @@ final class CloudManager {
 		}
 	}
 
-	static func sync(force: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
+	static func sync(force: Bool = false, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn {
-			completion(previouslySentChanges, nil)
+			completion(nil)
 			return
 		}
 
 		if onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
-			completion(previouslySentChanges, nil)
+			completion(nil)
 			return
 		}
 
 		if syncing && !force {
 			syncDirty = true
-			completion(previouslySentChanges, nil)
+			completion(nil)
 			return
 		}
 
@@ -326,24 +325,23 @@ final class CloudManager {
 			}
 		}
 
-		sendUpdatesUp { changes, error in
-			let previousOrCurrentChanges = previouslySentChanges || changes
+		sendUpdatesUp { error in
 			if let error = error {
 				log("Could not perform push: \(error.localizedDescription)")
 				syncing = false
-				completion(previousOrCurrentChanges, error)
+				completion(error)
 				endBgTask()
 			} else {
 				fetchDatabaseChanges { error in
 					if let error = error {
 						log("Could not perform pull: \(error.localizedDescription)")
 						syncing = false
-						completion(previouslySentChanges, error)
+						completion(error)
 					} else if syncDirty {
-						sync(force: true, previouslySentChanges: previouslySentChanges, completion: completion)
+						sync(force: true, completion: completion)
 					} else {
 						syncing = false
-						completion(previouslySentChanges, nil)
+						completion(nil)
 						lastSyncCompletion = Date()
 					}
 					endBgTask()
@@ -494,7 +492,7 @@ final class CloudManager {
 		}
 	}
 
-	private static func sendUpdatesUp(completion: @escaping (Bool, Error?)->Void) {
+	private static func sendUpdatesUp(completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { return }
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
@@ -502,7 +500,7 @@ final class CloudManager {
 		var idsToPush = [String]()
 		var payloadsToPush = ViewController.shared.model.drops.flatMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
-				var payload = item.typeItems.map { $0.populatedCloudKitRecord }
+				var payload = item.typeItems.flatMap { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
 				idsToPush.append(item.uuid.uuidString)
 				return payload
@@ -530,11 +528,10 @@ final class CloudManager {
 
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
-			completion(false, nil)
+			completion(nil)
 			return
 		}
 
-		var changes = false
 		var latestError: Error?
 		var operations = [CKDatabaseOperation]()
 
@@ -577,11 +574,12 @@ final class CloudManager {
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
 							syncForceOrderSend = false
-							log("Sent updated cloud item position list record")
+							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = ViewController.shared.model.item(uuid: itemUUID) {
-							item.needsCloudPush = false
 							item.cloudKitRecord = record
-							changes = true
+							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
+						} else if let typeItem = ViewController.shared.model.typeItem(uuid: itemUUID) {
+							typeItem.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
 						}
 					}
@@ -598,7 +596,7 @@ final class CloudManager {
 			}
 		}
 		group.notify(queue: DispatchQueue.main) {
-			completion(changes, latestError)
+			completion(latestError)
 		}
 		operations.forEach {
 			go($0)
@@ -613,7 +611,7 @@ final class CloudManager {
 			return
 		}
 
-		CloudManager.sync { changes, error in
+		CloudManager.sync { error in
 			if let error = error {
 				genericAlert(title: "Sync Error", message: error.localizedDescription, on: vc)
 			}
