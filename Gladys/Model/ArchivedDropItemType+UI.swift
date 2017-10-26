@@ -67,6 +67,10 @@ extension ArchivedDropItemType {
 		return (nil, 0)
 	}
 
+	var sizeDescription: String? {
+		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
+	}
+
 	////////////////////////////////////////////////////////////////
 
 	var cloudKitDataPath: URL {

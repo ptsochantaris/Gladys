@@ -16,6 +16,14 @@ final class DetailController: GladysViewController,
 	@IBOutlet weak var copyButton: UIBarButtonItem!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
 
+	let dateFormatter: DateFormatter = {
+		let d = DateFormatter()
+		d.doesRelativeDateFormatting = true
+		d.dateStyle = .medium
+		d.timeStyle = .medium
+		return d
+	}()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		table.estimatedRowHeight = 120

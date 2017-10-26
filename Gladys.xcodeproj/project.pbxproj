@@ -33,6 +33,7 @@
 		1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1619E8251EFF3B54000087DD /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		162027911FA1A9FC00E8D964 /* Types+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162027901FA1A9FC00E8D964 /* Types+MainApp.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -194,6 +195,7 @@
 		1619E8181EFF3745000087DD /* DropItemEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropItemEnumerator.swift; sourceTree = "<group>"; };
 		1619E81A1EFF3745000087DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1619E81B1EFF3745000087DD /* GladysFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysFiles.entitlements; sourceTree = "<group>"; };
+		162027901FA1A9FC00E8D964 /* Types+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Types+MainApp.swift"; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				16EDB3761F2361EB001CC65C /* Model+MainApp.swift */,
 				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
 				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
+				162027901FA1A9FC00E8D964 /* Types+MainApp.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1052,6 +1055,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				162027911FA1A9FC00E8D964 /* Types+MainApp.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,

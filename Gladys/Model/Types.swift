@@ -44,16 +44,6 @@ extension Notification.Name {
 	static let ReachabilityChangedNotification = Notification.Name("ReachabilityChangedNotification")
 }
 
-let diskSizeFormatter = ByteCountFormatter()
-
-let dateFormatter: DateFormatter = {
-	let d = DateFormatter()
-	d.doesRelativeDateFormatting = true
-	d.dateStyle = .medium
-	d.timeStyle = .medium
-	return d
-}()
-
 extension UIImage {
 
 	func writeBitmap(to url: URL) {

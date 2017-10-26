@@ -395,10 +395,6 @@ final class ArchivedDropItemType: Codable {
 		return sizeItem(path: bytesPath)
 	}
 
-	var sizeDescription: String? {
-		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
-	}
-
 	func decode() -> Any? {
 		guard let bytes = bytes else { return nil }
 

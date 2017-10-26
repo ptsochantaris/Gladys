@@ -60,7 +60,7 @@ extension Model {
 
 	func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sync(onlySend: true) { changes, error in
+		CloudManager.sync { changes, error in
 			if changes {
 				self.save()
 			}

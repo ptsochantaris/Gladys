@@ -9,38 +9,6 @@
 import UIKit
 import CloudKit
 
-extension Array {
-	func bunch(maxSize: Int) -> [[Element]] {
-		var pos = 0
-		var res = [[Element]]()
-		while pos < count {
-			let end = Swift.min(count, pos + maxSize)
-			let a = self[pos ..< end]
-			res.append(Array(a))
-			pos += maxSize
-		}
-		return res
-	}
-}
-
-extension Array where Element == [CKRecord] {
-	func flatBunch(minSize: Int) -> [[CKRecord]] {
-		var result = [[CKRecord]]()
-		var newChild = [CKRecord]()
-		for childArray in self {
-			newChild.append(contentsOf: childArray)
-			if newChild.count >= minSize {
-				result.append(newChild)
-				newChild.removeAll(keepingCapacity: true)
-			}
-		}
-		if newChild.count > 0 {
-			result.append(newChild)
-		}
-		return result
-	}
-}
-
 final class CloudManager {
 
 	private static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
@@ -85,7 +53,7 @@ final class CloudManager {
 				} else {
 					deletionQueue.removeAll()
 					zoneChangeTokens = [:]
-					lastFetchDate = .distantPast
+					lastSyncCompletion = .distantPast
 					uuidSequence = nil
 					dbChangeToken = nil
 					syncSwitchedOn = false
@@ -145,14 +113,14 @@ final class CloudManager {
 		guard ids.count > 0 else {
 			log("No zone changes, hence no record changes")
 			DispatchQueue.main.async {
-				self.lastFetchDate = Date()
 				finalCompletion(nil)
 			}
 			return
 		}
 
 		var lookup = zoneChangeTokens
-		var changes = false
+		var itemFieldsWereModified = false
+		var itemsNeedDeletion = false
 		var updatedSequence = false
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
@@ -172,8 +140,9 @@ final class CloudManager {
 			DispatchQueue.main.async {
 				log("Record \(recordType) deletion: \(itemUUID)")
 				if let item = ViewController.shared.model.item(uuid: itemUUID) {
-					if item.updatedAt < lastFetchDate {
-						ViewController.shared.deleteRequested(for: [item])
+					if item.updatedAt < lastSyncCompletion {
+						item.needsDeletion = true
+						itemsNeedDeletion = true
 						log("Clear to delete")
 					} else {
 						log("Will not delete local item as it's been modified since last refresh, will recreate back in cloud")
@@ -194,12 +163,12 @@ final class CloudManager {
 						} else {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
-							changes = true
+							itemFieldsWereModified = true
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
-						changes = true
+						itemFieldsWereModified = true
 					}
 				} else if record.recordType == "ArchivedDropItemType" {
 					let itemUUID = record.recordID.recordName
@@ -209,7 +178,7 @@ final class CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							changes = true
+							itemFieldsWereModified = true
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
@@ -218,7 +187,6 @@ final class CloudManager {
 				} else if record.recordType == "PositionList", let newUUIDlist = record["positionList"] as? [String], newUUIDlist != (uuidSequence ?? []) {
 					log("Received an updated position list record")
 					uuidSequence = newUUIDlist
-					changes = true
 					updatedSequence = true
 				}
 			}
@@ -229,25 +197,25 @@ final class CloudManager {
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
-				if changes {
+				if itemFieldsWereModified {
+					// ingestions will take care of save
 					for dropRecord in newDrops {
 						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
-					}
-					if newDrops.count == 0 { // was only deletions, let's save, otherwise ingestion will cause save later on
-						ViewController.shared.model.save()
 					}
 					if updatedSequence {
 						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
 					} else {
 						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 					}
+				} else if itemsNeedDeletion {
+					// deletions will take care of save
+					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
 				if let error = error {
 					finalCompletion(error)
 				} else {
 					log("Received record changes")
 					self.zoneChangeTokens = lookup
-					self.lastFetchDate = Date()
 					finalCompletion(nil)
 				}
 			}
@@ -304,10 +272,10 @@ final class CloudManager {
 			return "Syncing"
 		}
 
-		let i = -lastFetchDate.timeIntervalSinceNow
+		let i = -lastSyncCompletion.timeIntervalSinceNow
 		if i < 1.0 {
 			return "Synced"
-		} else if lastFetchDate != .distantPast, let s = agoFormatter.string(from: i) {
+		} else if lastSyncCompletion != .distantPast, let s = agoFormatter.string(from: i) {
 			return "Synced \(s) ago"
 		} else {
 			return "Never"
@@ -330,7 +298,7 @@ final class CloudManager {
 		}
 	}
 
-	static func sync(force: Bool = false, onlySend: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
+	static func sync(force: Bool = false, previouslySentChanges: Bool = false, completion: @escaping (Bool, Error?)->Void) {
 		if !syncSwitchedOn {
 			completion(previouslySentChanges, nil)
 			return
@@ -358,16 +326,6 @@ final class CloudManager {
 			}
 		}
 
-		func syncDone(_ thereWereChanges: Bool) {
-			if syncDirty {
-				sync(force: true, previouslySentChanges: thereWereChanges, completion: completion)
-			} else {
-				syncing = false
-				completion(thereWereChanges, nil)
-			}
-			endBgTask()
-		}
-
 		sendUpdatesUp { changes, error in
 			let previousOrCurrentChanges = previouslySentChanges || changes
 			if let error = error {
@@ -375,18 +333,20 @@ final class CloudManager {
 				syncing = false
 				completion(previousOrCurrentChanges, error)
 				endBgTask()
-			} else if onlySend {
-				syncDone(previousOrCurrentChanges)
 			} else {
 				fetchDatabaseChanges { error in
 					if let error = error {
 						log("Could not perform pull: \(error.localizedDescription)")
 						syncing = false
 						completion(previouslySentChanges, error)
-						endBgTask()
+					} else if syncDirty {
+						sync(force: true, previouslySentChanges: previouslySentChanges, completion: completion)
 					} else {
-						syncDone(previousOrCurrentChanges)
+						syncing = false
+						completion(previouslySentChanges, nil)
+						lastSyncCompletion = Date()
 					}
+					endBgTask()
 				}
 			}
 		}
@@ -412,14 +372,14 @@ final class CloudManager {
 		}
 	}
 
-	static var lastFetchDate: Date {
+	static var lastSyncCompletion: Date {
 		get {
-			return UserDefaults.standard.object(forKey: "lastFetchDate") as? Date ?? .distantPast
+			return UserDefaults.standard.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
 		}
 
 		set {
 			let d = UserDefaults.standard
-			d.set(newValue, forKey: "lastFetchDate")
+			d.set(newValue, forKey: "lastSyncCompletion")
 			d.synchronize()
 		}
 	}
@@ -593,7 +553,6 @@ final class CloudManager {
 						if deletionIdsSnapshot.contains(uuid) {
 							deletionQueue.remove(uuid)
 							log("Deleted cloud record \(uuid)")
-							changes = true
 						}
 					}
 				}
