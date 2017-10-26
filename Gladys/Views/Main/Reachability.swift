@@ -23,7 +23,7 @@ class Reachability {
 		if (SCNetworkReachabilitySetCallback(reachability, { target, flags, info in
 			let newStatus = Reachability.status(from: flags)
 			log("Rechability changed: \(newStatus.name)")
-			NotificationCenter.default.post(name: .ReachabilityChangedNotification, object: newStatus)
+			NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
 		}, &context)) {
 			if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.commonModes.rawValue)) {
 				log("Reachability monitoring active")

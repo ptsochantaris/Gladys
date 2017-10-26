@@ -59,7 +59,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	private func fileItem(at url: URL) -> FileProviderItem? {
 		let urlComponents = url.pathComponents
 		if let lastComponent = urlComponents.last, urlComponents.count > 1 {
-			if lastComponent == "items.json" || lastComponent == "ck-delete-queue" {
+			if lastComponent == "items.json" || lastComponent == "ck-delete-queue" || lastComponent == "ck-uuid-sequence" {
 				return nil
 			}
 			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
@@ -83,9 +83,13 @@ final class FileProviderExtension: NSFileProviderExtension {
     }
 
     override func itemChanged(at url: URL) {
-		if url.lastPathComponent == "items.json" { return }
-		if url.lastPathComponent == "ck-delete-queue" { return }
-		log("Item changed: \(url.path)")
+		switch url.lastPathComponent {
+		case "items.json", "ck-delete-queue", "ck-uuid-sequence":
+			return
+		default:
+			log("Item changed: \(url.path)")
+		}
+		
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = undeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			typeItem.markUpdated()

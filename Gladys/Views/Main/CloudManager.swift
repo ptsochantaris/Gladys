@@ -55,6 +55,7 @@ final class CloudManager {
 					zoneChangeTokens = [:]
 					lastSyncCompletion = .distantPast
 					uuidSequence = nil
+					uuidSequenceRecord = nil
 					dbChangeToken = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
@@ -183,16 +184,16 @@ final class CloudManager {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
 					}
-				} else if record.recordType == "PositionList", let newUUIDlist = record["positionList"] as? [String] {
-					if newUUIDlist != (uuidSequence ?? []) {
+				} else if record.recordType == "PositionList" {
+					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag {
 						log("Received an updated position list record")
-						uuidSequence = newUUIDlist
+						uuidSequence = record["positionList"] as? [String]
 						updatedSequence = true
 						itemFieldsWereModified = true
+						uuidSequenceRecord = record
 					} else {
 						log("Received non-updated position list record")
 					}
-					// TODO: hook up a cloudkit record to the position data
 				}
 			}
 		}
@@ -303,13 +304,14 @@ final class CloudManager {
 		}
 	}
 
-	static func sync(force: Bool = false, completion: @escaping (Error?)->Void) {
+	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn {
 			completion(nil)
 			return
 		}
 
-		if onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
+		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
+			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
 			completion(nil)
 			return
 		}
@@ -448,6 +450,8 @@ final class CloudManager {
 		}
 	}
 
+	///////////////////////////////////////
+
 	static var uuidSequence: [String]? {
 		get {
 			if let d = UserDefaults.standard.data(forKey: "uuidSequence") {
@@ -465,6 +469,38 @@ final class CloudManager {
 				d.removeObject(forKey: "uuidSequence")
 			}
 			d.synchronize()
+		}
+	}
+
+	private static var uuidSequenceRecordPath: URL {
+		return Model.appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
+	}
+
+	private static var uuidSequenceRecord: CKRecord? {
+		get {
+			let recordLocation = uuidSequenceRecordPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKRecord(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = uuidSequenceRecordPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			}
 		}
 	}
 
@@ -525,7 +561,7 @@ final class CloudManager {
 
 		let currentUUIDSequence = ViewController.shared.model.drops.map { $0.uuid.uuidString }
 		if syncForceOrderSend || (uuidSequence ?? []) != currentUUIDSequence {
-			let record = CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
+			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])
 		}
@@ -580,6 +616,7 @@ final class CloudManager {
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
 							syncForceOrderSend = false
+							uuidSequenceRecord = record
 							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = ViewController.shared.model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
@@ -617,7 +654,7 @@ final class CloudManager {
 			return
 		}
 
-		CloudManager.sync { error in
+		CloudManager.sync(overridingWiFiPreference: true) { error in
 			if let error = error {
 				genericAlert(title: "Sync Error", message: error.localizedDescription, on: vc)
 			}

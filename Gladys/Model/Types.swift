@@ -41,7 +41,7 @@ extension Notification.Name {
 	static let DetailViewClosing = Notification.Name("DetailViewClosing")
 	static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
 	static let CloudManagerUpdatedUUIDSequence = Notification.Name("CloudManagerUpdatedUUIDSequence")
-	static let ReachabilityChangedNotification = Notification.Name("ReachabilityChangedNotification")
+	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 }
 
 extension UIImage {

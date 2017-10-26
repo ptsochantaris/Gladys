@@ -66,20 +66,38 @@ final class iCloudController: GladysViewController {
 	@objc private func icloudSwitchChanged() {
 		if icloudSpinner.isAnimating { return }
 
-		if icloudSwitch.isOn {
-			CloudManager.activate { error in
+		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
+			let model = ViewController.shared.model
+			if model.drops.count > 0 {
+				let contentSize = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+				let message = "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?"
+				let a = UIAlertController(title: "Upload Existing Items?", message: message, preferredStyle: .alert)
+				a.addAction(UIAlertAction(title: "Proceed", style: .default, handler: { action in
+					self.proceedWithActivation()
+				}))
+				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+					self.icloudSwitch.setOn(false, animated: true)
+				}))
+				present(a, animated: true)
+			} else {
+				proceedWithActivation()
+			}
+		} else if CloudManager.syncSwitchedOn {
+			CloudManager.deactivate { error in
 				DispatchQueue.main.async {
 					if let error = error {
 						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
 					}
 				}
 			}
-		} else {
-			CloudManager.deactivate { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
-					}
+		}
+	}
+
+	private func proceedWithActivation() {
+		CloudManager.activate { error in
+			DispatchQueue.main.async {
+				if let error = error {
+					genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
 				}
 			}
 		}

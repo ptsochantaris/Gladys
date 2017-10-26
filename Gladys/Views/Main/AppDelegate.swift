@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return false
 	}
 
-	func applicationDidBecomeActive(_ application: UIApplication) {
+	func applicationWillEnterForeground(_ application: UIApplication) {
 		CloudManager.sync { error in
 			if let error = error {
 				log("Error in foregrounding sync: \(error.localizedDescription)")

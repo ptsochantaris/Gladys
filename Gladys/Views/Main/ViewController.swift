@@ -378,6 +378,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(itemPositionsReceived), name: .CloudManagerUpdatedUUIDSequence, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
+		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -388,6 +389,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 		checkForUpgrade()
 		cloudStatusChanged()
+	}
+
+	@objc private func reachabilityChanged() {
+		if CloudManager.syncSwitchedOn && reachability.status == .ReachableViaWiFi && CloudManager.onlySyncOverWiFi {
+			CloudManager.tryManualSync(from: self)
+		}
 	}
 
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
@@ -696,6 +703,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 			firstAppearance = false
 			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
+			CloudManager.sync { error in
+				if let error = error {
+					log("Error in foregrounding sync: \(error.localizedDescription)")
+				}
+			}
 		}
 	}
 
