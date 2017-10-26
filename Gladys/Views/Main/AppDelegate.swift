@@ -42,18 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return false
 	}
 
-	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.sync { error in
-			if let error = error {
-				log("Error in foregrounding sync: \(error.localizedDescription)")
-			}
-		}
-	}
-
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
 		if CloudManager.syncSwitchedOn && !UIApplication.shared.isRegisteredForRemoteNotifications {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
+		CloudManager.statusListener.start()
 		log("Initial reachability status: \(reachability.status.name)")
 		return true
 	}

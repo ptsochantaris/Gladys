@@ -743,4 +743,61 @@ final class CloudManager {
 			}
 		}
 	}
+
+	///////////////////////////////////
+
+	static let statusListener = CloudStatusListener()
+	
+	final class CloudStatusListener {
+
+		private var holdOffOnSyncWhileWeInvestigateICloudStatus = false
+
+		func start() {
+			NotificationCenter.default.addObserver(self, selector: #selector(iCloudStatusChanged(_:)), name: .CKAccountChanged, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(_:)), name: .UIApplicationWillEnterForeground, object: nil)
+		}
+
+		@objc private func iCloudStatusChanged(_ notification: Notification) {
+			if !CloudManager.syncSwitchedOn { return }
+
+			holdOffOnSyncWhileWeInvestigateICloudStatus = true
+			container.accountStatus { status, error in
+				if status == .available {
+					DispatchQueue.main.async {
+						self.holdOffOnSyncWhileWeInvestigateICloudStatus = false
+						self.proceedWithSync()
+					}
+				} else {
+					log("iCloud deactivated on this device, shutting down sync")
+					DispatchQueue.main.async {
+						deactivate(force: true) { _ in
+							self.holdOffOnSyncWhileWeInvestigateICloudStatus = false
+							genericAlert(title: "Sync Disabled", message: "Syncing has been disabled as you are no longer logged into iCloud on this device.", on: ViewController.shared)
+						}
+					}
+				}
+			}
+		}
+
+		@objc private func willEnterForeground(_ notification: Notification) {
+			if !CloudManager.syncSwitchedOn { return }
+			
+			if holdOffOnSyncWhileWeInvestigateICloudStatus {
+				return
+			}
+			proceedWithSync()
+		}
+
+		private func proceedWithSync() {
+			CloudManager.sync { error in
+				if let error = error {
+					log("Error in foregrounding sync: \(error.localizedDescription)")
+				}
+			}
+		}
+
+		deinit {
+			NotificationCenter.default.removeObserver(self)
+		}
+	}
 }
