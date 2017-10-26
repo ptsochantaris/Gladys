@@ -158,6 +158,9 @@ final class CloudManager {
 						syncDirty = true
 						syncForceOrderSend = true
 						item.needsCloudPush = true
+						for typeItem in item.typeItems {
+							typeItem.needsCloudPush = true
+						}
 					}
 				}
 			}
@@ -781,7 +784,7 @@ final class CloudManager {
 
 		@objc private func willEnterForeground(_ notification: Notification) {
 			if !CloudManager.syncSwitchedOn { return }
-			
+
 			if holdOffOnSyncWhileWeInvestigateICloudStatus {
 				return
 			}
