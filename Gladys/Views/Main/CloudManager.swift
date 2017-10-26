@@ -183,10 +183,16 @@ final class CloudManager {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
 					}
-				} else if record.recordType == "PositionList", let newUUIDlist = record["positionList"] as? [String], newUUIDlist != (uuidSequence ?? []) {
-					log("Received an updated position list record")
-					uuidSequence = newUUIDlist
-					updatedSequence = true
+				} else if record.recordType == "PositionList", let newUUIDlist = record["positionList"] as? [String] {
+					if newUUIDlist != (uuidSequence ?? []) {
+						log("Received an updated position list record")
+						uuidSequence = newUUIDlist
+						updatedSequence = true
+						itemFieldsWereModified = true
+					} else {
+						log("Received non-updated position list record")
+						// TODO: hook up a cloudkit record to it
+					}
 				}
 			}
 		}
