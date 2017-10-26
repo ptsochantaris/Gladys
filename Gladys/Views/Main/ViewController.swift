@@ -226,6 +226,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		return UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
 	}
 
+	private var phoneMode: Bool {
+		return traitCollection.horizontalSizeClass == .regular || traitCollection.verticalSizeClass == .regular
+	}
+
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		if segue.identifier == "showPreferences",
@@ -241,11 +245,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 			for n in t.viewControllers ?? [] {
 				if let d = (n as? UINavigationController)?.topViewController {
-					if traitCollection.horizontalSizeClass == .regular {
+					if phoneMode {
+						n.view.backgroundColor = c
+					} else {
 						p.backgroundColor = c
 						d.navigationItem.rightBarButtonItem = nil
-					} else {
-						n.view.backgroundColor = c
 					}
 				}
 			}
@@ -265,11 +269,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 				p.delegate = self
 				let c = patternColor
-				if traitCollection.horizontalSizeClass == .regular {
+				if phoneMode {
+					n.view.backgroundColor = c
+				} else {
 					p.backgroundColor = c
 					d.navigationItem.rightBarButtonItem = nil
-				} else {
-					n.view.backgroundColor = c
 				}
 			}
 
