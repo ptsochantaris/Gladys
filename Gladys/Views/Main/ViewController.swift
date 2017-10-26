@@ -415,8 +415,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		if let r = archivedItemCollectionView.refreshControl {
 			if r.isRefreshing && !CloudManager.syncing {
 				r.endRefreshing()
-			} else if !r.isRefreshing && CloudManager.syncing {
-				r.beginRefreshing()
 			}
 			lastSyncUpdate()
 		}

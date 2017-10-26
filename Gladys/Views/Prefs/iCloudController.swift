@@ -14,7 +14,6 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
-	@IBOutlet weak var detailsLabel: UILabel!
 	// TODO: accessibility
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
@@ -62,8 +61,6 @@ final class iCloudController: GladysViewController {
 			icloudSpinner.stopAnimating()
 			icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		}
-
-		detailsLabel.isHidden = !CloudManager.syncSwitchedOn
 	}
 
 	@objc private func icloudSwitchChanged() {

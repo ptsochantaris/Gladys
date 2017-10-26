@@ -415,52 +415,76 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                <rect key="frame" x="221" y="235" width="51" height="31"/>
+                                <rect key="frame" x="221" y="171" width="51" height="31"/>
                                 <connections>
                                     <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                <rect key="frame" x="40" y="229.5" width="156" height="42.5"/>
+                                <rect key="frame" x="40" y="165.5" width="156" height="42.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                <rect key="frame" x="284" y="169" width="20" height="20"/>
+                                <rect key="frame" x="284" y="113" width="20" height="20"/>
                                 <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                <rect key="frame" x="40" y="169" width="156" height="20.5"/>
+                                <rect key="frame" x="40" y="113" width="156" height="20.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                <rect key="frame" x="221" y="164" width="51" height="31"/>
+                                <rect key="frame" x="221" y="108" width="51" height="31"/>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Items sync automatically, but you can force a refresh by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
-                                <rect key="frame" x="60" y="312" width="200" height="52"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can request a manual sync by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
+                                <rect key="frame" x="20" y="240" width="280" height="34"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="hZp-ez-qqA"/>
+                                    <constraint firstAttribute="width" constant="280" id="hZp-ez-qqA"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
+                                <rect key="frame" x="20.5" y="290" width="280" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="xFc-N1-8ay"/>
+                                </constraints>
+                                <string key="text">Gladys stores data in your private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
+                                <rect key="frame" x="20" y="376" width="280" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="Ynj-re-Qug"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="top" secondItem="bc6-6V-O7h" secondAttribute="bottom" constant="32" id="2R9-TI-Q41"/>
+                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="centerX" secondItem="RxQ-uD-Ykw" secondAttribute="centerX" id="349-XY-pgr"/>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="50" id="9Wa-2H-dSI"/>
                             <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="xdt-ru-gMc" secondAttribute="centerX" id="E3M-Xx-ubr"/>
-                            <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="guO-CQ-KTM" secondAttribute="bottom" constant="40" id="Im2-19-uJV"/>
+                            <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="guO-CQ-KTM" secondAttribute="bottom" constant="32" id="Im2-19-uJV"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="JgK-jj-6sV"/>
                             <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="14" id="KnE-Xl-LnX"/>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="cSP-79-0Wg" secondAttribute="bottom" priority="750" constant="69" id="Lg0-g7-TkF"/>
                             <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="QKf-Fo-ZMH"/>
+                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="cSP-79-0Wg" secondAttribute="bottom" constant="16" id="SY5-zo-2eD"/>
+                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="centerX" secondItem="cSP-79-0Wg" secondAttribute="centerX" id="TgI-FU-FYp"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="dTy-8w-XcM"/>
-                            <constraint firstItem="V6J-fH-sQH" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="100" id="hXr-3L-QWB"/>
+                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BZ8-I2-EIj" secondAttribute="bottom" constant="50" id="gPb-qL-rcJ"/>
+                            <constraint firstItem="V6J-fH-sQH" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="44" id="hXr-3L-QWB"/>
+                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" constant="16" id="kN5-S3-3dY"/>
                             <constraint firstItem="i3g-cz-xkx" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="trailing" constant="25" id="kTc-kV-VqV"/>
-                            <constraint firstItem="i3g-cz-xkx" firstAttribute="top" secondItem="V6J-fH-sQH" secondAttribute="bottom" constant="40" id="kdt-s9-n6a"/>
                             <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="40" id="mO3-Ep-w1d"/>
                             <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="leading" id="odW-4u-ch3"/>
                             <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="vYg-pg-Ye0"/>
@@ -476,7 +500,6 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="detailsLabel" destination="cSP-79-0Wg" id="ee0-Uw-fQ9"/>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
@@ -528,7 +551,7 @@ Selecting them will show only items that contain these labels.</string>
                             </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gdd-eU-gY3" secondAttribute="bottom" priority="750" constant="30" id="7dO-PL-bGx"/>
+                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gdd-eU-gY3" secondAttribute="bottom" constant="30" id="7dO-PL-bGx"/>
                             <constraint firstItem="Gdd-eU-gY3" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" constant="30" id="hN1-Y3-m23"/>
                             <constraint firstItem="Gdd-eU-gY3" firstAttribute="leading" secondItem="J9I-Dy-W9t" secondAttribute="leading" constant="10" id="koU-0e-qXr"/>
                             <constraint firstItem="J9I-Dy-W9t" firstAttribute="trailing" secondItem="Gdd-eU-gY3" secondAttribute="trailing" constant="10" id="wjH-bY-2Xm"/>
@@ -1208,7 +1231,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

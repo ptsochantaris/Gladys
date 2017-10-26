@@ -59,7 +59,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	private func fileItem(at url: URL) -> FileProviderItem? {
 		let urlComponents = url.pathComponents
 		if let lastComponent = urlComponents.last, urlComponents.count > 1 {
-			if lastComponent == "items.json" {
+			if lastComponent == "items.json" || lastComponent == "ck-delete-queue" {
 				return nil
 			}
 			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent

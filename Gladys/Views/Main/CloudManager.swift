@@ -191,8 +191,8 @@ final class CloudManager {
 						itemFieldsWereModified = true
 					} else {
 						log("Received non-updated position list record")
-						// TODO: hook up a cloudkit record to it
 					}
+					// TODO: hook up a cloudkit record to the position data
 				}
 			}
 		}

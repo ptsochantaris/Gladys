@@ -1,5 +1,6 @@
 
 import CoreSpotlight
+import CloudKit
 import UIKit
 
 extension Model {
@@ -366,15 +367,18 @@ extension Model {
 			item.needsReIngest = true
 			item.markUpdated()
 
-			let uuid = item.uuid.uuidString
-
-			let localPath = Model.appStorageUrl.appendingPathComponent(uuid)
+			let localPath = item.folderUrl
 			if fm.fileExists(atPath: localPath.path) {
 				try! fm.removeItem(at: localPath)
 			}
 
-			let remotePath = url.appendingPathComponent(uuid)
+			let remotePath = url.appendingPathComponent(item.uuid.uuidString)
 			try! fm.moveItem(at: remotePath, to: localPath)
+
+			item.cloudKitRecord = nil
+			for typeItem in item.typeItems {
+				typeItem.cloudKitRecord = nil
+			}
 		}
 
 		DispatchQueue.main.async {
