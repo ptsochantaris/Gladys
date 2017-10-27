@@ -8,13 +8,61 @@
 
 import UIKit
 
+final class SwitchHolder: UIView {
+
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		isAccessibilityElement = true
+	}
+
+	override var accessibilityLabel: String? {
+		set {}
+		get {
+			if let s = subviews.first(where: { $0 is UILabel }) as? UILabel {
+				return s.accessibilityLabel
+			} else {
+				return nil
+			}
+		}
+	}
+
+	var switchControl: UISwitch? {
+		return subviews.first(where: { $0 is UISwitch }) as? UISwitch
+	}
+
+	override var accessibilityValue: String? {
+		set {}
+		get {
+			return switchControl?.accessibilityValue
+		}
+	}
+
+	override var accessibilityTraits: UIAccessibilityTraits {
+		set {}
+		get {
+			return switchControl?.accessibilityTraits ?? UIAccessibilityTraitNone
+		}
+	}
+
+	override var accessibilityHint: String? {
+		set {}
+		get {
+			return switchControl?.accessibilityHint
+		}
+	}
+
+	override func accessibilityActivate() -> Bool {
+		switchControl?.isOn = !(switchControl?.isOn ?? false)
+		return true
+	}
+}
+
 final class iCloudController: GladysViewController {
 
 	@IBOutlet weak var icloudLabel: UILabel!
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
-	// TODO: accessibility
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn

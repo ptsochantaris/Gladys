@@ -414,33 +414,8 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                <rect key="frame" x="221" y="171" width="51" height="31"/>
-                                <connections>
-                                    <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                <rect key="frame" x="40" y="165.5" width="156" height="42.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                <rect key="frame" x="284" y="113" width="20" height="20"/>
-                                <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                <rect key="frame" x="40" y="113" width="156" height="20.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                <rect key="frame" x="221" y="108" width="51" height="31"/>
-                            </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can request a manual sync by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
-                                <rect key="frame" x="20" y="240" width="280" height="34"/>
+                                <rect key="frame" x="20" y="248.5" width="280" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="hZp-ez-qqA"/>
                                 </constraints>
@@ -449,7 +424,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
-                                <rect key="frame" x="20.5" y="290" width="280" height="70"/>
+                                <rect key="frame" x="20.5" y="298.5" width="280" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="xFc-N1-8ay"/>
                                 </constraints>
@@ -459,7 +434,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
-                                <rect key="frame" x="20" y="376" width="280" height="52"/>
+                                <rect key="frame" x="20" y="384.5" width="280" height="52"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="Ynj-re-Qug"/>
                                 </constraints>
@@ -467,28 +442,74 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="88n-uM-fcL" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="84" width="320" height="72"/>
+                                <subviews>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
+                                        <rect key="frame" x="273" y="26" width="20" height="20"/>
+                                        <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
+                                        <rect key="frame" x="8" y="26" width="175" height="21"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
+                                        <rect key="frame" x="201" y="21" width="51" height="31"/>
+                                    </switch>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="V6J-fH-sQH" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="2ig-al-Y58"/>
+                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="top" secondItem="88n-uM-fcL" secondAttribute="top" constant="26" id="45b-fV-MGI"/>
+                                    <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
+                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="23" id="Ex6-yc-wkY"/>
+                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="8" id="G4y-zu-7Vt"/>
+                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="Nwz-1M-6aN"/>
+                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
+                                    <constraint firstAttribute="trailing" secondItem="0S6-rX-cYY" secondAttribute="trailing" constant="27" id="wTa-4d-YQZ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="156" width="320" height="62.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
+                                        <rect key="frame" x="8" y="10" width="175" height="42.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
+                                        <rect key="frame" x="201" y="16" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
+                                        </connections>
+                                    </switch>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="ehw-1I-mk8" secondAttribute="centerY" id="TTe-5a-RWI"/>
+                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="top" secondItem="ehw-1I-mk8" secondAttribute="top" constant="10" id="h5N-Ja-gzd"/>
+                                    <constraint firstItem="i3g-cz-xkx" firstAttribute="centerY" secondItem="ehw-1I-mk8" secondAttribute="centerY" id="ygt-mr-z3V"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="top" secondItem="bc6-6V-O7h" secondAttribute="bottom" constant="32" id="2R9-TI-Q41"/>
                             <constraint firstItem="BZ8-I2-EIj" firstAttribute="centerX" secondItem="RxQ-uD-Ykw" secondAttribute="centerX" id="349-XY-pgr"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="50" id="9Wa-2H-dSI"/>
+                            <constraint firstItem="ehw-1I-mk8" firstAttribute="trailing" secondItem="xdt-ru-gMc" secondAttribute="trailing" id="3ae-sQ-iVg"/>
+                            <constraint firstItem="88n-uM-fcL" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" id="6ee-67-M0c"/>
+                            <constraint firstItem="ehw-1I-mk8" firstAttribute="top" secondItem="88n-uM-fcL" secondAttribute="bottom" id="9Bt-Qd-RbM"/>
                             <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="xdt-ru-gMc" secondAttribute="centerX" id="E3M-Xx-ubr"/>
-                            <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="guO-CQ-KTM" secondAttribute="bottom" constant="32" id="Im2-19-uJV"/>
-                            <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="JgK-jj-6sV"/>
-                            <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="14" id="KnE-Xl-LnX"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="cSP-79-0Wg" secondAttribute="bottom" priority="750" constant="69" id="Lg0-g7-TkF"/>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="centerY" secondItem="i3g-cz-xkx" secondAttribute="centerY" id="QKf-Fo-ZMH"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="leading" id="Kea-nv-c4I"/>
                             <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="cSP-79-0Wg" secondAttribute="bottom" constant="16" id="SY5-zo-2eD"/>
                             <constraint firstItem="RxQ-uD-Ykw" firstAttribute="centerX" secondItem="cSP-79-0Wg" secondAttribute="centerX" id="TgI-FU-FYp"/>
-                            <constraint firstItem="bc6-6V-O7h" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="dTy-8w-XcM"/>
+                            <constraint firstItem="88n-uM-fcL" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="20" id="WQ9-D1-k7H"/>
+                            <constraint firstItem="88n-uM-fcL" firstAttribute="trailing" secondItem="xdt-ru-gMc" secondAttribute="trailing" id="d6K-fs-nwJ"/>
+                            <constraint firstItem="guO-CQ-KTM" firstAttribute="trailing" secondItem="bc6-6V-O7h" secondAttribute="trailing" id="eGC-yi-TIY"/>
+                            <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="ehw-1I-mk8" secondAttribute="bottom" constant="30" id="etb-j1-KKG"/>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BZ8-I2-EIj" secondAttribute="bottom" constant="50" id="gPb-qL-rcJ"/>
-                            <constraint firstItem="V6J-fH-sQH" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" constant="44" id="hXr-3L-QWB"/>
                             <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" constant="16" id="kN5-S3-3dY"/>
-                            <constraint firstItem="i3g-cz-xkx" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="trailing" constant="25" id="kTc-kV-VqV"/>
-                            <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" constant="40" id="mO3-Ep-w1d"/>
-                            <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="leading" id="odW-4u-ch3"/>
-                            <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="V6J-fH-sQH" secondAttribute="centerY" id="vYg-pg-Ye0"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="i3g-cz-xkx" secondAttribute="trailing" constant="50" id="zLN-YY-CPa"/>
+                            <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="pVQ-6I-ejL"/>
+                            <constraint firstItem="ehw-1I-mk8" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" id="y7o-7j-QK1"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
@@ -521,7 +542,7 @@ Selecting them will show only items that contain these labels.</string>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Gdd-eU-gY3">
                                 <rect key="frame" x="10" y="94" width="300" height="372"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="Xsy-cM-XaU"/>
@@ -1231,7 +1252,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
