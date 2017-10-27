@@ -245,7 +245,9 @@ extension Model {
 		if itemsNeedingReIndex.count > 0 {
 			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 			reIndex(items: itemsNeedingReIndex) {
-				self.save()
+				DispatchQueue.main.async {
+					self.save()
+				}
 			}
 		}
 	}
