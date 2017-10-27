@@ -15,10 +15,8 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 	finalVC.present(a, animated: true)
 }
 
-final class ViewController: GladysViewController, UICollectionViewDelegate,
-	LoadCompletionDelegate, SKProductsRequestDelegate,
-	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver,
-	UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
+final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
+	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -373,7 +371,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
-		n.addObserver(self, selector: #selector(searchUpdated), name: .SearchResultsUpdated, object: nil)
+		n.addObserver(self, selector: #selector(reloadData), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
@@ -497,6 +495,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		if UIApplication.shared.applicationState == .background {
 			lowMemoryMode = true
 			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
+			ArchivedItemCell.clearCaches()
 		}
 	}
 
@@ -527,7 +526,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 	@objc private func externalDataUpdate() {
 		model.forceUpdateFilter(signalUpdate: false) // will force below
-		searchUpdated()
+		reloadData()
 		didUpdateItems()
 		updateEmptyView(animated: true)
 		detectExternalDeletions()
@@ -970,7 +969,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	}
 
 	private var dragActionInProgress = false
-	@objc func searchUpdated() {
+	@objc func reloadData() {
 		updateLabelIcon()
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))

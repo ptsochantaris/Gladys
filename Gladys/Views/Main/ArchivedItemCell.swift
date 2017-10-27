@@ -280,6 +280,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private static let displayIconCache = NSCache<NSString, UIImage>()
 
+	static func clearCaches() {
+		displayIconCache.removeAllObjects()
+	}
+
 	private func decorate(with item: ArchivedDropItem?) {
 
 		var wantMapView = false

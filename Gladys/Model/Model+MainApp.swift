@@ -177,8 +177,11 @@ extension Model {
 		Model.modelFilter = newValue
 
 		let olduuids = filteredUuids
+		var filtering = false
 
 		if let f = filter, !f.isEmpty {
+
+			filtering = true
 
 			var replacementResults = [String]()
 
@@ -208,7 +211,21 @@ extension Model {
 		}
 
 		if signalUpdate && olduuids != filteredUuids {
-			NotificationCenter.default.post(name: .SearchResultsUpdated, object: nil)
+
+			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+
+			if filtering && UIAccessibilityIsVoiceOverRunning() {
+				let resultString: String
+				let c = filteredDrops.count
+				if c == 0 {
+					resultString = "No results"
+				} else if c == 1 {
+					resultString = "One result"
+				} else  {
+					resultString = "\(filteredDrops.count) results"
+				}
+				UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, resultString)
+			}
 		}
 	}
 

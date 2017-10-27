@@ -32,7 +32,7 @@ extension FileManager {
 
 extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
-	static let SearchResultsUpdated = Notification.Name("SearchResultsUpdated")
+	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
 	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
 	static let LowMemoryModeOn = Notification.Name("LowMemoryModeOn")
 	static let ItemModified = Notification.Name("ItemModified")
