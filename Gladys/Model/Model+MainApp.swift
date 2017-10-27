@@ -189,7 +189,7 @@ extension Model {
 			group.enter()
 
 			let criterion = "\"*\(f)*\"cd"
-			let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion)", attributes: nil)
+			let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)", attributes: nil)
 			q.foundItemsHandler = { items in
 				let uuids = items.map { $0.uniqueIdentifier }
 				replacementResults.append(contentsOf: uuids)
