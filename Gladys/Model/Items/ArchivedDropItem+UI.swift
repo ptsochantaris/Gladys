@@ -102,7 +102,7 @@ extension ArchivedDropItem {
 		return false
 	}
 
-	func tryOpen(in viewController: UINavigationController) {
+	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
 		var priority = -1
 		var item: Any?
 
@@ -116,11 +116,13 @@ extension ArchivedDropItem {
 
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
+			completion(true)
 		} else if let contact = item as? CNContact {
 			let c = CNContactViewController(forUnknownContact: contact)
 			c.contactStore = CNContactStore()
 			c.hidesBottomBarWhenPushed = true
 			viewController.pushViewController(c, animated: true)
+			completion(false)
 		} else if let item = item as? URL {
 			UIApplication.shared.open(item, options: [:]) { success in
 				if !success {
@@ -134,6 +136,7 @@ extension ArchivedDropItem {
 					             message: message,
 					             on: viewController)
 				}
+				completion(success)
 			}
 		}
 	}

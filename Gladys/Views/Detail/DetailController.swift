@@ -115,7 +115,11 @@ final class DetailController: GladysViewController,
 	}
 
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {
-		item.tryOpen(in: navigationController!)
+		item.tryOpen(in: navigationController!) { shouldClose in
+			if shouldClose {
+				self.done()
+			}
+		}
 	}
 
 	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
