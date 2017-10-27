@@ -337,7 +337,7 @@ final class DetailController: GladysViewController,
 		item.markUpdated()
 		item.makeIndex() { _ in
 			DispatchQueue.main.async {
-				ViewController.shared.model.save()
+				model.save()
 			}
 		}
 	}

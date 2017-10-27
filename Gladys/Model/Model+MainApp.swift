@@ -69,8 +69,6 @@ extension Model {
 	}
 	
 	func beginMonitoringChanges() {
-		Model.filePresenter.model = self
-		
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
@@ -313,9 +311,7 @@ extension Model {
 	}
 	
 	private class ModelFilePresenter: NSObject, NSFilePresenter {
-		
-		weak var model: Model?
-		
+				
 		var presentedItemURL: URL? {
 			return Model.fileUrl
 		}
@@ -325,7 +321,7 @@ extension Model {
 		}
 		
 		func presentedItemDidChange() {
-			model?.reloadDataIfNeeded()
+			model.reloadDataIfNeeded()
 		}
 	}
 

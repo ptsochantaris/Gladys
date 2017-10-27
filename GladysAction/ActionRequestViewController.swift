@@ -11,7 +11,6 @@ import UIKit
 class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	private var loadCount = 0
-	private let model = Model()
 
 	@IBOutlet weak var statusLabel: UILabel?
 	@IBOutlet weak var cancelButton: UIBarButtonItem?
@@ -94,14 +93,29 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		if loadCount == 0 {
 			statusLabel?.text = "Saving..."
 			cancelButton?.isEnabled = false
-			Model.oneTimeSaveCallback = {
+
+			let group = DispatchGroup()
+			group.enter()
+			group.enter()
+			group.enter()
+			group.notify(queue: DispatchQueue.main) {
+				log("Action done")
 				self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 			}
-			model.reIndex(items: newItems) {
-				DispatchQueue.main.async {
-					self.model.save()
+
+			CloudManager.sendUpdatesUp { error in
+				if let error = error {
+					log("Error while sending up items: \(error.localizedDescription)")
 				}
+				group.leave()
 			}
+			model.reIndex(items: newItems) {
+				group.leave()
+			}
+			Model.oneTimeSaveCallback = {
+				group.leave()
+			}
+			model.save()
 		}
 	}
 }

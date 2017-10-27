@@ -27,8 +27,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	@IBOutlet weak var labelsButton: UIBarButtonItem!
 	@IBOutlet weak var settingsButton: UIBarButtonItem!
 
-	let model = Model()
-
 	static var shared: ViewController!
 
 	///////////////////////
@@ -122,9 +120,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 				let destinationIndex = model.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
 
 				collectionView.performBatchUpdates({
-					self.model.drops.remove(at: sourceIndex)
-					self.model.drops.insert(existingItem, at: destinationIndex)
-					self.model.forceUpdateFilter(signalUpdate: false)
+					model.drops.remove(at: sourceIndex)
+					model.drops.insert(existingItem, at: destinationIndex)
+					model.forceUpdateFilter(signalUpdate: false)
 					collectionView.deleteItems(at: [filteredPreviousIndex])
 					collectionView.insertItems(at: [filteredDestinationIndexPath])
 				})
@@ -145,8 +143,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
 				collectionView.performBatchUpdates({
 					collectionView.isAccessibilityElement = false
-					self.model.drops.insert(item, at: dataIndex)
-					self.model.forceUpdateFilter(signalUpdate: false)
+					model.drops.insert(item, at: dataIndex)
+					model.forceUpdateFilter(signalUpdate: false)
 					collectionView.insertItems(at: [destinationIndexPath])
 				}, completion: { finished in
 					self.mostRecentIndexPathActioned = destinationIndexPath
@@ -367,8 +365,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 
-		searchTimer = PopTimer(timeInterval: 0.4) { [weak self, weak searchController] in
-			self?.model.filter = searchController?.searchBar.text
+		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController] in
+			model.filter = searchController?.searchBar.text
 		}
 
 		navigationController?.setToolbarHidden(true, animated: false)
@@ -464,8 +462,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 		let destinationIndexPath = IndexPath(item: 0, section: 0)
 
 		archivedItemCollectionView.performBatchUpdates({
-			self.model.drops.insert(item, at: 0)
-			self.model.forceUpdateFilter(signalUpdate: false)
+			model.drops.insert(item, at: 0)
+			model.forceUpdateFilter(signalUpdate: false)
 			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
 		}, completion: { finished in
 			self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)

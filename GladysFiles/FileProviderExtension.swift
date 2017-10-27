@@ -2,8 +2,6 @@
 import FileProvider
 import UIKit
 
-let model = Model()
-
 var undeletedDrops: [ArchivedDropItem] {
 	return model.drops.filter { !$0.needsDeletion }
 }

@@ -10,8 +10,6 @@ import CoreSpotlight
 
 final class IndexRequestHandler: CSIndexExtensionRequestHandler {
 
-	private let model = Model()
-
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
 		model.reloadDataIfNeeded()
 		model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)

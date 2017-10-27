@@ -71,7 +71,6 @@ final class iCloudController: GladysViewController {
 		if icloudSpinner.isAnimating { return }
 
 		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
-			let model = ViewController.shared.model
 			if model.drops.count > 0 {
 				let contentSize = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
 				let message = "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?"

@@ -5,8 +5,6 @@ let modelAccessQueue = DispatchQueue(label: "build.bru.Gladys.fileprovider.model
 
 private class ModelFilePresenter: NSObject, NSFilePresenter {
 
-	weak var model: Model?
-
 	var presentedItemURL: URL? {
 		return Model.fileUrl
 	}
@@ -16,7 +14,7 @@ private class ModelFilePresenter: NSObject, NSFilePresenter {
 	}
 
 	func presentedItemDidChange() {
-		model?.reloadDataIfNeeded()
+		model.reloadDataIfNeeded()
 	}
 }
 
@@ -35,7 +33,6 @@ extension Model {
 	func saveComplete() {}
 
 	func startupComplete() {
-		fileExtensionPresenter.model = self
 		NSFileCoordinator.addFilePresenter(fileExtensionPresenter)
 	}
 

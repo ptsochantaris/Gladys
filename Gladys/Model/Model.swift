@@ -4,6 +4,8 @@ import Foundation
 	import FileProvider
 #endif
 
+let model = Model()
+
 final class Model: NSObject {
 
 	var drops: [ArchivedDropItem]

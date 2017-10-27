@@ -91,7 +91,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		resizeCallback?(nil)
 		
 		item.makeIndex()
-		ViewController.shared.model.save()
+		model.save()
 	}
 
 	/////////////////////////////////////

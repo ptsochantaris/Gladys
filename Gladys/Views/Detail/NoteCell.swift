@@ -87,7 +87,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		resizeCallback?(nil)
 
 		item.makeIndex()
-		ViewController.shared.model.save()
+		model.save()
 	}
 
 	/////////////////////////////////////

@@ -23,7 +23,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			}
 			count += 1
 		}
-		clearAllButton.isEnabled = ViewController.shared.model.isFilteringLabels
+		clearAllButton.isEnabled = model.isFilteringLabels
 		if filteredToggles.count == 0 {
 			table.isHidden = true
 			navigationController?.setNavigationBarHidden(true, animated: false)
@@ -97,7 +97,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	}
 
 	@IBAction func clearAllSelected(_ sender: UIBarButtonItem) {
-		ViewController.shared.model.disableAllLabels()
+		model.disableAllLabels()
 		updates()
 		done()
 		LabelSelector.filter = ""
@@ -105,13 +105,13 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	private func updates() {
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-		clearAllButton.isEnabled = ViewController.shared.model.isFilteringLabels
+		clearAllButton.isEnabled = model.isFilteringLabels
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		var newState = filteredToggles[indexPath.row]
 		newState.enabled = !newState.enabled
-		ViewController.shared.model.updateLabel(newState)
+		model.updateLabel(newState)
 		if !newState.enabled {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
@@ -128,7 +128,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
 			guard let s = self else { return }
-			ViewController.shared.model.removeLabel(toggle.name)
+			model.removeLabel(toggle.name)
 			if Model.labelToggles.count == 0 {
 				tableView.isHidden = true
 				s.emptyLabel.isHidden = false

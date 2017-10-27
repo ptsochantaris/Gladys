@@ -72,7 +72,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			self.zipImage.isHidden = true
 		}
 
-		let dropsCopy = ViewController.shared.model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
+		let dropsCopy = model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
 		let itemCount = Int64(1 + dropsCopy.count)
 		let p = Progress(totalUnitCount: itemCount)
 
@@ -255,7 +255,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func deleteAllItems() {
-		ViewController.shared.model.resetEverything()
+		model.resetEverything()
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
@@ -318,7 +318,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@objc private func externalDataUpdate() {
 		spinner.stopAnimating()
-		let model = ViewController.shared.model
 		let count = model.drops.count
 		if count > 0 {
 			let size = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
@@ -368,7 +367,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func importArchive(from url: URL) {
-		let model = ViewController.shared.model
 		model.importData(from: url) { success in
 			DispatchQueue.main.async {
 				if !success {
