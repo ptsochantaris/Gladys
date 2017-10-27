@@ -149,19 +149,8 @@ final class CloudManager {
 			DispatchQueue.main.async {
 				log("Record \(recordType) deletion: \(itemUUID)")
 				if let item = ViewController.shared.model.item(uuid: itemUUID) {
-					if item.updatedAt < lastSyncCompletion {
-						item.needsDeletion = true
-						itemsNeedDeletion = true
-						log("Clear to delete")
-					} else {
-						log("Will not delete local item as it's been modified since last refresh, will recreate back in cloud")
-						syncDirty = true
-						syncForceOrderSend = true
-						item.needsCloudPush = true
-						for typeItem in item.typeItems {
-							typeItem.needsCloudPush = true
-						}
-					}
+					item.needsDeletion = true
+					itemsNeedDeletion = true
 				}
 			}
 		}

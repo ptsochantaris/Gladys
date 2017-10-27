@@ -92,8 +92,6 @@ extension ArchivedDropItemType {
 	
 	var populatedCloudKitRecord: CKRecord? {
 
-		guard needsCloudPush else { return nil }
-
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems",
 		                            ownerName: CKCurrentUserDefaultName)
 

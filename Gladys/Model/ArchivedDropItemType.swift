@@ -443,7 +443,6 @@ final class ArchivedDropItemType: Codable {
 
 	func markUpdated() {
 		updatedAt = Date()
-		needsCloudPush = true
 	}
 
 	#if MAINAPP || ACTIONEXTENSION
@@ -501,35 +500,6 @@ final class ArchivedDropItemType: Codable {
 
 	private var cloudKitDataPath: URL {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-	}
-
-	var needsCloudPush: Bool {
-		set {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				_ = recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					if newValue {
-						let data = "true".data(using: .utf8)!
-						_ = data.withUnsafeBytes { bytes in
-							setxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", bytes, data.count, 0, 0)
-						}
-					} else {
-						removexattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", 0)
-					}
-				}
-			}
-		}
-		get {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					let length = getxattr(fileSystemPath, "build.bru.Gladys.needsCloudPush", nil, 0, 0, 0)
-					return length > 0
-				}
-			} else {
-				return true
-			}
-		}
 	}
 
 	var cloudKitRecord: CKRecord? {
