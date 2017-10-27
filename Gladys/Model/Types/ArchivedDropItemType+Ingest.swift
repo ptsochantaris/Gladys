@@ -265,6 +265,7 @@ extension ArchivedDropItemType {
 		displayIconHeight = result.size.height
 		displayIconPriority = priority
 		displayIconContentMode = contentMode
+		displayIconTemplate = icon.renderingMode == .alwaysTemplate
 		displayIcon = result
 	}
 

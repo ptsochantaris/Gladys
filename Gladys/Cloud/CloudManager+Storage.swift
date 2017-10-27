@@ -13,7 +13,7 @@ import CloudKit
 
 extension CloudManager {
 
-	private static var d: UserDefaults { return UserDefaults(suiteName: "group.build.bru.Gladys")! }
+	private static var d: UserDefaults = { return UserDefaults(suiteName: "group.build.bru.Gladys")! }()
 
 	static var syncTransitioning = false {
 		didSet {
@@ -70,10 +70,10 @@ extension CloudManager {
 		}
 	}
 
-	static var dbChangeToken: CKServerChangeToken? {
+	static var zoneChangeToken: CKServerChangeToken? {
 		get {
-			if let d = d.data(forKey: "dbChangeToken") {
-				return NSKeyedUnarchiver.unarchiveObject(with: d) as? CKServerChangeToken
+			if let data = d.data(forKey: "zoneChangeToken"), data.count > 0 {
+				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
 			} else {
 				return nil
 			}
@@ -81,46 +81,27 @@ extension CloudManager {
 		set {
 			if let n = newValue {
 				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				d.set(data, forKey: "dbChangeToken")
+				d.set(data, forKey: "zoneChangeToken")
 			} else {
-				d.removeObject(forKey: "dbChangeToken")
+				d.set(Data(), forKey: "zoneChangeToken")
 			}
-			d.synchronize()
-		}
-	}
-
-	static var zoneChangeTokens: [CKRecordZoneID: CKServerChangeToken] {
-		get {
-			if let d = d.data(forKey: "zoneChangeTokens") {
-				return NSKeyedUnarchiver.unarchiveObject(with: d) as? [CKRecordZoneID: CKServerChangeToken] ?? [:]
-			} else {
-				return [:]
-			}
-		}
-		set {
-			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-			d.set(data, forKey: "zoneChangeTokens")
 			d.synchronize()
 		}
 	}
 
 	///////////////////////////////////////
 
-	static var uuidSequence: [String]? {
+	static var uuidSequence: [String] {
 		get {
-			if let d = d.data(forKey: "uuidSequence") {
-				return NSKeyedUnarchiver.unarchiveObject(with: d) as? [String]
+			if let data = d.data(forKey: "uuidSequence") {
+				return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
 			} else {
-				return nil
+				return []
 			}
 		}
 		set {
-			if let n = newValue {
-				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				d.set(data, forKey: "uuidSequence")
-			} else {
-				d.removeObject(forKey: "uuidSequence")
-			}
+			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
+			d.set(data, forKey: "uuidSequence")
 			d.synchronize()
 		}
 	}

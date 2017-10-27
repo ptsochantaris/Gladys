@@ -309,15 +309,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	@objc private func itemPositionsReceived() {
-		if let sequence = CloudManager.uuidSequence {
-			model.drops.sort { i1, i2 in
-				let p1 = sequence.index(of: i1.uuid.uuidString) ?? 0
-				let p2 = sequence.index(of: i2.uuid.uuidString) ?? 0
-				return p1 < p2
-			}
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-			model.save()
+		let sequence = CloudManager.uuidSequence
+		if sequence.count == 0 { return }
+		
+		model.drops.sort { i1, i2 in
+			let p1 = sequence.index(of: i1.uuid.uuidString) ?? 0
+			let p2 = sequence.index(of: i2.uuid.uuidString) ?? 0
+			return p1 < p2
 		}
+		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+		model.save()
 	}
 
 	override func awakeFromNib() {

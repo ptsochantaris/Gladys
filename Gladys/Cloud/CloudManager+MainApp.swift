@@ -95,11 +95,10 @@ extension CloudManager {
 					completion(error)
 				} else {
 					deletionQueue.removeAll()
-					zoneChangeTokens = [:]
 					lastSyncCompletion = .distantPast
-					uuidSequence = nil
+					uuidSequence = []
 					uuidSequenceRecord = nil
-					dbChangeToken = nil
+					zoneChangeToken = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in model.drops {
@@ -158,37 +157,25 @@ extension CloudManager {
 
 	/////////////////////////////////////////// Fetching
 
-	private static func fetchZoneChanges(ids: [CKRecordZoneID], finalCompletion: @escaping (Error?)->Void) {
+	private static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
 
-		guard ids.count > 0 else {
-			log("No zone changes, hence no record changes")
-			DispatchQueue.main.async {
-				finalCompletion(nil)
-			}
-			return
-		}
-
-		var lookup = zoneChangeTokens
 		var itemFieldsWereModified = false
 		var itemsNeedDeletion = false
 		var updatedSequence = false
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
 
-		let changeTokenOptionsList = ids.map { zoneId -> (CKRecordZoneID, CKFetchRecordZoneChangesOptions) in
-			let o = CKFetchRecordZoneChangesOptions()
-			if let changeToken = lookup[zoneId] {
-				o.previousServerChangeToken = changeToken
-			}
-			return (zoneId, o)
-		}
-		let d = Dictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions>(uniqueKeysWithValues: changeTokenOptionsList)
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: ids, optionsByRecordZoneID: d)
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+
+		let o = CKFetchRecordZoneChangesOptions()
+		o.previousServerChangeToken = zoneChangeToken
+
+		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			if recordType != "ArchivedDropItem" { return }
 			let itemUUID = recordId.recordName
+			log("Record \(recordType) deletion: \(itemUUID)")
 			DispatchQueue.main.async {
-				log("Record \(recordType) deletion: \(itemUUID)")
 				if let item = model.item(uuid: itemUUID) {
 					item.needsDeletion = true
 					itemsNeedDeletion = true
@@ -229,7 +216,7 @@ extension CloudManager {
 				} else if record.recordType == "PositionList" {
 					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag {
 						log("Received an updated position list record")
-						uuidSequence = record["positionList"] as? [String]
+						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true
 						itemFieldsWereModified = true
 						uuidSequenceRecord = record
@@ -240,16 +227,18 @@ extension CloudManager {
 			}
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
-			if (error as? CKError)?.code == .changeTokenExpired {
-				lookup[zoneId] = nil
-				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
-			} else {
-				lookup[zoneId] = token
-				log("Zone \(zoneId.zoneName) changes fetch complete")
-			}
-		}
-		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
+
+				if (error as? CKError)?.code == .changeTokenExpired {
+					zoneChangeToken = nil
+					log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
+					finalCompletion(error)
+					return
+				}
+
+				zoneChangeToken = token
+				log("Zone \(zoneId.zoneName) changes fetch complete")
+
 				if itemFieldsWereModified {
 					// ingestions will take care of save
 					for dropRecord in newDrops {
@@ -264,13 +253,8 @@ extension CloudManager {
 					// deletions will take care of save
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
-				if let error = error {
-					finalCompletion(error)
-				} else {
-					log("Received record changes")
-					self.zoneChangeTokens = lookup
-					finalCompletion(nil)
-				}
+
+				finalCompletion(error)
 			}
 		}
 		go(operation)
@@ -287,31 +271,6 @@ extension CloudManager {
 		}
 		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
 		model.drops.insert(item, at: 0)
-	}
-
-	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
-		var changedZoneIds = [CKRecordZoneID]()
-
-		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: dbChangeToken)
-		operation.recordZoneWithIDChangedBlock = { zoneId in
-			changedZoneIds.append(zoneId)
-		}
-		operation.fetchDatabaseChangesCompletionBlock = { serverChangeToken, moreComing, error in
-			if let error = error {
-				if (error as? CKError)?.code == .changeTokenExpired {
-					dbChangeToken = nil
-					log("Zone log could not be retrieved because token was stale, will retry")
-				}
-				DispatchQueue.main.async {
-					finalCompletion(error)
-				}
-			} else {
-				log("Received zone log, \(changedZoneIds.count) zones have changes")
-				dbChangeToken = serverChangeToken
-				fetchZoneChanges(ids: changedZoneIds, finalCompletion: finalCompletion)
-			}
-		}
-		go(operation)
 	}
 
 	/////////////////////////////////// Helpers

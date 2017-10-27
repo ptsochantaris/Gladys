@@ -48,7 +48,7 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = model.drops.map { $0.uuid.uuidString }
-		if syncForceOrderSend || (uuidSequence ?? []) != currentUUIDSequence {
+		if syncForceOrderSend || uuidSequence != currentUUIDSequence {
 			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])

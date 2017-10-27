@@ -20,6 +20,7 @@ final class ArchivedDropItemType: Codable {
 		case displayIconScale
 		case displayIconWidth
 		case displayIconHeight
+		case displayIconTemplate
 		case createdAt
 		case updatedAt
 	}
@@ -42,6 +43,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(displayIconHeight, forKey: .displayIconHeight)
 		try v.encode(createdAt, forKey: .createdAt)
 		try v.encode(updatedAt, forKey: .updatedAt)
+		try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
 	}
 
 	lazy var imagePath: URL = {
@@ -62,6 +64,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
 		displayIconWidth = try v.decode(CGFloat.self, forKey: .displayIconWidth)
 		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
+		displayIconTemplate = try v.decodeIfPresent(Bool.self, forKey: .displayIconTemplate) ?? false
 		let c = try v.decode(Date.self, forKey: .createdAt)
 		createdAt = c
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
@@ -130,6 +133,7 @@ final class ArchivedDropItemType: Codable {
 	var loadingAborted = false
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
+	var displayIconTemplate: Bool
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
@@ -420,7 +424,12 @@ final class ArchivedDropItemType: Codable {
 			}
 		}
 		get {
-			return UIImage.fromBitmap(at: imagePath, scale: displayIconScale)
+			let i = UIImage.fromBitmap(at: imagePath, scale: displayIconScale)
+			if displayIconTemplate {
+				return i?.withRenderingMode(.alwaysTemplate)
+			} else {
+				return i
+			}
 		}
 	}
 
@@ -460,6 +469,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconScale = 1
 		displayIconWidth = 0
 		displayIconHeight = 0
+		displayIconTemplate = false
 		classWasWrapped = false
 		createdAt = Date()
 		updatedAt = createdAt
@@ -478,6 +488,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconScale = 1
 		displayIconWidth = 0
 		displayIconHeight = 0
+		displayIconTemplate = false
 
 		let myUUID = record.recordID.recordName
 		uuid = UUID(uuidString: myUUID)!
