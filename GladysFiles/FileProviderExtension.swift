@@ -6,7 +6,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override init() {
 		super.init()
-		Model.ensureStarted()
+		Model.reloadDataIfNeeded()
 	}
 
 	@discardableResult

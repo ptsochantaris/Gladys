@@ -325,8 +325,8 @@ extension Model {
 	private static let filePresenter = ModelFilePresenter()
 	
 	private static func foregrounded() {
-		reloadDataIfNeeded()
 		NSFileCoordinator.addFilePresenter(filePresenter)
+		reloadDataIfNeeded()
 	}
 
 	private static func backgrounded() {

@@ -32,7 +32,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			return
 		}
 
-		Model.ensureStarted()
+		Model.reloadDataIfNeeded()
 		
 		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {

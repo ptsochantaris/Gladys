@@ -1,26 +1,30 @@
 import Foundation
 import FileProvider
 
-let modelAccessQueue = DispatchQueue(label: "build.bru.Gladys.fileprovider.model.queue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
-
-private class ModelFilePresenter: NSObject, NSFilePresenter {
-
-	var presentedItemURL: URL? {
-		return Model.fileUrl
-	}
-
-	var presentedItemOperationQueue: OperationQueue {
-		return OperationQueue.main
-	}
-
-	func presentedItemDidChange() {
-		Model.reloadDataIfNeeded()
-	}
-}
-
-private let fileExtensionPresenter = ModelFilePresenter()
-
 extension Model {
+
+	private class ModelFilePresenter: NSObject, NSFilePresenter {
+
+		var presentedItemURL: URL? {
+			return Model.fileUrl
+		}
+
+		var presentedItemOperationQueue: OperationQueue {
+			return accessQueue
+		}
+
+		func presentedItemDidChange() {
+			reloadDataIfNeeded()
+		}
+	}
+
+	private static let fileExtensionPresenter = ModelFilePresenter()
+	static let accessQueue: OperationQueue = {
+		let o = OperationQueue()
+		o.maxConcurrentOperationCount = 1
+		o.qualityOfService = .background
+		return o
+	}()
 
 	static var coordinator: NSFileCoordinator {
 		let coordinator = NSFileCoordinator(filePresenter: nil)

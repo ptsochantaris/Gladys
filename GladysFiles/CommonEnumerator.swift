@@ -24,7 +24,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 	@objc(enumerateItemsForObserver:startingAtPage:)
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
-		modelAccessQueue.async {
+		Model.accessQueue.addOperation {
 			self.sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 			log("Listing \(self.uuid)")
 			observer.didEnumerate(self.fileItems)
@@ -34,7 +34,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 	@objc(enumerateChangesForObserver:fromSyncAnchor:)
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-		modelAccessQueue.async {
+		Model.accessQueue.addOperation {
 			log("Listing changes for \(self.uuid) from anchor: \(String(data: syncAnchor.rawValue, encoding: .utf8)!)")
 			self.currentAnchor = syncAnchor
 			self.enumerateChanges(for: observer)

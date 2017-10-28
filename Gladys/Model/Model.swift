@@ -37,8 +37,9 @@ final class Model {
 		}).first
 	}
 
-	private static func loadData() {
-		
+	private static var isStarted = false
+
+	static func reloadDataIfNeeded() {
 		var coordinationError: NSError?
 		// withoutChanges because we only signal the provider after we have saved
 		coordinator.coordinate(readingItemAt: fileUrl, options: .withoutChanges, error: &coordinationError) { url in
@@ -70,21 +71,14 @@ final class Model {
 			log("Error in loading coordination: \(e.localizedDescription)")
 			abort()
 		}
-	}
 
-	private static var isStarted = false
-
-	static func ensureStarted() {
-		if isStarted { return }
-		loadData()
-		startupComplete()
-	}
-
-	static func reloadDataIfNeeded() {
-		ensureStarted()
-		loadData()
 		DispatchQueue.main.async {
-			reloadCompleted()
+			if isStarted {
+				reloadCompleted()
+			} else {
+				isStarted = true
+				startupComplete()
+			}
 		}
 	}
 }
