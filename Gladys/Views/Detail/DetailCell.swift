@@ -8,11 +8,22 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet weak var nameHolder: UIView!
 	@IBOutlet weak var inspectButton: UIButton!
+	@IBOutlet weak var viewButton: UIButton!
+	@IBOutlet weak var labelRightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var labelLeftConstraint: NSLayoutConstraint!
 
-	var selectionCallback: (()->Void)? {
+	var inspectionCallback: (()->Void)? {
 		didSet {
 			if inspectButton != nil {
-				inspectButton.alpha = (selectionCallback != nil) ? 0.7 : 0
+				inspectButton.alpha = (inspectionCallback != nil) ? 0.7 : 0
+			}
+		}
+	}
+
+	var viewCallback: (()->Void)? {
+		didSet {
+			if viewButton != nil {
+				viewButton.alpha = (viewCallback != nil) ? 0.7 : 0
 			}
 		}
 	}
@@ -23,6 +34,7 @@ final class DetailCell: UITableViewCell {
 		nameHolder.layer.cornerRadius = 5
 
 		inspectButton.accessibilityLabel = "Inspect raw data"
+		viewButton.accessibilityLabel = "Visual item preview"
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -39,11 +51,22 @@ final class DetailCell: UITableViewCell {
 
 	override func dragStateDidChange(_ dragState: UITableViewCellDragState) {
 		super.dragStateDidChange(dragState)
-		inspectButton.alpha = (selectionCallback != nil && dragState == .none) ? 0.7 : 0
+		inspectButton.alpha = (inspectionCallback != nil && dragState == .none) ? 0.7 : 0
+		viewButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
 	}
 
 	@IBAction func inspectSelected(_ sender: UIButton) {
-		selectionCallback?()
+		inspectionCallback?()
+	}
+
+	@IBAction func viewSelected(_ sender: UIButton) {
+		viewCallback?()
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		labelLeftConstraint.constant = viewCallback != nil ? 24 : 0
+		labelRightConstraint.constant = inspectionCallback != nil ? 24 : 0
 	}
 
 	/////////////////////////////////////

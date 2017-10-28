@@ -791,21 +791,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private var currentDetailView: DetailController? {
-		return firstPresentedNavigationController?.topViewController as? DetailController
+		return firstPresentedNavigationController?.viewControllers.first as? DetailController
 	}
 
 	private var currentPreferencesView: PreferencesController? {
-		return firstPresentedNavigationController?.topViewController as? PreferencesController
+		return firstPresentedNavigationController?.viewControllers.first as? PreferencesController
 	}
 
 	private var currentLabelSelector: LabelSelector? {
-		return firstPresentedNavigationController?.topViewController as? LabelSelector
+		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
 	func dismissAnyPopOver() {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
 			if popoverPresentationControllerShouldDismissPopover(pc) {
-				firstPresentedNavigationController?.dismiss(animated: true)
+				firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true)
 			}
 		}
 	}

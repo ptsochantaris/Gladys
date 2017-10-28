@@ -70,4 +70,13 @@ extension ArchivedDropItemType {
 	var sizeDescription: String? {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
+
+	var previewTempPath: URL {
+		if let f = fileExtension {
+			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
+		} else {
+			return bytesPath
+		}
+	}
 }
+

@@ -747,14 +747,14 @@ Selecting them will show only items that contain these labels.</string>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
                                                             <rect key="frame" x="8" y="27" width="288" height="43.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
                                                                     <rect key="frame" x="10" y="10" width="268" height="23.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="288" height="44"/>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
+                                                                    <rect key="frame" x="154" y="0.0" width="134" height="44"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
                                                                     <state key="normal" image="info"/>
@@ -762,16 +762,28 @@ Selecting them will show only items that contain these labels.</string>
                                                                         <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
                                                                     </connections>
                                                                 </button>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="134" height="44"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                    <state key="normal" image="iconEye"/>
+                                                                    <connections>
+                                                                        <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
+                                                                    </connections>
+                                                                </button>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
-                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="0Hf-2q-ZI5"/>
                                                                 <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leadingMargin" id="9AC-bX-gvd"/>
                                                                 <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="9XG-NJ-UaG"/>
+                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="width" secondItem="c4v-Gs-QKx" secondAttribute="width" multiplier="0.5" id="CzL-A5-1CQ"/>
+                                                                <constraint firstAttribute="bottom" secondItem="yZD-lA-j0C" secondAttribute="bottom" id="Jdb-BQ-nGb"/>
                                                                 <constraint firstItem="mRm-i0-pKo" firstAttribute="trailing" secondItem="eyj-G4-d4N" secondAttribute="trailingMargin" constant="10" id="Mnp-Em-DTz"/>
                                                                 <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="topMargin" id="Tru-JB-yds"/>
+                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="cke-IJ-06y"/>
+                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="d8q-u0-ltK"/>
                                                                 <constraint firstAttribute="bottomMargin" secondItem="c4v-Gs-QKx" secondAttribute="bottom" id="lOm-M1-fDv"/>
-                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="c4v-Gs-QKx" secondAttribute="leading" priority="250" id="swy-9S-zSx"/>
+                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="width" secondItem="c4v-Gs-QKx" secondAttribute="width" multiplier="0.5" id="uZx-Jg-plq"/>
                                                                 <constraint firstAttribute="trailingMargin" secondItem="c4v-Gs-QKx" secondAttribute="trailing" id="w3r-BS-L1N"/>
                                                                 <constraint firstAttribute="bottom" secondItem="mRm-i0-pKo" secondAttribute="bottom" id="xom-6A-KV5"/>
                                                             </constraints>
@@ -805,10 +817,13 @@ Selecting them will show only items that contain these labels.</string>
                                         <connections>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
+                                            <outlet property="labelLeftConstraint" destination="9AC-bX-gvd" id="XZN-fU-tiw"/>
+                                            <outlet property="labelRightConstraint" destination="w3r-BS-L1N" id="dcH-Bo-5AI"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
                                             <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>
                                             <outlet property="size" destination="c2U-hQ-bi9" id="0sm-hS-09V"/>
                                             <outlet property="type" destination="LIX-qh-eGs" id="rTf-VX-7eO"/>
+                                            <outlet property="viewButton" destination="yZD-lA-j0C" id="o8G-6e-kav"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1530,6 +1545,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="gladysImage" width="1024" height="1024"/>
         <image name="iconCloud" width="28" height="18"/>
         <image name="iconDeleteSmall" width="18" height="22"/>
+        <image name="iconEye" width="15" height="12"/>
         <image name="iconImportExport" width="28" height="28"/>
         <image name="iconInfo" width="28" height="28"/>
         <image name="info" width="15" height="15"/>

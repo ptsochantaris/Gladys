@@ -1,9 +1,10 @@
 
 import UIKit
+import QuickLook
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource {
 
 	var item: ArchivedDropItem!
 
@@ -68,6 +69,17 @@ final class DetailController: GladysViewController,
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+		super.dismiss(animated: flag) { // workaround for quiclook dismissal issue
+			if let n = self.navigationController {
+				if n.viewControllers.count > 1 {
+					n.popViewController(animated: false)
+				}
+			}
+			completion?()
+		}
+	}
+
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		if navigationController?.isBeingDismissed ?? false {
@@ -80,12 +92,21 @@ final class DetailController: GladysViewController,
 		sizeWindow()
 	}
 
+	private var initialWidth: CGFloat = 0
+
 	private func sizeWindow() {
 		if sharing {
 			preferredContentSize = CGSize(width: 320, height: max(preferredContentSize.height, 500))
 		} else {
 			table.layoutIfNeeded()
-			preferredContentSize = table.contentSize
+			if initialWidth > 0 {
+				preferredContentSize = CGSize(width: initialWidth, height: table.contentSize.height)
+			} else {
+				preferredContentSize = table.contentSize
+			}
+		}
+		if initialWidth == 0 {
+			initialWidth = preferredContentSize.width
 		}
 	}
 
@@ -211,19 +232,36 @@ final class DetailController: GladysViewController,
 				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
-				cell.selectionCallback = nil
+				cell.inspectionCallback = { [weak self] in
+					self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
+				}
+				if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
+					cell.viewCallback = { [weak self] in
+						self?.quickLook(typeEntry)
+					}
+				} else {
+					cell.viewCallback = nil
+				}
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
 				cell.name.text = "Binary Data"
 				cell.name.textAlignment = .center
-				cell.selectionCallback = { [weak self] in
+				cell.inspectionCallback = { [weak self] in
 					self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
+				}
+				if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
+					cell.viewCallback = { [weak self] in
+						self?.quickLook(typeEntry)
+					}
+				} else {
+					cell.viewCallback = nil
 				}
 			} else {
 				cell.name.alpha = 0.7
 				cell.name.text = "Loading Error"
 				cell.name.textAlignment = .center
-				cell.selectionCallback = nil
+				cell.inspectionCallback = nil
+				cell.viewCallback = nil
 			}
 			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
@@ -443,5 +481,66 @@ final class DetailController: GladysViewController,
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	////////////////////////////////////////////////////////
+
+	private var entryForPreview: ArchivedDropItemType?
+
+	private func quickLook(_ typeEntry: ArchivedDropItemType) {
+		entryForPreview = typeEntry
+
+		let q = QLPreviewController()
+		q.title = typeEntry.oneTitle
+		q.dataSource = self
+		q.delegate = self
+		navigationController?.pushViewController(q, animated: true)
+	}
+
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+		return 1
+	}
+
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+		let i = PreviewItem(typeItem: entryForPreview!)
+		entryForPreview = nil
+		return i
+	}
+
+	private class PreviewItem: NSObject, QLPreviewItem {
+		let previewItemURL: URL?
+		let previewItemTitle: String?
+
+		private let item: ArchivedDropItemType
+
+		init(typeItem: ArchivedDropItemType) {
+
+			item = typeItem
+			let blobPath = typeItem.bytesPath
+			let tempPath = typeItem.previewTempPath
+
+			if blobPath == tempPath {
+				previewItemURL = blobPath
+			} else {
+				let fm = FileManager.default
+				if fm.fileExists(atPath: tempPath.path) {
+					try? fm.removeItem(at: tempPath)
+				}
+				try? fm.copyItem(at: blobPath, to: tempPath)
+				log("Created temporary file for preview")
+				previewItemURL = tempPath
+			}
+
+			previewItemTitle = typeItem.oneTitle
+		}
+
+		deinit {
+			let tempPath = item.previewTempPath
+			let fm = FileManager.default
+			if fm.fileExists(atPath: tempPath.path) {
+				try? fm.removeItem(at: tempPath)
+				log("Removed temporary file for preview")
+			}
+		}
 	}
 }
