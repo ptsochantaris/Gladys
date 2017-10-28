@@ -232,30 +232,12 @@ final class DetailController: GladysViewController,
 				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
-				cell.inspectionCallback = { [weak self] in
-					self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
-				}
-				if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
-					cell.viewCallback = { [weak self] in
-						self?.quickLook(typeEntry)
-					}
-				} else {
-					cell.viewCallback = nil
-				}
+				setCallbacks(for: cell, for: typeEntry)
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
 				cell.name.text = "Binary Data"
 				cell.name.textAlignment = .center
-				cell.inspectionCallback = { [weak self] in
-					self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
-				}
-				if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
-					cell.viewCallback = { [weak self] in
-						self?.quickLook(typeEntry)
-					}
-				} else {
-					cell.viewCallback = nil
-				}
+				setCallbacks(for: cell, for: typeEntry)
 			} else {
 				cell.name.alpha = 0.7
 				cell.name.text = "Loading Error"
@@ -266,6 +248,23 @@ final class DetailController: GladysViewController,
 			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
 			return cell
+		}
+	}
+
+	private func setCallbacks(for cell: DetailCell, for typeEntry: ArchivedDropItemType) {
+		cell.inspectionCallback = { [weak self] in
+			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
+		}
+		if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
+			cell.viewCallback = { [weak self] in
+				self?.quickLook(typeEntry)
+			}
+		} else if let url = typeEntry.encodedUrl {
+			cell.viewCallback = { [weak self] in
+				self?.performSegue(withIdentifier: "webPreview", sender: url)
+			}
+		} else {
+			cell.viewCallback = nil
 		}
 	}
 
@@ -294,6 +293,11 @@ final class DetailController: GladysViewController,
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.contentDescription + " (\(size))"
+
+		} else if segue.identifier == "webPreview" {
+			let d = segue.destination as! WebPreviewController
+			d.title = "Loading..."
+			d.address = sender as! URL
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,
@@ -483,7 +487,7 @@ final class DetailController: GladysViewController,
 		return .none
 	}
 
-	////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////// quicklook
 
 	private var entryForPreview: ArchivedDropItemType?
 

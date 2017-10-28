@@ -70,6 +70,7 @@
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
 		167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABEC81F7770DF0075E0E8 /* DimView.swift */; };
 		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
+		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
 		169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
 		169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763131F15669000537776 /* ArchivedDropItemType+UI.swift */; };
 		169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
@@ -239,6 +240,7 @@
 		167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		167ABEC81F7770DF0075E0E8 /* DimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
+		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
 		169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Ingest.swift"; sourceTree = "<group>"; };
 		169763131F15669000537776 /* ArchivedDropItemType+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UI.swift"; sourceTree = "<group>"; };
 		169763171F1566DE00537776 /* ArchivedDropItemType+Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Tagging.swift"; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
+				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -1124,6 +1127,7 @@
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */,
+				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,

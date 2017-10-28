@@ -257,7 +257,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kTp-Ow-OyL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3274" y="1570"/>
+            <point key="canvasLocation" x="2267" y="2012"/>
         </scene>
         <!--Preferences Controller-->
         <scene sceneID="UOX-0n-X4D">
@@ -404,7 +404,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5136" y="-567"/>
+            <point key="canvasLocation" x="5160" y="-611"/>
         </scene>
         <!--iCloud Controller-->
         <scene sceneID="9V7-zs-8tY">
@@ -531,7 +531,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5135.625" y="-1279.2253521126761"/>
+            <point key="canvasLocation" x="5160" y="-1362"/>
         </scene>
         <!--About Controller-->
         <scene sceneID="mHF-aQ-il8">
@@ -596,7 +596,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5136" y="145"/>
+            <point key="canvasLocation" x="5160" y="145"/>
         </scene>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
@@ -890,6 +890,7 @@ Selecting them will show only items that contain these labels.</string>
                         <segue destination="81Y-XF-Eeu" kind="popoverPresentation" identifier="addLabel" popoverAnchorView="gOE-Fp-Sbs" id="lDE-Q6-gKw">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
+                        <segue destination="wbd-m0-Cft" kind="show" identifier="webPreview" id="E4y-u1-zUS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A9F-i9-UXY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1071,7 +1072,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="WIP-XK-jIa"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="5136" y="937"/>
+            <point key="canvasLocation" x="5160" y="937"/>
         </scene>
         <!--Data Inspector-->
         <scene sceneID="Vh6-0C-4We">
@@ -1261,7 +1262,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZtC-km-u0Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6049" y="937"/>
+            <point key="canvasLocation" x="5160" y="1601"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">
@@ -1439,7 +1440,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="rij-Sw-Lt9"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="5135.625" y="1568.661971830986"/>
+            <point key="canvasLocation" x="3274" y="2011"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nOy-qs-6YK">
@@ -1458,7 +1459,7 @@ Selecting them will show only items that contain these labels.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R0n-KN-S0V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4211" y="1570"/>
+            <point key="canvasLocation" x="3274" y="1570"/>
         </scene>
         <!--Self Sizing Tab Controller-->
         <scene sceneID="Jqy-hX-Bs4">
@@ -1480,7 +1481,7 @@ Selecting them will show only items that contain these labels.</string>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tUy-6c-BrF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3253" y="145"/>
+            <point key="canvasLocation" x="3274" y="145"/>
         </scene>
         <!--About-->
         <scene sceneID="tM9-q2-qE9">
@@ -1501,6 +1502,51 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="4211" y="145"/>
         </scene>
+        <!--Web Preview Controller-->
+        <scene sceneID="w9e-TV-a0y">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="wbd-m0-Cft" customClass="WebPreviewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ndK-jn-u5m">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzu-kl-oLc">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uja-Ru-1K2">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="xzu-kl-oLc" firstAttribute="top" secondItem="cvj-8E-BYA" secondAttribute="top" id="BqE-d8-zV1"/>
+                            <constraint firstItem="uja-Ru-1K2" firstAttribute="top" secondItem="cvj-8E-BYA" secondAttribute="top" id="DtD-J2-s9H"/>
+                            <constraint firstItem="cvj-8E-BYA" firstAttribute="trailing" secondItem="uja-Ru-1K2" secondAttribute="trailing" id="GZv-5Z-ry6"/>
+                            <constraint firstItem="cvj-8E-BYA" firstAttribute="bottom" secondItem="uja-Ru-1K2" secondAttribute="bottom" id="K2X-yM-Q2L"/>
+                            <constraint firstItem="xzu-kl-oLc" firstAttribute="leading" secondItem="cvj-8E-BYA" secondAttribute="leading" id="Vat-2l-C3F"/>
+                            <constraint firstItem="cvj-8E-BYA" firstAttribute="bottom" secondItem="xzu-kl-oLc" secondAttribute="bottom" id="YBj-sC-KM4"/>
+                            <constraint firstItem="cvj-8E-BYA" firstAttribute="trailing" secondItem="xzu-kl-oLc" secondAttribute="trailing" id="edd-Fr-BxB"/>
+                            <constraint firstItem="uja-Ru-1K2" firstAttribute="leading" secondItem="cvj-8E-BYA" secondAttribute="leading" id="tzj-Zq-oif"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cvj-8E-BYA"/>
+                    </view>
+                    <connections>
+                        <outlet property="statusLabel" destination="uja-Ru-1K2" id="4NU-oy-Mxb"/>
+                        <outlet property="web" destination="xzu-kl-oLc" id="Mj4-Cs-rzz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="96y-tG-0db" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4208" y="1838"/>
+        </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
             <objects>
@@ -1518,7 +1564,7 @@ Selecting them will show only items that contain these labels.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2GO-xc-lCS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4211" y="-567"/>
+            <point key="canvasLocation" x="4209" y="-610"/>
         </scene>
         <!--iCloud Sync-->
         <scene sceneID="cvH-2z-bBX">
@@ -1537,7 +1583,7 @@ Selecting them will show only items that contain these labels.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x1I-GH-nXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4211" y="-1279"/>
+            <point key="canvasLocation" x="4211" y="-1361"/>
         </scene>
     </scenes>
     <resources>
