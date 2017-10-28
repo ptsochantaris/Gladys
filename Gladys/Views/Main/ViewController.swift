@@ -223,7 +223,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private var phoneMode: Bool {
-		return traitCollection.horizontalSizeClass == .regular || traitCollection.verticalSizeClass == .regular
+		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -245,7 +245,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 						n.view.backgroundColor = c
 					} else {
 						p.backgroundColor = c
-						d.navigationItem.rightBarButtonItem = nil
+						if !UIAccessibilityIsVoiceOverRunning() {
+							d.navigationItem.rightBarButtonItem = nil
+						}
 					}
 				}
 			}
@@ -264,12 +266,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				p.sourceView = cell
 				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 				p.delegate = self
-				let c = patternColor
 				if phoneMode {
-					n.view.backgroundColor = c
+					n.view.backgroundColor = patternColor
 				} else {
-					p.backgroundColor = c
-					d.navigationItem.rightBarButtonItem = nil
+					p.backgroundColor = patternColor
+					if !UIAccessibilityIsVoiceOverRunning() {
+						d.navigationItem.rightBarButtonItem = nil
+					}
 				}
 			}
 

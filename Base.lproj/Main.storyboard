@@ -446,41 +446,43 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="84" width="320" height="72"/>
                                 <subviews>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                        <rect key="frame" x="273" y="26" width="20" height="20"/>
+                                        <rect key="frame" x="275.5" y="26" width="20" height="20"/>
                                         <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                        <rect key="frame" x="8" y="26" width="175" height="21"/>
+                                        <rect key="frame" x="15.5" y="26" width="172" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="172" id="CQq-TK-AfZ"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                        <rect key="frame" x="201" y="21" width="51" height="31"/>
+                                        <rect key="frame" x="205.5" y="21" width="51" height="31"/>
                                     </switch>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="V6J-fH-sQH" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="2ig-al-Y58"/>
                                     <constraint firstItem="bc6-6V-O7h" firstAttribute="top" secondItem="88n-uM-fcL" secondAttribute="top" constant="26" id="45b-fV-MGI"/>
                                     <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
-                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="23" id="Ex6-yc-wkY"/>
-                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="8" id="G4y-zu-7Vt"/>
+                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="21" id="Ex6-yc-wkY"/>
                                     <constraint firstItem="bc6-6V-O7h" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="Nwz-1M-6aN"/>
                                     <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
-                                    <constraint firstAttribute="trailing" secondItem="0S6-rX-cYY" secondAttribute="trailing" constant="27" id="wTa-4d-YQZ"/>
+                                    <constraint firstItem="V6J-fH-sQH" firstAttribute="centerX" secondItem="88n-uM-fcL" secondAttribute="centerX" constant="70" id="pSy-vR-vBY"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="156" width="320" height="62.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                        <rect key="frame" x="8" y="10" width="175" height="42.5"/>
+                                        <rect key="frame" x="15.5" y="10" width="172" height="42.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                        <rect key="frame" x="201" y="16" width="51" height="31"/>
+                                        <rect key="frame" x="205.5" y="16" width="51" height="31"/>
                                         <connections>
                                             <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
                                         </connections>
