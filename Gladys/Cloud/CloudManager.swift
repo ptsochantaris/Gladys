@@ -28,7 +28,7 @@ final class CloudManager {
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 		var idsToPush = [String]()
-		var payloadsToPush = model.drops.flatMap { item -> [CKRecord]? in
+		var payloadsToPush = Model.drops.flatMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
 				var payload = item.typeItems.flatMap { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
@@ -47,7 +47,7 @@ final class CloudManager {
 			}
 		}
 
-		let currentUUIDSequence = model.drops.map { $0.uuid.uuidString }
+		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
 		if syncForceOrderSend || uuidSequence != currentUUIDSequence {
 			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
@@ -106,10 +106,10 @@ final class CloudManager {
 							syncForceOrderSend = false
 							uuidSequenceRecord = record
 							log("Sent updated \(record.recordType) cloud record")
-						} else if let item = model.item(uuid: itemUUID) {
+						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
-						} else if let typeItem = model.typeItem(uuid: itemUUID) {
+						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
 						}

@@ -339,11 +339,8 @@ final class DetailController: GladysViewController,
 
 	private func makeIndexAndSaveItem() {
 		item.markUpdated()
-		item.makeIndex() { _ in
-			DispatchQueue.main.async {
-				model.save()
-			}
-		}
+		item.reIndex()
+		Model.save()
 	}
 
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {

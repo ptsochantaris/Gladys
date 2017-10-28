@@ -16,21 +16,21 @@ extension Model {
 		return NSFileCoordinator(filePresenter: filePresenter)
 	}
 
-	func prepareToSave() {
-		Model.saveOverlap += 1
-		if Model.saveBgTask == nil {
+	static func prepareToSave() {
+		saveOverlap += 1
+		if saveBgTask == nil {
 			log("Starting save queue background task")
-			Model.saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
+			saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
 		}
 		rebuildLabels()
 	}
 
-	func startupComplete() {
+	static func startupComplete() {
 
 		// cleanup, in case of previous crashes, cancelled transfers, etc
 
 		let fm = FileManager.default
-		guard let items = try? fm.contentsOfDirectory(at: Model.appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
+		guard let items = try? fm.contentsOfDirectory(at: appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
 		let uuids = items.flatMap { UUID(uuidString: $0.lastPathComponent) }
 		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
 			for d in drops {
@@ -41,25 +41,25 @@ extension Model {
 			return true
 		}
 		for uuid in nonExistingUUIDs {
-			let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
+			let url = appStorageUrl.appendingPathComponent(uuid.uuidString)
 			try? fm.removeItem(at: url)
 		}
 
 		rebuildLabels()
 	}
 
-	func saveDone() {
-		Model.saveOverlap -= 1
+	static func saveDone() {
+		saveOverlap -= 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-			if Model.saveOverlap == 0, let b = Model.saveBgTask {
+			if saveOverlap == 0, let b = saveBgTask {
 				log("Ending save queue background task")
 				UIApplication.shared.endBackgroundTask(b)
-				Model.saveBgTask = nil
+				saveBgTask = nil
 			}
 		}
 	}
 
-	func saveComplete() {
+	static func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
 		CloudManager.sync { error in
 			if let error = error {
@@ -68,14 +68,18 @@ extension Model {
 		}
 	}
 	
-	func beginMonitoringChanges() {
+	static func beginMonitoringChanges() {
 		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
-		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
+		n.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { _ in
+			foregrounded()
+		}
+		n.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main) { _ in
+			backgrounded()
+		}
 		foregrounded()
 	}
 	
-	var sizeInBytes: Int64 {
+	static var sizeInBytes: Int64 {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 	
@@ -90,12 +94,12 @@ extension Model {
 
 	static var labelToggles = [LabelToggle]()
 
-	var isFilteringLabels: Bool {
-		return Model.labelToggles.contains { $0.enabled }
+	static var isFilteringLabels: Bool {
+		return labelToggles.contains { $0.enabled }
 	}
 
-	func disableAllLabels() {
-		Model.labelToggles = Model.labelToggles.map {
+	static func disableAllLabels() {
+		labelToggles = labelToggles.map {
 			if $0.enabled {
 				var l = $0
 				l.enabled = false
@@ -106,7 +110,7 @@ extension Model {
 		}
 	}
 
-	private func rebuildLabels() {
+	private static func rebuildLabels() {
 		var counts = [String:Int]()
 		var noLabelCount = 0
 		for item in drops {
@@ -122,59 +126,59 @@ extension Model {
 			}
 		}
 
-		let previous = Model.labelToggles
-		Model.labelToggles.removeAll()
+		let previous = labelToggles
+		labelToggles.removeAll()
 		for (label, count) in counts {
 			let previousEnabled = (previous.first { $0.enabled == true && $0.name == label } != nil)
 			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
-			Model.labelToggles.append(toggle)
+			labelToggles.append(toggle)
 		}
-		if Model.labelToggles.count > 0 {
-			Model.labelToggles.sort { $0.name < $1.name }
+		if labelToggles.count > 0 {
+			labelToggles.sort { $0.name < $1.name }
 			
 			let name = "Items with no labels"
 			let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
-			Model.labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+			labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
 		}
 	}
 
-	var enabledLabelsForItems: [String] {
-		return Model.labelToggles.flatMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
+	static var enabledLabelsForItems: [String] {
+		return labelToggles.flatMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
 	}
 
-	var enabledLabelsForTitles: [String] {
-		return Model.labelToggles.flatMap { $0.enabled ? $0.name : nil }
+	static var enabledLabelsForTitles: [String] {
+		return labelToggles.flatMap { $0.enabled ? $0.name : nil }
 	}
 
-	func updateLabel(_ label: LabelToggle) {
-		if let i = Model.labelToggles.index(where: { $0.name == label.name }) {
-			Model.labelToggles[i] = label
+	static func updateLabel(_ label: LabelToggle) {
+		if let i = labelToggles.index(where: { $0.name == label.name }) {
+			labelToggles[i] = label
 		}
 	}
 
-	var isFilteringText: Bool {
-		return Model.currentFilterQuery != nil
+	static var isFilteringText: Bool {
+		return currentFilterQuery != nil
 	}
 
-	var filter: String? {
+	static var filter: String? {
 		get {
-			return Model.modelFilter
+			return modelFilter
 		}
 		set {
-			guard Model.modelFilter != newValue else {
+			guard modelFilter != newValue else {
 				return
 			}
 			forceUpdateFilter(with: newValue, signalUpdate: true)
 		}
 	}
 
-	func forceUpdateFilter(signalUpdate: Bool) {
-		forceUpdateFilter(with: Model.modelFilter, signalUpdate: signalUpdate)
+	static func forceUpdateFilter(signalUpdate: Bool) {
+		forceUpdateFilter(with: modelFilter, signalUpdate: signalUpdate)
 	}
 
-	private func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
-		Model.currentFilterQuery = nil
-		Model.modelFilter = newValue
+	private static func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
+		currentFilterQuery = nil
+		modelFilter = newValue
 
 		let olduuids = filteredUuids
 		var filtering = false
@@ -200,14 +204,14 @@ extension Model {
 				}
 				group.leave()
 			}
-			Model.currentFilterQuery = q
+			currentFilterQuery = q
 
 			q.start()
 			group.wait()
 
-			Model.cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
+			cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
 		} else {
-			Model.cachedFilteredDrops = postLabelDrops
+			cachedFilteredDrops = postLabelDrops
 		}
 
 		if signalUpdate && olduuids != filteredUuids {
@@ -229,22 +233,22 @@ extension Model {
 		}
 	}
 
-	private var filteredUuids: [String] {
-		return Model.cachedFilteredDrops?.map({ $0.uuid.uuidString }) ?? []
+	private static var filteredUuids: [String] {
+		return cachedFilteredDrops?.map({ $0.uuid.uuidString }) ?? []
 	}
 
-	func removeLabel(_ label : String) {
-		var itemsNeedingReIndex = [ArchivedDropItem]()
+	static func removeLabel(_ label : String) {
+		var itemIdsNeedingReIndex = [String]()
 		for i in drops {
 			if i.labels.contains(label) {
 				i.labels = i.labels.filter { $0 != label }
-				itemsNeedingReIndex.append(i)
+				itemIdsNeedingReIndex.append(i.uuid.uuidString)
 			}
 		}
 		rebuildLabels()
-		if itemsNeedingReIndex.count > 0 {
+		if itemIdsNeedingReIndex.count > 0 {
 			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-			reIndex(items: itemsNeedingReIndex) {
+			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemIdsNeedingReIndex) {
 				DispatchQueue.main.async {
 					self.save()
 				}
@@ -252,7 +256,7 @@ extension Model {
 		}
 	}
 
-	func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
+	static func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
 		guard isFilteringText || isFilteringLabels else {
 			return index
 		}
@@ -272,8 +276,8 @@ extension Model {
 		}
 	}
 
-	private var postLabelDrops: [ArchivedDropItem] {
-		let enabledToggles = Model.labelToggles.filter { $0.enabled }
+	private static var postLabelDrops: [ArchivedDropItem] {
+		let enabledToggles = labelToggles.filter { $0.enabled }
 		if enabledToggles.count == 0 { return drops }
 
 		return drops.filter { item in
@@ -290,49 +294,49 @@ extension Model {
 		}
 	}
 
-	func resetEverything() {
+	static func resetEverything() {
 		for item in drops {
 			item.delete()
 		}
 		drops.removeAll()
-		Model.modelFilter = nil
-		Model.cachedFilteredDrops = nil
+		modelFilter = nil
+		cachedFilteredDrops = nil
 		save()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
-	var filteredDrops: [ArchivedDropItem] {
-		if let f = Model.cachedFilteredDrops {
+	static var filteredDrops: [ArchivedDropItem] {
+		if let f = cachedFilteredDrops {
 			return f
 		} else {
 			return drops
 		}
 	}
 	
-	func removeItemFromList(uuid: UUID) {
+	static func removeItemFromList(uuid: UUID) {
 		if let x = drops.index(where: { $0.uuid == uuid }) {
 			drops.remove(at: x)
 		}
-		if Model.cachedFilteredDrops != nil, let x = Model.cachedFilteredDrops!.index(where: { $0.uuid == uuid }) {
-			Model.cachedFilteredDrops!.remove(at: x)
+		if cachedFilteredDrops != nil, let x = cachedFilteredDrops!.index(where: { $0.uuid == uuid }) {
+			cachedFilteredDrops!.remove(at: x)
 		}
 	}
 	
 	private static let filePresenter = ModelFilePresenter()
 	
-	@objc private func foregrounded() {
+	private static func foregrounded() {
 		reloadDataIfNeeded()
-		NSFileCoordinator.addFilePresenter(Model.filePresenter)
+		NSFileCoordinator.addFilePresenter(filePresenter)
 	}
-	
-	@objc private func backgrounded() {
-		NSFileCoordinator.removeFilePresenter(Model.filePresenter)
+
+	private static func backgrounded() {
+		NSFileCoordinator.removeFilePresenter(filePresenter)
 	}
 	
 	private class ModelFilePresenter: NSObject, NSFilePresenter {
 				
 		var presentedItemURL: URL? {
-			return Model.fileUrl
+			return fileUrl
 		}
 		
 		var presentedItemOperationQueue: OperationQueue {
@@ -340,16 +344,16 @@ extension Model {
 		}
 		
 		func presentedItemDidChange() {
-			model.reloadDataIfNeeded()
+			reloadDataIfNeeded()
 		}
 	}
 
-	func reloadCompleted() {
+	static func reloadCompleted() {
 		rebuildLabels()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
-	func importData(from url: URL, completion: @escaping (Bool)->Void) {
+	static func importData(from url: URL, completion: @escaping (Bool)->Void) {
 		NSLog("URL for importing: \(url.path)")
 
 		let fm = FileManager.default
@@ -398,7 +402,7 @@ extension Model {
 
 		DispatchQueue.main.async {
 			if itemsImported > 0 {
-				self.save()
+				save()
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			}
 			completion(true)

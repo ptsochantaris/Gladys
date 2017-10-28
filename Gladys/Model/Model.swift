@@ -4,12 +4,10 @@ import Foundation
 	import FileProvider
 #endif
 
-let model = Model()
+final class Model {
 
-final class Model: NSObject {
-
-	var drops: [ArchivedDropItem]
-	var dataFileLastModified = Date.distantPast
+	static var drops = [ArchivedDropItem]()
+	static var dataFileLastModified = Date.distantPast
 
 	static var appStorageUrl: URL = {
 		#if MAINAPP || FILEPROVIDER
@@ -23,35 +21,27 @@ final class Model: NSObject {
 		return appStorageUrl.appendingPathComponent("items.json")
 	}()
 
-	override init() {
-		drops = Model.loadData(&dataFileLastModified) ?? [ArchivedDropItem]()
-		super.init()
-		startupComplete()
-	}
-
 	static func modificationDate(for url: URL) -> Date? {
 		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
 	}
 
-	func item(uuid: String) -> ArchivedDropItem? {
+	static func item(uuid: String) -> ArchivedDropItem? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.first { $0.uuid == uuidData }
 	}
 
-	func typeItem(uuid: String) -> ArchivedDropItemType? {
+	static func typeItem(uuid: String) -> ArchivedDropItemType? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.flatMap({
 			$0.typeItems.first { $0.uuid == uuidData }
 		}).first
 	}
 
-	private static func loadData(_ dataFileLastModified: inout Date) -> [ArchivedDropItem]? {
+	private static func loadData() {
 		
-		var res: [ArchivedDropItem]?
-
 		var coordinationError: NSError?
 		// withoutChanges because we only signal the provider after we have saved
-		coordinator.coordinate(readingItemAt: Model.fileUrl, options: .withoutChanges, error: &coordinationError) { url in
+		coordinator.coordinate(readingItemAt: fileUrl, options: .withoutChanges, error: &coordinationError) { url in
 
 			if FileManager.default.fileExists(atPath: url.path) {
 				do {
@@ -67,7 +57,7 @@ final class Model: NSObject {
 					if shouldLoad {
 						log("Needed to reload data, new file date: \(dataFileLastModified)")
 						let data = try Data(contentsOf: url, options: [.alwaysMapped])
-						res = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+						drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 					}
 				} catch {
 					log("Loading Error: \(error)")
@@ -80,15 +70,21 @@ final class Model: NSObject {
 			log("Error in loading coordination: \(e.localizedDescription)")
 			abort()
 		}
-		return res
 	}
 
-	func reloadDataIfNeeded() {
-		if let d = Model.loadData(&dataFileLastModified) {
-			drops = d
-			DispatchQueue.main.async {
-				self.reloadCompleted()
-			}
+	private static var isStarted = false
+
+	static func ensureStarted() {
+		if isStarted { return }
+		loadData()
+		startupComplete()
+	}
+
+	static func reloadDataIfNeeded() {
+		ensureStarted()
+		loadData()
+		DispatchQueue.main.async {
+			reloadCompleted()
 		}
 	}
 }

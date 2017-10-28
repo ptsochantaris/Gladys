@@ -101,13 +101,13 @@ extension CloudManager {
 					zoneChangeToken = nil
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
-					for item in model.drops {
+					for item in Model.drops {
 						item.cloudKitRecord = nil
 						for typeItem in item.typeItems {
 							typeItem.cloudKitRecord = nil
 						}
 					}
-					model.save()
+					Model.save()
 					log("Cloud sync deactivation complete")
 					completion(nil)
 				}
@@ -176,7 +176,7 @@ extension CloudManager {
 			let itemUUID = recordId.recordName
 			log("Record \(recordType) deletion: \(itemUUID)")
 			DispatchQueue.main.async {
-				if let item = model.item(uuid: itemUUID) {
+				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
 					itemsNeedDeletion = true
 				}
@@ -186,7 +186,7 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if record.recordType == "ArchivedDropItem" {
 					let itemUUID = record.recordID.recordName
-					if let item = model.item(uuid: itemUUID) {
+					if let item = Model.item(uuid: itemUUID) {
 						if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item record \(itemUUID)")
 						} else {
@@ -201,7 +201,7 @@ extension CloudManager {
 					}
 				} else if record.recordType == "ArchivedDropItemType" {
 					let itemUUID = record.recordID.recordName
-					if let typeItem = model.typeItem(uuid: itemUUID) {
+					if let typeItem = Model.typeItem(uuid: itemUUID) {
 						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item type record \(itemUUID)")
 						} else {
@@ -270,7 +270,7 @@ extension CloudManager {
 			return false
 		}
 		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
-		model.drops.insert(item, at: 0)
+		Model.drops.insert(item, at: 0)
 	}
 
 	/////////////////////////////////// Helpers
@@ -290,32 +290,26 @@ extension CloudManager {
 
 	/////////////////////////////////// Status
 
-	static let statusListener = CloudStatusListener()
+	private static var holdOffOnSyncWhileWeInvestigateICloudStatus = false
 
-	final class CloudStatusListener {
+	static func listenForAccountChanges() {
+		let n = NotificationCenter.default
 
-		private var holdOffOnSyncWhileWeInvestigateICloudStatus = false
-
-		func start() {
-			NotificationCenter.default.addObserver(self, selector: #selector(iCloudStatusChanged(_:)), name: .CKAccountChanged, object: nil)
-			NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(_:)), name: .UIApplicationWillEnterForeground, object: nil)
-		}
-
-		@objc private func iCloudStatusChanged(_ notification: Notification) {
-			if !CloudManager.syncSwitchedOn { return }
+		n.addObserver(forName: .CKAccountChanged, object: nil, queue: OperationQueue.main) { _ in
+			if !syncSwitchedOn { return }
 
 			holdOffOnSyncWhileWeInvestigateICloudStatus = true
 			container.accountStatus { status, error in
 				if status == .available {
 					DispatchQueue.main.async {
-						self.holdOffOnSyncWhileWeInvestigateICloudStatus = false
-						self.proceedWithSync()
+						holdOffOnSyncWhileWeInvestigateICloudStatus = false
+						proceedWithForegroundingSync()
 					}
 				} else {
 					log("iCloud deactivated on this device, shutting down sync")
 					DispatchQueue.main.async {
 						deactivate(force: true) { _ in
-							self.holdOffOnSyncWhileWeInvestigateICloudStatus = false
+							holdOffOnSyncWhileWeInvestigateICloudStatus = false
 							genericAlert(title: "Sync Disabled", message: "Syncing has been disabled as you are no longer logged into iCloud on this device.", on: ViewController.shared)
 						}
 					}
@@ -323,25 +317,17 @@ extension CloudManager {
 			}
 		}
 
-		@objc private func willEnterForeground(_ notification: Notification) {
-			if !CloudManager.syncSwitchedOn { return }
-
-			if holdOffOnSyncWhileWeInvestigateICloudStatus {
-				return
-			}
-			proceedWithSync()
+		n.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { _ in
+			if !syncSwitchedOn || holdOffOnSyncWhileWeInvestigateICloudStatus { return }
+			proceedWithForegroundingSync()
 		}
+	}
 
-		private func proceedWithSync() {
-			CloudManager.sync { error in
-				if let error = error {
-					log("Error in foregrounding sync: \(error.localizedDescription)")
-				}
+	private static func proceedWithForegroundingSync() {
+		CloudManager.sync { error in
+			if let error = error {
+				log("Error in foregrounding sync: \(error.localizedDescription)")
 			}
-		}
-
-		deinit {
-			NotificationCenter.default.removeObserver(self)
 		}
 	}
 

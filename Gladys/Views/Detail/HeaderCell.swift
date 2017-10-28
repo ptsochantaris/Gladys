@@ -89,9 +89,9 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)
 		resizeCallback?(nil)
-		
-		item.makeIndex()
-		model.save()
+
+		item.reIndex()
+	    Model.save()
 	}
 
 	/////////////////////////////////////

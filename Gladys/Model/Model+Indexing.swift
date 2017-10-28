@@ -1,39 +1,54 @@
 
 import CoreSpotlight
 
-extension Model: CSSearchableIndexDelegate {
+extension Model {
 
-	func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex = CSSearchableIndex.default(), completion: (()->Void)? = nil) {
-
-		let group = DispatchGroup()
-		for _ in 0 ..< items.count {
-			group.enter()
+	private class IndexProxy: NSObject, CSSearchableIndexDelegate {
+		func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+			Model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
 		}
 
-		let bgQueue = DispatchQueue.global(qos: .background)
-		bgQueue.async {
-			for item in items {
-				item.makeIndex(in: index) { success in
-					group.leave() // re-index completion
-				}
+		func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+			Model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
+		}
+
+		func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+			return try Model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+		}
+
+		func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
+			return try Model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+		}
+	}
+
+	static var indexDelegate: CSSearchableIndexDelegate = {
+		return IndexProxy()
+	}()
+
+	private static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex = CSSearchableIndex.default(), completion: (()->Void)? = nil) {
+		let searchableItems = items.map { $0.searchableItem }
+		let count = items.count
+		index.indexSearchableItems(searchableItems) { error in
+			if let error = error {
+				log("Error indexing items: \(error.localizedDescription)")
+			} else {
+				log("\(count) item(s) indexed")
 			}
-		}
-		group.notify(queue: bgQueue) {
 			completion?()
 		}
 	}
 
-	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
 		let existingItems = drops
 		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
 				log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
 			}
-			self.reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
+			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 
-	func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
 		let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }
 		let currentItemIds = drops.map { $0.uuid.uuidString }
 		let deletedItems = identifiers.filter { currentItemIds.contains($0) }
@@ -41,18 +56,18 @@ extension Model: CSSearchableIndexDelegate {
 			if let error = error {
 				log("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
 			}
-			self.reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
+			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 
-	func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+	static func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
 		if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let data = item.bytes(for: typeIdentifier) {
 			return data
 		}
 		return Data()
 	}
 
-	func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
+	static func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
 		if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let url = item.url(for: typeIdentifier) {
 			return url as URL
 		}

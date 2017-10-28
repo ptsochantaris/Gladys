@@ -3,7 +3,7 @@ import UIKit
 
 func log(_ line: @autoclosure ()->String) {
 	#if DEBUG
-		print(line())
+		NSLog(line())
 	#endif
 }
 

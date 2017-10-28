@@ -5,9 +5,9 @@ extension Model {
 		return NSFileCoordinator(filePresenter: nil)
 	}
 
-	func prepareToSave() {}
-	func saveDone() {}
-	func saveComplete() {}
-	func startupComplete() {}
-	func reloadCompleted() {}
+	static func prepareToSave() {}
+	static func saveDone() {}
+	static func saveComplete() {}
+	static func startupComplete() {}
+	static func reloadCompleted() {}
 }

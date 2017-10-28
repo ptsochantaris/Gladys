@@ -86,8 +86,8 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		item.markUpdated()
 		resizeCallback?(nil)
 
-		item.makeIndex()
-		model.save()
+		item.reIndex()
+	    Model.save()
 	}
 
 	/////////////////////////////////////

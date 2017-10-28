@@ -2,18 +2,19 @@
 import FileProvider
 import UIKit
 
-var undeletedDrops: [ArchivedDropItem] {
-	return model.drops.filter { !$0.needsDeletion }
-}
-
 final class FileProviderExtension: NSFileProviderExtension {
+
+	override init() {
+		super.init()
+		Model.ensureStarted()
+	}
 
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
 		let uuid = UUID(uuidString: identifier.rawValue)
 
-		let drops = undeletedDrops
+		let drops = Model.nonDeletedDrops
 
 		for item in drops {
 			if item.uuid == uuid {
@@ -39,7 +40,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	private func saveModel(completion: (()->Void)? = nil) {
 		DispatchQueue.main.async {
 			Model.oneTimeSaveCallback = completion
-			model.save()
+			Model.save()
 		}
 	}
 
@@ -88,7 +89,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			log("Item changed: \(url.path)")
 		}
 		
-		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = undeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
+		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.nonDeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			typeItem.markUpdated()
 			parent.markUpdated()
@@ -175,8 +176,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 				completionHandler(NSFileProviderError(.noSuchItem))
 				return
 			}
-			if let i = model.drops.index(where: { $0.uuid == uuid }) {
-				model.drops[i].needsDeletion = true
+			if let i = Model.drops.index(where: { $0.uuid == uuid }) {
+				Model.drops[i].needsDeletion = true
 				saveModel {
 					completionHandler(nil)
 				}

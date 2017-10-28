@@ -2,7 +2,7 @@
 import CoreSpotlight
 
 extension ArchivedDropItem {
-	func makeIndex(in index: CSSearchableIndex = CSSearchableIndex.default(), completion: ((Bool)->Void)? = nil) {
+	var searchableItem: CSSearchableItem {
 
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
 		if let a = accessoryTitle {
@@ -34,15 +34,11 @@ extension ArchivedDropItem {
 		attributes.addedDate = createdAt
 		attributes.contentModificationDate = updatedAt
 
-		let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
-		index.indexSearchableItems([item], completionHandler: { error in
-			if let error = error {
-				log("Error indexing item \(self.uuid): \(error)")
-				completion?(false)
-			} else {
-				log("Item indexed: \(self.uuid)")
-				completion?(true)
-			}
-		})
+		return CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
+	}
+
+	func reIndex() {
+		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: [uuid.uuidString], acknowledgementHandler: {})
 	}
 }
+

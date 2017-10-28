@@ -119,8 +119,8 @@ final class iCloudController: GladysViewController {
 		if icloudSpinner.isAnimating { return }
 
 		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
-			if model.drops.count > 0 {
-				let contentSize = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+			if Model.drops.count > 0 {
+				let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
 				let message = "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?"
 				let a = UIAlertController(title: "Upload Existing Items?", message: message, preferredStyle: .alert)
 				a.addAction(UIAlertAction(title: "Proceed", style: .default, handler: { action in

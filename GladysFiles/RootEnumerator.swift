@@ -9,9 +9,9 @@ final class RootEnumerator: CommonEnumerator {
 
 	override var fileItems: [FileProviderItem] {
 		if sortByDate {
-			return undeletedDrops.sorted { $0.createdAt < $1.createdAt }.map { FileProviderItem($0) }
+			return Model.nonDeletedDrops.sorted { $0.createdAt < $1.createdAt }.map { FileProviderItem($0) }
 		} else {
-			return undeletedDrops.sorted { $0.oneTitle < $1.oneTitle }.map { FileProviderItem($0) }
+			return Model.nonDeletedDrops.sorted { $0.oneTitle < $1.oneTitle }.map { FileProviderItem($0) }
 		}
 	}
 }

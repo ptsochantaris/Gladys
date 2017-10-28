@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
@@ -19,7 +20,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	@IBOutlet weak var imageDistance: NSLayoutConstraint!
 	@IBOutlet weak var expandButton: UIButton!
 
-	private var newItems = [ArchivedDropItem]()
+	private var newItemIds = [String]()
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -31,7 +32,9 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			return
 		}
 
-		let newTotal = model.drops.count + loadCount
+		Model.ensureStarted()
+		
+		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			imageHeight.constant = 60
 			imageCenter.constant = -110
@@ -46,8 +49,8 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			if let providers = inputItem.attachments as? [NSItemProvider] {
 				itemCount += providers.count
 				let newItem = ArchivedDropItem(providers: providers, delegate: self)
-				model.drops.insert(newItem, at: 0)
-				newItems.append(newItem)
+				Model.drops.insert(newItem, at: 0)
+				newItemIds.append(newItem.uuid.uuidString)
 			}
 		}
 
@@ -62,7 +65,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 		cancelRequested(cancelButton!)
 
-		let newTotal = model.drops.count + loadCount
+		let newTotal = Model.drops.count + loadCount
 		let url = URL(string: "gladys://in-app-purchase/\(newTotal)")!
 
 		let selector = sel_registerName("openURL:")
@@ -75,12 +78,12 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	@IBAction func cancelRequested(_ sender: UIBarButtonItem) {
 
-		let loadingItems = model.drops.filter { $0.loadingProgress != nil }
+		let loadingItems = Model.drops.filter { $0.loadingProgress != nil }
 		for loadingItem in loadingItems {
 			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
 		}
-		model.drops = model.drops.filter({ i -> Bool in
+		Model.drops = Model.drops.filter({ i -> Bool in
 			loadingItems.contains { $0 === i }
 		})
 
@@ -109,13 +112,14 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 				}
 				group.leave()
 			}
-			model.reIndex(items: newItems) {
+
+			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
 				group.leave()
 			}
 			Model.oneTimeSaveCallback = {
 				group.leave()
 			}
-			model.save()
+			Model.save()
 		}
 	}
 }

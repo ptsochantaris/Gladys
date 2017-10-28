@@ -14,7 +14,7 @@ private class ModelFilePresenter: NSObject, NSFilePresenter {
 	}
 
 	func presentedItemDidChange() {
-		model.reloadDataIfNeeded()
+		Model.reloadDataIfNeeded()
 	}
 }
 
@@ -28,11 +28,11 @@ extension Model {
 		return coordinator
 	}
 
-	func prepareToSave() {}
-	func saveDone() {}
-	func saveComplete() {}
+	static func prepareToSave() {}
+	static func saveDone() {}
+	static func saveComplete() {}
 
-	func startupComplete() {
+	static func startupComplete() {
 		NSFileCoordinator.addFilePresenter(fileExtensionPresenter)
 	}
 
@@ -52,8 +52,12 @@ extension Model {
 		}
 	}
 
-	func reloadCompleted() {
+	static func reloadCompleted() {
 		Model.signalRootChange()
 		Model.signalWorkingSetChange()
+	}
+
+	static var nonDeletedDrops: [ArchivedDropItem] {
+		return drops.filter { !$0.needsDeletion }
 	}
 }

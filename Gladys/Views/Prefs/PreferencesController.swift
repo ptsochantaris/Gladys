@@ -72,7 +72,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			self.zipImage.isHidden = true
 		}
 
-		let dropsCopy = model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
+		let dropsCopy = Model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
 		let itemCount = Int64(1 + dropsCopy.count)
 		let p = Progress(totalUnitCount: itemCount)
 
@@ -255,7 +255,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func deleteAllItems() {
-		model.resetEverything()
+	    Model.resetEverything()
 	}
 
 	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
@@ -318,9 +318,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@objc private func externalDataUpdate() {
 		spinner.stopAnimating()
-		let count = model.drops.count
+		let count = Model.drops.count
 		if count > 0 {
-			let size = diskSizeFormatter.string(fromByteCount: model.sizeInBytes)
+			let size = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
 			infoLabel.text = "\(count) Items\n\(size)"
 			deleteAll.isEnabled = true
 		} else {
@@ -367,7 +367,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func importArchive(from url: URL) {
-		model.importData(from: url) { success in
+	    Model.importData(from: url) { success in
 			DispatchQueue.main.async {
 				if !success {
 					genericAlert(title: "Could not import data", message: "Contents were corrupted", on: self)

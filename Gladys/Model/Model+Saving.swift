@@ -5,10 +5,10 @@ extension Model {
 	static var needsAnotherSave = false
 	static var oneTimeSaveCallback: (()->Void)?
 
-	func save() {
+	static func save() {
 		assert(Thread.isMainThread)
-		if Model.isSaving {
-			Model.needsAnotherSave = true
+		if isSaving {
+			needsAnotherSave = true
 		} else {
 			_save()
 		}
@@ -16,7 +16,7 @@ extension Model {
 
 	private static let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	private func _save() {
+	private static func _save() {
 
 		let start = Date()
 
@@ -24,10 +24,10 @@ extension Model {
 
 		prepareToSave()
 
-		Model.isSaving = true
-		Model.needsAnotherSave = false
+		isSaving = true
+		needsAnotherSave = false
 
-		Model.saveQueue.async {
+		saveQueue.async {
 
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
@@ -38,24 +38,24 @@ extension Model {
 				log("Saving Error: \(error.localizedDescription)")
 			}
 			DispatchQueue.main.async {
-				if Model.needsAnotherSave {
+				if needsAnotherSave {
 					self._save()
 				} else {
-					Model.isSaving = false
+					isSaving = false
 					self.saveComplete()
-					Model.oneTimeSaveCallback?()
-					Model.oneTimeSaveCallback = nil
+					oneTimeSaveCallback?()
+					oneTimeSaveCallback = nil
 				}
 				self.saveDone()
 			}
 		}
 	}
 
-	private func coordinatedSave(data: Data) {
+	private static func coordinatedSave(data: Data) {
 		var coordinationError: NSError?
-		Model.coordinator.coordinate(writingItemAt: Model.fileUrl, options: [], error: &coordinationError) { url in
+		coordinator.coordinate(writingItemAt: fileUrl, options: [], error: &coordinationError) { url in
 			try! data.write(to: url, options: [])
-			if let dataModified = Model.modificationDate(for: url) {
+			if let dataModified = modificationDate(for: url) {
 				dataFileLastModified = dataModified
 			}
 		}

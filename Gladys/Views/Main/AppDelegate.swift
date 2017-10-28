@@ -43,10 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+		Model.ensureStarted()
 		if CloudManager.syncSwitchedOn && !UIApplication.shared.isRegisteredForRemoteNotifications {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
-		CloudManager.statusListener.start()
+		CloudManager.listenForAccountChanges()
 		log("Initial reachability status: \(reachability.status.name)")
 		return true
 	}

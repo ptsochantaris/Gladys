@@ -10,7 +10,7 @@ final class WorkingSetEnumerator: CommonEnumerator {
 	override var fileItems: [FileProviderItem] {
 
 		var taggedItems = [FileProviderItem]()
-		for drop in undeletedDrops {
+		for drop in Model.nonDeletedDrops {
 			if drop.hasTagData {
 				taggedItems.append(FileProviderItem(drop))
 			}
