@@ -81,10 +81,10 @@ final class DetailCell: UITableViewCell {
 	override var accessibilityValue: String? {
 		set {}
 		get {
-			if inspectButton.alpha == 0 {
-				return "\(size.text ?? ""), Contents: \(name.text ?? "")"
-			} else {
+			if name.text == "Binary Data" {
 				return "\(size.text ?? ""), Binary data"
+			} else {
+				return "\(size.text ?? ""), Contents: \(name.text ?? "")"
 			}
 		}
 	}
@@ -94,6 +94,17 @@ final class DetailCell: UITableViewCell {
 		get {
 			return inspectButton.alpha == 0 ? nil : "Select to inspect"
 		}
+	}
+
+	override var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
+		set {}
+		get {
+			return [UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected))]
+		}
+	}
+
+	@objc private func previewSelected() {
+		viewCallback?()
 	}
 
 	override func accessibilityActivate() -> Bool {

@@ -439,9 +439,9 @@ extension CloudManager {
 					} else if syncDirty {
 						sync(force: true, completion: completion)
 					} else {
+						lastSyncCompletion = Date()
 						syncing = false
 						completion(nil)
-						lastSyncCompletion = Date()
 					}
 					endBgTask()
 				}
