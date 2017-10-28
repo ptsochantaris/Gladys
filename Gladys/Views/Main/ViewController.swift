@@ -134,16 +134,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 				let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
-				if Model.isFilteringLabels {
+				if Model.isFilteringLabels || Model.isFilteringText {
 					dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-					item.labels = Model.enabledLabelsForItems
+					if Model.isFilteringLabels {
+						item.labels = Model.enabledLabelsForItems
+					}
 				}
 
+				var itemVisiblyInserted = false
 				collectionView.performBatchUpdates({
-					collectionView.isAccessibilityElement = false
 				    Model.drops.insert(item, at: dataIndex)
 				    Model.forceUpdateFilter(signalUpdate: false)
-					collectionView.insertItems(at: [destinationIndexPath])
+					itemVisiblyInserted = Model.filteredDrops.contains(item)
+					if itemVisiblyInserted {
+						collectionView.isAccessibilityElement = false
+						collectionView.insertItems(at: [destinationIndexPath])
+					}
 				}, completion: { finished in
 					self.mostRecentIndexPathActioned = destinationIndexPath
 					self.focusInitialAccessibilityElement()
@@ -151,7 +157,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 				loadingUUIDs.insert(item.uuid)
 				startBgTaskIfNeeded()
-				coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				if itemVisiblyInserted {
+					coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				}
 			}
 		}
 
@@ -182,11 +190,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func resetForDragEntry(session: UIDropSession) {
-		if currentDetailView != nil || currentLabelSelector != nil {
+		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: ["build.bru.gladys.archive"]) {
 			dismissAnyPopOver()
-		}
-		if countInserts(in: session) > 0 {
-			resetSearch(andLabels: false)
+		} else if currentDetailView != nil || currentLabelSelector != nil {
+			dismissAnyPopOver()
 		}
 	}
 
@@ -204,7 +211,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			dimView = nil
 			d.dismiss()
 		}
-
 		return true
 	}
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
@@ -786,6 +792,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	private var currentDetailView: DetailController? {
 		return firstPresentedNavigationController?.topViewController as? DetailController
+	}
+
+	private var currentPreferencesView: PreferencesController? {
+		return firstPresentedNavigationController?.topViewController as? PreferencesController
 	}
 
 	private var currentLabelSelector: LabelSelector? {
