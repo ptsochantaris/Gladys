@@ -293,11 +293,13 @@ final class DetailController: GladysViewController,
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.contentDescription + " (\(size))"
+			e.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
 
 		} else if segue.identifier == "webPreview" {
 			let d = segue.destination as! WebPreviewController
 			d.title = "Loading..."
 			d.address = sender as! URL
+			d.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,
@@ -498,6 +500,7 @@ final class DetailController: GladysViewController,
 		q.title = typeEntry.oneTitle
 		q.dataSource = self
 		q.delegate = self
+		q.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
 		navigationController?.pushViewController(q, animated: true)
 	}
 
