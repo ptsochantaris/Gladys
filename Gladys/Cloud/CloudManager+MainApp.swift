@@ -180,11 +180,15 @@ extension CloudManager {
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
 
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-
 		let o = CKFetchRecordZoneChangesOptions()
-		o.previousServerChangeToken = zoneChangeToken
+		if zoneChangeMayNotReflectSavedChanges {
+			log("Change token could be unreliable, performing full fetch")
+		} else {
+			log("Performing delta fetch")
+			o.previousServerChangeToken = zoneChangeMayNotReflectSavedChanges ? nil : zoneChangeToken
+		}
 
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			if recordType != "ArchivedDropItem" { return }
@@ -193,29 +197,34 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
+					zoneChangeMayNotReflectSavedChanges = true
 					itemsModified = true
 				}
 			}
 		}
 		operation.recordChangedBlock = { record in
+			let itemUUID = record.recordID.recordName
+
 			DispatchQueue.main.async {
+
 				if record.recordType == "ArchivedDropItem" {
-					let itemUUID = record.recordID.recordName
 					if let item = Model.item(uuid: itemUUID) {
 						if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item record \(itemUUID)")
 						} else {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
+							zoneChangeMayNotReflectSavedChanges = true
 							itemsModified = true
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
+						zoneChangeMayNotReflectSavedChanges = true
 						itemsModified = true
 					}
+
 				} else if record.recordType == "ArchivedDropItemType" {
-					let itemUUID = record.recordID.recordName
 					if let typeItem = Model.typeItem(uuid: itemUUID) {
 						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item type record \(itemUUID)")
@@ -223,17 +232,20 @@ extension CloudManager {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
 							itemsModified = true
+							zoneChangeMayNotReflectSavedChanges = true
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
 					}
-				} else if record.recordType == "PositionList" {
+
+				} else if itemUUID == "PositionList" {
 					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true
 						itemsModified = true
+						zoneChangeMayNotReflectSavedChanges = true
 						uuidSequenceRecord = record
 					} else {
 						log("Received non-updated position list record")
@@ -251,6 +263,13 @@ extension CloudManager {
 					return
 				}
 
+				if itemsModified || zoneChangeMayNotReflectSavedChanges {
+					zoneChangeMayNotReflectSavedChanges = true
+					Model.queueNextSaveCallback {
+						zoneChangeMayNotReflectSavedChanges = false
+						log("Commited zone change token")
+					}
+				}
 				zoneChangeToken = token
 				log("Zone \(zoneId.zoneName) changes fetch complete")
 
@@ -345,7 +364,7 @@ extension CloudManager {
 	/////////////////////////////////////////////// Whole sync
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
-		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
+		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil) { error in
 			guard let ckError = error as? CKError else {
 				completion(error)
 				return
@@ -379,7 +398,7 @@ extension CloudManager {
 
 				let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 3.0
 				DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
-					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil, completion: completion)
 				}
 
 			case .alreadyShared,
@@ -409,7 +428,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func _sync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
+	static private func _sync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier?, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { completion(nil); return }
 
 		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
@@ -424,37 +443,43 @@ extension CloudManager {
 			return
 		}
 
-		let bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
+		let bgTask: UIBackgroundTaskIdentifier
+		if let e = existingBgTask {
+			bgTask = e
+		} else {
+			log("Starting cloud sync background task")
+			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
+		}
 
 		syncing = true
 		syncDirty = false
 
-		func endBgTask() {
+		func done(_ error: Error?) {
+			syncing = false
+			if let e = error {
+				log("Sync failure: \(e.localizedDescription)")
+			}
+			completion(error)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+				log("Ending cloud sync background task")
 				UIApplication.shared.endBackgroundTask(bgTask)
 			}
 		}
 
 		sendUpdatesUp { error in
 			if let error = error {
-				log("Could not perform push: \(error.localizedDescription)")
-				syncing = false
-				completion(error)
-				endBgTask()
-			} else {
-				fetchDatabaseChanges { error in
-					if let error = error {
-						log("Could not perform pull: \(error.localizedDescription)")
-						syncing = false
-						completion(error)
-					} else if syncDirty {
-						sync(force: true, completion: completion)
-					} else {
-						lastSyncCompletion = Date()
-						syncing = false
-						completion(nil)
-					}
-					endBgTask()
+				done(error)
+				return
+			}
+
+			fetchDatabaseChanges { error in
+				if let error = error {
+					done(error)
+				} else if syncDirty {
+					_sync(force: true, overridingWiFiPreference:overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
+				} else {
+					lastSyncCompletion = Date()
+					done(nil)
 				}
 			}
 		}

@@ -48,6 +48,17 @@ extension CloudManager {
 		}
 	}
 
+	static var zoneChangeMayNotReflectSavedChanges: Bool {
+		get {
+			return d.bool(forKey: "zoneChangeMayNotReflectSavedChanges")
+		}
+
+		set {
+			d.set(newValue, forKey: "zoneChangeMayNotReflectSavedChanges")
+			d.synchronize()
+		}
+	}
+
 	static var syncSwitchedOn: Bool {
 		get {
 			return d.bool(forKey: "syncSwitchedOn")

@@ -48,22 +48,20 @@ extension Model {
 		rebuildLabels()
 	}
 
-	static func saveDone() {
+	static func saveComplete() {
+		NotificationCenter.default.post(name: .SaveComplete, object: nil)
+		CloudManager.sync { error in
+			if let error = error {
+				log("Error in push after save: \(error.localizedDescription)")
+			}
+		}
+
 		saveOverlap -= 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 			if saveOverlap == 0, let b = saveBgTask {
 				log("Ending save queue background task")
 				UIApplication.shared.endBackgroundTask(b)
 				saveBgTask = nil
-			}
-		}
-	}
-
-	static func saveComplete() {
-		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sync { error in
-			if let error = error {
-				log("Error in push after safe: \(error.localizedDescription)")
 			}
 		}
 	}

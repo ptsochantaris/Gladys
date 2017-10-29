@@ -1,28 +1,44 @@
 import UIKit
 
 extension Model {
-	private static var isSaving = false
 	static var needsAnotherSave = false
-	static var oneTimeSaveCallback: (()->Void)?
+	private static var isSaving = false
+	private static var nextSaveCallbacks: [()->Void]?
+
+	static func queueNextSaveCallback(_ callback: @escaping ()->Void) {
+		if nextSaveCallbacks == nil {
+			nextSaveCallbacks = [()->Void]()
+		}
+		nextSaveCallbacks!.append(callback)
+	}
+
+	private static func performAnyNextSaveCallbacks() {
+		if let n = nextSaveCallbacks {
+			for callback in n {
+				callback()
+			}
+			nextSaveCallbacks = nil
+		}
+	}
 
 	static func save() {
 		assert(Thread.isMainThread)
+
 		if isSaving {
 			needsAnotherSave = true
 		} else {
-			_save()
+			prepareToSave()
+			performSave()
 		}
 	}
 
 	private static let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	private static func _save() {
+	private static func performSave() {
 
 		let start = Date()
 
 		let itemsToSave = drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
-
-		prepareToSave()
 
 		isSaving = true
 		needsAnotherSave = false
@@ -39,14 +55,12 @@ extension Model {
 			}
 			DispatchQueue.main.async {
 				if needsAnotherSave {
-					self._save()
+					performSave()
 				} else {
 					isSaving = false
-					self.saveComplete()
-					oneTimeSaveCallback?()
-					oneTimeSaveCallback = nil
+					saveComplete()
+					performAnyNextSaveCallbacks()
 				}
-				self.saveDone()
 			}
 		}
 	}

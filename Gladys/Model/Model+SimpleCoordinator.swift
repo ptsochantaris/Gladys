@@ -6,7 +6,6 @@ extension Model {
 	}
 
 	static func prepareToSave() {}
-	static func saveDone() {}
 	static func saveComplete() {}
 	static func startupComplete() {}
 	static func reloadCompleted() {}

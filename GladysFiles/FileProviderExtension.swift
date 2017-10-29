@@ -39,7 +39,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	private func saveModel(completion: (()->Void)? = nil) {
 		DispatchQueue.main.async {
-			Model.oneTimeSaveCallback = completion
+			if let c = completion {
+				Model.queueNextSaveCallback(c)
+			}
 			Model.save()
 		}
 	}

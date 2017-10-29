@@ -116,7 +116,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
 				group.leave()
 			}
-			Model.oneTimeSaveCallback = {
+			Model.queueNextSaveCallback {
 				group.leave()
 			}
 			Model.save()
