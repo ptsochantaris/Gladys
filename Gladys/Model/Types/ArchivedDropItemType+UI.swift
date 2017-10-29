@@ -64,7 +64,7 @@ extension ArchivedDropItemType {
 			return (url, 3)
 		}
 
-		return (nil, 0)
+		return (bytes, 0)
 	}
 
 	var sizeDescription: String? {
