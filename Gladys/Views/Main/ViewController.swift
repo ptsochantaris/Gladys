@@ -322,8 +322,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if sequence.count == 0 { return }
 
 	    Model.drops.sort { i1, i2 in
-			let p1 = sequence.index(of: i1.uuid.uuidString) ?? 0
-			let p2 = sequence.index(of: i2.uuid.uuidString) ?? 0
+			let p1 = sequence.index(of: i1.uuid.uuidString) ?? -1
+			let p2 = sequence.index(of: i2.uuid.uuidString) ?? -1
 			return p1 < p2
 		}
 	}
@@ -411,6 +411,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			CloudManager.tryManualSync(from: self)
 		} else {
 			r.beginRefreshing()
+			lastSyncUpdate()
 		}
 	}
 

@@ -48,7 +48,7 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
-		if uuidSequence != currentUUIDSequence {
+		if lastSyncCompletion != .distantPast && uuidSequence != currentUUIDSequence { // only send position record if we've synced before and things have moved around
 			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])
