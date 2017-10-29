@@ -48,10 +48,24 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
-		if lastSyncCompletion != .distantPast && uuidSequence != currentUUIDSequence { // only send position record if we've synced before and things have moved around
-			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
-			record["positionList"] = currentUUIDSequence as NSArray
-			payloadsToPush.append([record])
+		if uuidSequence != currentUUIDSequence {
+			if lastSyncCompletion == .distantPast {
+				if currentUUIDSequence.count > 0 {
+					let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
+					var mergedSequence = uuidSequence
+					for i in currentUUIDSequence.reversed() {
+						if !mergedSequence.contains(i) {
+							mergedSequence.insert(i, at: 0)
+						}
+					}
+					record["positionList"] = mergedSequence as NSArray
+					payloadsToPush.append([record])
+				}
+			} else {
+				let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
+				record["positionList"] = currentUUIDSequence as NSArray
+				payloadsToPush.append([record])
+			}
 		}
 
 		let recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)

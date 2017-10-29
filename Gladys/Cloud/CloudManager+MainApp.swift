@@ -142,10 +142,31 @@ extension CloudManager {
 		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
 		subscribeToZone.addDependency(createZone)
 		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+			if let error = error {
+				log("Error while updating zone subscription: \(error.localizedDescription)")
+				DispatchQueue.main.async {
+					completion(error)
+				}
+			}
+		}
+
+		let positionListId = CKRecordID(recordName: "PositionList", zoneID: zone.zoneID)
+		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
+		fetchInitialUUIDSequence.addDependency(subscribeToZone)
+		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
-				if let error = error {
+				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
+					log("Error while fetching inital item sequence: \(error.localizedDescription)")
 					completion(error)
 				} else {
+					if let sequenceRecord = ids2records?[positionListId], let sequence = sequenceRecord["positionList"] as? [String] {
+						log("Received initial record sequence")
+						uuidSequence = sequence
+						uuidSequenceRecord = sequenceRecord
+					} else {
+						log("No initial record sequence on server")
+						uuidSequence = []
+					}
 					syncSwitchedOn = true
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
@@ -154,6 +175,7 @@ extension CloudManager {
 
 		go(createZone)
 		go(subscribeToZone)
+		go(fetchInitialUUIDSequence)
 	}
 
 	/////////////////////////////////////////// Wipe Zone
@@ -241,7 +263,7 @@ extension CloudManager {
 					}
 
 				} else if itemUUID == "PositionList" {
-					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag {
+					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true

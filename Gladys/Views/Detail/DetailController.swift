@@ -502,6 +502,9 @@ final class DetailController: GladysViewController,
 		q.dataSource = self
 		q.delegate = self
 		q.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
+		if typeEntry.typeIdentifier.contains(".iwork."), let s = UIApplication.shared.windows.first?.bounds.size {
+			q.preferredContentSize = s
+		}
 		navigationController?.pushViewController(q, animated: true)
 	}
 
