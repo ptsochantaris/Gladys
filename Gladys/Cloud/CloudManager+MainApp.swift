@@ -99,6 +99,7 @@ extension CloudManager {
 					uuidSequence = []
 					uuidSequenceRecord = nil
 					zoneChangeToken = nil
+					zoneChangeMayNotReflectSavedChanges = false
 					syncSwitchedOn = false
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in Model.drops {
@@ -258,6 +259,7 @@ extension CloudManager {
 
 				if (error as? CKError)?.code == .changeTokenExpired {
 					zoneChangeToken = nil
+					zoneChangeMayNotReflectSavedChanges = false
 					log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 					finalCompletion(error)
 					return
