@@ -15,6 +15,20 @@ protocol LoadCompletionDelegate: class {
 	func loadCompleted(sender: AnyObject, success: Bool)
 }
 
+extension Data {
+	var isPlist: Bool {
+		guard count > 6 else { return false }
+		return withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
+			return x[0] == 0x62
+				&& x[1] == 0x70
+				&& x[2] == 0x6c
+				&& x[3] == 0x69
+				&& x[4] == 0x73
+				&& x[5] == 0x74
+		}
+	}
+}
+
 extension FileManager {
 	func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
 		var contentSize: Int64 = 0

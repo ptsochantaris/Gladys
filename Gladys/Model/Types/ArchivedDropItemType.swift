@@ -407,22 +407,10 @@ final class ArchivedDropItemType: Codable {
 
 		if classWasWrapped {
 			return try! NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(bytes)
-		} else if bytesIsPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
+		} else if bytes.isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {
 			return bytes
-		}
-	}
-
-	var bytesIsPlist: Bool {
-		guard let bytes = bytes, bytes.count > 6 else { return false }
-		return bytes.withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
-			return x[0] == 0x62
-				&& x[1] == 0x70
-				&& x[2] == 0x6c
-				&& x[3] == 0x69
-				&& x[4] == 0x73
-				&& x[5] == 0x74
 		}
 	}
 

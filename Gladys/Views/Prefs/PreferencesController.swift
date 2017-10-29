@@ -248,17 +248,20 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 		let title: String
 		let subtitle: String
+		let actionName: String
 
 		if CloudManager.syncSwitchedOn {
 			title = "Remove from all devices?"
-			subtitle = "This will remove all items from your collection on all synced devices. This cannot be undone."
+			subtitle = "Sync is switched on, so this action will remove your entire collection from all synced devices. This cannot be undone."
+			actionName = "Delete From All Devices"
 		} else {
 			title = "Are you sure?"
 			subtitle = "This will remove all items from your collection. This cannot be undone."
+			actionName = "Delete All"
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: "Delete All", style: .destructive, handler: { [weak self] action in
+		a.addAction(UIAlertAction(title: actionName, style: .destructive, handler: { [weak self] action in
 			self?.deleteAllItems()
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
