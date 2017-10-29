@@ -516,6 +516,11 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
                     <navigationItem key="navigationItem" id="fpO-3k-GDD">
+                        <barButtonItem key="leftBarButtonItem" title="Delete iCloud Data" id="7JS-kd-eCS">
+                            <connections>
+                                <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" id="j4c-6Y-KsL"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="2tt-ZI-Tzq">
                             <connections>
                                 <action selector="doneSelected:" destination="PmV-gD-gyX" id="lh0-7p-mdb"/>
@@ -523,6 +528,7 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="eraseAlliCloudData" destination="7JS-kd-eCS" id="YXc-ZP-82j"/>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
@@ -1270,7 +1276,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

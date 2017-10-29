@@ -63,6 +63,7 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
+	@IBOutlet weak var eraseAlliCloudData: UIBarButtonItem!
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
@@ -85,6 +86,36 @@ final class iCloudController: GladysViewController {
 		limitToWiFiSwitch.onTintColor = view.tintColor
 
 		updateiCloudControls()
+	}
+
+	@IBAction func eraseiCloudDataSelected(_ sender: UIBarButtonItem) {
+		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
+			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
+		} else {
+			let a = UIAlertController(title: "Are you sure?", message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.", preferredStyle: .alert)
+			a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive, handler: { [weak self] action in
+				self?.eraseiCloudData()
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+			present(a, animated: true)
+
+		}
+	}
+
+	private func eraseiCloudData() {
+		icloudSwitch.isEnabled = false
+		UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		self.eraseAlliCloudData.isEnabled = false
+		CloudManager.eraseZoneIfNeeded { error in
+			self.eraseAlliCloudData.isEnabled = true
+			self.icloudSwitch.isEnabled = true
+			UIApplication.shared.isNetworkActivityIndicatorVisible = false
+			if let error = error {
+				genericAlert(title: "Error", message: error.localizedDescription, on: self)
+			} else {
+				genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud", on: self)
+			}
+		}
 	}
 
 	@objc private func icloudTransitionChanged() {

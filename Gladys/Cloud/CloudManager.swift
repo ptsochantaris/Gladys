@@ -14,11 +14,11 @@ final class CloudManager {
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
 	static func go(_ operation: CKDatabaseOperation) {
+		operation.qualityOfService = .userInitiated
 		container.privateCloudDatabase.add(operation)
 	}
 
 	static var syncDirty = false
-	private static var syncForceOrderSend = false
 
 	/////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
-		if syncForceOrderSend || uuidSequence != currentUUIDSequence {
+		if uuidSequence != currentUUIDSequence {
 			let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 			record["positionList"] = currentUUIDSequence as NSArray
 			payloadsToPush.append([record])
@@ -103,7 +103,6 @@ final class CloudManager {
 						let itemUUID = record.recordID.recordName
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
-							syncForceOrderSend = false
 							uuidSequenceRecord = record
 							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = Model.item(uuid: itemUUID) {

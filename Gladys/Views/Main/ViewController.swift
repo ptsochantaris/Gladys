@@ -320,14 +320,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@objc private func itemPositionsReceived() {
 		let sequence = CloudManager.uuidSequence
 		if sequence.count == 0 { return }
-		
+
 	    Model.drops.sort { i1, i2 in
 			let p1 = sequence.index(of: i1.uuid.uuidString) ?? 0
 			let p2 = sequence.index(of: i2.uuid.uuidString) ?? 0
 			return p1 < p2
 		}
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-	    Model.save()
 	}
 
 	override func awakeFromNib() {
@@ -565,7 +563,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			deleteButton.title = "Delete"
 		}
 
-		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
+		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !loadingUUIDs.contains($0.uuid) }
 		for item in itemsToReIngest {
 			loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()

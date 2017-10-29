@@ -155,12 +155,27 @@ extension CloudManager {
 		go(subscribeToZone)
 	}
 
+	/////////////////////////////////////////// Wipe Zone
+
+	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [zoneId])
+		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
+			if let error = error {
+				log("Error while deleting zone: \(error.localizedDescription)")
+			}
+			DispatchQueue.main.async {
+				completion(error)
+			}
+		}
+		go(deleteZone)
+	}
+
 	/////////////////////////////////////////// Fetching
 
 	private static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
 
-		var itemFieldsWereModified = false
-		var itemsNeedDeletion = false
+		var itemsModified = false
 		var updatedSequence = false
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
@@ -178,7 +193,7 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
-					itemsNeedDeletion = true
+					itemsModified = true
 				}
 			}
 		}
@@ -192,12 +207,12 @@ extension CloudManager {
 						} else {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
-							itemFieldsWereModified = true
+							itemsModified = true
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
-						itemFieldsWereModified = true
+						itemsModified = true
 					}
 				} else if record.recordType == "ArchivedDropItemType" {
 					let itemUUID = record.recordID.recordName
@@ -207,7 +222,7 @@ extension CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							itemFieldsWereModified = true
+							itemsModified = true
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
@@ -218,7 +233,7 @@ extension CloudManager {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true
-						itemFieldsWereModified = true
+						itemsModified = true
 						uuidSequenceRecord = record
 					} else {
 						log("Received non-updated position list record")
@@ -239,18 +254,14 @@ extension CloudManager {
 				zoneChangeToken = token
 				log("Zone \(zoneId.zoneName) changes fetch complete")
 
-				if itemFieldsWereModified {
-					// ingestions will take care of save
+				if itemsModified {
+					// ingestions and deletions will take care of save
 					for dropRecord in newDrops {
 						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
 					}
 					if updatedSequence {
 						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
-					} else {
-						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 					}
-				} else if itemsNeedDeletion {
-					// deletions will take care of save
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
 

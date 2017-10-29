@@ -41,6 +41,7 @@ extension ArchivedDropItemType {
 			}
 		} else {
 			overallProgress.completedUnitCount += 1
+			completeIngest()
 		}
 		return overallProgress
 	}
@@ -167,9 +168,7 @@ extension ArchivedDropItemType {
 	private func handleData(_ data: Data) {
 		bytes = data
 
-		var hasPreviewImage = false
 		if let image = UIImage(data: data) {
-			hasPreviewImage = true
 			setDisplayIcon(image, 40, .fill)
 		}
 
@@ -225,7 +224,7 @@ extension ArchivedDropItemType {
 		} else if typeConforms(to: kUTTypeText as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
-		} else if !hasPreviewImage && typeConforms(to: kUTTypeImage as CFString) {
+		} else if displayIconPriority == 0 && typeConforms(to: kUTTypeImage as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
 		} else if typeConforms(to: kUTTypeVideo as CFString) {
@@ -236,6 +235,13 @@ extension ArchivedDropItemType {
 
 		} else if typeConforms(to: kUTTypeAudio as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
+
+		} else if typeIdentifier.contains(".iwork.") {
+			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+		}
+
+		if displayIconPriority == 0 {
+			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}
 
 		completeIngest()
@@ -282,24 +288,25 @@ extension ArchivedDropItemType {
 		// in thread!!
 
 		var request = ArchivedDropItemType.webRequest(for: url)
+		let U = uuid
 
 		if testing {
 
-			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
+			log("\(U): Investigating possible HTML title from this URL: \(url.absoluteString)")
 
 			request.httpMethod = "HEAD"
 			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
 					if let type = response.mimeType, type.hasPrefix("text/html") {
-						log("Content for this is HTML, will try to fetch title")
+						log("\(U): Content for this is HTML, will try to fetch title")
 						self.fetchWebPreview(for: url, testing: false, completion: completion)
 					} else {
-						log("Content for this isn't HTML, never mind")
+						log("\(U): Content for this isn't HTML, never mind")
 						completion(nil, nil)
 					}
 				}
 				if let error = error {
-					log("Error while investigating URL: \(error.localizedDescription)")
+					log("\(U): Error while investigating URL: \(error.localizedDescription)")
 					completion(nil, nil)
 				}
 			}
@@ -307,7 +314,7 @@ extension ArchivedDropItemType {
 
 		} else {
 
-			log("Fetching HTML from URL: \(url.absoluteString)")
+			log("\(U): Fetching HTML from URL: \(url.absoluteString)")
 
 			let fetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let data = data,
@@ -316,9 +323,9 @@ extension ArchivedDropItemType {
 
 					let title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
 					if let title = title {
-						log("Title located at URL: \(title)")
+						log("\(U): Title located at URL: \(title)")
 					} else {
-						log("No title located at URL")
+						log("\(U): No title located at URL")
 					}
 
 					var largestImagePath = "/favicon.ico"
@@ -353,15 +360,20 @@ extension ArchivedDropItemType {
 						}
 					}
 
-					ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
-						completion(title, newImage)
+					if let iconUrl = iconUrl {
+						log("\(U): Fetching image for site icon: \(iconUrl)")
+						ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
+							completion(title, newImage)
+						}
+					} else {
+						completion(title, nil)
 					}
 
 				} else if let error = error {
-					log("Error while fetching title URL: \(error.localizedDescription)")
+					log("\(U): Error while fetching title URL: \(error.localizedDescription)")
 					completion(nil, nil)
 				} else {
-					log("Bad HTML data while fetching title URL")
+					log("\(U): Bad HTML data while fetching title URL")
 					completion(nil, nil)
 				}
 			}
@@ -374,9 +386,11 @@ extension ArchivedDropItemType {
 		let request = ArchivedDropItemType.webRequest(for: url)
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			if let data = data {
+				log("Image fetched for \(url)")
 				completion(UIImage(data: data))
 			} else {
 				log("Error fetching site icon from \(url)")
+				completion(nil)
 			}
 		}.resume()
 	}
