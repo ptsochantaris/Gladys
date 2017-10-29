@@ -411,8 +411,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			CloudManager.tryManualSync(from: self)
 		} else {
 			r.beginRefreshing()
-			lastSyncUpdate()
 		}
+		lastSyncUpdate()
 	}
 
 	@objc private func cloudStatusChanged() {

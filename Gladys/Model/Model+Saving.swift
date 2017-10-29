@@ -58,8 +58,8 @@ extension Model {
 					performSave()
 				} else {
 					isSaving = false
-					saveComplete()
 					performAnyNextSaveCallbacks()
+					saveComplete()
 				}
 			}
 		}
