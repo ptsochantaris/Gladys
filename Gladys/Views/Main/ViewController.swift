@@ -989,7 +989,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		searchTimer.push()
 	}
 
-	private var dragActionInProgress = false
 	@objc func reloadData() {
 		updateLabelIcon()
 		archivedItemCollectionView.performBatchUpdates({

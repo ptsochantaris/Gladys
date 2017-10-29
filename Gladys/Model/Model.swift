@@ -41,6 +41,7 @@ final class Model {
 
 	static func reloadDataIfNeeded() {
 		var coordinationError: NSError?
+		var didLoad = false
 		// withoutChanges because we only signal the provider after we have saved
 		coordinator.coordinate(readingItemAt: fileUrl, options: .withoutChanges, error: &coordinationError) { url in
 
@@ -59,6 +60,7 @@ final class Model {
 						log("Needed to reload data, new file date: \(dataFileLastModified)")
 						let data = try Data(contentsOf: url, options: [.alwaysMapped])
 						drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+						didLoad = true
 					}
 				} catch {
 					log("Loading Error: \(error)")
@@ -74,7 +76,9 @@ final class Model {
 
 		DispatchQueue.main.async {
 			if isStarted {
-				reloadCompleted()
+				if didLoad {
+					reloadCompleted()
+				}
 			} else {
 				isStarted = true
 				startupComplete()
