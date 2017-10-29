@@ -51,7 +51,7 @@ extension ArchivedDropItemType {
 		ingestCompletion = completion
 
 		let item: NSSecureCoding
-		if let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
+		if data.count > 0, let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
 			log("      unwrapped keyed object: \(type(of:obj))")
 			item = obj
 			classWasWrapped = true

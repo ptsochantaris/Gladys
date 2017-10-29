@@ -415,7 +415,7 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var bytesIsPlist: Bool {
-		guard let bytes = bytes else { return false }
+		guard let bytes = bytes, bytes.count > 6 else { return false }
 		return bytes.withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
 			return x[0] == 0x62
 				&& x[1] == 0x70
