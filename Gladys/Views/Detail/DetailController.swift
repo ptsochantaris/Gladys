@@ -247,6 +247,7 @@ final class DetailController: GladysViewController,
 			}
 			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
+
 			return cell
 		}
 	}
@@ -259,7 +260,7 @@ final class DetailController: GladysViewController,
 			cell.viewCallback = { [weak self] in
 				self?.quickLook(typeEntry)
 			}
-		} else if let url = typeEntry.encodedUrl {
+		} else if let url = typeEntry.encodedUrl, url.scheme?.hasPrefix("http") ?? false {
 			cell.viewCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "webPreview", sender: url)
 			}
