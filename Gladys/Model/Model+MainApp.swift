@@ -108,7 +108,7 @@ extension Model {
 		}
 	}
 
-	private static func rebuildLabels() {
+	static func rebuildLabels() {
 		var counts = [String:Int]()
 		var noLabelCount = 0
 		for item in drops {
@@ -236,17 +236,20 @@ extension Model {
 	}
 
 	static func removeLabel(_ label : String) {
-		var itemIdsNeedingReIndex = [String]()
+		var itemsNeedingReIndex = [ArchivedDropItem]()
 		for i in drops {
 			if i.labels.contains(label) {
 				i.labels = i.labels.filter { $0 != label }
-				itemIdsNeedingReIndex.append(i.uuid.uuidString)
+				itemsNeedingReIndex.append(i)
 			}
 		}
 		rebuildLabels()
-		if itemIdsNeedingReIndex.count > 0 {
+		if itemsNeedingReIndex.count > 0 {
 			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemIdsNeedingReIndex) {
+			for i in itemsNeedingReIndex {
+				i.needsCloudPush = true
+			}
+			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemsNeedingReIndex.map { $0.uuid.uuidString }) {
 				DispatchQueue.main.async {
 					self.save()
 				}

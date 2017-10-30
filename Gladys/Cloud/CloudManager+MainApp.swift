@@ -344,6 +344,7 @@ extension CloudManager {
 					if updatedSequence {
 						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
 					}
+					Model.rebuildLabels()
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
 			}

@@ -43,6 +43,17 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		}
 
 		table.tableFooterView = UIView()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func labelsUpdated() {
+		table.reloadData()
+		clearAllButton.isEnabled = Model.isFilteringLabels
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
