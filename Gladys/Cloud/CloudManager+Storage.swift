@@ -18,7 +18,7 @@ extension CloudManager {
 	static var syncTransitioning = false {
 		didSet {
 			if syncTransitioning != oldValue {
-				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+				syncProgressString = "Changing status"
 				#if MAINAPP
 				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
 				#endif
@@ -29,7 +29,7 @@ extension CloudManager {
 	static var syncing = false {
 		didSet {
 			if syncing != oldValue {
-				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+				syncProgressString = syncing ? "Syncing" : nil
 				#if MAINAPP
 				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
 				#endif

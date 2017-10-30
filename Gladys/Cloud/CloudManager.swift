@@ -20,10 +20,25 @@ final class CloudManager {
 
 	static var syncDirty = false
 
+	static var syncProgressString: String? {
+		didSet {
+			#if DEBUG
+			if let s = syncProgressString {
+				log("Sync update: \(s)")
+			} else {
+				log("Sync updates done")
+			}
+			#endif
+			NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+		}
+	}
+
 	/////////////////////////////////////////////
 
 	static func sendUpdatesUp(completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { completion(nil); return }
+
+		syncProgressString = "Sending changes"
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
@@ -78,6 +93,8 @@ final class CloudManager {
 
 		var latestError: Error?
 		var operations = [CKDatabaseOperation]()
+		var deletionCount = 0
+		var uploadCount = 0
 
 		log("Pushing up \(recordsToDelete.count) item deletion blocks")
 
@@ -94,6 +111,12 @@ final class CloudManager {
 						if deletionIdsSnapshot.contains(uuid) {
 							deletionQueue.remove(uuid)
 							log("Deleted cloud record \(uuid)")
+							deletionCount += 1
+							if deletionCount == 1 {
+								syncProgressString = "Deleting 1 item"
+							} else {
+								syncProgressString = "Deleting \(deletionCount) items"
+							}
 						}
 					}
 				}
@@ -122,6 +145,12 @@ final class CloudManager {
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
+							uploadCount += 1
+							if uploadCount == 1 {
+								syncProgressString = "Uploaded 1 item"
+							} else {
+								syncProgressString = "Uploaded \(uploadCount) items"
+							}
 						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")

@@ -22,8 +22,8 @@ extension CloudManager {
 	}()
 
 	static var syncString: String {
-		if syncing {
-			return "Syncing"
+		if let s = syncProgressString {
+			return s
 		}
 
 		let i = -lastSyncCompletion.timeIntervalSinceNow
@@ -198,10 +198,15 @@ extension CloudManager {
 
 	private static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
 
-		var itemsModified = false
 		var updatedSequence = false
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
+
+		var deletionCount = 0
+		var updateCount = 0
+		var newCount = 0
+		var typesModified = false
+		syncProgressString = "Checking for changes"
 
 		let o = CKFetchRecordZoneChangesOptions()
 		if zoneChangeMayNotReflectSavedChanges {
@@ -221,7 +226,12 @@ extension CloudManager {
 				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
 					zoneChangeMayNotReflectSavedChanges = true
-					itemsModified = true
+					deletionCount += 1
+					if deletionCount == 1 {
+						syncProgressString = "Fetched 1 deletion"
+					} else {
+						syncProgressString = "Fetched \(deletionCount) deletions"
+					}
 				}
 			}
 		}
@@ -238,13 +248,23 @@ extension CloudManager {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
 							zoneChangeMayNotReflectSavedChanges = true
-							itemsModified = true
+							updateCount += 1
+							if updateCount == 1 {
+								syncProgressString = "Fetched 1 update"
+							} else {
+								syncProgressString = "Fetched \(updateCount) updates"
+							}
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
 						zoneChangeMayNotReflectSavedChanges = true
-						itemsModified = true
+						newCount += 1
+						if newCount == 1 {
+							syncProgressString = "Fetched 1 new item"
+						} else {
+							syncProgressString = "Fetched \(newCount) new items"
+						}
 					}
 
 				} else if record.recordType == "ArchivedDropItemType" {
@@ -254,7 +274,7 @@ extension CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							itemsModified = true
+							typesModified = true
 							zoneChangeMayNotReflectSavedChanges = true
 						}
 					} else {
@@ -267,9 +287,9 @@ extension CloudManager {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true
-						itemsModified = true
 						zoneChangeMayNotReflectSavedChanges = true
 						uuidSequenceRecord = record
+						syncProgressString = "Fetched position updates"
 					} else {
 						log("Received non-updated position list record")
 					}
@@ -287,7 +307,9 @@ extension CloudManager {
 					return
 				}
 
-				if itemsModified || zoneChangeMayNotReflectSavedChanges {
+				let itemsModified = typesModified || updatedSequence || (newCount + updateCount + deletionCount > 0)
+
+				if itemsModified || zoneChangeMayNotReflectSavedChanges { // re-checking zone variable in case of older sync
 					zoneChangeMayNotReflectSavedChanges = true
 					Model.queueNextSaveCallback {
 						zoneChangeMayNotReflectSavedChanges = false
