@@ -108,7 +108,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 			CloudManager.sendUpdatesUp { error in
 				if let error = error {
-					log("Error while sending up items: \(error.localizedDescription)")
+					log("Error while sending up items: \(error.finalDescription)")
 				}
 				group.leave()
 			}

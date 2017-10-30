@@ -70,7 +70,7 @@ final class Model {
 			}
 		}
 		if let e = coordinationError {
-			log("Error in loading coordination: \(e.localizedDescription)")
+			log("Error in loading coordination: \(e.finalDescription)")
 			abort()
 		}
 

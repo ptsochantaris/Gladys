@@ -402,7 +402,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	private func kickSync() {
 		CloudManager.sync(overridingWiFiPreference: true) { error in
 			if let error = error {
-				genericAlert(title: "Sync Error", message: error.localizedDescription, on: self)
+				genericAlert(title: "Sync Error", message: error.finalDescription, on: self)
 			}
 		}
 	}
@@ -914,7 +914,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				let (errorPrefix, error) = item.loadingError
 				if errorPrefix != nil || error != nil {
 					genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
-						message: "\(errorPrefix ?? "")\(error?.localizedDescription ?? "")",
+						message: "\(errorPrefix ?? "")\(error?.finalDescription ?? "")",
 						on: self)
 				}
 			}
@@ -1020,7 +1020,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func request(_ request: SKRequest, didFailWithError error: Error) {
-		log("Error fetching IAP items: \(error.localizedDescription)")
+		log("Error fetching IAP items: \(error.finalDescription)")
 		iapFetchCompletion()
 	}
 
@@ -1097,7 +1097,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
 		genericAlert(title: "There was an error restoring your purchase",
-		             message: error.localizedDescription,
+		             message: error.finalDescription,
 		             on: self)
 	}
 
@@ -1107,7 +1107,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			case .failed:
 				SKPaymentQueue.default().finishTransaction(t)
 				genericAlert(title: "There was an error completing this purchase",
-				             message: t.error?.localizedDescription,
+				             message: t.error?.finalDescription,
 				             on: self)
 				SKPaymentQueue.default().finishTransaction(t)
 			case .purchased, .restored:

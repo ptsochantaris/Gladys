@@ -30,7 +30,7 @@ extension Model {
 		let count = items.count
 		index.indexSearchableItems(searchableItems) { error in
 			if let error = error {
-				log("Error indexing items: \(error.localizedDescription)")
+				log("Error indexing items: \(error.finalDescription)")
 			} else {
 				log("\(count) item(s) indexed")
 			}
@@ -42,7 +42,7 @@ extension Model {
 		let existingItems = drops
 		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
-				log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
+				log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
 			}
 			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}
@@ -54,7 +54,7 @@ extension Model {
 		let deletedItems = identifiers.filter { currentItemIds.contains($0) }
 		searchableIndex.deleteSearchableItems(withIdentifiers: deletedItems) { error in
 			if let error = error {
-				log("Warning: Error while deleting non-existing item from index: \(error.localizedDescription)")
+				log("Warning: Error while deleting non-existing item from index: \(error.finalDescription)")
 			}
 			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 		}

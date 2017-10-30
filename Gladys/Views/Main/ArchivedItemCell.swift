@@ -133,7 +133,7 @@ final class MiniMapView: UIImageView {
 				}
 			}
 			if let error = error {
-				log("Error taking snapshot: \(error.localizedDescription)")
+				log("Error taking snapshot: \(error.finalDescription)")
 			}
 		}
 	}

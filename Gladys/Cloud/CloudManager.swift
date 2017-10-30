@@ -105,7 +105,7 @@ final class CloudManager {
 				DispatchQueue.main.async {
 					if let error = error {
 						latestError = error
-						log("Error deleting items: \(error.localizedDescription)")
+						log("Error deleting items: \(error.finalDescription)")
 					}
 					for uuid in (deletedRecordIds?.map({ $0.recordName })) ?? [] {
 						if deletionIdsSnapshot.contains(uuid) {
@@ -133,7 +133,7 @@ final class CloudManager {
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
 					if let error = error {
-						log("Error updating cloud records: \(error.localizedDescription)")
+						log("Error updating cloud records: \(error.finalDescription)")
 						latestError = error
 					}
 					for record in updatedRecords ?? [] {

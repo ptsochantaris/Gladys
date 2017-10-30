@@ -31,7 +31,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	}
 
 	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-		statusLabel.text = error.localizedDescription
+		statusLabel.text = error.finalDescription
 		statusLabel.isHidden = false
 		title = nil
 	}

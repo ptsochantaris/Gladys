@@ -42,7 +42,7 @@ extension Model {
 	static func signalRootChange() {
 		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
 			if let e = error {
-				log("Error signalling: \(e.localizedDescription)")
+				log("Error signalling: \(e.finalDescription)")
 			}
 		}
 	}
@@ -50,7 +50,7 @@ extension Model {
 	static func signalWorkingSetChange() {
 		NSFileProviderManager.default.signalEnumerator(for: .workingSet) { error in
 			if let e = error {
-				log("Error signalling: \(e.localizedDescription)")
+				log("Error signalling: \(e.finalDescription)")
 			}
 		}
 	}

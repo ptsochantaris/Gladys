@@ -198,7 +198,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				} else {
 					DispatchQueue.main.async {
 						if let e = error {
-							genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.localizedDescription)", on: self)
+							genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)", on: self)
 						} else {
 							genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
 						}

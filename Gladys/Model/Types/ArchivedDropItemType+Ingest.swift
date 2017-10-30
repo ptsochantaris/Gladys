@@ -13,7 +13,7 @@ extension ArchivedDropItemType {
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
 			if let error = error {
-				log(">> Error receiving item: \(error.localizedDescription)")
+				log(">> Error receiving item: \(error.finalDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.completeIngest()
@@ -306,7 +306,7 @@ extension ArchivedDropItemType {
 					}
 				}
 				if let error = error {
-					log("\(U): Error while investigating URL: \(error.localizedDescription)")
+					log("\(U): Error while investigating URL: \(error.finalDescription)")
 					completion(nil, nil)
 				}
 			}
@@ -370,7 +370,7 @@ extension ArchivedDropItemType {
 					}
 
 				} else if let error = error {
-					log("\(U): Error while fetching title URL: \(error.localizedDescription)")
+					log("\(U): Error while fetching title URL: \(error.finalDescription)")
 					completion(nil, nil)
 				} else {
 					log("\(U): Bad HTML data while fetching title URL")
@@ -415,7 +415,7 @@ extension ArchivedDropItemType {
 			}
 			try f.copyItem(at: url, to: newUrl)
 		} catch {
-			log("Error while copying item: \(error.localizedDescription)")
+			log("Error while copying item: \(error.finalDescription)")
 			loadingError = error
 		}
 		return newUrl

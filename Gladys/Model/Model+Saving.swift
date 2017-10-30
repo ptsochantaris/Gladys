@@ -51,7 +51,7 @@ extension Model {
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
 
 			} catch {
-				log("Saving Error: \(error.localizedDescription)")
+				log("Saving Error: \(error.finalDescription)")
 			}
 			DispatchQueue.main.async {
 				if needsAnotherSave {
@@ -74,7 +74,7 @@ extension Model {
 			}
 		}
 		if let e = coordinationError {
-			log("Error in saving coordination: \(e.localizedDescription)")
+			log("Error in saving coordination: \(e.finalDescription)")
 		}
 	}
 }

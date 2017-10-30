@@ -58,6 +58,13 @@ extension Notification.Name {
 	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 }
 
+extension Error {
+	var finalDescription: String {
+		let err = self as NSError
+		return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
+	}
+}
+
 extension UIImage {
 
 	func writeBitmap(to url: URL) {

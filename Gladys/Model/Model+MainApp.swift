@@ -52,7 +52,7 @@ extension Model {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
 		CloudManager.sync { error in
 			if let error = error {
-				log("Error in push after save: \(error.localizedDescription)")
+				log("Error in push after save: \(error.finalDescription)")
 			}
 		}
 
@@ -198,7 +198,7 @@ extension Model {
 			}
 			q.completionHandler = { error in
 				if let error = error {
-					log("Search error: \(error.localizedDescription)")
+					log("Search error: \(error.finalDescription)")
 				}
 				group.leave()
 			}

@@ -135,7 +135,7 @@ extension CloudManager {
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
 		createZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
-				log("Error while creating zone: \(error.localizedDescription)")
+				log("Error while creating zone: \(error.finalDescription)")
 				DispatchQueue.main.async {
 					completion(error)
 				}
@@ -146,7 +146,7 @@ extension CloudManager {
 		subscribeToZone.addDependency(createZone)
 		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
-				log("Error while updating zone subscription: \(error.localizedDescription)")
+				log("Error while updating zone subscription: \(error.finalDescription)")
 				DispatchQueue.main.async {
 					completion(error)
 				}
@@ -159,7 +159,7 @@ extension CloudManager {
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
-					log("Error while fetching inital item sequence: \(error.localizedDescription)")
+					log("Error while fetching inital item sequence: \(error.finalDescription)")
 					completion(error)
 				} else {
 					if let sequenceRecord = ids2records?[positionListId], let sequence = sequenceRecord["positionList"] as? [String] {
@@ -189,7 +189,7 @@ extension CloudManager {
 		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [zoneId])
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
-				log("Error while deleting zone: \(error.localizedDescription)")
+				log("Error while deleting zone: \(error.finalDescription)")
 			}
 			DispatchQueue.main.async {
 				completion(error)
@@ -378,7 +378,7 @@ extension CloudManager {
 		if syncSwitchedOn {
 			sync { error in
 				if let error = error {
-					log("Error in foregrounding sync: \(error.localizedDescription)")
+					log("Error in foregrounding sync: \(error.finalDescription)")
 				}
 			}
 		}
@@ -423,7 +423,7 @@ extension CloudManager {
 
 				// shutdown
 				if let e = error {
-					genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.localizedDescription)\"", on: ViewController.shared)
+					genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.finalDescription)\"", on: ViewController.shared)
 				}
 				deactivate(force: true) { _ in
 					completion(nil)
@@ -497,7 +497,7 @@ extension CloudManager {
 		func done(_ error: Error?) {
 			syncing = false
 			if let e = error {
-				log("Sync failure: \(e.localizedDescription)")
+				log("Sync failure: \(e.finalDescription)")
 			}
 			completion(error)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {

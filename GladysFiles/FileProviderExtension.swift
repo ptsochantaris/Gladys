@@ -52,7 +52,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				return fpi.fileSystemURL
 			}
 		} catch {
-			log("Error getting URL for item with ID \(identifier): \(error.localizedDescription)")
+			log("Error getting URL for item with ID \(identifier): \(error.finalDescription)")
 		}
 		return nil
     }
@@ -68,7 +68,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			do {
 				return try item(for: identifier) as? FileProviderItem
 			} catch {
-				log("Error locating file item at \(url): \(error.localizedDescription)")
+				log("Error locating file item at \(url): \(error.finalDescription)")
 			}
 		}
 		return nil

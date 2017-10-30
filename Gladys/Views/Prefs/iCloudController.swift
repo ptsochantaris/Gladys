@@ -111,7 +111,7 @@ final class iCloudController: GladysViewController {
 			self.icloudSwitch.isEnabled = true
 			UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			if let error = error {
-				genericAlert(title: "Error", message: error.localizedDescription, on: self)
+				genericAlert(title: "Error", message: error.finalDescription, on: self)
 			} else {
 				genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud", on: self)
 			}
@@ -160,7 +160,7 @@ final class iCloudController: GladysViewController {
 			CloudManager.deactivate(force: false) { error in
 				DispatchQueue.main.async {
 					if let error = error {
-						genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
+						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
 					}
 				}
 			}
@@ -171,7 +171,7 @@ final class iCloudController: GladysViewController {
 		CloudManager.activate { error in
 			DispatchQueue.main.async {
 				if let error = error {
-					genericAlert(title: "Could not change state", message: error.localizedDescription, on: self)
+					genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
 				}
 			}
 		}
