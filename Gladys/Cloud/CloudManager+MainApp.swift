@@ -354,7 +354,7 @@ extension CloudManager {
 
 			holdOffOnSyncWhileWeInvestigateICloudStatus = true
 			container.accountStatus { status, error in
-				if status == .available {
+				if status == .available || status == .couldNotDetermine {
 					DispatchQueue.main.async {
 						holdOffOnSyncWhileWeInvestigateICloudStatus = false
 						proceedWithForegroundingSync()
