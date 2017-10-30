@@ -126,17 +126,9 @@ final class iCloudController: GladysViewController {
 	}
 
 	private func updateiCloudControls() {
-		if CloudManager.syncTransitioning {
+		if CloudManager.syncTransitioning || CloudManager.syncing {
 			icloudSwitch.isEnabled = false
-			if CloudManager.syncing {
-				icloudLabel.text = "Syncing"
-			} else {
-				icloudLabel.text = CloudManager.syncSwitchedOn ? "Deactinvating" : "Activating"
-			}
-			icloudSpinner.startAnimating()
-		} else if CloudManager.syncing {
-			icloudSwitch.isEnabled = false
-			icloudLabel.text = "Syncing"
+			icloudLabel.text = CloudManager.syncString
 			icloudSpinner.startAnimating()
 		} else {
 			icloudSwitch.isEnabled = true

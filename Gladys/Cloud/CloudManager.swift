@@ -24,9 +24,9 @@ final class CloudManager {
 		didSet {
 			#if DEBUG
 			if let s = syncProgressString {
-				log("Sync update: \(s)")
+				log(">>> Sync update: \(s)")
 			} else {
-				log("Sync updates done")
+				log(">>> Sync updates done")
 			}
 			#endif
 			NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
@@ -37,8 +37,6 @@ final class CloudManager {
 
 	static func sendUpdatesUp(completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { completion(nil); return }
-
-		syncProgressString = "Sending changes"
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
@@ -91,6 +89,8 @@ final class CloudManager {
 			return
 		}
 
+		syncProgressString = "Sending changes"
+
 		var latestError: Error?
 		var operations = [CKDatabaseOperation]()
 		var deletionCount = 0
@@ -141,6 +141,7 @@ final class CloudManager {
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
 							uuidSequenceRecord = record
+							syncProgressString = "Uploaded positions"
 							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record

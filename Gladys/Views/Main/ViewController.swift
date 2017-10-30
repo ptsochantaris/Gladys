@@ -409,8 +409,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		guard let r = archivedItemCollectionView.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
 			CloudManager.tryManualSync(from: self)
-		} else {
-			r.beginRefreshing()
 		}
 		lastSyncUpdate()
 	}

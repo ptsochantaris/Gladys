@@ -26,6 +26,8 @@ extension CloudManager {
 			return s
 		}
 
+		if syncTransitioning { return syncSwitchedOn ? "Deactivating" : "Activating" }
+
 		let i = -lastSyncCompletion.timeIntervalSinceNow
 		if i < 1.0 {
 			return "Synced"
@@ -206,7 +208,7 @@ extension CloudManager {
 		var updateCount = 0
 		var newCount = 0
 		var typesModified = false
-		syncProgressString = "Checking for changes"
+		syncProgressString = "Fetching changes"
 
 		let o = CKFetchRecordZoneChangesOptions()
 		if zoneChangeMayNotReflectSavedChanges {
@@ -289,7 +291,7 @@ extension CloudManager {
 						updatedSequence = true
 						zoneChangeMayNotReflectSavedChanges = true
 						uuidSequenceRecord = record
-						syncProgressString = "Fetched position updates"
+						syncProgressString = "Fetched positions"
 					} else {
 						log("Received non-updated position list record")
 					}
@@ -297,6 +299,9 @@ extension CloudManager {
 			}
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
+			DispatchQueue.main.async {
+				syncProgressString = "Applying updates"
+			}
 			DispatchQueue.main.async {
 
 				if (error as? CKError)?.code == .changeTokenExpired {
