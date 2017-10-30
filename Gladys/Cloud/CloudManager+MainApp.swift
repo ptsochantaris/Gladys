@@ -397,7 +397,7 @@ extension CloudManager {
 					completion(nil)
 				}
 				if newToken == nil {
-					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so iCloud sync was disabled.", on: ViewController.shared)
+					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.", on: ViewController.shared)
 				} else {
 					genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.", on: ViewController.shared)
 				}

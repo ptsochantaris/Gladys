@@ -71,6 +71,14 @@ extension ArchivedDropItem {
 		return i
 	}
 
+	var addedString: String {
+		let d = DateFormatter()
+		d.doesRelativeDateFormatting = true
+		d.dateStyle = .medium
+		d.timeStyle = .medium
+		return "Added " + d.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+	}
+
 	var shareableComponents: [Any] {
 		var items = typeItems.flatMap { $0.itemForShare.0 }
 		if let a = accessoryTitle {

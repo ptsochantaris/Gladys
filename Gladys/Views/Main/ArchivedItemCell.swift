@@ -237,6 +237,36 @@ final class ArchivedItemCell: UICollectionViewCell {
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
 		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
+
+		if ViewController.shared.traitCollection.forceTouchCapability == .available {
+			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
+			contentView.addGestureRecognizer(d)
+		}
+	}
+
+	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
+		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading {
+			let title = item.addedString
+			let subtitle = item.note.isEmpty ? nil : item.note
+			let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
+			if item.canOpen {
+				a.addAction(UIAlertAction(title: "Open", style: .default, handler: { action in
+					item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
+				}))
+			}
+			a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { action in
+				item.copyToPasteboard()
+			}))
+			a.addAction(UIAlertAction(title: "Share", style: .default, handler: { action in
+				let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
+				ViewController.shared.present(a, animated: true)
+			}))
+			a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
+				ViewController.shared.deleteRequested(for: [item])
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			ViewController.shared.present(a, animated: true)
+		}
 	}
 
 	deinit {
