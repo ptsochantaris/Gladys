@@ -47,9 +47,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if CloudManager.syncSwitchedOn && !UIApplication.shared.isRegisteredForRemoteNotifications {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
-		CloudManager.listenForAccountChanges()
 		log("Initial reachability status: \(reachability.status.name)")
 		return true
+	}
+
+	func applicationWillEnterForeground(_ application: UIApplication) {
+		CloudManager.foregroundSyncIfNeeded()
 	}
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

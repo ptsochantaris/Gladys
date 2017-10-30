@@ -399,18 +399,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		cloudStatusChanged()
 	}
 
+	private func kickSync() {
+		CloudManager.sync(overridingWiFiPreference: true) { error in
+			if let error = error {
+				genericAlert(title: "Sync Error", message: error.localizedDescription, on: self)
+			}
+		}
+	}
+
 	@objc private func reachabilityChanged() {
-		if CloudManager.syncSwitchedOn && reachability.status == .ReachableViaWiFi && CloudManager.onlySyncOverWiFi {
-			CloudManager.tryManualSync(from: self)
+		if reachability.status == .ReachableViaWiFi && CloudManager.onlySyncOverWiFi {
+			kickSync()
 		}
 	}
 
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
 		guard let r = archivedItemCollectionView.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
-			CloudManager.tryManualSync(from: self)
+			kickSync()
+			lastSyncUpdate()
 		}
-		lastSyncUpdate()
 	}
 
 	@objc private func cloudStatusChanged() {
@@ -499,6 +507,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func migration(to currentBuild: String) {
+		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
+			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+		}
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
 			UserDefaults.standard.synchronize()
@@ -719,11 +730,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			firstAppearance = false
 			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
-			CloudManager.sync { error in
-				if let error = error {
-					log("Error in foregrounding sync: \(error.localizedDescription)")
-				}
-			}
+			CloudManager.foregroundSyncIfNeeded()
 		}
 	}
 

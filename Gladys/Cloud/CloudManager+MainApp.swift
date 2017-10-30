@@ -103,6 +103,7 @@ extension CloudManager {
 					zoneChangeToken = nil
 					zoneChangeMayNotReflectSavedChanges = false
 					syncSwitchedOn = false
+					lastiCloudAccount = nil
 					UIApplication.shared.unregisterForRemoteNotifications()
 					for item in Model.drops {
 						item.cloudKitRecord = nil
@@ -170,6 +171,7 @@ extension CloudManager {
 						uuidSequence = []
 					}
 					syncSwitchedOn = true
+					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
 			}
@@ -204,10 +206,9 @@ extension CloudManager {
 		var newDrops = [CKRecord]()
 		var newTypeItemsToHookOntoDrops = [CKRecord]()
 
+		var typeUpdateCount = 0
 		var deletionCount = 0
 		var updateCount = 0
-		var newCount = 0
-		var typesModified = false
 		syncProgressString = "Fetching changes"
 
 		let o = CKFetchRecordZoneChangesOptions()
@@ -252,20 +253,20 @@ extension CloudManager {
 							zoneChangeMayNotReflectSavedChanges = true
 							updateCount += 1
 							if updateCount == 1 {
-								syncProgressString = "Fetched 1 update"
+								syncProgressString = "Fetched 1 drop update"
 							} else {
-								syncProgressString = "Fetched \(updateCount) updates"
+								syncProgressString = "Fetched \(updateCount) drop updates"
 							}
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
 						zoneChangeMayNotReflectSavedChanges = true
-						newCount += 1
+						let newCount = newDrops.count
 						if newCount == 1 {
-							syncProgressString = "Fetched 1 new item"
+							syncProgressString = "Fetched 1 new drop"
 						} else {
-							syncProgressString = "Fetched \(newCount) new items"
+							syncProgressString = "Fetched \(newCount) new drops"
 						}
 					}
 
@@ -276,12 +277,23 @@ extension CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							typesModified = true
 							zoneChangeMayNotReflectSavedChanges = true
+							typeUpdateCount += 1
+							if typeUpdateCount == 1 {
+								syncProgressString = "Fetched 1 data update"
+							} else {
+								syncProgressString = "Fetched \(typeUpdateCount) data updates"
+							}
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
+						let newCount = newTypeItemsToHookOntoDrops.count
+						if newCount == 1 {
+							syncProgressString = "Fetched 1 data item"
+						} else {
+							syncProgressString = "Fetched \(newCount) data items"
+						}
 					}
 
 				} else if itemUUID == "PositionList" {
@@ -312,7 +324,7 @@ extension CloudManager {
 					return
 				}
 
-				let itemsModified = typesModified || updatedSequence || (newCount + updateCount + deletionCount > 0)
+				let itemsModified = updatedSequence || (typeUpdateCount + newDrops.count + updateCount + deletionCount > 0)
 
 				if itemsModified || zoneChangeMayNotReflectSavedChanges { // re-checking zone variable in case of older sync
 					zoneChangeMayNotReflectSavedChanges = true
@@ -334,7 +346,13 @@ extension CloudManager {
 					}
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
-
+			}
+		}
+		operation.fetchRecordZoneChangesCompletionBlock = { error in
+			DispatchQueue.main.async {
+				if error == nil {
+					zoneChangeMayNotReflectSavedChanges = false
+				}
 				finalCompletion(error)
 			}
 		}
@@ -354,60 +372,14 @@ extension CloudManager {
 		Model.drops.insert(item, at: 0)
 	}
 
-	/////////////////////////////////// Helpers
+	////////////////////////////////////////////////
 
-	static func tryManualSync(from vc: UIViewController) {
-		if reachability.status == .NotReachable {
-			genericAlert(title: "Network Not Available", message: "Please check your network connection", on: vc)
-			return
-		}
-
-		CloudManager.sync(overridingWiFiPreference: true) { error in
-			if let error = error {
-				genericAlert(title: "Sync Error", message: error.localizedDescription, on: vc)
-			}
-		}
-	}
-
-	/////////////////////////////////// Status
-
-	private static var holdOffOnSyncWhileWeInvestigateICloudStatus = false
-
-	static func listenForAccountChanges() {
-		let n = NotificationCenter.default
-
-		n.addObserver(forName: .CKAccountChanged, object: nil, queue: OperationQueue.main) { _ in
-			if !syncSwitchedOn { return }
-
-			holdOffOnSyncWhileWeInvestigateICloudStatus = true
-			container.accountStatus { status, error in
-				if status == .available || status == .couldNotDetermine {
-					DispatchQueue.main.async {
-						holdOffOnSyncWhileWeInvestigateICloudStatus = false
-						proceedWithForegroundingSync()
-					}
-				} else {
-					log("iCloud deactivated on this device, shutting down sync")
-					DispatchQueue.main.async {
-						deactivate(force: true) { _ in
-							holdOffOnSyncWhileWeInvestigateICloudStatus = false
-							genericAlert(title: "Sync Disabled", message: "Syncing has been disabled as you are no longer logged into iCloud on this device.", on: ViewController.shared)
-						}
-					}
+	static func foregroundSyncIfNeeded() {
+		if syncSwitchedOn {
+			sync { error in
+				if let error = error {
+					log("Error in foregrounding sync: \(error.localizedDescription)")
 				}
-			}
-		}
-
-		n.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { _ in
-			if !syncSwitchedOn || holdOffOnSyncWhileWeInvestigateICloudStatus { return }
-			proceedWithForegroundingSync()
-		}
-	}
-
-	private static func proceedWithForegroundingSync() {
-		CloudManager.sync { error in
-			if let error = error {
-				log("Error in foregrounding sync: \(error.localizedDescription)")
 			}
 		}
 	}
@@ -415,6 +387,23 @@ extension CloudManager {
 	/////////////////////////////////////////////// Whole sync
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
+
+		if let l = lastiCloudAccount {
+			let newToken = FileManager.default.ubiquityIdentityToken
+			if !l.isEqual(newToken) {
+				// shutdown
+				deactivate(force: true) { _ in
+					completion(nil)
+				}
+				if newToken == nil {
+					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so iCloud sync was disabled.", on: ViewController.shared)
+				} else {
+					genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.", on: ViewController.shared)
+				}
+				return
+			}
+		}
+
 		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil) { error in
 			guard let ckError = error as? CKError else {
 				completion(error)
@@ -433,11 +422,11 @@ extension CloudManager {
 			     .badContainer:
 
 				// shutdown
+				if let e = error {
+					genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.localizedDescription)\"", on: ViewController.shared)
+				}
 				deactivate(force: true) { _ in
-					completion(error)
-					if let e = error {
-						genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.localizedDescription)\"", on: ViewController.shared)
-					}
+					completion(nil)
 				}
 
 			case .assetFileModified,

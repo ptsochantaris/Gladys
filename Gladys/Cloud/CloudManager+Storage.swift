@@ -38,6 +38,22 @@ extension CloudManager {
 		}
 	}
 
+	typealias iCloudToken = (NSCoding & NSCopying & NSObjectProtocol)
+	static var lastiCloudAccount: iCloudToken? {
+		get {
+			let o = d.object(forKey: "lastiCloudAccount") as? iCloudToken
+			return (o?.isEqual("") ?? false) ? nil : o
+ 		}
+		set {
+			if let n = newValue {
+				d.set(n, forKey: "lastiCloudAccount")
+			} else {
+				d.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
+			}
+			d.synchronize()
+		}
+	}
+
 	static var lastSyncCompletion: Date {
 		get {
 			return d.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
