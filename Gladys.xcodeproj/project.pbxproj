@@ -1456,10 +1456,12 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "1deb331c-9daf-4269-b3a4-33fd9fbfd600";
 				PROVISIONING_PROFILE_SPECIFIER = "GladysIndex App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = INDEXER;
@@ -1473,10 +1475,12 @@
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "06e86873-abd0-4df8-a614-23c6db476bf7";
 				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = FILEPROVIDER;

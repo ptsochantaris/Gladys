@@ -7,6 +7,8 @@ import MobileCoreServices
 
 extension ArchivedDropItemType {
 
+	private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+
 	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
@@ -34,7 +36,7 @@ extension ArchivedDropItemType {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
-			DispatchQueue.global(qos: .background).async {
+			ArchivedDropItemType.ingestQueue.async {
 				self.ingest(data: bytesCopy) {
 					overallProgress.completedUnitCount += 1
 				}
