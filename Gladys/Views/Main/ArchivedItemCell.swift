@@ -254,6 +254,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 					item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
 				}))
 			}
+			a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { action in
+				ViewController.shared.sendToTop(item: item)
+			}))
 			a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { action in
 				item.copyToPasteboard()
 			}))

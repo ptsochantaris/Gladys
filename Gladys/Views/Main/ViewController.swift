@@ -494,6 +494,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		ensureNoEmptySearchResult()
 	}
 
+	func sendToTop(item: ArchivedDropItem) {
+		if let i = Model.drops.index(of: item) {
+			Model.drops.remove(at: i)
+			Model.drops.insert(item, at: 0)
+			Model.save()
+			reloadData()
+		}
+	}
+
 	private func checkForUpgrade() {
 		let previousBuild = UserDefaults.standard.string(forKey: "LastRanVersion")
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
