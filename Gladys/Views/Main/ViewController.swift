@@ -499,7 +499,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			Model.drops.remove(at: i)
 			Model.drops.insert(item, at: 0)
 			Model.save()
-			reloadData()
+			Model.forceUpdateFilter(signalUpdate: true)
 		}
 	}
 

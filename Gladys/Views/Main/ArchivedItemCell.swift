@@ -268,7 +268,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				ViewController.shared.deleteRequested(for: [item])
 			}))
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-			ViewController.shared.present(a, animated: true)
+
+			(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
 		}
 	}
 
