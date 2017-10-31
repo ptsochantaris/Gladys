@@ -265,12 +265,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 				ViewController.shared.present(a, animated: true)
 			}))
 			a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
-				ViewController.shared.deleteRequested(for: [item])
+				self.confirmDelete(for: item)
 			}))
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
 			(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
 		}
+	}
+
+	private func confirmDelete(for item: ArchivedDropItem) {
+		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
+			ViewController.shared.deleteRequested(for: [item])
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
 	}
 
 	deinit {
