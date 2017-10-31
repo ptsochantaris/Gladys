@@ -231,9 +231,9 @@ extension CloudManager {
 					zoneChangeMayNotReflectSavedChanges = true
 					deletionCount += 1
 					if deletionCount == 1 {
-						syncProgressString = "Fetched 1 deletion"
+						syncProgressString = "Got 1 deletion"
 					} else {
-						syncProgressString = "Fetched \(deletionCount) deletions"
+						syncProgressString = "Got \(deletionCount) deletions"
 					}
 				}
 			}
@@ -253,9 +253,9 @@ extension CloudManager {
 							zoneChangeMayNotReflectSavedChanges = true
 							updateCount += 1
 							if updateCount == 1 {
-								syncProgressString = "Fetched 1 drop update"
+								syncProgressString = "Got 1 drop update"
 							} else {
-								syncProgressString = "Fetched \(updateCount) drop updates"
+								syncProgressString = "Got \(updateCount) drop updates"
 							}
 						}
 					} else {
@@ -264,9 +264,9 @@ extension CloudManager {
 						zoneChangeMayNotReflectSavedChanges = true
 						let newCount = newDrops.count
 						if newCount == 1 {
-							syncProgressString = "Fetched 1 new drop"
+							syncProgressString = "Got 1 new drop"
 						} else {
-							syncProgressString = "Fetched \(newCount) new drops"
+							syncProgressString = "Got \(newCount) new drops"
 						}
 					}
 
@@ -280,9 +280,9 @@ extension CloudManager {
 							zoneChangeMayNotReflectSavedChanges = true
 							typeUpdateCount += 1
 							if typeUpdateCount == 1 {
-								syncProgressString = "Fetched 1 data update"
+								syncProgressString = "Got 1 data update"
 							} else {
-								syncProgressString = "Fetched \(typeUpdateCount) data updates"
+								syncProgressString = "Got \(typeUpdateCount) data updates"
 							}
 						}
 					} else {
@@ -290,9 +290,9 @@ extension CloudManager {
 						newTypeItemsToHookOntoDrops.append(record)
 						let newCount = newTypeItemsToHookOntoDrops.count
 						if newCount == 1 {
-							syncProgressString = "Fetched 1 data item"
+							syncProgressString = "Got 1 item"
 						} else {
-							syncProgressString = "Fetched \(newCount) data items"
+							syncProgressString = "Got \(newCount) data items"
 						}
 					}
 
@@ -303,7 +303,6 @@ extension CloudManager {
 						updatedSequence = true
 						zoneChangeMayNotReflectSavedChanges = true
 						uuidSequenceRecord = record
-						syncProgressString = "Fetched positions"
 					} else {
 						log("Received non-updated position list record")
 					}

@@ -14,17 +14,20 @@ extension ArchivedDropItemType {
 		let overallProgress = Progress(totalUnitCount: 3)
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
-			if let error = error {
+			if let data = data {
+				ArchivedDropItemType.ingestQueue.async {
+					log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
+					s.ingest(data: data) {
+						overallProgress.completedUnitCount += 1
+					}
+				}
+			} else {
+				let error = error ?? NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
 				log(">> Error receiving item: \(error.finalDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
 				s.completeIngest()
 				overallProgress.completedUnitCount += 1
-			} else if let data = data {
-				log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
-				s.ingest(data: data) {
-					overallProgress.completedUnitCount += 1
-				}
 			}
 		}
 		overallProgress.addChild(p, withPendingUnitCount: 2)
@@ -36,8 +39,8 @@ extension ArchivedDropItemType {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
-			ArchivedDropItemType.ingestQueue.async {
-				self.ingest(data: bytesCopy) {
+			ArchivedDropItemType.ingestQueue.async { [weak self] in
+				self?.ingest(data: bytesCopy) {
 					overallProgress.completedUnitCount += 1
 				}
 			}

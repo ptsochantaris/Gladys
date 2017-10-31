@@ -126,6 +126,20 @@ final class CloudManager {
 
 		log("Pushing up \(payloadsToPush.count) item blocks")
 
+		func incrementUploadSync() {
+			uploadCount += 1
+			let count = (idsToPush.count - uploadCount) + 1
+			if count <= 0 {
+				syncProgressString = "Completing upload"
+			} else if count == 1 {
+				syncProgressString = "Uploading 1 item"
+			} else {
+				syncProgressString = "Uploading \(count) items"
+			}
+		}
+
+		incrementUploadSync()
+
 		for recordList in payloadsToPush {
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
 			operation.savePolicy = .allKeys
@@ -141,17 +155,11 @@ final class CloudManager {
 						if itemUUID == "PositionList" {
 							uuidSequence = currentUUIDSequence
 							uuidSequenceRecord = record
-							syncProgressString = "Uploaded positions"
 							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
-							uploadCount += 1
-							if uploadCount == 1 {
-								syncProgressString = "Uploaded 1 item"
-							} else {
-								syncProgressString = "Uploaded \(uploadCount) items"
-							}
+							incrementUploadSync()
 						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
