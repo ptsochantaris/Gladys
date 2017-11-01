@@ -374,8 +374,9 @@ extension CloudManager {
 
 	////////////////////////////////////////////////
 
-	static func foregroundSyncIfNeeded() {
-		if syncSwitchedOn {
+	static func opportunisticSyncIfNeeded(isStartup: Bool) {
+		if syncSwitchedOn && !syncing && (isStartup || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -3600) {
+			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
 			sync { error in
 				if let error = error {
 					log("Error in foregrounding sync: \(error.finalDescription)")

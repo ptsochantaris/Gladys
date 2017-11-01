@@ -739,7 +739,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			firstAppearance = false
 			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
-			CloudManager.foregroundSyncIfNeeded()
+			CloudManager.opportunisticSyncIfNeeded(isStartup:: true)
 		}
 	}
 

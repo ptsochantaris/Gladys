@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.foregroundSyncIfNeeded()
+		CloudManager.opportunisticSyncIfNeeded(isStartup: false)
 	}
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
