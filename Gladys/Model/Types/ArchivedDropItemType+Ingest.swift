@@ -9,7 +9,7 @@ extension ArchivedDropItemType {
 
 	private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate) -> Progress {
+	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate, encodeAnyUIImage: Bool = false) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
@@ -17,7 +17,7 @@ extension ArchivedDropItemType {
 			if let data = data {
 				ArchivedDropItemType.ingestQueue.async {
 					log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
-					s.ingest(data: data) {
+					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage) {
 						overallProgress.completedUnitCount += 1
 					}
 				}
@@ -51,7 +51,7 @@ extension ArchivedDropItemType {
 		return overallProgress
 	}
 
-	private func ingest(data: Data, completion: @escaping ()->Void) { // in thread!
+	private func ingest(data: Data, encodeAnyUIImage: Bool = false, completion: @escaping ()->Void) { // in thread!
 
 		ingestCompletion = completion
 
@@ -91,8 +91,18 @@ extension ArchivedDropItemType {
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
-			representedClass = "UIImage"
-			bytes = data
+			if encodeAnyUIImage {
+				log("      will encode it to JPEG, as it's the only image in this parent item")
+				representedClass = "NSData"
+				typeIdentifier = kUTTypeJPEG as String
+				classWasWrapped = false
+				DispatchQueue.main.sync {
+					bytes = UIImageJPEGRepresentation(item, 1)
+				}
+			} else {
+				representedClass = "UIImage"
+				bytes = data
+			}
 			completeIngest()
 
 		} else if let item = item as? MKMapItem {
