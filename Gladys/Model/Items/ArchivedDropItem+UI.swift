@@ -115,8 +115,7 @@ extension ArchivedDropItem {
 	}
 
 	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
-		if let t = typeItems.first(where:{ $0.canPreview }) {
-			let q = t.quickLook(extraRightButton: nil)
+		if let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) {
 			let n = UINavigationController(rootViewController: q)
 			if let s = UIApplication.shared.windows.first?.bounds.size {
 				n.preferredContentSize = s

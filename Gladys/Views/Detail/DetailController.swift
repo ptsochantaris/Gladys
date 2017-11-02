@@ -249,13 +249,8 @@ final class DetailController: GladysViewController,
 		}
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
-				guard let s = self else { return }
-				let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem)
+				guard let s = self, let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem) else { return }
 				s.navigationController?.pushViewController(q, animated: true)
-			}
-		} else if let url = typeEntry.encodedUrl, url.scheme?.hasPrefix("http") ?? false {
-			cell.viewCallback = { [weak self] in
-				self?.performSegue(withIdentifier: "webPreview", sender: url)
 			}
 		} else {
 			cell.viewCallback = nil
@@ -288,12 +283,6 @@ final class DetailController: GladysViewController,
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.contentDescription + " (\(size))"
 			e.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
-
-		} else if segue.identifier == "webPreview" {
-			let d = segue.destination as! WebPreviewController
-			d.title = "Loading..."
-			d.address = sender as! URL
-			d.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,

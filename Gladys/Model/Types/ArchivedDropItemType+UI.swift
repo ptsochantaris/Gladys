@@ -74,16 +74,27 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	//////////////////////////////////////////////////////// quicklook
 
-	func quickLook(extraRightButton: UIBarButtonItem?) -> QLPreviewController {
-		let q = QLPreviewController()
-		q.title = oneTitle
-		q.dataSource = self
-		q.modalPresentationStyle = .popover
-		q.navigationItem.rightBarButtonItem = extraRightButton
-		if let s = UIApplication.shared.windows.first?.bounds.size {
-			q.preferredContentSize = s
+	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
+
+		if QLPreviewController.canPreview(previewTempPath as NSURL) {
+			let q = QLPreviewController()
+			q.title = oneTitle
+			q.dataSource = self
+			q.modalPresentationStyle = .popover
+			q.navigationItem.rightBarButtonItem = extraRightButton
+			if let s = UIApplication.shared.windows.first?.bounds.size {
+				q.preferredContentSize = s
+			}
+			return q
+
+		} else if let url = encodedUrl {
+			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			d.title = "Loading..."
+			d.address = url as URL
+			d.navigationItem.rightBarButtonItem = extraRightButton
+			return d
 		}
-		return q
+		return nil
 	}
 
 	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
@@ -151,7 +162,13 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canPreview: Bool {
-		return QLPreviewController.canPreview(previewTempPath as NSURL)
+		if QLPreviewController.canPreview(previewTempPath as NSURL) {
+			return true
+		} else if let url = encodedUrl, url.scheme?.hasPrefix("http") ?? false {
+			return true
+		} else {
+			return false
+		}
 	}
 
 	var previewTempPath: URL {
