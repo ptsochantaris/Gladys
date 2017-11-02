@@ -123,10 +123,10 @@ final class MiniMapView: UIImageView {
 
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
+				let img = snapshot.image
+				MiniMapView.cache.setObject(img, forKey: cacheKey)
 				DispatchQueue.main.async { [weak self] in
-					let img = snapshot.image
 					self?.image = img
-					MiniMapView.cache.setObject(img, forKey: cacheKey)
 					UIView.animate(withDuration: 0.2) {
 						self?.alpha = 1
 					}
@@ -140,6 +140,10 @@ final class MiniMapView: UIImageView {
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	static func clearCaches() {
+		cache.removeAllObjects()
 	}
 }
 
@@ -325,6 +329,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	static func clearCaches() {
 		displayIconCache.removeAllObjects()
+		MiniMapView.clearCaches()
 	}
 
 	private func decorate(with item: ArchivedDropItem?) {

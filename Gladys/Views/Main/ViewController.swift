@@ -529,9 +529,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	override func didReceiveMemoryWarning() {
 		if UIApplication.shared.applicationState == .background {
 			lowMemoryMode = true
-			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
 			ArchivedItemCell.clearCaches()
+			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
+			log("Placed UI in low-memory mode")
 		}
+		super.didReceiveMemoryWarning()
 	}
 
 	@objc private func foregrounded() {
@@ -542,7 +544,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				cell.reDecorate()
 			}
 		}
-
 		if emptyView != nil {
 			blurb(randomGreetLine)
 		}
@@ -739,7 +740,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			firstAppearance = false
 			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
-			CloudManager.opportunisticSyncIfNeeded(isStartup:: true)
+			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 		}
 	}
 

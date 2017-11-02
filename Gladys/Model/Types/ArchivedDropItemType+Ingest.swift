@@ -232,7 +232,7 @@ extension ArchivedDropItemType {
 		} else if displayIconPriority == 0 && typeConforms(to: kUTTypeImage as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
-		} else if typeConforms(to: kUTTypeVideo as CFString) {
+		} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
 
 		} else if typeConforms(to: kUTTypeArchive as CFString) {
