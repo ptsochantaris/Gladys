@@ -118,6 +118,9 @@ extension ArchivedDropItem {
 		if let t = typeItems.first(where:{ $0.canPreview }) {
 			let q = t.quickLook(extraRightButton: nil)
 			let n = UINavigationController(rootViewController: q)
+			if let s = UIApplication.shared.windows.first?.bounds.size {
+				n.preferredContentSize = s
+			}
 			n.view.tintColor = ViewController.shared.view.tintColor
 			n.modalPresentationStyle = .popover
 			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
