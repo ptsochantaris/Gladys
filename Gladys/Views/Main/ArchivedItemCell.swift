@@ -244,45 +244,52 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		if ViewController.shared.traitCollection.forceTouchCapability == .available {
 			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
+			for g in ViewController.shared.archivedItemCollectionView.gestureRecognizers ?? [] {
+				g.require(toFail: d)
+			}
 			contentView.addGestureRecognizer(d)
 		} else {
 			let d = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
 			d.numberOfTouchesRequired = 2
+			for g in ViewController.shared.archivedItemCollectionView.gestureRecognizers ?? [] {
+				g.require(toFail: d)
+			}
 			contentView.addGestureRecognizer(d)
 		}
 	}
 
 	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
 		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading {
-			showShortcutMenu(item: item, iPad: false)
+			showShortcutMenu(item: item, push: true)
 		}
 	}
 
 	@objc private func doubleTapped(_ tapRecognizer: UITapGestureRecognizer) {
 		if let item = archivedDropItem, tapRecognizer.state == .recognized, !item.shouldDisplayLoading {
-			showShortcutMenu(item: item, iPad: true)
+			showShortcutMenu(item: item, push: false)
 		}
 	}
 
-	private func showShortcutMenu(item: ArchivedDropItem, iPad: Bool) {
-
-		flash()
-
+	private func showShortcutMenu(item: ArchivedDropItem, push: Bool) {
 		let title = item.addedString
 		let subtitle = item.note.isEmpty ? nil : item.note
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
 		if item.canOpen {
-			a.addAction(UIAlertAction(title: "Open", style: .default, handler: { action in
+			a.addAction(UIAlertAction(title: "Open", style: .default, handler: { _ in
+				self.egress()
 				item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
 			}))
 		}
-		a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { action in
+		a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { _ in
+			self.egress()
 			ViewController.shared.sendToTop(item: item)
 		}))
-		a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { action in
+		a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { _ in
+			self.egress()
 			item.copyToPasteboard()
 		}))
-		a.addAction(UIAlertAction(title: "Share", style: .default, handler: { action in
+		a.addAction(UIAlertAction(title: "Share", style: .default, handler: { _ in
+			self.egress()
 			let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
 			ViewController.shared.present(a, animated: true)
 			if let p = a.popoverPresentationController {
@@ -290,27 +297,35 @@ final class ArchivedItemCell: UICollectionViewCell {
 				p.sourceRect = self.contentView.bounds
 			}
 		}))
-		a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
-			self.confirmDelete(for: item)
+		a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+			self.egress()
+			self.confirmDelete(for: item, push: push)
 		}))
-		presentAlert(a)
+		presentAlert(a, push: push)
 	}
 
-	private func confirmDelete(for item: ArchivedDropItem) {
+	private func confirmDelete(for item: ArchivedDropItem, push: Bool) {
 		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
+		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { _ in
 			ViewController.shared.deleteRequested(for: [item])
 		}))
-		presentAlert(a)
+		presentAlert(a, push: push)
 	}
 
-	private func presentAlert(_ a: UIAlertController) {
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+	private func presentAlert(_ a: UIAlertController, push: Bool) {
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+			self.egress()
+		}))
 		a.modalPresentationStyle = .popover
 		(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
 		if let p = a.popoverPresentationController {
 			p.sourceView = self
 			p.sourceRect = self.contentView.bounds
+		}
+		if push {
+			a.transitionCoordinator?.animate(alongsideTransition: { context in
+				self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+			}, completion: nil)
 		}
 	}
 
@@ -478,6 +493,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 			}) { finished in
 			}
 		}
+	}
+
+	private func egress() {
+		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
+			self.transform = .identity
+		})
 	}
 
 	/////////////////////////////////////////
