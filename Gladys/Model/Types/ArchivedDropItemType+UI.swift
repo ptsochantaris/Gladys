@@ -3,8 +3,9 @@ import UIKit
 import MapKit
 import Contacts
 import CloudKit
+import QuickLook
 
-extension ArchivedDropItemType {
+extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	var dragItem: UIDragItem {
 
@@ -71,6 +72,69 @@ extension ArchivedDropItemType {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
+	//////////////////////////////////////////////////////// quicklook
+
+	func quickLook(extraRightButton: UIBarButtonItem?) -> QLPreviewController {
+		let q = QLPreviewController()
+		q.title = oneTitle
+		q.dataSource = self
+		q.modalPresentationStyle = .popover
+		q.navigationItem.rightBarButtonItem = extraRightButton
+		if let s = UIApplication.shared.windows.first?.bounds.size {
+			q.preferredContentSize = s
+		}
+		return q
+	}
+
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+		return 1
+	}
+
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+		return PreviewItem(typeItem: self)
+	}
+
+	private class PreviewItem: NSObject, QLPreviewItem {
+		let previewItemURL: URL?
+		let previewItemTitle: String?
+
+		private let item: ArchivedDropItemType
+
+		init(typeItem: ArchivedDropItemType) {
+
+			item = typeItem
+			let blobPath = typeItem.bytesPath
+			let tempPath = typeItem.previewTempPath
+
+			if blobPath == tempPath {
+				previewItemURL = blobPath
+			} else {
+				let fm = FileManager.default
+				if fm.fileExists(atPath: tempPath.path) {
+					try? fm.removeItem(at: tempPath)
+				}
+				try? fm.copyItem(at: blobPath, to: tempPath)
+				log("Created temporary file for preview")
+				previewItemURL = tempPath
+			}
+
+			previewItemTitle = typeItem.oneTitle
+		}
+
+		deinit {
+			let tempPath = item.previewTempPath
+			let fm = FileManager.default
+			if fm.fileExists(atPath: tempPath.path) {
+				try? fm.removeItem(at: tempPath)
+				log("Removed temporary file for preview")
+			}
+		}
+	}
+
+	var canPreview: Bool {
+		return QLPreviewController.canPreview(previewTempPath as NSURL)
+	}
+
 	var previewTempPath: URL {
 		if let f = fileExtension {
 			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
@@ -79,4 +143,3 @@ extension ArchivedDropItemType {
 		}
 	}
 }
-

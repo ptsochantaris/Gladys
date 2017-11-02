@@ -242,20 +242,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
 		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
 
+		let d: UIGestureRecognizer
 		if ViewController.shared.traitCollection.forceTouchCapability == .available {
-			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
-			for g in ViewController.shared.archivedItemCollectionView.gestureRecognizers ?? [] {
-				g.require(toFail: d)
-			}
-			contentView.addGestureRecognizer(d)
+			d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
 		} else {
-			let d = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
-			d.numberOfTouchesRequired = 2
-			for g in ViewController.shared.archivedItemCollectionView.gestureRecognizers ?? [] {
+			let D = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
+			D.numberOfTouchesRequired = 2
+			d = D
+		}
+		let A = ViewController.shared.archivedItemCollectionView!
+		for g in A.gestureRecognizers ?? [] {
+			if g != A.panGestureRecognizer && g != A.pinchGestureRecognizer && g != A.directionalPressGestureRecognizer {
 				g.require(toFail: d)
 			}
-			contentView.addGestureRecognizer(d)
 		}
+		contentView.addGestureRecognizer(d)
 	}
 
 	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
@@ -280,11 +281,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 				item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
 			}))
 		}
-		a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { _ in
+		if item.canPreview {
+			a.addAction(UIAlertAction(title: "Quick Look", style: .default, handler: { _ in
+				self.egress()
+				item.tryPreview(in: ViewController.shared.navigationController!, from: self)
+			}))
+		}
+		a.addAction(UIAlertAction(title: "Move to Top", style: .default, handler: { _ in
 			self.egress()
 			ViewController.shared.sendToTop(item: item)
 		}))
-		a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { _ in
+		a.addAction(UIAlertAction(title: "Copy to Clipboard", style: .default, handler: { _ in
 			self.egress()
 			item.copyToPasteboard()
 		}))
@@ -294,7 +301,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			ViewController.shared.present(a, animated: true)
 			if let p = a.popoverPresentationController {
 				p.sourceView = self
-				p.sourceRect = self.contentView.bounds
+				p.sourceRect = self.contentView.bounds.insetBy(dx: 6, dy: 6)
 			}
 		}))
 		a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
@@ -320,7 +327,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
 		if let p = a.popoverPresentationController {
 			p.sourceView = self
-			p.sourceRect = self.contentView.bounds
+			p.sourceRect = self.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}
 		if push {
 			a.transitionCoordinator?.animate(alongsideTransition: { context in

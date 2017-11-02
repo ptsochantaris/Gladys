@@ -1,10 +1,9 @@
 
 import UIKit
-import QuickLook
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -248,9 +247,11 @@ final class DetailController: GladysViewController,
 		cell.inspectionCallback = { [weak self] in
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
-		if QLPreviewController.canPreview(typeEntry.previewTempPath as NSURL) {
+		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
-				self?.quickLook(typeEntry)
+				guard let s = self else { return }
+				let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem)
+				s.navigationController?.pushViewController(q, animated: true)
 			}
 		} else if let url = typeEntry.encodedUrl, url.scheme?.hasPrefix("http") ?? false {
 			cell.viewCallback = { [weak self] in
@@ -480,70 +481,5 @@ final class DetailController: GladysViewController,
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
 		return .none
-	}
-
-	//////////////////////////////////////////////////////// quicklook
-
-	private var entryForPreview: ArchivedDropItemType?
-
-	private func quickLook(_ typeEntry: ArchivedDropItemType) {
-		entryForPreview = typeEntry
-
-		let q = QLPreviewController()
-		q.title = typeEntry.oneTitle
-		q.dataSource = self
-		q.delegate = self
-		q.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
-		if typeEntry.typeIdentifier.contains(".iwork."), let s = UIApplication.shared.windows.first?.bounds.size {
-			q.preferredContentSize = s
-		}
-		navigationController?.pushViewController(q, animated: true)
-	}
-
-	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return 1
-	}
-
-	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		let i = PreviewItem(typeItem: entryForPreview!)
-		entryForPreview = nil
-		return i
-	}
-
-	private class PreviewItem: NSObject, QLPreviewItem {
-		let previewItemURL: URL?
-		let previewItemTitle: String?
-
-		private let item: ArchivedDropItemType
-
-		init(typeItem: ArchivedDropItemType) {
-
-			item = typeItem
-			let blobPath = typeItem.bytesPath
-			let tempPath = typeItem.previewTempPath
-
-			if blobPath == tempPath {
-				previewItemURL = blobPath
-			} else {
-				let fm = FileManager.default
-				if fm.fileExists(atPath: tempPath.path) {
-					try? fm.removeItem(at: tempPath)
-				}
-				try? fm.copyItem(at: blobPath, to: tempPath)
-				log("Created temporary file for preview")
-				previewItemURL = tempPath
-			}
-
-			previewItemTitle = typeItem.oneTitle
-		}
-
-		deinit {
-			let tempPath = item.previewTempPath
-			let fm = FileManager.default
-			if fm.fileExists(atPath: tempPath.path) {
-				try? fm.removeItem(at: tempPath)
-				log("Removed temporary file for preview")
-			}
-		}
 	}
 }

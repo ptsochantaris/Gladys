@@ -110,6 +110,32 @@ extension ArchivedDropItem {
 		return false
 	}
 
+	var canPreview: Bool {
+		return typeItems.contains { $0.canPreview }
+	}
+
+	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
+		if let t = typeItems.first(where:{ $0.canPreview }) {
+			let q = t.quickLook(extraRightButton: nil)
+			let n = UINavigationController(rootViewController: q)
+			n.view.tintColor = ViewController.shared.view.tintColor
+			n.modalPresentationStyle = .popover
+			if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
+				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
+				q.navigationItem.rightBarButtonItem = r
+			}
+			ViewController.shared.present(n, animated: true)
+			if let p = q.popoverPresentationController {
+				p.sourceView = from
+				p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
+			}
+		}
+	}
+
+	@objc private func previewDone() {
+		ViewController.shared.dismissAnyPopOver()
+	}
+
 	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
 		var priority = -1
 		var item: Any?
