@@ -24,7 +24,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			p.completedUnitCount = 1
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block")
-				completion(self.bytes, nil)
+				completion(self.dataForWrappedItem ?? self.bytes, nil)
 			}
 			return p
 		}
@@ -94,6 +94,20 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return PreviewItem(typeItem: self)
 	}
 
+	var dataForWrappedItem: Data? {
+		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
+			let decoded = decode()
+			if let s = decoded as? String {
+				return s.data(using: .utf8)
+			} else if let s = decoded as? NSAttributedString {
+				return try? s.data(from: NSMakeRange(0, s.string.count), documentAttributes: [:])
+			} else if let s = decoded as? NSURL {
+				return s.absoluteString?.data(using: .utf8)
+			}
+		}
+		return nil
+	}
+
 	private class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?
 		let previewItemTitle: String?
@@ -113,7 +127,12 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 				if fm.fileExists(atPath: tempPath.path) {
 					try? fm.removeItem(at: tempPath)
 				}
-				try? fm.copyItem(at: blobPath, to: tempPath)
+
+				if let data = typeItem.dataForWrappedItem {
+					try? data.write(to: tempPath)
+				} else {
+					try? fm.copyItem(at: blobPath, to: tempPath)
+				}
 				log("Created temporary file for preview")
 				previewItemURL = tempPath
 			}
