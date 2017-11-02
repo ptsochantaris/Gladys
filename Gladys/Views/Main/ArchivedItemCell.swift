@@ -245,36 +245,55 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if ViewController.shared.traitCollection.forceTouchCapability == .available {
 			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
 			contentView.addGestureRecognizer(d)
+		} else {
+			let d = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
+			d.numberOfTouchesRequired = 2
+			contentView.addGestureRecognizer(d)
 		}
 	}
 
 	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
 		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading {
-			let title = item.addedString
-			let subtitle = item.note.isEmpty ? nil : item.note
-			let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
-			if item.canOpen {
-				a.addAction(UIAlertAction(title: "Open", style: .default, handler: { action in
-					item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
-				}))
-			}
-			a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { action in
-				ViewController.shared.sendToTop(item: item)
-			}))
-			a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { action in
-				item.copyToPasteboard()
-			}))
-			a.addAction(UIAlertAction(title: "Share", style: .default, handler: { action in
-				let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
-				ViewController.shared.present(a, animated: true)
-			}))
-			a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
-				self.confirmDelete(for: item)
-			}))
-			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-
-			(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
+			showShortcutMenu(item: item, iPad: false)
 		}
+	}
+
+	@objc private func doubleTapped(_ tapRecognizer: UITapGestureRecognizer) {
+		if let item = archivedDropItem, tapRecognizer.state == .recognized, !item.shouldDisplayLoading {
+			showShortcutMenu(item: item, iPad: true)
+		}
+	}
+
+	private func showShortcutMenu(item: ArchivedDropItem, iPad: Bool) {
+
+		flash()
+
+		let title = item.addedString
+		let subtitle = item.note.isEmpty ? nil : item.note
+		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
+		if item.canOpen {
+			a.addAction(UIAlertAction(title: "Open", style: .default, handler: { action in
+				item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
+			}))
+		}
+		a.addAction(UIAlertAction(title: "Move To Top", style: .default, handler: { action in
+			ViewController.shared.sendToTop(item: item)
+		}))
+		a.addAction(UIAlertAction(title: "Copy To Clipboard", style: .default, handler: { action in
+			item.copyToPasteboard()
+		}))
+		a.addAction(UIAlertAction(title: "Share", style: .default, handler: { action in
+			let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
+			ViewController.shared.present(a, animated: true)
+			if let p = a.popoverPresentationController {
+				p.sourceView = self
+				p.sourceRect = self.contentView.bounds
+			}
+		}))
+		a.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
+			self.confirmDelete(for: item)
+		}))
+		presentAlert(a)
 	}
 
 	private func confirmDelete(for item: ArchivedDropItem) {
@@ -282,8 +301,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
 			ViewController.shared.deleteRequested(for: [item])
 		}))
+		presentAlert(a)
+	}
+
+	private func presentAlert(_ a: UIAlertController) {
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		a.modalPresentationStyle = .popover
 		(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
+		if let p = a.popoverPresentationController {
+			p.sourceView = self
+			p.sourceRect = self.contentView.bounds
+		}
 	}
 
 	deinit {
@@ -442,10 +470,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
 	func flash() {
-		UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
 			self.borderView.backgroundColor = .red
 		}) { finished in
-			UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
 				self.borderView.backgroundColor = .white
 			}) { finished in
 			}

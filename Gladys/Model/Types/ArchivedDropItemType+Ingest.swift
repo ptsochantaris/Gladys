@@ -140,15 +140,16 @@ extension ArchivedDropItemType {
 	private func handleUrl(_ item: URL, _ data: Data) {
 
 		bytes = data
-		setTitleInfo(item.absoluteString, 6)
 		representedClass = "URL"
 
 		if item.isFileURL {
+			setTitleInfo(item.lastPathComponent, 6)
 			log("      received local file url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			completeIngest()
 			return
 		} else {
+			setTitleInfo(item.absoluteString, 6)
 			log("      received remote url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 			if let s = item.scheme, s.hasPrefix("http") {

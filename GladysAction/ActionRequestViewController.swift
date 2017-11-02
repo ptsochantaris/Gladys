@@ -94,32 +94,28 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		loadCount -= 1
 		if loadCount == 0 {
-			statusLabel?.text = "Saving..."
 			cancelButton?.isEnabled = false
 
-			let group = DispatchGroup()
-			group.enter()
-			group.enter()
-			group.enter()
-			group.notify(queue: DispatchQueue.main) {
-				log("Action done")
-				self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-			}
-
-			CloudManager.sendUpdatesUp { error in
-				if let error = error {
-					log("Error while sending up items: \(error.finalDescription)")
-				}
-				group.leave()
-			}
-
+			statusLabel?.text = "Indexing..."
 			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
-				group.leave()
+				DispatchQueue.main.async {
+					self.statusLabel?.text = "Saving..."
+					Model.save()
+				}
 			}
 			Model.queueNextSaveCallback {
-				group.leave()
+				self.statusLabel?.text = "Uploading..."
+				CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
+					self.statusLabel?.text = "Done"
+					if let error = error {
+						log("Error while sending up items from extension: \(error.finalDescription)")
+					}
+					log("Action done")
+					DispatchQueue.main.async {
+						self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+					}
+				}
 			}
-			Model.save()
 		}
 	}
 }
