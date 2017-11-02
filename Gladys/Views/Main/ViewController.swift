@@ -228,7 +228,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
 	}
 
-	private var phoneMode: Bool {
+	var phoneMode: Bool {
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
 

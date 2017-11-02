@@ -120,7 +120,7 @@ extension ArchivedDropItem {
 			let n = UINavigationController(rootViewController: q)
 			n.view.tintColor = ViewController.shared.view.tintColor
 			n.modalPresentationStyle = .popover
-			if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
+			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
