@@ -399,24 +399,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		cloudStatusChanged()
 	}
 
-	private func kickSync() {
-		CloudManager.sync(overridingWiFiPreference: true) { error in
-			if let error = error {
-				genericAlert(title: "Sync Error", message: error.finalDescription, on: self)
-			}
-		}
-	}
-
 	@objc private func reachabilityChanged() {
 		if reachability.status == .ReachableViaWiFi && CloudManager.onlySyncOverWiFi {
-			kickSync()
+			CloudManager.opportunisticSyncIfNeeded(isStartup: false)
 		}
 	}
 
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
 		guard let r = archivedItemCollectionView.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
-			kickSync()
+			CloudManager.sync(overridingWiFiPreference: true) { error in
+				if let error = error {
+					genericAlert(title: "Sync Error", message: error.finalDescription, on: self)
+				}
+			}
 			lastSyncUpdate()
 		}
 	}
