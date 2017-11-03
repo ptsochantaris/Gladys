@@ -41,8 +41,13 @@ final class CloudManager {
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 		var idsToPush = [String]()
+		var dataItemsToPush = 0
+		var dropsToPush = 0
+
 		var payloadsToPush = Model.drops.flatMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
+				dataItemsToPush += item.typeItems.count
+				dropsToPush += 1
 				var payload = item.typeItems.flatMap { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
 				idsToPush.append(item.uuid.uuidString)
@@ -93,8 +98,6 @@ final class CloudManager {
 
 		var latestError: Error?
 		var operations = [CKDatabaseOperation]()
-		var deletionCount = 0
-		var uploadCount = 0
 
 		log("Pushing up \(recordsToDelete.count) item deletion blocks")
 
@@ -111,14 +114,9 @@ final class CloudManager {
 						if deletionIdsSnapshot.contains(uuid) {
 							deletionQueue.remove(uuid)
 							log("Deleted cloud record \(uuid)")
-							deletionCount += 1
-							if deletionCount == 1 {
-								syncProgressString = "Deleting 1 item"
-							} else {
-								syncProgressString = "Deleting \(deletionCount) items"
-							}
 						}
 					}
+					updateSyncMessage()
 				}
 			}
 			operations.append(operation)
@@ -126,19 +124,16 @@ final class CloudManager {
 
 		log("Pushing up \(payloadsToPush.count) item blocks")
 
-		func incrementUploadSync() {
-			uploadCount += 1
-			let count = (idsToPush.count - uploadCount) + 1
-			if count <= 0 {
-				syncProgressString = "Completing upload"
-			} else if count == 1 {
-				syncProgressString = "Uploading 1 item"
-			} else {
-				syncProgressString = "Uploading \(count) items"
-			}
+		func updateSyncMessage() {
+			var components = [String]()
+			if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
+			if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
+			let deletionCount = deletionQueue.count
+			if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+			syncProgressString = "Sending" + (components.count > 0 ? (" " + components.joined(separator: ", ")) : "")
 		}
 
-		incrementUploadSync()
+		updateSyncMessage()
 
 		for recordList in payloadsToPush {
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
@@ -159,12 +154,14 @@ final class CloudManager {
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
-							incrementUploadSync()
+							dropsToPush -= 1
 						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
 							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
+							dataItemsToPush -= 1
 						}
 					}
+					updateSyncMessage()
 				}
 			}
 			operations.append(operation)

@@ -219,6 +219,21 @@ extension CloudManager {
 			o.previousServerChangeToken = zoneChangeMayNotReflectSavedChanges ? nil : zoneChangeToken
 		}
 
+		func updateProgress() {
+			var components = [String]()
+
+			let newCount = newDrops.count
+			if newCount > 0 { components.append(newCount == 1 ? "1 Drop" : "\(newCount) Drops") }
+			if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
+
+			let newTypeCount = newTypeItemsToHookOntoDrops.count
+			if newTypeCount > 0 { components.append(newCount == 1 ? "1 Component" : "\(newTypeCount) Components") }
+			if typeUpdateCount > 0 { components.append(newCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
+
+			if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+			syncProgressString = "Fetching" + (components.count > 0 ? (" " + components.joined(separator: ", ")) : "")
+		}
+
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
@@ -230,11 +245,7 @@ extension CloudManager {
 					item.needsDeletion = true
 					zoneChangeMayNotReflectSavedChanges = true
 					deletionCount += 1
-					if deletionCount == 1 {
-						syncProgressString = "Got 1 deletion"
-					} else {
-						syncProgressString = "Got \(deletionCount) deletions"
-					}
+					updateProgress()
 				}
 			}
 		}
@@ -252,22 +263,13 @@ extension CloudManager {
 							item.cloudKitUpdate(from: record)
 							zoneChangeMayNotReflectSavedChanges = true
 							updateCount += 1
-							if updateCount == 1 {
-								syncProgressString = "Got 1 drop update"
-							} else {
-								syncProgressString = "Got \(updateCount) drop updates"
-							}
+							updateProgress()
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
 						zoneChangeMayNotReflectSavedChanges = true
-						let newCount = newDrops.count
-						if newCount == 1 {
-							syncProgressString = "Got 1 new drop"
-						} else {
-							syncProgressString = "Got \(newCount) new drops"
-						}
+						updateProgress()
 					}
 
 				} else if record.recordType == "ArchivedDropItemType" {
@@ -279,21 +281,12 @@ extension CloudManager {
 							typeItem.cloudKitUpdate(from: record)
 							zoneChangeMayNotReflectSavedChanges = true
 							typeUpdateCount += 1
-							if typeUpdateCount == 1 {
-								syncProgressString = "Got 1 data update"
-							} else {
-								syncProgressString = "Got \(typeUpdateCount) data updates"
-							}
+							updateProgress()
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
 						newTypeItemsToHookOntoDrops.append(record)
-						let newCount = newTypeItemsToHookOntoDrops.count
-						if newCount == 1 {
-							syncProgressString = "Got 1 item"
-						} else {
-							syncProgressString = "Got \(newCount) data items"
-						}
+						updateProgress()
 					}
 
 				} else if itemUUID == "PositionList" {
@@ -375,7 +368,7 @@ extension CloudManager {
 	////////////////////////////////////////////////
 
 	static func opportunisticSyncIfNeeded(isStartup: Bool) {
-		if syncSwitchedOn && !syncing && (isStartup || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -3600) {
+		if syncSwitchedOn && !syncing && (isStartup || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -600) {
 			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
 			sync { error in
 				if let error = error {
