@@ -190,7 +190,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func resetForDragEntry(session: UIDropSession) {
-		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: ["build.bru.gladys.archive"]) {
+		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: ["build.bru.gladys.archive", "public.zip-archive"]) {
 			dismissAnyPopOver()
 		} else if currentDetailView != nil || currentLabelSelector != nil {
 			dismissAnyPopOver()

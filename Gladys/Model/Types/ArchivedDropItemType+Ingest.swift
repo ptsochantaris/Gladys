@@ -448,7 +448,7 @@ extension ArchivedDropItemType {
 			alignment = .center
 			finalText = text
 		}
-		let final = finalText?.trimmingCharacters(in: .whitespacesAndNewlines)
+		let final = finalText?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\0", with: "")
 		displayTitle = (final?.isEmpty ?? true) ? nil : final
 		displayTitlePriority = priority
 		displayTitleAlignment = alignment

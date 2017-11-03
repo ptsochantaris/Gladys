@@ -147,9 +147,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			bytes = data
 
 		} else if typeItem.classWasWrapped {
-			if typeItem.representedClass == "__NSCFString", let string = typeItem.decode() as? String, let data = string.data(using: .utf8) {
-				bytes = data
-			}
+			bytes = typeItem.dataForWrappedItem ?? typeItem.bytes
 		}
 		if let B = bytes ?? typeItem.bytes {
 
@@ -164,6 +162,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				let directory = truncate(string: directory, limit: 255)
 				name = directory + "/" + name
 			}
+
+			// for now, remove in a few weeks
+			name = name.replacingOccurrences(of: "\0", with: "")
 
 			try? archive.addEntry(with: name, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
 				return B[pos ..< pos+size]
