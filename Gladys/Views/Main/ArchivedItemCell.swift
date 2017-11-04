@@ -442,7 +442,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				case .center:
 					image.contentMode = .center
 					image.circle = false
-					label.numberOfLines = 8
+					label.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
 				case .fill:
 					image.contentMode = .scaleAspectFill
 					image.circle = false

@@ -696,26 +696,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let layout = (collectionViewLayout as! UICollectionViewFlowLayout)
-		if view.bounds.size.width <= 320 {
-			return CGSize(width: 300, height: 200)
+	var itemSize = CGSize.zero
+	private func calculateItemSize() {
 
-		} else if view.bounds.size.width >= 1024 {
-			let extras = layout.minimumInteritemSpacing * 3 + layout.sectionInset.left + layout.sectionInset.right
-			let fourth = ((view.bounds.size.width - extras) / 4.0).rounded(.down)
-			return CGSize(width: fourth, height: fourth)
-
-		} else if view.bounds.size.width >= 694 {
-			let extras = layout.minimumInteritemSpacing * 2 + layout.sectionInset.left + layout.sectionInset.right
-			let third = ((view.bounds.size.width - extras) / 3.0).rounded(.down)
-			return CGSize(width: third, height: third)
-
-		} else {
-			let extras = layout.minimumInteritemSpacing + layout.sectionInset.left + layout.sectionInset.right
-			let third = ((view.bounds.size.width - extras) / 2.0).rounded(.down)
-			return CGSize(width: third, height: third)
+		func calculateSizes(for columnCount: CGFloat) {
+			let layout = (archivedItemCollectionView.collectionViewLayout as! UICollectionViewFlowLayout)
+			let extras = (layout.minimumInteritemSpacing * (columnCount - 1.0)) + layout.sectionInset.left + layout.sectionInset.right
+			let side = ((lastSize.width - extras) / columnCount).rounded(.down)
+			itemSize = CGSize(width: side, height: side)
 		}
+
+		if lastSize.width <= 320 && !OptionsController.forceTwoColumnPreference {
+			itemSize = CGSize(width: 300, height: 200)
+		} else if lastSize.width >= 1024 {
+			calculateSizes(for: 4)
+		} else if lastSize.width >= 694 {
+			calculateSizes(for: 3)
+		} else {
+			calculateSizes(for: 2)
+		}
+	}
+
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		return itemSize
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
@@ -755,12 +758,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private var lastSize = CGSize.zero
+	func forceLayout() {
+		lastSize = .zero
+		view.setNeedsLayout()
+	}
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
 		let boundsSize = view.bounds.size
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
+
+		calculateItemSize()
 
 		dismissAnyPopOver()
 		archivedItemCollectionView.performBatchUpdates({})

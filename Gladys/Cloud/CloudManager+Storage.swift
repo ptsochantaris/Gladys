@@ -11,9 +11,9 @@ import CloudKit
 	import UIKit
 #endif
 
-extension CloudManager {
+var defaults: UserDefaults = { return UserDefaults(suiteName: "group.buildefaults.bru.Gladys")! }()
 
-	private static var d: UserDefaults = { return UserDefaults(suiteName: "group.build.bru.Gladys")! }()
+extension CloudManager {
 
 	static var syncTransitioning = false {
 		didSet {
@@ -41,66 +41,66 @@ extension CloudManager {
 	typealias iCloudToken = (NSCoding & NSCopying & NSObjectProtocol)
 	static var lastiCloudAccount: iCloudToken? {
 		get {
-			let o = d.object(forKey: "lastiCloudAccount") as? iCloudToken
+			let o = defaults.object(forKey: "lastiCloudAccount") as? iCloudToken
 			return (o?.isEqual("") ?? false) ? nil : o
  		}
 		set {
 			if let n = newValue {
-				d.set(n, forKey: "lastiCloudAccount")
+				defaults.set(n, forKey: "lastiCloudAccount")
 			} else {
-				d.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
+				defaults.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
 			}
-			d.synchronize()
+			defaults.synchronize()
 		}
 	}
 
 	static var lastSyncCompletion: Date {
 		get {
-			return d.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
+			return defaults.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
 		}
 
 		set {
-			d.set(newValue, forKey: "lastSyncCompletion")
-			d.synchronize()
+			defaults.set(newValue, forKey: "lastSyncCompletion")
+			defaults.synchronize()
 		}
 	}
 
 	static var zoneChangeMayNotReflectSavedChanges: Bool {
 		get {
-			return d.bool(forKey: "zoneChangeMayNotReflectSavedChanges")
+			return defaults.bool(forKey: "zoneChangeMayNotReflectSavedChanges")
 		}
 
 		set {
-			d.set(newValue, forKey: "zoneChangeMayNotReflectSavedChanges")
-			d.synchronize()
+			defaults.set(newValue, forKey: "zoneChangeMayNotReflectSavedChanges")
+			defaults.synchronize()
 		}
 	}
 
 	static var syncSwitchedOn: Bool {
 		get {
-			return d.bool(forKey: "syncSwitchedOn")
+			return defaults.bool(forKey: "syncSwitchedOn")
 		}
 
 		set {
-			d.set(newValue, forKey: "syncSwitchedOn")
-			d.synchronize()
+			defaults.set(newValue, forKey: "syncSwitchedOn")
+			defaults.synchronize()
 		}
 	}
 
 	static var onlySyncOverWiFi: Bool {
 		get {
-			return d.bool(forKey: "onlySyncOverWiFi")
+			return defaults.bool(forKey: "onlySyncOverWiFi")
 		}
 
 		set {
-			d.set(newValue, forKey: "onlySyncOverWiFi")
-			d.synchronize()
+			defaults.set(newValue, forKey: "onlySyncOverWiFi")
+			defaults.synchronize()
 		}
 	}
 
 	static var zoneChangeToken: CKServerChangeToken? {
 		get {
-			if let data = d.data(forKey: "zoneChangeToken"), data.count > 0 {
+			if let data = defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
 				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
 			} else {
 				return nil
@@ -109,11 +109,11 @@ extension CloudManager {
 		set {
 			if let n = newValue {
 				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				d.set(data, forKey: "zoneChangeToken")
+				defaults.set(data, forKey: "zoneChangeToken")
 			} else {
-				d.set(Data(), forKey: "zoneChangeToken")
+				defaults.set(Data(), forKey: "zoneChangeToken")
 			}
-			d.synchronize()
+			defaults.synchronize()
 		}
 	}
 
@@ -121,7 +121,7 @@ extension CloudManager {
 
 	static var uuidSequence: [String] {
 		get {
-			if let data = d.data(forKey: "uuidSequence") {
+			if let data = defaults.data(forKey: "uuidSequence") {
 				return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
 			} else {
 				return []
@@ -129,8 +129,8 @@ extension CloudManager {
 		}
 		set {
 			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-			d.set(data, forKey: "uuidSequence")
-			d.synchronize()
+			defaults.set(data, forKey: "uuidSequence")
+			defaults.synchronize()
 		}
 	}
 
