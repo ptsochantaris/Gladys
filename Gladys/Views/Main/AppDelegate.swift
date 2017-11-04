@@ -66,5 +66,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		CloudManager.received(notificationInfo: userInfo, fetchCompletionHandler: completionHandler)
 	}
+
+	func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+		ViewController.executeOrQueue {
+			if shortcutItem.type.hasSuffix(".Search") {
+				ViewController.shared.forceStartSearch()
+			} else if shortcutItem.type.hasSuffix(".Paste") {
+				ViewController.shared.forcePaste()
+			}
+			completionHandler(true)
+		}
+	}
 }
 

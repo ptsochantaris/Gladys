@@ -27,6 +27,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	static var shared: ViewController!
 
+	static var launchQueue = [()->Void]()
+
+	static func executeOrQueue(block: @escaping ()->Void) {
+		if shared == nil {
+			launchQueue.append(block)
+		} else {
+			block()
+		}
+	}
+
 	///////////////////////
 
 	private var bgTask: UIBackgroundTaskIdentifier?
@@ -737,6 +747,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
 			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
+			DispatchQueue.main.async {
+				ViewController.launchQueue.forEach { $0() }
+				ViewController.launchQueue.removeAll(keepingCapacity: false)
+			}
 		}
 	}
 
@@ -812,12 +826,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
-	func dismissAnyPopOver() {
+	func dismissAnyPopOver(completion: (()->Void)? = nil) {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
 			if popoverPresentationControllerShouldDismissPopover(pc) {
-				firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true)
+				firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true) {
+					completion?()
+				}
+				return
 			}
 		}
+		completion?()
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
@@ -954,25 +972,24 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func resetSearch(andLabels: Bool) {
-		if let s = navigationItem.searchController {
-			s.searchResultsUpdater = nil
-			s.delegate = nil
+		guard let s = navigationItem.searchController else { return }
+		s.searchResultsUpdater = nil
+		s.delegate = nil
 
-			if andLabels {
-			    Model.disableAllLabels()
-				updateLabelIcon()
-				if Model.filter == nil { // because the next line won't have any effect if its already nil
-				    Model.forceUpdateFilter(signalUpdate: true)
-				}
+		if andLabels {
+			Model.disableAllLabels()
+			updateLabelIcon()
+			if Model.filter == nil { // because the next line won't have any effect if its already nil
+				Model.forceUpdateFilter(signalUpdate: true)
 			}
-
-		    Model.filter = nil
-			s.searchBar.text = nil
-			s.isActive = false
-
-			s.searchResultsUpdater = self
-			s.delegate = self
 		}
+
+		Model.filter = nil
+		s.searchBar.text = nil
+		s.isActive = false
+
+		s.searchResultsUpdater = self
+		s.delegate = self
 	}
 
 	func highlightItem(with identifier: String) {
@@ -1132,6 +1149,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		} else {
 			return .overCurrentContext
 		}
+	}
+
+	///////////////////////////// Quick actions
+
+	func forceStartSearch() {
+		dismissAnyPopOver() {
+			if let s = self.navigationItem.searchController, !s.isActive {
+				s.searchBar.becomeFirstResponder()
+			}
+		}
+	}
+
+	func forcePaste() {
+		resetSearch(andLabels: true)
+		dismissAnyPopOver()
+		pasteSelected(pasteButton)
 	}
 
 	///////////////////////////// Accessibility
