@@ -122,17 +122,16 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	private class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?
 		let previewItemTitle: String?
-
-		private let item: ArchivedDropItemType
+		let needsCleanup: Bool
 
 		init(typeItem: ArchivedDropItemType) {
 
-			item = typeItem
 			let blobPath = typeItem.bytesPath
 			let tempPath = typeItem.previewTempPath
 
 			if blobPath == tempPath {
 				previewItemURL = blobPath
+				needsCleanup = false
 			} else {
 				let fm = FileManager.default
 				if fm.fileExists(atPath: tempPath.path) {
@@ -146,17 +145,19 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 				}
 				log("Created temporary file for preview")
 				previewItemURL = tempPath
+				needsCleanup = true
 			}
 
 			previewItemTitle = typeItem.oneTitle
 		}
 
 		deinit {
-			let tempPath = item.previewTempPath
-			let fm = FileManager.default
-			if fm.fileExists(atPath: tempPath.path) {
-				try? fm.removeItem(at: tempPath)
-				log("Removed temporary file for preview")
+			if needsCleanup, let previewItemURL = previewItemURL {
+				let fm = FileManager.default
+				if fm.fileExists(atPath: previewItemURL.path) {
+					try? fm.removeItem(at: previewItemURL)
+					log("Removed temporary file for preview")
+				}
 			}
 		}
 	}

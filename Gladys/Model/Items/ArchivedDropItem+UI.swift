@@ -114,9 +114,16 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
+	private class QLHostingViewController: UINavigationController {
+		override func viewDidDisappear(_ animated: Bool) {
+			super.viewDidDisappear(animated)
+			viewControllers = []
+		}
+	}
+
 	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
 		if let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) {
-			let n = UINavigationController(rootViewController: q)
+			let n = QLHostingViewController(rootViewController: q)
 			if let s = UIApplication.shared.windows.first?.bounds.size {
 				n.preferredContentSize = s
 			}

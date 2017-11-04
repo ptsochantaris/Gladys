@@ -242,15 +242,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
 		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
 
+		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
+		contentView.addGestureRecognizer(p)
+
 		if ViewController.shared.traitCollection.forceTouchCapability == .available {
 			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
-			d.cancelsTouchesInView = true
 			contentView.addGestureRecognizer(d)
 		} else {
 			let D = UILongPressGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
 			D.numberOfTouchesRequired = 2
+			D.require(toFail: p)
 			D.minimumPressDuration = 0.01
-			D.cancelsTouchesInView = true
 			contentView.addGestureRecognizer(D)
 		}
 	}
@@ -262,6 +264,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
+		if pinchRecognizer.state == .began, pinchRecognizer.velocity > 0, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview {
+			clearAllOtherGestures()
+			item.tryPreview(in: ViewController.shared.navigationController!, from: self)
+		}
+	}
+
 	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
 		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading {
 			clearAllOtherGestures()
@@ -270,7 +279,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	@objc private func doubleTapped(_ tapRecognizer: UITapGestureRecognizer) {
-		if let item = archivedDropItem, tapRecognizer.state == .began, !item.shouldDisplayLoading {
+		if let item = archivedDropItem, tapRecognizer.state == .ended, !item.shouldDisplayLoading {
 			clearAllOtherGestures()
 			showShortcutMenu(item: item, push: false)
 		}
