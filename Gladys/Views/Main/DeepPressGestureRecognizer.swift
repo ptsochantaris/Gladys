@@ -41,6 +41,8 @@ class DeepPressGestureRecognizer: UIGestureRecognizer
 		if !pressed && (touch.force / touch.maximumPossibleForce) >= threshold {
 			state = .began
 			pressed = true
+			UISelectionFeedbackGenerator().selectionChanged()
+
 		} else if pressed && (touch.force / touch.maximumPossibleForce) < threshold {
 			state = .ended
 			pressed = false
