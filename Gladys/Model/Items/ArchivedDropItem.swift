@@ -135,10 +135,27 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	#if MAINAPP || ACTIONEXTENSION
 
+		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) -> [ArchivedDropItem] {
+			if PersistedOptions.separateItemPreference {
+				var res = [ArchivedDropItem]()
+				for p in providers {
+					for t in p.registeredTypeIdentifiers {
+						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t)
+						res.append(item)
+					}
+				}
+				return res
+
+			} else {
+				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil)
+				return [item]
+			}
+		}
+
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
 
-		init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) {
+		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) {
 
 			uuid = UUID()
 			createdAt = Date()
@@ -152,7 +169,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			labels = []
 			typeItems = [ArchivedDropItemType]()
 	
-			loadingProgress = startIngest(providers: providers, delegate: delegate)
+			loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 		}
 
 	#endif

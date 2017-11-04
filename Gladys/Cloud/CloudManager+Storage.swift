@@ -11,7 +11,29 @@ import CloudKit
 	import UIKit
 #endif
 
-var defaults: UserDefaults = { return UserDefaults(suiteName: "group.buildefaults.bru.Gladys")! }()
+private var defaults: UserDefaults = { return UserDefaults(suiteName: "group.buildefaults.bru.Gladys")! }()
+
+class PersistedOptions {
+	static var separateItemPreference: Bool {
+		get {
+			return defaults.bool(forKey: "separateItemPreference")
+		}
+		set {
+			defaults.set(newValue, forKey: "separateItemPreference")
+			defaults.synchronize()
+		}
+	}
+
+	static var forceTwoColumnPreference: Bool {
+		get {
+			return defaults.bool(forKey: "forceTwoColumnPreference")
+		}
+		set {
+			defaults.set(newValue, forKey: "forceTwoColumnPreference")
+			defaults.synchronize()
+		}
+	}
+}
 
 extension CloudManager {
 

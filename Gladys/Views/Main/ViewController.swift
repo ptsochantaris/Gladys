@@ -140,35 +140,40 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			} else {
 
-				let item = ArchivedDropItem(providers: [dragItem.itemProvider], delegate: self)
-				var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
-				let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+				var firstDestinationPath: IndexPath?
+				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self) {
+					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
+					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
-				if Model.isFilteringLabels || Model.isFilteringText {
-					dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-					if Model.isFilteringLabels {
-						item.labels = Model.enabledLabelsForItems
+					if Model.isFilteringLabels || Model.isFilteringText {
+						dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+						if Model.isFilteringLabels {
+							item.labels = Model.enabledLabelsForItems
+						}
+					}
+
+					var itemVisiblyInserted = false
+					collectionView.performBatchUpdates({
+						Model.drops.insert(item, at: dataIndex)
+						Model.forceUpdateFilter(signalUpdate: false)
+						itemVisiblyInserted = Model.filteredDrops.contains(item)
+						if itemVisiblyInserted {
+							collectionView.isAccessibilityElement = false
+							collectionView.insertItems(at: [destinationIndexPath])
+						}
+					}, completion: { finished in
+						self.mostRecentIndexPathActioned = destinationIndexPath
+						self.focusInitialAccessibilityElement()
+					})
+
+					loadingUUIDs.insert(item.uuid)
+					if itemVisiblyInserted {
+						firstDestinationPath = destinationIndexPath
 					}
 				}
-
-				var itemVisiblyInserted = false
-				collectionView.performBatchUpdates({
-				    Model.drops.insert(item, at: dataIndex)
-				    Model.forceUpdateFilter(signalUpdate: false)
-					itemVisiblyInserted = Model.filteredDrops.contains(item)
-					if itemVisiblyInserted {
-						collectionView.isAccessibilityElement = false
-						collectionView.insertItems(at: [destinationIndexPath])
-					}
-				}, completion: { finished in
-					self.mostRecentIndexPathActioned = destinationIndexPath
-					self.focusInitialAccessibilityElement()
-				})
-
-				loadingUUIDs.insert(item.uuid)
 				startBgTaskIfNeeded()
-				if itemVisiblyInserted {
-					coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+				if let firstDestinationPath = firstDestinationPath {
+					coordinator.drop(dragItem, toItemAt: firstDestinationPath)
 				}
 			}
 		}
@@ -472,27 +477,28 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return
 		}
 
-		let item = ArchivedDropItem(providers: providers, delegate: self)
+		for item in ArchivedDropItem.importData(providers: providers, delegate: self) {
 
-		if Model.isFilteringLabels {
-			item.labels = Model.enabledLabelsForItems
+			if Model.isFilteringLabels {
+				item.labels = Model.enabledLabelsForItems
+			}
+
+			let destinationIndexPath = IndexPath(item: 0, section: 0)
+
+			archivedItemCollectionView.performBatchUpdates({
+				Model.drops.insert(item, at: 0)
+				Model.forceUpdateFilter(signalUpdate: false)
+				archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+			}, completion: { finished in
+				self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
+				self.mostRecentIndexPathActioned = destinationIndexPath
+				self.focusInitialAccessibilityElement()
+			})
+
+			updateEmptyView(animated: true)
+
+			loadingUUIDs.insert(item.uuid)
 		}
-
-		let destinationIndexPath = IndexPath(item: 0, section: 0)
-
-		archivedItemCollectionView.performBatchUpdates({
-		    Model.drops.insert(item, at: 0)
-		    Model.forceUpdateFilter(signalUpdate: false)
-			archivedItemCollectionView.insertItems(at: [destinationIndexPath])
-		}, completion: { finished in
-			self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
-			self.mostRecentIndexPathActioned = destinationIndexPath
-			self.focusInitialAccessibilityElement()
-		})
-
-		updateEmptyView(animated: true)
-
-		loadingUUIDs.insert(item.uuid)
 		startBgTaskIfNeeded()
 	}
 
@@ -706,7 +712,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			itemSize = CGSize(width: side, height: side)
 		}
 
-		if lastSize.width <= 320 && !OptionsController.forceTwoColumnPreference {
+		if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
 			itemSize = CGSize(width: 300, height: 200)
 		} else if lastSize.width >= 1024 {
 			calculateSizes(for: 4)

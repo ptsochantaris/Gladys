@@ -14,32 +14,12 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var twoColumnsSwitch: UISwitch!
 
 	@IBAction func twoColumnsSwitchSelected(_ sender: UISwitch) {
-		OptionsController.forceTwoColumnPreference = sender.isOn
+		PersistedOptions.forceTwoColumnPreference = sender.isOn
 		ViewController.shared.forceLayout()
 	}
 
 	@IBAction func separateItemsSwitchSelected(_ sender: UISwitch) {
-		OptionsController.separateItemPreference = sender.isOn
-	}
-
-	static var separateItemPreference: Bool {
-		get {
-			return defaults.bool(forKey: "separateItemPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "separateItemPreference")
-			defaults.synchronize()
-		}
-	}
-
-	static var forceTwoColumnPreference: Bool {
-		get {
-			return defaults.bool(forKey: "forceTwoColumnPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "forceTwoColumnPreference")
-			defaults.synchronize()
-		}
+		PersistedOptions.separateItemPreference = sender.isOn
 	}
 
 	override func viewDidLoad() {
@@ -47,11 +27,11 @@ final class OptionsController: GladysViewController {
 
 		separateItemsSwitch.tintColor = UIColor.lightGray
 		separateItemsSwitch.onTintColor = view.tintColor
-		separateItemsSwitch.isOn = OptionsController.separateItemPreference
+		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 
 		twoColumnsSwitch.tintColor = UIColor.lightGray
 		twoColumnsSwitch.onTintColor = view.tintColor
-		twoColumnsSwitch.isOn = OptionsController.forceTwoColumnPreference
+		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 	}
 
 	private func done() {

@@ -28,7 +28,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
-	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) -> Progress {
+	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
 		var progressChildren = [Progress]()
 
@@ -36,7 +36,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 
 		for provider in providers {
 
-			let identifiers = provider.registeredTypeIdentifiers
+			let identifiers = limitToType == nil ? provider.registeredTypeIdentifiers : [limitToType!]
 			var shouldCreateEncodedImage = false
 			if identifiers.contains("public.image") {
 				if !identifiers.contains(where: { $0.hasPrefix("public.image.") }) {
