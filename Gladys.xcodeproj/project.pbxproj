@@ -1443,7 +1443,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "28758165-1cf5-4fa0-8415-2ba7f8ffbcd2";
+				PROVISIONING_PROFILE = "a3e542d0-4666-4fd8-a0ef-c8388c271c33";
 				PROVISIONING_PROFILE_SPECIFIER = "Gladys App Store";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = MAINAPP;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1461,7 +1461,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1deb331c-9daf-4269-b3a4-33fd9fbfd600";
+				PROVISIONING_PROFILE = "0c7f11f1-71e8-450a-b184-0f20109058a6";
 				PROVISIONING_PROFILE_SPECIFIER = "GladysIndex App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = INDEXER;
@@ -1480,7 +1480,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "06e86873-abd0-4df8-a614-23c6db476bf7";
+				PROVISIONING_PROFILE = "0e1626f4-0a94-4885-923d-83544748f489";
 				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = FILEPROVIDER;
@@ -1501,7 +1501,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "70857887-1d54-4530-99d7-caa9f1a2a35a";
+				PROVISIONING_PROFILE = "2ba1e394-841e-4f1d-8a24-3055329115b3";
 				PROVISIONING_PROFILE_SPECIFIER = "GladysAction App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = ACTIONEXTENSION;
