@@ -28,30 +28,32 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
+	static func sanitised(_ idenitfiers: [String]) -> [String] {
+		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
+		return idenitfiers.filter { typeIdentifier in
+			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
+		}
+	}
+
 	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
 		var progressChildren = [Progress]()
 
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
-
 		for provider in providers {
 
-			let identifiers = limitToType == nil ? provider.registeredTypeIdentifiers : [limitToType!]
-			var shouldCreateEncodedImage = false
-			if identifiers.contains("public.image") {
-				if !identifiers.contains(where: { $0.hasPrefix("public.image.") }) {
-					shouldCreateEncodedImage = true
-				}
+			var identifiers = ArchivedDropItem.sanitised(provider.registeredTypeIdentifiers)
+			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
+
+			if let limit = limitToType {
+				identifiers = [limit]
 			}
 
 			for typeIdentifier in identifiers {
-				if !blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) } ) {
-					loadCount += 1
-					let i = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
-					let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: shouldCreateEncodedImage)
-					progressChildren.append(p)
-					typeItems.append(i)
-				}
+				loadCount += 1
+				let i = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
+				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: shouldCreateEncodedImage)
+				progressChildren.append(p)
+				typeItems.append(i)
 			}
 		}
 		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))

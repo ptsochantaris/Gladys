@@ -139,7 +139,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			if PersistedOptions.separateItemPreference {
 				var res = [ArchivedDropItem]()
 				for p in providers {
-					for t in p.registeredTypeIdentifiers {
+					for t in sanitised(p.registeredTypeIdentifiers) {
 						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t)
 						res.append(item)
 					}

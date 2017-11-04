@@ -15,7 +15,9 @@ final class OptionsController: GladysViewController {
 
 	@IBAction func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
-		ViewController.shared.forceLayout()
+		if ViewController.shared.phoneMode {
+			ViewController.shared.forceLayout()
+		}
 	}
 
 	@IBAction func separateItemsSwitchSelected(_ sender: UISwitch) {
