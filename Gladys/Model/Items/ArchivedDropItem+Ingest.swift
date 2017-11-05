@@ -48,12 +48,19 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 				identifiers = [limit]
 			}
 
-			for typeIdentifier in identifiers {
+			func addTypeItem(type: String, encodeUIImage: Bool) {
 				loadCount += 1
-				let i = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: uuid, delegate: self)
-				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: shouldCreateEncodedImage)
+				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self)
+				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage)
 				progressChildren.append(p)
 				typeItems.append(i)
+			}
+
+			for typeIdentifier in identifiers {
+				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
+					addTypeItem(type: "public.image", encodeUIImage: true)
+				}
+				addTypeItem(type: typeIdentifier, encodeUIImage: false)
 			}
 		}
 		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))
