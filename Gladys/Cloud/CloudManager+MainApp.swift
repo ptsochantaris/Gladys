@@ -209,7 +209,7 @@ extension CloudManager {
 		var typeUpdateCount = 0
 		var deletionCount = 0
 		var updateCount = 0
-		syncProgressString = "Fetching changes"
+		syncProgressString = "Fetching"
 
 		let o = CKFetchRecordZoneChangesOptions()
 		if zoneChangeMayNotReflectSavedChanges {
