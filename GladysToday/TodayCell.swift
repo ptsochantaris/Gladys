@@ -31,7 +31,7 @@ final class TodayCell: UICollectionViewCell {
 		backgroundView = b
 
 		let borderView = UIView()
-		borderView.backgroundColor = .white
+		borderView.backgroundColor = UIColor(white: 0.95, alpha: 1)
 		borderView.layer.cornerRadius = 10
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
 

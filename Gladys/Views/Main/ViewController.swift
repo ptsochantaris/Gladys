@@ -362,7 +362,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		archivedItemCollectionView.dropDelegate = self
 		archivedItemCollectionView.dragDelegate = self
-		archivedItemCollectionView.reorderingCadence = .immediate
+		archivedItemCollectionView.reorderingCadence = .fast
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
 		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))

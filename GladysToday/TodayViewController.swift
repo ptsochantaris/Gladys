@@ -9,7 +9,8 @@
 import UIKit
 import NotificationCenter
 
-class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
+UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
 
 	@IBOutlet weak var emptyLabel: UILabel!
 	@IBOutlet weak var itemsView: UICollectionView!
@@ -62,6 +63,27 @@ class TodayViewController: UIViewController, NCWidgetProviding, UICollectionView
 		}
 	}
 
+	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		Model.reloadDataIfNeeded()
+		let drop = Model.drops[indexPath.row]
+		return [drop.dragItem]
+	}
+
+	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		Model.reloadDataIfNeeded()
+		let item = Model.drops[indexPath.row].dragItem
+		if !session.items.contains(item) {
+			return [item]
+		} else {
+			return []
+		}
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		itemsView.dragDelegate = self
+	}
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 		Model.reset()
@@ -78,5 +100,21 @@ class TodayViewController: UIViewController, NCWidgetProviding, UICollectionView
 		updateUI()
         completionHandler(NCUpdateResult.newData)
     }
-    
+
+	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
+		if let cell = itemsView.cellForItem(at: indexPath) as? TodayCell, let b = cell.backgroundView {
+			let corner = b.layer.cornerRadius
+			let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
+			let params = UIDragPreviewParameters()
+			params.backgroundColor = .clear
+			params.visiblePath = path
+			return params
+		} else {
+			return nil
+		}
+	}
+
+	func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+		return dragParameters(for: indexPath)
+	}
 }

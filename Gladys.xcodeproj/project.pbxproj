@@ -77,7 +77,6 @@
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
 		16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		16969BAB1FB0E475007B2F77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16969BAC1FB0E675007B2F77 /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		16969BAD1FB0E675007B2F77 /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16969BAE1FB0E688007B2F77 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -933,7 +932,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16969BAB1FB0E475007B2F77 /* Assets.xcassets in Resources */,
 				16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -19,9 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="atV-6z-vUn">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
-                            </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RlE-Mh-9wq">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -97,7 +93,6 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="gWK-0m-iMe" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" constant="-20" id="09b-XB-Tg2"/>
-                            <constraint firstItem="atV-6z-vUn" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="8zF-nO-60g"/>
                             <constraint firstItem="Wri-OW-ONo" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" constant="20" id="BZR-5i-7a3"/>
                             <constraint firstItem="gWK-0m-iMe" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="20" id="FGh-SL-cSN"/>
                             <constraint firstItem="Wri-OW-ONo" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="40" id="KEW-ZV-YpF"/>
@@ -106,12 +101,9 @@
                             <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="Wri-OW-ONo" secondAttribute="trailing" constant="40" id="UXR-5V-czo"/>
                             <constraint firstItem="RlE-Mh-9wq" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="fWf-Gb-laV"/>
                             <constraint firstItem="gWK-0m-iMe" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" constant="20" id="gD3-DA-EAw"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="atV-6z-vUn" secondAttribute="trailing" id="o8d-ML-N97"/>
-                            <constraint firstItem="atV-6z-vUn" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="qCg-jk-q8A"/>
                             <constraint firstItem="gWK-0m-iMe" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" constant="-20" id="rKL-M1-KYc"/>
                             <constraint firstItem="RlE-Mh-9wq" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" id="rn2-H2-EH8"/>
                             <constraint firstItem="RlE-Mh-9wq" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="wjn-gE-SGI"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="atV-6z-vUn" secondAttribute="bottom" id="wnA-jf-qRQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
                     </view>
@@ -129,7 +121,4 @@
             <point key="canvasLocation" x="137.59999999999999" y="133.13343328335833"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="paper" width="2100" height="1500"/>
-    </resources>
 </document>
