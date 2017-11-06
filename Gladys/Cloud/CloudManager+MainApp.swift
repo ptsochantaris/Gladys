@@ -41,6 +41,7 @@ extension CloudManager {
 	/////////////////////////////////////////////////// Push
 
 	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		UIApplication.shared.applicationIconBadgeNumber = 0
 		if !syncSwitchedOn { return }
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
@@ -121,15 +122,33 @@ extension CloudManager {
 		go(ms)
 	}
 
-	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
-
-		UIApplication.shared.registerForRemoteNotifications()
-
+	private static var zoneSubscriptionOperation: CKModifySubscriptionsOperation {
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.shouldSendContentAvailable = true
+		notificationInfo.shouldBadge = true
 
 		let subscription = CKDatabaseSubscription(subscriptionID: "private-changes")
 		subscription.notificationInfo = notificationInfo
+
+		return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
+	}
+
+	static func migrate() {
+		guard syncSwitchedOn else { return }
+		let subscribeToZone = zoneSubscriptionOperation
+		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+			if let error = error {
+				log("Error while updating zone subscription: \(error.finalDescription)")
+			} else {
+				log("Zone subscription migrated successfully")
+			}
+		}
+		go(subscribeToZone)
+	}
+
+	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
+
+		UIApplication.shared.registerForRemoteNotifications()
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
@@ -142,7 +161,7 @@ extension CloudManager {
 			}
 		}
 
-		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
+		let subscribeToZone = zoneSubscriptionOperation
 		subscribeToZone.addDependency(createZone)
 		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
