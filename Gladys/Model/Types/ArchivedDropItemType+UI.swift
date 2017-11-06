@@ -18,18 +18,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return i
 	}
 
-	func register(with provider: NSItemProvider) {
-		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
-			let p = Progress(totalUnitCount: 1)
-			p.completedUnitCount = 1
-			DispatchQueue.global(qos: .userInitiated).async {
-				log("Responding with data block")
-				completion(self.dataForWrappedItem ?? self.bytes, nil)
-			}
-			return p
-		}
-	}
-
 	var dataExists: Bool {
 		return FileManager.default.fileExists(atPath: bytesPath.path)
 	}
@@ -103,20 +91,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return PreviewItem(typeItem: self)
-	}
-
-	var dataForWrappedItem: Data? {
-		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
-			let decoded = decode()
-			if let s = decoded as? String {
-				return s.data(using: .utf8)
-			} else if let s = decoded as? NSAttributedString {
-				return try? s.data(from: NSMakeRange(0, s.string.count), documentAttributes: [:])
-			} else if let s = decoded as? NSURL {
-				return s.absoluteString?.data(using: .utf8)
-			}
-		}
-		return nil
 	}
 
 	private class PreviewItem: NSObject, QLPreviewItem {

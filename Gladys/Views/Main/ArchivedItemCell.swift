@@ -3,29 +3,6 @@ import UIKit
 import MapKit
 import WebKit
 
-extension UIView {
-	func cover(with view: UIView, insets: UIEdgeInsets = .zero) {
-		view.translatesAutoresizingMaskIntoConstraints = false
-		addSubview(view)
-
-		view.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: insets.left).isActive = true
-		view.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -insets.right).isActive = true
-		view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
-		view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
-	}
-
-	func center(on parentView: UIView, offset: CGFloat = 0) {
-		translatesAutoresizingMaskIntoConstraints = false
-		parentView.addSubview(self)
-		centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
-		centerYAnchor.constraint(equalTo: parentView.centerYAnchor, constant: offset).isActive = true
-	}
-
-	static func animate(animations: @escaping ()->Void, completion: ((Bool)->Void)? = nil) {
-		UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: animations, completion: completion)
-	}
-}
-
 final class GladysImageView: UIImageView {
 
 	var circle: Bool = false {

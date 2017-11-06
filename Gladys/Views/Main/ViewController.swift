@@ -544,10 +544,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	override func didReceiveMemoryWarning() {
 		if UIApplication.shared.applicationState == .background {
 			lowMemoryMode = true
-			ArchivedItemCell.clearCaches()
 			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
 			log("Placed UI in low-memory mode")
 		}
+		ArchivedItemCell.clearCaches()
 		super.didReceiveMemoryWarning()
 	}
 

@@ -39,6 +39,11 @@ final class Model {
 
 	private static var isStarted = false
 
+	static func reset() {
+		drops.removeAll(keepingCapacity: false)
+		dataFileLastModified = .distantPast
+	}
+
 	static func reloadDataIfNeeded() {
 		var coordinationError: NSError?
 		var didLoad = false
