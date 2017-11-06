@@ -36,6 +36,12 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 		title = nil
 	}
 
+	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+		statusLabel.text = error.finalDescription
+		statusLabel.isHidden = false
+		title = nil
+	}
+
 	override var preferredContentSize: CGSize {
 		get {
 			return UIApplication.shared.windows.first!.bounds.size
