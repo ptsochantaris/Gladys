@@ -12,12 +12,18 @@ import StoreKit
 final class AboutController: GladysViewController {
 
 	@IBOutlet weak var unlimitedButton: UIButton!
+	@IBOutlet weak var unlimitedSpacing: NSLayoutConstraint!
+	@IBOutlet weak var webSiteSpacing: NSLayoutConstraint!
 	@IBOutlet weak var versionLabel: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		unlimitedButton.isHidden = infiniteMode
+		if infiniteMode {
+			unlimitedButton.isHidden = true
+			unlimitedSpacing.constant = 0
+			webSiteSpacing.constant = 0
+		}
 
 		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
 		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
