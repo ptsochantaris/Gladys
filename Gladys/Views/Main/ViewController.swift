@@ -259,17 +259,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			p.delegate = self
 
 			let c = patternColor
+			p.backgroundColor = c
 
 			for n in t.viewControllers ?? [] {
-				if let d = (n as? UINavigationController)?.topViewController {
-					if phoneMode {
-						n.view.backgroundColor = c
-					} else {
-						p.backgroundColor = c
-						if !UIAccessibilityIsVoiceOverRunning() {
-							d.navigationItem.rightBarButtonItem = nil
-						}
-					}
+				n.view.backgroundColor = c
+				if !UIAccessibilityIsVoiceOverRunning(), let d = (n as? UINavigationController)?.topViewController {
+					d.navigationItem.rightBarButtonItem = nil
 				}
 			}
 
@@ -287,13 +282,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				p.sourceView = cell
 				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
 				p.delegate = self
-				if phoneMode {
-					n.view.backgroundColor = patternColor
-				} else {
-					p.backgroundColor = patternColor
-					if !UIAccessibilityIsVoiceOverRunning() {
-						d.navigationItem.rightBarButtonItem = nil
-					}
+				let c = patternColor
+				p.backgroundColor = c
+				n.view.backgroundColor = c
+				if !UIAccessibilityIsVoiceOverRunning() {
+					d.navigationItem.rightBarButtonItem = nil
 				}
 			}
 
@@ -780,7 +773,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		calculateItemSize()
 
-		dismissAnyPopOver()
 		archivedItemCollectionView.performBatchUpdates({})
 	}
 

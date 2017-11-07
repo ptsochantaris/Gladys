@@ -406,7 +406,7 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="5160" y="-611"/>
         </scene>
-        <!--Options-->
+        <!--Options Controller-->
         <scene sceneID="DO8-pZ-FEn">
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
@@ -497,7 +497,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="wOj-7s-Sqp"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Options" id="REe-Ta-y5r">
+                    <navigationItem key="navigationItem" id="REe-Ta-y5r">
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="yel-Pz-H2C">
                             <connections>
                                 <action selector="doneSelected:" destination="mOB-Wa-q7c" id="3Mk-ty-OVu"/>
@@ -657,7 +657,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Gdd-eU-gY3">
-                                <rect key="frame" x="10" y="94" width="300" height="372"/>
+                                <rect key="frame" x="10" y="94" width="300" height="395"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
@@ -665,22 +665,22 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstAttribute="height" constant="200" id="Xsy-cM-XaU"/>
                                         </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
                                         <rect key="frame" x="0.0" y="220" width="300" height="30"/>
                                         <state key="normal" title="Unlimited Mode"/>
                                         <connections>
                                             <action selector="unlimitedSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="czo-Mh-n6e"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
                                         <rect key="frame" x="0.0" y="270" width="300" height="30"/>
                                         <state key="normal" title="Gladys Web Site"/>
                                         <connections>
                                             <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
-                                        <rect key="frame" x="0.0" y="320" width="300" height="52"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
+                                        <rect key="frame" x="0.0" y="320" width="300" height="75"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1384,7 +1384,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
