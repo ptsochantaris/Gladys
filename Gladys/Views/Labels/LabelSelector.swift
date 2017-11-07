@@ -47,6 +47,14 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
 	}
 
+	func showDone(_ show: Bool) {
+		if show && navigationItem.leftBarButtonItem == nil {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneSelected(_:)))
+		} else if !show && navigationItem.leftBarButtonItem != nil {
+			navigationItem.leftBarButtonItem = nil
+		}
+	}
+
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 	}
@@ -161,7 +169,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		}
 	}
 
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
+	@objc private func doneSelected(_ sender: UIBarButtonItem) {
 		done()
 	}
 
