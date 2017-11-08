@@ -39,6 +39,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		doneLocation = .right
 		grid.allowsMultipleSelection = true
 
 		inspectorButton.accessibilityLabel = "Inspect selection"

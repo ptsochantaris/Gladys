@@ -65,13 +65,27 @@ class GladysViewController: UIViewController {
 		dismiss(animated: true)
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		checkDoneLocation()
+	}
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
+		checkDoneLocation()
+	}
+
+	private func checkDoneLocation() {
 		if doneLocation != .none {
+			if UIAccessibilityIsVoiceOverRunning() {
+				showDone(true)
+				return
+			}
+
 			let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
 			if s == -1 { // hovering
 				if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
-					showDone(UIAccessibilityIsVoiceOverRunning())
+					showDone(false)
 				} else {
 					showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
 				}
