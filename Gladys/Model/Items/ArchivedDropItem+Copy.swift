@@ -11,7 +11,7 @@ import UIKit
 extension ArchivedDropItem {
 	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
-		p.suggestedName = suggestedName
+		p.suggestedName = suggestedName ?? oneTitle
 		typeItems.forEach { $0.register(with: p) }
 		return p
 	}
