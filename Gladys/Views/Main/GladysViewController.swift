@@ -73,10 +73,10 @@ class GladysViewController: UIViewController {
 				if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
 					showDone(UIAccessibilityIsVoiceOverRunning())
 				} else {
-					showDone(true)
+					showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
 				}
-			} else { // full window
-				showDone(true)
+			} else { // full window?
+				showDone(ViewController.shared.phoneMode)
 			}
 		}
 	}
