@@ -101,10 +101,6 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		done()
-	}
-
 	var sharing = false
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		sharing = true
@@ -142,17 +138,6 @@ final class DetailController: GladysViewController,
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 	}
-
-	//////////////////////////////////
-
-	func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
-	}
-
-	//////////////////////////////////
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 2 {
@@ -282,7 +267,6 @@ final class DetailController: GladysViewController,
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.contentDescription + " (\(size))"
-			e.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,

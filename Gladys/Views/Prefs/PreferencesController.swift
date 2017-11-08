@@ -273,14 +273,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	    Model.resetEverything()
 	}
 
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		done()
-	}
-
 	@IBOutlet weak var deleteAll: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		doneLocation = .right
 
 		container.layer.cornerRadius = 10
 		innerFrame.layer.cornerRadius = 5
@@ -324,13 +322,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	private func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
-	}
-
 	@objc private func externalDataUpdate() {
 		spinner.stopAnimating()
 		let count = Model.drops.count
@@ -343,14 +334,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			deleteAll.isEnabled = false
 		}
 		container.accessibilityValue = infoLabel.text
-	}
-
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showAbout" {
-			if navigationItem.rightBarButtonItem == nil {
-				segue.destination.navigationItem.rightBarButtonItem = nil
-			}
-		}
 	}
 
 	///////////////////////////////////

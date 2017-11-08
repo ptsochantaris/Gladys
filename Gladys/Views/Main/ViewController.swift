@@ -263,9 +263,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			for n in t.viewControllers ?? [] {
 				n.view.backgroundColor = c
-				if !UIAccessibilityIsVoiceOverRunning() && !phoneMode, let d = (n as? UINavigationController)?.topViewController {
-					d.navigationItem.rightBarButtonItem = nil
-				}
 			}
 
 		} else if segue.identifier == "showDetail",
@@ -285,9 +282,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				let c = patternColor
 				p.backgroundColor = c
 				n.view.backgroundColor = c
-				if !UIAccessibilityIsVoiceOverRunning() && !phoneMode {
-					d.navigationItem.rightBarButtonItem = nil
-				}
 			}
 
 		} else if segue.identifier == "showLabels",
@@ -763,13 +757,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	func forceLayout() {
 		lastSize = .zero
 		view.setNeedsLayout()
-	}
-	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-		if phoneMode, let l = currentLabelSelector {
-			let wide = newCollection.horizontalSizeClass != .compact
-			l.view.backgroundColor = wide ? .white : .clear
-			l.showDone(wide)
-		}
 	}
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()

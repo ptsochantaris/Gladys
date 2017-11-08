@@ -10,6 +10,11 @@ import UIKit
 
 class GladysViewController: UIViewController {
 
+	enum DoneLocation {
+		case none, left, right
+	}
+	var doneLocation = DoneLocation.none
+
 	var initialAccessibilityElement: UIView {
 		return navigationController?.navigationBar ?? view
 	}
@@ -50,6 +55,38 @@ class GladysViewController: UIViewController {
 			} else {
 				UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, v.view)
 			}
+		}
+	}
+
+	@objc func done() {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+			_ = f(p)
+		}
+		dismiss(animated: true)
+	}
+
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
+		showDone(s == 0 && ViewController.shared.traitCollection.horizontalSizeClass == .compact || UIAccessibilityIsVoiceOverRunning())
+	}
+
+	private func showDone(_ show: Bool) {
+		switch doneLocation {
+		case .left:
+			if show && navigationItem.leftBarButtonItem == nil {
+				navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+			} else if !show && navigationItem.leftBarButtonItem != nil {
+				navigationItem.leftBarButtonItem = nil
+			}
+		case .right:
+			if show && navigationItem.rightBarButtonItem == nil {
+				navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+			} else if !show && navigationItem.rightBarButtonItem != nil {
+				navigationItem.rightBarButtonItem = nil
+			}
+		case .none:
+			break
 		}
 	}
 }

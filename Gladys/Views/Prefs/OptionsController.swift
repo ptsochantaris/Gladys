@@ -27,6 +27,8 @@ final class OptionsController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		doneLocation = .right
+
 		separateItemsSwitch.tintColor = UIColor.lightGray
 		separateItemsSwitch.onTintColor = view.tintColor
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
@@ -34,16 +36,5 @@ final class OptionsController: GladysViewController {
 		twoColumnsSwitch.tintColor = UIColor.lightGray
 		twoColumnsSwitch.onTintColor = view.tintColor
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
-	}
-
-	private func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
-	}
-
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		done()
 	}
 }

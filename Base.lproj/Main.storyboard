@@ -391,11 +391,6 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="deleteAllItemsSelected:" destination="HJT-hG-46H" id="B6p-iF-cU4"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="aj9-up-Brs">
-                            <connections>
-                                <action selector="doneSelected:" destination="HJT-hG-46H" id="vyJ-2F-NZq"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -522,13 +517,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="wOj-7s-Sqp"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="REe-Ta-y5r">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="yel-Pz-H2C">
-                            <connections>
-                                <action selector="doneSelected:" destination="mOB-Wa-q7c" id="3Mk-ty-OVu"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="separateItemsSwitch" destination="rEn-tW-qfZ" id="7Z0-nJ-PnJ"/>
@@ -662,11 +651,6 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" id="j4c-6Y-KsL"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="2tt-ZI-Tzq">
-                            <connections>
-                                <action selector="doneSelected:" destination="PmV-gD-gyX" id="lh0-7p-mdb"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="eraseAlliCloudData" destination="7JS-kd-eCS" id="YXc-ZP-82j"/>
@@ -746,11 +730,6 @@ Selecting them will show only items that contain these labels.</string>
                     </view>
                     <navigationItem key="navigationItem" id="IwC-N7-oaE">
                         <barButtonItem key="leftBarButtonItem" enabled="NO" title="Version" id="1U2-0T-zYK"/>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="6KI-Rn-fhA">
-                            <connections>
-                                <action selector="doneSelected:" destination="3Cr-dT-I5Y" id="ngW-BO-5dE"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="unlimitedButton" destination="BHy-ip-KBG" id="Tin-2n-3KA"/>
@@ -1032,11 +1011,6 @@ Selecting them will show only items that contain these labels.</string>
                         <barButtonItem key="leftBarButtonItem" title="Open" id="qFs-2B-sKz">
                             <connections>
                                 <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="1GB-Fa-pGA">
-                            <connections>
-                                <action selector="doneSelected:" destination="Ftr-GB-y6U" id="Tfb-QU-WjI"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

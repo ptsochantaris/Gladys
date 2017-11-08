@@ -23,6 +23,8 @@ final class iCloudController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		doneLocation = .right
+
 		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
 
 		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
@@ -126,16 +128,5 @@ final class iCloudController: GladysViewController {
 				}
 			}
 		}
-	}
-
-	private func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
-	}
-
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		done()
 	}
 }

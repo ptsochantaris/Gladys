@@ -19,6 +19,8 @@ final class AboutController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		doneLocation = .right
+
 		if infiniteMode {
 			unlimitedButton.isHidden = true
 			unlimitedSpacing.constant = 0
@@ -37,17 +39,6 @@ final class AboutController: GladysViewController {
 				self.done()
 			}
 		}
-	}
-
-	@IBAction func doneSelected(_ sender: UIBarButtonItem) {
-		done()
-	}
-
-	private func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
-			_ = f(p)
-		}
-		dismiss(animated: true)
 	}
 
 	@IBAction func unlimitedSelected(_ sender: UIButton) {

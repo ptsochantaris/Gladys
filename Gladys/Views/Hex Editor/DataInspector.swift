@@ -122,7 +122,7 @@ final class DataInspector: GladysViewController {
 	@objc private func updateBytes() {
 
 		if bytes.count == 0 {
-			doneSelected(nil)
+			done()
 			return
 		}
 
@@ -188,15 +188,7 @@ final class DataInspector: GladysViewController {
         DataInspector.decimalSwitchOn = decimalSwitch.isOn
         DataInspector.littleEndianSwitchOn = littleEndianSwitch.isOn
     }
-    
-    func doneSelected(_ sender: UIBarButtonItem?) {
-        if let p = popoverPresentationController, let shouldDismiss = p.delegate?.popoverPresentationControllerShouldDismissPopover {
-            if shouldDismiss(p) {
-                dismiss(animated: true)
-            }
-        }
-    }
-    
+        
     private func calculate<T: FixedWidthInteger>(_ type: T.Type) -> String {
         let byteCount = type.bitWidth / 8
 		let maxLength = min(byteCount, bytes.count)

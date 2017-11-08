@@ -16,6 +16,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		doneLocation = .left
 		var count = 0
 		for toggle in filteredToggles {
 			if toggle.enabled {
@@ -45,14 +46,6 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		table.tableFooterView = UIView()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
-	}
-
-	func showDone(_ show: Bool) {
-		if show && navigationItem.leftBarButtonItem == nil {
-			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneSelected(_:)))
-		} else if !show && navigationItem.leftBarButtonItem != nil {
-			navigationItem.leftBarButtonItem = nil
-		}
 	}
 
 	deinit {
@@ -169,11 +162,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		}
 	}
 
-	@objc private func doneSelected(_ sender: UIBarButtonItem) {
-		done()
-	}
-
-	private func done() {
+	override func done() {
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
 			_ = f(p)
 		}
