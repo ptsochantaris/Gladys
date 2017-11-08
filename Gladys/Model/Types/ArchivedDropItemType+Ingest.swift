@@ -9,7 +9,7 @@ extension ArchivedDropItemType {
 
 	private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate, encodeAnyUIImage: Bool = false) -> Progress {
+	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate, encodeAnyUIImage: Bool) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
 
@@ -25,24 +25,10 @@ extension ArchivedDropItemType {
 			} else {
 				let error = error ?? NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
 				log(">> Error receiving item: \(error.finalDescription)")
-				log(">> Fallback to file representation load")
-				
-				provider.loadFileRepresentation(forTypeIdentifier: s.typeIdentifier) { fileUrl, fileError in
-					if let fileUrl = fileUrl, let data = try? Data(contentsOf: fileUrl, options: .alwaysMapped) {
-						ArchivedDropItemType.ingestQueue.async {
-							log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
-							s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage) {
-								overallProgress.completedUnitCount += 1
-							}
-						}
-					} else {
-						log(">> Fallback to file representation failed: \(error.finalDescription)")
-						s.loadingError = error
-						s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-						s.completeIngest()
-						overallProgress.completedUnitCount += 1
-					}
-				}
+				s.loadingError = error
+				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+				s.completeIngest()
+				overallProgress.completedUnitCount += 1
 			}
 		}
 		overallProgress.addChild(p, withPendingUnitCount: 2)
