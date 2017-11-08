@@ -36,6 +36,8 @@ final class TodayCell: UICollectionViewCell {
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
 
 		imageView.layer.cornerRadius = 5
+		isAccessibilityElement = true
+		accessibilityHint = "Select to copy"
 	}
 
 	var dropItem: ArchivedDropItem? {
@@ -54,6 +56,8 @@ final class TodayCell: UICollectionViewCell {
 				case .fit:
 					imageView.contentMode = .scaleAspectFit
 				}
+				accessibilityLabel = "Added " + (bottomLabel.text ?? "")
+				accessibilityValue = topLabel.text ?? ""
 			}
 		}
 	}
