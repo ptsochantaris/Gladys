@@ -27,10 +27,13 @@ class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 	private func sizeWindow() {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			if let n = self.selectedViewController as? UINavigationController, let v = n.topViewController {
-				let s = v.view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
-													   withHorizontalFittingPriority: .required,
-													   verticalFittingPriority: .fittingSizeLevel)
-				self.preferredContentSize = s
+				var size = v.view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
+														  withHorizontalFittingPriority: .required,
+														  verticalFittingPriority: .fittingSizeLevel)
+				if let s = v.view.subviews.first as? UIScrollView {
+					size.height += s.contentSize.height
+				}
+				self.preferredContentSize = size
 			}
 		}
 	}
