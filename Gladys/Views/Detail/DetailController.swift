@@ -18,6 +18,9 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		doneLocation = .right
+
 		table.estimatedRowHeight = 120
 		table.rowHeight = UITableViewAutomaticDimension
 		table.dragInteractionEnabled = true
