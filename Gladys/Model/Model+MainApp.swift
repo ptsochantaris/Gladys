@@ -178,7 +178,7 @@ extension Model {
 		currentFilterQuery = nil
 		modelFilter = newValue
 
-		let olduuids = filteredUuids
+		let previouslyVisibleUuids = visibleUuids
 		var filtering = false
 
 		if let f = filter, !f.isEmpty {
@@ -212,7 +212,7 @@ extension Model {
 			cachedFilteredDrops = postLabelDrops
 		}
 
-		if signalUpdate && olduuids != filteredUuids {
+		if signalUpdate && previouslyVisibleUuids != visibleUuids {
 
 			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
@@ -231,8 +231,8 @@ extension Model {
 		}
 	}
 
-	private static var filteredUuids: [String] {
-		return cachedFilteredDrops?.map({ $0.uuid.uuidString }) ?? []
+	private static var visibleUuids: [UUID] {
+		return (cachedFilteredDrops ?? drops).map { $0.uuid }
 	}
 
 	static func removeLabel(_ label : String) {
