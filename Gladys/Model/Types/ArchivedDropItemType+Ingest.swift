@@ -238,27 +238,29 @@ extension ArchivedDropItemType {
 			handleUrl(url as URL, data)
 			return // important
 
-		} else if typeConforms(to: kUTTypeText as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
-		} else if displayIconPriority == 0 && typeConforms(to: kUTTypeImage as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
-
-		} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
-
-		} else if typeConforms(to: kUTTypeArchive as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "zip"), 50, .center)
-
-		} else if typeConforms(to: kUTTypeAudio as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
-
-		} else if typeConforms(to: kUTTypeContent as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 		}
 
 		if displayIconPriority == 0 {
-			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			if typeConforms(to: kUTTypeText as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+
+			} else if typeConforms(to: kUTTypeImage as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
+
+			} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
+
+			} else if typeConforms(to: kUTTypeArchive as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "zip"), 50, .center)
+
+			} else if typeConforms(to: kUTTypeAudio as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
+
+			} else if typeConforms(to: kUTTypeContent as CFString) {
+				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+			} else {
+				setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+			}
 		}
 
 		completeIngest()
