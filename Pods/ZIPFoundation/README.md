@@ -1,6 +1,7 @@
 <img src="https://user-images.githubusercontent.com/1577319/27564151-1d99e3a0-5ad6-11e7-8ab6-417c5b5a3ff2.png" width="489"/>
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/ZIPFoundation.svg)](https://cocoapods.org/pods/ZIPFoundation)
 [![Platform](https://img.shields.io/cocoapods/p/ZIPFoundation.svg?style=flat)](http://cocoadocs.org/docsets/ZIPFoundation)
 [![Twitter](https://img.shields.io/badge/twitter-@weichsel-blue.svg?style=flat)](http://twitter.com/weichsel)
@@ -48,6 +49,7 @@ The ZIP Foundation package uses the [V4 Package Description API](https://github.
 To add ZIP Foundation as a dependency, you have to add it to the `dependencies` of your `Package.swift` file and refer to that dependency in your `target`.
 
 ```swift
+// swift-tools-version:4.0
 import PackageDescription
 let package = Package(
     name: "<Your Product Name>",
@@ -68,6 +70,24 @@ After adding the dependency, you can fetch the library with:
 $ swift package resolve
 ```
 
+### Carthage
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager.  
+Installation instructions can be found in the project's [README file](https://github.com/Carthage/Carthage#installing-carthage).
+
+To integrate ZIPFoundation into your Xcode project using Carthage, you have to add it to your `Cartfile`:
+
+```ogdl
+github "weichsel/ZIPFoundation" ~> 0.9
+```
+
+After adding ZIPFoundation to the `Cartfile`, you have to fetch the sources by running:
+
+```bash
+carthage update --no-build
+```
+
+The fetched project has to be integrated into your workspace by dragging `ZIPFoundation.framework` to Xcode's Project Navigator. (See [official Carhage docs](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).)
 
 ### CocoaPods
 

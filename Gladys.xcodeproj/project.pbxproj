@@ -1433,7 +1433,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 830AF4B32245C358B4C1156F /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
@@ -1592,7 +1591,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BCB1F62DCC7BDC22E0AE4831 /* Pods-Gladys.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;

@@ -29,9 +29,11 @@ extension Archive {
                          bufferSize: UInt32 = defaultWriteChunkSize) throws {
         let fileManager = FileManager()
         let entryURL = baseURL.appendingPathComponent(path)
+        guard fileManager.fileExists(atPath: entryURL.path) else {
+            throw CocoaError.error(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: entryURL.path], url: nil)
+        }
         guard fileManager.isReadableFile(atPath: entryURL.path) else {
-            throw NSError(domain: NSCocoaErrorDomain, code: CocoaError.fileReadNoPermission.rawValue,
-                          userInfo: [NSFilePathErrorKey: url.path])
+            throw CocoaError.error(.fileReadNoPermission, userInfo: [NSFilePathErrorKey: url.path], url: nil)
         }
         let type = try FileManager.typeForItem(at: entryURL)
         let modDate = try FileManager.fileModificationDateTimeForItem(at: entryURL)
@@ -61,8 +63,7 @@ extension Archive {
                 let linkFileSystemRepresentation = fileManager.fileSystemRepresentation(withPath: linkDestination)
                 let linkLength = Int(strlen(linkFileSystemRepresentation))
                 let linkBuffer = UnsafeBufferPointer(start: linkFileSystemRepresentation, count: linkLength)
-                let linkData = Data.init(buffer: linkBuffer)
-                return linkData
+                return Data.init(buffer: linkBuffer)
             }
             try self.addEntry(with: path, type: type, uncompressedSize: uncompressedSize,
                               modificationDate: modDate, permissions: permissions,
