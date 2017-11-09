@@ -137,13 +137,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canPreview: Bool {
-		if QLPreviewController.canPreview(previewTempPath as NSURL) {
-			return true
-		} else if let url = encodedUrl, url.scheme?.hasPrefix("http") ?? false {
-			return true
-		} else {
-			return false
-		}
+		return typeIdentifier == "public.url" || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 
 	var previewTempPath: URL {

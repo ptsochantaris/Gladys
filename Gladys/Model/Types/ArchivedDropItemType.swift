@@ -77,9 +77,12 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var encodedUrl: NSURL? {
-		if let u = decode() as? NSURL {
+		guard typeIdentifier == "public.url" || typeIdentifier == "public.file-url" else { return nil }
+
+		let decoded = decode()
+		if let u = decoded as? NSURL {
 			return u
-		} else if let array = decode() as? NSArray {
+		} else if let array = decoded as? NSArray {
 			for item in array {
 				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
 					return url
