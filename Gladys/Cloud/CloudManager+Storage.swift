@@ -11,9 +11,28 @@ import CloudKit
 	import UIKit
 #endif
 
-private var defaults: UserDefaults = { return UserDefaults(suiteName: "group.buildefaults.bru.Gladys")! }()
+private var defaults: UserDefaults = { return UserDefaults(suiteName: "group.build.bru.Gladys")! }()
 
 class PersistedOptions {
+
+	static func migrateBrokenDefaults() { // keep this around for a while
+		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {
+			var changes = false
+			for key in ["separateItemPreference", "forceTwoColumnPreference", "lastiCloudAccount", "lastSyncCompletion", "zoneChangeMayNotReflectSavedChanges", "syncSwitchedOn", "onlySyncOverWiFi", "zoneChangeToken", "uuidSequence"] {
+				if let o = brokenDefaults.object(forKey: key) {
+					log("Migrating option \(key) to correct defaults group")
+					defaults.set(o, forKey: key)
+					brokenDefaults.removeObject(forKey: key)
+					changes = true
+				}
+			}
+			if changes {
+				brokenDefaults.synchronize()
+				defaults.synchronize()
+			}
+		}
+	}
+
 	static var separateItemPreference: Bool {
 		get {
 			return defaults.bool(forKey: "separateItemPreference")

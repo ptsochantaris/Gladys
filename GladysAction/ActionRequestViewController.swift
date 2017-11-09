@@ -92,6 +92,9 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		extensionContext?.cancelRequest(withError: error)
 	}
 
+	private var uploadObservation: NSKeyValueObservation?
+	private var uploadProgress: Progress?
+
 	func loadCompleted(sender: AnyObject, success: Bool) {
 		loadCount -= 1
 		if loadCount == 0 {
@@ -105,8 +108,9 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 				}
 			}
 			Model.queueNextSaveCallback {
-				self.statusLabel?.text = "Uploading..."
-				CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
+				self.uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
+					self.uploadObservation = nil
+					self.uploadProgress = nil
 					self.statusLabel?.text = "Done"
 					if let error = error {
 						log("Error while sending up items from extension: \(error.finalDescription)")
@@ -114,6 +118,15 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 					log("Action done")
 					DispatchQueue.main.async {
 						self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+					}
+				}
+
+				if let p = self.uploadProgress {
+					self.statusLabel?.text = "Uploading..."
+					self.uploadObservation = p.observe(\Progress.completedUnitCount) { progress, change in
+						let complete = Int((progress.fractionCompleted * 100).rounded())
+						let line = "\(complete)% Uploaded"
+						self.statusLabel?.text = line
 					}
 				}
 			}

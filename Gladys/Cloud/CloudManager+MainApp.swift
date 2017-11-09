@@ -250,7 +250,11 @@ extension CloudManager {
 			if typeUpdateCount > 0 { components.append(newCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
 
 			if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-			syncProgressString = "Fetching" + (components.count > 0 ? (" " + components.joined(separator: ", ")) : "")
+			if components.count > 0 {
+				syncProgressString = "Fetched " + components.joined(separator: ", ")
+			} else {
+				syncProgressString = "Fetching"
+			}
 		}
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)

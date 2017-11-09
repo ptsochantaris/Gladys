@@ -35,14 +35,16 @@ final class CloudManager {
 
 	/////////////////////////////////////////////
 
-	static func sendUpdatesUp(completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn { completion(nil); return }
+	@discardableResult
+	static func sendUpdatesUp(completion: @escaping (Error?)->Void) -> Progress? {
+		if !syncSwitchedOn { completion(nil); return nil }
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 		var idsToPush = [String]()
 		var dataItemsToPush = 0
 		var dropsToPush = 0
+		var uuid2progress = [String: Progress]()
 
 		var payloadsToPush = Model.drops.flatMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
@@ -50,7 +52,12 @@ final class CloudManager {
 				dropsToPush += 1
 				var payload = item.typeItems.flatMap { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
-				idsToPush.append(item.uuid.uuidString)
+
+				let itemId = item.uuid.uuidString
+				idsToPush.append(itemId)
+				uuid2progress[itemId] = Progress(totalUnitCount: 100)
+				item.typeItems.forEach { uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
+
 				return payload
 			}
 			return nil
@@ -91,9 +98,13 @@ final class CloudManager {
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
 			completion(nil)
-			return
+			return nil
 		}
 
+		let progress = Progress(totalUnitCount: Int64(dropsToPush + dataItemsToPush) * 100)
+		for (k, v) in uuid2progress {
+			progress.addChild(v, withPendingUnitCount: 100)
+		}
 		syncProgressString = "Sending changes"
 
 		var latestError: Error?
@@ -139,6 +150,12 @@ final class CloudManager {
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
 			operation.savePolicy = .allKeys
 			operation.isAtomic = true
+			operation.perRecordProgressBlock = { record, progress in
+				DispatchQueue.main.async {
+					let recordProgress = uuid2progress[record.recordID.recordName]
+					recordProgress?.completedUnitCount = Int64(progress * 100.0)
+				}
+			}
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
 					if let error = error {
@@ -180,5 +197,7 @@ final class CloudManager {
 		operations.forEach {
 			go($0)
 		}
+
+		return progress
 	}
 }
