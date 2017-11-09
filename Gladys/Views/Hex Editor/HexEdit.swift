@@ -56,6 +56,11 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		addressItem.customView = addressViewHolder
 		asciiModeButton.title = asciiMode ? "HEX" : "ASCII"
 		clearSelection()
+
+		if bytes.count == 0 {
+			addressButton.isEnabled = false
+			ascii.isEnabled = false
+		}
 	}
 
 	private func selectCell(at point: CGPoint, animated: Bool) {
@@ -232,7 +237,8 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		super.viewDidLayoutSubviews()
 		if lastSize != view.frame.size && !view.frame.isEmpty {
 			lastSize = view.frame.size
-			preferredContentSize = CGSize(width: preferredContentSize.width, height: grid.collectionViewLayout.collectionViewContentSize.height)
+			let H = max(grid.collectionViewLayout.collectionViewContentSize.height, 120)
+			preferredContentSize = CGSize(width: preferredContentSize.width, height: H)
 			grid.collectionViewLayout.invalidateLayout()
 		}
 	}
