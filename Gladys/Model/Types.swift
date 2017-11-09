@@ -169,10 +169,20 @@ extension UIView {
 		view.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(view)
 
-		view.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: insets.left).isActive = true
-		view.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -insets.right).isActive = true
-		view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
-		view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
+		view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.left).isActive = true
+		view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.right).isActive = true
+		view.topAnchor.constraint(equalTo: topAnchor, constant: insets.top).isActive = true
+		view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom).isActive = true
+	}
+
+	func coverUnder(with view: UIView, insets: UIEdgeInsets = .zero) {
+		view.translatesAutoresizingMaskIntoConstraints = false
+		superview?.insertSubview(view, belowSubview: self)
+
+		view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.left).isActive = true
+		view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.right).isActive = true
+		view.topAnchor.constraint(equalTo: topAnchor, constant: insets.top).isActive = true
+		view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom).isActive = true
 	}
 
 	func center(on parentView: UIView, offset: CGFloat = 0) {

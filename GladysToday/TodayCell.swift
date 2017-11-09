@@ -25,15 +25,15 @@ final class TodayCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		let b = UIView()
-		b.backgroundColor = .lightGray
-		b.layer.cornerRadius = 10
-		backgroundView = b
+		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+		backgroundEffect.layer.cornerRadius = 10
+		backgroundEffect.clipsToBounds = true
+		backgroundView = backgroundEffect
 
-		let borderView = UIView()
-		borderView.backgroundColor = .white
-		borderView.layer.cornerRadius = 10
-		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
+		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+		imageEffect.layer.cornerRadius = 5
+		imageEffect.clipsToBounds = true
+		imageView.coverUnder(with: imageEffect)
 
 		imageView.layer.cornerRadius = 5
 		isAccessibilityElement = true
