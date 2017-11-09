@@ -253,7 +253,7 @@ extension ArchivedDropItemType {
 		} else if typeConforms(to: kUTTypeAudio as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
 
-		} else if typeIdentifier.contains(".iwork.") {
+		} else if typeConforms(to: kUTTypeContent as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 		}
 
