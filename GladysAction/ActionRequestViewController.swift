@@ -108,19 +108,13 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 				}
 			}
 			Model.queueNextSaveCallback {
-				self.uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
-					self.uploadObservation = nil
-					self.uploadProgress = nil
-					self.statusLabel?.text = "Done"
-					if let error = error {
-						log("Error while sending up items from extension: \(error.finalDescription)")
-					}
-					log("Action done")
-					DispatchQueue.main.async {
-						self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-					}
+				if !CloudManager.shareActionShouldUpload {
+					self.sharingDone(error: nil)
+					return
 				}
-
+				self.uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
+					self.sharingDone(error: error)
+				}
 				if let p = self.uploadProgress {
 					self.statusLabel?.text = "Uploading..."
 					self.uploadObservation = p.observe(\Progress.completedUnitCount) { progress, change in
@@ -130,6 +124,19 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 					}
 				}
 			}
+		}
+	}
+
+	private func sharingDone(error: Error?) {
+		self.uploadObservation = nil
+		self.uploadProgress = nil
+		self.statusLabel?.text = "Done"
+		if let error = error {
+			log("Error while sending up items from extension: \(error.finalDescription)")
+		}
+		log("Action done")
+		DispatchQueue.main.async {
+			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
 	}
 }

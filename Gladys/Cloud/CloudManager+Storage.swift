@@ -128,6 +128,17 @@ extension CloudManager {
 		}
 	}
 
+	static var shareActionShouldUpload: Bool {
+		get {
+			return defaults.bool(forKey: "shareActionShouldUpload")
+		}
+
+		set {
+			defaults.set(newValue, forKey: "shareActionShouldUpload")
+			defaults.synchronize()
+		}
+	}
+
 	static var onlySyncOverWiFi: Bool {
 		get {
 			return defaults.bool(forKey: "onlySyncOverWiFi")

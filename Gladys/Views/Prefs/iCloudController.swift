@@ -15,9 +15,14 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
 	@IBOutlet weak var eraseAlliCloudData: UIBarButtonItem!
+	@IBOutlet weak var actionUploadSwitch: UISwitch!
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
+	}
+
+	@IBAction func uploadItemsFromShareChanged(_ sender: UISwitch) {
+		CloudManager.shareActionShouldUpload = sender.isOn
 	}
 
 	override func viewDidLoad() {
@@ -25,18 +30,20 @@ final class iCloudController: GladysViewController {
 
 		doneLocation = .right
 
-		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
-
 		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
+		icloudSwitch.tintColor = .lightGray
+		icloudSwitch.onTintColor = view.tintColor
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
 
-		icloudSwitch.tintColor = UIColor.lightGray
-		icloudSwitch.onTintColor = view.tintColor
-
-		limitToWiFiSwitch.tintColor = UIColor.lightGray
+		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
+		limitToWiFiSwitch.tintColor = .lightGray
 		limitToWiFiSwitch.onTintColor = view.tintColor
+
+		actionUploadSwitch.isOn = CloudManager.shareActionShouldUpload
+		actionUploadSwitch.tintColor = .lightGray
+		actionUploadSwitch.onTintColor = view.tintColor
 
 		updateiCloudControls()
 	}
