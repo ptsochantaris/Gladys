@@ -279,11 +279,10 @@ extension ArchivedDropItemType {
 	private func generatePdfPreview() -> UIImage? {
 		guard let document = CGPDFDocument(bytesPath as CFURL), let firstPage = document.page(at: 1) else { return nil }
 
-		let side: CGFloat = 512
+		let side: CGFloat = 1024
 
 		var pageRect = firstPage.getBoxRect(.cropBox)
-		let s = UIScreen.main.scale
-		let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height) * s
+		let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
 		pageRect.origin = .zero
 		pageRect.size.width = pageRect.size.width * pdfScale
 		pageRect.size.height = pageRect.size.height * pdfScale
@@ -298,14 +297,14 @@ extension ArchivedDropItemType {
 
 		guard let context = c else { return nil }
 
-		context.setFillColor(red: 0, green: 0, blue: 0, alpha: 0)
+		context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
 		context.fill(pageRect)
 
 		context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
 		context.drawPDFPage(firstPage)
 
 		if let cgImage = context.makeImage() {
-			return UIImage(cgImage: cgImage, scale: s, orientation: .up)
+			return UIImage(cgImage: cgImage, scale: 1, orientation: .up)
 		} else {
 			return nil
 		}
