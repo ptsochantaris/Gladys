@@ -47,6 +47,9 @@ extension CloudManager {
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
 			log("Received zone change push")
+			if UIApplication.shared.applicationState == .background {
+				Model.reloadDataIfNeeded()
+			}
 			sync { error in
 				if error != nil {
 					completionHandler(.failed)
@@ -103,6 +106,7 @@ extension CloudManager {
 					uuidSequenceRecord = nil
 					zoneChangeToken = nil
 					zoneChangeMayNotReflectSavedChanges = false
+					shareActionIsActioningIds = []
 					syncSwitchedOn = false
 					lastiCloudAccount = nil
 					UIApplication.shared.unregisterForRemoteNotifications()
@@ -298,7 +302,7 @@ extension CloudManager {
 				} else if record.recordType == "ArchivedDropItemType" {
 					if let typeItem = Model.typeItem(uuid: itemUUID) {
 						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
-							log("Update but no changes to item type record \(itemUUID)")
+							log("Update but no changes to item type data record \(itemUUID)")
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)

@@ -139,6 +139,17 @@ extension CloudManager {
 		}
 	}
 
+	static var shareActionIsActioningIds: [String] {
+		get {
+			return defaults.object(forKey: "shareActionIsActioningIds") as? [String] ?? []
+		}
+
+		set {
+			defaults.set(newValue, forKey: "shareActionIsActioningIds")
+			defaults.synchronize()
+		}
+	}
+
 	static var onlySyncOverWiFi: Bool {
 		get {
 			return defaults.bool(forKey: "onlySyncOverWiFi")

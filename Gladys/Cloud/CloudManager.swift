@@ -37,7 +37,11 @@ final class CloudManager {
 
 	@discardableResult
 	static func sendUpdatesUp(completion: @escaping (Error?)->Void) -> Progress? {
-		if !syncSwitchedOn { completion(nil); return nil }
+		if !syncSwitchedOn {
+			CloudManager.shareActionIsActioningIds = []
+			completion(nil)
+			return nil
+		}
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
@@ -97,6 +101,9 @@ final class CloudManager {
 
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
+			#if MAINAPP
+				CloudManager.shareActionIsActioningIds = []
+			#endif
 			completion(nil)
 			return nil
 		}
@@ -192,6 +199,9 @@ final class CloudManager {
 			}
 		}
 		group.notify(queue: DispatchQueue.main) {
+			#if MAINAPP
+				CloudManager.shareActionIsActioningIds = []
+			#endif
 			completion(latestError)
 		}
 		operations.forEach {

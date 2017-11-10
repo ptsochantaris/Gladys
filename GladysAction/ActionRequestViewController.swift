@@ -104,6 +104,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
 				DispatchQueue.main.async {
 					self.statusLabel?.text = "Saving..."
+					CloudManager.shareActionIsActioningIds = CloudManager.shareActionShouldUpload ? self.newItemIds : []
 					Model.save()
 				}
 			}
