@@ -115,7 +115,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 				if let data = typeItem.dataForWrappedItem {
 					try? data.write(to: tempPath)
 				} else {
-					try? fm.copyItem(at: blobPath, to: tempPath)
+					try? fm.linkItem(at: blobPath, to: tempPath)
 				}
 				log("Created temporary file for preview")
 				previewItemURL = tempPath
@@ -138,13 +138,5 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	var canPreview: Bool {
 		return typeIdentifier == "public.url" || QLPreviewController.canPreview(previewTempPath as NSURL)
-	}
-
-	var previewTempPath: URL {
-		if let f = fileExtension {
-			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
-		} else {
-			return bytesPath
-		}
 	}
 }

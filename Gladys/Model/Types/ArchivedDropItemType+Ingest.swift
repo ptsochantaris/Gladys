@@ -3,6 +3,7 @@ import UIKit
 import Fuzi
 import MapKit
 import Contacts
+import AVFoundation
 import MobileCoreServices
 
 extension ArchivedDropItemType {
@@ -41,6 +42,7 @@ extension ArchivedDropItemType {
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
 			ArchivedDropItemType.ingestQueue.async { [weak self] in
+				self?.displayIconPriority = 0
 				self?.ingest(data: bytesCopy) {
 					overallProgress.completedUnitCount += 1
 				}
@@ -248,7 +250,11 @@ extension ArchivedDropItemType {
 				setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
 			} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
+				if let moviePreview = generateMoviePreview() {
+					setDisplayIcon(moviePreview, 50, .fill)
+				} else {
+					setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
+				}
 
 			} else if typeConforms(to: kUTTypeArchive as CFString) {
 				setDisplayIcon(#imageLiteral(resourceName: "zip"), 50, .center)
@@ -256,14 +262,86 @@ extension ArchivedDropItemType {
 			} else if typeConforms(to: kUTTypeAudio as CFString) {
 				setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
 
+			} else if typeConforms(to: kUTTypePDF as CFString), let pdfPreview = generatePdfPreview() {
+				setDisplayIcon(pdfPreview, 50, .fill)
+
 			} else if typeConforms(to: kUTTypeContent as CFString) {
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+
 			} else {
 				setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			}
 		}
 
 		completeIngest()
+	}
+
+	private func generatePdfPreview() -> UIImage? {
+		guard let document = CGPDFDocument(bytesPath as CFURL), let firstPage = document.page(at: 1) else { return nil }
+
+		let side: CGFloat = 512
+
+		var pageRect = firstPage.getBoxRect(.cropBox)
+		let s = UIScreen.main.scale
+		let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height) * s
+		pageRect.origin = .zero
+		pageRect.size.width = pageRect.size.width * pdfScale
+		pageRect.size.height = pageRect.size.height * pdfScale
+
+		let c = CGContext(data: nil,
+						  width: Int(pageRect.size.width),
+						  height: Int(pageRect.size.height),
+						  bitsPerComponent: 8,
+						  bytesPerRow: Int(pageRect.size.width) * 4,
+						  space: CGColorSpaceCreateDeviceRGB(),
+						  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)
+
+		guard let context = c else { return nil }
+
+		context.setFillColor(red: 0, green: 0, blue: 0, alpha: 0)
+		context.fill(pageRect)
+
+		context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
+		context.drawPDFPage(firstPage)
+
+		if let cgImage = context.makeImage() {
+			return UIImage(cgImage: cgImage, scale: s, orientation: .up)
+		} else {
+			return nil
+		}
+	}
+
+	var previewTempPath: URL {
+		if let f = fileExtension {
+			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
+		} else {
+			return bytesPath
+		}
+	}
+
+	private func generateMoviePreview() -> UIImage? {
+		do {
+			let fm = FileManager.default
+			let tempPath = previewTempPath
+			if fm.fileExists(atPath: tempPath.path) {
+				try? fm.removeItem(at: tempPath)
+			}
+			try? fm.linkItem(at: bytesPath, to: tempPath)
+
+			let asset = AVURLAsset(url: tempPath , options: nil)
+			let imgGenerator = AVAssetImageGenerator(asset: asset)
+			imgGenerator.appliesPreferredTrackTransform = true
+			let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+
+			if fm.fileExists(atPath: tempPath.path) {
+				try? fm.removeItem(at: tempPath)
+			}
+			return UIImage(cgImage: cgImage)
+
+		} catch let error {
+			print("Error generating movie thumbnail: \(error.finalDescription)")
+			return nil
+		}
 	}
 
 	private func setLoadingError(_ message: String) {
