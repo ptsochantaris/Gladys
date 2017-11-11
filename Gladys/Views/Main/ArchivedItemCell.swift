@@ -374,6 +374,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		MiniMapView.clearCaches()
 	}
 
+	static func clearCachedImage(for item: ArchivedDropItem) {
+		displayIconCache.removeObject(forKey: item.imageCacheKey)
+	}
+
 	private func decorate(with item: ArchivedDropItem?) {
 
 		var wantMapView = false
@@ -398,7 +402,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				hideImage = false
 				progressView.observedProgress = nil
 
-				let cacheKey = "\(item.uuid.uuidString) \(item.updatedAt.timeIntervalSinceReferenceDate)" as NSString
+				let cacheKey = item.imageCacheKey
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
 					image.image = cachedImage
 				} else {

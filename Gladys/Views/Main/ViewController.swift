@@ -589,6 +589,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		for item in itemsToReIngest {
 			loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()
+			ArchivedItemCell.clearCachedImage(for: item)
 			item.reIngest(delegate: self)
 		}
 

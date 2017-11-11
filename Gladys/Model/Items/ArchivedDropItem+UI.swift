@@ -97,6 +97,10 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
+	var imageCacheKey: NSString {
+		return "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)" as NSString
+	}
+
 	private class QLHostingViewController: UINavigationController {
 		override func viewDidDisappear(_ animated: Bool) {
 			super.viewDidDisappear(animated)
