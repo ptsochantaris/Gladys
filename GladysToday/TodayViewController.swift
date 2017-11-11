@@ -17,22 +17,25 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	@IBOutlet weak var copiedLabel: UILabel!
 
 	private var itemCount: Int {
-		let s = view.bounds.size
-		let count: Int
-		if s.width < 320 {
-			count = 2
-		} else if s.width < 400 {
-			count = 3
-		} else {
-			count = 4
-		}
+		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
 		return min(count, Model.drops.count)
 	}
 
+	private var itemsPerRow: Int {
+		let s = itemsView.bounds.size
+		if s.width < 320 {
+			return min(2, Model.drops.count)
+		} else if s.width < 400 {
+			return min(3, Model.drops.count)
+		} else {
+			return min(4, Model.drops.count)
+		}
+	}
+
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let count = CGFloat(itemCount)
+		let count = CGFloat(itemsPerRow)
 		var s = view.bounds.size
-		s.height -= 20
+		s.height = 90
 		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
 		return s
 	}
@@ -81,7 +84,12 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
 		itemsView.dragDelegate = self
+	}
+
+	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
+		updateUI()
 	}
 
     override func didReceiveMemoryWarning() {
@@ -94,6 +102,8 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		copiedLabel.alpha = 0
 		emptyLabel.isHidden = Model.drops.count > 0
 		itemsView.reloadData()
+		itemsView.layoutIfNeeded()
+		preferredContentSize = itemsView.contentSize
 	}
 
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
