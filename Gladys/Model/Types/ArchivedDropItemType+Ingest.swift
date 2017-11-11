@@ -42,7 +42,6 @@ extension ArchivedDropItemType {
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
 			ArchivedDropItemType.ingestQueue.async { [weak self] in
-				self?.displayIconPriority = 0
 				self?.ingest(data: bytesCopy) {
 					overallProgress.completedUnitCount += 1
 				}
@@ -55,20 +54,20 @@ extension ArchivedDropItemType {
 	}
 
 	private func ingest(data: Data, encodeAnyUIImage: Bool = false, completion: @escaping ()->Void) { // in thread!
-
+		
 		ingestCompletion = completion
-
+		
 		let item: NSSecureCoding
 		if data.isPlist, let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
 			log("      unwrapped keyed object: \(type(of:obj))")
 			item = obj
 			classWasWrapped = true
-
+			
 		} else {
 			log("      looks like raw data")
 			item = data as NSSecureCoding
 		}
-
+		
 		if let item = item as? NSString {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
@@ -76,7 +75,7 @@ extension ArchivedDropItemType {
 			representedClass = "NSString"
 			bytes = data
 			completeIngest()
-
+			
 		} else if let item = item as? NSAttributedString {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
@@ -84,13 +83,13 @@ extension ArchivedDropItemType {
 			representedClass = "NSAttributedString"
 			bytes = data
 			completeIngest()
-
+			
 		} else if let item = item as? UIColor {
 			log("      received color: \(item)")
 			representedClass = "UIColor"
 			bytes = data
 			completeIngest()
-
+			
 		} else if let item = item as? UIImage {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
@@ -107,17 +106,17 @@ extension ArchivedDropItemType {
 				bytes = data
 			}
 			completeIngest()
-
+			
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
 			representedClass = "MKMapItem"
 			bytes = data
 			completeIngest()
-
+			
 		} else if let item = item as? URL {
 			handleUrl(item, data)
-
+			
 		} else if let item = item as? NSArray {
 			log("      received array: \(item)")
 			if item.count == 1 {
@@ -129,7 +128,7 @@ extension ArchivedDropItemType {
 			representedClass = "NSArray"
 			bytes = data
 			completeIngest()
-
+			
 		} else if let item = item as? NSDictionary {
 			log("      received dictionary: \(item)")
 			if item.count == 1 {
@@ -141,20 +140,20 @@ extension ArchivedDropItemType {
 			representedClass = "NSDictionary"
 			bytes = data
 			completeIngest()
-
+			
 		} else {
 			log("      received data: \(data)")
 			representedClass = "NSData"
 			handleData(data)
 		}
 	}
-
-
+	
+	
 	private func handleUrl(_ item: URL, _ data: Data) {
-
+		
 		bytes = data
 		representedClass = "URL"
-
+		
 		if item.isFileURL {
 			setTitleInfo(item.lastPathComponent, 6)
 			log("      received local file url: \(item.absoluteString)")
@@ -183,94 +182,89 @@ extension ArchivedDropItemType {
 			}
 		}
 	}
-
+	
 	private func handleData(_ data: Data) {
 		bytes = data
-
-		if let image = UIImage(data: data) {
-			setDisplayIcon(image, 40, .fill)
-		}
-
+		
 		if typeIdentifier == "public.folder" {
 			typeIdentifier = "public.zip-archive"
 		}
+		
+		if let image = UIImage(data: data) {
+			setDisplayIcon(image, 50, .fill)
 
-		if typeIdentifier == "public.vcard" {
+		} else if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
 				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
 				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
 				accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
-
+				
 				if let imageData = person.imageData, let img = UIImage(data: imageData) {
 					setDisplayIcon(img, 9, .circle)
 				} else {
 					setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
 				}
 			}
-
+			
 		} else if typeIdentifier == "public.utf8-plain-text" {
 			let s = String(data: data, encoding: .utf8)
 			setTitleInfo(s, 9)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
+			
 		} else if typeIdentifier == "public.utf16-plain-text" {
 			let s = String(data: data, encoding: .utf16)
 			setTitleInfo(s, 8)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
+			
 		} else if typeIdentifier == "public.email-message" {
 			setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
-
+			
 		} else if typeIdentifier == "com.apple.mapkit.map-item" {
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
-
+			
 		} else if typeIdentifier.hasSuffix(".rtf") {
 			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
+			
 		} else if typeIdentifier.hasSuffix(".rtfd") {
 			if let s = (decode() as? NSAttributedString)?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
+			
 		} else if let url = encodedUrl {
 			handleUrl(url as URL, data)
 			return // important
-
-		}
-
-		if displayIconPriority == 0 {
-			if typeConforms(to: kUTTypeText as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
-			} else if typeConforms(to: kUTTypeImage as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
-
-			} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
-				if let moviePreview = generateMoviePreview() {
-					setDisplayIcon(moviePreview, 50, .fill)
-				} else {
-					setDisplayIcon(#imageLiteral(resourceName: "movie"), 50, .center)
-				}
-
-			} else if typeConforms(to: kUTTypeArchive as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "zip"), 50, .center)
-
-			} else if typeConforms(to: kUTTypeAudio as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "audio"), 50, .center)
-
-			} else if typeConforms(to: kUTTypePDF as CFString), let pdfPreview = generatePdfPreview() {
-				setDisplayIcon(pdfPreview, 50, .fill)
-
-			} else if typeConforms(to: kUTTypeContent as CFString) {
-				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-
+			
+		} else if typeConforms(to: kUTTypeText as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+			
+		} else if typeConforms(to: kUTTypeImage as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
+			
+		} else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
+			if let moviePreview = generateMoviePreview() {
+				setDisplayIcon(moviePreview, 50, .fill)
 			} else {
-				setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+				setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
 			}
+			
+		} else if typeConforms(to: kUTTypeArchive as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+			
+		} else if typeConforms(to: kUTTypeAudio as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
+			
+		} else if typeConforms(to: kUTTypePDF as CFString), let pdfPreview = generatePdfPreview() {
+			setDisplayIcon(pdfPreview, 50, .fill)
+			
+		} else if typeConforms(to: kUTTypeContent as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+			
+		} else {
+			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}
 
 		completeIngest()
@@ -354,6 +348,10 @@ extension ArchivedDropItemType {
 	}
 
 	private func setDisplayIcon(_ icon: UIImage, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
+		guard priority >= displayIconPriority else {
+			return
+		}
+
 		let result: UIImage
 		if contentMode == .center || contentMode == .circle {
 			result = icon

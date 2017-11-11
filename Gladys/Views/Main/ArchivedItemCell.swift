@@ -242,7 +242,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
-		if pinchRecognizer.state == .began, pinchRecognizer.velocity > 0, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview {
+		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview {
+			pinchRecognizer.state = .ended
 			clearAllOtherGestures()
 			item.tryPreview(in: ViewController.shared.navigationController!, from: self)
 		}
