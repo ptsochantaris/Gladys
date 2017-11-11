@@ -16,11 +16,6 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	@IBOutlet weak var itemsView: UICollectionView!
 	@IBOutlet weak var copiedLabel: UILabel!
 
-	private var itemCount: Int {
-		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
-		return min(count, Model.drops.count)
-	}
-
 	private var itemsPerRow: Int {
 		let s = itemsView.bounds.size
 		if s.width < 320 {
@@ -33,15 +28,17 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		let compactHeight = extensionContext?.widgetMaximumSize(for: .compact).height ?? 110
 		let count = CGFloat(itemsPerRow)
 		var s = view.bounds.size
-		s.height = 90
+		s.height = compactHeight - 20
 		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
 		return s
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return itemCount
+		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
+		return min(count, Model.drops.count)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
