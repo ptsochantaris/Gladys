@@ -33,12 +33,7 @@ extension Model {
 		guard let items = try? fm.contentsOfDirectory(at: appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
 		let uuids = items.flatMap { UUID(uuidString: $0.lastPathComponent) }
 		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
-			for d in drops {
-				if d.uuid == uuid {
-					return false
-				}
-			}
-			return true
+			return !drops.contains { $0.uuid == uuid }
 		}
 		for uuid in nonExistingUUIDs {
 			let url = appStorageUrl.appendingPathComponent(uuid.uuidString)

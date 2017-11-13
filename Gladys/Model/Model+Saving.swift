@@ -47,7 +47,7 @@ extension Model {
 
 			do {
 				let data = try JSONEncoder().encode(itemsToSave)
-				self.coordinatedSave(data: data)
+				try self.coordinatedSave(data: data)
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
 
 			} catch {
@@ -65,16 +65,20 @@ extension Model {
 		}
 	}
 
-	private static func coordinatedSave(data: Data) {
+	private static func coordinatedSave(data: Data) throws {
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: fileUrl, options: [], error: &coordinationError) { url in
-			try! data.write(to: url, options: [])
-			if let dataModified = modificationDate(for: url) {
-				dataFileLastModified = dataModified
+			do {
+				try data.write(to: url, options: [.atomic])
+				if let dataModified = modificationDate(for: url) {
+					dataFileLastModified = dataModified
+				}
+			} catch {
+				coordinationError = error as NSError
 			}
 		}
 		if let e = coordinationError {
-			log("Error in saving coordination: \(e.finalDescription)")
+			throw e
 		}
 	}
 }
