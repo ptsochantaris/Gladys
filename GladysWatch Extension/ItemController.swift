@@ -49,6 +49,10 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
+	@IBAction func complicationSelected() {
+		// TODO
+	}
+
 	@IBAction func copySelected() {
 		copying = true
 		if let uuid = uuid {

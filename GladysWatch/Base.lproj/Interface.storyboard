@@ -50,9 +50,14 @@ Label</string>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
-                            <menuItem title="Copy" icon="add" id="hIZ-ya-Yzj">
+                            <menuItem title="Pin To Complication" icon="add" id="hIZ-ya-Yzj">
                                 <connections>
-                                    <action selector="copySelected" destination="mJP-ds-eku" id="EY9-xm-cOc"/>
+                                    <action selector="complicationSelected" destination="mJP-ds-eku" id="bma-JZ-MBZ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy" image="Copy" id="lbC-Mg-EY7">
+                                <connections>
+                                    <action selector="copySelected" destination="mJP-ds-eku" id="HMt-QY-C3h"/>
                                 </connections>
                             </menuItem>
                         </items>
