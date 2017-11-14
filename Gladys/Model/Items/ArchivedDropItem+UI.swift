@@ -93,6 +93,10 @@ extension ArchivedDropItem {
 		return false
 	}
 
+	var watchItem: [String: Any] {
+		return ["u": uuid.uuidString, "t": oneTitle, "d": updatedAt]
+	}
+
 	var canPreview: Bool {
 		return typeItems.contains { $0.canPreview }
 	}

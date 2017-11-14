@@ -1,7 +1,69 @@
 
 import CoreSpotlight
+import WatchConnectivity
 import CloudKit
 import UIKit
+
+private class WatchDelegate: NSObject, WCSessionDelegate {
+
+	override init() {
+		super.init()
+		let session = WCSession.default
+		session.delegate = self
+		session.activate()
+	}
+
+	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+		updateContext()
+	}
+
+	func sessionDidBecomeInactive(_ session: WCSession) {}
+
+	func sessionDidDeactivate(_ session: WCSession) {}
+
+	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+		DispatchQueue.main.async {
+
+			if let uuidForCopy = message["copy"] as? String {
+				if let i = Model.item(uuid: uuidForCopy) {
+					i.copyToPasteboard()
+				}
+				DispatchQueue.global().async {
+					replyHandler([:])
+				}
+			}
+
+			if let uuidForImage = message["image"] as? String {
+				if let i = Model.item(uuid: uuidForImage) {
+					let mode = i.displayMode
+					let icon = i.displayIcon
+					DispatchQueue.global().async {
+						let limit: CGFloat = (mode == .center || mode == .circle) ? 0.7 : 1.0
+						let size = (mode == .center || mode == .circle) ? CGSize(width: 22, height: 22) : CGSize(width: 40, height: 40)
+						let scaledImage = icon.limited(to: size, limitTo: limit)
+						let data = UIImagePNGRepresentation(scaledImage)!
+						replyHandler(["imagePng": data])
+					}
+				} else {
+					DispatchQueue.global().async {
+						replyHandler([:])
+					}
+				}
+			}
+		}
+	}
+
+	func updateContext() {
+		let session = WCSession.default
+		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
+		do {
+			try session.updateApplicationContext(["dropList": Model.drops.map { $0.watchItem }])
+			log("Updated watch context")
+		} catch {
+			log("Error updating watch context: \(error.localizedDescription)")
+		}
+	}
+}
 
 extension Model {
 
@@ -13,6 +75,8 @@ extension Model {
 
 	private static var saveOverlap = 0
 	private static var saveBgTask: UIBackgroundTaskIdentifier?
+
+	private static var watchDelegate: WatchDelegate?
 	
 	static var coordinator: NSFileCoordinator {
 		return NSFileCoordinator(filePresenter: filePresenter)
@@ -43,6 +107,10 @@ extension Model {
 		}
 
 		rebuildLabels()
+
+		if WCSession.isSupported() {
+			watchDelegate = WatchDelegate()
+		}
 	}
 
 	static func saveComplete() {
@@ -61,6 +129,7 @@ extension Model {
 		saveOverlap -= 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 			if saveOverlap == 0, let b = saveBgTask {
+				watchDelegate?.updateContext()
 				log("Ending save queue background task")
 				UIApplication.shared.endBackgroundTask(b)
 				saveBgTask = nil
