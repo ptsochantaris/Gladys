@@ -27,7 +27,7 @@ extension ArchivedDropItem {
 			}
 		#endif
 
-		guard needsCloudPush && !needsDeletion && !isDeleting else { return nil }
+		guard needsCloudPush && !needsDeletion && goodToSave else { return nil }
 
 		let record = cloudKitRecord ??
 			CKRecord(recordType: "ArchivedDropItem",

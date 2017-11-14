@@ -936,16 +936,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		"Ready!",
 	]
 
-	func loadCompleted(sender: AnyObject, success: Bool) {
+	func loadCompleted(sender: AnyObject) {
 
 		if let item = sender as? ArchivedDropItem {
-			if !success {
-				let (errorPrefix, error) = item.loadingError
-				if errorPrefix != nil || error != nil {
-					genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
-						message: "\(errorPrefix ?? "")\(error?.finalDescription ?? "")",
-						on: self)
-				}
+			if let (errorPrefix, error) = item.loadingError {
+				genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
+					message: errorPrefix + error.finalDescription,
+					on: self)
 			}
 
 			item.needsReIngest = false

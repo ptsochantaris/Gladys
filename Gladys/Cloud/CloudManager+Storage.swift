@@ -106,17 +106,6 @@ extension CloudManager {
 		}
 	}
 
-	static var zoneChangeMayNotReflectSavedChanges: Bool {
-		get {
-			return defaults.bool(forKey: "zoneChangeMayNotReflectSavedChanges")
-		}
-
-		set {
-			defaults.set(newValue, forKey: "zoneChangeMayNotReflectSavedChanges")
-			defaults.synchronize()
-		}
-	}
-
 	static var syncSwitchedOn: Bool {
 		get {
 			return defaults.bool(forKey: "syncSwitchedOn")

@@ -16,6 +16,7 @@ extension ArchivedDropItemType {
 
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
+			s.isTransferring = false
 			if let data = data {
 				ArchivedDropItemType.ingestQueue.async {
 					log(">> Received: [\(provider.suggestedName ?? "")] type: [\(s.typeIdentifier)]")
@@ -493,7 +494,7 @@ extension ArchivedDropItemType {
 		let callback = ingestCompletion
 		ingestCompletion = nil
 		DispatchQueue.main.async {
-			self.delegate?.loadCompleted(sender: self, success: self.loadingError == nil && !self.loadingAborted)
+			self.delegate?.loadCompleted(sender: self)
 			self.delegate = nil
 			callback?()
 		}

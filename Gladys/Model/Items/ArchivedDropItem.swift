@@ -9,7 +9,6 @@ final class ArchivedDropItem: Codable, Equatable {
 	var typeItems: [ArchivedDropItemType]
 	let createdAt:  Date
 	var updatedAt: Date
-	var allLoadedWell: Bool
 	var needsReIngest: Bool
 	var needsDeletion: Bool
 	var note: String
@@ -25,7 +24,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		case createdAt
 		case updatedAt
 		case uuid
-		case allLoadedWell
 		case needsReIngest
 		case note
 		case titleOverride
@@ -40,7 +38,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(updatedAt, forKey: .updatedAt)
 		try v.encode(uuid, forKey: .uuid)
 		try v.encode(typeItems, forKey: .typeItems)
-		try v.encode(allLoadedWell, forKey: .allLoadedWell)
 		try v.encode(needsReIngest, forKey: .needsReIngest)
 		try v.encode(note, forKey: .note)
 		try v.encode(titleOverride, forKey: .titleOverride)
@@ -56,7 +53,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
-		allLoadedWell = try v.decode(Bool.self, forKey: .allLoadedWell)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
@@ -161,7 +157,6 @@ final class ArchivedDropItem: Codable, Equatable {
 			createdAt = Date()
 			updatedAt = createdAt
 			suggestedName = providers.first!.suggestedName
-			allLoadedWell = true
 			needsReIngest = true
 			needsDeletion = false
 			titleOverride = ""
@@ -184,7 +179,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		note = record["note"] as! String
 		labels = (record["labels"] as? [String]) ?? []
 		needsReIngest = true
-		allLoadedWell = true
 		needsDeletion = false
 		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
 		cloudKitRecord = record
@@ -192,6 +186,14 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
 		var isDeleting = false
+
+		var isTransferring: Bool {
+			return typeItems.contains { $0.isTransferring }
+		}
+
+		var goodToSave: Bool { // TODO: Check if data transfer is occuring, NOT ingest
+			return !isDeleting && !isTransferring
+		}
 	#endif
 
 	private var cloudKitDataPath: URL {

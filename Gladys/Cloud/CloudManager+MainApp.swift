@@ -105,7 +105,6 @@ extension CloudManager {
 					uuidSequence = []
 					uuidSequenceRecord = nil
 					zoneChangeToken = nil
-					zoneChangeMayNotReflectSavedChanges = false
 					shareActionIsActioningIds = []
 					syncSwitchedOn = false
 					lastiCloudAccount = nil
@@ -234,14 +233,6 @@ extension CloudManager {
 		var updateCount = 0
 		syncProgressString = "Fetching"
 
-		let o = CKFetchRecordZoneChangesOptions()
-		if zoneChangeMayNotReflectSavedChanges {
-			log("Change token could be unreliable, performing full fetch")
-		} else {
-			log("Performing delta fetch")
-			o.previousServerChangeToken = zoneChangeMayNotReflectSavedChanges ? nil : zoneChangeToken
-		}
-
 		func updateProgress() {
 			var components = [String]()
 
@@ -262,6 +253,8 @@ extension CloudManager {
 		}
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let o = CKFetchRecordZoneChangesOptions()
+		o.previousServerChangeToken = zoneChangeToken
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			if recordType != "ArchivedDropItem" { return }
@@ -270,7 +263,6 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
-					zoneChangeMayNotReflectSavedChanges = true
 					deletionCount += 1
 					updateProgress()
 				}
@@ -288,14 +280,12 @@ extension CloudManager {
 						} else {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
-							zoneChangeMayNotReflectSavedChanges = true
 							updateCount += 1
 							updateProgress()
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
 						newDrops.append(record)
-						zoneChangeMayNotReflectSavedChanges = true
 						updateProgress()
 					}
 
@@ -306,7 +296,6 @@ extension CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							zoneChangeMayNotReflectSavedChanges = true
 							typeUpdateCount += 1
 							updateProgress()
 						}
@@ -321,7 +310,6 @@ extension CloudManager {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
 						updatedSequence = true
-						zoneChangeMayNotReflectSavedChanges = true
 						uuidSequenceRecord = record
 					} else {
 						log("Received non-updated position list record")
@@ -337,7 +325,6 @@ extension CloudManager {
 
 				if (error as? CKError)?.code == .changeTokenExpired {
 					zoneChangeToken = nil
-					zoneChangeMayNotReflectSavedChanges = false
 					log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 					finalCompletion(error)
 					return
@@ -345,14 +332,6 @@ extension CloudManager {
 
 				let itemsModified = updatedSequence || (typeUpdateCount + newDrops.count + updateCount + deletionCount > 0)
 
-				if itemsModified || zoneChangeMayNotReflectSavedChanges { // re-checking zone variable in case of older sync
-					zoneChangeMayNotReflectSavedChanges = true
-					Model.queueNextSaveCallback {
-						zoneChangeMayNotReflectSavedChanges = false
-						log("Commited zone change token")
-					}
-				}
-				zoneChangeToken = token
 				log("Zone \(zoneId.zoneName) changes fetch complete")
 
 				if itemsModified {
@@ -363,16 +342,21 @@ extension CloudManager {
 					if updatedSequence {
 						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
 					}
-					Model.rebuildLabels()
-					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+					Model.queueNextSaveCallback {
+						log("Comitting zone change token")
+						self.zoneChangeToken = token
+						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+					}
+					Model.saveIsDueToSyncFetch = true
+					Model.save()
+				} else {
+					log("Comitting zone change token")
+					self.zoneChangeToken = token
 				}
 			}
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
 			DispatchQueue.main.async {
-				if error == nil {
-					zoneChangeMayNotReflectSavedChanges = false
-				}
 				finalCompletion(error)
 			}
 		}

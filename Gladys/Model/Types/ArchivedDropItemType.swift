@@ -74,6 +74,8 @@ final class ArchivedDropItemType: Codable {
 
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
+
+		isTransferring = false
 	}
 
 	var encodedUrl: NSURL? {
@@ -141,6 +143,7 @@ final class ArchivedDropItemType: Codable {
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
 	var ingestCompletion: (()->Void)?
+	var isTransferring: Bool
 
 	var fileExtension: String? {
 		let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
@@ -473,6 +476,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
+		isTransferring = true
 		classWasWrapped = false
 		createdAt = Date()
 		updatedAt = createdAt
@@ -492,6 +496,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
+		isTransferring = false
 
 		let myUUID = record.recordID.recordName
 		uuid = UUID(uuidString: myUUID)!

@@ -3,12 +3,11 @@ import Foundation
 
 extension ArchivedDropItem: LoadCompletionDelegate {
 	
-	func loadCompleted(sender: AnyObject, success: Bool) {
-		if !success { allLoadedWell = false }
+	func loadCompleted(sender: AnyObject) {
 		loadCount = loadCount - 1
 		if loadCount == 0 {
 			loadingProgress = nil
-			delegate?.loadCompleted(sender: self, success: allLoadedWell)
+			delegate?.loadCompleted(sender: self)
 			delegate = nil
 		}
 	}

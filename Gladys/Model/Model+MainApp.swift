@@ -4,7 +4,9 @@ import CloudKit
 import UIKit
 
 extension Model {
-	
+
+	static var saveIsDueToSyncFetch = false
+
 	private static var modelFilter: String?
 	private static var currentFilterQuery: CSSearchQuery?
 	private static var cachedFilteredDrops: [ArchivedDropItem]?
@@ -45,9 +47,14 @@ extension Model {
 
 	static func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
-		CloudManager.sync { error in
-			if let error = error {
-				log("Error in push after save: \(error.finalDescription)")
+		if saveIsDueToSyncFetch {
+			saveIsDueToSyncFetch = false
+			log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
+		} else {
+			CloudManager.sync { error in
+				if let error = error {
+					log("Error in push after save: \(error.finalDescription)")
+				}
 			}
 		}
 

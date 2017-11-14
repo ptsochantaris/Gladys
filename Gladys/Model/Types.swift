@@ -12,7 +12,7 @@ enum ArchivedDropItemDisplayType: Int {
 }
 
 protocol LoadCompletionDelegate: class {
-	func loadCompleted(sender: AnyObject, success: Bool)
+	func loadCompleted(sender: AnyObject)
 }
 
 extension Data {

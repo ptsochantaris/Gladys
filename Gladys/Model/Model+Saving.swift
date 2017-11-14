@@ -1,7 +1,7 @@
 import UIKit
 
 extension Model {
-	static var needsAnotherSave = false
+	private static var needsAnotherSave = false
 	private static var isSaving = false
 	private static var nextSaveCallbacks: [()->Void]?
 
@@ -38,7 +38,8 @@ extension Model {
 
 		let start = Date()
 
-		let itemsToSave = drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
+		let itemsToSave = drops.filter { $0.goodToSave }
+		log("\(itemsToSave.count) items to save")
 
 		isSaving = true
 		needsAnotherSave = false

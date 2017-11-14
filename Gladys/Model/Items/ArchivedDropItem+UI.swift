@@ -171,12 +171,12 @@ extension ArchivedDropItem {
 		}
 	}
 
-	var loadingError: (String?, Error?) {
+	var loadingError: (String, Error)? {
 		for item in typeItems {
 			if let e = item.loadingError {
 				return ("Error processing type \(item.typeIdentifier): ", e)
 			}
 		}
-		return (nil, nil)
+		return nil
 	}
 }

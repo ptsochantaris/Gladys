@@ -95,7 +95,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	private var uploadObservation: NSKeyValueObservation?
 	private var uploadProgress: Progress?
 
-	func loadCompleted(sender: AnyObject, success: Bool) {
+	func loadCompleted(sender: AnyObject) {
 		loadCount -= 1
 		if loadCount == 0 {
 			cancelButton?.isEnabled = false
