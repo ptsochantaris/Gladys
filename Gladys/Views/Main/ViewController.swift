@@ -4,15 +4,24 @@ import CoreSpotlight
 import StoreKit
 import GladysFramework
 
-func genericAlert(title: String?, message: String?, on viewController: UIViewController) {
+func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true) {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-	a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+	if showOK {
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+	}
 
 	var finalVC: UIViewController! = viewController
 	while finalVC.presentedViewController != nil {
 		finalVC = finalVC.presentedViewController
 	}
+
 	finalVC.present(a, animated: true)
+
+	if !showOK {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			a.dismiss(animated: true)
+		}
+	}
 }
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
@@ -56,7 +65,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	/////////////////////////
 
+	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+		if let droppedId = ArchivedDropItemType.droppedId {
+			if let item = Model.item(uuid: droppedId), PersistedOptions.removeItemsWhenDraggedOut {
+				deleteRequested(for: [item])
+			}
+			ArchivedDropItemType.droppedId = nil
+		}
+	}
+
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		ArchivedDropItemType.droppedId = nil
 		return [Model.filteredDrops[indexPath.item].dragItem]
 	}
 
@@ -148,7 +167,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					if Model.isFilteringLabels || Model.isFilteringText {
 						dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
 						if Model.isFilteringLabels {
-							item.labels = Model.enabledLabelsForItems
+							if PersistedOptions.dontAutoLabelNewItems {
+								addedItemFeedback()
+							} else {
+								item.labels = Model.enabledLabelsForItems
+							}
 						}
 					}
 
@@ -450,6 +473,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		lastSyncUpdate()
 	}
 
+	private func addedItemFeedback() {
+		genericAlert(title: nil, message: "Item Added", on: self, showOK: false)
+	}
+
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
@@ -467,7 +494,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		for item in ArchivedDropItem.importData(providers: providers, delegate: self) {
 
 			if Model.isFilteringLabels {
-				item.labels = Model.enabledLabelsForItems
+				if PersistedOptions.dontAutoLabelNewItems {
+					addedItemFeedback()
+				} else {
+					item.labels = Model.enabledLabelsForItems
+				}
 			}
 
 			let destinationIndexPath = IndexPath(item: 0, section: 0)

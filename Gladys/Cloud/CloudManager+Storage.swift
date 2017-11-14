@@ -33,6 +33,27 @@ class PersistedOptions {
 		}
 	}
 
+	static var removeItemsWhenDraggedOut: Bool {
+		get {
+			return defaults.bool(forKey: "removeItemsWhenDraggedOut")
+		}
+		set {
+			defaults.set(newValue, forKey: "removeItemsWhenDraggedOut")
+			defaults.synchronize()
+		}
+	}
+
+	static var dontAutoLabelNewItems: Bool {
+		get {
+			return defaults.bool(forKey: "dontAutoLabelNewItems")
+		}
+		set {
+			defaults.set(newValue, forKey: "dontAutoLabelNewItems")
+			defaults.synchronize()
+		}
+	}
+
+
 	static var separateItemPreference: Bool {
 		get {
 			return defaults.bool(forKey: "separateItemPreference")

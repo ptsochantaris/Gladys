@@ -118,11 +118,7 @@ final class DetailController: GladysViewController,
 
 	@IBAction func copySelected(_ sender: UIBarButtonItem) {
 		item.copyToPasteboard()
-		let a = UIAlertController(title: nil, message: "Copied to clipboard", preferredStyle: .alert)
-		present(a, animated: true)
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-			a.dismiss(animated: true)
-		}
+		genericAlert(title: nil, message: "Copied to clipboard", on: self, showOK: false)
 	}
 
 	@IBAction func openSelected(_ sender: UIBarButtonItem) {

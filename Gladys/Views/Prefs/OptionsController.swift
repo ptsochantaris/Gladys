@@ -12,6 +12,16 @@ final class OptionsController: GladysViewController {
 
 	@IBOutlet weak var separateItemsSwitch: UISwitch!
 	@IBOutlet weak var twoColumnsSwitch: UISwitch!
+	@IBOutlet weak var removeItemsWhenDraggedOutSwitch: UISwitch!
+	@IBOutlet weak var dontAutoLabelNewItemsSwitch: UISwitch!
+
+	@IBAction func removeItemsWhenDraggedOutChanged(_ sender: UISwitch) {
+		PersistedOptions.removeItemsWhenDraggedOut = sender.isOn
+	}
+
+	@IBAction func dontAutoLabelNewItemsChanged(_ sender: UISwitch) {
+		PersistedOptions.dontAutoLabelNewItems = sender.isOn
+	}
 
 	@IBAction func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
@@ -36,5 +46,14 @@ final class OptionsController: GladysViewController {
 		twoColumnsSwitch.tintColor = UIColor.lightGray
 		twoColumnsSwitch.onTintColor = view.tintColor
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
+
+		removeItemsWhenDraggedOutSwitch.tintColor = UIColor.lightGray
+		removeItemsWhenDraggedOutSwitch.onTintColor = view.tintColor
+		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut
+
+		dontAutoLabelNewItemsSwitch.tintColor = UIColor.lightGray
+		dontAutoLabelNewItemsSwitch.onTintColor = view.tintColor
+		dontAutoLabelNewItemsSwitch.isOn = PersistedOptions.dontAutoLabelNewItems
+
 	}
 }

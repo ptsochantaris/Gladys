@@ -9,12 +9,18 @@
 import Foundation
 
 extension ArchivedDropItemType {
+
+	static var droppedId: String?
+
 	func register(with provider: NSItemProvider) {
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
 			let p = Progress(totalUnitCount: 1)
 			p.completedUnitCount = 1
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block")
+				DispatchQueue.main.async {
+					ArchivedDropItemType.droppedId = self.parentUuid.uuidString
+				}
 				completion(self.dataForWrappedItem ?? self.bytes, nil)
 			}
 			return p
