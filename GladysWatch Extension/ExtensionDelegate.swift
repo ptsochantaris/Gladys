@@ -28,14 +28,21 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 	}
 
 	private func updatePages() {
-		var names = [String]()
-		for _ in 0 ..< dropList.count {
-			names.append("ItemController")
+		if dropList.count > 0 {
+			var names = [String]()
+			for _ in 0 ..< dropList.count {
+				names.append("ItemController")
+			}
+			WKInterfaceController.reloadRootPageControllers(withNames: names,
+															contexts: dropList,
+															orientation: .vertical,
+															pageIndex: 0)
+		} else {
+			WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"],
+															contexts: nil,
+															orientation: .vertical,
+															pageIndex: 0)
 		}
-		WKInterfaceController.reloadRootPageControllers(withNames: names,
-														contexts: dropList,
-														orientation: .vertical,
-														pageIndex: 0)
 	}
 
     func applicationDidFinishLaunching() {

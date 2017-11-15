@@ -9,12 +9,12 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--StartupController-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="GladysWatch" customModuleProvider="target">
+                <controller identifier="StartupController" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
-                        <label alignment="center" verticalAlignment="center" text="Loading" id="mnL-YR-CrQ">
+                        <label alignment="center" verticalAlignment="center" text="Items in your collection will appear here." textAlignment="center" numberOfLines="0" id="mnL-YR-CrQ">
                             <fontDescription key="font" style="UICTFontTextStyleBody"/>
                         </label>
                     </items>
