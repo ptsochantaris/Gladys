@@ -95,11 +95,11 @@ class ItemController: WKInterfaceController {
 
 	private var opening: Bool = false {
 		didSet {
-			label.setHidden(copying)
-			date.setHidden(copying)
-			image.setHidden(copying)
+			label.setHidden(opening)
+			date.setHidden(opening)
+			image.setHidden(opening)
 			copyLabel.setText("Viewing on Phone")
-			copyLabel.setHidden(!copying)
+			copyLabel.setHidden(!opening)
 		}
 	}
 
@@ -127,7 +127,7 @@ class ItemController: WKInterfaceController {
 	@IBAction func complicationSelected() {
 		complicating = true
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-			complicating = false
+			self.complicating = false
 		}
 	}
 

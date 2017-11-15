@@ -1027,6 +1027,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func highlightItem(with identifier: String, andOpen: Bool) {
 		resetSearch(andLabels: true)
+		dismissAnyPopOver()
 		archivedItemCollectionView.isUserInteractionEnabled = false
 		if let i = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
 			let ip = IndexPath(item: i, section: 0)
