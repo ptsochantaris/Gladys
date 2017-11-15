@@ -13,15 +13,27 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
 	static var currentUUID = ""
 
+	private func extractDropList(from context: [String: Any]) -> [[String: Any]] {
+		if
+			let compressedData = context["dropList"] as? Data,
+			let uncompressedData = compressedData.data(operation: .decompress),
+			let itemInfo = NSKeyedUnarchiver.unarchiveObject(with: uncompressedData) as? [[String : Any]] {
+
+			return itemInfo
+		} else {
+			return []
+		}
+	}
+
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		let dropList = session.receivedApplicationContext["dropList"] as? [[String: Any]] ?? []
+		let dropList = extractDropList(from: session.receivedApplicationContext)
 		DispatchQueue.main.async {
 			self.updatePages(dropList)
 		}
 	}
 
 	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-		let dropList = applicationContext["dropList"] as? [[String: Any]] ?? []
+		let dropList = extractDropList(from: applicationContext)
 		DispatchQueue.main.async {
 			self.updatePages(dropList)
 		}

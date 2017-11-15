@@ -69,11 +69,16 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	func updateContext() {
 		let session = WCSession.default
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
-		do {
-			try session.updateApplicationContext(["dropList": Model.drops.map { $0.watchItem }])
-			log("Updated watch context")
-		} catch {
-			log("Error updating watch context: \(error.localizedDescription)")
+		DispatchQueue.global(qos: .background).async {
+			do {
+				let items = Model.drops.map { $0.watchItem }
+				let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
+				try session.updateApplicationContext(["dropList": compressedData])
+				log("Updated watch context")
+			} catch {
+				log("Error updating watch context: \(error.localizedDescription)")
+			}
+
 		}
 	}
 }
