@@ -62,6 +62,15 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
+	override func willDisappear() {
+		super.willDisappear()
+		image.setImage(nil)
+		label.setText(nil)
+		date.setText(nil)
+		gotImage = false
+		fetchingImage = false
+	}
+
 	private static let imageCache = NSCache<NSString, UIImage>()
 
 	private func fetchImage() {
