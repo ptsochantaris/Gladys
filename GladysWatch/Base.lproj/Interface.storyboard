@@ -28,25 +28,29 @@
                 <controller identifier="ItemController" id="mJP-ds-eku" customClass="ItemController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
                         <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." id="BFr-jH-zmC"/>
-                        <label width="1" alignment="center" textAlignment="center" numberOfLines="2" id="Hpo-D8-PYh">
-                            <string key="text">Label
-Label</string>
-                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                        </label>
-                        <group alignment="center" verticalAlignment="center" id="if9-pT-VGa">
+                        <group width="1" height="1" alignment="left" layout="vertical" id="Qmu-Cs-KCW">
                             <items>
-                                <imageView alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </imageView>
-                            </items>
-                            <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </group>
-                        <label width="1" alignment="center" verticalAlignment="bottom" textAlignment="center" numberOfLines="2" id="veG-bS-Gax">
-                            <string key="text">Label
+                                <label width="1" alignment="center" textAlignment="center" numberOfLines="2" id="Hpo-D8-PYh">
+                                    <string key="text">Label
 Label</string>
-                            <color key="textColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                        </label>
+                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                </label>
+                                <group alignment="center" verticalAlignment="center" radius="5" id="if9-pT-VGa">
+                                    <items>
+                                        <imageView alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </imageView>
+                                    </items>
+                                    <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </group>
+                                <label width="1" alignment="center" verticalAlignment="bottom" textAlignment="center" numberOfLines="2" id="veG-bS-Gax">
+                                    <string key="text">Label
+Label</string>
+                                    <color key="textColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                </label>
+                            </items>
+                        </group>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
