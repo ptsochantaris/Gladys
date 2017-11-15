@@ -1025,7 +1025,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		s.delegate = self
 	}
 
-	func highlightItem(with identifier: String) {
+	func highlightItem(with identifier: String, andOpen: Bool) {
 		resetSearch(andLabels: true)
 		archivedItemCollectionView.isUserInteractionEnabled = false
 		if let i = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
@@ -1034,6 +1034,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
 				if let cell = self.archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
 					cell.flash()
+					if andOpen {
+						self.collectionView(self.archivedItemCollectionView, didSelectItemAt: ip)
+					}
 				}
 				self.archivedItemCollectionView.isUserInteractionEnabled = true
 			}

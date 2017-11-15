@@ -30,6 +30,13 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
 		DispatchQueue.main.async {
 
+			if let uuidForView = message["view"] as? String {
+				ViewController.shared.highlightItem(with: uuidForView, andOpen: true)
+				DispatchQueue.global().async {
+					replyHandler([:])
+				}
+			}
+
 			if let uuidForCopy = message["copy"] as? String {
 				if let i = Model.item(uuid: uuidForCopy) {
 					i.copyToPasteboard()
@@ -70,6 +77,8 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////
 
 extension Model {
 

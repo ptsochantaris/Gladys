@@ -11,32 +11,35 @@ import WatchConnectivity
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
-	private var dropList = [[String: Any]]()
+	static var currentUUID = ""
 
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+		let dropList = session.receivedApplicationContext["dropList"] as? [[String: Any]] ?? []
 		DispatchQueue.main.async {
-			self.dropList = session.receivedApplicationContext["dropList"] as? [[String: Any]] ?? []
-			self.updatePages()
+			self.updatePages(dropList)
 		}
 	}
 
 	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+		let dropList = applicationContext["dropList"] as? [[String: Any]] ?? []
 		DispatchQueue.main.async {
-			self.dropList = applicationContext["dropList"] as? [[String: Any]] ?? []
-			self.updatePages()
+			self.updatePages(dropList)
 		}
 	}
 
-	private func updatePages() {
+	private func updatePages(_ dropList: [[String: Any]]) {
 		if dropList.count > 0 {
 			var names = [String]()
 			for _ in 0 ..< dropList.count {
 				names.append("ItemController")
 			}
+			let currentPage = dropList.index(where: { properties -> Bool in
+				properties["u"] as? String == ExtensionDelegate.currentUUID
+			}) ?? 0
 			WKInterfaceController.reloadRootPageControllers(withNames: names,
 															contexts: dropList,
 															orientation: .vertical,
-															pageIndex: 0)
+															pageIndex: min(currentPage, names.count-1))
 		} else {
 			WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"],
 															contexts: nil,

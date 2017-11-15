@@ -50,12 +50,17 @@ Label</string>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
-                            <menuItem title="Pin To Complication" icon="add" id="hIZ-ya-Yzj">
+                            <menuItem title="Make Complication" icon="add" id="hIZ-ya-Yzj" userLabel="Make Complication">
                                 <connections>
                                     <action selector="complicationSelected" destination="mJP-ds-eku" id="bma-JZ-MBZ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copy" image="Copy" id="lbC-Mg-EY7">
+                            <menuItem title="View on Phone" image="View" id="CrJ-Bd-Ra6" userLabel="View on Phone">
+                                <connections>
+                                    <action selector="viewOnDeviceSelected" destination="mJP-ds-eku" id="cZO-vJ-Jm0"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy to Clipboard" image="Copy" id="lbC-Mg-EY7">
                                 <connections>
                                     <action selector="copySelected" destination="mJP-ds-eku" id="HMt-QY-C3h"/>
                                 </connections>

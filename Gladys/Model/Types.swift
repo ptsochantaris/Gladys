@@ -68,9 +68,7 @@ extension Error {
 extension UIImage {
 
 	func writeBitmap(to url: URL) {
-		DispatchQueue.main.async { // TODO improve
-			try? UIImagePNGRepresentation(self)?.write(to: url, options: .atomic)
-		}
+		try? UIImagePNGRepresentation(self)?.write(to: url, options: .atomic)
 	}
 
 	static func fromBitmap(at url: URL, scale: CGFloat) -> UIImage? {

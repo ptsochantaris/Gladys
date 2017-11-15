@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-				ViewController.shared.highlightItem(with: itemIdentifier)
+				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
 			}
 			return true
 		}
