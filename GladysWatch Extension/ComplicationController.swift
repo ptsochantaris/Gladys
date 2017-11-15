@@ -11,10 +11,8 @@ import ClockKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
-    // MARK: - Timeline Configuration
-    
     func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
-        handler([.forward, .backward])
+        handler([])
     }
     
     func getTimelineStartDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
@@ -29,28 +27,39 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         handler(.showOnLockScreen)
     }
     
-    // MARK: - Timeline Population
-    
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-        // Call the handler with the current timeline entry
-        handler(nil)
+		switch complication.family {
+
+		case .modularSmall, .extraLarge, .utilitarianSmallFlat, .utilitarianSmall, .circularSmall, .modularLarge:
+			handler(nil)
+
+		case .utilitarianLarge:
+			let text = PersistedOptions.watchComplicationText.isEmpty ? "Set text from items" : PersistedOptions.watchComplicationText
+
+			let t = CLKComplicationTemplateUtilitarianLargeFlat()
+			t.textProvider = CLKSimpleTextProvider(text: text)
+
+			let e = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: t)
+			handler(e)
+		}
     }
     
     func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
-        // Call the handler with the timeline entries prior to the given date
         handler(nil)
     }
     
     func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
-        // Call the handler with the timeline entries after to the given date
         handler(nil)
     }
-    
-    // MARK: - Placeholder Templates
-    
+
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
-        // This method will be called once per supported complication, and the results will be cached
-        handler(nil)
-    }
-    
+			switch complication.family {
+			case .modularSmall, .extraLarge, .utilitarianSmallFlat, .utilitarianSmall, .circularSmall, .modularLarge:
+				handler(nil)
+			case .utilitarianLarge:
+				let t = CLKComplicationTemplateUtilitarianLargeFlat()
+				t.textProvider = CLKSimpleTextProvider(text: "Set text from items")
+				handler(t)
+			}
+	}
 }

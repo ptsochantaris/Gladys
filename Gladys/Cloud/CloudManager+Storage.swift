@@ -11,70 +11,6 @@ import CloudKit
 	import UIKit
 #endif
 
-private var defaults: UserDefaults = { return UserDefaults(suiteName: "group.build.bru.Gladys")! }()
-
-class PersistedOptions {
-
-	static func migrateBrokenDefaults() { // keep this around for a while
-		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {
-			var changes = false
-			for key in ["separateItemPreference", "forceTwoColumnPreference", "lastiCloudAccount", "lastSyncCompletion", "zoneChangeMayNotReflectSavedChanges", "syncSwitchedOn", "onlySyncOverWiFi", "zoneChangeToken", "uuidSequence"] {
-				if let o = brokenDefaults.object(forKey: key) {
-					log("Migrating option \(key) to correct defaults group")
-					defaults.set(o, forKey: key)
-					brokenDefaults.removeObject(forKey: key)
-					changes = true
-				}
-			}
-			if changes {
-				brokenDefaults.synchronize()
-				defaults.synchronize()
-			}
-		}
-	}
-
-	static var removeItemsWhenDraggedOut: Bool {
-		get {
-			return defaults.bool(forKey: "removeItemsWhenDraggedOut")
-		}
-		set {
-			defaults.set(newValue, forKey: "removeItemsWhenDraggedOut")
-			defaults.synchronize()
-		}
-	}
-
-	static var dontAutoLabelNewItems: Bool {
-		get {
-			return defaults.bool(forKey: "dontAutoLabelNewItems")
-		}
-		set {
-			defaults.set(newValue, forKey: "dontAutoLabelNewItems")
-			defaults.synchronize()
-		}
-	}
-
-
-	static var separateItemPreference: Bool {
-		get {
-			return defaults.bool(forKey: "separateItemPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "separateItemPreference")
-			defaults.synchronize()
-		}
-	}
-
-	static var forceTwoColumnPreference: Bool {
-		get {
-			return defaults.bool(forKey: "forceTwoColumnPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "forceTwoColumnPreference")
-			defaults.synchronize()
-		}
-	}
-}
-
 extension CloudManager {
 
 	static var syncTransitioning = false {
@@ -103,77 +39,77 @@ extension CloudManager {
 	typealias iCloudToken = (NSCoding & NSCopying & NSObjectProtocol)
 	static var lastiCloudAccount: iCloudToken? {
 		get {
-			let o = defaults.object(forKey: "lastiCloudAccount") as? iCloudToken
+			let o = PersistedOptions.defaults.object(forKey: "lastiCloudAccount") as? iCloudToken
 			return (o?.isEqual("") ?? false) ? nil : o
  		}
 		set {
 			if let n = newValue {
-				defaults.set(n, forKey: "lastiCloudAccount")
+				PersistedOptions.defaults.set(n, forKey: "lastiCloudAccount")
 			} else {
-				defaults.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
+				PersistedOptions.defaults.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
 			}
-			defaults.synchronize()
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var lastSyncCompletion: Date {
 		get {
-			return defaults.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
+			return PersistedOptions.defaults.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
 		}
 
 		set {
-			defaults.set(newValue, forKey: "lastSyncCompletion")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(newValue, forKey: "lastSyncCompletion")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var syncSwitchedOn: Bool {
 		get {
-			return defaults.bool(forKey: "syncSwitchedOn")
+			return PersistedOptions.defaults.bool(forKey: "syncSwitchedOn")
 		}
 
 		set {
-			defaults.set(newValue, forKey: "syncSwitchedOn")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(newValue, forKey: "syncSwitchedOn")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var shareActionShouldUpload: Bool {
 		get {
-			return defaults.bool(forKey: "shareActionShouldUpload")
+			return PersistedOptions.defaults.bool(forKey: "shareActionShouldUpload")
 		}
 
 		set {
-			defaults.set(newValue, forKey: "shareActionShouldUpload")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(newValue, forKey: "shareActionShouldUpload")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var shareActionIsActioningIds: [String] {
 		get {
-			return defaults.object(forKey: "shareActionIsActioningIds") as? [String] ?? []
+			return PersistedOptions.defaults.object(forKey: "shareActionIsActioningIds") as? [String] ?? []
 		}
 
 		set {
-			defaults.set(newValue, forKey: "shareActionIsActioningIds")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(newValue, forKey: "shareActionIsActioningIds")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var onlySyncOverWiFi: Bool {
 		get {
-			return defaults.bool(forKey: "onlySyncOverWiFi")
+			return PersistedOptions.defaults.bool(forKey: "onlySyncOverWiFi")
 		}
 
 		set {
-			defaults.set(newValue, forKey: "onlySyncOverWiFi")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(newValue, forKey: "onlySyncOverWiFi")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
 	static var zoneChangeToken: CKServerChangeToken? {
 		get {
-			if let data = defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
+			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
 				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
 			} else {
 				return nil
@@ -182,11 +118,11 @@ extension CloudManager {
 		set {
 			if let n = newValue {
 				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				defaults.set(data, forKey: "zoneChangeToken")
+				PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
 			} else {
-				defaults.set(Data(), forKey: "zoneChangeToken")
+				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
 			}
-			defaults.synchronize()
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -194,7 +130,7 @@ extension CloudManager {
 
 	static var uuidSequence: [String] {
 		get {
-			if let data = defaults.data(forKey: "uuidSequence") {
+			if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
 				return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
 			} else {
 				return []
@@ -202,8 +138,8 @@ extension CloudManager {
 		}
 		set {
 			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-			defaults.set(data, forKey: "uuidSequence")
-			defaults.synchronize()
+			PersistedOptions.defaults.set(data, forKey: "uuidSequence")
+			PersistedOptions.defaults.synchronize()
 		}
 	}
 

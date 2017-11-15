@@ -26,10 +26,12 @@ class ItemController: WKInterfaceController {
 	private var uuid: String?
 	private var fetchingImage = false
 	private var gotImage = false
+	private var labelText: String?
 
 	override func awake(withContext context: Any?) {
 		let c = context as! [String: Any]
-		label.setText(c["t"] as? String)
+		labelText = c["t"] as? String
+		label.setText(labelText)
 		date.setText(formatter.string(from: c["d"] as? Date ?? .distantPast))
 
 		uuid = c["u"] as? String
@@ -126,6 +128,11 @@ class ItemController: WKInterfaceController {
 
 	@IBAction func complicationSelected() {
 		complicating = true
+		PersistedOptions.watchComplicationText = labelText ?? ""
+		let server = CLKComplicationServer.sharedInstance()
+		for a in server.activeComplications ?? [] {
+			server.reloadTimeline(for: a)
+		}
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 			self.complicating = false
 		}

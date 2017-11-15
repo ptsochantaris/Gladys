@@ -73,6 +73,9 @@
 		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwtichHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwtichHolder.swift */; };
+		168A0CE81FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
+		168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
+		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -313,6 +316,9 @@
 		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwtichHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwtichHolder.swift; sourceTree = "<group>"; };
+		168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "GladysWatch Extension.entitlements"; sourceTree = "<group>"; };
+		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
+		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -484,6 +490,7 @@
 				16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */,
 				161089941FA31D810095FE34 /* CloudManager+Storage.swift */,
 				161089921FA31D0D0095FE34 /* CloudManager+MainApp.swift */,
+				168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */,
 			);
 			path = Cloud;
 			sourceTree = "<group>";
@@ -621,6 +628,7 @@
 		16A4E7E11FBB844A00D60596 /* GladysWatch */ = {
 			isa = PBXGroup;
 			children = (
+				168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */,
 				16A4E7E21FBB844A00D60596 /* Interface.storyboard */,
 				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7E71FBB844A00D60596 /* Info.plist */,
@@ -631,6 +639,7 @@
 		16A4E7F01FBB844A00D60596 /* GladysWatch Extension */ = {
 			isa = PBXGroup;
 			children = (
+				168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */,
 				16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */,
 				16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */,
 				16A4E7F51FBB844A00D60596 /* ComplicationController.swift */,
@@ -979,10 +988,20 @@
 					16A4E7DF1FBB844A00D60596 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					16A4E7EB1FBB844A00D60596 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1216,6 +1235,7 @@
 			files = (
 				1604A3351F091D79005A477E /* Types.swift in Sources */,
 				16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */,
+				168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
 				1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
@@ -1254,6 +1274,7 @@
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
+				168A0CE81FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
 				161089931FA31D0D0095FE34 /* CloudManager+MainApp.swift in Sources */,
@@ -1320,6 +1341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */,
 				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
@@ -1782,6 +1804,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1791,7 +1814,7 @@
 				INFOPLIST_FILE = GladysWatch/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "743781b0-1a82-4a09-a7d0-572e6ccce6c1";
+				PROVISIONING_PROFILE = "82dc7252-4d14-414e-9dae-e6a7ae567f26";
 				PROVISIONING_PROFILE_SPECIFIER = "Gladys Watch App Dev";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1808,6 +1831,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
@@ -1833,6 +1857,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1842,7 +1867,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "4aea8718-5e76-4d34-9572-0aaaf5828766";
+				PROVISIONING_PROFILE = "912c7472-984e-42b5-b8d7-4a99b725012d";
 				PROVISIONING_PROFILE_SPECIFIER = "Gladys Watch Extension Dev";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1858,6 +1883,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = X727JSJUGJ;

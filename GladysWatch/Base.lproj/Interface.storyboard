@@ -54,7 +54,7 @@ Label</string>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
-                            <menuItem title="Make Complication" icon="add" id="hIZ-ya-Yzj" userLabel="Make Complication">
+                            <menuItem title="Complication" icon="add" id="hIZ-ya-Yzj">
                                 <connections>
                                     <action selector="complicationSelected" destination="mJP-ds-eku" id="bma-JZ-MBZ"/>
                                 </connections>
