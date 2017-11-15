@@ -17,11 +17,17 @@ private let formatter: DateFormatter = {
 	return d
 }()
 
+extension Notification.Name {
+	static let GroupsUpdated = Notification.Name("GroupsUpdated")
+}
+
 class ItemController: WKInterfaceController {
 	@IBOutlet var label: WKInterfaceLabel!
 	@IBOutlet var date: WKInterfaceLabel!
 	@IBOutlet var image: WKInterfaceImage!
 	@IBOutlet var copyLabel: WKInterfaceLabel!
+	@IBOutlet var topGroup: WKInterfaceGroup!
+	@IBOutlet var bottomGroup: WKInterfaceGroup!
 
 	private var uuid: String?
 	private var fetchingImage = false
@@ -36,6 +42,11 @@ class ItemController: WKInterfaceController {
 
 		uuid = c["u"] as? String
 		fetchImage()
+
+		NotificationCenter.default.addObserver(forName: .GroupsUpdated, object: nil, queue: OperationQueue.main) { [weak self] n in
+			self?.updateGroups()
+		}
+		updateGroups()
 	}
 
 	private var active = false
@@ -66,7 +77,7 @@ class ItemController: WKInterfaceController {
 
 		fetchingImage = true
 		WCSession.default.sendMessage(["image": uuid], replyHandler: { reply in
-			if let r = reply["imagePng"] as? Data {
+			if let r = reply["image"] as? Data {
 				DispatchQueue.main.async {
 					let i = UIImage(data: r)
 					if let i = i {
@@ -87,8 +98,8 @@ class ItemController: WKInterfaceController {
 
 	private var copying: Bool = false {
 		didSet {
-			label.setHidden(copying)
-			date.setHidden(copying)
+			topGroup.setHidden(copying || ItemController.hidden)
+			bottomGroup.setHidden(copying || ItemController.hidden)
 			image.setHidden(copying)
 			copyLabel.setText("Copying")
 			copyLabel.setHidden(!copying)
@@ -97,8 +108,8 @@ class ItemController: WKInterfaceController {
 
 	private var opening: Bool = false {
 		didSet {
-			label.setHidden(opening)
-			date.setHidden(opening)
+			topGroup.setHidden(opening || ItemController.hidden)
+			bottomGroup.setHidden(opening || ItemController.hidden)
 			image.setHidden(opening)
 			copyLabel.setText("Viewing on Phone")
 			copyLabel.setHidden(!opening)
@@ -107,8 +118,8 @@ class ItemController: WKInterfaceController {
 
 	private var complicating: Bool = false {
 		didSet {
-			label.setHidden(complicating)
-			date.setHidden(complicating)
+			topGroup.setHidden(complicating || ItemController.hidden)
+			bottomGroup.setHidden(complicating || ItemController.hidden)
 			image.setHidden(complicating)
 			copyLabel.setText("Setting as Watch face complication text")
 			copyLabel.setHidden(!complicating)
@@ -133,7 +144,7 @@ class ItemController: WKInterfaceController {
 		for a in server.activeComplications ?? [] {
 			server.reloadTimeline(for: a)
 		}
-		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
 			self.complicating = false
 		}
 	}
@@ -147,5 +158,16 @@ class ItemController: WKInterfaceController {
 				self.copying = false
 			})
 		}
+	}
+
+	private static var hidden = false
+	@IBAction func tapped() {
+		ItemController.hidden = !ItemController.hidden
+		NotificationCenter.default.post(name: .GroupsUpdated, object: nil)
+	}
+
+	private func updateGroups() {
+		topGroup.setHidden(ItemController.hidden)
+		bottomGroup.setHidden(ItemController.hidden)
 	}
 }

@@ -27,30 +27,52 @@
             <objects>
                 <controller identifier="ItemController" id="mJP-ds-eku" customClass="ItemController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
-                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." id="BFr-jH-zmC"/>
-                        <group width="1" height="1" alignment="left" layout="vertical" id="Qmu-Cs-KCW">
-                            <items>
-                                <label width="1" alignment="center" textAlignment="center" numberOfLines="2" id="Hpo-D8-PYh">
-                                    <string key="text">Label
+                        <button alignment="center" verticalAlignment="center" id="29O-lL-WJR">
+                            <group key="contentGroup" width="1" height="1" alignment="left" layout="overlap" id="D3x-gM-hNW">
+                                <items>
+                                    <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" radius="5" id="if9-pT-VGa">
+                                        <items>
+                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="yIB-Vg-Pav">
+                                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </imageView>
+                                        </items>
+                                        <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </group>
+                                    <group width="1" alignment="center" verticalAlignment="bottom" id="bSZ-GK-Zhg">
+                                        <items>
+                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="3" id="veG-bS-Gax">
+                                                <string key="text">Label
+Label
 Label</string>
-                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                                </label>
-                                <group alignment="center" verticalAlignment="center" radius="5" id="if9-pT-VGa">
-                                    <items>
-                                        <imageView alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
-                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </imageView>
-                                    </items>
-                                    <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </group>
-                                <label width="1" alignment="center" verticalAlignment="bottom" textAlignment="center" numberOfLines="2" id="veG-bS-Gax">
-                                    <string key="text">Label
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="font" type="system" pointSize="12"/>
+                                            </label>
+                                        </items>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="2"/>
+                                    </group>
+                                    <group width="1" alignment="center" id="z6C-zg-Pzx">
+                                        <items>
+                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="3" id="Hpo-D8-PYh">
+                                                <string key="text">Label
+Label
 Label</string>
-                                    <color key="textColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
-                                </label>
-                            </items>
-                        </group>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="font" type="system" pointSize="12"/>
+                                            </label>
+                                        </items>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="2"/>
+                                    </group>
+                                    <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </label>
+                                </items>
+                            </group>
+                            <connections>
+                                <action selector="tapped" destination="mJP-ds-eku" id="6xp-2N-xgo"/>
+                            </connections>
+                        </button>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
@@ -72,10 +94,12 @@ Label</string>
                         </items>
                     </menu>
                     <connections>
+                        <outlet property="bottomGroup" destination="z6C-zg-Pzx" id="1eX-MG-MVR"/>
                         <outlet property="copyLabel" destination="BFr-jH-zmC" id="s3j-1S-XMq"/>
                         <outlet property="date" destination="veG-bS-Gax" id="11B-hx-sv3"/>
                         <outlet property="image" destination="yIB-Vg-Pav" id="1MP-Uk-6tp"/>
                         <outlet property="label" destination="Hpo-D8-PYh" id="Gia-eZ-tWi"/>
+                        <outlet property="topGroup" destination="bSZ-GK-Zhg" id="SFv-k8-aTU"/>
                     </connections>
                 </controller>
             </objects>
