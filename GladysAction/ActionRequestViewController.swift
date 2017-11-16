@@ -48,7 +48,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
 			if let providers = inputItem.attachments as? [NSItemProvider] {
 				itemCount += providers.count
-				for newItem in ArchivedDropItem.importData(providers: providers, delegate: self) {
+				for newItem in ArchivedDropItem.importData(providers: providers, delegate: self, overrideName: nil) {
 					Model.drops.insert(newItem, at: 0)
 					newItemIds.append(newItem.uuid.uuidString)
 				}

@@ -131,19 +131,19 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	#if MAINAPP || ACTIONEXTENSION
 
-		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?) -> [ArchivedDropItem] {
+		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrideName: String?) -> [ArchivedDropItem] {
 			if PersistedOptions.separateItemPreference {
 				var res = [ArchivedDropItem]()
 				for p in providers {
 					for t in sanitised(p.registeredTypeIdentifiers) {
-						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t)
+						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrideName: overrideName)
 						res.append(item)
 					}
 				}
 				return res
 
 			} else {
-				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil)
+				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrideName: overrideName)
 				return [item]
 			}
 		}
@@ -151,7 +151,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
 
-		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) {
+	private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrideName: String?) {
 
 			uuid = UUID()
 			createdAt = Date()
@@ -159,7 +159,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			suggestedName = providers.first!.suggestedName
 			needsReIngest = true
 			needsDeletion = false
-			titleOverride = ""
+			titleOverride = overrideName ?? ""
 			note = ""
 			labels = []
 			typeItems = [ArchivedDropItemType]()

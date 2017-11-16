@@ -19,6 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			let vc = (window?.rootViewController as? UINavigationController)?.topViewController as? ViewController
 			vc?.displayIAPRequest(newTotal: t)
 			return true
+		} else if let c = url.host, c == "paste-clipboard" {
+			ViewController.shared.dismissAnyPopOver()
+			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+			let labelParameter = components?.queryItems?.first { $0.name == "label" }
+			ViewController.shared.pasteClipboard(label: labelParameter?.value)
+			return true
 		}
 		return false
 	}
