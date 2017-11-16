@@ -38,31 +38,31 @@
                                         </items>
                                         <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </group>
-                                    <group width="1" alignment="center" verticalAlignment="bottom" id="bSZ-GK-Zhg">
+                                    <group width="1" alignment="center" verticalAlignment="bottom" layout="overlap" radius="0.0" id="bSZ-GK-Zhg">
                                         <items>
-                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="3" id="veG-bS-Gax">
+                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="veG-bS-Gax">
                                                 <string key="text">Label
+Label
 Label
 Label</string>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="font" type="system" pointSize="12"/>
                                             </label>
                                         </items>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="2"/>
+                                        <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
                                     </group>
-                                    <group width="1" alignment="center" id="z6C-zg-Pzx">
+                                    <group width="1" alignment="center" layout="overlap" radius="0.0" id="z6C-zg-Pzx">
                                         <items>
-                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="3" id="Hpo-D8-PYh">
+                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="Hpo-D8-PYh">
                                                 <string key="text">Label
+Label
 Label
 Label</string>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="font" type="system" pointSize="12"/>
                                             </label>
                                         </items>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="2"/>
+                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="10"/>
                                     </group>
                                     <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>

@@ -37,9 +37,14 @@ class ItemController: WKInterfaceController {
 	override func awake(withContext context: Any?) {
 		self.context = context as! [String: Any]
 
+		self.setTitle(self.context["it"] as? String)
+
 		fetchImage()
 		label.setText(labelText)
 		date.setText(formatter.string(from: itemDate))
+
+		topGroup.setBackgroundImage(ItemController.topShade)
+		bottomGroup.setBackgroundImage(ItemController.bottomShade)
 
 		NotificationCenter.default.addObserver(forName: .GroupsUpdated, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateGroups()
@@ -83,6 +88,29 @@ class ItemController: WKInterfaceController {
 	}
 
 	private static let imageCache = NSCache<NSString, UIImage>()
+
+	private static let topShade = makeGradient(up: false)
+
+	private static let bottomShade = makeGradient(up: true)
+
+	private static func makeGradient(up: Bool) -> UIImage {
+
+		let context = CGContext(data: nil,
+								width: 1,
+								height: 255,
+								bitsPerComponent: 8,
+								bytesPerRow: 4,
+								space: CGColorSpaceCreateDeviceRGB(),
+								bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+
+		let components: [CGFloat] = [0.0, 0.0, 0.0, 0.0,
+									 0.0, 0.0, 0.0, 0.4,
+									 0.0, 0.0, 0.0, 0.5]
+		let locations: [CGFloat] = [0.0, 0.9, 1.0]
+		let gradient = CGGradient(colorSpace: CGColorSpaceCreateDeviceRGB(), colorComponents: components, locations: locations, count: 3)!
+		context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: up ? 0 : 255), end: CGPoint(x: 0, y: up ? 255 : 0), options: [])
+		return UIImage(cgImage: context.makeImage()!)
+	}
 
 	private func fetchImage() {
 
