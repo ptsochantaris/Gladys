@@ -151,7 +151,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
 
-	private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrideName: String?) {
+		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrideName: String?) {
 
 			uuid = UUID()
 			createdAt = Date()
