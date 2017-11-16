@@ -94,12 +94,13 @@ extension UIImage {
 		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
 	}
 
-	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false) -> UIImage {
+	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
 
-		let mySizePixelWidth = size.width * scale
-		let mySizePixelHeight = size.height * scale
+		let targetScale = singleScale ? 1 : scale
+		let mySizePixelWidth = size.width * targetScale
+		let mySizePixelHeight = size.height * targetScale
 
-		let s = useScreenScale ? UIScreen.main.scale : scale
+		let s = useScreenScale ? UIScreen.main.scale : targetScale
 		let outputImagePixelWidth = targetSize.width * s
 		let outputImagePixelHeight = targetSize.height * s
 

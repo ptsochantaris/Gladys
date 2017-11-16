@@ -51,14 +51,15 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 					let mode = i.displayMode
 					let icon = i.displayIcon
 					DispatchQueue.global().async {
+						let W = message["width"] as! CGFloat
+						let H = message["height"] as! CGFloat
+						let size = CGSize(width: W, height: H)
 						if mode == .center || mode == .circle {
-							let size = CGSize(width: 200, height: 200)
-							let scaledImage = icon.limited(to: size, limitTo: 0.2)
+							let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
 							let data = UIImagePNGRepresentation(scaledImage)!
 							replyHandler(["image": data])
 						} else {
-							let size = CGSize(width: 200, height: 200)
-							let scaledImage = icon.limited(to: size, limitTo: 1.0)
+							let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
 							let data = UIImageJPEGRepresentation(scaledImage, 0.6)!
 							replyHandler(["image": data])
 						}

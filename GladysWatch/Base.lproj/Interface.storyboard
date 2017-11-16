@@ -32,7 +32,7 @@
                                 <items>
                                     <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" radius="5" id="if9-pT-VGa">
                                         <items>
-                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" id="yIB-Vg-Pav">
+                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
                                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </imageView>
                                         </items>
@@ -93,6 +93,7 @@ Label</string>
                             </menuItem>
                         </items>
                     </menu>
+                    <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                     <connections>
                         <outlet property="bottomGroup" destination="z6C-zg-Pzx" id="1eX-MG-MVR"/>
                         <outlet property="copyLabel" destination="BFr-jH-zmC" id="s3j-1S-XMq"/>

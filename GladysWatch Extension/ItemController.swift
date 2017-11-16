@@ -29,19 +29,17 @@ class ItemController: WKInterfaceController {
 	@IBOutlet var topGroup: WKInterfaceGroup!
 	@IBOutlet var bottomGroup: WKInterfaceGroup!
 
-	private var uuid: String?
 	private var fetchingImage = false
 	private var gotImage = false
-	private var labelText: String?
+	private var context: [String: Any]!
+	private var active = false
 
 	override func awake(withContext context: Any?) {
-		let c = context as! [String: Any]
-		labelText = c["t"] as? String
-		label.setText(labelText)
-		date.setText(formatter.string(from: c["d"] as? Date ?? .distantPast))
+		self.context = context as! [String: Any]
 
-		uuid = c["u"] as? String
 		fetchImage()
+		label.setText(labelText)
+		date.setText(formatter.string(from: itemDate))
 
 		NotificationCenter.default.addObserver(forName: .GroupsUpdated, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateGroups()
@@ -49,14 +47,31 @@ class ItemController: WKInterfaceController {
 		updateGroups()
 	}
 
-	private var active = false
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	private var labelText: String? {
+		return context["t"] as? String
+	}
+
+	private var uuid: String? {
+		return context["u"] as? String
+	}
+
+	private var itemDate: Date {
+		return context["d"] as? Date ?? .distantPast
+	}
 
 	override func willActivate() {
 		super.willActivate()
+
 		if active || ExtensionDelegate.currentUUID.isEmpty, let uuid = uuid {
 			ExtensionDelegate.currentUUID = uuid
 		}
+
 		active = true
+
 		if !gotImage && !fetchingImage {
 			fetchImage()
 		}
@@ -64,11 +79,7 @@ class ItemController: WKInterfaceController {
 
 	override func willDisappear() {
 		super.willDisappear()
-		image.setImage(nil)
-		label.setText(nil)
-		date.setText(nil)
-		gotImage = false
-		fetchingImage = false
+		ExtensionDelegate.currentUUID = ""
 	}
 
 	private static let imageCache = NSCache<NSString, UIImage>()
@@ -85,7 +96,10 @@ class ItemController: WKInterfaceController {
 		}
 
 		fetchingImage = true
-		WCSession.default.sendMessage(["image": uuid], replyHandler: { reply in
+		var size = contentFrame.size
+		size.width *= 2
+		size.height *= 2
+		WCSession.default.sendMessage(["image": uuid, "width": size.width, "height": size.height], replyHandler: { reply in
 			if let r = reply["image"] as? Data {
 				DispatchQueue.main.async {
 					let i = UIImage(data: r)
