@@ -262,18 +262,13 @@ extension Model {
 			return modelFilter
 		}
 		set {
-			guard modelFilter != newValue else {
-				return
-			}
+			if modelFilter == newValue { return }
 			forceUpdateFilter(with: newValue, signalUpdate: true)
 		}
 	}
 
-	static func forceUpdateFilter(signalUpdate: Bool) {
-		forceUpdateFilter(with: modelFilter, signalUpdate: signalUpdate)
-	}
-
-	private static func forceUpdateFilter(with newValue: String?, signalUpdate: Bool) {
+	@discardableResult
+	static func forceUpdateFilter(with newValue: String? = modelFilter, signalUpdate: Bool) -> Bool {
 		currentFilterQuery = nil
 		modelFilter = newValue
 
@@ -311,7 +306,8 @@ extension Model {
 			cachedFilteredDrops = postLabelDrops
 		}
 
-		if signalUpdate && previouslyVisibleUuids != visibleUuids {
+		let changesToVisibleItems = previouslyVisibleUuids != visibleUuids
+		if signalUpdate && changesToVisibleItems {
 
 			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
@@ -328,6 +324,8 @@ extension Model {
 				UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, resultString)
 			}
 		}
+
+		return changesToVisibleItems
 	}
 
 	private static var visibleUuids: [UUID] {
@@ -360,7 +358,7 @@ extension Model {
 		guard isFilteringText || isFilteringLabels else {
 			return index
 		}
-		if drops.count == 0 {
+		if filteredDrops.count == 0 {
 			return 0
 		}
 		let closestItem: ArchivedDropItem

@@ -134,6 +134,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		coordinator.session.progressIndicatorStyle = .none
 
+		var visibleChanges = false
+		var dropsPerformed = false
+
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
@@ -166,20 +169,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 					if Model.isFilteringLabels || Model.isFilteringText {
 						dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-						if Model.isFilteringLabels {
-							if PersistedOptions.dontAutoLabelNewItems {
-								addedItemFeedback()
-							} else {
-								item.labels = Model.enabledLabelsForItems
-							}
+						if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+							item.labels = Model.enabledLabelsForItems
 						}
 					}
 
 					var itemVisiblyInserted = false
 					collectionView.performBatchUpdates({
 						Model.drops.insert(item, at: dataIndex)
-						Model.forceUpdateFilter(signalUpdate: false)
-						itemVisiblyInserted = Model.filteredDrops.contains(item)
+						itemVisiblyInserted = Model.forceUpdateFilter(signalUpdate: false)
 						if itemVisiblyInserted {
 							collectionView.isAccessibilityElement = false
 							collectionView.insertItems(at: [destinationIndexPath])
@@ -190,15 +188,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					})
 
 					loadingUUIDs.insert(item.uuid)
+					dropsPerformed = true
 					if itemVisiblyInserted {
+						visibleChanges = true
 						firstDestinationPath = destinationIndexPath
 					}
 				}
 				startBgTaskIfNeeded()
 				if let firstDestinationPath = firstDestinationPath {
+					visibleChanges = true
 					coordinator.drop(dragItem, toItemAt: firstDestinationPath)
 				}
 			}
+		}
+
+		if dropsPerformed && !visibleChanges {
+			addedItemFeedback()
 		}
 
 		if needSave{
@@ -474,7 +479,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func addedItemFeedback() {
-		genericAlert(title: nil, message: "Item Added", on: self, showOK: false)
+		genericAlert(title: nil, message: "Item(s) Added", on: self, showOK: false)
 	}
 
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
@@ -494,22 +499,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return
 		}
 
+		var visibleChangesOccured = false
+
 		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrideName: label) {
 
-			if Model.isFilteringLabels {
-				if PersistedOptions.dontAutoLabelNewItems {
-					addedItemFeedback()
-				} else {
-					item.labels = Model.enabledLabelsForItems
-				}
+			if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+				item.labels = Model.enabledLabelsForItems
 			}
 
 			let destinationIndexPath = IndexPath(item: 0, section: 0)
 
 			archivedItemCollectionView.performBatchUpdates({
 				Model.drops.insert(item, at: 0)
-				Model.forceUpdateFilter(signalUpdate: false)
-				archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+				if Model.forceUpdateFilter(signalUpdate: false) {
+					archivedItemCollectionView.insertItems(at: [destinationIndexPath])
+					archivedItemCollectionView.isAccessibilityElement = false
+					visibleChangesOccured = true
+				}
 			}, completion: { finished in
 				self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
 				self.mostRecentIndexPathActioned = destinationIndexPath
@@ -521,6 +527,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
+
+		if !visibleChangesOccured {
+			addedItemFeedback()
+		}
 	}
 
 	@objc private func detailViewClosing() {
@@ -980,12 +990,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			}
 
 			item.needsReIngest = false
-			item.reIndex()
 
 			if let i = Model.filteredDrops.index(where: { $0 === sender }) {
 				mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 				archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
 				focusInitialAccessibilityElement()
+				item.reIndex()
+			} else {
+				item.reIndex {
+					DispatchQueue.main.async {
+						if Model.isFilteringText {
+							Model.forceUpdateFilter(signalUpdate: true)
+						}
+					}
+				}
 			}
 
 			loadingUUIDs.remove(item.uuid)
@@ -1011,18 +1029,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		guard let s = navigationItem.searchController else { return }
 		s.searchResultsUpdater = nil
 		s.delegate = nil
+		s.searchBar.text = nil
+		s.isActive = false
 
 		if andLabels {
 			Model.disableAllLabels()
 			updateLabelIcon()
-			if Model.filter == nil { // because the next line won't have any effect if its already nil
-				Model.forceUpdateFilter(signalUpdate: true)
-			}
 		}
 
-		Model.filter = nil
-		s.searchBar.text = nil
-		s.isActive = false
+		if Model.filter == nil { // because the next line won't have any effect if it's already nil
+			Model.forceUpdateFilter(signalUpdate: true)
+		} else {
+			Model.filter = nil
+		}
 
 		s.searchResultsUpdater = self
 		s.delegate = self
