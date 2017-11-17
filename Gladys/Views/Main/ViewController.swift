@@ -12,7 +12,9 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 
 	var finalVC: UIViewController! = viewController
 	while finalVC.presentedViewController != nil {
-		finalVC = finalVC.presentedViewController
+		let newVC = finalVC.presentedViewController
+		if newVC is UIAlertController { break }
+		finalVC = newVC
 	}
 
 	finalVC.present(a, animated: true)
@@ -134,9 +136,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		coordinator.session.progressIndicatorStyle = .none
 
-		var visibleChanges = false
-		var dropsPerformed = false
-
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
 
@@ -188,22 +187,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					})
 
 					loadingUUIDs.insert(item.uuid)
-					dropsPerformed = true
 					if itemVisiblyInserted {
-						visibleChanges = true
 						firstDestinationPath = destinationIndexPath
 					}
 				}
 				startBgTaskIfNeeded()
 				if let firstDestinationPath = firstDestinationPath {
-					visibleChanges = true
 					coordinator.drop(dragItem, toItemAt: firstDestinationPath)
 				}
 			}
-		}
-
-		if dropsPerformed && !visibleChanges {
-			addedItemFeedback()
 		}
 
 		if needSave{
@@ -478,10 +470,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		lastSyncUpdate()
 	}
 
-	private func addedItemFeedback() {
-		genericAlert(title: nil, message: "Item(s) Added", on: self, showOK: false)
-	}
-
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
@@ -499,8 +487,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return
 		}
 
-		var visibleChangesOccured = false
-
 		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrideName: label) {
 
 			if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
@@ -514,7 +500,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				if Model.forceUpdateFilter(signalUpdate: false) {
 					archivedItemCollectionView.insertItems(at: [destinationIndexPath])
 					archivedItemCollectionView.isAccessibilityElement = false
-					visibleChangesOccured = true
 				}
 			}, completion: { finished in
 				self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
@@ -527,10 +512,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
-
-		if !visibleChangesOccured {
-			addedItemFeedback()
-		}
 	}
 
 	@objc private func detailViewClosing() {
@@ -998,9 +979,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				item.reIndex()
 			} else {
 				item.reIndex {
-					DispatchQueue.main.async {
-						if Model.isFilteringText {
-							Model.forceUpdateFilter(signalUpdate: true)
+					DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
+						if !Model.forceUpdateFilter(signalUpdate: true) {
+							genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
 						}
 					}
 				}
