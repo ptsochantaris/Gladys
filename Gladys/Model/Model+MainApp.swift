@@ -354,8 +354,12 @@ extension Model {
 		}
 	}
 
+	static var isFiltering: Bool {
+		return isFilteringText || isFilteringLabels
+	}
+
 	static func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
-		guard isFilteringText || isFilteringLabels else {
+		guard isFiltering else {
 			return index
 		}
 		if filteredDrops.count == 0 {

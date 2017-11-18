@@ -166,7 +166,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
-					if Model.isFilteringLabels || Model.isFilteringText {
+					if Model.isFiltering {
 						dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
 						if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
 							item.labels = Model.enabledLabelsForItems
@@ -176,7 +176,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					var itemVisiblyInserted = false
 					collectionView.performBatchUpdates({
 						Model.drops.insert(item, at: dataIndex)
-						itemVisiblyInserted = Model.forceUpdateFilter(signalUpdate: false)
+						Model.forceUpdateFilter(signalUpdate: false)
+						itemVisiblyInserted = Model.filteredDrops.contains(item)
 						if itemVisiblyInserted {
 							collectionView.isAccessibilityElement = false
 							collectionView.insertItems(at: [destinationIndexPath])
@@ -497,7 +498,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			archivedItemCollectionView.performBatchUpdates({
 				Model.drops.insert(item, at: 0)
-				if Model.forceUpdateFilter(signalUpdate: false) {
+				Model.forceUpdateFilter(signalUpdate: false)
+				let itemVisiblyInserted = Model.filteredDrops.contains(item)
+				if itemVisiblyInserted {
 					archivedItemCollectionView.insertItems(at: [destinationIndexPath])
 					archivedItemCollectionView.isAccessibilityElement = false
 				}
@@ -918,7 +921,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	private func ensureNoEmptySearchResult() {
 	    Model.forceUpdateFilter(signalUpdate: true)
-		if Model.filteredDrops.count == 0 && (Model.isFilteringText || Model.isFilteringLabels) {
+		if Model.filteredDrops.count == 0 && Model.isFiltering {
 			resetSearch(andLabels: true)
 		}
 	}
