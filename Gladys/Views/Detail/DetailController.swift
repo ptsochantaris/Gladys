@@ -159,17 +159,21 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private func cellNeedsResize(caretRect: CGRect?) {
-		UIView.setAnimationsEnabled(false)
-		table.beginUpdates()
+	private func cellNeedsResize(caretRect: CGRect?, section: Int, heightChange: Bool) {
 		if let caretRect = caretRect {
 			table.scrollRectToVisible(caretRect, animated: false)
 		} else {
-			table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+			table.scrollToRow(at: IndexPath(row: 0, section: section), at: .top, animated: false)
 		}
-		table.endUpdates()
-		UIView.setAnimationsEnabled(true)
-		sizeWindow()
+		if heightChange {
+			UIView.performWithoutAnimation {
+				table.beginUpdates()
+				table.endUpdates()
+			}
+			DispatchQueue.main.async {
+				self.sizeWindow()
+			}
+		}
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -177,16 +181,16 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
 			cell.item = item
-			cell.resizeCallback = { [weak self] caretRect in
-				self?.cellNeedsResize(caretRect: caretRect)
+			cell.resizeCallback = { [weak self] caretRect, heightChange in
+				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
 			return cell
 
 		} else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
 			cell.item = item
-			cell.resizeCallback = { [weak self] caretRect in
-				self?.cellNeedsResize(caretRect: caretRect)
+			cell.resizeCallback = { [weak self] caretRect, heightChange in
+				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
 			return cell
 

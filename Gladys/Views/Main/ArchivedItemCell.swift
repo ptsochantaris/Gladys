@@ -464,6 +464,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				if !n.isEmpty && PersistedOptions.displayNotesInMainView {
 					if bottomLabelText == nil || topLabelText != nil {
 						bottomLabelText = n
+						bottomLabelAlignment = .center
 						bottomLabelHighlight = true
 					} else {
 						topLabelText = n

@@ -18,7 +18,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		}
 	}
 
-	var resizeCallback: ((CGRect?)->Void)?
+	var resizeCallback: ((CGRect?, Bool)->Void)?
 
 	override func awakeFromNib() {
 		label.addObserver(self, forKeyPath: "selectedTextRange", options: .new, context: nil)
@@ -34,7 +34,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 			var caretRect = label.caretRect(for: r.start)
 			caretRect = label.convert(caretRect, to: s)
 			caretRect = caretRect.insetBy(dx: 0, dy: -22)
-			resizeCallback?(caretRect)
+			resizeCallback?(caretRect, false)
 		}
 	}
 
@@ -58,16 +58,17 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
 	func textViewDidChange(_ textView: UITextView) {
 		dirty = true
-		let newHeight = sizeThatFits(CGSize(width: frame.size.width, height: 5000)).height
+		let newHeight = textView.sizeThatFits(CGSize(width: frame.size.width, height: 5000)).height
 		if previousHeight != newHeight {
 			if let r = textView.selectedTextRange, let s = superview {
 				var caretRect = textView.caretRect(for: r.start)
 				caretRect = textView.convert(caretRect, to: s)
 				caretRect = caretRect.insetBy(dx: 0, dy: -22)
-				resizeCallback?(caretRect)
+				resizeCallback?(caretRect, true)
 			} else {
-				resizeCallback?(nil)
+				resizeCallback?(nil, true)
 			}
+			previousHeight = newHeight
 		}
 	}
 
@@ -88,7 +89,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		label.text = item.oneTitle
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)
-		resizeCallback?(nil)
+		resizeCallback?(nil, true)
 
 		item.reIndex()
 	    Model.save()
