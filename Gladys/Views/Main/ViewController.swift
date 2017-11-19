@@ -1104,6 +1104,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if Model.isFiltering {
 			resetSearch(andLabels: true)
 		}
+		dismissAnyPopOver()
 
 		guard let infiniteModeItem = infiniteModeItem else {
 			let message: String

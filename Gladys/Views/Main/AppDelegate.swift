@@ -16,8 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
 		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
-			let vc = (window?.rootViewController as? UINavigationController)?.topViewController as? ViewController
-			vc?.displayIAPRequest(newTotal: t)
+			ViewController.shared.displayIAPRequest(newTotal: t)
 			return true
 		} else if let c = url.host, c == "paste-clipboard" {
 			ViewController.shared.dismissAnyPopOver()

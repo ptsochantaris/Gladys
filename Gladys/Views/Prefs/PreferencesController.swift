@@ -262,15 +262,11 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: actionName, style: .destructive, handler: { [weak self] action in
-			self?.deleteAllItems()
+		a.addAction(UIAlertAction(title: actionName, style: .destructive, handler: { action in
+			Model.resetEverything()
 		}))
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(a, animated: true)
-	}
-
-	private func deleteAllItems() {
-	    Model.resetEverything()
 	}
 
 	@IBOutlet weak var deleteAll: UIBarButtonItem!

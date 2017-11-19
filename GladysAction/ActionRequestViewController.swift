@@ -85,7 +85,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			loadingItem.cancelIngest()
 		}
 		Model.drops = Model.drops.filter({ i -> Bool in
-			loadingItems.contains { $0 === i }
+			!loadingItems.contains { $0.uuid == i.uuid }
 		})
 
 		let error = NSError(domain: "build.bru.Gladys.error", code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel?.text ?? "No further info" ])
