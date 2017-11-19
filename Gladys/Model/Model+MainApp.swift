@@ -372,8 +372,11 @@ extension Model {
 				return i+1
 			}
 			return 0
+		} else if index > 0 {
+			closestItem = filteredDrops[index-1]
+			return (drops.index(of: closestItem) ?? 0) + 1
 		} else {
-			closestItem = filteredDrops[index]
+			closestItem = filteredDrops[0]
 			return drops.index(of: closestItem) ?? 0
 		}
 	}
