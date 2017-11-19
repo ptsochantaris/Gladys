@@ -1101,6 +1101,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		guard infiniteMode == false else { return }
 
+		if Model.isFiltering {
+			resetSearch(andLabels: true)
+		}
+
 		guard let infiniteModeItem = infiniteModeItem else {
 			let message: String
 			if newTotal == -1 {
