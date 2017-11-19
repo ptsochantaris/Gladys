@@ -32,6 +32,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			return
 		}
 
+		Model.reset()
 		Model.reloadDataIfNeeded()
 		
 		let newTotal = Model.drops.count + loadCount
