@@ -14,6 +14,7 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var twoColumnsSwitch: UISwitch!
 	@IBOutlet weak var removeItemsWhenDraggedOutSwitch: UISwitch!
 	@IBOutlet weak var dontAutoLabelNewItemsSwitch: UISwitch!
+	@IBOutlet weak var displayNotesInMainViewSwitch: UISwitch!
 
 	@IBAction func removeItemsWhenDraggedOutChanged(_ sender: UISwitch) {
 		PersistedOptions.removeItemsWhenDraggedOut = sender.isOn
@@ -32,6 +33,11 @@ final class OptionsController: GladysViewController {
 
 	@IBAction func separateItemsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.separateItemPreference = sender.isOn
+	}
+
+	@IBAction func displayNotesInMainViewSelected(_ sender: UISwitch) {
+		PersistedOptions.displayNotesInMainView = sender.isOn
+		ViewController.shared.reloadData()
 	}
 
 	override func viewDidLoad() {
@@ -55,5 +61,8 @@ final class OptionsController: GladysViewController {
 		dontAutoLabelNewItemsSwitch.onTintColor = view.tintColor
 		dontAutoLabelNewItemsSwitch.isOn = PersistedOptions.dontAutoLabelNewItems
 
+		displayNotesInMainViewSwitch.tintColor = UIColor.lightGray
+		displayNotesInMainViewSwitch.onTintColor = view.tintColor
+		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
 	}
 }

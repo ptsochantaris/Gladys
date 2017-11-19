@@ -126,10 +126,10 @@ final class MiniMapView: UIImageView {
 
 final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var image: GladysImageView!
-	@IBOutlet weak var label: UILabel!
-	@IBOutlet weak var labelDistance: NSLayoutConstraint!
-	@IBOutlet weak var accessoryLabel: UILabel!
-	@IBOutlet weak var accessoryLabelDistance: NSLayoutConstraint!
+	@IBOutlet weak var bottomLabel: UILabel!
+	@IBOutlet weak var bottomLabelDistance: NSLayoutConstraint!
+	@IBOutlet weak var topLabel: UILabel!
+	@IBOutlet weak var topLabelDistance: NSLayoutConstraint!
 	@IBOutlet weak var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
 
@@ -146,6 +146,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override func tintColorDidChange() {
 		selectionImage?.tintColor = tintColor
 		cancelButton?.tintColor = tintColor
+		topLabel.highlightedTextColor = tintColor
+		bottomLabel.highlightedTextColor = tintColor
 	}
 
 	var isSelectedForDelete: Bool {
@@ -155,6 +157,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 		get {
 			return selectionImage?.isHighlighted ?? false
 		}
+	}
+
+	override var isSelected: Bool {
+		set {}
+		get { return false }
+	}
+
+	override var isHighlighted: Bool {
+		set {}
+		get { return false }
 	}
 
 	var isEditing: Bool = false {
@@ -385,8 +397,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideImage = true
 		var hideProgress = true
 
-		var accessoryLabelText: String?
-		var accessoryLabelDistanceConstant: CGFloat = 0
+		var topLabelText: String?
+		var topLabelHighlight = false
+
+		var bottomLabelText: String?
+		var bottomLabelAlignment: NSTextAlignment?
+		var bottomLabelHighlight = false
 
 		if let item = item {
 
@@ -395,7 +411,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 				hideProgress = false
 				progressView.observedProgress = item.loadingProgress
 				image.image = nil
-				label.text = nil
 
 			} else {
 
@@ -424,28 +439,36 @@ final class ArchivedItemCell: UICollectionViewCell {
 				case .center:
 					image.contentMode = .center
 					image.circle = false
-					label.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
+					bottomLabel.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
 				case .fill:
 					image.contentMode = .scaleAspectFill
 					image.circle = false
-					label.numberOfLines = 2
+					bottomLabel.numberOfLines = 2
 				case .fit:
 					image.contentMode = .scaleAspectFit
 					image.circle = false
-					label.numberOfLines = 2
+					bottomLabel.numberOfLines = 2
 				case .circle:
 					image.contentMode = .scaleAspectFill
 					image.circle = true
-					label.numberOfLines = 2
+					bottomLabel.numberOfLines = 2
 				}
 
 				let titleInfo = item.displayTitle
-				label.textAlignment = titleInfo.1
-				label.text = titleInfo.0
+				bottomLabelAlignment = titleInfo.1
+				bottomLabelText = titleInfo.0
 
-				if let t = item.accessoryTitle {
-					accessoryLabelText = t
-					accessoryLabelDistanceConstant = 8
+				topLabelText = item.accessoryTitle
+
+				let n = item.note
+				if !n.isEmpty && PersistedOptions.displayNotesInMainView {
+					if bottomLabelText == nil || topLabelText != nil {
+						bottomLabelText = n
+						bottomLabelHighlight = true
+					} else {
+						topLabelText = n
+						topLabelHighlight = true
+					}
 				}
 
 				// if we're showing an icon, let's try to enhance things a bit
@@ -467,7 +490,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 			}
 
 		} else { // item is nil
-			label.text = nil
 			image.image = nil
 			progressView.observedProgress = nil
 		}
@@ -478,9 +500,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 
 		progressView.isHidden = hideProgress
-		accessoryLabel.text = accessoryLabelText
-		labelDistance.constant = (label.text == nil) ? 0 : 8
-		accessoryLabelDistance.constant = accessoryLabelDistanceConstant
+
+		topLabel.text = topLabelText
+		topLabelDistance.constant = (topLabelText == nil) ? 0 : 8
+		topLabel.isHighlighted = topLabelHighlight
+
+		bottomLabel.text = bottomLabelText
+		bottomLabelDistance.constant = (bottomLabelText == nil) ? 0 : 8
+		bottomLabel.textAlignment = bottomLabelAlignment ?? .center
+		bottomLabel.isHighlighted = bottomLabelHighlight
+
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
 	}
@@ -526,7 +555,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		set {}
 		get {
 			if shouldDisplayLoading {
-				return accessoryLabel.text
+				return topLabel.text
 			}
 			return nil
 		}
@@ -538,7 +567,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			if shouldDisplayLoading {
 				return "Processing item. Activate to cancel."
 			} else {
-				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, label.text].flatMap { $0 }.joined(separator: "\n")
+				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomLabel.text].flatMap { $0 }.joined(separator: "\n")
 			}
 		}
 	}

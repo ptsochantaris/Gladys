@@ -93,13 +93,13 @@
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="accessoryLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
-                                            <outlet property="accessoryLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
+                                            <outlet property="bottomLabel" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
+                                            <outlet property="bottomLabelDistance" destination="zYq-Vr-jMB" id="b5Z-Uo-UfU"/>
                                             <outlet property="cancelButton" destination="mEc-YZ-ZGZ" id="D4Y-sH-UBm"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
-                                            <outlet property="label" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
-                                            <outlet property="labelDistance" destination="zYq-Vr-jMB" id="b5Z-Uo-UfU"/>
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
+                                            <outlet property="topLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
+                                            <outlet property="topLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -418,11 +418,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kch-Hm-YOV">
-                                <rect key="frame" x="0.0" y="64" width="320" height="543"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="643"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbf-8Q-XQN" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="135" width="320" height="123"/>
@@ -562,12 +562,49 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="FDI-4i-U5a" firstAttribute="top" secondItem="8fy-WQ-f8c" secondAttribute="bottom" constant="4" id="wuF-hE-yO9"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zL-R0-MOE" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="480" width="320" height="69"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display notes in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnu-A8-kYB">
+                                                <rect key="frame" x="40" y="10" width="173.5" height="21"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qro-Jb-hVE">
+                                                <rect key="frame" x="231" y="5" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="displayNotesInMainViewSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="KjE-Vf-a3V"/>
+                                                </connections>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show any added notes for items in the main view." textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9oh-Qt-4OW">
+                                                <rect key="frame" x="40" y="35" width="174" height="34"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="qro-Jb-hVE" secondAttribute="trailing" constant="40" id="Aij-Cj-f3Q"/>
+                                            <constraint firstItem="9oh-Qt-4OW" firstAttribute="top" secondItem="fnu-A8-kYB" secondAttribute="bottom" constant="4" id="LjD-yG-pts"/>
+                                            <constraint firstItem="qro-Jb-hVE" firstAttribute="leading" secondItem="fnu-A8-kYB" secondAttribute="trailing" constant="18" id="MyY-q2-Ekq"/>
+                                            <constraint firstItem="9oh-Qt-4OW" firstAttribute="trailing" secondItem="fnu-A8-kYB" secondAttribute="trailing" id="WbP-n7-yQT"/>
+                                            <constraint firstItem="qro-Jb-hVE" firstAttribute="centerY" secondItem="fnu-A8-kYB" secondAttribute="centerY" id="X9I-Ou-eB5"/>
+                                            <constraint firstItem="fnu-A8-kYB" firstAttribute="top" secondItem="0zL-R0-MOE" secondAttribute="top" constant="10" id="af3-Ap-Atz"/>
+                                            <constraint firstItem="fnu-A8-kYB" firstAttribute="leading" secondItem="0zL-R0-MOE" secondAttribute="leading" constant="40" id="hET-QM-hQ7"/>
+                                            <constraint firstItem="9oh-Qt-4OW" firstAttribute="leading" secondItem="fnu-A8-kYB" secondAttribute="leading" id="hX6-1a-DFx"/>
+                                            <constraint firstAttribute="bottom" secondItem="9oh-Qt-4OW" secondAttribute="bottom" id="oeu-dJ-TYI"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="top" secondItem="bB7-5e-4Zy" secondAttribute="bottom" constant="10" id="4QK-j0-Uli"/>
+                                    <constraint firstItem="0zL-R0-MOE" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="4f9-zs-bCP"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="width" secondItem="Nbf-8Q-XQN" secondAttribute="width" id="9Na-Vf-nD8"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="top" secondItem="Kch-Hm-YOV" secondAttribute="top" constant="20" id="APS-8E-MUH"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="top" secondItem="XgP-jO-jfU" secondAttribute="bottom" constant="10" id="Eyd-MY-R98"/>
+                                    <constraint firstAttribute="trailing" secondItem="0zL-R0-MOE" secondAttribute="trailing" id="Hmj-pX-Ow6"/>
+                                    <constraint firstAttribute="bottom" secondItem="0zL-R0-MOE" secondAttribute="bottom" constant="30" id="J2g-XA-ThI"/>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="width" secondItem="Kch-Hm-YOV" secondAttribute="width" id="VsL-3g-iUK"/>
                                     <constraint firstItem="XgP-jO-jfU" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="WEX-DQ-iaY"/>
                                     <constraint firstAttribute="trailing" secondItem="2Bf-gq-086" secondAttribute="trailing" id="X6M-Q7-jQG"/>
@@ -575,10 +612,10 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstAttribute="trailing" secondItem="XgP-jO-jfU" secondAttribute="trailing" id="bnv-xO-vWw"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fX0-qL-Qid"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fic-zs-slc"/>
+                                    <constraint firstItem="0zL-R0-MOE" firstAttribute="top" secondItem="2Bf-gq-086" secondAttribute="bottom" constant="10" id="hza-U8-of0"/>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="qan-Hp-iQq"/>
                                     <constraint firstItem="XgP-jO-jfU" firstAttribute="top" secondItem="Nbf-8Q-XQN" secondAttribute="bottom" constant="10" id="s1G-jo-NFN"/>
                                     <constraint firstAttribute="trailing" secondItem="Nbf-8Q-XQN" secondAttribute="trailing" id="vcD-h2-L7A"/>
-                                    <constraint firstAttribute="bottom" secondItem="2Bf-gq-086" secondAttribute="bottom" constant="20" id="zKN-Dx-kZF"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
@@ -593,8 +630,9 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="700"/>
+                    <size key="freeformSize" width="320" height="800"/>
                     <connections>
+                        <outlet property="displayNotesInMainViewSwitch" destination="qro-Jb-hVE" id="P56-Q3-X0o"/>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="Tft-Nz-YcR" id="oX4-o7-2rV"/>
                         <outlet property="removeItemsWhenDraggedOutSwitch" destination="7RR-Hc-O46" id="iGX-ri-zvz"/>
                         <outlet property="separateItemsSwitch" destination="rEn-tW-qfZ" id="7Z0-nJ-PnJ"/>
@@ -603,7 +641,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5160" y="-2108.4507042253522"/>
+            <point key="canvasLocation" x="5160" y="-2231"/>
         </scene>
         <!--iCloud Controller-->
         <scene sceneID="9V7-zs-8tY">
@@ -1847,7 +1885,7 @@ Selecting them will show only items that contain these labels.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TfS-H3-6sm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4211" y="-2108"/>
+            <point key="canvasLocation" x="4208" y="-2231"/>
         </scene>
     </scenes>
     <resources>

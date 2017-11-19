@@ -84,6 +84,8 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 		item.note = textView.text
 		item.markUpdated()
+
+		NotificationCenter.default.post(name: .ItemModified, object: item)
 		resizeCallback?(nil)
 
 		item.reIndex()

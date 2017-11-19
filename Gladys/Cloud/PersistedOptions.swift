@@ -29,6 +29,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var displayNotesInMainView: Bool {
+		get {
+			return defaults.bool(forKey: "displayNotesInMainView")
+		}
+		set {
+			defaults.set(newValue, forKey: "displayNotesInMainView")
+			defaults.synchronize()
+		}
+	}
+
 	static var watchComplicationText: String {
 		get {
 			return defaults.string(forKey: "watchComplicationText") ?? ""
