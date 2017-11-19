@@ -131,19 +131,19 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	#if MAINAPP || ACTIONEXTENSION
 
-		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrideName: String?) -> [ArchivedDropItem] {
+		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
 			if PersistedOptions.separateItemPreference {
 				var res = [ArchivedDropItem]()
 				for p in providers {
 					for t in sanitised(p.registeredTypeIdentifiers) {
-						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrideName: overrideName)
+						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
 						res.append(item)
 					}
 				}
 				return res
 
 			} else {
-				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrideName: overrideName)
+				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
 				return [item]
 			}
 		}
@@ -151,7 +151,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		var loadCount = 0
 		weak var delegate: LoadCompletionDelegate?
 
-		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrideName: String?) {
+		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
 
 			uuid = UUID()
 			createdAt = Date()
@@ -159,9 +159,9 @@ final class ArchivedDropItem: Codable, Equatable {
 			suggestedName = providers.first!.suggestedName
 			needsReIngest = true
 			needsDeletion = false
-			titleOverride = overrideName ?? ""
-			note = ""
-			labels = []
+			titleOverride = overrides?.title ?? ""
+			note = overrides?.note ?? ""
+			labels = overrides?.labels ?? []
 			typeItems = [ArchivedDropItemType]()
 	
 			loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)

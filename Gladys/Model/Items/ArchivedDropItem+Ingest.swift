@@ -1,6 +1,12 @@
 
 import Foundation
 
+struct ImportOverrides {
+	let title: String?
+	let note: String?
+	let labels: [String]?
+}
+
 extension ArchivedDropItem: LoadCompletionDelegate {
 	
 	func loadCompleted(sender: AnyObject) {

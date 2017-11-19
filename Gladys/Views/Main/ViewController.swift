@@ -162,7 +162,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			} else {
 
 				var firstDestinationPath: IndexPath?
-				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self, overrideName: nil) {
+				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self, overrides: nil) {
 					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
@@ -474,10 +474,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
-		pasteClipboard(label: nil)
+		pasteClipboard(overrides: nil)
 	}
 
-	func pasteClipboard(label: String?) {
+	func pasteClipboard(overrides: ImportOverrides?) {
 		let providers = UIPasteboard.general.itemProviders
 		if providers.count == 0 {
 			genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
@@ -488,7 +488,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return
 		}
 
-		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrideName: label) {
+		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: overrides) {
 
 			if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
 				item.labels = Model.enabledLabelsForItems

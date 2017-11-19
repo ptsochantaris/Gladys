@@ -21,8 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		} else if let c = url.host, c == "paste-clipboard" {
 			ViewController.shared.dismissAnyPopOver()
 			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-			let labelParameter = components?.queryItems?.first { $0.name == "label" }
-			ViewController.shared.pasteClipboard(label: labelParameter?.value)
+			let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
+			let noteParameter = components?.queryItems?.first { $0.name == "note" }
+			let labelsList = components?.queryItems?.first { $0.name == "labels" }?.value?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+			let importOverrides = ImportOverrides(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList)
+			ViewController.shared.pasteClipboard(overrides: importOverrides)
 			return true
 		}
 		return false
