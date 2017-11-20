@@ -66,16 +66,7 @@ final class DetailController: GladysViewController,
 		let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
 		let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
 		let intersection = safeAreaFrame.intersection(keyboardFrameInView)
-
-		let animationDuration: TimeInterval = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-		let animationCurveRawNSN = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
-		let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
-		let animationCurve = UIViewAnimationOptions(rawValue: animationCurveRaw)
-
-		UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
-			self.additionalSafeAreaInsets.bottom = intersection.height
-			self.view.layoutIfNeeded()
-		}, completion: nil)
+		additionalSafeAreaInsets.bottom = intersection.height
 	}
 
 	deinit {
