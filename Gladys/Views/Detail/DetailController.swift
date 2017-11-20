@@ -160,11 +160,6 @@ final class DetailController: GladysViewController,
 	}
 
 	private func cellNeedsResize(caretRect: CGRect?, section: Int, heightChange: Bool) {
-		if let caretRect = caretRect {
-			table.scrollRectToVisible(caretRect, animated: false)
-		} else {
-			table.scrollToRow(at: IndexPath(row: 0, section: section), at: .top, animated: false)
-		}
 		if heightChange {
 			UIView.performWithoutAnimation {
 				table.beginUpdates()
@@ -173,6 +168,11 @@ final class DetailController: GladysViewController,
 			DispatchQueue.main.async {
 				self.sizeWindow()
 			}
+		}
+		if let caretRect = caretRect {
+			table.scrollRectToVisible(caretRect, animated: false)
+		} else {
+			table.scrollToRow(at: IndexPath(row: 0, section: section), at: .top, animated: false)
 		}
 	}
 

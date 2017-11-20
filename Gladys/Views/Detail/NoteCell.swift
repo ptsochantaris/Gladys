@@ -25,12 +25,15 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		// caret moved
+		caretMoved()
+	}
+
+	private func caretMoved() {
 		if let r = textView.selectedTextRange, let s = superview {
 			var caretRect = textView.caretRect(for: r.start)
 			caretRect = textView.convert(caretRect, to: s)
 			caretRect = caretRect.insetBy(dx: 0, dy: -22)
-			resizeCallback?(caretRect, false)
+			self.resizeCallback?(caretRect, false)
 		}
 	}
 
@@ -59,6 +62,13 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 	private var previousHeight: CGFloat = 0
 	private var dirty = false
+
+	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+		if text == "\n" {
+			caretMoved()
+		}
+		return true
+	}
 
 	func textViewDidChange(_ textView: UITextView) {
 		dirty = true
