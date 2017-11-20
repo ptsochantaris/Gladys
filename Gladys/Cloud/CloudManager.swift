@@ -89,22 +89,31 @@ final class CloudManager {
 
 		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
 		if sequenceNeedsUpload(currentUUIDSequence) {
+
+			var sequenceToSend: [String]?
+
 			if lastSyncCompletion == .distantPast {
 				if currentUUIDSequence.count > 0 {
-					let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
 					var mergedSequence = uuidSequence
 					for i in currentUUIDSequence.reversed() {
 						if !mergedSequence.contains(i) {
 							mergedSequence.insert(i, at: 0)
 						}
 					}
-					record["positionList"] = mergedSequence as NSArray
-					payloadsToPush.append([record])
+					sequenceToSend = mergedSequence
 				}
 			} else {
+				sequenceToSend = currentUUIDSequence
+			}
+
+			if let sequenceToSend = sequenceToSend {
 				let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
-				record["positionList"] = currentUUIDSequence as NSArray
-				payloadsToPush.append([record])
+				record["positionList"] = sequenceToSend as NSArray
+				if payloadsToPush.count > 0 {
+					payloadsToPush[0].insert(record, at: 0)
+				} else {
+					payloadsToPush.append([record])
+				}
 			}
 		}
 

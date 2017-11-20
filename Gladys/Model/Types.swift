@@ -54,7 +54,6 @@ extension Notification.Name {
 	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
 	static let DetailViewClosing = Notification.Name("DetailViewClosing")
 	static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
-	static let CloudManagerUpdatedUUIDSequence = Notification.Name("CloudManagerUpdatedUUIDSequence")
 	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 }
 

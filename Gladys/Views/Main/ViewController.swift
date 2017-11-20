@@ -340,17 +340,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
-	@objc private func itemPositionsReceived() {
-		let sequence = CloudManager.uuidSequence
-		if sequence.count == 0 { return }
-
-	    Model.drops.sort { i1, i2 in
-			let p1 = sequence.index(of: i1.uuid.uuidString) ?? -1
-			let p2 = sequence.index(of: i2.uuid.uuidString) ?? -1
-			return p1 < p2
-		}
-	}
-
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		navigationItem.largeTitleDisplayMode = .never
@@ -407,7 +396,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foregrounded), name: .UIApplicationWillEnterForeground, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
-		n.addObserver(self, selector: #selector(itemPositionsReceived), name: .CloudManagerUpdatedUUIDSequence, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 

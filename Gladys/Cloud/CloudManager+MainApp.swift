@@ -331,34 +331,39 @@ extension CloudManager {
 					return
 				}
 
+				log("Zone \(zoneId.zoneName) changes fetch complete, processing")
+
+				for dropRecord in newDrops {
+					createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
+				}
+
+				if updatedSequence || newDrops.count > 0 {
+					let sequence = uuidSequence
+					if sequence.count > 0 {
+						Model.drops.sort { i1, i2 in
+							let p1 = sequence.index(of: i1.uuid.uuidString) ?? -1
+							let p2 = sequence.index(of: i2.uuid.uuidString) ?? -1
+							return p1 < p2
+						}
+					}
+				}
+
 				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount > 0
 
-				log("Zone \(zoneId.zoneName) changes fetch complete")
-
 				if itemsModified || updatedSequence{
-					// ingestions and deletions will take care of save
-					for dropRecord in newDrops {
-						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
-					}
-					if updatedSequence {
-						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
-					}
-					if itemsModified {
-						// need to save stuff that's been modified
-						Model.queueNextSaveCallback {
-							log("Comitting zone change token")
-							self.zoneChangeToken = token
-							NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-						}
-						Model.saveIsDueToSyncFetch = true
-						Model.save()
-					} else {
-						// it was only a position record
+					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+				}
+
+				if itemsModified {
+					// need to save stuff that's been modified
+					Model.queueNextSaveCallback {
 						log("Comitting zone change token")
 						self.zoneChangeToken = token
-						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 					}
+					Model.saveIsDueToSyncFetch = true
+					Model.save()
 				} else {
+					// it was only a position record
 					log("Comitting zone change token")
 					self.zoneChangeToken = token
 				}
