@@ -39,6 +39,7 @@ final class DetailController: GladysViewController,
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
+		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 	}
 
@@ -57,6 +58,24 @@ final class DetailController: GladysViewController,
 		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)
 		}
+	}
+
+	@objc private func keyboardChanged(_ notification: Notification) {
+		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+
+		let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
+		let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
+		let intersection = safeAreaFrame.intersection(keyboardFrameInView)
+
+		let animationDuration: TimeInterval = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+		let animationCurveRawNSN = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+		let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+		let animationCurve = UIViewAnimationOptions(rawValue: animationCurveRaw)
+
+		UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: {
+			self.additionalSafeAreaInsets.bottom = intersection.height
+			self.view.layoutIfNeeded()
+		}, completion: nil)
 	}
 
 	deinit {
