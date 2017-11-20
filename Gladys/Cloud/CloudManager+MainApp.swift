@@ -347,7 +347,6 @@ extension CloudManager {
 						self.zoneChangeToken = token
 						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 					}
-					Model.saveIsDueToSyncFetch = true
 					Model.save()
 				} else {
 					log("Comitting zone change token")
@@ -473,6 +472,8 @@ extension CloudManager {
 		}
 	}
 
+	static var extendedSyncTime = false
+
 	static private func _sync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier?, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { completion(nil); return }
 
@@ -492,6 +493,7 @@ extension CloudManager {
 		if let e = existingBgTask {
 			bgTask = e
 		} else {
+			extendedSyncTime = true
 			log("Starting cloud sync background task")
 			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
 		}
@@ -505,7 +507,8 @@ extension CloudManager {
 				log("Sync failure: \(e.finalDescription)")
 			}
 			completion(error)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+				extendedSyncTime = false
 				log("Ending cloud sync background task")
 				UIApplication.shared.endBackgroundTask(bgTask)
 			}
