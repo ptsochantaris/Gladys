@@ -263,6 +263,7 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let item = Model.item(uuid: itemUUID) {
 					item.needsDeletion = true
+					item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
 					deletionCount += 1
 					updateProgress()
 				}
@@ -330,11 +331,11 @@ extension CloudManager {
 					return
 				}
 
-				let itemsModified = updatedSequence || (typeUpdateCount + newDrops.count + updateCount + deletionCount > 0)
+				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount > 0
 
 				log("Zone \(zoneId.zoneName) changes fetch complete")
 
-				if itemsModified {
+				if itemsModified || updatedSequence{
 					// ingestions and deletions will take care of save
 					for dropRecord in newDrops {
 						createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
@@ -342,12 +343,21 @@ extension CloudManager {
 					if updatedSequence {
 						NotificationCenter.default.post(name: .CloudManagerUpdatedUUIDSequence, object: nil)
 					}
-					Model.queueNextSaveCallback {
+					if itemsModified {
+						// need to save stuff that's been modified
+						Model.queueNextSaveCallback {
+							log("Comitting zone change token")
+							self.zoneChangeToken = token
+							NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+						}
+						Model.saveIsDueToSyncFetch = true
+						Model.save()
+					} else {
+						// it was only a position record
 						log("Comitting zone change token")
 						self.zoneChangeToken = token
 						NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 					}
-					Model.save()
 				} else {
 					log("Comitting zone change token")
 					self.zoneChangeToken = token
@@ -472,8 +482,6 @@ extension CloudManager {
 		}
 	}
 
-	static var extendedSyncTime = false
-
 	static private func _sync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier?, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn { completion(nil); return }
 
@@ -493,7 +501,6 @@ extension CloudManager {
 		if let e = existingBgTask {
 			bgTask = e
 		} else {
-			extendedSyncTime = true
 			log("Starting cloud sync background task")
 			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
 		}
@@ -507,8 +514,7 @@ extension CloudManager {
 				log("Sync failure: \(e.finalDescription)")
 			}
 			completion(error)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-				extendedSyncTime = false
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 				log("Ending cloud sync background task")
 				UIApplication.shared.endBackgroundTask(bgTask)
 			}

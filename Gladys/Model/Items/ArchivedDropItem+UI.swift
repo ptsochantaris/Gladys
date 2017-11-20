@@ -11,7 +11,11 @@ extension ArchivedDropItem {
 
 	func delete() {
 		isDeleting = true
-		CloudManager.markAsDeleted(uuid: uuid)
+		if cloudKitRecord != nil {
+			CloudManager.markAsDeleted(uuid: uuid)
+		} else {
+			log("No cloud record for this item, skipping cloud delete")
+		}
 		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
 			if let error = error {
 				log("Error while deleting an index \(error)")
