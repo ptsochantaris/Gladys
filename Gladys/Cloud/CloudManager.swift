@@ -35,6 +35,17 @@ final class CloudManager {
 
 	/////////////////////////////////////////////
 
+	private static func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
+		var previousSequence = uuidSequence
+		for localItem in currentSequence {
+			if !previousSequence.contains(localItem) { // we have a new item
+				return true
+			}
+		}
+		previousSequence = previousSequence.filter { currentSequence.contains($0) }
+		return currentSequence != previousSequence
+	}
+
 	@discardableResult
 	static func sendUpdatesUp(completion: @escaping (Error?)->Void) -> Progress? {
 		if !syncSwitchedOn {
@@ -77,7 +88,7 @@ final class CloudManager {
 		}
 
 		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
-		if uuidSequence != currentUUIDSequence {
+		if sequenceNeedsUpload(currentUUIDSequence) {
 			if lastSyncCompletion == .distantPast {
 				if currentUUIDSequence.count > 0 {
 					let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
