@@ -10,21 +10,33 @@ import UIKit
 
 class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		let i = PersistedOptions.lastSelectedPreferencesTab
+		if i < (viewControllers?.count ?? 0) {
+			selectedIndex = i
+		}
+		delegate = self
+	}
+
 	private var firstView = true
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		delegate = self
 		if firstView {
 			firstView = false
-			sizeWindow()
+			sizeWindow(animate: false)
 		}
 	}
 
 	func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-		sizeWindow()
+		sizeWindow(animate: true)
+		if let index = viewControllers?.index(of: viewController) {
+			PersistedOptions.lastSelectedPreferencesTab = index
+		}
 	}
 	
-	private func sizeWindow() {
+	private func sizeWindow(animate: Bool) {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			if let n = self.selectedViewController as? UINavigationController, let v = n.topViewController {
 				var size = v.view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
@@ -33,7 +45,13 @@ class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 				if let s = v.view.subviews.first as? UIScrollView {
 					size.height += s.contentSize.height
 				}
-				self.preferredContentSize = size
+				if animate {
+					self.preferredContentSize = size
+				} else {
+					UIView.performWithoutAnimation {
+						self.preferredContentSize = size
+					}
+				}
 			}
 		}
 	}

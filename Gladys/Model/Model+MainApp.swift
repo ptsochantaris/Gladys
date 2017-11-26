@@ -77,9 +77,10 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		let session = WCSession.default
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
 		let bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
+		let dropsClone = Model.drops
 		DispatchQueue.global(qos: .background).async {
 			do {
-				let items = Model.drops.map { $0.watchItem }
+				let items = dropsClone.map { $0.watchItem }
 				let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
 				try session.updateApplicationContext(["dropList": compressedData])
 				log("Updated watch context")
@@ -412,18 +413,14 @@ extension Model {
 	}
 
 	static var filteredDrops: [ArchivedDropItem] {
-		if let f = cachedFilteredDrops {
-			return f
-		} else {
-			return drops
-		}
+		return cachedFilteredDrops ?? drops
 	}
 	
 	static func removeItemFromList(uuid: UUID) {
 		if let x = drops.index(where: { $0.uuid == uuid }) {
 			drops.remove(at: x)
 		}
-		if cachedFilteredDrops != nil, let x = cachedFilteredDrops!.index(where: { $0.uuid == uuid }) {
+		if let x = cachedFilteredDrops?.index(where: { $0.uuid == uuid }) {
 			cachedFilteredDrops!.remove(at: x)
 		}
 	}

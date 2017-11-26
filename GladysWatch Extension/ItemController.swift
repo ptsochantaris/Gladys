@@ -116,7 +116,8 @@ class ItemController: WKInterfaceController {
 
 		guard let uuid = uuid else { return }
 
-		if let i = ItemController.imageCache.object(forKey: uuid as NSString) {
+		let cacheKey = uuid + String(itemDate.timeIntervalSinceReferenceDate)
+		if let i = ItemController.imageCache.object(forKey: cacheKey as NSString) {
 			image.setImage(i)
 			fetchingImage = false
 			gotImage = true
@@ -132,7 +133,7 @@ class ItemController: WKInterfaceController {
 				DispatchQueue.main.async {
 					let i = UIImage(data: r)
 					if let i = i {
-						ItemController.imageCache.setObject(i, forKey: uuid as NSString)
+						ItemController.imageCache.setObject(i, forKey: cacheKey as NSString)
 					}
 					self.image.setImage(i)
 					self.fetchingImage = false

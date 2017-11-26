@@ -10,7 +10,7 @@ import Foundation
 
 class PersistedOptions {
 
-	static var defaults: UserDefaults = { return UserDefaults(suiteName: "group.build.bru.Gladys")! }()
+	static var defaults = UserDefaults(suiteName: "group.build.bru.Gladys")!
 
 	static func migrateBrokenDefaults() { // keep this around for a while
 		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {
@@ -86,6 +86,16 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "forceTwoColumnPreference")
+			defaults.synchronize()
+		}
+	}
+
+	static var lastSelectedPreferencesTab: Int {
+		get {
+			return defaults.integer(forKey: "lastSelectedPreferencesTab")
+		}
+		set {
+			defaults.set(newValue, forKey: "lastSelectedPreferencesTab")
 			defaults.synchronize()
 		}
 	}
