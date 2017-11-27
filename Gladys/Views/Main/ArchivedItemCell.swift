@@ -216,6 +216,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		clipsToBounds = true
 		image.clipsToBounds = true
 		image.layer.cornerRadius = 5
+		image.accessibilityIgnoresInvertColors = true
 		contentView.tintColor = .darkGray
 
 		let b = UIView()
