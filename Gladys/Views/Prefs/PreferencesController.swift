@@ -5,12 +5,17 @@ import ZIPFoundation
 
 final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
+	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
+
 	@discardableResult
 	private func createArchive(completion: @escaping (URL)->Void) -> Progress {
-		let p = Progress(totalUnitCount: 2)
+		let eligibleItems = eligibleDropsForExport
+		let count = 2 + eligibleItems.count
+		let p = Progress(totalUnitCount: Int64(count))
 
 		DispatchQueue.main.async {
 			self.spinner.startAnimating()
+			self.exportOnlyVisibleSwitch.isEnabled = false
 			self.infoLabel.isHidden = true
 		}
 
@@ -24,14 +29,24 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 			p.completedUnitCount += 1
 
-			try! fm.copyItem(at: Model.appStorageUrl, to: tempPath)
+			try! fm.createDirectory(at: tempPath, withIntermediateDirectories: true, attributes: nil)
+			for item in eligibleItems {
+				let uuidString = item.uuid.uuidString
+				let sourceForItem = Model.appStorageUrl.appendingPathComponent(uuidString)
+				let desinationForItem = tempPath.appendingPathComponent(uuidString)
+				try! fm.copyItem(at: sourceForItem, to: desinationForItem)
+				p.completedUnitCount += 1
+			}
 
+			let data = try! JSONEncoder().encode(eligibleItems)
+			try! data.write(to: tempPath.appendingPathComponent("items.json"))
 			p.completedUnitCount += 1
 
 			completion(tempPath)
 
 			DispatchQueue.main.async {
 				self.spinner.stopAnimating()
+				self.exportOnlyVisibleSwitch.isEnabled = true
 				self.infoLabel.isHidden = false
 			}
 		}
@@ -64,15 +79,32 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		return string
 	}
 
+	private var eligibleDropsForExport: [ArchivedDropItem] {
+		func items() -> [ArchivedDropItem] {
+			let items = PersistedOptions.exportOnlyVisibleItems ? Model.filteredDrops : Model.drops
+			return items.filter { $0.goodToSave }
+		}
+		if Thread.isMainThread {
+			return items()
+		} else {
+			var i = [ArchivedDropItem]()
+			DispatchQueue.main.sync {
+				i = items()
+			}
+			return i
+		}
+	}
+
 	@discardableResult
 	private func createZip(completion: @escaping (URL)->Void) -> Progress {
 
 		DispatchQueue.main.async {
 			self.zipSpinner.startAnimating()
+			self.exportOnlyVisibleSwitch.isEnabled = false
 			self.zipImage.isHidden = true
 		}
 
-		let dropsCopy = Model.drops.filter { $0.loadingProgress == nil && !$0.isDeleting }
+		let dropsCopy = eligibleDropsForExport
 		let itemCount = Int64(1 + dropsCopy.count)
 		let p = Progress(totalUnitCount: itemCount)
 
@@ -117,6 +149,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 			DispatchQueue.main.async {
 				self.zipSpinner.stopAnimating()
+				self.exportOnlyVisibleSwitch.isEnabled = true
 				self.zipImage.isHidden = false
 			}
 
@@ -186,11 +219,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		if let p = session.items.first?.itemProvider {
 			infoLabel.text = nil
 			spinner.startAnimating()
+			exportOnlyVisibleSwitch.isEnabled = false
 			var cancelled = false
 			let progress = p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
 				if cancelled {
 					DispatchQueue.main.async {
-						self.externalDataUpdate()
+						self.updateUI()
 					}
 					return
 				}
@@ -203,14 +237,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 						} else {
 							genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
 						}
-						self.externalDataUpdate()
+						self.updateUI()
 					}
 				}
 			}
 			progress.cancellationHandler = {
 				cancelled = true
 				DispatchQueue.main.async {
-					self.externalDataUpdate()
+					self.updateUI()
 				}
 			}
 		}
@@ -282,6 +316,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		zipContainer.layer.cornerRadius = 10
 		zipInnerFrame.layer.cornerRadius = 5
 
+		exportOnlyVisibleSwitch.onTintColor = view.tintColor
+		exportOnlyVisibleSwitch.tintColor = .lightGray
+		exportOnlyVisibleSwitch.isOn = PersistedOptions.exportOnlyVisibleItems
+
 		let dragInteraction = UIDragInteraction(delegate: self)
 		container.addInteraction(dragInteraction)
 		let dropInteraction = UIDropInteraction(delegate: self)
@@ -290,8 +328,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		let zipDragInteraction = UIDragInteraction(delegate: self)
 		zipContainer.addInteraction(zipDragInteraction)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
-		externalDataUpdate()
+		NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
+		updateUI()
 
 		container.isAccessibilityElement = true
 		container.accessibilityLabel = "Import and export area"
@@ -318,17 +356,34 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	@objc private func externalDataUpdate() {
+	@objc private func updateUI() {
 		spinner.stopAnimating()
-		let count = Model.drops.count
-		if count > 0 {
-			let size = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
-			infoLabel.text = "\(count) Items\n\(size)"
-			deleteAll.isEnabled = true
+		exportOnlyVisibleSwitch.isEnabled = true
+		let count = eligibleDropsForExport.count
+		if PersistedOptions.exportOnlyVisibleItems {
+			if count > 0 {
+				let size = diskSizeFormatter.string(fromByteCount: Model.sizeOfVisibleItemsInBytes)
+				if count > 1 {
+					infoLabel.text = "\(count) Visible Items\n\(size)"
+				} else {
+					infoLabel.text = "1 Visible Item\n\(size)"
+				}
+			} else {
+				infoLabel.text = "No Visible Items"
+			}
 		} else {
-			infoLabel.text = "No Items"
-			deleteAll.isEnabled = false
+			if count > 0 {
+				let size = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
+				if count > 1 {
+					infoLabel.text = "\(count) Items\n\(size)"
+				} else {
+					infoLabel.text = "1 Item"
+				}
+			} else {
+				infoLabel.text = "No Items"
+			}
 		}
+		deleteAll.isEnabled = count > 0
 		container.accessibilityValue = infoLabel.text
 	}
 
@@ -366,7 +421,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				if !success {
 					genericAlert(title: "Could not import data", message: "Contents were corrupted", on: self)
 				}
-				self.externalDataUpdate()
+				self.updateUI()
 			}
 		}
 	}
@@ -392,6 +447,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		} else {
 			infoLabel.text = nil
 			spinner.startAnimating()
+			exportOnlyVisibleSwitch.isEnabled = false
 			DispatchQueue.global(qos: .userInitiated).async {
 				self.importArchive(from: urls.first!)
 			}
@@ -412,4 +468,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			exportingFileURL = nil
 		}
 	}
+
+	/////////////////////////////
+
+	@IBAction func exportOnlyVisibleChanged(_ sender: UISwitch) {
+		PersistedOptions.exportOnlyVisibleItems = sender.isOn
+		updateUI()
+	}
+
 }

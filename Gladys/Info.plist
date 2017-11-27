@@ -9,8 +9,10 @@
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
-				<string>gladysIcon320</string>
-				<string>gladysIcon64</string>
+				<string>gladysIcon64.png</string>
+				<string>gladysIcon320.png</string>
+				<string>gladysIcon22.png</string>
+				<string>gladysIcon44.png</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>Gladys Archive</string>
@@ -18,6 +20,10 @@
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>gladysarchive</string>
+			</array>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>build.bru.gladys.archive</string>

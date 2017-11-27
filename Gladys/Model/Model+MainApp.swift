@@ -181,6 +181,10 @@ extension Model {
 	static var sizeInBytes: Int64 {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
+
+	static var sizeOfVisibleItemsInBytes: Int64 {
+		return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
+	}
 	
 	////////////////////////// Filtering
 

@@ -69,6 +69,15 @@ class PersistedOptions {
 		}
 	}
 
+	static var exportOnlyVisibleItems: Bool {
+		get {
+			return defaults.bool(forKey: "exportOnlyVisibleItems")
+		}
+		set {
+			defaults.set(newValue, forKey: "exportOnlyVisibleItems")
+			defaults.synchronize()
+		}
+	}
 
 	static var separateItemPreference: Bool {
 		get {
