@@ -7,12 +7,16 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>gladysArchive</string>
+			</array>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
-				<string>gladysIcon64.png</string>
 				<string>gladysIcon320.png</string>
-				<string>gladysIcon22.png</string>
+				<string>gladysIcon64.png</string>
 				<string>gladysIcon44.png</string>
+				<string>gladysIcon22.png</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>Gladys Archive</string>
@@ -20,10 +24,6 @@
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gladysarchive</string>
-			</array>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>build.bru.gladys.archive</string>
@@ -41,7 +41,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.6</string>
+	<string>1.1.7</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -58,7 +58,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>437</string>
+	<string>438</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -139,9 +139,9 @@
 			<key>UTTypeIdentifier</key>
 			<string>build.bru.gladys.archive</string>
 			<key>UTTypeSize320IconFile</key>
-			<string>gladysIcon320</string>
+			<string>gladysIcon320.png</string>
 			<key>UTTypeSize64IconFile</key>
-			<string>gladysIcon64</string>
+			<string>gladysIcon64.png</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

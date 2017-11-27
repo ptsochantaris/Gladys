@@ -80,19 +80,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private var eligibleDropsForExport: [ArchivedDropItem] {
-		func items() -> [ArchivedDropItem] {
-			let items = PersistedOptions.exportOnlyVisibleItems ? Model.filteredDrops : Model.drops
-			return items.filter { $0.goodToSave }
-		}
-		if Thread.isMainThread {
-			return items()
-		} else {
-			var i = [ArchivedDropItem]()
-			DispatchQueue.main.sync {
-				i = items()
-			}
-			return i
-		}
+		let items = PersistedOptions.exportOnlyVisibleItems ? Model.threadSafeFilteredDrops : Model.threadSafeDrops
+		return items.filter { $0.goodToSave }
 	}
 
 	@discardableResult

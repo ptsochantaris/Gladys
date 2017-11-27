@@ -61,7 +61,8 @@ final class CloudManager {
 		var dropsToPush = 0
 		var uuid2progress = [String: Progress]()
 
-		var payloadsToPush = Model.drops.flatMap { item -> [CKRecord]? in
+		let drops = Model.drops
+		var payloadsToPush = drops.flatMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
 				dataItemsToPush += item.typeItems.count
 				dropsToPush += 1
@@ -87,7 +88,7 @@ final class CloudManager {
 			}
 		}
 
-		let currentUUIDSequence = Model.drops.map { $0.uuid.uuidString }
+		let currentUUIDSequence = drops.map { $0.uuid.uuidString }
 		if sequenceNeedsUpload(currentUUIDSequence) {
 
 			var sequenceToSend: [String]?

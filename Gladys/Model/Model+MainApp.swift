@@ -77,10 +77,9 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		let session = WCSession.default
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
 		let bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
-		let dropsClone = Model.drops
 		DispatchQueue.global(qos: .background).async {
 			do {
-				let items = dropsClone.map { $0.watchItem }
+				let items = Model.threadSafeDrops.map { $0.watchItem }
 				let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
 				try session.updateApplicationContext(["dropList": compressedData])
 				log("Updated watch context")
@@ -513,6 +512,32 @@ extension Model {
 				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 			}
 			completion(true)
+		}
+	}
+
+	///////////////////////// Threading
+
+	static var threadSafeDrops: [ArchivedDropItem] {
+		if Thread.isMainThread {
+			return drops
+		} else {
+			var dropsClone = [ArchivedDropItem]()
+			DispatchQueue.main.sync {
+				dropsClone = drops
+			}
+			return dropsClone
+		}
+	}
+
+	static var threadSafeFilteredDrops: [ArchivedDropItem] {
+		if Thread.isMainThread {
+			return filteredDrops
+		} else {
+			var dropsClone = [ArchivedDropItem]()
+			DispatchQueue.main.sync {
+				dropsClone = filteredDrops
+			}
+			return dropsClone
 		}
 	}
 }
