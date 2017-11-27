@@ -57,8 +57,6 @@
 		1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0351F9371EB00421B8C /* AddLabelController.swift */; };
 		1633F0381F93757000421B8C /* LabelListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0371F93757000421B8C /* LabelListCell.swift */; };
 		163845FC1EF8629700CB8D97 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
-		163C03F61FCC1A89005ABED8 /* gladysIcon44.png in Resources */ = {isa = PBXBuildFile; fileRef = 163C03F41FCC1A88005ABED8 /* gladysIcon44.png */; };
-		163C03F71FCC1A89005ABED8 /* gladysIcon22.png in Resources */ = {isa = PBXBuildFile; fileRef = 163C03F51FCC1A88005ABED8 /* gladysIcon22.png */; };
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		165173031F99483E006CAF0A /* GladysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165173021F99483E006CAF0A /* GladysViewController.swift */; };
@@ -296,8 +294,6 @@
 		1633F0351F9371EB00421B8C /* AddLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLabelController.swift; sourceTree = "<group>"; };
 		1633F0371F93757000421B8C /* LabelListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelListCell.swift; sourceTree = "<group>"; };
 		163845FB1EF8629700CB8D97 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
-		163C03F41FCC1A88005ABED8 /* gladysIcon44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon44.png; path = Gladys/gladysIcon44.png; sourceTree = "<group>"; };
-		163C03F51FCC1A88005ABED8 /* gladysIcon22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon22.png; path = Gladys/gladysIcon22.png; sourceTree = "<group>"; };
 		1641368D1F09195000B34574 /* GladysAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
 		164136931F09195000B34574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -714,8 +710,6 @@
 				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
 				1678F9DC1EF475FF005697CB /* Info.plist */,
 				1678F9D71EF475FF005697CB /* Assets.xcassets */,
-				163C03F51FCC1A88005ABED8 /* gladysIcon22.png */,
-				163C03F41FCC1A88005ABED8 /* gladysIcon44.png */,
 				1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */,
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
@@ -1078,11 +1072,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */,
-				163C03F71FCC1A89005ABED8 /* gladysIcon22.png in Resources */,
 				1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */,
 				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
-				163C03F61FCC1A89005ABED8 /* gladysIcon44.png in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
