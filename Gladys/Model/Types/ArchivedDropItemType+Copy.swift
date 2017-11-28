@@ -10,7 +10,7 @@ import Foundation
 
 extension ArchivedDropItemType {
 
-	static var droppedId: String?
+	static var droppedIds: Set<UUID>?
 
 	func register(with provider: NSItemProvider) {
 		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
@@ -19,7 +19,7 @@ extension ArchivedDropItemType {
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block")
 				DispatchQueue.main.async {
-					ArchivedDropItemType.droppedId = self.parentUuid.uuidString
+					ArchivedDropItemType.droppedIds?.insert(self.parentUuid)
 				}
 				completion(self.dataForWrappedItem ?? self.bytes, nil)
 			}

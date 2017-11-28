@@ -68,16 +68,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	/////////////////////////
 
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
-		if let droppedId = ArchivedDropItemType.droppedId {
-			if let item = Model.item(uuid: droppedId), PersistedOptions.removeItemsWhenDraggedOut {
-				deleteRequested(for: [item])
+		if let droppedIds = ArchivedDropItemType.droppedIds {
+			if PersistedOptions.removeItemsWhenDraggedOut {
+				let items = droppedIds.flatMap { Model.item(uuid: $0.uuidString) }
+				if items.count > 0 {
+					deleteRequested(for: items)
+				}
 			}
-			ArchivedDropItemType.droppedId = nil
+			ArchivedDropItemType.droppedIds = nil
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		ArchivedDropItemType.droppedId = nil
+		ArchivedDropItemType.droppedIds = Set<UUID>()
 		return [Model.filteredDrops[indexPath.item].dragItem]
 	}
 
