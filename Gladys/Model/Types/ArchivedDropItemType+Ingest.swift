@@ -413,7 +413,7 @@ extension ArchivedDropItemType {
 
 			let fetch = URLSession.shared.dataTask(with: request) { data, response, error in
 				if let data = data,
-					let text = String(data: data, encoding: .utf8),
+					let text = (String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii)),
 					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
 
 					let title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
