@@ -23,8 +23,15 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	}
 
 	func reIngest(delegate: LoadCompletionDelegate) {
-		loadCount = typeItems.count
 		self.delegate = delegate
+		if typeItems.count == 0 { // can happen for example when all components are removed by some corner case
+			loadCount = 1
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+				self.loadCompleted(sender: self)
+			}
+			return
+		}
+		loadCount = typeItems.count
 		let p = Progress(totalUnitCount: Int64(typeItems.count * 100))
 		loadingProgress = p
 		typeItems.forEach {

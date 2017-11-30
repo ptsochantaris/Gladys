@@ -257,15 +257,27 @@ extension CloudManager {
 		o.previousServerChangeToken = zoneChangeToken
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-			if recordType != "ArchivedDropItem" { return }
-			let itemUUID = recordId.recordName
-			log("Record \(recordType) deletion: \(itemUUID)")
-			DispatchQueue.main.async {
-				if let item = Model.item(uuid: itemUUID) {
-					item.needsDeletion = true
-					item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-					deletionCount += 1
-					updateProgress()
+			if recordType == "ArchivedDropItem" {
+				let itemUUID = recordId.recordName
+				DispatchQueue.main.async {
+					if let item = Model.item(uuid: itemUUID) {
+						log("Drop \(recordType) deletion: \(itemUUID)")
+						item.needsDeletion = true
+						item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+						deletionCount += 1
+						updateProgress()
+					}
+				}
+			} else if recordType == "ArchivedDropItemType" {
+				let itemUUID = recordId.recordName
+				DispatchQueue.main.async {
+					if let component = Model.typeItem(uuid: itemUUID) {
+						log("Component \(recordType) deletion: \(itemUUID)")
+						component.needsDeletion = true
+						component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+						deletionCount += 1
+						updateProgress()
+					}
 				}
 			}
 		}

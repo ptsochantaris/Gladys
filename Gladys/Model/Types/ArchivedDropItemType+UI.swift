@@ -60,6 +60,15 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
+	func deleteFromStorage() {
+		let fm = FileManager.default
+		if fm.fileExists(atPath: folderUrl.path) {
+			log("Removing component storage at: \(folderUrl.path)")
+			try? fm.removeItem(at: folderUrl)
+		}
+		CloudManager.markAsDeleted(uuid: uuid)
+	}
+
 	//////////////////////////////////////////////////////// quicklook
 
 	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {

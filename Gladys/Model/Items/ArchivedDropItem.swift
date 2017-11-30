@@ -113,7 +113,12 @@ final class ArchivedDropItem: Codable, Equatable {
 	}
 
 	lazy var folderUrl: URL = {
-		return Model.appStorageUrl.appendingPathComponent(self.uuid.uuidString)
+		let url = Model.appStorageUrl.appendingPathComponent(self.uuid.uuidString)
+		let f = FileManager.default
+		if !f.fileExists(atPath: url.path) {
+			try? f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		}
+		return url
 	}()
 
 	func bytes(for type: String) -> Data? {

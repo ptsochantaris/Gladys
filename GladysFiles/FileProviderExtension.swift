@@ -174,12 +174,18 @@ final class FileProviderExtension: NSFileProviderExtension {
 				completionHandler(NSFileProviderError(.noSuchItem))
 				return
 			}
-			guard let uuid = fpi.dropItem?.uuid ?? fpi.typeItem?.parentUuid else {
+			let typeUuid = fpi.typeItem?.uuid
+			guard let dropUuid = fpi.dropItem?.uuid ?? fpi.typeItem?.parentUuid else {
 				completionHandler(NSFileProviderError(.noSuchItem))
 				return
 			}
-			if let i = Model.drops.index(where: { $0.uuid == uuid }) {
-				Model.drops[i].needsDeletion = true
+			if let i = Model.drops.index(where: { $0.uuid == dropUuid }) {
+				let item = Model.drops[i]
+				if let typeUuid = typeUuid, item.typeItems.count > 1, let typeItem = item.typeItems.first(where: { $0.uuid == typeUuid }) { // we picked a component to delete and it wasn't the last one
+					typeItem.needsDeletion = true
+				} else {
+					item.needsDeletion = true
+				}
 				saveModel {
 					completionHandler(nil)
 				}

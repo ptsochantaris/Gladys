@@ -43,9 +43,13 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 	}
 
-	@objc private func externalDataUpdate() {
+	func updateUI() {
 		table.reloadData()
 		sizeWindow()
+	}
+
+	@objc private func externalDataUpdate() {
+		updateUI()
 	}
 
 	override var preferredContentSize: CGSize {
@@ -259,14 +263,33 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 2 && indexPath.row < item.labels.count {
 			return .delete
 		}
+		if indexPath.section >= 3 {
+			return .delete
+		}
 		return .none
 	}
 
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			item.labels.remove(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .automatic)
-			makeIndexAndSaveItem()
+			if indexPath.section == 2 {
+				item.labels.remove(at: indexPath.row)
+				tableView.deleteRows(at: [indexPath], with: .automatic)
+				makeIndexAndSaveItem()
+			} else {
+				removeTypeItem(at: indexPath)
+			}
+		}
+	}
+
+	private func removeTypeItem(at indexPath: IndexPath) {
+		let typeItem = item.typeItems[indexPath.section - 3]
+		item.typeItems.remove(at: indexPath.section - 3)
+		typeItem.deleteFromStorage()
+		table.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+		item.needsReIngest = true
+		Model.save()
+		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+			self.sizeWindow()
 		}
 	}
 
