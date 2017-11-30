@@ -11,10 +11,12 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	
 	func loadCompleted(sender: AnyObject) {
 		loadCount = loadCount - 1
-		if loadCount == 0 {
+		if loadCount <= 0 {
 			loadingProgress = nil
-			delegate?.loadCompleted(sender: self)
-			delegate = nil
+			if let d = delegate {
+				delegate = nil
+				d.loadCompleted(sender: self)
+			}
 		}
 	}
 
@@ -24,19 +26,18 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 
 	func reIngest(delegate: LoadCompletionDelegate) {
 		self.delegate = delegate
-		if typeItems.count == 0 { // can happen for example when all components are removed by some corner case
-			loadCount = 1
+		loadCount = typeItems.count
+		let p = Progress(totalUnitCount: Int64(loadCount * 100))
+		loadingProgress = p
+		if typeItems.count == 0 { // can happen for example when all components are removed
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 				self.loadCompleted(sender: self)
 			}
-			return
-		}
-		loadCount = typeItems.count
-		let p = Progress(totalUnitCount: Int64(typeItems.count * 100))
-		loadingProgress = p
-		typeItems.forEach {
-			let cp = $0.reIngest(delegate: self)
-			p.addChild(cp, withPendingUnitCount: 100)
+		} else {
+			typeItems.forEach {
+				let cp = $0.reIngest(delegate: self)
+				p.addChild(cp, withPendingUnitCount: 100)
+			}
 		}
 	}
 

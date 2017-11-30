@@ -976,38 +976,38 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func loadCompleted(sender: AnyObject) {
 
-		if let item = sender as? ArchivedDropItem {
-			if let (errorPrefix, error) = item.loadingError {
-				genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
-					message: errorPrefix + error.finalDescription,
-					on: self)
-			}
+		guard let item = sender as? ArchivedDropItem else { return }
 
-			item.needsReIngest = false
+		if let (errorPrefix, error) = item.loadingError {
+			genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
+				message: errorPrefix + error.finalDescription,
+				on: self)
+		}
 
-			if let i = Model.filteredDrops.index(where: { $0 === sender }) {
-				mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-				archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
-				focusInitialAccessibilityElement()
-				item.reIndex()
-			} else {
-				item.reIndex {
-					DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
-						if !Model.forceUpdateFilter(signalUpdate: true) {
-							genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
-						}
+		item.needsReIngest = false
+
+		if let i = Model.filteredDrops.index(of: item) {
+			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
+			archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
+			focusInitialAccessibilityElement()
+			item.reIndex()
+		} else {
+			item.reIndex {
+				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
+					if !Model.forceUpdateFilter(signalUpdate: true) {
+						genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
 					}
 				}
 			}
-
-			loadingUUIDs.remove(item.uuid)
-			if loadingUUIDs.count == 0 {
-			    Model.save()
-				UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
-			}
-
-			endBgTaskIfNeeded()
 		}
+
+		loadingUUIDs.remove(item.uuid)
+		if loadingUUIDs.count == 0 {
+			Model.save()
+			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
+		}
+
+		endBgTaskIfNeeded()
 	}
 
 	//////////////////////////
