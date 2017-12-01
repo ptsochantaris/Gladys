@@ -13,6 +13,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	
 	@IBOutlet weak var web: WKWebView!
 	@IBOutlet weak var statusLabel: UILabel!
+	@IBOutlet weak var spinner: UIActivityIndicatorView!
 
 	var address: URL?
 	var webArchive: ArchivedDropItemType.PreviewItem?
@@ -30,18 +31,21 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	}
 
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+		spinner.stopAnimating()
 		statusLabel.text = nil
 		statusLabel.isHidden = true
 		title = webView.title
 	}
 
 	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+		spinner.stopAnimating()
 		statusLabel.text = error.finalDescription
 		statusLabel.isHidden = false
 		title = nil
 	}
 
 	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+		spinner.stopAnimating()
 		statusLabel.text = error.finalDescription
 		statusLabel.isHidden = false
 		title = nil
