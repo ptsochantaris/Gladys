@@ -259,6 +259,9 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 			
 		} else if typeConforms(to: kUTTypePDF as CFString), let pdfPreview = generatePdfPreview() {
+			if let title = getPdfTitle(), !title.isEmpty {
+				setTitleInfo(title, 11)
+			}
 			setDisplayIcon(pdfPreview, 50, .fill)
 			
 		} else if typeConforms(to: kUTTypeContent as CFString) {
@@ -269,6 +272,17 @@ extension ArchivedDropItemType {
 		}
 
 		completeIngest()
+	}
+
+	private func getPdfTitle() -> String? {
+		if let document = CGPDFDocument(bytesPath as CFURL), let info = document.info {
+			var titleStringRef: CGPDFStringRef?
+			CGPDFDictionaryGetString(info, "Title", &titleStringRef)
+			if let titleStringRef = titleStringRef, let s = CGPDFStringCopyTextString(titleStringRef), !(s as String).isEmpty {
+				return s as String
+			}
+		}
+		return nil
 	}
 
 	private func generatePdfPreview() -> UIImage? {
