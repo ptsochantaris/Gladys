@@ -599,9 +599,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@objc private func externalDataUpdate() {
 	    Model.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData()
+		detectExternalDeletions()
 		didUpdateItems()
 		updateEmptyView(animated: true)
-		detectExternalDeletions()
 	}
 
 	private var emptyView: UIImageView?
