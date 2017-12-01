@@ -345,6 +345,15 @@ extension CloudManager {
 
 				log("Zone \(zoneId.zoneName) changes fetch complete, processing")
 
+				var newTypesAppended = 0
+				for newTypeItemRecord in newTypeItemsToHookOntoDrops {
+					if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
+						let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
+						existingParent.needsReIngest = true
+						existingParent.typeItems.append(newTypeItem)
+						newTypesAppended += 1
+					}
+				}
 				for dropRecord in newDrops {
 					createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
 				}
@@ -360,7 +369,7 @@ extension CloudManager {
 					}
 				}
 
-				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount > 0
+				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
 
 				if itemsModified || updatedSequence{
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
