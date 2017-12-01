@@ -133,8 +133,6 @@ public class WebArchiver {
                 webarchive[kWebSubresources] = webSubresources
                 webarchive[kWebMainResource] = mainResource
 
-                //log("webarchive : \(webarchive.ba_description())")
-
                 do {
 					let webarchiveData = try PropertyListSerialization.data(fromPropertyList: webarchive, format: .binary, options: 0)
                     completionHandler(webarchiveData, metaData, nil)
@@ -176,8 +174,6 @@ public class WebArchiver {
                 return
             }
 
-            log("html --> \(html)")
-            
             var metaData = [String: String?]()
             if let htmlTitle = doc.title {
                 metaData[ArchivedWebpageMetaKeyTitle] = htmlTitle

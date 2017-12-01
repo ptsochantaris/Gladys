@@ -190,6 +190,14 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	private static let shortFormatter: DateFormatter = {
+		let d = DateFormatter()
+		d.doesRelativeDateFormatting = true
+		d.dateStyle = .short
+		d.timeStyle = .short
+		return d
+	}()
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		if indexPath.section == 0 {
@@ -228,7 +236,11 @@ final class DetailController: GladysViewController,
 				setCallbacks(for: cell, for: typeEntry)
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
-				cell.name.text = "Binary Data"
+				if typeEntry.typeIdentifier == "com.apple.webarchive" {
+					cell.name.text = DetailController.shortFormatter.string(from: typeEntry.createdAt)
+				} else {
+					cell.name.text = "Binary Data"
+				}
 				cell.name.textAlignment = .center
 				setCallbacks(for: cell, for: typeEntry)
 			} else {

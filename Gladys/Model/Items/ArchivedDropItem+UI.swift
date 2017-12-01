@@ -58,12 +58,17 @@ extension ArchivedDropItem {
 		return i
 	}
 
-	var addedString: String {
+
+	private static let mediumFormatter: DateFormatter = {
 		let d = DateFormatter()
 		d.doesRelativeDateFormatting = true
 		d.dateStyle = .medium
 		d.timeStyle = .medium
-		return "Added " + d.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+		return d
+	}()
+
+	var addedString: String {
+		return "Added " + ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
 	var shareableComponents: [Any] {
