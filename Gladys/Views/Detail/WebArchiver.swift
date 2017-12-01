@@ -8,7 +8,7 @@ import Fuzi
 public typealias ArchiveCompletionHandler = (Data?, ArchiveErrorType?) -> ()
 
 /// Fetch resource paths completion handler block
-public typealias FetchResourcePathCompletionHandler = (Data?, [String]?, ArchiveErrorType?) -> ()
+public typealias FetchResourcePathCompletionHandler = (Data?, HTTPURLResponse?, [String]?, ArchiveErrorType?) -> ()
 
 /// Error type
 public enum ArchiveErrorType: Error {
@@ -19,20 +19,11 @@ public enum ArchiveErrorType: Error {
     case PlistSerializeFailed
 }
 
-/// Meta data key 'title'
-private let kWebResourceUrl = "WebResourceURL"
-private let kWebResourceMIMEType = "WebResourceMIMEType"
-private let kWebResourceData = "WebResourceData"
-private let kWebResourceTextEncodingName = "WebResourceTextEncodingName"
-private let kWebSubresources = "WebSubresources"
-private let kWebResourceFrameName = "WebResourceFrameName"
-private let kWebMainResource = "WebMainResource"
-
 /// Archiver
 public class WebArchiver {
 	public static func archiveWebpageFromUrl(url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
 
-        resourcePathsFromUrl(url) { data, resources, error in
+        resourcePathsFromUrl(url) { data, response, resources, error in
             guard let resources = resources else {
                 log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
                 completionHandler(nil, .FetchResourceFailed)
@@ -59,13 +50,13 @@ public class WebArchiver {
 					}
 
 					var resource: [AnyHashable: Any] = [
-						kWebResourceUrl: path
+						"WebResourceURL": path
 					]
 					if let mimeType = response.mimeType {
-						resource[kWebResourceMIMEType] = mimeType
+						resource["WebResourceMIMEType"] = mimeType
 					}
 					if let data = data {
-						resource[kWebResourceData] = data
+						resource["WebResourceData"] = data
 					}
 
 					assembleQueue.async {
@@ -81,19 +72,19 @@ public class WebArchiver {
 			downloadGroup.notify(queue: assembleQueue) {
 
 				var mainResource: [AnyHashable: Any] = [
-					kWebResourceFrameName: "",
-					kWebResourceMIMEType: "text/html",
-					kWebResourceTextEncodingName: "UTF-8",
-					kWebResourceUrl: url.absoluteString
+					"WebResourceFrameName": "",
+					"WebResourceMIMEType": response?.mimeType ?? "text/html",
+					"WebResourceTextEncodingName": response?.textEncodingName ?? "UTF-8",
+					"WebResourceURL": url.absoluteString
 				]
 
 				if let data = data {
-					mainResource[kWebResourceData] = data
+					mainResource["WebResourceData"] = data
 				}
 
                 let webarchive: [AnyHashable: Any] = [
-					kWebSubresources: (resourceInfo as NSDictionary).allValues,
-					kWebMainResource: mainResource
+					"WebSubresources": (resourceInfo as NSDictionary).allValues,
+					"WebMainResource": mainResource
 				]
 
                 do {
@@ -109,24 +100,25 @@ public class WebArchiver {
 
 	private static func resourcePathsFromUrl(_ url: URL, completionHandler: @escaping FetchResourcePathCompletionHandler) {
 
-        let session = URLSession.shared
-		let task = session.dataTask(with: url) { (data, response, error) in
+		let task = URLSession.shared.dataTask(with: url) { data, response, error in
+
+			let response = response as? HTTPURLResponse
 
             guard let htmlData = data else {
                 log("Fetch html error: \(error?.localizedDescription ?? "")")
-                completionHandler(data, nil, ArchiveErrorType.FetchHTMLError)
+                completionHandler(data, response, nil, ArchiveErrorType.FetchHTMLError)
                 return
             }
 
 			guard let html = String(data: htmlData, encoding: .utf8) ?? String(data: htmlData, encoding: .ascii) else {
                 log("HTML invalid")
-                completionHandler(data, nil, ArchiveErrorType.HTMLInvalid)
+                completionHandler(data, response, nil, ArchiveErrorType.HTMLInvalid)
                 return
             }
 
             guard let doc = try? HTMLDocument(string: html, encoding: .utf8) else {
                 log("Init html doc error, html: \(html)")
-                completionHandler(data, nil, ArchiveErrorType.FailToInitHTMLDocument)
+                completionHandler(data, response, nil, ArchiveErrorType.FailToInitHTMLDocument)
                 return
             }
 
@@ -160,7 +152,7 @@ public class WebArchiver {
 			}
 			resources += cssPaths
 
-            completionHandler(data, resources, nil)
+            completionHandler(data, response, resources, nil)
         }
         task.resume()
     }

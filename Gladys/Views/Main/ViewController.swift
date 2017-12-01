@@ -575,27 +575,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func detectExternalDeletions() {
-		var dirty = false
 		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
 			let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
 			if componentsToDelete.count > 0 {
-				item.needsReIngest = true
 				item.typeItems = item.typeItems.filter { !$0.needsDeletion }
-				if let d = currentDetailView, d.item.uuid == item.uuid {
-					d.item = item // because we've reloaded the model, this isn't the same object
-					d.updateUI()
+				for c in componentsToDelete {
+					c.deleteFromStorage()
 				}
-				dirty = true
-			}
-			for c in componentsToDelete {
-				c.deleteFromStorage()
+				item.needsReIngest = true
 			}
 		}
 		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
 		if itemsToDelete.count > 0 {
 			deleteRequested(for: itemsToDelete) // will also save
-		} else if dirty {
-			Model.save()
 		}
 	}
 

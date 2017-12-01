@@ -349,8 +349,8 @@ extension CloudManager {
 				for newTypeItemRecord in newTypeItemsToHookOntoDrops {
 					if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
 						let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
-						existingParent.needsReIngest = true
 						existingParent.typeItems.append(newTypeItem)
+						existingParent.needsReIngest = true
 						newTypesAppended += 1
 					}
 				}
