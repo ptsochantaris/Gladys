@@ -518,7 +518,7 @@ final class DetailController: GladysViewController,
 
 	private func archiveWebComponent(cell: DetailCell, url: URL) {
 		cell.animateArchive(true)
-		WebArchiver.archiveWebpageFromUrl(url: url) { data, _, error in
+		WebArchiver.archiveWebpageFromUrl(url: url) { data, error in
 			if let error = error {
 				DispatchQueue.main.async {
 					genericAlert(title: "Archiving failed", message: error.finalDescription, on: self)
