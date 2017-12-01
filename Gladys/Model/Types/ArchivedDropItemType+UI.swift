@@ -84,6 +84,13 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			}
 			return q
 
+		} else if typeIdentifier == "com.apple.webarchive" {
+			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			d.title = "Loading..."
+			d.webArchive = PreviewItem(typeItem: self)
+			d.navigationItem.rightBarButtonItem = extraRightButton
+			return d
+
 		} else if let url = encodedUrl {
 			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading..."
@@ -102,7 +109,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return PreviewItem(typeItem: self)
 	}
 
-	private class PreviewItem: NSObject, QLPreviewItem {
+	class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?
 		let previewItemTitle: String?
 		let needsCleanup: Bool
@@ -146,6 +153,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canPreview: Bool {
-		return typeIdentifier == "public.url" || QLPreviewController.canPreview(previewTempPath as NSURL)
+		return typeIdentifier == "public.url" || typeIdentifier == "com.apple.webarchive" || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }

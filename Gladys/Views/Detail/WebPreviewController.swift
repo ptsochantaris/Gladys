@@ -14,14 +14,19 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	@IBOutlet weak var web: WKWebView!
 	@IBOutlet weak var statusLabel: UILabel!
 
-	var address: URL!
+	var address: URL?
+	var webArchive: ArchivedDropItemType.PreviewItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let r = URLRequest(url: address)
 		web.navigationDelegate = self
-		web.load(r)
+		if let address = address {
+			let r = URLRequest(url: address)
+			web.load(r)
+		} else if let previewURL = webArchive?.previewItemURL {
+			web.loadFileURL(previewURL, allowingReadAccessTo: previewURL)
+		}
 	}
 
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

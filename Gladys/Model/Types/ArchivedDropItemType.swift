@@ -464,6 +464,32 @@ final class ArchivedDropItemType: Codable {
 		updatedAt = Date()
 	}
 
+	#if MAINAPP
+	init(typeIdentifier: String, parentUuid: UUID, data: Data) {
+
+		self.typeIdentifier = typeIdentifier
+		self.parentUuid = parentUuid
+
+		uuid = UUID()
+		displayIconPriority = 0
+		displayIconContentMode = .center
+		displayTitlePriority = 0
+		displayTitleAlignment = .center
+		displayIconScale = 1
+		displayIconWidth = 0
+		displayIconHeight = 0
+		displayIconTemplate = false
+		isTransferring = false
+		classWasWrapped = false
+		needsDeletion = false
+		createdAt = Date()
+		updatedAt = createdAt
+		representedClass = "NSData"
+		delegate = nil
+		bytes = data
+	}
+	#endif
+
 	#if MAINAPP || ACTIONEXTENSION
 	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
 

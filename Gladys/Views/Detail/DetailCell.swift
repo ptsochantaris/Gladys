@@ -69,6 +69,7 @@ final class DetailCell: UITableViewCell {
 		super.dragStateDidChange(dragState)
 		inspectButton.alpha = (inspectionCallback != nil && dragState == .none) ? 0.7 : 0
 		viewButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
+		archiveButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
 	}
 
 	@IBAction func inspectSelected(_ sender: UIButton) {
@@ -101,6 +102,7 @@ final class DetailCell: UITableViewCell {
 			e.stopAnimating()
 			e.removeFromSuperview()
 			archiveButton.alpha = 1
+			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
 		}
 	}
 
