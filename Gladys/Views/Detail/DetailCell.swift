@@ -7,15 +7,20 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var size: UILabel!
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet weak var nameHolder: UIView!
+
 	@IBOutlet weak var inspectButton: UIButton!
 	@IBOutlet weak var viewButton: UIButton!
-	@IBOutlet weak var labelRightConstraint: NSLayoutConstraint!
-	@IBOutlet weak var labelLeftConstraint: NSLayoutConstraint!
+	@IBOutlet weak var archiveButton: UIButton!
+
+	@IBOutlet weak var inspectWidth: NSLayoutConstraint!
+	@IBOutlet weak var viewWidth: NSLayoutConstraint!
+	@IBOutlet weak var archiveWidth: NSLayoutConstraint!
 
 	var inspectionCallback: (()->Void)? {
 		didSet {
 			if inspectButton != nil {
-				inspectButton.alpha = (inspectionCallback != nil) ? 0.7 : 0
+				let showButton = inspectionCallback != nil
+				inspectWidth.constant = showButton ? 44 : 0
 			}
 		}
 	}
@@ -23,7 +28,17 @@ final class DetailCell: UITableViewCell {
 	var viewCallback: (()->Void)? {
 		didSet {
 			if viewButton != nil {
-				viewButton.alpha = (viewCallback != nil) ? 0.7 : 0
+				let showButton = viewCallback != nil
+				viewWidth.constant = showButton ? 44 : 0
+			}
+		}
+	}
+
+	var archiveCallback: (()->Void)? {
+		didSet {
+			if archiveButton != nil {
+				let showButton = archiveCallback != nil
+				archiveWidth.constant = showButton ? 44 : 0
 			}
 		}
 	}
@@ -35,6 +50,7 @@ final class DetailCell: UITableViewCell {
 
 		inspectButton.accessibilityLabel = "Inspect raw data"
 		viewButton.accessibilityLabel = "Visual item preview"
+		archiveButton.accessibilityLabel = "Archive target of link"
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -59,14 +75,33 @@ final class DetailCell: UITableViewCell {
 		inspectionCallback?()
 	}
 
+	@IBAction func archiveSelected(_ sender: UIButton) {
+		archiveCallback?()
+	}
+
 	@IBAction func viewSelected(_ sender: UIButton) {
 		viewCallback?()
 	}
 
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		labelLeftConstraint.constant = viewCallback != nil ? 24 : 0
-		labelRightConstraint.constant = inspectionCallback != nil ? 24 : 0
+	func animateArchive(_ animate: Bool) {
+		let existingSpinner = contentView.viewWithTag(72634) as? UIActivityIndicatorView
+		if animate, existingSpinner == nil {
+			let a = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+			a.tag = 72634
+			a.color = tintColor
+			a.translatesAutoresizingMaskIntoConstraints = false
+			contentView.addSubview(a)
+			NSLayoutConstraint.activate([
+				a.centerXAnchor.constraint(equalTo: archiveButton.centerXAnchor),
+				a.centerYAnchor.constraint(equalTo: archiveButton.centerYAnchor)
+			])
+			a.startAnimating()
+			archiveButton.alpha = 0
+		} else if !animate, let e = existingSpinner {
+			e.stopAnimating()
+			e.removeFromSuperview()
+			archiveButton.alpha = 1
+		}
 	}
 
 	/////////////////////////////////////

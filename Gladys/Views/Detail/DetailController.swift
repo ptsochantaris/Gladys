@@ -249,6 +249,17 @@ final class DetailController: GladysViewController,
 		cell.inspectionCallback = { [weak self] in
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
+
+		if let i = typeEntry.encodedUrl, !i.isFileURL {
+			cell.archiveCallback = { [weak self, weak cell] in
+				if let s = self, let c = cell {
+					s.archiveWebComponent(cell: c, url: i as URL)
+				}
+			}
+		} else {
+			cell.archiveCallback = nil
+		}
+
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
 				guard let s = self, let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem) else { return }
@@ -490,5 +501,12 @@ final class DetailController: GladysViewController,
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	private func archiveWebComponent(cell: DetailCell, url: URL) {
+		cell.animateArchive(true)
+		DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+			cell.animateArchive(false)
+		}
 	}
 }

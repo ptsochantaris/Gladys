@@ -1074,63 +1074,79 @@ Selecting them will show only items that contain these labels.</string>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
-                                                            <rect key="frame" x="8" y="27" width="274" height="43.5"/>
+                                                            <rect key="frame" x="8" y="27" width="150" height="43.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
-                                                                    <rect key="frame" x="10" y="10" width="254" height="23.5"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
+                                                                    <rect key="frame" x="10" y="10" width="130" height="23.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
-                                                                    <rect key="frame" x="147" y="0.0" width="127" height="44"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                                                                    <state key="normal" image="info"/>
-                                                                    <connections>
-                                                                        <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
-                                                                    </connections>
-                                                                </button>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="127" height="44"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                    <state key="normal" image="iconEye"/>
-                                                                    <connections>
-                                                                        <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
-                                                                    </connections>
-                                                                </button>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
-                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leadingMargin" id="9AC-bX-gvd"/>
-                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="9XG-NJ-UaG"/>
-                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="width" secondItem="c4v-Gs-QKx" secondAttribute="width" multiplier="0.5" id="CzL-A5-1CQ"/>
-                                                                <constraint firstAttribute="bottom" secondItem="yZD-lA-j0C" secondAttribute="bottom" id="Jdb-BQ-nGb"/>
-                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="trailing" secondItem="eyj-G4-d4N" secondAttribute="trailingMargin" constant="10" id="Mnp-Em-DTz"/>
-                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="topMargin" id="Tru-JB-yds"/>
-                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="cke-IJ-06y"/>
-                                                                <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="d8q-u0-ltK"/>
-                                                                <constraint firstAttribute="bottomMargin" secondItem="c4v-Gs-QKx" secondAttribute="bottom" id="lOm-M1-fDv"/>
-                                                                <constraint firstItem="mRm-i0-pKo" firstAttribute="width" secondItem="c4v-Gs-QKx" secondAttribute="width" multiplier="0.5" id="uZx-Jg-plq"/>
-                                                                <constraint firstAttribute="trailingMargin" secondItem="c4v-Gs-QKx" secondAttribute="trailing" id="w3r-BS-L1N"/>
-                                                                <constraint firstAttribute="bottom" secondItem="mRm-i0-pKo" secondAttribute="bottom" id="xom-6A-KV5"/>
+                                                                <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="10" id="A4z-xs-pX2"/>
+                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" constant="10" id="VyL-e1-tLl"/>
+                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="10" id="sDA-vR-FnE"/>
+                                                                <constraint firstAttribute="trailing" secondItem="c4v-Gs-QKx" secondAttribute="trailing" constant="10" id="vjp-PR-kDd"/>
                                                             </constraints>
                                                             <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                                         </view>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
+                                                            <rect key="frame" x="246" y="27" width="44" height="43.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="44" id="hHl-tj-UfT"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="iconEye"/>
+                                                            <connections>
+                                                                <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
+                                                            <rect key="frame" x="158" y="27" width="44" height="43.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="44" id="QU5-D6-Ech"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="iconArchive2"/>
+                                                            <connections>
+                                                                <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
+                                                            <rect key="frame" x="202" y="27" width="44" height="43.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="44" id="mOV-7n-SkY"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="info"/>
+                                                            <connections>
+                                                                <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="top" secondItem="SCX-mM-he8" secondAttribute="topMargin" id="0mK-2Y-ick"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="1dQ-qX-9Fx"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="trailing" secondItem="SCX-mM-he8" secondAttribute="trailingMargin" id="45Y-4F-GZn"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="5ya-yC-oAv"/>
                                                         <constraint firstItem="LIX-qh-eGs" firstAttribute="leading" secondItem="SCX-mM-he8" secondAttribute="leadingMargin" id="6xU-eZ-jF5"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="ATt-ZN-Xju"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="leading" secondItem="SCX-mM-he8" secondAttribute="leadingMargin" id="BtQ-TB-YKC"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="FxF-XI-VvH"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="IiE-aR-zRm"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="MOj-iW-qu2"/>
                                                         <constraint firstItem="LIX-qh-eGs" firstAttribute="top" secondItem="SCX-mM-he8" secondAttribute="topMargin" id="MUp-Cg-TBG"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="mRm-i0-pKo" secondAttribute="trailing" id="MaB-Ma-5B7"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="OW1-ia-9bl"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="bottom" constant="5.5" id="c3I-7N-VB7"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="LIX-qh-eGs" secondAttribute="bottom" constant="5" id="cpo-li-GjT"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="iP4-O9-mPW"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yZD-lA-j0C" secondAttribute="trailing" id="j9g-QL-7er"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="leading" secondItem="LIX-qh-eGs" secondAttribute="trailing" constant="8" id="oqo-4f-hHw"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="inF-G0-kRj" secondAttribute="trailing" id="t2M-zz-4lK"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="zNc-os-t2p"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -1144,15 +1160,17 @@ Selecting them will show only items that contain these labels.</string>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
+                                            <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
+                                            <outlet property="archiveWidth" destination="QU5-D6-Ech" id="P3x-3q-Sff"/>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
-                                            <outlet property="labelLeftConstraint" destination="9AC-bX-gvd" id="XZN-fU-tiw"/>
-                                            <outlet property="labelRightConstraint" destination="w3r-BS-L1N" id="dcH-Bo-5AI"/>
+                                            <outlet property="inspectWidth" destination="mOV-7n-SkY" id="JJ7-U1-nvL"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
                                             <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>
                                             <outlet property="size" destination="c2U-hQ-bi9" id="0sm-hS-09V"/>
                                             <outlet property="type" destination="LIX-qh-eGs" id="rTf-VX-7eO"/>
                                             <outlet property="viewButton" destination="yZD-lA-j0C" id="o8G-6e-kav"/>
+                                            <outlet property="viewWidth" destination="hHl-tj-UfT" id="Fdr-3U-jJd"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1932,6 +1950,7 @@ Selecting them will show only items that contain these labels.</string>
     <resources>
         <image name="details" width="22" height="15"/>
         <image name="gladysImage" width="1024" height="1024"/>
+        <image name="iconArchive2" width="16" height="14"/>
         <image name="iconCloud" width="28" height="18"/>
         <image name="iconDeleteSmall" width="18" height="22"/>
         <image name="iconEye" width="15" height="12"/>
