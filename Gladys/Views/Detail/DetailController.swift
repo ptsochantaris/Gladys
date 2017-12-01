@@ -97,7 +97,10 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		sizeWindow()
+		if initialWidth == 0 {
+			sizeWindow()
+			initialWidth = preferredContentSize.width
+		}
 	}
 
 	private var initialWidth: CGFloat = 0
@@ -112,9 +115,6 @@ final class DetailController: GladysViewController,
 			} else {
 				preferredContentSize = table.contentSize
 			}
-		}
-		if initialWidth == 0 {
-			initialWidth = preferredContentSize.width
 		}
 	}
 
@@ -526,6 +526,7 @@ final class DetailController: GladysViewController,
 			} else if let data = data {
 				let newTypeItem = ArchivedDropItemType(typeIdentifier: "com.apple.webarchive", parentUuid: self.item.uuid, data: data)
 				DispatchQueue.main.async {
+					self.view.endEditing(true)
 					self.item.typeItems.append(newTypeItem)
 					self.item.needsCloudPush = true
 					self.item.markUpdated()

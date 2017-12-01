@@ -299,9 +299,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			d.item = item
 			let indexPath = IndexPath(item: index, section: 0)
 			if let cell = archivedItemCollectionView.cellForItem(at: indexPath) {
+				let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
 				p.permittedArrowDirections = [.down, .left, .right]
-				p.sourceView = cell
-				p.sourceRect = cell.bounds.insetBy(dx: 6, dy: 6)
+				p.sourceView =  navigationController!.view
+				p.sourceRect = cellRect
 				p.delegate = self
 				let c = patternColor
 				p.backgroundColor = c
@@ -575,6 +576,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func detectExternalDeletions() {
+		var shouldSaveInAnyCase = false
 		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
 			let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
 			if componentsToDelete.count > 0 {
@@ -583,11 +585,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					c.deleteFromStorage()
 				}
 				item.needsReIngest = true
+				shouldSaveInAnyCase = !CloudManager.syncing // this could be from the file provider
 			}
 		}
 		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
 		if itemsToDelete.count > 0 {
 			deleteRequested(for: itemsToDelete) // will also save
+		} else if shouldSaveInAnyCase {
+			Model.save()
 		}
 	}
 
