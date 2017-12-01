@@ -184,19 +184,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 				holder.translatesAutoresizingMaskIntoConstraints = false
 				holder.backgroundColor = .white
 				holder.layer.cornerRadius = 10
+				holder.addSubview(img)
 				addSubview(holder)
 
-				holder.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-				holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+				NSLayoutConstraint.activate([
+					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+					holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
 
-				holder.widthAnchor.constraint(equalToConstant: 50).isActive = true
-				holder.heightAnchor.constraint(equalToConstant: 50).isActive = true
+					holder.widthAnchor.constraint(equalToConstant: 50),
+					holder.heightAnchor.constraint(equalToConstant: 50),
 
-				holder.addSubview(img)
-				img.centerXAnchor.constraint(equalTo: holder.centerXAnchor).isActive = true
-				img.centerYAnchor.constraint(equalTo: holder.centerYAnchor).isActive = true
-				img.widthAnchor.constraint(equalToConstant: img.image!.size.width).isActive = true
-				img.heightAnchor.constraint(equalToConstant: img.image!.size.height).isActive = true
+					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
+					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+					img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
+					img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
+				])
 
 				selectionImage = img
 				editHolder = holder
@@ -557,9 +559,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 		set {}
 		get {
 			if shouldDisplayLoading {
-				return topLabel.text
+				return nil
 			}
-			return nil
+			return topLabel.text
 		}
 	}
 

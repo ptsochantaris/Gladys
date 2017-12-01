@@ -301,6 +301,7 @@ final class DetailController: GladysViewController,
 		Model.save()
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
 			self.sizeWindow()
+			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self.table)
 		}
 	}
 
@@ -518,6 +519,9 @@ final class DetailController: GladysViewController,
 					self.item.markUpdated()
 					self.updateUI()
 					ViewController.shared.loadCompleted(sender: self.item)
+					if let newCell = self.table.cellForRow(at: IndexPath(row: 0, section: self.table.numberOfSections-1)) {
+						UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, newCell)
+					}
 				}
 			}
 			DispatchQueue.main.async {

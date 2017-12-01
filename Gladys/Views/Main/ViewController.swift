@@ -667,9 +667,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			l.lineBreakMode = .byWordWrapping
 			l.isAccessibilityElement = false
 			view.addSubview(l)
-			l.topAnchor.constraint(equalTo: e.bottomAnchor, constant: 8).isActive = true
-			l.centerXAnchor.constraint(equalTo: e.centerXAnchor).isActive = true
-			l.widthAnchor.constraint(equalTo: e.widthAnchor).isActive = true
+
+			NSLayoutConstraint.activate([
+				l.topAnchor.constraint(equalTo: e.bottomAnchor, constant: 8),
+				l.centerXAnchor.constraint(equalTo: e.centerXAnchor),
+				l.widthAnchor.constraint(equalTo: e.widthAnchor),
+			])
 
 			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
 				UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {

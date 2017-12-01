@@ -57,12 +57,12 @@ final class DetailCell: UITableViewCell {
 		b.backgroundColor = .lightGray
 		b.layer.cornerRadius = 10
 		contentView.insertSubview(b, belowSubview: borderView)
-		[
+		NSLayoutConstraint.activate([
 			b.topAnchor.constraint(equalTo: borderView.topAnchor),
 			b.leadingAnchor.constraint(equalTo: borderView.leadingAnchor),
 			b.trailingAnchor.constraint(equalTo: borderView.trailingAnchor),
 			b.bottomAnchor.constraint(equalTo: borderView.bottomAnchor, constant: 0.5)
-		].forEach { $0.isActive = true }
+		])
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCellDragState) {
@@ -72,11 +72,16 @@ final class DetailCell: UITableViewCell {
 		archiveButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
 	}
 
+	@objc private func previewSelected() {
+		viewCallback?()
+	}
+
 	@IBAction func inspectSelected(_ sender: UIButton) {
 		inspectionCallback?()
 	}
 
 	@IBAction func archiveSelected(_ sender: UIButton) {
+		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Archiving, please wait")
 		archiveCallback?()
 	}
 
@@ -126,28 +131,24 @@ final class DetailCell: UITableViewCell {
 		}
 	}
 
-	override var accessibilityHint: String? {
-		set {}
-		get {
-			return inspectButton.alpha == 0 ? nil : "Select to inspect"
-		}
-	}
-
 	override var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
 		set {}
 		get {
-			return [UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected))]
+			var actions = [UIAccessibilityCustomAction]()
+			if archiveWidth.constant > 0 {
+				actions.append(UIAccessibilityCustomAction(name: "Archive Link Target", target: self, selector: #selector(archiveSelected(_:))))
+			}
+			if inspectWidth.constant > 0 {
+				actions.append(UIAccessibilityCustomAction(name: "Inspect Item", target: self, selector: #selector(inspectSelected(_:))))
+			}
+			if viewWidth.constant > 0 {
+				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
+			}
+			return actions
 		}
-	}
-
-	@objc private func previewSelected() {
-		viewCallback?()
 	}
 
 	override func accessibilityActivate() -> Bool {
-		if inspectButton.alpha != 0 {
-			inspectSelected(inspectButton)
-		}
 		return true
 	}
 
