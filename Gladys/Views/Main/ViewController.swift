@@ -882,8 +882,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
-		var detailController = currentDetailView
-
 		for item in items {
 
 			if item.shouldDisplayLoading {
@@ -892,11 +890,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			let uuid = item.uuid
 			loadingUUIDs.remove(uuid)
-
-			if let d = detailController, d.item.uuid == uuid {
-				d.done()
-				detailController = nil
-			}
 
 			if let i = Model.filteredDrops.index(where: { $0.uuid == uuid }) {
 			    Model.removeItemFromList(uuid: uuid)

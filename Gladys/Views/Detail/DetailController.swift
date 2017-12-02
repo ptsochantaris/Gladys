@@ -46,8 +46,12 @@ final class DetailController: GladysViewController,
 	private func updateUI() {
 		view.endEditing(true)
 		item = Model.item(uuid: item.uuid.uuidString)
-		table.reloadData()
-		sizeWindow()
+		if item == nil {
+			done()
+		} else {
+			table.reloadData()
+			sizeWindow()
+		}
 	}
 
 	@objc private func externalDataUpdate() {
