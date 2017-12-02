@@ -27,6 +27,14 @@ extension Data {
 				&& x[5] == 0x74
 		}
 	}
+	var isZip: Bool {
+		guard count > 4 else { return false }
+		return withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
+			return x[0] == 0x50
+				&& x[1] == 0x4B
+				&& ((x[2] == 3 && x[3] == 4) || (x[2] == 5 && x[3] == 6) || (x[2] == 7 && x[3] == 8))
+		}
+	}
 }
 
 extension FileManager {
