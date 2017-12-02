@@ -299,6 +299,7 @@ final class DetailController: GladysViewController,
 			if indexPath.section == 2 {
 				item.labels.remove(at: indexPath.row)
 				tableView.deleteRows(at: [indexPath], with: .automatic)
+				view.setNeedsLayout()
 				makeIndexAndSaveItem()
 			} else {
 				removeTypeItem(at: indexPath)

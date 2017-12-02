@@ -54,7 +54,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>438</string>
+	<string>439</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -125,17 +125,17 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeIconFiles</key>
-			<array>
-				<string>gladysIcon64</string>
-				<string>gladysIcon320</string>
-			</array>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Gladys Archive</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>gladysIcon64</string>
+				<string>gladysIcon320</string>
+			</array>
 			<key>UTTypeIdentifier</key>
 			<string>build.bru.gladys.archive</string>
 			<key>UTTypeSize320IconFile</key>
