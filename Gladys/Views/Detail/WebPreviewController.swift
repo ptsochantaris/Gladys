@@ -18,8 +18,28 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	var address: URL?
 	var webArchive: ArchivedDropItemType.PreviewItem?
 
+	private var loadCheck1: NSKeyValueObservation!
+	private var loadCheck2: NSKeyValueObservation!
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { w, v in
+			if let n = v.newValue {
+				if n > 0.85 {
+					self.spinner.stopAnimating()
+					self.loadCheck1 = nil
+				}
+			}
+		}
+
+		loadCheck2 = web.observe(\.title, options: .new) { w, v in
+			assert(Thread.isMainThread)
+			if let n = v.newValue {
+				self.title = n
+				self.loadCheck2 = nil
+			}
+		}
 
 		web.navigationDelegate = self
 		if let address = address {
@@ -28,6 +48,11 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 		} else if let previewURL = webArchive?.previewItemURL {
 			web.loadFileURL(previewURL, allowingReadAccessTo: previewURL)
 		}
+	}
+
+	deinit {
+		loadCheck1 = nil
+		loadCheck2 = nil
 	}
 
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
