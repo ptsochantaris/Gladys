@@ -28,7 +28,7 @@ extension Data {
 		}
 	}
 	var isZip: Bool {
-		guard count > 4 else { return false }
+		guard count > 3 else { return false }
 		return withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
 			return x[0] == 0x50
 				&& x[1] == 0x4B

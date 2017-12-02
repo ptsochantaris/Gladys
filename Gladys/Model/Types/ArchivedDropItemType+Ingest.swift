@@ -187,7 +187,7 @@ extension ArchivedDropItemType {
 	private func handleData(_ data: Data) {
 		bytes = data
 		
-		if data.isZip {
+		if (typeIdentifier == "public.folder" || typeIdentifier == "public.data") && data.isZip {
 			typeIdentifier = "public.zip-archive"
 		}
 		
