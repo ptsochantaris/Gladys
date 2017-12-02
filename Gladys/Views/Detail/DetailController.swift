@@ -99,10 +99,7 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		if initialWidth == 0 {
-			sizeWindow()
-			initialWidth = preferredContentSize.width
-		}
+		sizeWindow()
 	}
 
 	private var initialWidth: CGFloat = 0
@@ -117,6 +114,9 @@ final class DetailController: GladysViewController,
 			} else {
 				preferredContentSize = table.contentSize
 			}
+		}
+		if initialWidth == 0 {
+			initialWidth = preferredContentSize.width
 		}
 	}
 
