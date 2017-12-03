@@ -5,7 +5,7 @@ import Contacts
 import CloudKit
 import QuickLook
 
-extension ArchivedDropItemType: QLPreviewControllerDataSource {
+extension ArchivedDropItemType {
 
 	var dragItem: UIDragItem {
 
@@ -69,8 +69,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		CloudManager.markAsDeleted(uuid: uuid)
 	}
 
-	//////////////////////////////////////////////////////// quicklook
-
 	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
 
 		if QLPreviewController.canPreview(previewTempPath as NSURL) {
@@ -99,60 +97,5 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			return d
 		}
 		return nil
-	}
-
-	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return 1
-	}
-
-	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		return PreviewItem(typeItem: self)
-	}
-
-	class PreviewItem: NSObject, QLPreviewItem {
-		let previewItemURL: URL?
-		let previewItemTitle: String?
-		let needsCleanup: Bool
-
-		init(typeItem: ArchivedDropItemType) {
-
-			let blobPath = typeItem.bytesPath
-			let tempPath = typeItem.previewTempPath
-
-			if blobPath == tempPath {
-				previewItemURL = blobPath
-				needsCleanup = false
-			} else {
-				let fm = FileManager.default
-				if fm.fileExists(atPath: tempPath.path) {
-					try? fm.removeItem(at: tempPath)
-				}
-
-				if let data = typeItem.dataForWrappedItem {
-					try? data.write(to: tempPath)
-				} else {
-					try? fm.linkItem(at: blobPath, to: tempPath)
-				}
-				log("Created temporary file for preview")
-				previewItemURL = tempPath
-				needsCleanup = true
-			}
-
-			previewItemTitle = typeItem.oneTitle
-		}
-
-		deinit {
-			if needsCleanup, let previewItemURL = previewItemURL {
-				let fm = FileManager.default
-				if fm.fileExists(atPath: previewItemURL.path) {
-					try? fm.removeItem(at: previewItemURL)
-					log("Removed temporary file for preview")
-				}
-			}
-		}
-	}
-
-	var canPreview: Bool {
-		return typeIdentifier == "public.url" || typeIdentifier == "com.apple.webarchive" || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }

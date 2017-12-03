@@ -106,7 +106,7 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	var accessoryTitle: String? {
 		if titleOverride.isEmpty {
-			return typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle
+			return typeItems.first { $0.accessoryTitle != nil }?.accessoryTitle
 		} else {
 			return titleOverride
 		}

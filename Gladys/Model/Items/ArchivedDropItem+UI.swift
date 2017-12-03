@@ -80,16 +80,7 @@ extension ArchivedDropItem {
 	}
 
 	var canOpen: Bool {
-		var priority = -1
-		var item: Any?
-
-		for i in typeItems {
-			let (newItem, newPriority) = i.itemForShare
-			if let newItem = newItem, newPriority > priority {
-				item = newItem
-				priority = newPriority
-			}
-		}
+		let item = itemForShare
 
 		if item is MKMapItem {
 			return true
@@ -145,7 +136,7 @@ extension ArchivedDropItem {
 		ViewController.shared.dismissAnyPopOver()
 	}
 
-	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
+	private var itemForShare: Any? {
 		var priority = -1
 		var item: Any?
 
@@ -156,7 +147,11 @@ extension ArchivedDropItem {
 				priority = newPriority
 			}
 		}
+		return item
+	}
 
+	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
+		let item = itemForShare
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
 			completion(true)

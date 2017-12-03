@@ -319,14 +319,6 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	var previewTempPath: URL {
-		if let f = fileExtension {
-			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
-		} else {
-			return bytesPath
-		}
-	}
-
 	private func generateMoviePreview() -> UIImage? {
 		do {
 			let fm = FileManager.default
