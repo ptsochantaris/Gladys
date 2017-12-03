@@ -24,6 +24,18 @@ extension CloudManager {
 		}
 	}
 
+	static var syncRateLimited = false {
+		didSet {
+			if syncTransitioning != oldValue {
+				syncProgressString = syncing ? "Pausing" : nil
+				#if MAINAPP
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+				#endif
+				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+			}
+		}
+	}
+
 	static var syncing = false {
 		didSet {
 			if syncing != oldValue {

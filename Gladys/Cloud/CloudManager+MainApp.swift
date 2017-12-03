@@ -26,6 +26,7 @@ extension CloudManager {
 			return s
 		}
 
+		if syncRateLimited { return "Pausing" }
 		if syncTransitioning { return syncSwitchedOn ? "Deactivating" : "Activating" }
 
 		let i = -lastSyncCompletion.timeIntervalSinceNow
@@ -477,7 +478,9 @@ extension CloudManager {
 			     .zoneBusy:
 
 				let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 3.0
+				syncRateLimited = true
 				DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
+					syncRateLimited = false
 					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil, completion: completion)
 				}
 
