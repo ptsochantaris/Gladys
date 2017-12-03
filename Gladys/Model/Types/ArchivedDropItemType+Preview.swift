@@ -76,6 +76,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canAttach: Bool {
-		return typeIdentifier != "public.url" && !typeConforms(to: kUTTypeText) && canPreview
+		return typeIdentifier != "public.url" && typeIdentifier != "public.data" && !typeConforms(to: kUTTypeText) && canPreview
 	}
 }

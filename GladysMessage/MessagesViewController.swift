@@ -32,6 +32,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	}
 
 	private func updateItemSize(for size: CGSize) {
+		guard size.width > 0 else { return }
 		guard let f = itemsView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
 		let count = CGFloat(itemsPerRow(for: size))
 		var s = size
@@ -60,25 +61,29 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		guard let a = activeConversation else {
+			dismiss()
+			return
+		}
+
 		let drop = filteredDrops[indexPath.row]
-		if let a = activeConversation {
-			let (text, url) = drop.textForMessage
-			var finalString = text
-			if let url = url {
-				finalString += ": " + url.absoluteString
+		let (text, url) = drop.textForMessage
+		var finalString = text
+		if let url = url {
+			finalString += ": " + url.absoluteString
+		}
+		a.insertText(finalString) { error in
+			if let error = error {
+				log("Error adding text: \(error.finalDescription)")
 			}
-			a.insertText(finalString) { error in
-				if let error = error {
-					log("Error adding text: \(error.finalDescription)")
-				}
-			}
-			if url == nil, let previewableType = drop.typeItems.first(where:{ $0.canAttach }) {
-				let previewItem = ArchivedDropItemType.PreviewItem(typeItem: previewableType)
-				if let u = previewItem.previewItemURL {
-					a.insertAttachment(u, withAlternateFilename: text) { error in
-						if let error = error {
-							log("Error adding attachment: \(error.finalDescription)")
-						}
+		}
+		if url == nil, let previewableType = drop.typeItems.first(where:{ $0.canAttach }) {
+			let previewItem = ArchivedDropItemType.PreviewItem(typeItem: previewableType)
+			if let u = previewItem.previewItemURL {
+				let filename = previewableType.filenameTypeIdentifier + "." + (previewableType.fileExtension ?? ".data")
+				a.insertAttachment(u, withAlternateFilename: filename) { error in
+					if let error = error {
+						log("Error adding attachment: \(error.finalDescription)")
 					}
 				}
 			}
@@ -99,21 +104,23 @@ UICollectionViewDataSource, UISearchBarDelegate {
         super.didReceiveMemoryWarning()
 		Model.reset()
     }
-    
-    override func willBecomeActive(with conversation: MSConversation) {
+
+	deinit {
+		log("iMessage app dismissed")
+	}
+
+	override func willBecomeActive(with conversation: MSConversation) {
+		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
-		itemsView.reloadData()
+		updateItemSize(for: view.bounds.size)
 		emptyLabel.isHidden = Model.drops.count > 0
 		searchVisibilityTrigger.isActive = presentationStyle != .expanded
-    }
-    
-    override func didResignActive(with conversation: MSConversation) {
-		Model.reset()
-    }
+		itemsView.reloadData()
+	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		updateItemSize(for: view.bounds.size)
+	override func willResignActive(with conversation: MSConversation) {
+		super.willResignActive(with: conversation)
+		Model.reset()
 	}
 
 	override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {

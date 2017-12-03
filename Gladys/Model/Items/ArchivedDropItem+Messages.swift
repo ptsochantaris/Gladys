@@ -28,13 +28,14 @@ extension ArchivedDropItem {
 				break
 			}
 		}
+		let tile = oneTitle
 		if let webURL = webURL {
 			let a = webURL.absoluteString
-			if oneTitle != a {
-				return (oneTitle, webURL)
+			if tile != a {
+				return (tile, webURL)
 			}
 		}
-		return (oneTitle, nil)
+		return (tile, nil)
 	}
 
 }
