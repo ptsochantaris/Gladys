@@ -9,6 +9,8 @@
 import UIKit
 import Messages
 
+private var messagesCurrentOffset = CGPoint.zero
+
 class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate,
 UICollectionViewDataSource, UISearchBarDelegate {
 
@@ -70,7 +72,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		let (text, url) = drop.textForMessage
 		var finalString = text
 		if let url = url {
-			finalString += ": " + url.absoluteString
+			finalString += " " + url.absoluteString
 		}
 		a.insertText(finalString) { error in
 			if let error = error {
@@ -116,10 +118,17 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		emptyLabel.isHidden = Model.drops.count > 0
 		searchVisibilityTrigger.isActive = presentationStyle != .expanded
 		itemsView.reloadData()
+		itemsView.contentOffset = messagesCurrentOffset
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		itemsView.contentOffset = messagesCurrentOffset
 	}
 
 	override func willResignActive(with conversation: MSConversation) {
 		super.willResignActive(with: conversation)
+		messagesCurrentOffset = itemsView.contentOffset
 		Model.reset()
 	}
 
@@ -129,6 +138,14 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		UIView.animate(animations: {
 			self.view.layoutIfNeeded()
 		})
+	}
+
+	override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
+		super.didTransition(to: presentationStyle)
+		if searchBar.text != nil {
+			searchBar.text = nil
+			itemsView.reloadData()
+		}
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
