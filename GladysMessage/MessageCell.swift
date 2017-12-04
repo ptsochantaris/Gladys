@@ -8,18 +8,9 @@
 
 import UIKit
 
-let messageCellFormatter: DateFormatter = {
-	let d = DateFormatter()
-	d.doesRelativeDateFormatting = true
-	d.dateStyle = .short
-	d.timeStyle = .short
-	return d
-}()
-
 final class MessageCell: UICollectionViewCell {
 
 	@IBOutlet weak var topLabel: UILabel!
-	@IBOutlet weak var bottomLabel: UILabel!
 	@IBOutlet weak var imageView: UIImageView!
 
 	override func awakeFromNib() {
@@ -40,7 +31,6 @@ final class MessageCell: UICollectionViewCell {
 		didSet {
 			if let dropItem = dropItem {
 				topLabel.text = dropItem.oneTitle
-				bottomLabel.text = messageCellFormatter.string(from: dropItem.updatedAt)
 				imageView.image = dropItem.displayIcon
 				switch dropItem.displayMode {
 				case .center:
@@ -52,7 +42,6 @@ final class MessageCell: UICollectionViewCell {
 				case .fit:
 					imageView.contentMode = .scaleAspectFit
 				}
-				accessibilityLabel = "Added " + (bottomLabel.text ?? "")
 				accessibilityValue = topLabel.text ?? ""
 			}
 		}

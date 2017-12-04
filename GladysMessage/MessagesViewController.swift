@@ -10,6 +10,7 @@ import UIKit
 import Messages
 
 private var messagesCurrentOffset = CGPoint.zero
+private var lastFilter: String?
 
 class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate,
 UICollectionViewDataSource, UISearchBarDelegate {
@@ -17,9 +18,9 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	@IBOutlet weak var emptyLabel: UILabel!
 	@IBOutlet weak var itemsView: UICollectionView!
 	@IBOutlet weak var searchBar: UISearchBar!
+	@IBOutlet weak var searchOffset: NSLayoutConstraint!
 
 	private var searchTimer: PopTimer!
-	private var searchVisibilityTrigger: NSLayoutConstraint!
 
 	private func itemsPerRow(for size: CGSize) -> Int {
 		if size.width < 320 {
@@ -41,6 +42,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
 		s.height = s.width
 		f.itemSize = s
+		f.sectionInset.top = searchBar.frame.size.height
 		f.invalidateLayout()
 	}
 
@@ -99,14 +101,8 @@ UICollectionViewDataSource, UISearchBarDelegate {
 			self?.searchUpdated()
 		}
 		itemsView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
-		searchVisibilityTrigger = searchBar.bottomAnchor.constraint(equalTo: view.topAnchor)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-		Model.reset()
-    }
-
 	deinit {
 		log("iMessage app dismissed")
 	}
@@ -114,38 +110,21 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	override func willBecomeActive(with conversation: MSConversation) {
 		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
-		updateItemSize(for: view.bounds.size)
 		emptyLabel.isHidden = Model.drops.count > 0
-		searchVisibilityTrigger.isActive = presentationStyle != .expanded
+		updateItemSize(for: view.bounds.size)
+		searchBar.text = lastFilter
 		itemsView.reloadData()
-		itemsView.contentOffset = messagesCurrentOffset
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		itemsView.contentOffset = messagesCurrentOffset
+		DispatchQueue.main.async {
+			self.itemsView.contentOffset = messagesCurrentOffset
+		}
 	}
 
 	override func willResignActive(with conversation: MSConversation) {
 		super.willResignActive(with: conversation)
 		messagesCurrentOffset = itemsView.contentOffset
+		lastFilter = searchBar.text
 		Model.reset()
-	}
-
-	override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-		super.willTransition(to: presentationStyle)
-		searchVisibilityTrigger.isActive = presentationStyle != .expanded
-		UIView.animate(animations: {
-			self.view.layoutIfNeeded()
-		})
-	}
-
-	override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-		super.didTransition(to: presentationStyle)
-		if searchBar.text != nil {
-			searchBar.text = nil
-			itemsView.reloadData()
-		}
+		itemsView.reloadData()
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -157,7 +136,18 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		searchTimer.push()
 	}
 
+	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+		requestPresentationStyle(.expanded)
+	}
+
 	private func searchUpdated() {
 		itemsView.reloadData()
+	}
+
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		let offset = scrollView.contentOffset.y
+		if offset > -searchBar.frame.size.height {
+			searchOffset.constant = -offset
+		}
 	}
 }
