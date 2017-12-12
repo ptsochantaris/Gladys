@@ -63,7 +63,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 			if lastComponent == "items.json" || lastComponent == "ck-delete-queue" || lastComponent == "ck-uuid-sequence" {
 				return nil
 			}
-			let uuidString = (lastComponent == "blob") ? urlComponents[urlComponents.count-2] : lastComponent
+			let lookingForTypeItem = urlComponents[urlComponents.count-2] == "shared-blob"
+			let uuidString = lookingForTypeItem ? urlComponents[urlComponents.count-3] : lastComponent
 			let identifier = NSFileProviderItemIdentifier(uuidString)
 			do {
 				return try item(for: identifier) as? FileProviderItem

@@ -252,9 +252,6 @@ extension ArchivedDropItemType {
 				setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
 			}
 			
-		} else if typeConforms(to: kUTTypeArchive as CFString) {
-			setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
-			
 		} else if typeConforms(to: kUTTypeAudio as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 			
@@ -266,7 +263,10 @@ extension ArchivedDropItemType {
 			
 		} else if typeConforms(to: kUTTypeContent as CFString) {
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-			
+
+		} else if typeConforms(to: kUTTypeArchive as CFString) {
+			setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+
 		} else {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}

@@ -24,7 +24,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	}
 
 	var fileSystemURL: URL? {
-		return typeItem?.bytesPath ?? dropItem?.folderUrl
+		return typeItem?.sharedLink ?? dropItem?.folderUrl
 	}
 
 	var documentSize: NSNumber? {

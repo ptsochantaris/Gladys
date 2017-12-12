@@ -3,7 +3,7 @@ import UIKit
 import MobileCoreServices
 import ZIPFoundation
 
-final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
+final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate, FileManagerDelegate {
 
 	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
 
@@ -33,8 +33,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			for item in eligibleItems {
 				let uuidString = item.uuid.uuidString
 				let sourceForItem = Model.appStorageUrl.appendingPathComponent(uuidString)
-				let desinationForItem = tempPath.appendingPathComponent(uuidString)
-				try! fm.copyItem(at: sourceForItem, to: desinationForItem)
+				let destinationForItem = tempPath.appendingPathComponent(uuidString)
+				fm.delegate = self
+				try! fm.copyItem(at: sourceForItem, to: destinationForItem)
+				fm.delegate = nil
 				p.completedUnitCount += 1
 			}
 
@@ -52,6 +54,11 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 
 		return p
+	}
+
+	func fileManager(_ fileManager: FileManager, shouldCopyItemAt srcURL: URL, to dstURL: URL) -> Bool {
+		let components = srcURL.pathComponents
+		return !components.contains { $0 == "shared-blob" || $0 == "ck-record" }
 	}
 
 	private var archiveDragItems: [UIDragItem] {
