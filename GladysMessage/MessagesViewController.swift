@@ -81,14 +81,11 @@ UICollectionViewDataSource, UISearchBarDelegate {
 				log("Error adding text: \(error.finalDescription)")
 			}
 		}
-		if url == nil, let previewableType = drop.typeItems.first(where:{ $0.canAttach }) {
-			let previewItem = ArchivedDropItemType.PreviewItem(typeItem: previewableType)
-			if let u = previewItem.previewItemURL {
-				let filename = previewableType.filenameTypeIdentifier + "." + (previewableType.fileExtension ?? ".data")
-				a.insertAttachment(u, withAlternateFilename: filename) { error in
-					if let error = error {
-						log("Error adding attachment: \(error.finalDescription)")
-					}
+		if url == nil, let attachableType = drop.attachableTypeItem {
+			let link = attachableType.sharedLink
+			a.insertAttachment(link, withAlternateFilename: link.lastPathComponent) { error in
+				if let error = error {
+					log("Error adding attachment: \(error.finalDescription)")
 				}
 			}
 		}

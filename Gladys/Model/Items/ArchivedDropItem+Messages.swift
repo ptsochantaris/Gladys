@@ -38,4 +38,12 @@ extension ArchivedDropItem {
 		return (tile, nil)
 	}
 
+	var attachableTypeItem: ArchivedDropItemType? {
+		if let i = typeItems.max(by: { $0.attachPriority < $1.attachPriority }), i.attachPriority > 0 {
+			return i
+		} else {
+			return nil
+		}
+	}
+
 }

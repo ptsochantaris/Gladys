@@ -8,7 +8,6 @@
 
 import Foundation
 import QuickLook
-import MobileCoreServices
 
 extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
@@ -73,9 +72,5 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	var canPreview: Bool {
 		return typeIdentifier == "public.url" || typeIdentifier == "com.apple.webarchive" || QLPreviewController.canPreview(previewTempPath as NSURL)
-	}
-
-	var canAttach: Bool {
-		return typeIdentifier != "public.url" && typeIdentifier != "public.data" && !typeConforms(to: kUTTypeText) && canPreview
 	}
 }
