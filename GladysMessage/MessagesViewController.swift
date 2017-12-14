@@ -133,8 +133,14 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		searchTimer.push()
 	}
 
-	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-		requestPresentationStyle(.expanded)
+	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+		if presentationStyle != .expanded {
+			requestPresentationStyle(.expanded)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+				searchBar.becomeFirstResponder()
+			}
+		}
+		return true
 	}
 
 	private func searchUpdated() {
@@ -144,7 +150,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		let offset = scrollView.contentOffset.y
 		if offset > -searchBar.frame.size.height {
-			searchOffset.constant = -offset
+			searchOffset.constant = min(0, -offset)
 		}
 	}
 }
