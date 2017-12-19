@@ -29,6 +29,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var showCopyMoveSwitchSelector: Bool {
+		get {
+			return defaults.bool(forKey: "showCopyMoveSwitchSelector")
+		}
+		set {
+			defaults.set(newValue, forKey: "showCopyMoveSwitchSelector")
+			defaults.synchronize()
+		}
+	}
+
 	static var displayNotesInMainView: Bool {
 		get {
 			return defaults.bool(forKey: "displayNotesInMainView")

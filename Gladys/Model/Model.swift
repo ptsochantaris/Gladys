@@ -30,6 +30,10 @@ final class Model {
 		return drops.first { $0.uuid == uuidData }
 	}
 
+	static func item(uuid: UUID) -> ArchivedDropItem? {
+		return drops.first { $0.uuid == uuid }
+	}
+
 	static func typeItem(uuid: String) -> ArchivedDropItemType? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.flatMap({

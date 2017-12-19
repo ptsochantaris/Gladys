@@ -147,6 +147,8 @@
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
+		16E781BC1FE97AD90071ED9C /* LabelEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */; };
+		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
@@ -403,6 +405,8 @@
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		16D829121F86D3DD00CF06FF /* AboutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
+		16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
+		16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
@@ -762,6 +766,8 @@
 				16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */,
 				1633F0351F9371EB00421B8C /* AddLabelController.swift */,
 				1633F0371F93757000421B8C /* LabelListCell.swift */,
+				16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */,
+				16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */,
 			);
 			path = Labels;
 			sourceTree = "<group>";
@@ -1407,6 +1413,7 @@
 				162027911FA1A9FC00E8D964 /* Types+MainApp.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				161089A01FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */,
+				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */,
 				168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
@@ -1447,6 +1454,7 @@
 				169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
+				16E781BC1FE97AD90071ED9C /* LabelEditorController.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwtichHolder.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,

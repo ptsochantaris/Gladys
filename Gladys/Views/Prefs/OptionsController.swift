@@ -15,6 +15,11 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var removeItemsWhenDraggedOutSwitch: UISwitch!
 	@IBOutlet weak var dontAutoLabelNewItemsSwitch: UISwitch!
 	@IBOutlet weak var displayNotesInMainViewSwitch: UISwitch!
+	@IBOutlet weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
+
+	@IBAction func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
+		PersistedOptions.showCopyMoveSwitchSelector = sender.isOn
+	}
 
 	@IBAction func removeItemsWhenDraggedOutChanged(_ sender: UISwitch) {
 		PersistedOptions.removeItemsWhenDraggedOut = sender.isOn
@@ -64,5 +69,9 @@ final class OptionsController: GladysViewController {
 		displayNotesInMainViewSwitch.tintColor = UIColor.lightGray
 		displayNotesInMainViewSwitch.onTintColor = view.tintColor
 		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
+
+		showCopyMoveSwitchSelectorSwitch.tintColor = UIColor.lightGray
+		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
+		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
 	}
 }

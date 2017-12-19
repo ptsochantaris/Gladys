@@ -45,7 +45,7 @@ final class DetailController: GladysViewController,
 
 	private func updateUI() {
 		view.endEditing(true)
-		item = Model.item(uuid: item.uuid.uuidString)
+		item = Model.item(uuid: item.uuid)
 		if item == nil {
 			done()
 		} else {

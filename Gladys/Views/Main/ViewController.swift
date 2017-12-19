@@ -33,8 +33,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
 	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet weak var deleteButton: UIBarButtonItem!
+	@IBOutlet weak var editLabelsButton: UIBarButtonItem!
 	@IBOutlet weak var labelsButton: UIBarButtonItem!
 	@IBOutlet weak var settingsButton: UIBarButtonItem!
+	@IBOutlet weak var itemsCount: UIBarButtonItem!
 
 	static var shared: ViewController!
 
@@ -70,7 +72,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		if let droppedIds = ArchivedDropItemType.droppedIds {
 			if PersistedOptions.removeItemsWhenDraggedOut {
-				let items = droppedIds.flatMap { Model.item(uuid: $0.uuidString) }
+				let items = droppedIds.flatMap { Model.item(uuid: $0) }
 				if items.count > 0 {
 					deleteRequested(for: items)
 				}
@@ -103,7 +105,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		let item = Model.filteredDrops[indexPath.item]
 		cell.archivedDropItem = item
 		cell.isEditing = isEditing
-		cell.isSelectedForDelete = deletionCandidates?.contains(where: { $0 == item.uuid }) ?? false
+		cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
 		return cell
 	}
 
@@ -317,6 +319,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			if isEditing {
 				setEditing(false, animated: true)
 			}
+
+		} else if segue.identifier == "showLabelEditor",
+			let n = segue.destination as? UINavigationController,
+			let e = n.topViewController as? LabelEditorController,
+			let p = n.popoverPresentationController {
+
+			p.delegate = self
+			e.selectedItems = selectedItems
+			e.endCallback = { [weak self] hasChanges in
+				if hasChanges {
+					self?.setEditing(false, animated: true)
+				}
+			}
 		}
 	}
 
@@ -330,10 +345,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 
 		if isEditing {
-			if deletionCandidates?.index(where: { $0 == item.uuid }) == nil {
-				deletionCandidates?.append(item.uuid)
+			if selectedItems?.index(where: { $0 == item.uuid }) == nil {
+				selectedItems?.append(item.uuid)
 			} else {
-				deletionCandidates = deletionCandidates?.filter { $0 != item.uuid }
+				selectedItems = selectedItems?.filter { $0 != item.uuid }
 			}
 			didUpdateItems()
 			collectionView.reloadItems(at: [indexPath])
@@ -606,18 +621,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	private var emptyView: UIImageView?
 	@objc private func didUpdateItems() {
-		totalSizeLabel.title = "\(Model.drops.count) Items: " + diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
 		editButtonItem.isEnabled = Model.drops.count > 0
 
-		deletionCandidates = deletionCandidates?.filter { uuid in Model.drops.contains(where: { $0.uuid == uuid }) }
+		selectedItems = selectedItems?.filter { uuid in Model.drops.contains(where: { $0.uuid == uuid }) }
 
-		let count = (deletionCandidates?.count ?? 0)
+		let count = (selectedItems?.count ?? 0)
+
+		let c = count == 0 ? Model.drops.count : count
+		itemsCount.title = c > 1 ? "\(c) Items" : c == 1 ? "1 Item" : "No Items"
+
+		let size = count == 0 ? Model.sizeInBytes : Model.sizeForItems(uuids: selectedItems ?? [])
+		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
 		deleteButton.isEnabled = count > 0
-		if count > 1 {
-			deleteButton.title = "Delete \(count) Items"
-		} else {
-			deleteButton.title = "Delete"
-		}
+		editLabelsButton.isEnabled = count > 0
 
 		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !loadingUUIDs.contains($0.uuid) }
 		for item in itemsToReIngest {
@@ -628,6 +644,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 
 		updateLabelIcon()
+		currentLabelEditor?.selectedItems = selectedItems
 		archivedItemCollectionView.isAccessibilityElement = Model.filteredDrops.count == 0
 	}
 
@@ -716,9 +733,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		navigationController?.setToolbarHidden(!editing, animated: animated)
 		if editing {
-			deletionCandidates = [UUID]()
+			selectedItems = [UUID]()
 		} else {
-			deletionCandidates = nil
+			selectedItems = nil
 			deleteButton.isEnabled = false
 		}
 
@@ -810,9 +827,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	/////////////////////////////////
 
-	private var deletionCandidates: [UUID]?
+	private var selectedItems: [UUID]?
 	@IBAction func deleteButtonSelected(_ sender: UIBarButtonItem) {
-		guard let candidates = deletionCandidates, candidates.count > 0 else { return }
+		guard let candidates = selectedItems, candidates.count > 0 else { return }
 
 		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
@@ -834,7 +851,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func proceedWithDelete() {
-		guard let candidates = deletionCandidates, candidates.count > 0 else { return }
+		guard let candidates = selectedItems, candidates.count > 0 else { return }
 
 		let itemsToDelete = Model.drops.filter { item -> Bool in
 			candidates.contains(where: { $0 == item.uuid })
@@ -843,7 +860,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			deleteRequested(for: itemsToDelete)
 		}
 
-		deletionCandidates?.removeAll()
+		selectedItems?.removeAll()
 	}
 
 	private var firstPresentedNavigationController: UINavigationController? {
@@ -854,6 +871,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return v.selectedViewController as? UINavigationController
 		}
 		return nil
+	}
+
+	private var currentLabelEditor: LabelEditorController? {
+		return firstPresentedNavigationController?.viewControllers.first as? LabelEditorController
 	}
 
 	private var currentDetailView: DetailController? {
@@ -988,7 +1009,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			item.reIndex {
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) {
-						genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
+						if item.createdAt == item.updatedAt {
+							genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
+						}
 					}
 				}
 			}
@@ -1195,7 +1218,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		if let n = controller.presentedViewController as? UINavigationController, n.topViewController is LabelSelector {
+		let t = (controller.presentedViewController as? UINavigationController)?.topViewController
+		if t is LabelSelector || t is LabelEditorController {
 			return .none
 		} else {
 			return .overCurrentContext

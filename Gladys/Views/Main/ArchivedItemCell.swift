@@ -150,7 +150,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		bottomLabel.highlightedTextColor = tintColor
 	}
 
-	var isSelectedForDelete: Bool {
+	var isSelectedForAction: Bool {
 		set {
 			selectionImage?.isHighlighted = newValue
 		}
@@ -579,7 +579,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityTraits: UIAccessibilityTraits {
 		set {}
 		get {
-			return isSelectedForDelete ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone
+			return isSelectedForAction ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone
 		}
 	}
 
