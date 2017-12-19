@@ -530,13 +530,14 @@ final class DetailController: GladysViewController,
 
 	private func archiveWebComponent(cell: DetailCell, url: URL) {
 		cell.animateArchive(true)
-		WebArchiver.archiveWebpageFromUrl(url: url) { data, error in
+		
+		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
 			if let error = error {
 				DispatchQueue.main.async {
 					genericAlert(title: "Archiving failed", message: error.finalDescription, on: self)
 				}
-			} else if let data = data {
-				let newTypeItem = ArchivedDropItemType(typeIdentifier: "com.apple.webarchive", parentUuid: self.item.uuid, data: data)
+			} else if let data = data, let typeIdentifier = typeIdentifier {
+				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data)
 				DispatchQueue.main.async {
 					self.view.endEditing(true)
 					self.item.typeItems.append(newTypeItem)
