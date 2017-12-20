@@ -175,28 +175,28 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                            <rect key="frame" x="0.0" y="35" width="290" height="24"/>
+                            <rect key="frame" x="0.0" y="39" width="290" height="24"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
                             <rect key="frame" x="0.0" y="0.0" width="290" height="140"/>
-                            <inset key="contentEdgeInsets" minX="50" minY="80" maxX="50" maxY="50"/>
+                            <inset key="contentEdgeInsets" minX="60" minY="85" maxX="60" maxY="50"/>
                             <state key="normal" title="Switch to Moving"/>
                             <connections>
                                 <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.94079854753282333" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" id="Px5-eq-2Pa"/>
                         <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="85D-T5-Fjo" secondAttribute="trailing" id="Yka-r7-K2t"/>
                         <constraint firstItem="GZp-EI-Tfs" firstAttribute="bottom" secondItem="85D-T5-Fjo" secondAttribute="bottom" id="ilk-Q8-Zvr"/>
                         <constraint firstItem="srE-1O-tlR" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="jZG-7J-yv0"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="jux-TY-A2l"/>
-                        <constraint firstItem="srE-1O-tlR" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" constant="35" id="m5Q-ZB-jhK"/>
+                        <constraint firstItem="srE-1O-tlR" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" constant="39" id="m5Q-ZB-jhK"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="centerX" secondItem="srE-1O-tlR" secondAttribute="centerX" id="muF-J9-AWp"/>
                         <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="srE-1O-tlR" secondAttribute="trailing" id="ocY-vw-enV"/>
                     </constraints>
@@ -687,7 +687,7 @@ Selecting them will show only items that contain these labels.</string>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IUw-1k-Z1Z" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="249.5" width="320" height="66.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Switch copy and move while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqs-I6-11E">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Copy / move selection while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqs-I6-11E">
                                                 <rect key="frame" x="40" y="10" width="173.5" height="38"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
