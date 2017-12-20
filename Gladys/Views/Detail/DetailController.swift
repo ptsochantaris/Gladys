@@ -579,10 +579,10 @@ final class DetailController: GladysViewController,
 				DispatchQueue.main.async {
 					self.view.endEditing(true)
 					self.item.typeItems.append(newTypeItem)
-					self.item.needsCloudPush = true
 					self.item.markUpdated()
 					self.updateUI()
-					ViewController.shared.loadCompleted(sender: self.item)
+					self.item.needsReIngest = true
+					self.item.reIngest(delegate: ViewController.shared)
 					if let newCell = self.table.cellForRow(at: IndexPath(row: 0, section: self.table.numberOfSections-1)) {
 						UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, newCell)
 					}
