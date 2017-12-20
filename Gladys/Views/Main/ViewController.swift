@@ -37,6 +37,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet weak var labelsButton: UIBarButtonItem!
 	@IBOutlet weak var settingsButton: UIBarButtonItem!
 	@IBOutlet weak var itemsCount: UIBarButtonItem!
+	@IBOutlet weak var dragModePanel: UIView!
+	@IBOutlet weak var dragModeButton: UIButton!
+	@IBOutlet weak var dragModeTitle: UILabel!
 
 	static var shared: ViewController!
 
@@ -67,11 +70,73 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
+	/////////////////////////////
+
+	private var dragModeReverse = false
+
+	private func showDragModeOverlay(_ show: Bool) {
+		if dragModePanel.superview != nil, !show {
+			UIView.animate(withDuration: 0.2, animations: {
+				self.dragModePanel.alpha = 0
+				self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -200)
+			}, completion: { finished in
+				self.dragModePanel.removeFromSuperview()
+				self.dragModePanel.transform = .identity
+			})
+		} else if dragModePanel.superview == nil, show {
+			self.dragModeReverse = false
+			self.updateDragModeOverlay()
+			view.addSubview(dragModePanel)
+			let top = dragModePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+			top.constant = -200
+			NSLayoutConstraint.activate([
+				dragModePanel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+				top
+				])
+			view.layoutIfNeeded()
+			top.constant = 0
+			UIView.animate(withDuration: 0.2, animations: {
+				self.view.layoutIfNeeded()
+				self.dragModePanel.alpha = 1
+			}, completion: { finished in
+			})
+		}
+	}
+
+	@IBAction func dragModeButtonSelected(_ sender: UIButton) {
+		dragModeReverse = !dragModeReverse
+		updateDragModeOverlay()
+	}
+
+	private func updateDragModeOverlay() {
+		if dragModeMove {
+			dragModeTitle.text = "Moving"
+			dragModeButton.setTitle("Copy instead", for: .normal)
+		} else {
+			dragModeTitle.text = "Copying"
+			dragModeButton.setTitle("Move instead", for: .normal)
+		}
+	}
+
+	private var dragModeMove: Bool {
+		if dragModeReverse {
+			return !PersistedOptions.removeItemsWhenDraggedOut
+		}
+		return PersistedOptions.removeItemsWhenDraggedOut
+	}
+
 	/////////////////////////
 
+	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
+		if PersistedOptions.showCopyMoveSwitchSelector {
+			showDragModeOverlay(true)
+		}
+	}
+
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+		showDragModeOverlay(false)
 		if let droppedIds = ArchivedDropItemType.droppedIds {
-			if PersistedOptions.removeItemsWhenDraggedOut {
+			if dragModeMove {
 				let items = droppedIds.flatMap { Model.item(uuid: $0) }
 				if items.count > 0 {
 					deleteRequested(for: items)
@@ -227,6 +292,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
+		showDragModeOverlay(false)
 		resetForDragEntry(session: session)
 	}
 
@@ -365,6 +431,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		navigationItem.largeTitleDisplayMode = .automatic
 		pasteButton.accessibilityLabel = "Paste from clipboard"
 		settingsButton.accessibilityLabel = "Options"
+
+		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
+		dragModePanel.layer.shadowColor = UIColor.black.cgColor
+		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
+		dragModePanel.layer.shadowOpacity = 0.3
+		dragModePanel.layer.shadowRadius = 1
+		dragModePanel.alpha = 0
 	}
 
 	override func viewDidLoad() {
