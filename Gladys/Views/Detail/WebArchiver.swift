@@ -5,20 +5,20 @@ import MobileCoreServices
 import Foundation
 import Fuzi
 
-/// Archive completion handler block
-public typealias ArchiveCompletionHandler = (Data?, String?, ArchiveErrorType?) -> ()
-
-/// Error type
-public enum ArchiveErrorType: Error {
-    case FetchHTMLError
-    case HTMLInvalid
-    case FailToInitHTMLDocument
-    case FetchResourceFailed
-    case PlistSerializeFailed
-}
-
 /// Archiver
-public class WebArchiver {
+final class WebArchiver {
+
+	/// Archive completion handler block
+	typealias ArchiveCompletionHandler = (Data?, String?, ArchiveErrorType?) -> ()
+
+	/// Error type
+	enum ArchiveErrorType: Error {
+		case FetchHTMLError
+		case HTMLInvalid
+		case FailToInitHTMLDocument
+		case FetchResourceFailed
+		case PlistSerializeFailed
+	}
 
 	public static func archiveFromUrl(_ url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
 		let task = URLSession.shared.dataTask(with: url) { data, response, error in

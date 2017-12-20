@@ -174,12 +174,17 @@ final class DetailController: GladysViewController,
 		return item.typeItems.count + 3
 	}
 
+	private var draggingTypeItem = false
+
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section < 2 {
 			return nil
 		} else if section == 2 {
 			return "Labels"
 		} else {
+			if draggingTypeItem {
+				return nil
+			}
 			return item.typeItems[section-3].contentDescription
 		}
 	}
@@ -386,24 +391,30 @@ final class DetailController: GladysViewController,
 			return []
 		} else if indexPath.section == 2 {
 			if let i = item.dragItem(forLabelIndex: indexPath.row) {
+				session.localContext = "label"
 				return [i]
 			} else {
 				return []
 			}
 		} else {
 			let typeItem = item.typeItems[indexPath.section-3]
+			session.localContext = "typeItem"
 			return [typeItem.dragItem]
 		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
-		if let d = destinationIndexPath,
-			d.section == 2,
-			d.row < item.labels.count,
-			session.canLoadObjects(ofClass: String.self),
-			session.localDragSession != nil {
-
-			return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+		if let d = destinationIndexPath, let s = session.localDragSession {
+			if d.section == 2, d.row < item.labels.count, session.canLoadObjects(ofClass: String.self) {
+				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			}
+			if d.section > 2, s.localContext as? String == "typeItem" {
+				if !draggingTypeItem {
+					draggingTypeItem = true
+					fadeReloadTypes()
+				}
+				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			}
 		}
 		return UITableViewDropProposal(operation: .cancel)
 	}
@@ -417,6 +428,13 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
 		if session.localDragSession == nil {
 			done()
+		}
+	}
+
+	func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
+		if draggingTypeItem {
+			draggingTypeItem = false
+			fadeReloadTypes()
 		}
 	}
 
@@ -435,39 +453,59 @@ final class DetailController: GladysViewController,
 					let destinationIndexPath = coordinator.destinationIndexPath,
 					let previousIndex = coordinatorItem.sourceIndexPath else { return }
 
-				let existingLabel = dragItem.localObject as? String
-				if previousIndex.section == 2 {
-					item.labels.remove(at: previousIndex.row)
-					item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
-					tableView.performBatchUpdates({
-						tableView.reloadData()
-					})
-				} else {
-					item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
-					tableView.performBatchUpdates({
-						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
-					})
-				}
+				if destinationIndexPath.section == 2 {
+					let existingLabel = dragItem.localObject as? String
+					if previousIndex.section == 2 {
+						item.labels.remove(at: previousIndex.row)
+						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+						tableView.performBatchUpdates({
+							tableView.reloadData()
+						})
+					} else {
+						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+						tableView.performBatchUpdates({
+							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
+						})
+					}
 
-				if existingLabel == nil {
-					_ = dragItem.itemProvider.loadObject(ofClass: String.self, completionHandler: { newLabel, error in
-						if let newLabel = newLabel {
-							DispatchQueue.main.async {
-								self.item.labels[destinationIndexPath.row] = newLabel
-								tableView.performBatchUpdates({
-									tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
-								})
-								self.makeIndexAndSaveItem()
+					if existingLabel == nil {
+						_ = dragItem.itemProvider.loadObject(ofClass: String.self, completionHandler: { newLabel, error in
+							if let newLabel = newLabel {
+								DispatchQueue.main.async {
+									self.item.labels[destinationIndexPath.row] = newLabel
+									tableView.performBatchUpdates({
+										tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
+									})
+									self.makeIndexAndSaveItem()
+								}
 							}
-						}
-					})
-				} else {
-					self.makeIndexAndSaveItem()
+						})
+					} else {
+						makeIndexAndSaveItem()
+					}
+					
+				} else if destinationIndexPath.section > 2, previousIndex.section > 2 {
+					let i1 = previousIndex.section - 3
+					let i2 = destinationIndexPath.section - 3
+					item.typeItems.swapAt(i1, i2)
+					var count = 0
+					for i in item.typeItems {
+						i.order = count
+						count += 1
+					}
+					fadeReloadTypes()
+					makeIndexAndSaveItem()
 				}
 
 				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
 			}
 		}
+	}
+
+	private func fadeReloadTypes() {
+		table.performBatchUpdates({
+			table.reloadSections(IndexSet(integersIn: 3 ..< self.numberOfSections(in: table)), with: .automatic)
+		}, completion: nil)
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
@@ -537,7 +575,7 @@ final class DetailController: GladysViewController,
 					genericAlert(title: "Archiving failed", message: error.finalDescription, on: self)
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
-				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data)
+				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 				DispatchQueue.main.async {
 					self.view.endEditing(true)
 					self.item.typeItems.append(newTypeItem)

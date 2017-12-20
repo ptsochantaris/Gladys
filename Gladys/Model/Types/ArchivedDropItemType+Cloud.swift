@@ -16,6 +16,7 @@ extension ArchivedDropItemType {
 		representedClass = record["representedClass"] as! String
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
+		order = record["order"] as? Int ?? 0
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
 			let path = bytesPath
 			let f = FileManager.default
@@ -49,6 +50,7 @@ extension ArchivedDropItemType {
 		record["representedClass"] = representedClass as NSString
 		record["classWasWrapped"] = NSNumber(value: classWasWrapped ? 1 : 0)
 		record["accessoryTitle"] = accessoryTitle as NSString?
+		record["order"] = order as NSNumber
 
 		return record
 	}

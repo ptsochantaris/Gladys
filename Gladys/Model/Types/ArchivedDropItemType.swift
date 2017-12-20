@@ -24,6 +24,7 @@ final class ArchivedDropItemType: Codable {
 		case createdAt
 		case updatedAt
 		case needsDeletion
+		case order
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -46,6 +47,7 @@ final class ArchivedDropItemType: Codable {
 		try v.encode(updatedAt, forKey: .updatedAt)
 		try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
 		try v.encode(needsDeletion, forKey: .needsDeletion)
+		try v.encode(order, forKey: .order)
 	}
 
 	lazy var imagePath: URL = {
@@ -68,6 +70,8 @@ final class ArchivedDropItemType: Codable {
 		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
 		displayIconTemplate = try v.decodeIfPresent(Bool.self, forKey: .displayIconTemplate) ?? false
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
+		order = try v.decodeIfPresent(Int.self, forKey: .order) ?? 0
+
 		let c = try v.decode(Date.self, forKey: .createdAt)
 		createdAt = c
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
@@ -133,6 +137,7 @@ final class ArchivedDropItemType: Codable {
 	var classWasWrapped: Bool
 	var loadingError: Error?
 	var needsDeletion: Bool
+	var order: Int
 
 	// transient / ui
 	weak var delegate: LoadCompletionDelegate?
@@ -465,10 +470,11 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	#if MAINAPP
-	init(typeIdentifier: String, parentUuid: UUID, data: Data) {
+	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
 		self.parentUuid = parentUuid
+		self.order = order
 
 		uuid = UUID()
 		displayIconPriority = 0
@@ -491,11 +497,12 @@ final class ArchivedDropItemType: Codable {
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION
-	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate) {
+	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
 		self.delegate = delegate
 		self.parentUuid = parentUuid
+		self.order = order
 
 		uuid = UUID()
 		displayIconPriority = 0
@@ -538,6 +545,7 @@ final class ArchivedDropItemType: Codable {
 		representedClass = record["representedClass"] as! String
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
+		order = record["order"] as? Int ?? 0
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
 			let path = bytesPath
 			let f = FileManager.default

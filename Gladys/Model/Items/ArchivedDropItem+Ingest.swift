@@ -34,6 +34,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 				self.loadCompleted(sender: self)
 			}
 		} else {
+			typeItems.sort { $0.order < $1.order }
 			typeItems.forEach {
 				let cp = $0.reIngest(delegate: self)
 				p.addChild(cp, withPendingUnitCount: 100)
@@ -61,19 +62,22 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 				identifiers = [limit]
 			}
 
-			func addTypeItem(type: String, encodeUIImage: Bool) {
+			func addTypeItem(type: String, encodeUIImage: Bool, order: Int) {
 				loadCount += 1
-				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self)
+				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self, order: order)
 				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage)
 				progressChildren.append(p)
 				typeItems.append(i)
 			}
 
+			var order = 0
 			for typeIdentifier in identifiers {
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
-					addTypeItem(type: "public.image", encodeUIImage: true)
+					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
+					order += 1
 				}
-				addTypeItem(type: typeIdentifier, encodeUIImage: false)
+				addTypeItem(type: typeIdentifier, encodeUIImage: false, order: order)
+				order += 1
 			}
 		}
 		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))

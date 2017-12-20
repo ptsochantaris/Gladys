@@ -185,7 +185,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		labels = (record["labels"] as? [String]) ?? []
 		needsReIngest = true
 		needsDeletion = false
-		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }
+		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }.sorted { $0.order < $1.order }
 		cloudKitRecord = record
 	}
 
