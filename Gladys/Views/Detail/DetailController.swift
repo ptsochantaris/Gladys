@@ -7,6 +7,8 @@ final class DetailController: GladysViewController,
 
 	var item: ArchivedDropItem!
 
+	private var showTypeDetails = false
+
 	@IBOutlet weak var table: UITableView!
 	@IBOutlet weak var openButton: UIBarButtonItem!
 	@IBOutlet weak var dateItem: UIBarButtonItem!
@@ -167,14 +169,15 @@ final class DetailController: GladysViewController,
 		if section == 2 {
 			return item.labels.count + 1
 		}
+		if section == 3 {
+			return item.typeItems.count
+		}
 		return 1
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return item.typeItems.count + 3
+		return (item.typeItems.count > 0 ? 1 : 0) + 3
 	}
-
-	private var draggingTypeItem = false
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section < 2 {
@@ -182,10 +185,7 @@ final class DetailController: GladysViewController,
 		} else if section == 2 {
 			return "Labels"
 		} else {
-			if draggingTypeItem {
-				return nil
-			}
-			return item.typeItems[section-3].contentDescription
+			return "Components"
 		}
 	}
 
@@ -244,7 +244,7 @@ final class DetailController: GladysViewController,
 		} else {
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-			let typeEntry = item.typeItems[indexPath.section-3]
+			let typeEntry = item.typeItems[indexPath.row]
 			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 				cell.name.alpha = 1.0
 				cell.name.text = "\"\(title)\""
@@ -266,8 +266,12 @@ final class DetailController: GladysViewController,
 				cell.inspectionCallback = nil
 				cell.viewCallback = nil
 			}
-			cell.type.text = typeEntry.typeIdentifier
 			cell.size.text = typeEntry.sizeDescription
+			if showTypeDetails {
+				cell.desc.text = typeEntry.typeIdentifier.uppercased()
+			} else {
+				cell.desc.text = typeEntry.contentDescription.uppercased()
+			}
 
 			return cell
 		}
@@ -302,7 +306,7 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 2 && indexPath.row < item.labels.count {
 			return .delete
 		}
-		if indexPath.section >= 3 {
+		if indexPath.section == 3 {
 			return .delete
 		}
 		return .none
@@ -322,10 +326,14 @@ final class DetailController: GladysViewController,
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
-		let typeItem = item.typeItems[indexPath.section - 3]
-		item.typeItems.remove(at: indexPath.section - 3)
+		let typeItem = item.typeItems[indexPath.row]
+		item.typeItems.remove(at: indexPath.row)
 		typeItem.deleteFromStorage()
-		table.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+		if item.typeItems.count == 0 {
+			table.deleteSections(IndexSet(integer: 3), with: .automatic)
+		} else {
+			table.deleteRows(at: [indexPath], with: .automatic)
+		}
 		item.needsReIngest = true
 		Model.save()
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
@@ -379,7 +387,9 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		if section < 2 {
+		if section == 3 {
+			return 6
+		} else if section < 2 {
 			return CGFloat.leastNonzeroMagnitude
 		} else {
 			return 0
@@ -397,7 +407,7 @@ final class DetailController: GladysViewController,
 				return []
 			}
 		} else {
-			let typeItem = item.typeItems[indexPath.section-3]
+			let typeItem = item.typeItems[indexPath.row]
 			session.localContext = "typeItem"
 			return [typeItem.dragItem]
 		}
@@ -408,11 +418,7 @@ final class DetailController: GladysViewController,
 			if d.section == 2, d.row < item.labels.count, session.canLoadObjects(ofClass: String.self) {
 				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 			}
-			if d.section > 2, s.localContext as? String == "typeItem" {
-				if !draggingTypeItem {
-					draggingTypeItem = true
-					fadeReloadTypes()
-				}
+			if d.section == 3, s.localContext as? String == "typeItem" {
 				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 			}
 		}
@@ -428,13 +434,6 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
 		if session.localDragSession == nil {
 			done()
-		}
-	}
-
-	func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
-		if draggingTypeItem {
-			draggingTypeItem = false
-			fadeReloadTypes()
 		}
 	}
 
@@ -483,29 +482,23 @@ final class DetailController: GladysViewController,
 					} else {
 						makeIndexAndSaveItem()
 					}
-					
-				} else if destinationIndexPath.section > 2, previousIndex.section > 2 {
-					let i1 = previousIndex.section - 3
-					let i2 = destinationIndexPath.section - 3
-					item.typeItems.swapAt(i1, i2)
+
+				} else if destinationIndexPath.section == 3, previousIndex.section == 3 {
+					item.typeItems.swapAt(previousIndex.row, destinationIndexPath.row)
 					var count = 0
 					for i in item.typeItems {
 						i.order = count
 						count += 1
 					}
-					fadeReloadTypes()
-					makeIndexAndSaveItem()
+					table.performBatchUpdates({
+						table.moveRow(at: previousIndex, to: destinationIndexPath)
+					}, completion: { _ in
+						self.makeIndexAndSaveItem()
+					})
 				}
-
 				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
 			}
 		}
-	}
-
-	private func fadeReloadTypes() {
-		table.performBatchUpdates({
-			table.reloadSections(IndexSet(integersIn: 3 ..< self.numberOfSections(in: table)), with: .automatic)
-		}, completion: nil)
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
@@ -537,6 +530,12 @@ final class DetailController: GladysViewController,
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		view.endEditing(false)
+
+		if indexPath.section == 3 {
+			showTypeDetails = !showTypeDetails
+			table.reloadData()
+		}
+
 		guard indexPath.section == 2 else {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return

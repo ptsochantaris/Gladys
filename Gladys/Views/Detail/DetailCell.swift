@@ -2,9 +2,10 @@
 import UIKit
 
 final class DetailCell: UITableViewCell {
-	@IBOutlet weak var type: UILabel!
 	@IBOutlet weak var name: UILabel!
 	@IBOutlet weak var size: UILabel!
+	@IBOutlet weak var desc: UILabel!
+
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet weak var nameHolder: UIView!
 
@@ -116,7 +117,7 @@ final class DetailCell: UITableViewCell {
 	override var accessibilityLabel: String? {
 		set {}
 		get {
-			return type.text
+			return desc.text
 		}
 	}
 
