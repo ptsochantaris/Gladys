@@ -39,11 +39,13 @@ extension Model {
 		let start = Date()
 
 		let itemsToSave = drops.filter { $0.goodToSave }
-		let itemsToEncode = itemsToSave.filter { $0.needsSaving }
-		for item in itemsToEncode {
-			item.needsSaving = false
+		let uuidsToEncode = itemsToSave.flatMap { i -> UUID? in
+			if i.needsSaving {
+				i.needsSaving = false
+				return i.uuid
+			}
+			return nil
 		}
-		log("\(itemsToSave.count) items to save, \(itemsToEncode.count) items to encode")
 
 		isSaving = true
 		needsAnotherSave = false
@@ -51,7 +53,8 @@ extension Model {
 		saveQueue.async {
 
 			do {
-				try self.coordinatedSave(allItems: itemsToSave, dirtyItems: itemsToEncode)
+				log("\(itemsToSave.count) items to save, \(uuidsToEncode.count) items to encode")
+				try self.coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
 
 			} catch {
@@ -69,7 +72,7 @@ extension Model {
 		}
 	}
 
-	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyItems: [ArchivedDropItem]) throws {
+	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 			do {
@@ -78,38 +81,23 @@ extension Model {
 					try fm.createDirectory(at: itemsDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
 				}
 
-				let uuids = allItems.map { $0.uuid }
+				let e = dirtyUuids.count > 0 ? JSONEncoder() : nil
+
 				var uuidData = Data()
-				uuidData.reserveCapacity(uuids.count * 16)
-				for uuid in uuids {
-					let t = uuid.uuid
-					uuidData.append(t.0)
-					uuidData.append(t.1)
-					uuidData.append(t.2)
-					uuidData.append(t.3)
-					uuidData.append(t.4)
-					uuidData.append(t.5)
-					uuidData.append(t.6)
-					uuidData.append(t.7)
-					uuidData.append(t.8)
-					uuidData.append(t.9)
-					uuidData.append(t.10)
-					uuidData.append(t.11)
-					uuidData.append(t.12)
-					uuidData.append(t.13)
-					uuidData.append(t.14)
-					uuidData.append(t.15)
+				uuidData.reserveCapacity(allItems.count * 16)
+				for item in allItems {
+					let u = item.uuid
+					let t = u.uuid
+					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
+					if let e = e, dirtyUuids.contains(u) {
+						try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
+					}
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
-				let e = JSONEncoder()
-				for item in dirtyItems {
-					try e.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
-				}
-
 				if let filesInDir = fm.enumerator(atPath: itemsDirectoryUrl.path)?.allObjects as? [String] {
-					if (filesInDir.count - 1) > uuids.count { // old file exists, let's find it
-						let uuidStrings = uuids.map { $0.uuidString }
+					if (filesInDir.count - 1) > allItems.count { // old file exists, let's find it
+						let uuidStrings = allItems.map { $0.uuid.uuidString }
 						for file in filesInDir {
 							if !uuidStrings.contains(file) && file != "uuids" { // old file
 								log("Removing file for non-existent item: \(file)")
