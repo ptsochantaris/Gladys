@@ -74,10 +74,19 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		switch state {
 		case .none:
 			selectedItems.forEach {
-				Model.item(uuid: $0)?.labels.append(toggle)
-				editedUUIDs.insert($0)
+				if let item = Model.item(uuid: $0) {
+					item.labels.append(toggle)
+					editedUUIDs.insert($0)
+				}
 			}
-		case .some, .all:
+		case .some:
+			selectedItems.forEach {
+				if let item = Model.item(uuid: $0), !item.labels.contains(toggle) {
+					item.labels.append(toggle)
+					editedUUIDs.insert($0)
+				}
+			}
+		case .all:
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle) {
 					item.labels.remove(at: i)
@@ -97,22 +106,31 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 	}
 
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-		if string == "\n" {
-			if let t = textField.text, !t.isEmpty {
-				textField.text = nil
-				textField.resignFirstResponder()
-				availableToggles.append(t)
-				availableToggles.sort()
-				table.reloadData()
-				if let i = availableToggles.index(of: t) {
-					let ip = IndexPath(row: i, section: 0)
-					tableView(table, didSelectRowAt: ip)
-					table.scrollToRow(at: ip, at: .middle, animated: true)
-				}
-			}
+
+		if string != "\n" {
+			return true
+		}
+
+		textField.resignFirstResponder()
+
+		guard let newTag = textField.text, !newTag.isEmpty else {
 			return false
 		}
-		return true
+
+		textField.text = nil
+		if !availableToggles.contains(newTag) {
+			availableToggles.append(newTag)
+			availableToggles.sort()
+			table.reloadData()
+		}
+		if let i = availableToggles.index(of: newTag) {
+			let ip = IndexPath(row: i, section: 0)
+			if toggleState(for: newTag) != .all {
+				tableView(table, didSelectRowAt: ip)
+			}
+			table.scrollToRow(at: ip, at: .middle, animated: true)
+		}
+		return false
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
