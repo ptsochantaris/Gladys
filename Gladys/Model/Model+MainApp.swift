@@ -444,7 +444,7 @@ extension Model {
 	}
 	
 	private class ModelFilePresenter: NSObject, NSFilePresenter {
-				
+
 		var presentedItemURL: URL? {
 			return fileUrl
 		}
@@ -454,7 +454,9 @@ extension Model {
 		}
 		
 		func presentedItemDidChange() {
-			reloadDataIfNeeded()
+			DispatchQueue.main.async {
+				reloadDataIfNeeded()
+			}
 		}
 	}
 

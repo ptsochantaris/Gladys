@@ -14,7 +14,9 @@ extension Model {
 		}
 
 		func presentedItemDidChange() {
-			reloadDataIfNeeded()
+			accessQueue.addOperation {
+				reloadDataIfNeeded()
+			}
 		}
 	}
 
