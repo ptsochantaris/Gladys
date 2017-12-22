@@ -17,8 +17,12 @@ final class Model {
 		#endif
 	}()
 
-	static var fileUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items.json")
+	static var itemsDirectoryUrl: URL = {
+		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
+	}()
+
+	static var legacyFileUrl: URL = {
+		return appStorageUrl.appendingPathComponent("items.json", isDirectory: true)
 	}()
 
 	static func modificationDate(for url: URL) -> Date? {
@@ -49,10 +53,20 @@ final class Model {
 	}
 
 	static func reloadDataIfNeeded() {
+		let fm = FileManager.default
+		if fm.fileExists(atPath: legacyFileUrl.path) {
+			load()
+		} else {
+			legacyLoad()
+		}
+	}
+
+	static private func load() {
 		var coordinationError: NSError?
 		var didLoad = false
+
 		// withoutChanges because we only signal the provider after we have saved
-		coordinator.coordinate(readingItemAt: fileUrl, options: .withoutChanges, error: &coordinationError) { url in
+		coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 
 			if FileManager.default.fileExists(atPath: url.path) {
 				do {
@@ -67,9 +81,69 @@ final class Model {
 					}
 					if shouldLoad {
 						log("Needed to reload data, new file date: \(dataFileLastModified)")
+						didLoad = true
+
+						let d = JSONDecoder()
+						let uuidData = try Data(contentsOf: url.appendingPathComponent("uuids"))
+						let uuids = try d.decode(Array<UUID>.self, from: uuidData)
+						let newDrops = try uuids.map { uuid -> ArchivedDropItem in
+							let dataPath = url.appendingPathComponent(uuid.uuidString)
+							let data = try Data(contentsOf: dataPath)
+							return try d.decode(ArchivedDropItem.self, from: data)
+						}
+						drops = newDrops
+					}
+				} catch {
+					log("Loading Error: \(error)")
+				}
+			} else {
+				log("Starting fresh store")
+			}
+		}
+		if let e = coordinationError {
+			log("Error in loading coordination: \(e.finalDescription)")
+			abort()
+		}
+
+		DispatchQueue.main.async {
+			if isStarted {
+				if didLoad {
+					reloadCompleted()
+				}
+			} else {
+				isStarted = true
+				startupComplete()
+			}
+		}
+	}
+
+	static private func legacyLoad() {
+		var coordinationError: NSError?
+		var didLoad = false
+
+		// withoutChanges because we only signal the provider after we have saved
+		coordinator.coordinate(readingItemAt: legacyFileUrl, options: .withoutChanges, error: &coordinationError) { url in
+
+			if FileManager.default.fileExists(atPath: url.path) {
+				do {
+
+					var shouldLoad = true
+					if let dataModified = modificationDate(for: url) {
+						if dataModified == dataFileLastModified {
+							shouldLoad = false
+						} else {
+							dataFileLastModified = dataModified
+						}
+					}
+					if shouldLoad {
+						log("Needed to reload data, new file date: \(dataFileLastModified)")
+						didLoad = true
+
 						let data = try Data(contentsOf: url, options: [.alwaysMapped])
 						drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
-						didLoad = true
+						for item in drops {
+							item.needsSaving = true
+						}
 					}
 				} catch {
 					log("Loading Error: \(error)")

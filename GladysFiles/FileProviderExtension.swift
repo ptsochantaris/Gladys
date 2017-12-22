@@ -57,12 +57,19 @@ final class FileProviderExtension: NSFileProviderExtension {
 		return nil
     }
 
+	private func isReservedName(_ name: String) -> Bool {
+		switch name {
+		case "items.json", "ck-delete-queue", "ck-uuid-sequence", "items":
+			return true
+		default:
+			return false
+		}
+	}
+
 	private func fileItem(at url: URL) -> FileProviderItem? {
 		let urlComponents = url.pathComponents
 		if let lastComponent = urlComponents.last, urlComponents.count > 1 {
-			if lastComponent == "items.json" || lastComponent == "ck-delete-queue" || lastComponent == "ck-uuid-sequence" {
-				return nil
-			}
+			if isReservedName(lastComponent) { return nil }
 			let lookingForTypeItem = urlComponents[urlComponents.count-2] == "shared-blob"
 			let uuidString = lookingForTypeItem ? urlComponents[urlComponents.count-3] : lastComponent
 			let identifier = NSFileProviderItemIdentifier(uuidString)
@@ -85,13 +92,10 @@ final class FileProviderExtension: NSFileProviderExtension {
     }
 
     override func itemChanged(at url: URL) {
-		switch url.lastPathComponent {
-		case "items.json", "ck-delete-queue", "ck-uuid-sequence":
-			return
-		default:
-			log("Item changed: \(url.path)")
-		}
-		
+		if isReservedName(url.lastPathComponent) { return }
+
+		log("Item changed: \(url.path)")
+
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.nonDeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			typeItem.markUpdated()

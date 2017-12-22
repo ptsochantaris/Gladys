@@ -6,7 +6,7 @@ extension Model {
 	private class ModelFilePresenter: NSObject, NSFilePresenter {
 
 		var presentedItemURL: URL? {
-			return Model.fileUrl
+			return Model.itemsDirectoryUrl
 		}
 
 		var presentedItemOperationQueue: OperationQueue {

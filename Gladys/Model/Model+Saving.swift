@@ -39,7 +39,11 @@ extension Model {
 		let start = Date()
 
 		let itemsToSave = drops.filter { $0.goodToSave }
-		log("\(itemsToSave.count) items to save")
+		let itemsToEncode = itemsToSave.filter { $0.needsSaving }
+		for item in itemsToEncode {
+			item.needsSaving = false
+		}
+		log("\(itemsToSave.count) items to save, \(itemsToEncode.count) items to encode")
 
 		isSaving = true
 		needsAnotherSave = false
@@ -47,8 +51,7 @@ extension Model {
 		saveQueue.async {
 
 			do {
-				let data = try JSONEncoder().encode(itemsToSave)
-				try self.coordinatedSave(data: data)
+				try self.coordinatedSave(allItems: itemsToSave, dirtyItems: itemsToEncode)
 				log("Saved: \(-start.timeIntervalSinceNow) seconds")
 
 			} catch {
@@ -66,11 +69,34 @@ extension Model {
 		}
 	}
 
-	private static func coordinatedSave(data: Data) throws {
+	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyItems: [ArchivedDropItem]) throws {
 		var coordinationError: NSError?
-		coordinator.coordinate(writingItemAt: fileUrl, options: [], error: &coordinationError) { url in
+		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 			do {
-				try data.write(to: url, options: [.atomic])
+				let fm = FileManager.default
+				if !fm.fileExists(atPath: itemsDirectoryUrl.path) {
+					try fm.createDirectory(at: itemsDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
+				}
+
+				let uuids = allItems.map { $0.uuid }
+				let e = JSONEncoder()
+				try e.encode(uuids).write(to: url.appendingPathComponent("uuids"), options: [.atomic])
+				for item in dirtyItems {
+					try e.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: [.atomic])
+				}
+
+				if let filesInDir = fm.enumerator(atPath: itemsDirectoryUrl.path)?.allObjects as? [String] {
+					if (filesInDir.count - 1) > uuids.count { // old file exists, let's find it
+						let uuidStrings = uuids.map { $0.uuidString }
+						for file in filesInDir {
+							if !uuidStrings.contains(file) && file != "uuids" { // old file
+								log("Removing file for non-existent item: \(file)")
+								try? fm.removeItem(atPath: itemsDirectoryUrl.appendingPathComponent(file).path)
+							}
+						}
+					}
+				}
+
 				if let dataModified = modificationDate(for: url) {
 					dataFileLastModified = dataModified
 				}

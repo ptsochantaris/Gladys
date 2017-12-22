@@ -446,7 +446,7 @@ extension Model {
 	private class ModelFilePresenter: NSObject, NSFilePresenter {
 
 		var presentedItemURL: URL? {
-			return fileUrl
+			return itemsDirectoryUrl
 		}
 		
 		var presentedItemOperationQueue: OperationQueue {

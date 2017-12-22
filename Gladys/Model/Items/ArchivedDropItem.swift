@@ -6,17 +6,47 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	let suggestedName: String?
 	let uuid: UUID
-	var typeItems: [ArchivedDropItemType]
 	let createdAt:  Date
-	var updatedAt: Date
-	var needsReIngest: Bool
-	var needsDeletion: Bool
-	var note: String
-	var titleOverride: String
-	var labels: [String]
+
+	var typeItems: [ArchivedDropItemType] {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var updatedAt: Date {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var needsReIngest: Bool {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var needsDeletion: Bool {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var note: String {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var titleOverride: String {
+		didSet {
+			needsSaving = true
+		}
+	}
+	var labels: [String] {
+		didSet {
+			needsSaving = true
+		}
+	}
 
 	// Transient
 	var loadingProgress: Progress?
+	var needsSaving: Bool
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -58,6 +88,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
+		needsSaving = false
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -168,6 +199,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			note = overrides?.note ?? ""
 			labels = overrides?.labels ?? []
 			typeItems = [ArchivedDropItemType]()
+			needsSaving = true
 	
 			loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 		}
@@ -184,6 +216,7 @@ final class ArchivedDropItem: Codable, Equatable {
 		note = record["note"] as! String
 		labels = (record["labels"] as? [String]) ?? []
 		needsReIngest = true
+		needsSaving = true
 		needsDeletion = false
 		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }.sorted { $0.order < $1.order }
 		cloudKitRecord = record
