@@ -54,7 +54,7 @@ final class Model {
 
 	static func reloadDataIfNeeded() {
 		let fm = FileManager.default
-		if fm.fileExists(atPath: legacyFileUrl.path) {
+		if fm.fileExists(atPath: itemsDirectoryUrl.path) {
 			load()
 		} else {
 			legacyLoad()
@@ -83,13 +83,28 @@ final class Model {
 						log("Needed to reload data, new file date: \(dataFileLastModified)")
 						didLoad = true
 
-						let d = JSONDecoder()
-						let uuidData = try Data(contentsOf: url.appendingPathComponent("uuids"))
-						let uuids = try d.decode(Array<UUID>.self, from: uuidData)
-						let newDrops = try uuids.map { uuid -> ArchivedDropItem in
+						let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
+						var uuids = [UUID]()
+						uuids.reserveCapacity(d.count / 16)
+						var c = 0
+						while c < d.count {
+							let d0 = d[c]; let d1 = d[c+1]; let d2 = d[c+2]; let d3 = d[c+3]
+							let d4 = d[c+4]; let d5 = d[c+5]; let d6 = d[c+6]; let d7 = d[c+7]
+							let d8 = d[c+8]; let d9 = d[c+9]; let d10 = d[c+10]; let d11 = d[c+11]
+							let d12 = d[c+12]; let d13 = d[c+13]; let d14 = d[c+14]; let d15 = d[c+15]
+							let u = UUID(uuid: (d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15))
+							uuids.append(u)
+							c += 16
+						}
+
+						let decoder = JSONDecoder()
+						let newDrops = try uuids.flatMap { uuid -> ArchivedDropItem? in
 							let dataPath = url.appendingPathComponent(uuid.uuidString)
-							let data = try Data(contentsOf: dataPath)
-							return try d.decode(ArchivedDropItem.self, from: data)
+							if let data = try? Data(contentsOf: dataPath) {
+								return try decoder.decode(ArchivedDropItem.self, from: data)
+							} else {
+								return nil
+							}
 						}
 						drops = newDrops
 					}

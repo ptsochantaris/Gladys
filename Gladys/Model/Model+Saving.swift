@@ -79,10 +79,32 @@ extension Model {
 				}
 
 				let uuids = allItems.map { $0.uuid }
+				var uuidData = Data()
+				uuidData.reserveCapacity(uuids.count * 16)
+				for uuid in uuids {
+					let t = uuid.uuid
+					uuidData.append(t.0)
+					uuidData.append(t.1)
+					uuidData.append(t.2)
+					uuidData.append(t.3)
+					uuidData.append(t.4)
+					uuidData.append(t.5)
+					uuidData.append(t.6)
+					uuidData.append(t.7)
+					uuidData.append(t.8)
+					uuidData.append(t.9)
+					uuidData.append(t.10)
+					uuidData.append(t.11)
+					uuidData.append(t.12)
+					uuidData.append(t.13)
+					uuidData.append(t.14)
+					uuidData.append(t.15)
+				}
+				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
+
 				let e = JSONEncoder()
-				try e.encode(uuids).write(to: url.appendingPathComponent("uuids"), options: [.atomic])
 				for item in dirtyItems {
-					try e.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: [.atomic])
+					try e.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
 				}
 
 				if let filesInDir = fm.enumerator(atPath: itemsDirectoryUrl.path)?.allObjects as? [String] {
