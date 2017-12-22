@@ -623,15 +623,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func migration(to currentBuild: String) {
-		if CloudManager.syncSwitchedOn {
-			if CloudManager.lastiCloudAccount == nil {
-				CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-			}
-			CloudManager.migrate()
+		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
+			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 		}
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
-			UserDefaults.standard.set(currentBuild, forKey: "LastRanVersion")
-			UserDefaults.standard.synchronize()
+			let d = UserDefaults.standard
+			d.set(currentBuild, forKey: "LastRanVersion")
+			d.synchronize()
 		})
 	}
 

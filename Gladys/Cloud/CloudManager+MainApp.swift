@@ -126,30 +126,6 @@ extension CloudManager {
 		go(ms)
 	}
 
-	private static var zoneSubscriptionOperation: CKModifySubscriptionsOperation {
-		let notificationInfo = CKNotificationInfo()
-		notificationInfo.shouldSendContentAvailable = true
-		notificationInfo.shouldBadge = true
-
-		let subscription = CKDatabaseSubscription(subscriptionID: "private-changes")
-		subscription.notificationInfo = notificationInfo
-
-		return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
-	}
-
-	static func migrate() {
-		guard syncSwitchedOn else { return }
-		let subscribeToZone = zoneSubscriptionOperation
-		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
-			if let error = error {
-				log("Error while updating zone subscription: \(error.finalDescription)")
-			} else {
-				log("Zone subscription migrated successfully")
-			}
-		}
-		go(subscribeToZone)
-	}
-
 	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
 
 		UIApplication.shared.registerForRemoteNotifications()
@@ -165,7 +141,14 @@ extension CloudManager {
 			}
 		}
 
-		let subscribeToZone = zoneSubscriptionOperation
+		let notificationInfo = CKNotificationInfo()
+		notificationInfo.shouldSendContentAvailable = true
+		notificationInfo.shouldBadge = true
+
+		let subscription = CKDatabaseSubscription(subscriptionID: "private-changes")
+		subscription.notificationInfo = notificationInfo
+
+		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
 		subscribeToZone.addDependency(createZone)
 		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
@@ -255,7 +238,8 @@ extension CloudManager {
 
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let o = CKFetchRecordZoneChangesOptions()
-		o.previousServerChangeToken = zoneChangeToken
+		let previousToken = zoneChangeToken
+		o.previousServerChangeToken = previousToken
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			if recordType == "ArchivedDropItem" {
@@ -384,10 +368,12 @@ extension CloudManager {
 					}
 					Model.saveIsDueToSyncFetch = true
 					Model.save()
-				} else {
+				} else if previousToken != token {
 					// it was only a position record
 					log("Comitting zone change token")
 					self.zoneChangeToken = token
+				} else {
+					log("No updates available")
 				}
 			}
 		}

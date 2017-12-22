@@ -83,6 +83,8 @@ final class Model {
 						log("Needed to reload data, new file date: \(dataFileLastModified)")
 						didLoad = true
 
+						let start = Date()
+
 						let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
 						var uuids = [UUID]()
 						uuids.reserveCapacity(d.count / 16)
@@ -107,6 +109,7 @@ final class Model {
 							}
 						}
 						drops = newDrops
+						log("Load time: \(-start.timeIntervalSinceNow) seconds")
 					}
 				} catch {
 					log("Loading Error: \(error)")
