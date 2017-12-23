@@ -276,6 +276,24 @@ extension Model {
 		}
 	}
 
+	static private func terms(for f: String?) -> [String]? {
+		guard let f = f?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
+
+		var terms = [String]()
+		do {
+			let regex = try NSRegularExpression(pattern: "(\\b\\S+?\\b|\\B\\\".+?\\\"\\B)")
+			regex.matches(in: f, range: NSRange(f.startIndex..., in: f)).forEach {
+				let s = f[Range($0.range, in: f)!]
+				let term = s.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+				let criterion = "\"*\(term)*\"cd"
+				terms.append("title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)")
+			}
+		} catch {
+			log("Warning regex error: \(error.localizedDescription)")
+		}
+		return terms
+	}
+
 	@discardableResult
 	static func forceUpdateFilter(with newValue: String? = modelFilter, signalUpdate: Bool) -> Bool {
 		currentFilterQuery = nil
@@ -284,7 +302,7 @@ extension Model {
 		let previouslyVisibleUuids = visibleUuids
 		var filtering = false
 
-		if let f = filter, !f.isEmpty {
+		if let terms = terms(for: filter), !terms.isEmpty {
 
 			filtering = true
 
@@ -293,8 +311,14 @@ extension Model {
 			let group = DispatchGroup()
 			group.enter()
 
-			let criterion = "\"*\(f)*\"cd"
-			let q = CSSearchQuery(queryString: "title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)", attributes: nil)
+			let queryString: String
+			if 	terms.count > 1 {
+				queryString = "(" + terms.joined(separator: ") && (") + ")"
+			} else {
+				queryString = terms.first ?? ""
+			}
+
+			let q = CSSearchQuery(queryString: queryString, attributes: nil)
 			q.foundItemsHandler = { items in
 				let uuids = items.map { $0.uniqueIdentifier }
 				replacementResults.append(contentsOf: uuids)
