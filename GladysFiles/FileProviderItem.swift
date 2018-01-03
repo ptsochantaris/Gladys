@@ -7,7 +7,8 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 	let typeItem: ArchivedDropItemType?
 
 	init(_ i: ArchivedDropItem) {
-		if i.typeItems.count == 1 {
+		let count = i.typeItems.count
+		if count == 1 {
 			dropItem = i
 			typeItem = i.typeItems.first
 		} else {

@@ -149,7 +149,7 @@ final class Model {
 						}
 					}
 					if shouldLoad {
-						log("Needed to reload data, new file date: \(dataFileLastModified)")
+						log("LEGACY: Needed to reload data, new file date: \(dataFileLastModified)")
 						didLoad = true
 
 						let data = try Data(contentsOf: url, options: [.alwaysMapped])
@@ -159,10 +159,10 @@ final class Model {
 						}
 					}
 				} catch {
-					log("Loading Error: \(error)")
+					log("LEGACY: Loading Error: \(error)")
 				}
 			} else {
-				log("Starting fresh store")
+				log("LEGACY: Starting fresh store")
 			}
 		}
 		if let e = coordinationError {
