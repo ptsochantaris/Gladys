@@ -3,7 +3,7 @@ import FileProvider
 
 extension Model {
 
-	private class ModelFilePresenter: NSObject, NSFilePresenter {
+	class ModelFilePresenter: NSObject, NSFilePresenter {
 
 		var presentedItemURL: URL? {
 			return Model.itemsDirectoryUrl
@@ -20,8 +20,6 @@ extension Model {
 		}
 	}
 
-	private static let fileExtensionPresenter = ModelFilePresenter()
-
 	static var coordinator: NSFileCoordinator {
 		let coordinator = NSFileCoordinator(filePresenter: nil)
 		coordinator.purposeIdentifier = NSFileProviderManager.default.providerIdentifier
@@ -30,10 +28,7 @@ extension Model {
 
 	static func prepareToSave() {}
 	static func saveComplete() {}
-
-	static func startupComplete() {
-		NSFileCoordinator.addFilePresenter(fileExtensionPresenter)
-	}
+	static func startupComplete() {}
 
 	static func signalRootChange() {
 		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in

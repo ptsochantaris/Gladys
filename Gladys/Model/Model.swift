@@ -117,6 +117,8 @@ final class Model {
 						}
 						drops = newDrops
 						log("Load time: \(-start.timeIntervalSinceNow) seconds")
+					} else {
+						log("No need to reload data")
 					}
 				} catch {
 					log("Loading Error: \(error)")
@@ -167,6 +169,8 @@ final class Model {
 
 					let data = try Data(contentsOf: legacyFileUrl, options: [.alwaysMapped])
 					drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+				} else {
+					log("LEGACY: No need to reload data")
 				}
 			} catch {
 				log("Error in legacy load: \(error.finalDescription)")

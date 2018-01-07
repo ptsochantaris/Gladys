@@ -15,11 +15,26 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0.gladysModificationDate ?? .distantPast) })
 	}
 
+	private var myFilePresenter: Model.ModelFilePresenter?
+
 	init(uuid: String) {
 		self.uuid = uuid
 		super.init()
+		if !Model.legacyMode {
+			myFilePresenter = Model.ModelFilePresenter()
+			NSFileCoordinator.addFilePresenter(myFilePresenter!)
+		}
+		Model.reloadDataIfNeeded()
 		refreshCurrentDates()
 		log("Enumerator for \(uuid) started")
+	}
+
+	deinit {
+		if let m = myFilePresenter {
+			NSFileCoordinator.removeFilePresenter(m)
+			myFilePresenter = nil
+		}
+		log("Enumerator for \(uuid) shut down")
 	}
 
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
@@ -82,9 +97,5 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 	private func incrementAnchor() {
 		let newAnchorCount = Int64(String(data: currentAnchor.rawValue, encoding: .utf8)!)! + 1
 		currentAnchor = NSFileProviderSyncAnchor(String(newAnchorCount).data(using: .utf8)!)
-	}
-
-	deinit {
-		log("Enumerator for \(uuid) shut down")
 	}
 }
