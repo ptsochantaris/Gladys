@@ -1745,10 +1745,10 @@
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6e741146-4c74-475d-af3f-84613a2189d0";
-				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles Dev";
+				PROVISIONING_PROFILE = "b4474a1d-6a35-4de9-9b4e-35bc5bab47de";
+				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles2 Dev";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG FILEPROVIDER";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1907,10 +1907,10 @@
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0e1626f4-0a94-4885-923d-83544748f489";
-				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles App Store";
+				PROVISIONING_PROFILE = "c9e26690-5e39-4a24-b83c-0a23526dc670";
+				PROVISIONING_PROFILE_SPECIFIER = "GladysFiles2 App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = FILEPROVIDER;
 				TARGETED_DEVICE_FAMILY = "1,2";

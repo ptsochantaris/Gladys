@@ -8,6 +8,7 @@ final class Model {
 
 	static var drops = [ArchivedDropItem]()
 	static var dataFileLastModified = Date.distantPast
+	static var legacyFileLastModified = Date.distantPast
 
 	static var appStorageUrl: URL = {
 		#if MAINAPP || FILEPROVIDER
@@ -22,7 +23,7 @@ final class Model {
 	}()
 
 	static var legacyFileUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items.json", isDirectory: true)
+		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
 	}()
 
 	static func modificationDate(for url: URL) -> Date? {
@@ -50,6 +51,7 @@ final class Model {
 	static func reset() {
 		drops.removeAll(keepingCapacity: false)
 		dataFileLastModified = .distantPast
+		legacyFileLastModified = .distantPast
 	}
 
 	static func reloadDataIfNeeded() {
@@ -131,43 +133,34 @@ final class Model {
 	}
 
 	static private func legacyLoad() {
-		var coordinationError: NSError?
 		var didLoad = false
 
-		// withoutChanges because we only signal the provider after we have saved
-		coordinator.coordinate(readingItemAt: legacyFileUrl, options: .withoutChanges, error: &coordinationError) { url in
-
-			if FileManager.default.fileExists(atPath: url.path) {
-				do {
-
-					var shouldLoad = true
-					if let dataModified = modificationDate(for: url) {
-						if dataModified == dataFileLastModified {
-							shouldLoad = false
-						} else {
-							dataFileLastModified = dataModified
-						}
+		if !FileManager.default.fileExists(atPath: legacyFileUrl.path) {
+			log("LEGACY: Starting fresh store")
+		} else {
+			do {
+				var shouldLoad = true
+				if let dataModified = modificationDate(for: legacyFileUrl) {
+					if dataModified == legacyFileLastModified {
+						shouldLoad = false
+					} else {
+						legacyFileLastModified = dataModified
 					}
-					if shouldLoad {
-						log("LEGACY: Needed to reload data, new file date: \(dataFileLastModified)")
-						didLoad = true
-
-						let data = try Data(contentsOf: url, options: [.alwaysMapped])
-						drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
-						for item in drops {
-							item.needsSaving = true
-						}
-					}
-				} catch {
-					log("LEGACY: Loading Error: \(error)")
 				}
-			} else {
-				log("LEGACY: Starting fresh store")
+				if shouldLoad {
+					log("LEGACY: Needed to reload data, new file date: \(legacyFileLastModified)")
+					didLoad = true
+
+					let data = try Data(contentsOf: legacyFileUrl, options: [.alwaysMapped])
+					drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+					for item in drops {
+						item.needsSaving = true
+					}
+				}
+			} catch {
+				log("Error in legacy load: \(error.finalDescription)")
+				abort()
 			}
-		}
-		if let e = coordinationError {
-			log("Error in loading coordination: \(e.finalDescription)")
-			abort()
 		}
 
 		DispatchQueue.main.async {
