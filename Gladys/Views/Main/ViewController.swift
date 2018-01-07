@@ -631,6 +631,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			d.set(currentBuild, forKey: "LastRanVersion")
 			d.synchronize()
 		})
+		if Model.drops.contains(where: { $0.needsSaving }) {
+			Model.save()
+		}
 	}
 
 	private var lowMemoryMode = false

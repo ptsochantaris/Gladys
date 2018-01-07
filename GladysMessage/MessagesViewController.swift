@@ -24,13 +24,13 @@ UICollectionViewDataSource, UISearchBarDelegate {
 
 	private func itemsPerRow(for size: CGSize) -> Int {
 		if size.width < 320 {
-			return min(2, Model.drops.count)
+			return 2
 		} else if size.width < 400 {
-			return min(3, Model.drops.count)
+			return 3
 		} else if size.width < 1000 {
-			return min(4, Model.drops.count)
+			return 4
 		} else {
-			return min(5, Model.drops.count)
+			return 5
 		}
 	}
 
@@ -48,9 +48,9 @@ UICollectionViewDataSource, UISearchBarDelegate {
 
 	private var filteredDrops: [ArchivedDropItem] {
 		if let t = searchBar.text, !t.isEmpty {
-			return Model.drops.filter { $0.oneTitle.localizedCaseInsensitiveContains(t) }
+			return Model.nonDeletedDrops.filter { $0.oneTitle.localizedCaseInsensitiveContains(t) }
 		} else {
-			return Model.drops
+			return Model.nonDeletedDrops
 		}
 	}
 
@@ -98,7 +98,14 @@ UICollectionViewDataSource, UISearchBarDelegate {
 			self?.searchUpdated()
 		}
 		itemsView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ExternalDataUpdated, object: nil)
     }
+
+	@objc private func externalDataUpdated() {
+		emptyLabel.isHidden = Model.nonDeletedDrops.count > 0
+		updateItemSize(for: view.bounds.size)
+		itemsView.reloadData()
+	}
     
 	deinit {
 		log("iMessage app dismissed")
@@ -107,7 +114,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	override func willBecomeActive(with conversation: MSConversation) {
 		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
-		emptyLabel.isHidden = Model.drops.count > 0
+		emptyLabel.isHidden = Model.nonDeletedDrops.count > 0
 		updateItemSize(for: view.bounds.size)
 		searchBar.text = lastFilter
 		itemsView.reloadData()

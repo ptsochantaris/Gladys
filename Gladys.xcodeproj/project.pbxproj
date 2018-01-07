@@ -43,6 +43,7 @@
 		1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1619E8251EFF3B54000087DD /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		162027911FA1A9FC00E8D964 /* Types+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162027901FA1A9FC00E8D964 /* Types+MainApp.swift */; };
+		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -69,7 +70,6 @@
 		1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1657B8BF1FD41E6B00EC480D /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1657B8C01FD41E9A00EC480D /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
-		1657B8C11FD41EAD00EC480D /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C31FD4329300EC480D /* MessageCell.swift */; };
 		1657B8C71FD4381700EC480D /* ArchivedDropItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedDropItem+Messages.swift */; };
 		1657B8CC1FD4482A00EC480D /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8CB1FD4482A00EC480D /* ArchivedDropItemType+Preview.swift */; };
@@ -315,6 +315,7 @@
 		1619E81A1EFF3745000087DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1619E81B1EFF3745000087DD /* GladysFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysFiles.entitlements; sourceTree = "<group>"; };
 		162027901FA1A9FC00E8D964 /* Types+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Types+MainApp.swift"; sourceTree = "<group>"; };
+		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -631,10 +632,11 @@
 			children = (
 				1657B8C21FD4248800EC480D /* GladysMessage.entitlements */,
 				1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */,
+				1657B8C31FD4329300EC480D /* MessageCell.swift */,
+				1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */,
 				1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */,
 				1657B8B41FD41C1C00EC480D /* Assets.xcassets */,
 				1657B8B61FD41C1C00EC480D /* Info.plist */,
-				1657B8C31FD4329300EC480D /* MessageCell.swift */,
 			);
 			path = GladysMessage;
 			sourceTree = "<group>";
@@ -1387,13 +1389,13 @@
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
 				1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */,
 				1657B8BF1FD41E6B00EC480D /* ArchivedDropItemType.swift in Sources */,
-				1657B8C11FD41EAD00EC480D /* Model+SimpleCoordinator.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedDropItem+Messages.swift in Sources */,
+				1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */,
 				1657B8D21FD4494D00EC480D /* ArchivedDropItemType+Copy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
