@@ -109,6 +109,10 @@ extension Model {
 					}
 				}
 
+				if fm.fileExists(atPath: legacyFileUrl.path) {
+					try? fm.removeItem(at: legacyFileUrl)
+				}
+
 				if let dataModified = modificationDate(for: url) {
 					dataFileLastModified = dataModified
 				}

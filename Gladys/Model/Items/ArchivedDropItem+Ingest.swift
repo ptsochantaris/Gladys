@@ -34,7 +34,9 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 				self.loadCompleted(sender: self)
 			}
 		} else {
-			typeItems.sort { $0.order < $1.order }
+			if typeItems.count > 1 && typeItems.filter({ $0.order != 0 }).count > 0 { // some type items have an order set, enforce it
+				typeItems.sort { $0.order < $1.order }
+			}
 			typeItems.forEach {
 				let cp = $0.reIngest(delegate: self)
 				p.addChild(cp, withPendingUnitCount: 100)

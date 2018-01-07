@@ -27,6 +27,14 @@ extension ArchivedDropItem {
 		}
 	}
 
+	func renumberTypeItems() {
+		var count = 0
+		for i in typeItems {
+			i.order = count
+			count += 1
+		}
+	}
+
 	var shouldDisplayLoading: Bool {
 		return needsReIngest || loadingProgress != nil
 	}

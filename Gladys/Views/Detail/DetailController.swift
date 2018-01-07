@@ -334,6 +334,7 @@ final class DetailController: GladysViewController,
 		} else {
 			table.deleteRows(at: [indexPath], with: .automatic)
 		}
+		item.renumberTypeItems()
 		item.needsReIngest = true
 		Model.save()
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
@@ -485,11 +486,7 @@ final class DetailController: GladysViewController,
 
 				} else if destinationIndexPath.section == 3, previousIndex.section == 3 {
 					item.typeItems.swapAt(previousIndex.row, destinationIndexPath.row)
-					var count = 0
-					for i in item.typeItems {
-						i.order = count
-						count += 1
-					}
+					item.renumberTypeItems()
 					table.performBatchUpdates({
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
 					}, completion: { _ in
