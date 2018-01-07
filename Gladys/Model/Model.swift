@@ -9,6 +9,13 @@ final class Model {
 	static var drops = [ArchivedDropItem]()
 	static var dataFileLastModified = Date.distantPast
 	static var legacyFileLastModified = Date.distantPast
+	static var legacyMode = true {
+		didSet {
+			if legacyMode != oldValue {
+				log("Model legacy mode changed to: \(legacyMode)")
+			}
+		}
+	}
 
 	static var appStorageUrl: URL = {
 		#if MAINAPP || FILEPROVIDER
@@ -64,6 +71,9 @@ final class Model {
 	}
 
 	static private func load() {
+
+		legacyMode = false
+
 		var coordinationError: NSError?
 		var didLoad = false
 
@@ -112,6 +122,7 @@ final class Model {
 					log("Loading Error: \(error)")
 				}
 			} else {
+				drops = []
 				log("Starting fresh store")
 			}
 		}
@@ -136,7 +147,9 @@ final class Model {
 		var didLoad = false
 
 		if !FileManager.default.fileExists(atPath: legacyFileUrl.path) {
-			log("LEGACY: Starting fresh store")
+			drops = []
+			legacyMode = false
+			log("Starting fresh store")
 		} else {
 			do {
 				var shouldLoad = true
@@ -150,12 +163,10 @@ final class Model {
 				if shouldLoad {
 					log("LEGACY: Needed to reload data, new file date: \(legacyFileLastModified)")
 					didLoad = true
+					legacyMode = true
 
 					let data = try Data(contentsOf: legacyFileUrl, options: [.alwaysMapped])
 					drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
-					for item in drops {
-						item.needsSaving = true
-					}
 				}
 			} catch {
 				log("Error in legacy load: \(error.finalDescription)")

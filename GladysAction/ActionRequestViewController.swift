@@ -34,6 +34,11 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 		Model.reset()
 		Model.reloadDataIfNeeded()
+
+		if Model.legacyMode {
+			statusLabel?.text = "Please run Gladys once after the update, the data store needs to be updated before adding new items through this extension."
+			return
+		}
 		
 		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {

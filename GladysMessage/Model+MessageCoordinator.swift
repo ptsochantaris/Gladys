@@ -41,7 +41,7 @@ extension Model {
 		NSFileCoordinator.addFilePresenter(messagesPresenter)
 	}
 
-	static var nonDeletedDrops: [ArchivedDropItem] {
+	static var visibleDrops: [ArchivedDropItem] {
 		return drops.filter { !$0.needsDeletion }
 	}
 }

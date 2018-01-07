@@ -626,14 +626,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
 			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 		}
+		if Model.legacyMode {
+			log("Migrating legacy data store")
+			for i in Model.drops {
+				i.needsSaving = true
+			}
+			Model.save()
+			Model.legacyMode = false
+			log("Migration done")
+		}
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			let d = UserDefaults.standard
 			d.set(currentBuild, forKey: "LastRanVersion")
 			d.synchronize()
 		})
-		if Model.drops.contains(where: { $0.needsSaving }) {
-			Model.save()
-		}
 	}
 
 	private var lowMemoryMode = false

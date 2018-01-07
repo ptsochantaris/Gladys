@@ -48,9 +48,9 @@ UICollectionViewDataSource, UISearchBarDelegate {
 
 	private var filteredDrops: [ArchivedDropItem] {
 		if let t = searchBar.text, !t.isEmpty {
-			return Model.nonDeletedDrops.filter { $0.oneTitle.localizedCaseInsensitiveContains(t) }
+			return Model.visibleDrops.filter { $0.oneTitle.localizedCaseInsensitiveContains(t) }
 		} else {
-			return Model.nonDeletedDrops
+			return Model.visibleDrops
 		}
 	}
 
@@ -102,7 +102,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
     }
 
 	@objc private func externalDataUpdated() {
-		emptyLabel.isHidden = Model.nonDeletedDrops.count > 0
+		emptyLabel.isHidden = Model.visibleDrops.count > 0
 		updateItemSize(for: view.bounds.size)
 		itemsView.reloadData()
 	}
@@ -114,7 +114,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 	override func willBecomeActive(with conversation: MSConversation) {
 		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
-		emptyLabel.isHidden = Model.nonDeletedDrops.count > 0
+		emptyLabel.isHidden = Model.visibleDrops.count > 0
 		updateItemSize(for: view.bounds.size)
 		searchBar.text = lastFilter
 		itemsView.reloadData()

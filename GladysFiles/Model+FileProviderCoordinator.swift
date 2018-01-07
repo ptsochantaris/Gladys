@@ -10,23 +10,17 @@ extension Model {
 		}
 
 		var presentedItemOperationQueue: OperationQueue {
-			return accessQueue
+			return OperationQueue.main
 		}
 
 		func presentedItemDidChange() {
-			accessQueue.addOperation {
+			OperationQueue.main.addOperation {
 				reloadDataIfNeeded()
 			}
 		}
 	}
 
 	private static let fileExtensionPresenter = ModelFilePresenter()
-	static let accessQueue: OperationQueue = {
-		let o = OperationQueue()
-		o.maxConcurrentOperationCount = 1
-		o.qualityOfService = .background
-		return o
-	}()
 
 	static var coordinator: NSFileCoordinator {
 		let coordinator = NSFileCoordinator(filePresenter: nil)
@@ -62,7 +56,10 @@ extension Model {
 		Model.signalWorkingSetChange()
 	}
 
-	static var nonDeletedDrops: [ArchivedDropItem] {
+	static var visibleDrops: [ArchivedDropItem] {
+		if Model.legacyMode {
+			return []
+		}
 		return drops.filter { !$0.needsDeletion }
 	}
 }

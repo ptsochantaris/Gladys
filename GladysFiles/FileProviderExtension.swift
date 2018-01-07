@@ -14,7 +14,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		let uuid = UUID(uuidString: identifier.rawValue)
 
-		let drops = Model.nonDeletedDrops
+		let drops = Model.visibleDrops
 
 		for item in drops {
 			if item.uuid == uuid {
@@ -96,7 +96,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		log("Item changed: \(url.path)")
 
-		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.nonDeletedDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
+		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.visibleDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			typeItem.markUpdated()
 			parent.markUpdated()
@@ -188,6 +188,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				let item = Model.drops[i]
 				if let typeUuid = typeUuid, item.typeItems.count > 1, let typeItem = item.typeItems.first(where: { $0.uuid == typeUuid }) { // we picked a component to delete and it wasn't the last one
 					typeItem.needsDeletion = true
+					item.needsSaving = true
 				} else {
 					item.needsDeletion = true
 				}
