@@ -111,9 +111,15 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		log("iMessage app dismissed")
 	}
 
+	private var filePresenter: ModelFilePresenter?
+
 	override func willBecomeActive(with conversation: MSConversation) {
 		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
+		if filePresenter == nil && !Model.legacyMode {
+			filePresenter = ModelFilePresenter()
+			NSFileCoordinator.addFilePresenter(filePresenter!)
+		}
 		emptyLabel.isHidden = Model.visibleDrops.count > 0
 		updateItemSize(for: view.bounds.size)
 		searchBar.text = lastFilter
@@ -125,6 +131,10 @@ UICollectionViewDataSource, UISearchBarDelegate {
 
 	override func willResignActive(with conversation: MSConversation) {
 		super.willResignActive(with: conversation)
+		if let m = filePresenter {
+			NSFileCoordinator.removeFilePresenter(m)
+			filePresenter = nil
+		}
 		messagesCurrentOffset = itemsView.contentOffset
 		lastFilter = searchBar.text
 		Model.reset()

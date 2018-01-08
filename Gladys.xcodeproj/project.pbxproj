@@ -117,6 +117,9 @@
 		169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */; };
 		169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
+		169C07DB2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
+		169C07DC2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
+		169C07DE2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		169E5E061FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */; };
 		169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
@@ -378,6 +381,7 @@
 		169763191F15680600537776 /* ArchivedDropItem+Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Tagging.swift"; sourceTree = "<group>"; };
 		169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+UI.swift"; sourceTree = "<group>"; };
 		169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Indexing.swift"; sourceTree = "<group>"; };
+		169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFilePresenter.swift; sourceTree = "<group>"; };
 		169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Sharing.swift"; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -545,6 +549,7 @@
 				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
 				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
 				162027901FA1A9FC00E8D964 /* Types+MainApp.swift */,
+				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1333,6 +1338,7 @@
 				1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */,
 				16EDB37F1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1619E8191EFF3745000087DD /* DropItemEnumerator.swift in Sources */,
+				169C07DC2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1619E8221EFF3A36000087DD /* Model.swift in Sources */,
 				169E5E061FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
 				1697631A1F15680600537776 /* ArchivedDropItem+Tagging.swift in Sources */,
@@ -1390,6 +1396,7 @@
 				1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */,
 				1657B8BF1FD41E6B00EC480D /* ArchivedDropItemType.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
+				169C07DE2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */,
@@ -1458,6 +1465,7 @@
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				16E781BC1FE97AD90071ED9C /* LabelEditorController.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+MainApp.swift in Sources */,
+				169C07DB2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwtichHolder.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,

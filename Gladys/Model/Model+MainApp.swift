@@ -466,23 +466,6 @@ extension Model {
 	private static func backgrounded() {
 		NSFileCoordinator.removeFilePresenter(filePresenter)
 	}
-	
-	private class ModelFilePresenter: NSObject, NSFilePresenter {
-
-		var presentedItemURL: URL? {
-			return itemsDirectoryUrl
-		}
-		
-		var presentedItemOperationQueue: OperationQueue {
-			return OperationQueue.main
-		}
-		
-		func presentedItemDidChange() {
-			DispatchQueue.main.async {
-				reloadDataIfNeeded()
-			}
-		}
-	}
 
 	static func reloadCompleted() {
 		rebuildLabels()

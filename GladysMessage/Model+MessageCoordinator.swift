@@ -10,35 +10,15 @@ import Foundation
 
 extension Model {
 
-	private class ModelFilePresenter: NSObject, NSFilePresenter {
-
-		var presentedItemURL: URL? {
-			return Model.itemsDirectoryUrl
-		}
-
-		var presentedItemOperationQueue: OperationQueue {
-			return OperationQueue.main
-		}
-
-		func presentedItemDidChange() {
-			reloadDataIfNeeded()
-		}
-	}
-
-	private static let messagesPresenter = ModelFilePresenter()
-
 	static var coordinator: NSFileCoordinator {
 		return NSFileCoordinator(filePresenter: nil)
 	}
 
 	static func prepareToSave() {}
 	static func saveComplete() {}
+	static func startupComplete() {}
 	static func reloadCompleted() {
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-	}
-
-	static func startupComplete() {
-		NSFileCoordinator.addFilePresenter(messagesPresenter)
 	}
 
 	static var visibleDrops: [ArchivedDropItem] {

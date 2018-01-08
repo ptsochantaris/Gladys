@@ -369,7 +369,10 @@ extension CloudManager {
 					Model.saveIsDueToSyncFetch = true
 					Model.save()
 				} else if previousToken != token {
-					// it was only a position record
+					// it was only a position record, most likely
+					if updatedSequence {
+						Model.saveIndexOnly()
+					}
 					log("Comitting zone change token")
 					self.zoneChangeToken = token
 				} else {

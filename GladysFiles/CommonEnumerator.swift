@@ -15,14 +15,14 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0.gladysModificationDate ?? .distantPast) })
 	}
 
-	private var myFilePresenter: Model.ModelFilePresenter?
+	private var filePresenter: ModelFilePresenter?
 
 	init(uuid: String) {
 		self.uuid = uuid
 		super.init()
 		if !Model.legacyMode {
-			myFilePresenter = Model.ModelFilePresenter()
-			NSFileCoordinator.addFilePresenter(myFilePresenter!)
+			filePresenter = ModelFilePresenter()
+			NSFileCoordinator.addFilePresenter(filePresenter!)
 		}
 		Model.reloadDataIfNeeded()
 		refreshCurrentDates()
@@ -30,9 +30,9 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 	}
 
 	deinit {
-		if let m = myFilePresenter {
+		if let m = filePresenter {
 			NSFileCoordinator.removeFilePresenter(m)
-			myFilePresenter = nil
+			filePresenter = nil
 		}
 		log("Enumerator for \(uuid) shut down")
 	}

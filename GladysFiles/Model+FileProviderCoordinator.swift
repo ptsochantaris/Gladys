@@ -3,23 +3,6 @@ import FileProvider
 
 extension Model {
 
-	class ModelFilePresenter: NSObject, NSFilePresenter {
-
-		var presentedItemURL: URL? {
-			return Model.itemsDirectoryUrl
-		}
-
-		var presentedItemOperationQueue: OperationQueue {
-			return OperationQueue.main
-		}
-
-		func presentedItemDidChange() {
-			OperationQueue.main.addOperation {
-				reloadDataIfNeeded()
-			}
-		}
-	}
-
 	static var coordinator: NSFileCoordinator {
 		let coordinator = NSFileCoordinator(filePresenter: nil)
 		coordinator.purposeIdentifier = NSFileProviderManager.default.providerIdentifier

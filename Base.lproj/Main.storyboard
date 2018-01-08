@@ -617,7 +617,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Bf-gq-086" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="306" width="320" height="98.5"/>
+                                        <rect key="frame" x="0.0" y="326" width="320" height="98.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Do not auto-label new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fy-WQ-f8c">
                                                 <rect key="frame" x="40" y="10" width="173.5" height="38"/>
@@ -651,7 +651,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zL-R0-MOE" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="414.5" width="320" height="82.5"/>
+                                        <rect key="frame" x="0.0" y="434.5" width="320" height="82.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display notes in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnu-A8-kYB">
                                                 <rect key="frame" x="40" y="10" width="173.5" height="38"/>
@@ -685,22 +685,22 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IUw-1k-Z1Z" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="249.5" width="320" height="46.5"/>
+                                        <rect key="frame" x="0.0" y="249.5" width="320" height="66.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Offer copy/move switch while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqs-I6-11E">
-                                                <rect key="frame" x="40" y="10" width="173.5" height="18"/>
+                                                <rect key="frame" x="40" y="10" width="173.5" height="38"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Do9-C4-hUt">
-                                                <rect key="frame" x="231" y="3.5" width="51" height="31"/>
+                                                <rect key="frame" x="231" y="13.5" width="51" height="31"/>
                                                 <connections>
                                                     <action selector="showCopyMoveSwitchSelectorSwitchChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="RjD-6m-5j7"/>
                                                 </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display an option to switch between copy and move while an export drag is taking place" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ah-QQ-zwq">
-                                                <rect key="frame" x="40" y="32" width="174" height="14.5"/>
+                                                <rect key="frame" x="40" y="52" width="174" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -885,7 +885,6 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="88n-uM-fcL" firstAttribute="top" secondItem="XAu-Zj-d4Q" secondAttribute="top" constant="20" id="Fo6-tl-mhi"/>
                                     <constraint firstItem="52a-oW-xMk" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="J79-wo-Bh1"/>
                                     <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="cSP-79-0Wg" secondAttribute="bottom" constant="14" id="L5Q-O2-wbK"/>
-                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="ehw-1I-mk8" secondAttribute="centerX" id="LT8-x4-AGQ"/>
                                     <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="leading" id="LgD-Tx-6Lx"/>
                                     <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="2DE-Ie-MEF" secondAttribute="bottom" constant="26.5" id="Ml2-Vs-Chq"/>
                                     <constraint firstAttribute="trailing" secondItem="cSP-79-0Wg" secondAttribute="trailing" constant="40" id="MtB-VX-rTN"/>
@@ -1695,7 +1694,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
