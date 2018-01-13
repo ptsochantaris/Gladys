@@ -104,28 +104,28 @@ final class ArchivedDropItem: Codable, Equatable {
 	}
 
 	var imagePath: URL? {
-		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.imagePath
 	}
 
 	var displayIcon: UIImage {
-		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 	}
 
 	var dominantTypeDescription: String? {
-		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.typeDescription
 	}
 
 	var displayMode: ArchivedDropItemDisplayType {
-		let highestPriorityIconItem = typeItems.max(by: { $0.displayIconPriority < $1.displayIconPriority })
+		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.displayIconContentMode ?? .center
 	}
 
 	var displayTitle: (String?, NSTextAlignment) {
 
-		let highestPriorityItem = typeItems.max(by: { $0.displayTitlePriority < $1.displayTitlePriority })
+		let highestPriorityItem = typeItems.max { $0.displayTitlePriority < $1.displayTitlePriority }
 		let title = highestPriorityItem?.displayTitle
 		let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
 		if let title = title {
