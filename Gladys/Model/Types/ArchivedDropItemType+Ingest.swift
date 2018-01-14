@@ -208,13 +208,15 @@ extension ArchivedDropItemType {
 			}
 			
 		} else if typeIdentifier == "public.utf8-plain-text" {
-			let s = String(data: data, encoding: .utf8)
-			setTitleInfo(s, 9)
+			if let s = String(data: data, encoding: .utf8) {
+				setTitleInfo(s, 9)
+			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			
 		} else if typeIdentifier == "public.utf16-plain-text" {
-			let s = String(data: data, encoding: .utf16)
-			setTitleInfo(s, 8)
+			if let s = String(data: data, encoding: .utf16) {
+				setTitleInfo(s, 8)
+			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			
 		} else if typeIdentifier == "public.email-message" {
@@ -240,8 +242,9 @@ extension ArchivedDropItemType {
 			return // important
 			
 		} else if typeConforms(to: kUTTypeText as CFString) {
-			let s = String(data: data, encoding: .utf8)
-			setTitleInfo(s, 5)
+			if let s = String(data: data, encoding: .utf8) {
+				setTitleInfo(s, 5)
+			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			
 		} else if typeConforms(to: kUTTypeImage as CFString) {

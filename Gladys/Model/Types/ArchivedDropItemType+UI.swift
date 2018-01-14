@@ -7,15 +7,21 @@ import QuickLook
 
 extension ArchivedDropItemType {
 
-	var dragItem: UIDragItem {
-
+	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = oneTitle
 		register(with: p)
+		return p
+	}
 
-		let i = UIDragItem(itemProvider: p)
+	var dragItem: UIDragItem {
+		let i = UIDragItem(itemProvider: itemProvider)
 		i.localObject = self
 		return i
+	}
+
+	func copyToPasteboard() {
+		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
 	}
 
 	var dataExists: Bool {

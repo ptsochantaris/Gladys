@@ -302,27 +302,39 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-		if indexPath.section == 2 && indexPath.row < item.labels.count {
-			return .delete
+	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if indexPath.section != 3 { return nil }
+		let copy = UIContextualAction(style: .normal, title: "Copy") { [weak self] action, view, handler in
+			self?.copyRowSelected(at: indexPath)
+			handler(true)
 		}
-		if indexPath.section == 3 {
-			return .delete
-		}
-		return .none
+		return UISwipeActionsConfiguration(actions: [copy])
 	}
 
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		if editingStyle == .delete {
-			if indexPath.section == 2 {
-				item.labels.remove(at: indexPath.row)
-				tableView.deleteRows(at: [indexPath], with: .automatic)
-				view.setNeedsLayout()
-				makeIndexAndSaveItem()
-			} else {
-				removeTypeItem(at: indexPath)
-			}
+	func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if indexPath.section < 2 { return nil }
+		let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, handler in
+			self?.deleteRowSelected(at: indexPath)
+			handler(true)
 		}
+		return UISwipeActionsConfiguration(actions: [delete])
+	}
+
+	private func deleteRowSelected(at indexPath: IndexPath) {
+		if indexPath.section == 2 {
+			item.labels.remove(at: indexPath.row)
+			table.deleteRows(at: [indexPath], with: .automatic)
+			view.setNeedsLayout()
+			makeIndexAndSaveItem()
+		} else {
+			removeTypeItem(at: indexPath)
+		}
+	}
+
+	private func copyRowSelected(at indexPath: IndexPath) {
+		let typeItem = item.typeItems[indexPath.row]
+		typeItem.copyToPasteboard()
+		genericAlert(title: nil, message: "Copied to clipboard", on: self, showOK: false)
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
