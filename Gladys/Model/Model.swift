@@ -9,13 +9,7 @@ final class Model {
 	static var drops = [ArchivedDropItem]()
 	static var dataFileLastModified = Date.distantPast
 	static var legacyFileLastModified = Date.distantPast
-	static var legacyMode = true {
-		didSet {
-			if legacyMode != oldValue {
-				log("Model legacy mode changed to: \(legacyMode)")
-			}
-		}
-	}
+	static var legacyMode = true
 
 	static var appStorageUrl: URL = {
 		#if MAINAPP || FILEPROVIDER

@@ -448,7 +448,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				if PersistedOptions.displayNotesInMainView && !item.note.isEmpty {
 					bottomLabelText = item.note
 					bottomLabelHighlight = true
-				} else if let url = item.associatedURL {
+				} else if let url = item.associatedWebURL {
 					bottomLabelText = url.absoluteString
 					if topLabelText == bottomLabelText {
 						topLabelText = nil

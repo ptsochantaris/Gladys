@@ -136,9 +136,9 @@ final class ArchivedDropItem: Codable, Equatable {
 		return displayText.0 ?? uuid.uuidString
 	}
 
-	var associatedURL: URL? {
+	var associatedWebURL: URL? {
 		for i in typeItems {
-			if let u = i.encodedUrl {
+			if let u = i.encodedUrl, !u.isFileURL {
 				return u as URL
 			}
 		}

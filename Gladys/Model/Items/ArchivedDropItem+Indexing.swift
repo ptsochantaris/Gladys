@@ -7,7 +7,7 @@ extension ArchivedDropItem {
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
 		attributes.title = displayText.0
 		if note.isEmpty {
-			attributes.contentDescription = associatedURL?.absoluteString
+			attributes.contentDescription = associatedWebURL?.absoluteString
 		} else {
 			attributes.contentDescription = note
 		}
