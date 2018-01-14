@@ -401,11 +401,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideProgress = true
 
 		var topLabelText: String?
-		var topLabelHighlight = false
+		var topLabelAlignment: NSTextAlignment?
 
 		var bottomLabelText: String?
-		var bottomLabelAlignment: NSTextAlignment?
 		var bottomLabelHighlight = false
+		var bottomLabelAlignment: NSTextAlignment?
 
 		if let item = item {
 
@@ -438,41 +438,56 @@ final class ArchivedItemCell: UICollectionViewCell {
 					}
 				}
 
+				let primaryLabel: UILabel
+				let secondaryLabel: UILabel
+
+				let titleInfo = item.displayText
+				topLabelAlignment = titleInfo.1
+				topLabelText = titleInfo.0
+
+				if PersistedOptions.displayNotesInMainView && !item.note.isEmpty {
+					bottomLabelText = item.note
+					bottomLabelHighlight = true
+				} else if let url = item.associatedURL {
+					bottomLabelText = url.absoluteString
+					if topLabelText == bottomLabelText {
+						topLabelText = nil
+					}
+				}
+
+				if bottomLabelText == nil && topLabelText != nil {
+					bottomLabelText = topLabelText
+					bottomLabelAlignment = topLabelAlignment
+					topLabelText = nil
+
+					primaryLabel = bottomLabel
+					secondaryLabel = topLabel
+				} else {
+					primaryLabel = topLabel
+					secondaryLabel = bottomLabel
+				}
+
 				switch item.displayMode {
 				case .center:
 					image.contentMode = .center
 					image.circle = false
-					bottomLabel.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
+					primaryLabel.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
+					secondaryLabel.numberOfLines = 2
 				case .fill:
 					image.contentMode = .scaleAspectFill
 					image.circle = false
-					bottomLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = 6
+					secondaryLabel.numberOfLines = 2
 				case .fit:
 					image.contentMode = .scaleAspectFit
 					image.circle = false
-					bottomLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = 6
+					secondaryLabel.numberOfLines = 2
 				case .circle:
 					image.contentMode = .scaleAspectFill
 					image.circle = true
-					bottomLabel.numberOfLines = 2
-				}
-
-				let titleInfo = item.displayTitle
-				bottomLabelAlignment = titleInfo.1
-				bottomLabelText = titleInfo.0
-
-				topLabelText = item.accessoryTitle
-
-				let n = item.note
-				if !n.isEmpty && PersistedOptions.displayNotesInMainView {
-					if bottomLabelText == nil || topLabelText != nil {
-						bottomLabelText = n
-						bottomLabelAlignment = .center
-						bottomLabelHighlight = true
-					} else {
-						topLabelText = n
-						topLabelHighlight = true
-					}
+					primaryLabel.numberOfLines = 6
+					secondaryLabel.numberOfLines = 2
 				}
 
 				// if we're showing an icon, let's try to enhance things a bit
@@ -506,11 +521,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.isHidden = hideProgress
 
 		topLabel.text = topLabelText
-		topLabelDistance.constant = (topLabelText == nil) ? 0 : 8
-		topLabel.isHighlighted = topLabelHighlight
+		topLabelDistance.constant = (topLabelText == nil) ? 0 : 7
+		topLabel.textAlignment = topLabelAlignment ?? .center
 
 		bottomLabel.text = bottomLabelText
-		bottomLabelDistance.constant = (bottomLabelText == nil) ? 0 : 8
+		bottomLabelDistance.constant = (bottomLabelText == nil) ? 0 : 7
 		bottomLabel.textAlignment = bottomLabelAlignment ?? .center
 		bottomLabel.isHighlighted = bottomLabelHighlight
 

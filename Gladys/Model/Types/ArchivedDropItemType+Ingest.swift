@@ -240,6 +240,8 @@ extension ArchivedDropItemType {
 			return // important
 			
 		} else if typeConforms(to: kUTTypeText as CFString) {
+			let s = String(data: data, encoding: .utf8)
+			setTitleInfo(s, 5)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			
 		} else if typeConforms(to: kUTTypeImage as CFString) {

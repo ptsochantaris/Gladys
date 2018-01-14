@@ -1073,7 +1073,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		guard let item = sender as? ArchivedDropItem else { return }
 
 		if let (errorPrefix, error) = item.loadingError {
-			genericAlert(title: "Some data from \(item.oneTitle) could not be imported",
+			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported",
 				message: errorPrefix + error.finalDescription,
 				on: self)
 		}

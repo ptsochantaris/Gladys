@@ -48,7 +48,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 
 	private var filteredDrops: [ArchivedDropItem] {
 		if let t = searchBar.text, !t.isEmpty {
-			return Model.visibleDrops.filter { $0.oneTitle.localizedCaseInsensitiveContains(t) }
+			return Model.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
 		} else {
 			return Model.visibleDrops
 		}

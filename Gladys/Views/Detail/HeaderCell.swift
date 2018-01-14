@@ -14,7 +14,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
 	var item: ArchivedDropItem? {
 		didSet {
-			label.text = item?.oneTitle
+			label.text = item?.displayText.0
 		}
 	}
 
@@ -90,13 +90,13 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		guard let item = item else { return }
 
 		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-		if newText.isEmpty || newText == item.oneTitle {
+		if newText.isEmpty || newText == item.displayText.0 {
 			item.titleOverride = ""
 		} else {
 			item.titleOverride = newText
 		}
 		item.markUpdated()
-		label.text = item.oneTitle
+		label.text = item.displayText.0
 
 		NotificationCenter.default.post(name: .ItemModified, object: item)
 		resizeCallback?(nil, true)

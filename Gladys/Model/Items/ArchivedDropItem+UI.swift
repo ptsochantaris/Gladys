@@ -81,8 +81,8 @@ extension ArchivedDropItem {
 
 	var shareableComponents: [Any] {
 		var items = typeItems.flatMap { $0.itemForShare.0 }
-		if let a = accessoryTitle {
-			items.append(a)
+		if let text = displayText.0, URL(string: text) == nil {
+			items.append(text)
 		}
 		return items
 	}
@@ -102,7 +102,7 @@ extension ArchivedDropItem {
 	}
 
 	var watchItem: [String: Any] {
-		return ["u": uuid.uuidString, "t": oneTitle, "d": updatedAt]
+		return ["u": uuid.uuidString, "t": displayTitleOrUuid, "d": updatedAt]
 	}
 
 	var canPreview: Bool {

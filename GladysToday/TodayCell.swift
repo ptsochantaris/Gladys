@@ -43,7 +43,7 @@ final class TodayCell: UICollectionViewCell {
 	var dropItem: ArchivedDropItem? {
 		didSet {
 			if let dropItem = dropItem {
-				topLabel.text = dropItem.oneTitle
+				topLabel.text = dropItem.displayText.0
 				bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
 				imageView.image = dropItem.displayIcon
 				switch dropItem.displayMode {

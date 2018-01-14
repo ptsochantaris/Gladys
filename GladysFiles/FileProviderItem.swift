@@ -124,7 +124,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 
     var filename: String {
 		if let d = dropItem {
-			return d.oneTitle
+			return d.displayTitleOrUuid
 
 		} else if let typeItem = typeItem {
 

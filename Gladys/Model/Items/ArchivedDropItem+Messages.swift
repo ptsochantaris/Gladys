@@ -28,7 +28,7 @@ extension ArchivedDropItem {
 				break
 			}
 		}
-		let tile = oneTitle
+		let tile = displayTitleOrUuid
 		if let webURL = webURL {
 			let a = webURL.absoluteString
 			if tile != a {

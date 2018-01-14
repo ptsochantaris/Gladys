@@ -11,7 +11,7 @@ final class RootEnumerator: CommonEnumerator {
 		if sortByDate {
 			return Model.visibleDrops.sorted { $0.createdAt < $1.createdAt }.map { FileProviderItem($0) }
 		} else {
-			return Model.visibleDrops.sorted { $0.oneTitle < $1.oneTitle }.map { FileProviderItem($0) }
+			return Model.visibleDrops.sorted { $0.displayTitleOrUuid < $1.displayTitleOrUuid }.map { FileProviderItem($0) }
 		}
 	}
 }

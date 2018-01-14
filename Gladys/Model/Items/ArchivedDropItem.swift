@@ -95,10 +95,6 @@ final class ArchivedDropItem: Codable, Equatable {
 		return lhs.uuid == rhs.uuid
 	}
 
-	var oneTitle: String {
-		return accessoryTitle ?? displayTitle.0 ?? uuid.uuidString
-	}
-
 	var sizeInBytes: Int64 {
 		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
 	}
@@ -123,24 +119,30 @@ final class ArchivedDropItem: Codable, Equatable {
 		return highestPriorityIconItem?.displayIconContentMode ?? .center
 	}
 
-	var displayTitle: (String?, NSTextAlignment) {
+	var displayText: (String?, NSTextAlignment) {
+		guard titleOverride.isEmpty else { return (titleOverride, .center) }
+		if let a = typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
 		let highestPriorityItem = typeItems.max { $0.displayTitlePriority < $1.displayTitlePriority }
-		let title = highestPriorityItem?.displayTitle
-		let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
-		if let title = title {
+		if let title = highestPriorityItem?.displayTitle {
+			let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
 			return (title, alignment)
 		} else {
 			return (suggestedName, .center)
 		}
 	}
 
-	var accessoryTitle: String? {
-		if titleOverride.isEmpty {
-			return typeItems.first { $0.accessoryTitle != nil }?.accessoryTitle
-		} else {
-			return titleOverride
+	var displayTitleOrUuid: String {
+		return displayText.0 ?? uuid.uuidString
+	}
+
+	var associatedURL: URL? {
+		for i in typeItems {
+			if let u = i.encodedUrl {
+				return u as URL
+			}
 		}
+		return nil
 	}
 
 	lazy var folderUrl: URL = {
@@ -153,11 +155,11 @@ final class ArchivedDropItem: Codable, Equatable {
 	}()
 
 	func bytes(for type: String) -> Data? {
-		return typeItems.first(where: { $0.typeIdentifier == type })?.bytes
+		return typeItems.first { $0.typeIdentifier == type }?.bytes
 	}
 
 	func url(for type: String) -> NSURL? {
-		return typeItems.first(where: { $0.typeIdentifier == type })?.encodedUrl
+		return typeItems.first { $0.typeIdentifier == type }?.encodedUrl
 	}
 
 	func markUpdated() {
