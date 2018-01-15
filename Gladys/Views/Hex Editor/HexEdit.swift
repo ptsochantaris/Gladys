@@ -45,7 +45,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		inspectorButton.accessibilityLabel = "Inspect selection"
 		addressItem.accessibilityLabel = "Selected addresses"
 
-		grid.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+		grid.backgroundView = UIImageView(image: (ViewController.shared.archivedItemCollectionView.backgroundView as! UIImageView).image)
 		grid.accessibilityTraits |= UIAccessibilityTraitAllowsDirectInteraction
 		grid.accessibilityLabel = "Data grid"
 
