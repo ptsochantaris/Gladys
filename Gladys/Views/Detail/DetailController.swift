@@ -39,10 +39,22 @@ final class DetailController: GladysViewController,
 		dateLabel.text = item.addedString
 		dateItem.customView = dateLabelHolder
 
+		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
+		activity.title = item.displayTitleOrUuid
+		activity.isEligibleForSearch = false
+		activity.isEligibleForHandoff = true
+		activity.isEligibleForPublicIndexing = false
+		userActivity = activity
+
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+	}
+
+	override func updateUserActivityState(_ activity: NSUserActivity) {
+		super.updateUserActivityState(activity)
+		activity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
 	}
 
 	private func updateUI() {

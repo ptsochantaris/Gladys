@@ -40,11 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
 			}
 			return true
-		}
 
-		if userActivity.activityType == CSQueryContinuationActionType {
+		} else if userActivity.activityType == CSQueryContinuationActionType {
 			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
 				ViewController.shared.startSearch(initialText: searchQuery)
+			}
+			return true
+
+		} else if userActivity.activityType == kGladysDetailViewingActivity {
+			if let itemIdentifier = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
+				ViewController.shared.highlightItem(with: itemIdentifier.uuidString, andOpen: true)
 			}
 			return true
 		}
