@@ -7,6 +7,21 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
 
+	@objc override func darkModeChanged() {
+		super.darkModeChanged()
+		if PersistedOptions.darkMode {
+			container.backgroundColor = .gray
+			zipContainer.backgroundColor = .gray
+			zipImage.backgroundColor = ViewController.darkColor
+			innerFrame.backgroundColor = ViewController.darkColor
+		} else {
+			container.backgroundColor = .white
+			zipContainer.backgroundColor = .white
+			zipImage.backgroundColor = ViewController.imageLightBackground
+			innerFrame.backgroundColor = ViewController.imageLightBackground
+		}
+	}
+
 	@discardableResult
 	private func createArchive(completion: @escaping (URL)->Void) -> Progress {
 		let eligibleItems = eligibleDropsForExport

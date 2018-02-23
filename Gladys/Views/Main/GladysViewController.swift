@@ -23,6 +23,45 @@ class GladysViewController: UIViewController {
 		UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, initialAccessibilityElement)
 	}
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		darkModeChanged()
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
+	}
+
+	@objc func darkModeChanged() {
+		guard let nav = navigationController?.navigationBar, let bar = navigationController?.toolbar else { return }
+
+		let d = GladysViewController.darkColor
+		nav.barTintColor = d
+		bar.barTintColor = d
+
+		let c = GladysViewController.tintColor
+		nav.tintColor = c
+		view.tintColor = c
+		bar.tintColor = c
+	}
+
+	static var tintColor: UIColor {
+		if PersistedOptions.darkMode {
+			return .lightGray
+		} else {
+			return UIColor(red: 147.0/255.0, green: 24.0/255.0, blue: 18.0/255.0, alpha: 1)
+		}
+	}
+
+	static var darkColor: UIColor? {
+		if PersistedOptions.darkMode {
+			return UIColor(red: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1)
+		}
+		return nil
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if popoverPresenter != nil {

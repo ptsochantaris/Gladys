@@ -29,6 +29,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var darkMode: Bool {
+		get {
+			return defaults.bool(forKey: "darkMode")
+		}
+		set {
+			defaults.set(newValue, forKey: "darkMode")
+			defaults.synchronize()
+		}
+	}
+
 	static var showCopyMoveSwitchSelector: Bool {
 		get {
 			return defaults.bool(forKey: "showCopyMoveSwitchSelector")

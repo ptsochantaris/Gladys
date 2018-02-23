@@ -17,6 +17,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	var resizeCallback: ((CGRect?, Bool)->Void)?
 
 	override func awakeFromNib() {
+		let c = ViewController.tintColor
+		textView.textColor = c
+		placeholder.textColor = c
 		textView.addObserver(self, forKeyPath: "selectedTextRange", options: .new, context: nil)
 	}
 

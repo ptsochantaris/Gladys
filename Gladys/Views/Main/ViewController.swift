@@ -26,6 +26,10 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 	}
 }
 
+let mainWindow: UIWindow = {
+	return UIApplication.shared.windows.first!
+}()
+
 final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
@@ -339,6 +343,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
 
+	static var imageLightBackground: UIColor!
+
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		if segue.identifier == "showPreferences",
@@ -382,6 +388,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			let p = n.popoverPresentationController {
 
 			p.delegate = self
+			if PersistedOptions.darkMode {
+				p.backgroundColor = ViewController.darkColor
+			}
 			if isEditing {
 				setEditing(false, animated: true)
 			}
@@ -392,6 +401,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			let p = n.popoverPresentationController {
 
 			p.delegate = self
+			if PersistedOptions.darkMode {
+				p.backgroundColor = ViewController.darkColor
+			}
 			e.selectedItems = selectedItems
 			e.endCallback = { [weak self] hasChanges in
 				if hasChanges {
@@ -440,6 +452,31 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		dragModePanel.alpha = 0
 	}
 
+	@objc override func darkModeChanged() {
+		super.darkModeChanged()
+		if PersistedOptions.darkMode {
+			archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+				DispatchQueue.main.async {
+					t.textColor = .lightGray
+				}
+			}
+		} else {
+			archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+				DispatchQueue.main.async {
+					t.textColor = .darkText
+				}
+			}
+		}
+		if let nav = firstPresentedNavigationController {
+			nav.popoverPresentationController?.backgroundColor = patternColor
+			nav.tabBarController?.viewControllers?.forEach {
+				$0.view.backgroundColor = patternColor
+			}
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -454,7 +491,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		archivedItemCollectionView.reorderingCadence = .fast
 		archivedItemCollectionView.dataSource = self
 		archivedItemCollectionView.delegate = self
-		archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 		archivedItemCollectionView.accessibilityLabel = "Items"
 		archivedItemCollectionView.dragInteractionEnabled = true
 
@@ -475,8 +511,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 
-		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController] in
+		darkModeChanged()
+		
+		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
 		    Model.filter = searchController?.searchBar.text
+			self?.didUpdateItems()
 		}
 
 		navigationController?.setToolbarHidden(true, animated: false)
@@ -707,10 +746,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		let count = (selectedItems?.count ?? 0)
 
-		let c = count == 0 ? Model.drops.count : count
-		itemsCount.title = c > 1 ? "\(c) Items" : c == 1 ? "1 Item" : "No Items"
+		let itemCount = Model.filteredDrops.count
+		let c = count == 0 ? itemCount : count
+		if c > 1 {
+			if count > 0 {
+				itemsCount.title = "\(c) Selected:"
+			} else {
+				itemsCount.title = "\(c) Items"
+			}
+		} else if c == 1 {
+			if count > 0 {
+				itemsCount.title = "1 Selected:"
+			} else {
+				itemsCount.title = "1 Item"
+			}
+		} else {
+			itemsCount.title = "No Items"
+		}
+		itemsCount.isEnabled = itemCount > 0
 
-		let size = count == 0 ? Model.sizeInBytes : Model.sizeForItems(uuids: selectedItems ?? [])
+		let size = count == 0 ? Model.filteredSizeInBytes : Model.sizeForItems(uuids: selectedItems ?? [])
 		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
 		deleteButton.isEnabled = count > 0
 		editLabelsButton.isEnabled = count > 0
@@ -726,6 +781,51 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
 		archivedItemCollectionView.isAccessibilityElement = Model.filteredDrops.count == 0
+	}
+
+	@IBAction func itemsCountSelected(_ sender: UIBarButtonItem) {
+		let selectedCount = (selectedItems?.count ?? 0)
+		if selectedCount > 0 {
+			let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
+			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
+				if let p = a.popoverPresentationController {
+					_ = self.popoverPresentationControllerShouldDismissPopover(p)
+				}
+				self.selectedItems?.removeAll()
+				self.archivedItemCollectionView.reloadData()
+				self.didUpdateItems()
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			a.modalPresentationStyle = .popover
+			navigationController?.visibleViewController?.present(a, animated: true)
+			if let p = a.popoverPresentationController {
+				p.permittedArrowDirections = [.any]
+				p.barButtonItem = itemsCount
+				p.delegate = self
+			}
+		} else {
+			let itemCount = Model.filteredDrops.count
+			guard itemCount > 0 else { return }
+			let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
+			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
+				if let p = a.popoverPresentationController {
+					_ = self.popoverPresentationControllerShouldDismissPopover(p)
+				}
+				self.selectedItems = Model.filteredDrops.map { $0.uuid }
+				self.archivedItemCollectionView.reloadData()
+				self.didUpdateItems()
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			a.modalPresentationStyle = .popover
+			navigationController?.visibleViewController?.present(a, animated: true)
+			if let p = a.popoverPresentationController {
+				p.permittedArrowDirections = [.any]
+				p.barButtonItem = itemsCount
+				p.delegate = self
+			}
+		}
 	}
 
 	@objc private func labelSelectionChanged() {
@@ -924,8 +1024,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		navigationController?.visibleViewController?.present(a, animated: true)
 		if let p = a.popoverPresentationController {
 			p.permittedArrowDirections = [.any]
-			p.sourceRect = CGRect(origin: CGPoint(x: 0, y: view.bounds.size.height-44), size: CGSize(width: 100, height: 44))
-			p.sourceView = navigationController!.view
+			p.barButtonItem = deleteButton
 			p.delegate = self
 		}
 	}
@@ -969,9 +1068,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
+	private var firstPresentedAlertController: UIAlertController? {
+		return presentedViewController as? UIAlertController
+	}
+
 	func dismissAnyPopOver(completion: (()->Void)? = nil) {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
 			if popoverPresentationControllerShouldDismissPopover(pc) {
+				firstPresentedAlertController?.dismiss(animated: true) {
+					completion?()
+				}
 				firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true) {
 					completion?()
 				}

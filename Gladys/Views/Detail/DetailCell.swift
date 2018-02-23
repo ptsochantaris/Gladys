@@ -64,6 +64,14 @@ final class DetailCell: UITableViewCell {
 			b.trailingAnchor.constraint(equalTo: borderView.trailingAnchor),
 			b.bottomAnchor.constraint(equalTo: borderView.bottomAnchor, constant: 0.5)
 		])
+
+		if PersistedOptions.darkMode {
+			borderView.backgroundColor = .darkGray
+			b.backgroundColor = ViewController.darkColor
+			nameHolder.backgroundColor = UIColor(white: 0.2, alpha: 1)
+			name.textColor = ViewController.tintColor
+			desc.textColor = .lightGray
+		}
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCellDragState) {

@@ -42,6 +42,16 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		case none, some, all
 	}
 
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		if PersistedOptions.darkMode {
+			labelText.backgroundColor = .gray
+			labelText.textColor = .black
+			headerLabel.textColor = .gray
+			table.separatorColor = .gray
+		}
+	}
+
 	private func toggleState(for toggle: String) -> State {
 		let n = selectedItems?.reduce(0) { total, uuid -> Int in
 			if let item = Model.item(uuid: uuid), item.labels.contains(toggle) {

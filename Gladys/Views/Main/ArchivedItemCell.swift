@@ -150,6 +150,29 @@ final class ArchivedItemCell: UICollectionViewCell {
 		bottomLabel.highlightedTextColor = tintColor
 	}
 
+	@objc private func darkModeChanged() {
+		borderView.backgroundColor = borderViewColor
+		topLabel.textColor = plainTextColor
+		bottomLabel.textColor = plainTextColor
+		if PersistedOptions.darkMode {
+			tintColor = .white
+			backgroundView?.backgroundColor = .darkGray
+			image.backgroundColor = UIColor(white: 0.2, alpha: 1)
+		} else {
+			tintColor = nil
+			backgroundView?.backgroundColor = .lightGray
+			image.backgroundColor = ViewController.imageLightBackground
+		}
+		if isEditing {
+			let wasSelected = selectionImage?.isHighlighted ?? false
+			isEditing = false
+			isEditing = true
+			if wasSelected {
+				selectionImage?.isHighlighted = true
+			}
+		}
+	}
+
 	var isSelectedForAction: Bool {
 		set {
 			selectionImage?.isHighlighted = newValue
@@ -182,7 +205,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
-				holder.backgroundColor = .white
+				holder.backgroundColor = borderView.backgroundColor
 				holder.layer.cornerRadius = 10
 				holder.addSubview(img)
 				addSubview(holder)
@@ -213,6 +236,26 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private let borderView = UIView()
 
+	private var borderViewColor: UIColor {
+		return PersistedOptions.darkMode ? .darkGray : .white
+	}
+
+	private var plainTextColor: UIColor {
+		if PersistedOptions.darkMode {
+			return ArchivedItemCell.lightTextColor
+		} else {
+			return ArchivedItemCell.darkTextColor
+		}
+	}
+
+	private static let darkTextColor: UIColor = {
+		return UIColor(red: 76.0/255.0, green: 76.0/255.0, blue: 76.0/255.0, alpha: 1)
+	}()
+
+	private static let lightTextColor: UIColor = {
+		return UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1)
+	}()
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = true
@@ -221,18 +264,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.accessibilityIgnoresInvertColors = true
 		contentView.tintColor = .darkGray
 
+		ViewController.imageLightBackground = image.backgroundColor
+
 		let b = UIView()
-		b.backgroundColor = .lightGray
 		b.layer.cornerRadius = 10
 		backgroundView = b
 
-		borderView.backgroundColor = .white
+		darkModeChanged()
 		borderView.layer.cornerRadius = 10
 		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
 		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
+		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
 		contentView.addGestureRecognizer(p)
@@ -540,7 +585,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			self.borderView.backgroundColor = .red
 		}) { finished in
 			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
-				self.borderView.backgroundColor = .white
+				self.borderView.backgroundColor = self.borderViewColor
 			}) { finished in
 			}
 		}

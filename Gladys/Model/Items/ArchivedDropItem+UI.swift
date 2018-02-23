@@ -123,9 +123,7 @@ extension ArchivedDropItem {
 	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
 		if let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) {
 			let n = QLHostingViewController(rootViewController: q)
-			if let s = UIApplication.shared.windows.first?.bounds.size {
-				n.preferredContentSize = s
-			}
+			n.preferredContentSize = mainWindow.bounds.size
 			n.view.tintColor = ViewController.shared.view.tintColor
 			n.modalPresentationStyle = .popover
 			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {

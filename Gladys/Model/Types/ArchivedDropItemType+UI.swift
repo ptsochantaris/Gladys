@@ -83,9 +83,7 @@ extension ArchivedDropItemType {
 			q.dataSource = self
 			q.modalPresentationStyle = .popover
 			q.navigationItem.rightBarButtonItem = extraRightButton
-			if let s = UIApplication.shared.windows.first?.bounds.size {
-				q.preferredContentSize = s
-			}
+			q.preferredContentSize = mainWindow.bounds.size
 			return q
 
 		} else if typeIdentifier == "com.apple.webarchive" {

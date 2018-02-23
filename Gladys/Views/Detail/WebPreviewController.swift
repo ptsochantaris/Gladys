@@ -78,7 +78,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 
 	override var preferredContentSize: CGSize {
 		get {
-			return UIApplication.shared.windows.first!.bounds.size
+			return mainWindow.bounds.size
 		}
 		set {}
 	}

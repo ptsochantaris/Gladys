@@ -14,6 +14,11 @@ final class LabelToggleCell: UITableViewCell {
 
 	override func setSelected(_ selected: Bool, animated: Bool) {
 		accessoryType = selected ? .checkmark : .none
-		labelName.textColor = selected ? .darkText : .darkGray
+		if PersistedOptions.darkMode {
+			labelName.textColor = selected ? .white : .lightGray
+			labelCount.textColor = .gray
+		} else {
+			labelName.textColor = selected ? .darkText : .darkGray
+		}
 	}
 }

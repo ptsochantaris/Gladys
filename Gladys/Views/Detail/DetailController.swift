@@ -391,6 +391,9 @@ final class DetailController: GladysViewController,
 			p.permittedArrowDirections = [.left, .right]
 			d.delegate = self
 			p.delegate = self
+			if PersistedOptions.darkMode {
+				p.backgroundColor = ViewController.darkColor
+			}
 			if indexPath.row < item.labels.count {
 				d.title = "Edit Label"
 				d.label = item.labels[indexPath.row]

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CloudKit
 
 let diskSizeFormatter = ByteCountFormatter()

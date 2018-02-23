@@ -37,6 +37,11 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		addressButton.tintColor = ViewController.tintColor
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneLocation = .right

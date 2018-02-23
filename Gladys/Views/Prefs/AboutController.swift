@@ -15,6 +15,7 @@ final class AboutController: GladysViewController {
 	@IBOutlet weak var unlimitedSpacing: NSLayoutConstraint!
 	@IBOutlet weak var webSiteSpacing: NSLayoutConstraint!
 	@IBOutlet weak var versionLabel: UIBarButtonItem!
+	@IBOutlet weak var logo: UIImageView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -30,6 +31,15 @@ final class AboutController: GladysViewController {
 		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
 		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
 		versionLabel.title = "v\(v) (\(b))"
+	}
+
+	@objc override func darkModeChanged() {
+		super.darkModeChanged()
+		if PersistedOptions.darkMode {
+			logo.alpha = 0.8
+		} else {
+			logo.alpha = 1
+		}
 	}
 
 	@IBAction func aboutSelected(_ sender: UIButton) {

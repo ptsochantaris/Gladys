@@ -181,6 +181,10 @@ extension Model {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
+	static var filteredSizeInBytes: Int64 {
+		return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
+	}
+
 	static func sizeForItems(uuids: [UUID]) -> Int64 {
 		return drops.reduce(0, { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) })
 	}

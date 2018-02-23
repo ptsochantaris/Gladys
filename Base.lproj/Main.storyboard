@@ -109,7 +109,9 @@
                     </view>
                     <toolbarItems>
                         <barButtonItem title="X Items" style="plain" id="2pe-qg-DFG" userLabel="Count Label">
-                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="itemsCountSelected:" destination="BYZ-38-t0r" id="qAh-aC-P9P"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem enabled="NO" title="Delete" id="MyX-3U-Yhw">
                             <connections>
@@ -718,6 +720,40 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="Do9-C4-hUt" firstAttribute="leading" secondItem="uqs-I6-11E" secondAttribute="trailing" constant="18" id="ydv-aK-Fpy"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SAa-Ja-PNG" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="527" width="320" height="78.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dark mode" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OuU-pw-dUx">
+                                                <rect key="frame" x="40" y="10" width="173.5" height="18"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Xeg-W1-kiy">
+                                                <rect key="frame" x="231" y="3.5" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="darkModeSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="4Qr-pA-Ca3"/>
+                                                </connections>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Darken the interface so that it doesn't contrast as much next to dark-themed apps." textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jov-Kc-2dl">
+                                                <rect key="frame" x="40" y="32" width="174" height="46.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Xeg-W1-kiy" secondAttribute="trailing" constant="40" id="1rH-Ku-xOh"/>
+                                            <constraint firstAttribute="bottom" secondItem="Jov-Kc-2dl" secondAttribute="bottom" id="3KU-9L-5eD"/>
+                                            <constraint firstItem="Jov-Kc-2dl" firstAttribute="trailing" secondItem="OuU-pw-dUx" secondAttribute="trailing" id="KkQ-Mj-k4g"/>
+                                            <constraint firstItem="Xeg-W1-kiy" firstAttribute="leading" secondItem="OuU-pw-dUx" secondAttribute="trailing" constant="18" id="Mo7-lr-66A"/>
+                                            <constraint firstItem="Jov-Kc-2dl" firstAttribute="top" secondItem="OuU-pw-dUx" secondAttribute="bottom" constant="4" id="NEG-Ce-xUl"/>
+                                            <constraint firstItem="Xeg-W1-kiy" firstAttribute="centerY" secondItem="OuU-pw-dUx" secondAttribute="centerY" id="j8p-hh-HoC"/>
+                                            <constraint firstItem="Jov-Kc-2dl" firstAttribute="leading" secondItem="OuU-pw-dUx" secondAttribute="leading" id="lRe-6o-EGa"/>
+                                            <constraint firstItem="OuU-pw-dUx" firstAttribute="leading" secondItem="SAa-Ja-PNG" secondAttribute="leading" constant="40" id="sTI-Ok-5E4"/>
+                                            <constraint firstItem="OuU-pw-dUx" firstAttribute="top" secondItem="SAa-Ja-PNG" secondAttribute="top" constant="10" id="yAn-QA-3G3"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="top" secondItem="bB7-5e-4Zy" secondAttribute="bottom" constant="10" id="4QK-j0-Uli"/>
@@ -725,16 +761,19 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="IUw-1k-Z1Z" firstAttribute="top" secondItem="XgP-jO-jfU" secondAttribute="bottom" constant="10" id="95N-jL-dnQ"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="width" secondItem="Nbf-8Q-XQN" secondAttribute="width" id="9Na-Vf-nD8"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="top" secondItem="Kch-Hm-YOV" secondAttribute="top" constant="20" id="APS-8E-MUH"/>
+                                    <constraint firstItem="SAa-Ja-PNG" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="GWL-VV-ne3"/>
                                     <constraint firstAttribute="trailing" secondItem="0zL-R0-MOE" secondAttribute="trailing" id="Hmj-pX-Ow6"/>
-                                    <constraint firstAttribute="bottom" secondItem="0zL-R0-MOE" secondAttribute="bottom" constant="30" id="J2g-XA-ThI"/>
                                     <constraint firstAttribute="trailing" secondItem="IUw-1k-Z1Z" secondAttribute="trailing" id="KY5-Zs-1dX"/>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="width" secondItem="Kch-Hm-YOV" secondAttribute="width" id="VsL-3g-iUK"/>
                                     <constraint firstItem="XgP-jO-jfU" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="WEX-DQ-iaY"/>
                                     <constraint firstAttribute="trailing" secondItem="2Bf-gq-086" secondAttribute="trailing" id="X6M-Q7-jQG"/>
                                     <constraint firstAttribute="trailing" secondItem="bB7-5e-4Zy" secondAttribute="trailing" id="X7s-h7-E5f"/>
                                     <constraint firstAttribute="trailing" secondItem="XgP-jO-jfU" secondAttribute="trailing" id="bnv-xO-vWw"/>
+                                    <constraint firstItem="SAa-Ja-PNG" firstAttribute="top" secondItem="0zL-R0-MOE" secondAttribute="bottom" constant="10" id="cCQ-Xl-jec"/>
+                                    <constraint firstAttribute="bottom" secondItem="SAa-Ja-PNG" secondAttribute="bottom" constant="20" id="cdO-Et-7hG"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fX0-qL-Qid"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fic-zs-slc"/>
+                                    <constraint firstAttribute="trailing" secondItem="SAa-Ja-PNG" secondAttribute="trailing" id="grL-d7-AqR"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="top" secondItem="IUw-1k-Z1Z" secondAttribute="bottom" constant="10" id="haH-Qo-9KL"/>
                                     <constraint firstItem="IUw-1k-Z1Z" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="mjd-WK-VHR"/>
                                     <constraint firstItem="0zL-R0-MOE" firstAttribute="top" secondItem="2Bf-gq-086" secondAttribute="bottom" constant="10" id="oFx-RM-S96"/>
@@ -757,6 +796,7 @@ Selecting them will show only items that contain these labels.</string>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="900"/>
                     <connections>
+                        <outlet property="darkModeSwitch" destination="Xeg-W1-kiy" id="nUn-Xp-SbR"/>
                         <outlet property="displayNotesInMainViewSwitch" destination="qro-Jb-hVE" id="P56-Q3-X0o"/>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="Tft-Nz-YcR" id="oX4-o7-2rV"/>
                         <outlet property="removeItemsWhenDraggedOutSwitch" destination="7RR-Hc-O46" id="iGX-ri-zvz"/>
@@ -1001,6 +1041,7 @@ Selecting them will show only items that contain these labels.</string>
                         <barButtonItem key="leftBarButtonItem" enabled="NO" title="Version" id="1U2-0T-zYK"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="logo" destination="yXI-xr-evN" id="18M-Pg-5Kh"/>
                         <outlet property="unlimitedButton" destination="BHy-ip-KBG" id="Tin-2n-3KA"/>
                         <outlet property="unlimitedSpacing" destination="M3L-V6-9Bw" id="RaY-cP-Aa3"/>
                         <outlet property="versionLabel" destination="1U2-0T-zYK" id="R8u-bm-Nqj"/>

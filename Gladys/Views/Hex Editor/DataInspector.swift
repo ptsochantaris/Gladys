@@ -113,10 +113,9 @@ final class DataInspector: GladysViewController {
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		let w = UIApplication.shared.windows.first!
-		signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: w)
-		endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: w)
-		decimalAccessibility.accessibilityActivationPoint = view.convert(decimalSwitch.center, to: w)
+		signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: mainWindow)
+		endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: mainWindow)
+		decimalAccessibility.accessibilityActivationPoint = view.convert(decimalSwitch.center, to: mainWindow)
 	}
 
 	@objc private func updateBytes() {
