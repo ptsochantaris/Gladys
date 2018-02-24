@@ -111,6 +111,23 @@ final class DataInspector: GladysViewController {
 		switchesChanged()
 	}
 
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		if PersistedOptions.darkMode {
+			let b = UIColor.darkGray
+			self.popoverPresentationController?.backgroundColor = b
+			view.backgroundColor = b
+			for v in view.subviews {
+				if let v = v as? UILabel {
+					v.textColor = .lightGray
+				}
+			}
+			bit16.textColor = .white
+			bit32.textColor = .white
+			bit64.textColor = .white
+		}
+	}
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: mainWindow)

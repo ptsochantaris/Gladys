@@ -39,6 +39,10 @@ final class DetailController: GladysViewController,
 		dateLabel.text = item.addedString
 		dateItem.customView = dateLabelHolder
 
+		if PersistedOptions.darkMode {
+			navigationController?.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
+		}
+
 		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 		activity.title = item.displayTitleOrUuid
 		activity.isEligibleForSearch = false
@@ -307,11 +311,24 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
 				guard let s = self, let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem) else { return }
-				s.navigationController?.pushViewController(q, animated: true)
+				if PersistedOptions.fullScreenPreviews {
+					let n = UINavigationController(rootViewController: q)
+					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
+					if PersistedOptions.darkMode {
+						n.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
+					}
+					ViewController.top.present(n, animated: true)
+				} else {
+					s.navigationController?.pushViewController(q, animated: true)
+				}
 			}
 		} else {
 			cell.viewCallback = nil
 		}
+	}
+
+	@objc private func closePreview() {
+		ViewController.top.dismiss(animated: true)
 	}
 
 	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

@@ -17,6 +17,7 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var displayNotesInMainViewSwitch: UISwitch!
 	@IBOutlet weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
 	@IBOutlet weak var darkModeSwitch: UISwitch!
+	@IBOutlet weak var fullScreenSwitch: UISwitch!
 
 	@IBAction func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
 		PersistedOptions.showCopyMoveSwitchSelector = sender.isOn
@@ -51,6 +52,10 @@ final class OptionsController: GladysViewController {
 		NotificationCenter.default.post(name: .DarkModeChanged, object: nil)
 	}
 
+	@IBAction func fullScreenPreviewsSelected(_ sender: UISwitch) {
+		PersistedOptions.fullScreenPreviews = sender.isOn
+	}
+
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		separateItemsSwitch.onTintColor = view.tintColor
@@ -60,6 +65,7 @@ final class OptionsController: GladysViewController {
 		displayNotesInMainViewSwitch.onTintColor = view.tintColor
 		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
 		darkModeSwitch.onTintColor = view.tintColor
+		fullScreenSwitch.onTintColor = view.tintColor
 	}
 
 	override func viewDidLoad() {
@@ -67,26 +73,29 @@ final class OptionsController: GladysViewController {
 
 		doneLocation = .right
 
-		separateItemsSwitch.tintColor = UIColor.lightGray
+		separateItemsSwitch.tintColor = .lightGray
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 
-		twoColumnsSwitch.tintColor = UIColor.lightGray
+		twoColumnsSwitch.tintColor = .lightGray
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 
-		removeItemsWhenDraggedOutSwitch.tintColor = UIColor.lightGray
+		removeItemsWhenDraggedOutSwitch.tintColor = .lightGray
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut
 
-		dontAutoLabelNewItemsSwitch.tintColor = UIColor.lightGray
+		dontAutoLabelNewItemsSwitch.tintColor = .lightGray
 		dontAutoLabelNewItemsSwitch.isOn = PersistedOptions.dontAutoLabelNewItems
 
-		displayNotesInMainViewSwitch.tintColor = UIColor.lightGray
+		displayNotesInMainViewSwitch.tintColor = .lightGray
 		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
 
-		showCopyMoveSwitchSelectorSwitch.tintColor = UIColor.lightGray
+		showCopyMoveSwitchSelectorSwitch.tintColor = .lightGray
 		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
 
-		darkModeSwitch.tintColor = UIColor.lightGray
+		darkModeSwitch.tintColor = .lightGray
 		darkModeSwitch.isOn = PersistedOptions.darkMode
+
+		fullScreenSwitch.tintColor = .lightGray
+		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
 
 		darkModeChanged()
 	}

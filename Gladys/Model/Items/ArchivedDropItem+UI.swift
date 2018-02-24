@@ -125,10 +125,18 @@ extension ArchivedDropItem {
 			let n = QLHostingViewController(rootViewController: q)
 			n.preferredContentSize = mainWindow.bounds.size
 			n.view.tintColor = ViewController.shared.view.tintColor
-			n.modalPresentationStyle = .popover
-			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
-				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
+			if PersistedOptions.darkMode {
+				n.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
+			}
+			if PersistedOptions.fullScreenPreviews {
+				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
 				q.navigationItem.rightBarButtonItem = r
+			} else {
+				n.modalPresentationStyle = .popover
+				if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
+					let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
+					q.navigationItem.rightBarButtonItem = r
+				}
 			}
 			ViewController.shared.present(n, animated: true)
 			if let p = q.popoverPresentationController {
@@ -136,6 +144,10 @@ extension ArchivedDropItem {
 				p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
 			}
 		}
+	}
+
+	@objc private func previewDismiss() {
+		ViewController.top.dismiss(animated: true)
 	}
 
 	@objc private func previewDone() {

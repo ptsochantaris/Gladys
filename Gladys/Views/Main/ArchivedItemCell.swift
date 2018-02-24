@@ -376,7 +376,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			self.egress()
 		}))
 		a.modalPresentationStyle = .popover
-		(ViewController.shared.presentedViewController ?? ViewController.shared).present(a, animated: true)
+		ViewController.top.present(a, animated: true)
 		if let p = a.popoverPresentationController {
 			p.sourceView = self
 			p.sourceRect = self.contentView.bounds.insetBy(dx: 6, dy: 6)

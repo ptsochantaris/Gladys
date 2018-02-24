@@ -57,6 +57,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
+	static var top: UIViewController {
+		return ViewController.shared.presentedViewController ?? ViewController.shared
+	}
+
 	///////////////////////
 
 	private var bgTask: UIBackgroundTaskIdentifier?

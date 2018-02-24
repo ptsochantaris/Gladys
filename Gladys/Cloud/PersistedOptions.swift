@@ -39,6 +39,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var fullScreenPreviews: Bool {
+		get {
+			return defaults.bool(forKey: "fullScreenPreviews")
+		}
+		set {
+			defaults.set(newValue, forKey: "fullScreenPreviews")
+			defaults.synchronize()
+		}
+	}
+
 	static var showCopyMoveSwitchSelector: Bool {
 		get {
 			return defaults.bool(forKey: "showCopyMoveSwitchSelector")
