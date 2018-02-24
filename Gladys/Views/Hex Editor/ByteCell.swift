@@ -43,19 +43,28 @@ final class ByteCell: UICollectionViewCell {
 		letter.textColor = .gray
 		isAccessibilityElement = true
 		accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
+		updateSelected()
+	}
+
+	private func updateSelected() {
+		if isSelected {
+			letter.textColor = .lightGray
+			label.textColor = .white
+			label.backgroundColor = .darkGray
+		} else {
+			if PersistedOptions.darkMode {
+				label.textColor = .lightGray
+			} else {
+				label.textColor = .darkGray
+			}
+			letter.textColor = .gray
+			label.backgroundColor = .clear
+		}
 	}
 
 	override var isSelected: Bool {
 		didSet {
-			if isSelected {
-				letter.textColor = .lightGray
-				label.textColor = .white
-				label.backgroundColor = .darkGray
-			} else {
-				letter.textColor = .gray
-				label.textColor = .darkGray
-				label.backgroundColor = .clear
-			}
+			updateSelected()
 		}
 	}
 }

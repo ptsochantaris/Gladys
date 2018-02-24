@@ -44,19 +44,28 @@ final class AsciiCell: UICollectionViewCell {
 		layer.borderColor = UIColor.lightGray.cgColor
 		label.textColor = .gray
 		isAccessibilityElement = true
+		updateSelected()
+	}
+
+	private func updateSelected() {
+		if isSelected {
+			label.textColor = .lightGray
+			letter.textColor = .white
+			letter.backgroundColor = .darkGray
+		} else {
+			if PersistedOptions.darkMode {
+				letter.textColor = .lightGray
+			} else {
+				letter.textColor = .darkGray
+			}
+			label.textColor = .gray
+			letter.backgroundColor = .clear
+		}
 	}
 
 	override var isSelected: Bool {
 		didSet {
-			if isSelected {
-				label.textColor = .lightGray
-				letter.textColor = .white
-				letter.backgroundColor = .darkGray
-			} else {
-				label.textColor = .gray
-				letter.textColor = .darkGray
-				letter.backgroundColor = .clear
-			}
+			updateSelected()
 		}
 	}
 }

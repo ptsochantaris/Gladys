@@ -15,8 +15,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		if PersistedOptions.darkMode {
 			container.backgroundColor = .gray
 			zipContainer.backgroundColor = .gray
-			zipImage.backgroundColor = ViewController.darkColor
+			zipInnerFrame.backgroundColor = ViewController.darkColor
 			innerFrame.backgroundColor = ViewController.darkColor
+			spinner.color = ViewController.tintColor
+			zipSpinner.color = ViewController.tintColor
 			for l in headerLabels {
 				l.textColor = UIColor.lightGray
 			}
@@ -26,8 +28,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		} else {
 			container.backgroundColor = .white
 			zipContainer.backgroundColor = .white
-			zipImage.backgroundColor = ViewController.imageLightBackground
+			zipInnerFrame.backgroundColor = ViewController.imageLightBackground
 			innerFrame.backgroundColor = ViewController.imageLightBackground
+			spinner.color = zipImage.tintColor
+			zipSpinner.color = zipImage.tintColor
 			for l in headerLabels {
 				l.textColor = UIColor.darkGray
 			}
