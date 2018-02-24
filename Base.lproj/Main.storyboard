@@ -313,11 +313,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="HJT-hG-46H" customClass="PreferencesController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7y-8b-Uup">
-                                <rect key="frame" x="0.0" y="64" width="320" height="543"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="411"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
                                         <rect key="frame" x="40" y="302" width="240" height="14.5"/>
@@ -481,8 +481,6 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="700"/>
                     <connections>
                         <outlet property="bottomLabel" destination="HiR-cx-G23" id="H70-4h-zjd"/>
                         <outlet property="container" destination="eHF-2i-yuv" id="u8J-Qp-uha"/>
@@ -506,7 +504,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5160" y="-680"/>
+            <point key="canvasLocation" x="5160" y="-611"/>
         </scene>
         <!--Options Controller-->
         <scene sceneID="DO8-pZ-FEn">
@@ -1971,7 +1969,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="rij-Sw-Lt9"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4208" y="2009"/>
+            <point key="canvasLocation" x="4208" y="1979"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nOy-qs-6YK">
