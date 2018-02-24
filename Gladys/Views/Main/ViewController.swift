@@ -179,11 +179,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
-		cell.lowMemoryMode = lowMemoryMode
-		let item = Model.filteredDrops[indexPath.item]
-		cell.archivedDropItem = item
-		cell.isEditing = isEditing
-		cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
+		if indexPath.item < Model.filteredDrops.count {
+			cell.lowMemoryMode = lowMemoryMode
+			let item = Model.filteredDrops[indexPath.item]
+			cell.archivedDropItem = item
+			cell.isEditing = isEditing
+			cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
+		}
 		return cell
 	}
 

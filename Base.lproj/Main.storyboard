@@ -120,7 +120,7 @@
                         </barButtonItem>
                         <barButtonItem enabled="NO" title="Labels" id="MZc-J5-Dyp">
                             <connections>
-                                <segue destination="xcJ-8p-bxv" kind="popoverPresentation" identifier="showLabelEditor" popoverAnchorBarButtonItem="MZc-J5-Dyp" id="TqB-9J-NBk">
+                                <segue destination="xcJ-8p-bxv" kind="popoverPresentation" identifier="showLabelEditor" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="MZc-J5-Dyp" id="TqB-9J-NBk">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
@@ -147,7 +147,7 @@
                         </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" image="labels-unselected" id="rde-vn-hL8">
                             <connections>
-                                <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
+                                <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
