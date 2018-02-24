@@ -19,6 +19,9 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var darkModeSwitch: UISwitch!
 	@IBOutlet weak var fullScreenSwitch: UISwitch!
 
+	@IBOutlet var headerLabels: [UILabel]!
+	@IBOutlet var subtitleLabels: [UILabel]!
+
 	@IBAction func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
 		PersistedOptions.showCopyMoveSwitchSelector = sender.isOn
 	}
@@ -66,6 +69,21 @@ final class OptionsController: GladysViewController {
 		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
 		darkModeSwitch.onTintColor = view.tintColor
 		fullScreenSwitch.onTintColor = view.tintColor
+		if PersistedOptions.darkMode {
+			for l in headerLabels {
+				l.textColor = UIColor.lightGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
+		} else {
+			for l in headerLabels {
+				l.textColor = UIColor.darkGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
+		}
 	}
 
 	override func viewDidLoad() {

@@ -17,6 +17,8 @@ final class AboutController: GladysViewController {
 	@IBOutlet weak var versionLabel: UIBarButtonItem!
 	@IBOutlet weak var logo: UIImageView!
 
+	@IBOutlet var subtitleLabels: [UILabel]!
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -37,8 +39,14 @@ final class AboutController: GladysViewController {
 		super.darkModeChanged()
 		if PersistedOptions.darkMode {
 			logo.alpha = 0.8
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
 		} else {
 			logo.alpha = 1
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
 		}
 	}
 

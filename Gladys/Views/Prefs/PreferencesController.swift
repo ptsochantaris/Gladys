@@ -7,6 +7,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
 
+	@IBOutlet var headerLabels: [UILabel]!
+	@IBOutlet var subtitleLabels: [UILabel]!
+
 	@objc override func darkModeChanged() {
 		super.darkModeChanged()
 		if PersistedOptions.darkMode {
@@ -14,11 +17,23 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			zipContainer.backgroundColor = .gray
 			zipImage.backgroundColor = ViewController.darkColor
 			innerFrame.backgroundColor = ViewController.darkColor
+			for l in headerLabels {
+				l.textColor = UIColor.lightGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
 		} else {
 			container.backgroundColor = .white
 			zipContainer.backgroundColor = .white
 			zipImage.backgroundColor = ViewController.imageLightBackground
 			innerFrame.backgroundColor = ViewController.imageLightBackground
+			for l in headerLabels {
+				l.textColor = UIColor.darkGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
 		}
 	}
 

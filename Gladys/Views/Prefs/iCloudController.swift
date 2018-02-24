@@ -17,6 +17,9 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var eraseAlliCloudData: UIBarButtonItem!
 	@IBOutlet weak var actionUploadSwitch: UISwitch!
 
+	@IBOutlet var headerLabels: [UILabel]!
+	@IBOutlet var subtitleLabels: [UILabel]!
+
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
 	}
@@ -51,6 +54,21 @@ final class iCloudController: GladysViewController {
 		icloudSwitch.onTintColor = view.tintColor
 		limitToWiFiSwitch.onTintColor = view.tintColor
 		actionUploadSwitch.onTintColor = view.tintColor
+		if PersistedOptions.darkMode {
+			for l in headerLabels {
+				l.textColor = UIColor.lightGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
+		} else {
+			for l in headerLabels {
+				l.textColor = UIColor.darkGray
+			}
+			for s in subtitleLabels {
+				s.textColor = UIColor.gray
+			}
+		}
 	}
 
 	@IBAction func eraseiCloudDataSelected(_ sender: UIBarButtonItem) {

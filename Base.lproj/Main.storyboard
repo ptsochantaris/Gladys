@@ -497,6 +497,11 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="zipInnerFrame" destination="60f-T2-TvR" id="bl6-RI-mTU"/>
                         <outlet property="zipLabel" destination="ZOF-Yb-WSo" id="KNc-ZG-Bxu"/>
                         <outlet property="zipSpinner" destination="g0B-rC-HOO" id="qUw-6p-bn6"/>
+                        <outletCollection property="headerLabels" destination="Gar-th-nmX" collectionClass="NSMutableArray" id="QMu-jw-90U"/>
+                        <outletCollection property="subtitleLabels" destination="iaP-VB-kpO" collectionClass="NSMutableArray" id="xhs-bH-zee"/>
+                        <outletCollection property="subtitleLabels" destination="ZOF-Yb-WSo" collectionClass="NSMutableArray" id="gI7-id-2E9"/>
+                        <outletCollection property="subtitleLabels" destination="HiR-cx-G23" collectionClass="NSMutableArray" id="T9C-ft-sos"/>
+                        <outletCollection property="subtitleLabels" destination="OxZ-BU-EoU" collectionClass="NSMutableArray" id="UgC-BD-peR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -841,6 +846,22 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="separateItemsSwitch" destination="rEn-tW-qfZ" id="7Z0-nJ-PnJ"/>
                         <outlet property="showCopyMoveSwitchSelectorSwitch" destination="Do9-C4-hUt" id="bEh-3u-jUE"/>
                         <outlet property="twoColumnsSwitch" destination="Muf-pL-bO7" id="9aO-4D-ZP3"/>
+                        <outletCollection property="headerLabels" destination="TCB-yS-Zi8" collectionClass="NSMutableArray" id="aGE-Zs-A98"/>
+                        <outletCollection property="headerLabels" destination="zfI-Nw-dDs" collectionClass="NSMutableArray" id="E06-5Z-2km"/>
+                        <outletCollection property="headerLabels" destination="B1F-Ds-mu2" collectionClass="NSMutableArray" id="u5d-WZ-JHZ"/>
+                        <outletCollection property="headerLabels" destination="uqs-I6-11E" collectionClass="NSMutableArray" id="tHW-gZ-euq"/>
+                        <outletCollection property="headerLabels" destination="8fy-WQ-f8c" collectionClass="NSMutableArray" id="Pw9-dn-jKe"/>
+                        <outletCollection property="headerLabels" destination="fnu-A8-kYB" collectionClass="NSMutableArray" id="IGe-lX-0QS"/>
+                        <outletCollection property="headerLabels" destination="OuU-pw-dUx" collectionClass="NSMutableArray" id="uls-4f-Wbs"/>
+                        <outletCollection property="headerLabels" destination="DB5-7E-n1A" collectionClass="NSMutableArray" id="S7I-hS-4IY"/>
+                        <outletCollection property="subtitleLabels" destination="lu9-sc-ekq" collectionClass="NSMutableArray" id="css-dD-sMa"/>
+                        <outletCollection property="subtitleLabels" destination="Jov-Kc-2dl" collectionClass="NSMutableArray" id="mJF-Ta-c3g"/>
+                        <outletCollection property="subtitleLabels" destination="9oh-Qt-4OW" collectionClass="NSMutableArray" id="uKf-R5-2Zx"/>
+                        <outletCollection property="subtitleLabels" destination="FDI-4i-U5a" collectionClass="NSMutableArray" id="dmo-9y-SvR"/>
+                        <outletCollection property="subtitleLabels" destination="0ah-QQ-zwq" collectionClass="NSMutableArray" id="92E-We-C17"/>
+                        <outletCollection property="subtitleLabels" destination="vn8-cj-Vjs" collectionClass="NSMutableArray" id="PHA-fN-USO"/>
+                        <outletCollection property="subtitleLabels" destination="GSf-By-OSK" collectionClass="NSMutableArray" id="7n0-GK-O7d"/>
+                        <outletCollection property="subtitleLabels" destination="52l-q7-cLP" collectionClass="NSMutableArray" id="q5u-VN-S6C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1005,6 +1026,12 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
                         <outlet property="limitToWiFiSwitch" destination="i3g-cz-xkx" id="bwk-rQ-871"/>
+                        <outletCollection property="headerLabels" destination="52a-oW-xMk" collectionClass="NSMutableArray" id="OnS-3D-U2A"/>
+                        <outletCollection property="subtitleLabels" destination="RxQ-uD-Ykw" collectionClass="NSMutableArray" id="ic4-79-J8x"/>
+                        <outletCollection property="headerLabels" destination="guO-CQ-KTM" collectionClass="NSMutableArray" id="V5e-eB-wHG"/>
+                        <outletCollection property="headerLabels" destination="bc6-6V-O7h" collectionClass="NSMutableArray" id="iXD-hX-qtn"/>
+                        <outletCollection property="subtitleLabels" destination="cSP-79-0Wg" collectionClass="NSMutableArray" id="ZJ6-Gx-jaU"/>
+                        <outletCollection property="subtitleLabels" destination="BZ8-I2-EIj" collectionClass="NSMutableArray" id="1Ta-t0-UkY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1084,6 +1111,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="unlimitedSpacing" destination="M3L-V6-9Bw" id="RaY-cP-Aa3"/>
                         <outlet property="versionLabel" destination="1U2-0T-zYK" id="R8u-bm-Nqj"/>
                         <outlet property="webSiteSpacing" destination="OnK-LC-Mra" id="SJO-BF-J01"/>
+                        <outletCollection property="subtitleLabels" destination="K7X-0r-S6t" collectionClass="NSMutableArray" id="RFh-Ev-Xjk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
