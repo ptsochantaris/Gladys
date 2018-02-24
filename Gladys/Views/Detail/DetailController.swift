@@ -314,8 +314,10 @@ final class DetailController: GladysViewController,
 				if PersistedOptions.fullScreenPreviews {
 					let n = UINavigationController(rootViewController: q)
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
-					if PersistedOptions.darkMode {
-						n.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
+					if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+						n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
+						n.navigationBar.barTintColor = sourceBar.barTintColor
+						n.navigationBar.tintColor = sourceBar.tintColor
 					}
 					ViewController.top.present(n, animated: true)
 				} else {

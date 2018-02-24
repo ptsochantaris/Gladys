@@ -125,8 +125,10 @@ extension ArchivedDropItem {
 			let n = QLHostingViewController(rootViewController: q)
 			n.preferredContentSize = mainWindow.bounds.size
 			n.view.tintColor = ViewController.shared.view.tintColor
-			if PersistedOptions.darkMode {
-				n.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
+			if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+				n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
+				n.navigationBar.barTintColor = sourceBar.barTintColor
+				n.navigationBar.tintColor = sourceBar.tintColor
 			}
 			if PersistedOptions.fullScreenPreviews {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
