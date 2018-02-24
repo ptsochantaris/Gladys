@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,6 @@
         <scene sceneID="7MM-of-jgj">
             <objects>
                 <viewController title="Image" id="ObA-dk-sSI" customClass="ActionRequestViewController" customModule="GladysAction" sceneMemberID="viewController">
-                    <layoutGuides/>
                     <view key="view" contentMode="scaleToFill" id="zMn-AG-sqS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -78,11 +77,14 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
+                        <outlet property="background" destination="RFu-pz-evy" id="grm-I2-xGE"/>
                         <outlet property="cancelButton" destination="WYi-yp-eM6" id="bee-A9-ctK"/>
                         <outlet property="expandButton" destination="Y1j-t2-fVq" id="ueE-2V-xab"/>
+                        <outlet property="image" destination="QQw-Qu-GXD" id="KtA-qT-8Ay"/>
                         <outlet property="imageCenter" destination="sID-Ds-Zd3" id="xf3-TE-RbT"/>
                         <outlet property="imageDistance" destination="Loj-4u-qUz" id="Jda-0o-oka"/>
                         <outlet property="imageHeight" destination="D3U-1n-34l" id="BJa-uz-npI"/>
+                        <outlet property="navigationBar" destination="NOA-Dm-cuz" id="kEV-um-qZD"/>
                         <outlet property="statusLabel" destination="HyJ-oj-52E" id="pPt-ah-ASv"/>
                         <outlet property="view" destination="zMn-AG-sqS" id="Qma-de-2ek"/>
                     </connections>

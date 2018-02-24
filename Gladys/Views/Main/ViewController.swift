@@ -93,6 +93,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			})
 		} else if dragModePanel.superview == nil, show {
 			self.dragModeReverse = false
+			if PersistedOptions.darkMode {
+				dragModePanel.tintColor = self.navigationController?.navigationBar.tintColor
+				dragModePanel.backgroundColor = ViewController.darkColor
+				dragModeTitle.textColor = .white
+			}
 			self.updateDragModeOverlay()
 			view.addSubview(dragModePanel)
 			let top = dragModePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
@@ -458,6 +463,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	@objc override func darkModeChanged() {
 		super.darkModeChanged()
+
 		if PersistedOptions.darkMode {
 			archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
@@ -473,6 +479,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				}
 			}
 		}
+
 		if let nav = firstPresentedNavigationController {
 			nav.popoverPresentationController?.backgroundColor = patternColor
 			nav.tabBarController?.viewControllers?.forEach {
@@ -536,6 +543,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
+		emptyView?.alpha = PersistedOptions.darkMode ? 0.5 : 1
 		blurb("Ready! Drop me stuff.")
 
 		SKPaymentQueue.default().add(self)
@@ -894,7 +902,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			if animated {
 				e.alpha = 0
 				UIView.animate(animations: {
-					e.alpha = 1
+					e.alpha = PersistedOptions.darkMode ? 0.5 : 1
 				})
 			}
 

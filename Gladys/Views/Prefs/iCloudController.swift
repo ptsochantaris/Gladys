@@ -34,18 +34,23 @@ final class iCloudController: GladysViewController {
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		icloudSwitch.tintColor = .lightGray
-		icloudSwitch.onTintColor = view.tintColor
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
 
 		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
 		limitToWiFiSwitch.tintColor = .lightGray
-		limitToWiFiSwitch.onTintColor = view.tintColor
 
 		actionUploadSwitch.isOn = CloudManager.shareActionShouldUpload
 		actionUploadSwitch.tintColor = .lightGray
-		actionUploadSwitch.onTintColor = view.tintColor
 
 		updateiCloudControls()
+	}
+
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		icloudSpinner.color = ViewController.tintColor
+		icloudSwitch.onTintColor = view.tintColor
+		limitToWiFiSwitch.onTintColor = view.tintColor
+		actionUploadSwitch.onTintColor = view.tintColor
 	}
 
 	@IBAction func eraseiCloudDataSelected(_ sender: UIBarButtonItem) {

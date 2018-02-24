@@ -19,6 +19,9 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	@IBOutlet weak var imageCenter: NSLayoutConstraint!
 	@IBOutlet weak var imageDistance: NSLayoutConstraint!
 	@IBOutlet weak var expandButton: UIButton!
+	@IBOutlet weak var background: UIImageView!
+	@IBOutlet weak var image: UIImageView!
+	@IBOutlet weak var navigationBar: UINavigationBar!
 
 	private var newItemIds = [String]()
 
@@ -65,6 +68,17 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			statusLabel?.text = "Adding \(itemCount) items..."
 		} else {
 			statusLabel?.text = "Adding item..."
+		}
+
+		if PersistedOptions.darkMode {
+			image.alpha = 0.7
+			background.image = nil
+			navigationBar.barTintColor = .darkGray
+			navigationBar.tintColor = .lightGray
+			statusLabel?.textColor = .lightGray
+			view.tintColor = .lightGray
+			view.backgroundColor = .black
+			expandButton.setTitleColor(.white, for: .normal)
 		}
     }
 
