@@ -14,7 +14,11 @@ class DimView: UIView, UIDropInteractionDelegate {
 		let t = UITapGestureRecognizer(target: self, action: #selector(tapped))
 		addGestureRecognizer(t)
 		addInteraction(UIDropInteraction(delegate: self))
-		backgroundColor = UIColor(white: 0, alpha: 0.1)
+		if PersistedOptions.darkMode {
+			backgroundColor = UIColor(white: 0, alpha: 0.4)
+		} else {
+			backgroundColor = UIColor(white: 0, alpha: 0.1)
+		}
 		alpha = 0
 		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
 			self.alpha = 1
