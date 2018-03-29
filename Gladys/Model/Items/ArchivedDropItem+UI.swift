@@ -80,7 +80,7 @@ extension ArchivedDropItem {
 	}
 
 	var shareableComponents: [Any] {
-		var items = typeItems.flatMap { $0.itemForShare.0 }
+		var items = typeItems.compactMap { $0.itemForShare.0 }
 		if let text = displayText.0, URL(string: text) == nil {
 			items.append(text)
 		}

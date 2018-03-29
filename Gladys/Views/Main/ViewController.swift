@@ -150,7 +150,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		showDragModeOverlay(false)
 		if let droppedIds = ArchivedDropItemType.droppedIds {
 			if dragModeMove {
-				let items = droppedIds.flatMap { Model.item(uuid: $0) }
+				let items = droppedIds.compactMap { Model.item(uuid: $0) }
 				if items.count > 0 {
 					deleteRequested(for: items)
 				}

@@ -22,7 +22,7 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 	var endCallback: ((Bool)->Void)?
 
 	var availableToggles: [String] = {
-		return Model.labelToggles.flatMap { $0.emptyChecker ? nil : $0.name }
+		return Model.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
 	}()
 
 	override func viewWillAppear(_ animated: Bool) {

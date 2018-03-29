@@ -1,6 +1,6 @@
 PODS:
   - Fuzi (2.0.1)
-  - ZIPFoundation (0.9.3)
+  - ZIPFoundation (0.9.5)
 
 DEPENDENCIES:
   - Fuzi (~> 2)
@@ -8,8 +8,8 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Fuzi: f64983dea705491d3aedd32351247a09523e7efd
-  ZIPFoundation: e4a50f3e7026d907ea31ac7a1a6ba5394029f718
+  ZIPFoundation: 9a2b911bfd129abda3a5b89dd20a8d329c3d9e8b
 
 PODFILE CHECKSUM: 65200057e8b40bb850b8c337e649b43fee497aa3
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0

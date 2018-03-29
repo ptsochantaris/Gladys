@@ -140,17 +140,17 @@ final class WebArchiver {
 			return nil
 		}
 
-		let imagePaths = doc.xpath("//img[@src]").flatMap {
+		let imagePaths = doc.xpath("//img[@src]").compactMap {
 			return resoucePathFilter($0["src"])
 		}
 		resources += imagePaths
 
-		let jsPaths = doc.xpath("//script[@src]").flatMap {
+		let jsPaths = doc.xpath("//script[@src]").compactMap {
 			return resoucePathFilter($0["src"])
 		}
 		resources += jsPaths
 
-		let cssPaths = doc.xpath("//link[@rel='stylesheet'][@href]").flatMap {
+		let cssPaths = doc.xpath("//link[@rel='stylesheet'][@href]").compactMap {
 			return resoucePathFilter($0["href"])
 		}
 		resources += cssPaths

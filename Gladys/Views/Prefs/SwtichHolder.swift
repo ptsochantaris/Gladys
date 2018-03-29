@@ -20,7 +20,7 @@ final class SwitchHolder: UIView {
 		get {
 			let components = subviews
 				.sorted { $0.frame.origin.y < $1.frame.origin.y }
-				.flatMap { $0 is UILabel ? $0.accessibilityLabel : nil }
+				.compactMap { $0 is UILabel ? $0.accessibilityLabel : nil }
 			
 			return components.count > 0 ? components.joined(separator: ".") : nil
 		}

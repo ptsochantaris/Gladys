@@ -37,6 +37,7 @@ extension Model {
 		let itemsToSave = drops.filter { $0.goodToSave }
 
 		saveQueue.async {
+			var closureError: NSError?
 			var coordinationError: NSError?
 			coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 				do {
@@ -60,10 +61,10 @@ extension Model {
 						dataFileLastModified = dataModified
 					}
 				} catch {
-					coordinationError = error as NSError
+					closureError = error as NSError
 				}
 			}
-			if let e = coordinationError {
+			if let e = coordinationError ?? closureError {
 				log("Saving index coordination error: \(e.finalDescription)")
 			}
 		}
@@ -76,7 +77,7 @@ extension Model {
 		let start = Date()
 
 		let itemsToSave = drops.filter { $0.goodToSave }
-		let uuidsToEncode = itemsToSave.flatMap { i -> UUID? in
+		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
 				i.needsSaving = false
 				return i.uuid
@@ -110,6 +111,7 @@ extension Model {
 	}
 
 	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
+		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 			do {
@@ -154,10 +156,10 @@ extension Model {
 					dataFileLastModified = dataModified
 				}
 			} catch {
-				coordinationError = error as NSError
+				closureError = error as NSError
 			}
 		}
-		if let e = coordinationError {
+		if let e = coordinationError ?? closureError {
 			throw e
 		}
 	}

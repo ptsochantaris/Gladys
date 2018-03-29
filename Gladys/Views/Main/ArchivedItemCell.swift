@@ -631,7 +631,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			if shouldDisplayLoading {
 				return "Processing item. Activate to cancel."
 			} else {
-				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomLabel.text].flatMap { $0 }.joined(separator: "\n")
+				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomLabel.text].compactMap { $0 }.joined(separator: "\n")
 			}
 		}
 	}

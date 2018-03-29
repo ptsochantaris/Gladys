@@ -443,6 +443,7 @@ extension CloudManager {
 			switch ckError.code {
 
 			case .notAuthenticated,
+				 .assetNotAvailable,
 			     .managedAccountRestricted,
 			     .missingEntitlement,
 			     .zoneNotFound,

@@ -54,9 +54,9 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 
 	var filteredToggles: [String] {
 		if filter.isEmpty {
-			return Model.labelToggles.flatMap { $0.emptyChecker ? nil : $0.name }
+			return Model.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
 		} else {
-			return Model.labelToggles.flatMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
+			return Model.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
 		}
 	}
 

@@ -125,7 +125,7 @@ extension Model {
 
 		let fm = FileManager.default
 		guard let items = try? fm.contentsOfDirectory(at: appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
-		let uuids = items.flatMap { UUID(uuidString: $0.lastPathComponent) }
+		let uuids = items.compactMap { UUID(uuidString: $0.lastPathComponent) }
 		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
 			return !drops.contains { $0.uuid == uuid }
 		}
@@ -253,11 +253,11 @@ extension Model {
 	}
 
 	static var enabledLabelsForItems: [String] {
-		return labelToggles.flatMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
+		return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
 	}
 
 	static var enabledLabelsForTitles: [String] {
-		return labelToggles.flatMap { $0.enabled ? $0.name : nil }
+		return labelToggles.compactMap { $0.enabled ? $0.name : nil }
 	}
 
 	static func updateLabel(_ label: LabelToggle) {

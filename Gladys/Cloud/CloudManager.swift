@@ -62,11 +62,11 @@ final class CloudManager {
 		var uuid2progress = [String: Progress]()
 
 		let drops = Model.drops
-		var payloadsToPush = drops.flatMap { item -> [CKRecord]? in
+		var payloadsToPush = drops.compactMap { item -> [CKRecord]? in
 			if let itemRecord = item.populatedCloudKitRecord {
 				dataItemsToPush += item.typeItems.count
 				dropsToPush += 1
-				var payload = item.typeItems.flatMap { $0.populatedCloudKitRecord }
+				var payload = item.typeItems.compactMap { $0.populatedCloudKitRecord }
 				payload.append(itemRecord)
 
 				let itemId = item.uuid.uuidString

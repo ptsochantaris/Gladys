@@ -42,9 +42,7 @@ final class Model {
 
 	static func typeItem(uuid: String) -> ArchivedDropItemType? {
 		let uuidData = UUID(uuidString: uuid)
-		return drops.flatMap({
-			$0.typeItems.first { $0.uuid == uuidData }
-		}).first
+		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
 	}
 
 	private static var isStarted = false
