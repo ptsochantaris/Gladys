@@ -462,7 +462,13 @@ extension ArchivedDropItemType {
 					} else {
 						if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
 							c.path = largestImagePath
-							iconUrl = c.url
+							var url = c.url
+							if url == nil && (!(largestImagePath.hasPrefix("/") || largestImagePath.hasPrefix("."))) {
+								largestImagePath = "/" + largestImagePath
+								c.path = largestImagePath
+								url = c.url
+							}
+							iconUrl = url
 						}
 					}
 
