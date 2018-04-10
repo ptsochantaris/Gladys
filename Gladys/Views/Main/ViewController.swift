@@ -4,6 +4,10 @@ import CoreSpotlight
 import StoreKit
 import GladysFramework
 
+enum PasteResult {
+	case success, noData, tooManyItems
+}
+
 func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true) {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if showOK {
@@ -611,17 +615,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	@discardableResult
-	func pasteClipboard(overrides: ImportOverrides?, skipVisibleErrors: Bool = false) -> Bool {
+	func pasteClipboard(overrides: ImportOverrides?, skipVisibleErrors: Bool = false) -> PasteResult {
 		let providers = UIPasteboard.general.itemProviders
 		if providers.count == 0 {
 			if !skipVisibleErrors {
 				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
 			}
-			return false
+			return .noData
 		}
 
 		if checkInfiniteMode(for: 1) {
-			return false
+			return .tooManyItems
 		}
 
 		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: overrides) {
@@ -651,7 +655,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
-		return true
+		return .success
 	}
 
 	@objc private func detailViewClosing() {

@@ -14,16 +14,22 @@ struct CallbackSupport {
 		let m = Manager.shared
 		m.callbackURLScheme = Manager.urlSchemes?.first
 		m["paste-clipboard"] = { parameters, success, failure, cancel in
-			if handlePasteRequest(title: parameters["title"], note: parameters["note"], labels: parameters["labels"], skipVisibleErrors: true) {
-				success(nil)
-			} else {
-				failure(NSError.error(code: 1, failureReason: "Could not paste from clipboard"))
+			let result = handlePasteRequest(title: parameters["title"], note: parameters["note"], labels: parameters["labels"], skipVisibleErrors: true)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				switch result {
+				case .success:
+					success(nil)
+				case .noData:
+					failure(NSError.error(code: 1, failureReason: "Clipboard is empty."))
+				case .tooManyItems:
+					failure(NSError.error(code: 2, failureReason: "Gladys cannot hold more items."))
+				}
 			}
 		}
 	}
 
 	@discardableResult
-	static func handlePasteRequest(title: String?, note: String?, labels: String?, skipVisibleErrors: Bool) -> Bool {
+	static func handlePasteRequest(title: String?, note: String?, labels: String?, skipVisibleErrors: Bool) -> PasteResult {
 		ViewController.shared.dismissAnyPopOver()
 		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
