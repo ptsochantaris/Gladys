@@ -67,6 +67,7 @@
 		1619E8251EFF3B54000087DD /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		162027911FA1A9FC00E8D964 /* Types+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162027901FA1A9FC00E8D964 /* Types+MainApp.swift */; };
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
+		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -347,6 +348,7 @@
 		1619E81B1EFF3745000087DD /* GladysFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysFiles.entitlements; sourceTree = "<group>"; };
 		162027901FA1A9FC00E8D964 /* Types+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Types+MainApp.swift"; sourceTree = "<group>"; };
 		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
+		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -803,6 +805,7 @@
 				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
 				1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */,
 				165173021F99483E006CAF0A /* GladysViewController.swift */,
+				162289B3207CC72600DAC6A2 /* CallbackSupport.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1296,11 +1299,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Gladys/Pods-Gladys-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CallbackURLKit/CallbackURLKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Fuzi/Fuzi.framework",
 				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CallbackURLKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fuzi.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
 			);
@@ -1532,6 +1537,7 @@
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1602F31F2030E5550036E2B0 /* Notifications.swift in Sources */,
+				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,

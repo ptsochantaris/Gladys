@@ -15,21 +15,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
+
+		if CallbackSupport.handlePossibleCallbackURL(url: url) {
+			return true
+
+		} else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 				ViewController.shared.displayIAPRequest(newTotal: t)
 			}
 			return true
-		} else if let c = url.host, c == "paste-clipboard" {
-			ViewController.shared.dismissAnyPopOver()
+
+		} else if let c = url.host, c == "paste-clipboard" { // overriden by callback support above - this is legacy
 			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 			let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
 			let noteParameter = components?.queryItems?.first { $0.name == "note" }
-			let labelsList = components?.queryItems?.first { $0.name == "labels" }?.value?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
-			let importOverrides = ImportOverrides(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList)
-			ViewController.shared.pasteClipboard(overrides: importOverrides)
+			let labelsList = components?.queryItems?.first { $0.name == "labels" }
+			CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
 			return true
 		}
+		
 		return false
 	}
 
@@ -65,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
 		log("Initial reachability status: \(reachability.status.name)")
+		CallbackSupport.setupCallbackSupport()
 		return true
 	}
 

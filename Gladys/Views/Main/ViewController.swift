@@ -610,15 +610,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		pasteClipboard(overrides: nil)
 	}
 
-	func pasteClipboard(overrides: ImportOverrides?) {
+	@discardableResult
+	func pasteClipboard(overrides: ImportOverrides?, skipVisibleErrors: Bool = false) -> Bool {
 		let providers = UIPasteboard.general.itemProviders
 		if providers.count == 0 {
-			genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
-			return
+			if !skipVisibleErrors {
+				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
+			}
+			return false
 		}
 
 		if checkInfiniteMode(for: 1) {
-			return
+			return false
 		}
 
 		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: overrides) {
@@ -648,6 +651,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
+		return true
 	}
 
 	@objc private func detailViewClosing() {

@@ -1,15 +1,20 @@
 PODS:
-  - Fuzi (2.0.1)
+  - CallbackURLKit (2.0.0):
+    - CallbackURLKit/Core (= 2.0.0)
+  - CallbackURLKit/Core (2.0.0)
+  - Fuzi (2.0.2)
   - ZIPFoundation (0.9.5)
 
 DEPENDENCIES:
+  - CallbackURLKit
   - Fuzi (~> 2)
   - ZIPFoundation
 
 SPEC CHECKSUMS:
-  Fuzi: f64983dea705491d3aedd32351247a09523e7efd
+  CallbackURLKit: eebcf4ecbb70dc8c970f9fcf1ff70162c5ea0965
+  Fuzi: a890c1b79058033e1dcc7e14f9a62e0936e728ef
   ZIPFoundation: 9a2b911bfd129abda3a5b89dd20a8d329c3d9e8b
 
-PODFILE CHECKSUM: 65200057e8b40bb850b8c337e649b43fee497aa3
+PODFILE CHECKSUM: 364e69be7dfdb141c36cbc6ccc737c9f9fa9b87c
 
 COCOAPODS: 1.4.0

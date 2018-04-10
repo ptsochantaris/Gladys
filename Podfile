@@ -7,6 +7,7 @@ inhibit_all_warnings!
 target 'Gladys' do
   pod 'Fuzi', '~> 2'
   pod 'ZIPFoundation'
+  pod 'CallbackURLKit'
 end
 
 target 'GladysAction' do
