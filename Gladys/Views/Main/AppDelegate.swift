@@ -16,25 +16,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
 
-		if CallbackSupport.handlePossibleCallbackURL(url: url) {
-			return true
-
-		} else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
+		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 				ViewController.shared.displayIAPRequest(newTotal: t)
 			}
 			return true
 
-		} else if let c = url.host, c == "paste-clipboard" { // overriden by callback support above - this is legacy
+		} else if let c = url.host, c == "paste-clipboard" { // this is legacy
 			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 			let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
 			let noteParameter = components?.queryItems?.first { $0.name == "note" }
 			let labelsList = components?.queryItems?.first { $0.name == "labels" }
 			CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
 			return true
+
+		} else if url.host == nil { // just opening
+			return true
 		}
-		
-		return false
+
+		return CallbackSupport.handlePossibleCallbackURL(url: url)
 	}
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
