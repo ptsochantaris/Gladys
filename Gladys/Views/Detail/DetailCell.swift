@@ -68,7 +68,7 @@ final class DetailCell: UITableViewCell {
 		if PersistedOptions.darkMode {
 			borderView.backgroundColor = .darkGray
 			b.backgroundColor = ViewController.darkColor
-			nameHolder.backgroundColor = UIColor(white: 0.2, alpha: 1)
+			nameHolder.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
 			name.textColor = ViewController.tintColor
 			desc.textColor = .lightGray
 		}

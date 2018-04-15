@@ -47,13 +47,13 @@ class GladysViewController: UIViewController {
 		if PersistedOptions.darkMode {
 			return .lightGray
 		} else {
-			return UIColor(red: 147.0/255.0, green: 24.0/255.0, blue: 18.0/255.0, alpha: 1)
+			return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
 		}
 	}
 
 	static var darkColor: UIColor? {
 		if PersistedOptions.darkMode {
-			return UIColor(red: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1)
+			return #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 1)
 		}
 		return nil
 	}

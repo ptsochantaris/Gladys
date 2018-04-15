@@ -157,7 +157,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if PersistedOptions.darkMode {
 			tintColor = .white
 			backgroundView?.backgroundColor = .darkGray
-			image.backgroundColor = UIColor(white: 0.2, alpha: 1)
+			image.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
 		} else {
 			tintColor = nil
 			backgroundView?.backgroundColor = .lightGray
@@ -248,13 +248,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	private static let darkTextColor: UIColor = {
-		return UIColor(red: 76.0/255.0, green: 76.0/255.0, blue: 76.0/255.0, alpha: 1)
-	}()
+	private static let darkTextColor = #colorLiteral(red: 0.2980392157, green: 0.2980392157, blue: 0.2980392157, alpha: 1)
 
-	private static let lightTextColor: UIColor = {
-		return UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1)
-	}()
+	private static let lightTextColor = #colorLiteral(red: 0.7843137255, green: 0.7843137255, blue: 0.7843137255, alpha: 1)
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -263,8 +259,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.layer.cornerRadius = 5
 		image.accessibilityIgnoresInvertColors = true
 		contentView.tintColor = .darkGray
-
-		ViewController.imageLightBackground = image.backgroundColor
 
 		let b = UIView()
 		b.layer.cornerRadius = 10

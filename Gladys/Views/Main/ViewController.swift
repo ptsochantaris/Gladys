@@ -90,7 +90,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if dragModePanel.superview != nil, !show {
 			UIView.animate(withDuration: 0.2, animations: {
 				self.dragModePanel.alpha = 0
-				self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -200)
+				self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -300)
 			}, completion: { finished in
 				self.dragModePanel.removeFromSuperview()
 				self.dragModePanel.transform = .identity
@@ -105,13 +105,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			self.updateDragModeOverlay()
 			view.addSubview(dragModePanel)
 			let top = dragModePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-			top.constant = -200
+			top.constant = -300
 			NSLayoutConstraint.activate([
 				dragModePanel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 				top
 				])
 			view.layoutIfNeeded()
-			top.constant = 0
+			top.constant = -180
 			UIView.animate(withDuration: 0.2, animations: {
 				self.view.layoutIfNeeded()
 				self.dragModePanel.alpha = 1
@@ -358,7 +358,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
 
-	static var imageLightBackground: UIColor!
+	static let imageLightBackground = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -464,6 +464,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
 		dragModePanel.layer.shadowOpacity = 0.3
 		dragModePanel.layer.shadowRadius = 1
+		dragModePanel.layer.cornerRadius = 100
 		dragModePanel.alpha = 0
 	}
 

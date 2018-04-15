@@ -44,6 +44,11 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		
 		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
+			// ensure the app wasn't just registered, just in case, before we warn the user
+			reVerifyInfiniteMode()
+		}
+
+		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			imageHeight.constant = 60
 			imageCenter.constant = -110
 			imageDistance.constant = 40

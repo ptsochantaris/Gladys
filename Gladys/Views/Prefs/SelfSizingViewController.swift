@@ -31,7 +31,7 @@ class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 		let bar = tabBar
 		bar.barTintColor = GladysViewController.darkColor
 		if PersistedOptions.darkMode {
-			bar.tintColor = UIColor(white: 0.8, alpha: 1)
+			bar.tintColor = #colorLiteral(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
 		} else {
 			bar.tintColor = ViewController.tintColor
 		}

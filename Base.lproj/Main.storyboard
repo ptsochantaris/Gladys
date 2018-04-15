@@ -168,18 +168,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="WNd-OH-aUx">
-                    <rect key="frame" x="0.0" y="0.0" width="290" height="140"/>
+                    <rect key="frame" x="0.0" y="0.0" width="290" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                            <rect key="frame" x="0.0" y="39" width="290" height="24"/>
+                            <rect key="frame" x="0.0" y="99" width="290" height="24"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
-                            <rect key="frame" x="0.0" y="0.0" width="290" height="140"/>
-                            <inset key="contentEdgeInsets" minX="60" minY="85" maxX="60" maxY="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="290" height="200"/>
+                            <inset key="contentEdgeInsets" minX="60" minY="145" maxX="60" maxY="50"/>
                             <state key="normal" title="Switch to Moving"/>
                             <connections>
                                 <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
@@ -193,7 +193,7 @@
                         <constraint firstItem="GZp-EI-Tfs" firstAttribute="bottom" secondItem="85D-T5-Fjo" secondAttribute="bottom" id="ilk-Q8-Zvr"/>
                         <constraint firstItem="srE-1O-tlR" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="jZG-7J-yv0"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="jux-TY-A2l"/>
-                        <constraint firstItem="srE-1O-tlR" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" constant="39" id="m5Q-ZB-jhK"/>
+                        <constraint firstItem="srE-1O-tlR" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" constant="99" id="m5Q-ZB-jhK"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="centerX" secondItem="srE-1O-tlR" secondAttribute="centerX" id="muF-J9-AWp"/>
                         <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="srE-1O-tlR" secondAttribute="trailing" id="ocY-vw-enV"/>
                     </constraints>
@@ -1796,7 +1796,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
