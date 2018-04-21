@@ -132,6 +132,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var topLabelDistance: NSLayoutConstraint!
 	@IBOutlet weak var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
+	@IBOutlet weak var lockImage: UIImageView!
 
 	private var selectionImage: UIImageView?
 	private var editHolder: UIView?
@@ -146,6 +147,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override func tintColorDidChange() {
 		selectionImage?.tintColor = tintColor
 		cancelButton?.tintColor = tintColor
+		lockImage.tintColor = tintColor
 		topLabel.highlightedTextColor = tintColor
 		bottomLabel.highlightedTextColor = tintColor
 	}
@@ -438,6 +440,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideCancel = true
 		var hideImage = true
 		var hideProgress = true
+		var hideLock = true
 
 		var topLabelText: String?
 		var topLabelAlignment: NSTextAlignment?
@@ -453,6 +456,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 				hideProgress = false
 				progressView.observedProgress = item.loadingProgress
 				image.image = nil
+
+			} else if item.needsUnlock {
+				hideLock = false
+				image.image = nil
+				bottomLabelAlignment = .center
+				bottomLabelText = item.lockHint
 
 			} else {
 
@@ -570,6 +579,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
+		lockImage.isHidden = hideLock
 	}
 
 	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)

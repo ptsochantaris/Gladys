@@ -6,6 +6,8 @@ import Contacts
 import ContactsUI
 import CoreSpotlight
 import MobileCoreServices
+import LocalAuthentication
+import GladysFramework
 
 extension ArchivedDropItem {
 
@@ -66,6 +68,93 @@ extension ArchivedDropItem {
 		return i
 	}
 
+	private func getPassword(from: UIViewController, title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?)->Void) {
+		let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		a.addTextField { textField in
+			textField.placeholder = "Password"
+		}
+		if requestHint {
+			a.addTextField { [weak self] textField in
+				textField.placeholder = "Label when locked"
+				textField.text = self?.displayText.0
+			}
+		}
+		a.addAction(UIAlertAction(title: action, style: .default, handler: { [weak self] ac in
+
+			var hint: String?
+			if a.textFields!.count > 1 {
+				hint = a.textFields![1].text
+			}
+
+			let password = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+			if password.isEmpty {
+				self?.getPassword(from: from, title: title, action: action, requestHint: requestHint, message: message, completion: completion)
+			} else {
+				completion(password, hint)
+			}
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { ac in
+			completion(nil, nil)
+		}))
+		from.present(a, animated: true)
+	}
+
+	func lock(from: UIViewController, completion: @escaping (Data?, String?)->Void) {
+		let auth = LAContext()
+		var authError: NSError?
+		let message: String
+		if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+			message = "Please provide a backup password in case Touch or Face ID fails. You can also provide an optional label to display while the item is locked."
+		} else {
+			message = "Please provide the password for unlocking this item. You can also provide an optional label to display while the item is locked."
+		}
+		getPassword(from: from, title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
+			guard let password = password else {
+				completion(nil, nil)
+				return
+			}
+			self?.needsUnlock = true
+			completion(sha1(password), hint)
+		}
+	}
+
+	func unlock(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
+		let auth = LAContext()
+		var authError: NSError?
+		if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+			auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
+				DispatchQueue.main.async { [weak self] in
+					if success {
+						self?.needsUnlock = false
+						completion(true)
+					} else {
+						self?.unlockWithPassword(from: from, label: label, action: action, completion: completion)
+					}
+				}
+			})
+		} else {
+			unlockWithPassword(from: from, label: label, action: action, completion: completion)
+		}
+	}
+
+	func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
+		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please provide the password for this item") { [weak self] password, hint in
+			guard let password = password else {
+				completion(false)
+				return
+			}
+			if self?.lockPassword == sha1(password) {
+				self?.needsUnlock = false
+				completion(true)
+			} else {
+				completion(false)
+			}
+		}
+	}
+
+	func postModified() {
+		NotificationCenter.default.post(name: .ItemModified, object: self)
+	}
 
 	private static let mediumFormatter: DateFormatter = {
 		let d = DateFormatter()
@@ -76,7 +165,7 @@ extension ArchivedDropItem {
 	}()
 
 	var addedString: String {
-		return "Added " + ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
 	var shareableComponents: [Any] {

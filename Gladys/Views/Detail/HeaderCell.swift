@@ -98,7 +98,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		item.markUpdated()
 		label.text = item.displayText.0
 
-		NotificationCenter.default.post(name: .ItemModified, object: item)
+		item.postModified()
 		resizeCallback?(nil, true)
 
 		item.reIndex()

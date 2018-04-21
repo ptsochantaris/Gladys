@@ -17,6 +17,7 @@ final class DetailController: GladysViewController,
 	@IBOutlet weak var deleteButton: UIBarButtonItem!
 	@IBOutlet weak var copyButton: UIBarButtonItem!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
+	@IBOutlet weak var lockButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,6 +34,7 @@ final class DetailController: GladysViewController,
 		deleteButton.accessibilityLabel = "Delete item"
 		copyButton.accessibilityLabel = "Copy item to clipboard"
 		shareButton.accessibilityLabel = "Share"
+		updateLockButton()
 
 		openButton.isEnabled = item.canOpen
 
@@ -54,6 +56,47 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+	}
+
+	private func updateLockButton() {
+		if item.isLocked {
+			lockButton.accessibilityLabel = "Remove Lock"
+			lockButton.image = #imageLiteral(resourceName: "locked")
+		} else {
+			lockButton.accessibilityLabel = "Lock Item"
+			lockButton.image = #imageLiteral(resourceName: "unlocked")
+		}
+	}
+
+	@IBAction func lockButtonSelected(_ sender: UIBarButtonItem) {
+		if item.isLocked {
+			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
+				if success, let s = self {
+					s.passwordUpdate(nil, hint: nil)
+				}
+			}
+		} else {
+			item.lock(from: self) { [weak self] passwordData, passwordHint in
+				if let d = passwordData, let s = self {
+					s.passwordUpdate(d, hint: passwordHint)
+				}
+			}
+		}
+	}
+
+	private func passwordUpdate(_ newPassword: Data?, hint: String?) {
+		item.lockPassword = newPassword
+		if let hint = hint, !hint.isEmpty {
+			item.lockHint = hint
+		} else {
+			item.lockHint = nil
+		}
+		updateLockButton()
+		makeIndexAndSaveItem()
+		item.postModified()
+		if item.needsUnlock {
+			done()
+		}
 	}
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {

@@ -17,3 +17,5 @@ FOUNDATION_EXPORT const unsigned char GladysFrameworkVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <GladysFramework/PublicHeader.h>
 
 BOOL verifyIapReceipt();
+
+NSData *sha1(NSString *input);

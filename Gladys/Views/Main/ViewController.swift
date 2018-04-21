@@ -165,13 +165,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		ArchivedDropItemType.droppedIds = Set<UUID>()
-		return [Model.filteredDrops[indexPath.item].dragItem]
+		let item = Model.filteredDrops[indexPath.item]
+		if item.needsUnlock { return [] }
+		return [item.dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let newItem = Model.filteredDrops[indexPath.item].dragItem
-		if !session.items.contains(newItem) {
-			return [newItem]
+		let item = Model.filteredDrops[indexPath.item]
+		let dragItem = item.dragItem
+		if !session.items.contains(dragItem) && !item.needsUnlock {
+			return [dragItem]
 		} else {
 			return []
 		}
@@ -446,6 +449,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			didUpdateItems()
 			collectionView.reloadItems(at: [indexPath])
 
+		} else if item.needsUnlock {
+			item.unlock(from: self, label: "Unlock Item", action: "Unlock") { success in
+				if success {
+					item.needsUnlock = false
+					collectionView.reloadItems(at: [indexPath])
+				}
+			}
+
 		} else {
 			mostRecentIndexPathActioned = indexPath
 			performSegue(withIdentifier: "showDetail", sender: item)
@@ -547,6 +558,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
+		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -558,6 +570,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		checkForUpgrade()
 		cloudStatusChanged()
+	}
+
+	@objc private func backgrounded() {
+		for item in Model.drops where item.lockPassword != nil && !item.needsUnlock {
+			item.needsUnlock = true
+			item.postModified()
+		}
 	}
 
 	@objc private func reachabilityChanged() {

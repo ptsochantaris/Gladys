@@ -4,6 +4,14 @@
 #import <openssl/objects.h>
 #import <openssl/x509.h>
 #import <openssl/evp.h>
+#import <CommonCrypto/CommonCrypto.h>
+
+NSData *sha1(NSString *input) {
+	unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+	NSData *stringBytes = [input dataUsingEncoding: NSUTF8StringEncoding];
+	CC_SHA1([stringBytes bytes], (CC_LONG)[stringBytes length], digest);
+	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
+}
 
 NSDateFormatter *makeFormatter() {
 	// Date formatter to handle RFC 3339 dates in GMT time zone

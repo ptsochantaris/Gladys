@@ -44,9 +44,22 @@ final class ArchivedDropItem: Codable, Equatable {
 		}
 	}
 
+	var lockPassword: Data? {
+		didSet {
+			needsSaving = true
+		}
+	}
+
+	var lockHint: String? {
+		didSet {
+			needsSaving = true
+		}
+	}
+
 	// Transient
 	var loadingProgress: Progress?
 	var needsSaving: Bool
+	var needsUnlock: Bool
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -59,6 +72,8 @@ final class ArchivedDropItem: Codable, Equatable {
 		case titleOverride
 		case labels
 		case needsDeletion
+		case lockPassword
+		case lockHint
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -73,6 +88,8 @@ final class ArchivedDropItem: Codable, Equatable {
 		try v.encode(titleOverride, forKey: .titleOverride)
 		try v.encode(labels, forKey: .labels)
 		try v.encode(needsDeletion, forKey: .needsDeletion)
+		try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
+		try v.encodeIfPresent(lockHint, forKey: .lockHint)
 	}
 
 	init(from decoder: Decoder) throws {
@@ -88,7 +105,10 @@ final class ArchivedDropItem: Codable, Equatable {
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
+		lockPassword = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+		lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
 		needsSaving = false
+		needsUnlock = lockPassword != nil
 	}
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
@@ -134,6 +154,10 @@ final class ArchivedDropItem: Codable, Equatable {
 
 	var displayTitleOrUuid: String {
 		return displayText.0 ?? uuid.uuidString
+	}
+
+	var isLocked: Bool {
+		return lockPassword != nil
 	}
 
 	var associatedWebURL: URL? {
@@ -202,6 +226,7 @@ final class ArchivedDropItem: Codable, Equatable {
 			labels = overrides?.labels ?? []
 			typeItems = [ArchivedDropItemType]()
 			needsSaving = true
+			needsUnlock = false
 	
 			loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 		}
@@ -215,11 +240,14 @@ final class ArchivedDropItem: Codable, Equatable {
 		updatedAt = record["updatedAt"] as! Date
 		suggestedName = record["suggestedName"] as? String
 		titleOverride = record["titleOverride"] as! String
+		lockPassword = record["lockPassword"] as? Data
+		lockHint = record["lockHint"] as? String
 		note = record["note"] as! String
 		labels = (record["labels"] as? [String]) ?? []
 		needsReIngest = true
 		needsSaving = true
 		needsDeletion = false
+		needsUnlock = lockPassword != nil
 		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }.sorted { $0.order < $1.order }
 		cloudKitRecord = record
 	}

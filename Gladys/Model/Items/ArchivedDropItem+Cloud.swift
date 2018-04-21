@@ -14,6 +14,8 @@ extension ArchivedDropItem {
 		note = record["note"] as! String
 		titleOverride = record["titleOverride"] as! String
 		labels = (record["labels"] as? [String]) ?? []
+		lockPassword = record["lockPassword"] as? Data
+		lockHint = record["lockHint"] as? String
 		cloudKitRecord = record
 		needsReIngest = true
 	}
@@ -40,11 +42,9 @@ extension ArchivedDropItem {
 		record["updatedAt"] = updatedAt as NSDate
 		record["note"] = note as NSString
 		record["titleOverride"] = titleOverride as NSString
-		if labels.isEmpty {
-			record["labels"] = nil
-		} else {
-			record["labels"] = labels as NSArray
-		}
+		record["lockPassword"] = lockPassword as NSData?
+		record["lockHint"] = lockHint as NSString?
+		record["labels"] = labels.isEmpty ? nil : labels as NSArray
 		return record
 	}
 }
