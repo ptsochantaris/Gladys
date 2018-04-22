@@ -67,8 +67,8 @@
                                                     <color key="progressTintColor" red="0.57073712350000005" green="0.0" blue="0.02017655782" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="trackTintColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </progressView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
-                                                    <rect key="frame" x="141.5" y="139" width="17" height="22"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconLock" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
+                                                    <rect key="frame" x="139.5" y="136" width="21" height="28"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
@@ -2379,6 +2379,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconHelp" width="28" height="28"/>
         <image name="iconImportExport" width="28" height="28"/>
         <image name="iconInfo" width="28" height="28"/>
+        <image name="iconLock" width="21" height="28"/>
         <image name="iconSettings" width="28" height="28"/>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>

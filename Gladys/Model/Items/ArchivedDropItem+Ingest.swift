@@ -27,6 +27,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	func reIngest(delegate: LoadCompletionDelegate) {
 		self.delegate = delegate
 		loadCount = typeItems.count
+		needsUnlock = lockPassword != nil
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
 		if typeItems.count == 0 { // can happen for example when all components are removed
