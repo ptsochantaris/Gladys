@@ -22,6 +22,6 @@ extension Model {
 	}
 
 	static var visibleDrops: [ArchivedDropItem] {
-		return drops.filter { !$0.needsDeletion }
+		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil }
 	}
 }

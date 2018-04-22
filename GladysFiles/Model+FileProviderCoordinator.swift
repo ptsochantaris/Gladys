@@ -38,6 +38,6 @@ extension Model {
 		if Model.legacyMode {
 			return []
 		}
-		return drops.filter { !$0.needsDeletion }
+		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil }
 	}
 }

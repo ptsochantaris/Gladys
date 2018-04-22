@@ -298,7 +298,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
-		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview {
+		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.needsUnlock {
 			pinchRecognizer.state = .ended
 			clearAllOtherGestures()
 			item.tryPreview(in: ViewController.shared.navigationController!, from: self)
@@ -306,14 +306,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
-		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading {
+		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading, !item.needsUnlock {
 			clearAllOtherGestures()
 			showShortcutMenu(item: item, push: true)
 		}
 	}
 
 	@objc private func doubleTapped(_ tapRecognizer: UITapGestureRecognizer) {
-		if let item = archivedDropItem, tapRecognizer.state == .ended, !item.shouldDisplayLoading {
+		if let item = archivedDropItem, tapRecognizer.state == .ended, !item.shouldDisplayLoading, !item.needsUnlock {
 			clearAllOtherGestures()
 			showShortcutMenu(item: item, push: false)
 		}
