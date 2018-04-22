@@ -403,6 +403,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		super.prepareForReuse()
 		progressView.observedProgress = nil
 		progressView.progress = 0
+		mergeMode = false
 	}
 
 	private var existingMapView: MiniMapView?
@@ -462,6 +463,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 				image.image = nil
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint
+
+			} else if mergeMode {
+				hideImage = true
+				image.image = nil
+				topLabelAlignment = .center
+				topLabelText = "Add data component"
 
 			} else {
 
@@ -599,6 +606,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
 			self.transform = .identity
 		})
+	}
+
+	var mergeMode: Bool = false {
+		didSet {
+			if mergeMode != oldValue {
+				reDecorate()
+			}
+		}
 	}
 
 	/////////////////////////////////////////

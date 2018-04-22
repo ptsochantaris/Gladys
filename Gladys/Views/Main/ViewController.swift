@@ -96,22 +96,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				self.dragModePanel.transform = .identity
 			})
 		} else if dragModePanel.superview == nil, show {
-			self.dragModeReverse = false
+			dragModeReverse = false
 			if PersistedOptions.darkMode {
 				dragModePanel.tintColor = self.navigationController?.navigationBar.tintColor
 				dragModePanel.backgroundColor = ViewController.darkColor
 				dragModeTitle.textColor = .white
 			}
-			self.updateDragModeOverlay()
+			updateDragModeOverlay()
 			view.addSubview(dragModePanel)
-			let top = dragModePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+			let top = dragModePanel.topAnchor.constraint(equalTo: archivedItemCollectionView.topAnchor)
 			top.constant = -300
 			NSLayoutConstraint.activate([
-				dragModePanel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+				dragModePanel.centerXAnchor.constraint(equalTo: archivedItemCollectionView.centerXAnchor),
 				top
 				])
 			view.layoutIfNeeded()
-			top.constant = -180
+			top.constant = -70
 			UIView.animate(withDuration: 0.2, animations: {
 				self.view.layoutIfNeeded()
 				self.dragModePanel.alpha = 1
@@ -146,7 +146,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
 		if PersistedOptions.showCopyMoveSwitchSelector {
-			showDragModeOverlay(true)
+			if let context = session.localDragSession?.localContext as? String, context == "typeItem" {
+				endMergeMode()
+			} else {
+				showDragModeOverlay(true)
+			}
 		}
 	}
 
@@ -173,10 +177,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
 		let item = Model.filteredDrops[indexPath.item]
 		let dragItem = item.dragItem
-		if !session.items.contains(dragItem) && !item.needsUnlock {
-			return [dragItem]
-		} else {
+		if session.localContext as? String == "typeItem" || session.items.contains(dragItem) || item.needsUnlock {
 			return []
+		} else {
+			return [dragItem]
 		}
 	}
 
@@ -220,6 +224,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
+		endMergeMode()
+
 		if checkInfiniteMode(for: countInserts(in: coordinator.session)) {
 			return
 		}
@@ -250,6 +256,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 				coordinator.drop(dragItem, toItemAt: filteredDestinationIndexPath)
 				needSave = true
+
+			} else if let d = coordinator.destinationIndexPath,
+				let cell = willBeMerge(at: d, from: coordinator.session),
+				let typeItem = dragItem.localObject as? ArchivedDropItemType {
+
+				let item = Model.filteredDrops[d.item]
+				let itemCopy = ArchivedDropItemType(from: typeItem, newParent: item)
+				item.typeItems.append(itemCopy)
+				item.needsReIngest = true
+				item.renumberTypeItems()
+				item.markUpdated()
+				needSave = true
+
+				let p = CGPoint(x: cell.bounds.midX-44, y: cell.bounds.midY-22)
+				coordinator.drop(dragItem, intoItemAt: d, rect: CGRect(origin: p, size: CGSize(width: 88, height: 44)))
 
 			} else {
 
@@ -318,6 +339,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		resetForDragEntry(session: session)
 	}
 
+	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+		showDragModeOverlay(false)
+		endMergeMode()
+	}
+
+	private func endMergeMode() {
+		if let m = mergeCellIndexPath, let oldCell = archivedItemCollectionView.cellForItem(at: m) as? ArchivedItemCell {
+			oldCell.mergeMode = false
+			mergeCellIndexPath = nil
+		}
+	}
+
 	func resetForDragEntry(session: UIDropSession) {
 		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: ["build.bru.gladys.archive", "public.zip-archive"]) {
 			dismissAnyPopOver()
@@ -326,7 +359,39 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
+	private var mergeCellIndexPath: IndexPath?
+
+	private func willBeMerge(at destinationIndexPath: IndexPath?, from session: UIDropSession) -> ArchivedItemCell? {
+		if let destinationIndexPath = destinationIndexPath,
+			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
+			let cell = archivedItemCollectionView.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
+			let cellItem = cell.archivedDropItem,
+			!cellItem.shouldDisplayLoading && !cellItem.needsUnlock,
+			!cellItem.typeItems.contains(where: { $0.uuid == draggedItem.uuid }) {
+
+			return cell
+		}
+
+		return nil
+	}
+
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+		if let cell = willBeMerge(at: destinationIndexPath, from: session) {
+			if let m = mergeCellIndexPath, let oldCell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
+				oldCell.mergeMode = false
+			}
+			cell.mergeMode = true
+			mergeCellIndexPath = destinationIndexPath
+			return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
+		}
+
+		if let m = mergeCellIndexPath {
+			if let cell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
+				cell.mergeMode = false
+			}
+			mergeCellIndexPath = nil
+		}
+
 		return UICollectionViewDropProposal(operation: operation(for: session), intent: .insertAtDestinationIndexPath)
 	}
 

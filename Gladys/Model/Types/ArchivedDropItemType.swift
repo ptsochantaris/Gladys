@@ -557,6 +557,32 @@ final class ArchivedDropItemType: Codable {
 		cloudKitRecord = record
 	}
 
+	init(from typeItem: ArchivedDropItemType, newParent: ArchivedDropItem) {
+		parentUuid = newParent.uuid
+
+		displayIconPriority = 0
+		displayIconContentMode = .center
+		displayTitlePriority = 0
+		displayTitleAlignment = .center
+		displayIconScale = 1
+		displayIconWidth = 0
+		displayIconHeight = 0
+		displayIconTemplate = false
+		isTransferring = false
+		needsDeletion = false
+		order = Int.max
+		delegate = nil
+
+		uuid = UUID()
+		createdAt = Date()
+		updatedAt = Date()
+		typeIdentifier = typeItem.typeIdentifier
+		representedClass = typeItem.representedClass
+		classWasWrapped = typeItem.classWasWrapped
+		accessoryTitle = typeItem.accessoryTitle
+		bytes = typeItem.bytes
+	}
+
 	private var cloudKitDataPath: URL {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
 	}
