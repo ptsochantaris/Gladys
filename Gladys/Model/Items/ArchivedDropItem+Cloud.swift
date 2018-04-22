@@ -17,6 +17,7 @@ extension ArchivedDropItem {
 		lockPassword = record["lockPassword"] as? Data
 		lockHint = record["lockHint"] as? String
 		cloudKitRecord = record
+		needsUnlock = lockPassword != nil
 		needsReIngest = true
 	}
 
