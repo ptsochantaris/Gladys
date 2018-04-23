@@ -22,6 +22,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 	var hasChanges = false
 	var isAttributed = false
 
+	@IBOutlet weak var bottomDistance: NSLayoutConstraint!
 	@IBOutlet weak var textView: UITextView!
 	
 	override func viewDidLoad() {
@@ -46,6 +47,34 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 				textView.attributedText = text
 				isAttributed = true
 			}
+		}
+
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
+		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func keyboardHiding(_ notification: Notification) {
+		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
+			bottomDistance.constant = 0
+		}
+	}
+
+	@objc private func keyboardChanged(_ notification: Notification) {
+		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+
+		let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
+		let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
+		let intersection = safeAreaFrame.intersection(keyboardFrameInView)
+
+		if intersection.isNull {
+			bottomDistance.constant = 0
+		} else {
+			bottomDistance.constant = (safeAreaFrame.origin.y + safeAreaFrame.size.height) - intersection.origin.y
 		}
 	}
 

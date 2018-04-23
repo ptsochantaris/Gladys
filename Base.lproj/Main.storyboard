@@ -2074,7 +2074,6 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES" shipmentTrackingNumber="YES" flightNumber="YES" lookupSuggestion="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="0bO-QF-axJ" id="9je-yD-nwh"/>
                                 </connections>
@@ -2090,6 +2089,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="kpG-6z-O1x"/>
                     </view>
                     <connections>
+                        <outlet property="bottomDistance" destination="rza-u8-wNE" id="MjX-kc-ifw"/>
                         <outlet property="textView" destination="Wbu-HM-Ndy" id="tnQ-Gl-tgA"/>
                     </connections>
                 </viewController>
