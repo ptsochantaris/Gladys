@@ -12,10 +12,12 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var inspectButton: UIButton!
 	@IBOutlet weak var viewButton: UIButton!
 	@IBOutlet weak var archiveButton: UIButton!
+	@IBOutlet weak var editButton: UIButton!
 
 	@IBOutlet weak var inspectWidth: NSLayoutConstraint!
 	@IBOutlet weak var viewWidth: NSLayoutConstraint!
 	@IBOutlet weak var archiveWidth: NSLayoutConstraint!
+	@IBOutlet weak var editWidth: NSLayoutConstraint!
 
 	var inspectionCallback: (()->Void)? {
 		didSet {
@@ -44,6 +46,15 @@ final class DetailCell: UITableViewCell {
 		}
 	}
 
+	var editCallback: (()->Void)? {
+		didSet {
+			if editButton != nil {
+				let showButton = editCallback != nil
+				editWidth.constant = showButton ? 44 : 0
+			}
+		}
+	}
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		borderView.layer.cornerRadius = 10
@@ -52,6 +63,7 @@ final class DetailCell: UITableViewCell {
 		inspectButton.accessibilityLabel = "Inspect raw data"
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
+		editWidth.accessibilityLabel = "Edit text item"
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -79,10 +91,15 @@ final class DetailCell: UITableViewCell {
 		inspectButton.alpha = (inspectionCallback != nil && dragState == .none) ? 0.7 : 0
 		viewButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
 		archiveButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
+		editButton.alpha = (editCallback != nil && dragState == .none) ? 0.7 : 0
 	}
 
 	@objc private func previewSelected() {
 		viewCallback?()
+	}
+
+	@IBAction func editSelected(_ sender: UIButton) {
+		editCallback?()
 	}
 
 	@IBAction func inspectSelected(_ sender: UIButton) {

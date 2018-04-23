@@ -183,6 +183,18 @@ extension ArchivedDropItemType {
 			}
 		}
 	}
+
+	var isText: Bool {
+		return !typeConforms(to: kUTTypeRTF) && (typeConforms(to: kUTTypeText as CFString) || typeIdentifier == "com.apple.uikit.attributedstring")
+	}
+
+	var isRichText: Bool {
+		return typeConforms(to: kUTTypeRTFD) || typeConforms(to: kUTTypeFlatRTFD) || typeIdentifier == "com.apple.uikit.attributedstring"
+	}
+
+	var textEncoding: String.Encoding {
+		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
+	}
 	
 	private func handleData(_ data: Data) {
 		bytes = data

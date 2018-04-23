@@ -3,7 +3,7 @@ import UIKit
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -337,6 +337,7 @@ final class DetailController: GladysViewController,
 	}
 
 	private func setCallbacks(for cell: DetailCell, for typeEntry: ArchivedDropItemType) {
+
 		cell.inspectionCallback = { [weak self] in
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
@@ -351,13 +352,21 @@ final class DetailController: GladysViewController,
 			cell.archiveCallback = nil
 		}
 
+		if typeEntry.isRichText || typeEntry.isText {
+			cell.editCallback = { [weak self] in
+				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
+			}
+		} else {
+			cell.editCallback = nil
+		}
+
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
 				guard let s = self, let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem) else { return }
 				if PersistedOptions.fullScreenPreviews {
 					let n = UINavigationController(rootViewController: q)
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
-					if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+					if let sourceBar = s.navigationController?.navigationBar {
 						n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
 						n.navigationBar.barTintColor = sourceBar.barTintColor
 						n.navigationBar.tintColor = sourceBar.tintColor
@@ -430,7 +439,14 @@ final class DetailController: GladysViewController,
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "hexEdit",
+		if segue.identifier == "textEdit",
+			let typeEntry = sender as? ArchivedDropItemType,
+			let e = segue.destination as? TextEditController {
+			e.item = item
+			e.typeEntry = typeEntry
+			e.delegate = self
+
+		} else if segue.identifier == "hexEdit",
 			let typeEntry = sender as? ArchivedDropItemType,
 			let e = segue.destination as? HexEdit {
 			
@@ -677,5 +693,9 @@ final class DetailController: GladysViewController,
 				cell.animateArchive(false)
 			}
 		}
+	}
+
+	func textEditControllerMadeChanges(_ textEditController: TextEditController) {
+		table.reloadData()
 	}
 }
