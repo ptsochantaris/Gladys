@@ -45,6 +45,22 @@ class PersistedOptions {
 		}
 	}
 
+	private static var allowMergeOfTypeItemsCache: Bool?
+	static var allowMergeOfTypeItems: Bool {
+		get {
+			if let c = allowMergeOfTypeItemsCache {
+				return c
+			}
+			allowMergeOfTypeItemsCache = defaults.bool(forKey: "allowMergeOfTypeItems")
+			return allowMergeOfTypeItemsCache!
+		}
+		set {
+			allowMergeOfTypeItemsCache = newValue
+			defaults.set(newValue, forKey: "allowMergeOfTypeItems")
+			defaults.synchronize()
+		}
+	}
+
 	static var fullScreenPreviews: Bool {
 		get {
 			return defaults.bool(forKey: "fullScreenPreviews")

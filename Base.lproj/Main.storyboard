@@ -70,6 +70,9 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconLock" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
                                                     <rect key="frame" x="139.5" y="136" width="21" height="28"/>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconPlusCircle" translatesAutoresizingMaskIntoConstraints="NO" id="7Cz-Ex-aln">
+                                                    <rect key="frame" x="135.5" y="38" width="28" height="28"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
@@ -80,6 +83,7 @@
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="width" secondItem="x5M-NP-dlj" secondAttribute="width" multiplier="0.6" id="6Py-cb-5dZ"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" constant="-10" id="Lox-2y-iXm"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="Lnk-SW-KkP" secondAttribute="trailing" id="MLn-ck-mTO"/>
+                                            <constraint firstItem="7Cz-Ex-aln" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="WmQ-wo-Fei"/>
                                             <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="top" secondItem="vTy-88-2LK" secondAttribute="bottom" constant="25" id="YCi-M1-v2Z"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YFJ-Zr-9jg"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="Lnk-SW-KkP" secondAttribute="bottom" constant="8" id="fR2-e0-xPA"/>
@@ -89,6 +93,7 @@
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" priority="750" id="tCq-Kc-mNY"/>
                                             <constraint firstItem="2DN-HK-OAe" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="uIz-TY-yqr"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
+                                            <constraint firstItem="7Cz-Ex-aln" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="top" constant="8" id="vcD-ge-jlS"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>
                                         </constraints>
@@ -98,6 +103,7 @@
                                             <outlet property="cancelButton" destination="mEc-YZ-ZGZ" id="D4Y-sH-UBm"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
                                             <outlet property="lockImage" destination="2DN-HK-OAe" id="thp-hn-MyS"/>
+                                            <outlet property="mergeImage" destination="7Cz-Ex-aln" id="boM-VZ-ZMD"/>
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
                                             <outlet property="topLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
                                             <outlet property="topLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
@@ -513,11 +519,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kch-Hm-YOV">
-                                <rect key="frame" x="0.0" y="64" width="320" height="943"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="1043"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbf-8Q-XQN" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="144.5" width="320" height="114.5"/>
@@ -793,10 +799,47 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="DB5-7E-n1A" firstAttribute="leading" secondItem="lH9-jQ-LyU" secondAttribute="leading" constant="30" id="yES-ra-2pV"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HXO-Ao-eZ4" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="824" width="320" height="98.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Allow merging of data components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMP-Bl-B9C">
+                                                <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="OJi-R4-nJJ">
+                                                <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="fullScreenPreviewsSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="j2t-eC-PM9"/>
+                                                    <action selector="mergeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Az4-O9-14b"/>
+                                                </connections>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dragged-out data components will merge into other items, instead of making new items." textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ru-95-SRb">
+                                                <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="1ru-95-SRb" firstAttribute="trailing" secondItem="rMP-Bl-B9C" secondAttribute="trailing" id="92o-oZ-2TG"/>
+                                            <constraint firstAttribute="bottom" secondItem="1ru-95-SRb" secondAttribute="bottom" id="BcG-MO-m7W"/>
+                                            <constraint firstItem="rMP-Bl-B9C" firstAttribute="top" secondItem="HXO-Ao-eZ4" secondAttribute="top" constant="10" id="IPl-2J-uDQ"/>
+                                            <constraint firstItem="rMP-Bl-B9C" firstAttribute="leading" secondItem="HXO-Ao-eZ4" secondAttribute="leading" constant="30" id="Jam-dF-I4m"/>
+                                            <constraint firstItem="1ru-95-SRb" firstAttribute="leading" secondItem="rMP-Bl-B9C" secondAttribute="leading" id="gE5-LC-qrK"/>
+                                            <constraint firstAttribute="trailing" secondItem="OJi-R4-nJJ" secondAttribute="trailing" constant="30" id="iWk-GH-yJE"/>
+                                            <constraint firstItem="1ru-95-SRb" firstAttribute="top" secondItem="rMP-Bl-B9C" secondAttribute="bottom" constant="4" id="lnO-6S-PWf"/>
+                                            <constraint firstItem="OJi-R4-nJJ" firstAttribute="leading" secondItem="rMP-Bl-B9C" secondAttribute="trailing" constant="18" id="rXk-Bu-Mdy"/>
+                                            <constraint firstItem="OJi-R4-nJJ" firstAttribute="centerY" secondItem="rMP-Bl-B9C" secondAttribute="centerY" id="u3D-JB-kDw"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="HXO-Ao-eZ4" firstAttribute="top" secondItem="lH9-jQ-LyU" secondAttribute="bottom" constant="10" id="2Fc-FJ-rks"/>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="top" secondItem="bB7-5e-4Zy" secondAttribute="bottom" constant="10" id="4QK-j0-Uli"/>
                                     <constraint firstItem="0zL-R0-MOE" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="4f9-zs-bCP"/>
+                                    <constraint firstAttribute="trailing" secondItem="HXO-Ao-eZ4" secondAttribute="trailing" id="5Vh-M1-Jxn"/>
                                     <constraint firstItem="IUw-1k-Z1Z" firstAttribute="top" secondItem="XgP-jO-jfU" secondAttribute="bottom" constant="10" id="95N-jL-dnQ"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="width" secondItem="Nbf-8Q-XQN" secondAttribute="width" id="9Na-Vf-nD8"/>
                                     <constraint firstAttribute="trailing" secondItem="lH9-jQ-LyU" secondAttribute="trailing" id="9fw-6j-19e"/>
@@ -810,12 +853,13 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstAttribute="trailing" secondItem="bB7-5e-4Zy" secondAttribute="trailing" id="X7s-h7-E5f"/>
                                     <constraint firstAttribute="trailing" secondItem="XgP-jO-jfU" secondAttribute="trailing" id="bnv-xO-vWw"/>
                                     <constraint firstItem="SAa-Ja-PNG" firstAttribute="top" secondItem="0zL-R0-MOE" secondAttribute="bottom" constant="10" id="cCQ-Xl-jec"/>
-                                    <constraint firstAttribute="bottom" secondItem="lH9-jQ-LyU" secondAttribute="bottom" constant="20" id="eFB-lZ-FuN"/>
                                     <constraint firstItem="lH9-jQ-LyU" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="f2i-76-NPL"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fX0-qL-Qid"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fic-zs-slc"/>
                                     <constraint firstAttribute="trailing" secondItem="SAa-Ja-PNG" secondAttribute="trailing" id="grL-d7-AqR"/>
+                                    <constraint firstAttribute="bottom" secondItem="HXO-Ao-eZ4" secondAttribute="bottom" constant="20" id="hO2-gQ-Z3V"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="top" secondItem="IUw-1k-Z1Z" secondAttribute="bottom" constant="10" id="haH-Qo-9KL"/>
+                                    <constraint firstItem="HXO-Ao-eZ4" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="l6L-eI-6yE"/>
                                     <constraint firstItem="IUw-1k-Z1Z" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="mjd-WK-VHR"/>
                                     <constraint firstItem="0zL-R0-MOE" firstAttribute="top" secondItem="2Bf-gq-086" secondAttribute="bottom" constant="10" id="oFx-RM-S96"/>
                                     <constraint firstItem="Nbf-8Q-XQN" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="qan-Hp-iQq"/>
@@ -836,12 +880,13 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="1100"/>
+                    <size key="freeformSize" width="320" height="1200"/>
                     <connections>
                         <outlet property="darkModeSwitch" destination="Xeg-W1-kiy" id="nUn-Xp-SbR"/>
                         <outlet property="displayNotesInMainViewSwitch" destination="qro-Jb-hVE" id="P56-Q3-X0o"/>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="Tft-Nz-YcR" id="oX4-o7-2rV"/>
                         <outlet property="fullScreenSwitch" destination="9yD-3G-qgG" id="NKG-gR-ChX"/>
+                        <outlet property="mergeSwitch" destination="OJi-R4-nJJ" id="QkZ-oX-Wcs"/>
                         <outlet property="removeItemsWhenDraggedOutSwitch" destination="7RR-Hc-O46" id="iGX-ri-zvz"/>
                         <outlet property="separateItemsSwitch" destination="rEn-tW-qfZ" id="7Z0-nJ-PnJ"/>
                         <outlet property="showCopyMoveSwitchSelectorSwitch" destination="Do9-C4-hUt" id="bEh-3u-jUE"/>
@@ -2380,6 +2425,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconImportExport" width="28" height="28"/>
         <image name="iconInfo" width="28" height="28"/>
         <image name="iconLock" width="21" height="28"/>
+        <image name="iconPlusCircle" width="28" height="28"/>
         <image name="iconSettings" width="28" height="28"/>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>

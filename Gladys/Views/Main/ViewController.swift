@@ -345,8 +345,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func endMergeMode() {
-		if let m = mergeCellIndexPath, let oldCell = archivedItemCollectionView.cellForItem(at: m) as? ArchivedItemCell {
-			oldCell.mergeMode = false
+		if let m = mergeCellIndexPath {
+			if let oldCell = archivedItemCollectionView.cellForItem(at: m) as? ArchivedItemCell {
+				oldCell.mergeMode = false
+			}
 			mergeCellIndexPath = nil
 		}
 	}
@@ -363,6 +365,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	private func willBeMerge(at destinationIndexPath: IndexPath?, from session: UIDropSession) -> ArchivedItemCell? {
 		if let destinationIndexPath = destinationIndexPath,
+			PersistedOptions.allowMergeOfTypeItems,
 			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
 			let cell = archivedItemCollectionView.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
 			let cellItem = cell.archivedDropItem,
@@ -376,22 +379,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-		if let cell = willBeMerge(at: destinationIndexPath, from: session) {
-			if let m = mergeCellIndexPath, let oldCell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
-				oldCell.mergeMode = false
+
+		if let context = session.localDragSession?.localContext as? String, context == "typeItem", PersistedOptions.allowMergeOfTypeItems {
+
+			if let cell = willBeMerge(at: destinationIndexPath, from: session) {
+				if let m = mergeCellIndexPath, let oldCell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
+					oldCell.mergeMode = false
+				}
+				cell.mergeMode = true
+				mergeCellIndexPath = destinationIndexPath
+				return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
+
+			} else if destinationIndexPath != nil {
+				endMergeMode()
+				return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
 			}
-			cell.mergeMode = true
-			mergeCellIndexPath = destinationIndexPath
-			return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
 		}
 
-		if let m = mergeCellIndexPath {
-			if let cell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
-				cell.mergeMode = false
-			}
-			mergeCellIndexPath = nil
-		}
-
+		// normal insert
+		endMergeMode()
 		return UICollectionViewDropProposal(operation: operation(for: session), intent: .insertAtDestinationIndexPath)
 	}
 

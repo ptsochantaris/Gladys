@@ -18,6 +18,7 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
 	@IBOutlet weak var darkModeSwitch: UISwitch!
 	@IBOutlet weak var fullScreenSwitch: UISwitch!
+	@IBOutlet weak var mergeSwitch: UISwitch!
 
 	@IBOutlet var headerLabels: [UILabel]!
 	@IBOutlet var subtitleLabels: [UILabel]!
@@ -59,6 +60,10 @@ final class OptionsController: GladysViewController {
 		PersistedOptions.fullScreenPreviews = sender.isOn
 	}
 
+	@IBAction func mergeSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.allowMergeOfTypeItems = sender.isOn
+	}
+
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		separateItemsSwitch.onTintColor = view.tintColor
@@ -69,6 +74,7 @@ final class OptionsController: GladysViewController {
 		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
 		darkModeSwitch.onTintColor = view.tintColor
 		fullScreenSwitch.onTintColor = view.tintColor
+		mergeSwitch.onTintColor = view.tintColor
 		if PersistedOptions.darkMode {
 			for l in headerLabels {
 				l.textColor = UIColor.lightGray
@@ -114,6 +120,9 @@ final class OptionsController: GladysViewController {
 
 		fullScreenSwitch.tintColor = .lightGray
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
+
+		mergeSwitch.tintColor = .lightGray
+		mergeSwitch.isOn = PersistedOptions.allowMergeOfTypeItems
 
 		darkModeChanged()
 	}

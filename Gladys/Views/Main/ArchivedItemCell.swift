@@ -133,6 +133,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var progressView: UIProgressView!
 	@IBOutlet weak var cancelButton: UIButton!
 	@IBOutlet weak var lockImage: UIImageView!
+	@IBOutlet weak var mergeImage: UIImageView!
 
 	private var selectionImage: UIImageView?
 	private var editHolder: UIView?
@@ -148,6 +149,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		selectionImage?.tintColor = tintColor
 		cancelButton?.tintColor = tintColor
 		lockImage.tintColor = tintColor
+		mergeImage.tintColor = tintColor
 		topLabel.highlightedTextColor = tintColor
 		bottomLabel.highlightedTextColor = tintColor
 	}
@@ -442,6 +444,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideImage = true
 		var hideProgress = true
 		var hideLock = true
+		var hideMerge = true
 
 		var topLabelText: String?
 		var topLabelAlignment: NSTextAlignment?
@@ -465,6 +468,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				bottomLabelText = item.lockHint
 
 			} else if mergeMode {
+				hideMerge = false
 				hideImage = true
 				image.image = nil
 				topLabelAlignment = .center
@@ -587,6 +591,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
 		lockImage.isHidden = hideLock
+		mergeImage.isHidden = hideMerge
 	}
 
 	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
