@@ -1299,16 +1299,16 @@ Selecting them will show only items that contain these labels.</string>
                                                     <rect key="frame" x="15" y="3" width="290" height="255"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2U-hQ-bi9">
-                                                            <rect key="frame" x="253.5" y="8" width="28.5" height="13.5"/>
+                                                            <rect key="frame" x="253.5" y="8" width="28.5" height="57.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
-                                                            <rect key="frame" x="8" y="27" width="238" height="220"/>
+                                                            <rect key="frame" x="8" y="71" width="238" height="176"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
-                                                                    <rect key="frame" x="10" y="5" width="218" height="210"/>
+                                                                    <rect key="frame" x="10" y="5" width="218" height="166"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -1324,68 +1324,84 @@ Selecting them will show only items that contain these labels.</string>
                                                             <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2E-UF-eyf">
-                                                            <rect key="frame" x="8" y="8" width="237.5" height="14"/>
+                                                            <rect key="frame" x="8" y="8" width="237.5" height="58"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="xhN-MG-vRr">
-                                                            <rect key="frame" x="246" y="27" width="44" height="220"/>
-                                                            <subviews>
-                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="44" height="55"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <state key="normal" image="iconPencil"/>
-                                                                    <connections>
-                                                                        <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
-                                                                    </connections>
-                                                                </button>
-                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
-                                                                    <rect key="frame" x="0.0" y="55" width="44" height="55"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <state key="normal" image="info"/>
-                                                                    <connections>
-                                                                        <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
-                                                                    </connections>
-                                                                </button>
-                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
-                                                                    <rect key="frame" x="0.0" y="110" width="44" height="55"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <state key="normal" image="iconArchive2"/>
-                                                                    <connections>
-                                                                        <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
-                                                                    </connections>
-                                                                </button>
-                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
-                                                                    <rect key="frame" x="0.0" y="165" width="44" height="55"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <state key="normal" image="iconEye"/>
-                                                                    <connections>
-                                                                        <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
-                                                                    </connections>
-                                                                </button>
-                                                            </subviews>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
+                                                            <rect key="frame" x="246" y="115" width="44" height="44"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="220" id="KV5-Xv-9Hn"/>
-                                                                <constraint firstAttribute="width" constant="44" id="UPd-Wu-Qtb"/>
+                                                                <constraint firstAttribute="height" constant="44" id="NAx-6u-ayg"/>
+                                                                <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
                                                             </constraints>
-                                                        </stackView>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="info"/>
+                                                            <connections>
+                                                                <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
+                                                            <rect key="frame" x="246" y="159" width="44" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="44" id="mPG-lj-hTC"/>
+                                                                <constraint firstAttribute="width" constant="44" id="nkU-Hz-ACs"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="iconArchive2"/>
+                                                            <connections>
+                                                                <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
+                                                            <rect key="frame" x="246" y="203" width="44" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="44" id="IG5-PU-ycQ"/>
+                                                                <constraint firstAttribute="height" constant="44" id="yNQ-kK-pxU"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="iconEye"/>
+                                                            <connections>
+                                                                <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
+                                                            <rect key="frame" x="246" y="71" width="44" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="44" id="5VF-vK-wlh"/>
+                                                                <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                            <state key="normal" image="iconPencil"/>
+                                                            <connections>
+                                                                <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="top" secondItem="SCX-mM-he8" secondAttribute="topMargin" id="0mK-2Y-ick"/>
+                                                        <constraint firstAttribute="trailing" secondItem="95r-TU-tTc" secondAttribute="trailing" id="1HV-IZ-8Jk"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="trailing" secondItem="SCX-mM-he8" secondAttribute="trailingMargin" id="45Y-4F-GZn"/>
-                                                        <constraint firstAttribute="bottom" secondItem="xhN-MG-vRr" secondAttribute="bottom" constant="8" id="4gg-k5-uVK"/>
+                                                        <constraint firstAttribute="trailing" secondItem="inF-G0-kRj" secondAttribute="trailing" id="4CP-7X-aT4"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="5ya-yC-oAv"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="top" id="61G-2D-GvH"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="leading" secondItem="SCX-mM-he8" secondAttribute="leadingMargin" id="BtQ-TB-YKC"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="leading" secondItem="X2E-UF-eyf" secondAttribute="trailing" constant="8" id="C6t-cK-glV"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="95r-TU-tTc" secondAttribute="bottom" id="EG4-Z4-UIj"/>
+                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="FNH-wn-bAD"/>
+                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="H5C-tg-4nf"/>
+                                                        <constraint firstAttribute="trailing" secondItem="mRm-i0-pKo" secondAttribute="trailing" id="MdZ-TK-JZI"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yZD-lA-j0C" secondAttribute="trailing" id="P2r-1R-QwG"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="RAP-38-mte"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="X1j-pU-7oo"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="inF-G0-kRj" secondAttribute="bottom" id="Xl5-bT-A9h"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="ZOT-e8-NKI"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="b7E-Ag-5KN"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="bottom" constant="5.5" id="c3I-7N-VB7"/>
-                                                        <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="xhN-MG-vRr" secondAttribute="top" id="lnh-2j-ucj"/>
-                                                        <constraint firstItem="xhN-MG-vRr" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="my4-zF-A3A"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="top" secondItem="mRm-i0-pKo" secondAttribute="bottom" id="jir-wo-02i"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="oRT-4u-y3B"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="bottom" secondItem="c2U-hQ-bi9" secondAttribute="bottom" id="tkq-W3-E95"/>
-                                                        <constraint firstAttribute="trailing" secondItem="xhN-MG-vRr" secondAttribute="trailing" id="ygY-N6-EkE"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -1400,15 +1416,18 @@ Selecting them will show only items that contain these labels.</string>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
+                                            <outlet property="archiveHeight" destination="mPG-lj-hTC" id="BFf-WW-mVU"/>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
                                             <outlet property="desc" destination="X2E-UF-eyf" id="UAI-bk-gWx"/>
                                             <outlet property="editButton" destination="95r-TU-tTc" id="t5R-Vc-po9"/>
+                                            <outlet property="editHeight" destination="5VF-vK-wlh" id="cJj-q8-Wj3"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
+                                            <outlet property="inspectHeight" destination="NAx-6u-ayg" id="frG-fN-SJd"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
                                             <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>
                                             <outlet property="size" destination="c2U-hQ-bi9" id="0sm-hS-09V"/>
-                                            <outlet property="stackViewHeight" destination="KV5-Xv-9Hn" id="qKd-hG-dJd"/>
                                             <outlet property="viewButton" destination="yZD-lA-j0C" id="o8G-6e-kav"/>
+                                            <outlet property="viewHeight" destination="yNQ-kK-pxU" id="E0J-I1-Niw"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

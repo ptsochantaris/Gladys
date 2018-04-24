@@ -14,11 +14,15 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet weak var editButton: UIButton!
 
+	@IBOutlet weak var editHeight: NSLayoutConstraint!
+	@IBOutlet weak var inspectHeight: NSLayoutConstraint!
+	@IBOutlet weak var archiveHeight: NSLayoutConstraint!
+	@IBOutlet weak var viewHeight: NSLayoutConstraint!
+
 	var inspectionCallback: (()->Void)? {
 		didSet {
 			if inspectButton != nil {
-				inspectButton.isHidden = inspectionCallback == nil
-				setNeedsUpdateConstraints()
+				inspectHeight.constant = inspectionCallback == nil ? 0 : 44
 			}
 		}
 	}
@@ -26,8 +30,7 @@ final class DetailCell: UITableViewCell {
 	var viewCallback: (()->Void)? {
 		didSet {
 			if viewButton != nil {
-				viewButton.isHidden = viewCallback == nil
-				setNeedsUpdateConstraints()
+				viewHeight.constant = viewCallback == nil ? 0 : 44
 			}
 		}
 	}
@@ -35,8 +38,7 @@ final class DetailCell: UITableViewCell {
 	var archiveCallback: (()->Void)? {
 		didSet {
 			if archiveButton != nil {
-				archiveButton.isHidden = archiveCallback == nil
-				setNeedsUpdateConstraints()
+				archiveHeight.constant = archiveCallback == nil ? 0 : 44
 			}
 		}
 	}
@@ -44,8 +46,7 @@ final class DetailCell: UITableViewCell {
 	var editCallback: (()->Void)? {
 		didSet {
 			if editButton != nil {
-				editButton.isHidden = editCallback == nil
-				setNeedsUpdateConstraints()
+				editHeight.constant = editCallback == nil ? 0 : 44
 			}
 		}
 	}
@@ -130,17 +131,6 @@ final class DetailCell: UITableViewCell {
 			archiveButton.alpha = 1
 			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
 		}
-	}
-
-	@IBOutlet weak var stackViewHeight: NSLayoutConstraint!
-	override func updateConstraints() {
-		super.updateConstraints()
-		var x: CGFloat = 0
-		if editCallback != nil { x += 44 }
-		if inspectionCallback != nil { x += 44 }
-		if archiveCallback != nil { x += 44 }
-		if viewCallback != nil { x += 44 }
-		stackViewHeight.constant = x
 	}
 
 	/////////////////////////////////////
