@@ -73,6 +73,9 @@ final class DetailController: GladysViewController,
 			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
 				if success, let s = self {
 					s.passwordUpdate(nil, hint: nil)
+					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+						genericAlert(title: "Lock Removed", message: nil, on: s, showOK: false)
+					}
 				}
 			}
 		} else {

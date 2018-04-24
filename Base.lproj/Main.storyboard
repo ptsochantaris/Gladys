@@ -1329,20 +1329,20 @@ Selecting them will show only items that contain these labels.</string>
                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
-                                                            <rect key="frame" x="246" y="115" width="44" height="44"/>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
+                                                            <rect key="frame" x="246" y="159" width="44" height="44"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="44" id="NAx-6u-ayg"/>
-                                                                <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
+                                                                <constraint firstAttribute="height" constant="44" id="5VF-vK-wlh"/>
+                                                                <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="info"/>
+                                                            <state key="normal" image="iconPencil"/>
                                                             <connections>
-                                                                <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
+                                                                <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
-                                                            <rect key="frame" x="246" y="159" width="44" height="44"/>
+                                                            <rect key="frame" x="246" y="115" width="44" height="44"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="44" id="mPG-lj-hTC"/>
                                                                 <constraint firstAttribute="width" constant="44" id="nkU-Hz-ACs"/>
@@ -1354,7 +1354,7 @@ Selecting them will show only items that contain these labels.</string>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
-                                                            <rect key="frame" x="246" y="203" width="44" height="44"/>
+                                                            <rect key="frame" x="246" y="71" width="44" height="44"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="44" id="IG5-PU-ycQ"/>
                                                                 <constraint firstAttribute="height" constant="44" id="yNQ-kK-pxU"/>
@@ -1365,16 +1365,16 @@ Selecting them will show only items that contain these labels.</string>
                                                                 <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
-                                                            <rect key="frame" x="246" y="71" width="44" height="44"/>
+                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
+                                                            <rect key="frame" x="246" y="203" width="44" height="44"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="44" id="5VF-vK-wlh"/>
-                                                                <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
+                                                                <constraint firstAttribute="height" constant="44" id="NAx-6u-ayg"/>
+                                                                <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="iconPencil"/>
+                                                            <state key="normal" image="info"/>
                                                             <connections>
-                                                                <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
+                                                                <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -1386,20 +1386,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         <constraint firstAttribute="trailing" secondItem="inF-G0-kRj" secondAttribute="trailing" id="4CP-7X-aT4"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="5ya-yC-oAv"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="top" id="61G-2D-GvH"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="8K9-4x-x9R"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="leading" secondItem="SCX-mM-he8" secondAttribute="leadingMargin" id="BtQ-TB-YKC"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="leading" secondItem="X2E-UF-eyf" secondAttribute="trailing" constant="8" id="C6t-cK-glV"/>
-                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="95r-TU-tTc" secondAttribute="bottom" id="EG4-Z4-UIj"/>
                                                         <constraint firstItem="95r-TU-tTc" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="FNH-wn-bAD"/>
-                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="H5C-tg-4nf"/>
+                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="H44-Wl-NaF"/>
+                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="top" secondItem="yZD-lA-j0C" secondAttribute="bottom" id="MIW-hz-Ana"/>
                                                         <constraint firstAttribute="trailing" secondItem="mRm-i0-pKo" secondAttribute="trailing" id="MdZ-TK-JZI"/>
                                                         <constraint firstAttribute="trailing" secondItem="yZD-lA-j0C" secondAttribute="trailing" id="P2r-1R-QwG"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="RAP-38-mte"/>
-                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="X1j-pU-7oo"/>
-                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="inF-G0-kRj" secondAttribute="bottom" id="Xl5-bT-A9h"/>
                                                         <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="ZOT-e8-NKI"/>
                                                         <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="b7E-Ag-5KN"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="bottom" constant="5.5" id="c3I-7N-VB7"/>
-                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="top" secondItem="mRm-i0-pKo" secondAttribute="bottom" id="jir-wo-02i"/>
+                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="top" secondItem="inF-G0-kRj" secondAttribute="bottom" id="dpY-cf-xFj"/>
+                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="95r-TU-tTc" secondAttribute="bottom" id="enP-LT-deO"/>
                                                         <constraint firstItem="inF-G0-kRj" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="oRT-4u-y3B"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="bottom" secondItem="c2U-hQ-bi9" secondAttribute="bottom" id="tkq-W3-E95"/>
                                                     </constraints>
