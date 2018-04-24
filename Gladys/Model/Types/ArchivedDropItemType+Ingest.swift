@@ -185,7 +185,7 @@ extension ArchivedDropItemType {
 	}
 
 	var isText: Bool {
-		return !typeConforms(to: kUTTypeRTF) && (typeConforms(to: kUTTypeText as CFString) || typeIdentifier == "com.apple.uikit.attributedstring")
+		return !(typeConforms(to: kUTTypeVCard) || typeConforms(to: kUTTypeRTF)) && (typeConforms(to: kUTTypeText as CFString) || typeIdentifier == "com.apple.uikit.attributedstring")
 	}
 
 	var isRichText: Bool {
