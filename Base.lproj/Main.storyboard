@@ -1169,11 +1169,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o6P-jX-a91">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="80" sectionHeaderHeight="14" sectionFooterHeight="14" translatesAutoresizingMaskIntoConstraints="NO" id="gOE-Fp-Sbs">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -1288,27 +1288,27 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="labelText" destination="FVY-cq-wvt" id="9Zh-kJ-Qiy"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="295.5" width="320" height="80"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="268" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="295.5" width="320" height="268"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="268"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SCX-mM-he8">
-                                                    <rect key="frame" x="15" y="3" width="290" height="67"/>
+                                                    <rect key="frame" x="15" y="3" width="290" height="255"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2U-hQ-bi9">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2U-hQ-bi9">
                                                             <rect key="frame" x="253.5" y="8" width="28.5" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
-                                                            <rect key="frame" x="8" y="27" width="106" height="32"/>
+                                                        <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
+                                                            <rect key="frame" x="8" y="27" width="238" height="220"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
-                                                                    <rect key="frame" x="10" y="10" width="86" height="12"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
+                                                                    <rect key="frame" x="10" y="5" width="218" height="210"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -1316,87 +1316,76 @@ Selecting them will show only items that contain these labels.</string>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.84341198210000001" green="0.83196836709999999" blue="0.80659013989999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="10" id="A4z-xs-pX2"/>
+                                                                <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="5" id="A4z-xs-pX2"/>
                                                                 <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" constant="10" id="VyL-e1-tLl"/>
-                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="10" id="sDA-vR-FnE"/>
+                                                                <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="5" id="sDA-vR-FnE"/>
                                                                 <constraint firstAttribute="trailing" secondItem="c4v-Gs-QKx" secondAttribute="trailing" constant="10" id="vjp-PR-kDd"/>
                                                             </constraints>
                                                             <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                                         </view>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
-                                                            <rect key="frame" x="246" y="27" width="44" height="32"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="44" id="hHl-tj-UfT"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="iconEye"/>
-                                                            <connections>
-                                                                <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
-                                                            </connections>
-                                                        </button>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
-                                                            <rect key="frame" x="114" y="27" width="44" height="32"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="44" id="QU5-D6-Ech"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="iconArchive2"/>
-                                                            <connections>
-                                                                <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
-                                                            </connections>
-                                                        </button>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
-                                                            <rect key="frame" x="202" y="27" width="44" height="32"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="44" id="mOV-7n-SkY"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="info"/>
-                                                            <connections>
-                                                                <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
-                                                            </connections>
-                                                        </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2E-UF-eyf">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2E-UF-eyf">
                                                             <rect key="frame" x="8" y="8" width="237.5" height="14"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
-                                                            <rect key="frame" x="158" y="27" width="44" height="32"/>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="xhN-MG-vRr">
+                                                            <rect key="frame" x="246" y="27" width="44" height="220"/>
+                                                            <subviews>
+                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="44" height="55"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <state key="normal" image="iconPencil"/>
+                                                                    <connections>
+                                                                        <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
+                                                                    <rect key="frame" x="0.0" y="55" width="44" height="55"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <state key="normal" image="info"/>
+                                                                    <connections>
+                                                                        <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
+                                                                    <rect key="frame" x="0.0" y="110" width="44" height="55"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <state key="normal" image="iconArchive2"/>
+                                                                    <connections>
+                                                                        <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
+                                                                    <rect key="frame" x="0.0" y="165" width="44" height="55"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <state key="normal" image="iconEye"/>
+                                                                    <connections>
+                                                                        <action selector="viewSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="3by-Tn-uk9"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="44" id="ghB-fB-GBf"/>
+                                                                <constraint firstAttribute="height" constant="220" id="KV5-Xv-9Hn"/>
+                                                                <constraint firstAttribute="width" constant="44" id="UPd-Wu-Qtb"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <state key="normal" image="iconPencil"/>
-                                                            <connections>
-                                                                <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
-                                                            </connections>
-                                                        </button>
+                                                        </stackView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="top" secondItem="SCX-mM-he8" secondAttribute="topMargin" id="0mK-2Y-ick"/>
-                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="1dQ-qX-9Fx"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="trailing" secondItem="SCX-mM-he8" secondAttribute="trailingMargin" id="45Y-4F-GZn"/>
+                                                        <constraint firstAttribute="bottom" secondItem="xhN-MG-vRr" secondAttribute="bottom" constant="8" id="4gg-k5-uVK"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="5ya-yC-oAv"/>
-                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="leading" secondItem="inF-G0-kRj" secondAttribute="trailing" id="8jW-00-ROW"/>
-                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="ATt-ZN-Xju"/>
-                                                        <constraint firstItem="X2E-UF-eyf" firstAttribute="baseline" secondItem="c2U-hQ-bi9" secondAttribute="baseline" id="B8h-Yb-WmR"/>
+                                                        <constraint firstItem="X2E-UF-eyf" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="top" id="61G-2D-GvH"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="leading" secondItem="SCX-mM-he8" secondAttribute="leadingMargin" id="BtQ-TB-YKC"/>
-                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="ByS-B3-1cd"/>
                                                         <constraint firstItem="c2U-hQ-bi9" firstAttribute="leading" secondItem="X2E-UF-eyf" secondAttribute="trailing" constant="8" id="C6t-cK-glV"/>
-                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="FxF-XI-VvH"/>
-                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="bottom" secondItem="eyj-G4-d4N" secondAttribute="bottom" id="IiE-aR-zRm"/>
-                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="MOj-iW-qu2"/>
-                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="leading" secondItem="mRm-i0-pKo" secondAttribute="trailing" id="MaB-Ma-5B7"/>
-                                                        <constraint firstItem="yZD-lA-j0C" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="OW1-ia-9bl"/>
                                                         <constraint firstItem="X2E-UF-eyf" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="RAP-38-mte"/>
                                                         <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="c2U-hQ-bi9" secondAttribute="bottom" constant="5.5" id="c3I-7N-VB7"/>
-                                                        <constraint firstItem="mRm-i0-pKo" firstAttribute="leading" secondItem="95r-TU-tTc" secondAttribute="trailing" id="hJ0-nf-OAB"/>
-                                                        <constraint firstAttribute="trailing" secondItem="yZD-lA-j0C" secondAttribute="trailing" id="j9g-QL-7er"/>
-                                                        <constraint firstItem="95r-TU-tTc" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="qz6-v5-bhQ"/>
-                                                        <constraint firstItem="inF-G0-kRj" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="zNc-os-t2p"/>
+                                                        <constraint firstItem="eyj-G4-d4N" firstAttribute="top" secondItem="xhN-MG-vRr" secondAttribute="top" id="lnh-2j-ucj"/>
+                                                        <constraint firstItem="xhN-MG-vRr" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="trailing" id="my4-zF-A3A"/>
+                                                        <constraint firstItem="X2E-UF-eyf" firstAttribute="bottom" secondItem="c2U-hQ-bi9" secondAttribute="bottom" id="tkq-W3-E95"/>
+                                                        <constraint firstAttribute="trailing" secondItem="xhN-MG-vRr" secondAttribute="trailing" id="ygY-N6-EkE"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -1411,18 +1400,15 @@ Selecting them will show only items that contain these labels.</string>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
-                                            <outlet property="archiveWidth" destination="QU5-D6-Ech" id="P3x-3q-Sff"/>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
                                             <outlet property="desc" destination="X2E-UF-eyf" id="UAI-bk-gWx"/>
                                             <outlet property="editButton" destination="95r-TU-tTc" id="t5R-Vc-po9"/>
-                                            <outlet property="editWidth" destination="ghB-fB-GBf" id="aAK-fg-xcb"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
-                                            <outlet property="inspectWidth" destination="mOV-7n-SkY" id="JJ7-U1-nvL"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
                                             <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>
                                             <outlet property="size" destination="c2U-hQ-bi9" id="0sm-hS-09V"/>
+                                            <outlet property="stackViewHeight" destination="KV5-Xv-9Hn" id="qKd-hG-dJd"/>
                                             <outlet property="viewButton" destination="yZD-lA-j0C" id="o8G-6e-kav"/>
-                                            <outlet property="viewWidth" destination="hHl-tj-UfT" id="Fdr-3U-jJd"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1476,6 +1462,7 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationItem>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="320" height="700"/>
                     <connections>
                         <outlet property="copyButton" destination="WNg-a3-4ZW" id="uwF-Xt-ar0"/>
                         <outlet property="dateItem" destination="wmE-wj-aN7" id="QQZ-bR-qUf"/>
@@ -1514,7 +1501,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="00w-AT-PRi"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4211.25" y="936.97183098591552"/>
+            <point key="canvasLocation" x="4207.5" y="936.97183098591552"/>
         </scene>
         <!--Hex Edit-->
         <scene sceneID="8x6-3J-YB8">
@@ -2040,7 +2027,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="rij-Sw-Lt9"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4208" y="1979"/>
+            <point key="canvasLocation" x="4208" y="2119"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nOy-qs-6YK">
@@ -2059,7 +2046,7 @@ Selecting them will show only items that contain these labels.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R0n-KN-S0V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4208" y="1570"/>
+            <point key="canvasLocation" x="4208" y="1709"/>
         </scene>
         <!--Text Edit Controller-->
         <scene sceneID="NU4-RA-yhI">
@@ -2095,7 +2082,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VO4-yh-Yz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5160" y="1742"/>
+            <point key="canvasLocation" x="5160" y="1881"/>
         </scene>
         <!--Self Sizing Tab Controller-->
         <scene sceneID="Jqy-hX-Bs4">
@@ -2151,8 +2138,8 @@ Selecting them will show only items that contain these labels.</string>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzu-kl-oLc">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                <wkWebViewConfiguration key="configuration" allowsInlineMediaPlayback="YES">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
@@ -2478,7 +2465,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconImportExport" width="28" height="28"/>
         <image name="iconInfo" width="28" height="28"/>
         <image name="iconLock" width="21" height="28"/>
-        <image name="iconPencil" width="15" height="15"/>
+        <image name="iconPencil" width="16" height="16"/>
         <image name="iconPlusCircle" width="28" height="28"/>
         <image name="iconSettings" width="28" height="28"/>
         <image name="info" width="15" height="15"/>

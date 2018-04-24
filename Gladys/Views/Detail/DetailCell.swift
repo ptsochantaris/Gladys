@@ -14,16 +14,11 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet weak var editButton: UIButton!
 
-	@IBOutlet weak var inspectWidth: NSLayoutConstraint!
-	@IBOutlet weak var viewWidth: NSLayoutConstraint!
-	@IBOutlet weak var archiveWidth: NSLayoutConstraint!
-	@IBOutlet weak var editWidth: NSLayoutConstraint!
-
 	var inspectionCallback: (()->Void)? {
 		didSet {
 			if inspectButton != nil {
-				let showButton = inspectionCallback != nil
-				inspectWidth.constant = showButton ? 44 : 0
+				inspectButton.isHidden = inspectionCallback == nil
+				setNeedsUpdateConstraints()
 			}
 		}
 	}
@@ -31,8 +26,8 @@ final class DetailCell: UITableViewCell {
 	var viewCallback: (()->Void)? {
 		didSet {
 			if viewButton != nil {
-				let showButton = viewCallback != nil
-				viewWidth.constant = showButton ? 44 : 0
+				viewButton.isHidden = viewCallback == nil
+				setNeedsUpdateConstraints()
 			}
 		}
 	}
@@ -40,8 +35,8 @@ final class DetailCell: UITableViewCell {
 	var archiveCallback: (()->Void)? {
 		didSet {
 			if archiveButton != nil {
-				let showButton = archiveCallback != nil
-				archiveWidth.constant = showButton ? 44 : 0
+				archiveButton.isHidden = archiveCallback == nil
+				setNeedsUpdateConstraints()
 			}
 		}
 	}
@@ -49,8 +44,8 @@ final class DetailCell: UITableViewCell {
 	var editCallback: (()->Void)? {
 		didSet {
 			if editButton != nil {
-				let showButton = editCallback != nil
-				editWidth.constant = showButton ? 44 : 0
+				editButton.isHidden = editCallback == nil
+				setNeedsUpdateConstraints()
 			}
 		}
 	}
@@ -63,7 +58,7 @@ final class DetailCell: UITableViewCell {
 		inspectButton.accessibilityLabel = "Inspect raw data"
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
-		editWidth.accessibilityLabel = "Edit text item"
+		editButton.accessibilityLabel = "Edit text item"
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -137,6 +132,17 @@ final class DetailCell: UITableViewCell {
 		}
 	}
 
+	@IBOutlet weak var stackViewHeight: NSLayoutConstraint!
+	override func updateConstraints() {
+		super.updateConstraints()
+		var x: CGFloat = 0
+		if editCallback != nil { x += 44 }
+		if inspectionCallback != nil { x += 44 }
+		if archiveCallback != nil { x += 44 }
+		if viewCallback != nil { x += 44 }
+		stackViewHeight.constant = x
+	}
+
 	/////////////////////////////////////
 
 	override var accessibilityLabel: String? {
@@ -161,13 +167,16 @@ final class DetailCell: UITableViewCell {
 		set {}
 		get {
 			var actions = [UIAccessibilityCustomAction]()
-			if archiveWidth.constant > 0 {
+			if !editButton.isHidden {
+				actions.append(UIAccessibilityCustomAction(name: "Edit Text", target: self, selector: #selector(previewSelected)))
+			}
+			if !archiveButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Archive Link Target", target: self, selector: #selector(archiveSelected(_:))))
 			}
-			if inspectWidth.constant > 0 {
+			if !inspectButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Inspect Item", target: self, selector: #selector(inspectSelected(_:))))
 			}
-			if viewWidth.constant > 0 {
+			if !viewButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
 			}
 			return actions
