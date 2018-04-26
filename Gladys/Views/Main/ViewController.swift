@@ -454,13 +454,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		} else if segue.identifier == "showDetail",
 			let item = sender as? ArchivedDropItem,
-			let index = Model.filteredDrops.index(of: item),
+			let indexPath = mostRecentIndexPathActioned,
 			let n = segue.destination as? UINavigationController,
 			let d = n.topViewController as? DetailController,
 			let p = n.popoverPresentationController {
 
 			d.item = item
-			let indexPath = IndexPath(item: index, section: 0)
 			if let cell = archivedItemCollectionView.cellForItem(at: indexPath) {
 				let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
 				p.permittedArrowDirections = [.down, .left, .right]
@@ -702,11 +701,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
-		pasteClipboard(overrides: nil)
+		pasteClipboard()
 	}
 
 	@discardableResult
-	func pasteClipboard(overrides: ImportOverrides?, skipVisibleErrors: Bool = false) -> PasteResult {
+	func pasteClipboard(overrides: ImportOverrides? = nil, skipVisibleErrors: Bool = false) -> PasteResult {
 		let providers = UIPasteboard.general.itemProviders
 		if providers.count == 0 {
 			if !skipVisibleErrors {
@@ -1563,6 +1562,43 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		} else {
 			return archivedItemCollectionView
 		}
+	}
+
+	@objc private func showLabels() {
+		performSegue(withIdentifier: "showLabels", sender: nil)
+	}
+
+	@objc private func showPreferences() {
+		performSegue(withIdentifier: "showPreferences", sender: nil)
+	}
+
+	@objc private func openSearch() {
+		navigationItem.searchController?.searchBar.becomeFirstResponder()
+	}
+
+	@objc private func resetLabels() {
+		resetSearch(andLabels: true)
+	}
+
+	@objc private func resetSearchTerms() {
+		resetSearch(andLabels: false)
+	}
+
+	@objc private func toggleEdit() {
+		setEditing(!isEditing, animated: true)
+	}
+
+	override var keyCommands: [UIKeyCommand]? {
+		var a = super.keyCommands ?? []
+		a.append(contentsOf: [
+			UIKeyCommand(input: "v", modifierFlags: .command, action: #selector(pasteSelected(_:)), discoverabilityTitle: "Paste From Clipboard"),
+			UIKeyCommand(input: "l", modifierFlags: .command, action: #selector(showLabels), discoverabilityTitle: "Labels Menu"),
+			UIKeyCommand(input: "l", modifierFlags: [.command, .alternate], action: #selector(resetLabels), discoverabilityTitle: "Clear Active Labels"),
+			UIKeyCommand(input: ",", modifierFlags: .command, action: #selector(showPreferences), discoverabilityTitle: "Preferences Menu"),
+			UIKeyCommand(input: "f", modifierFlags: .command, action: #selector(openSearch), discoverabilityTitle: "Search Items"),
+			UIKeyCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), discoverabilityTitle: "Toggle Edit Mode")
+		])
+		return a
 	}
 }
 

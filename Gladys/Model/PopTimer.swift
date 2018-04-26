@@ -1,34 +1,34 @@
 
 import Foundation
 
-final class PopTimer {
+final class GladysTimer {
 
-	private final class Timer {
+	private let timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
 
-		private let timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+	init(repeats: Bool, interval: TimeInterval, block: @escaping ()->Void) {
 
-		init(repeats: Bool, interval: TimeInterval, block: @escaping ()->Void) {
-
-			if repeats {
-				timer.schedule(deadline: .now() + interval, repeating: interval)
-			} else {
-				timer.schedule(deadline: .now() + interval)
-			}
-			timer.setEventHandler(handler: block)
-			timer.resume()
+		if repeats {
+			timer.schedule(deadline: .now() + interval, repeating: interval)
+		} else {
+			timer.schedule(deadline: .now() + interval)
 		}
-
-		deinit {
-			timer.cancel()
-		}
+		timer.setEventHandler(handler: block)
+		timer.resume()
 	}
 
-	private var popTimer: Timer?
+	deinit {
+		timer.cancel()
+	}
+}
+
+final class PopTimer {
+
+	private var popTimer: GladysTimer?
 	private let timeInterval: TimeInterval
 	private let callback: ()->Void
 
 	func push() {
-		popTimer = Timer(repeats: false, interval: timeInterval) { [weak self] in
+		popTimer = GladysTimer(repeats: false, interval: timeInterval) { [weak self] in
 			self?.abort()
 			self?.callback()
 		}

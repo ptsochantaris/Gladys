@@ -134,6 +134,61 @@ class GladysViewController: UIViewController {
 		}
 	}
 
+	private var scrollTimer: GladysTimer?
+	private var scrollLink: CADisplayLink?
+	private var scrollView: UIScrollView?
+
+	override var keyCommands: [UIKeyCommand]? {
+		var a = [
+			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: [], action: #selector(scrollDown), discoverabilityTitle: "Scroll Down"),
+			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: [], action: #selector(scrollUp), discoverabilityTitle: "Scroll Up"),
+		]
+		if self.popoverPresenter != nil {
+			let w = UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(done), discoverabilityTitle: "Close This View")
+			a.insert(w, at: 0)
+		}
+		return a
+	}
+
+	@objc private func scrollUp() {
+		startScroll(#selector(scrollLineUp))
+	}
+
+	@objc private func scrollDown() {
+		startScroll(#selector(scrollLineDown))
+	}
+
+	private func startScroll(_ selector: Selector) {
+		scrollLink?.invalidate()
+		guard let scr = view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView else { return }
+		scrollView = scr
+		scrollLink = CADisplayLink(target: self, selector: selector)
+		scrollLink!.add(to: RunLoop.main, forMode: .commonModes)
+		scrollTimer = GladysTimer(repeats: false, interval: 0.4) {
+			self.scrollLink?.invalidate()
+			self.scrollLink = nil
+			self.scrollView = nil
+			print("scroll done")
+		}
+	}
+
+	@objc private func scrollLineUp() {
+		if let firstScrollView = scrollView {
+			var newPos = firstScrollView.contentOffset
+			let maxY = (firstScrollView.contentSize.height - firstScrollView.bounds.size.height) + firstScrollView.adjustedContentInset.bottom
+			newPos.y = min(firstScrollView.contentOffset.y+8, maxY)
+			firstScrollView.setContentOffset(newPos, animated: false)
+		}
+	}
+
+	@objc private func scrollLineDown() {
+		if let firstScrollView = scrollView {
+			var newPos = firstScrollView.contentOffset
+			newPos.y = max(newPos.y-8, -firstScrollView.adjustedContentInset.top)
+			firstScrollView.setContentOffset(newPos, animated: false)
+		}
+	}
+
 	private func showDone(_ show: Bool) {
 		switch doneLocation {
 		case .left:
