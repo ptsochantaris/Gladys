@@ -117,4 +117,11 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 		_ = typeEntry.reIngest(delegate: self)
 	}
 
+	override var keyCommands: [UIKeyCommand]? {
+		let a = super.keyCommands ?? []
+		return a.filter {
+			return !($0.input == UIKeyInputUpArrow || $0.input == UIKeyInputDownArrow)
+		}
+	}
+
 }
