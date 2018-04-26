@@ -168,7 +168,6 @@ class GladysViewController: UIViewController {
 			self.scrollLink?.invalidate()
 			self.scrollLink = nil
 			self.scrollView = nil
-			print("scroll done")
 		}
 	}
 
