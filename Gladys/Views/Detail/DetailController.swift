@@ -188,6 +188,16 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	override var keyCommands: [UIKeyCommand]? {
+		var a = super.keyCommands ?? []
+		a.append(UIKeyCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), discoverabilityTitle: "Copy Item To Clipboard"))
+		return a
+	}
+
+	@objc private func copyPressed() {
+		copySelected(copyButton)
+	}
+
 	var sharing = false
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		sharing = true
