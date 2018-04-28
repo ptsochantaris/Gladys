@@ -56,6 +56,25 @@
 		1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
 		161089A01FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
 		161089A11FA322C10095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
+		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
+		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
+		161718CB2094D334005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161718CA2094D334005ABD6C /* Assets.xcassets */; };
+		161718CE2094D334005ABD6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161718CC2094D334005ABD6C /* Main.storyboard */; };
+		161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */; };
+		161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */; };
+		161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
+		161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
+		161718DB2094D7A6005ABD6C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		161718DD2094D7F7005ABD6C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718DC2094D7F7005ABD6C /* Model.swift */; };
+		161718DE2094D870005ABD6C /* Types+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162027901FA1A9FC00E8D964 /* Types+MainApp.swift */; };
+		161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
+		161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
+		161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
+		161718E32094DEB0005ABD6C /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718E22094DEB0005ABD6C /* CloudManager.swift */; };
+		161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
+		161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
+		161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8141EFF3745000087DD /* FileProviderExtension.swift */; };
 		1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8161EFF3745000087DD /* FileProviderItem.swift */; };
@@ -120,6 +139,8 @@
 		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
 		168A0CED1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
+		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
+		168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168FE05C20952E4D00E740E9 /* DropCell.xib */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -341,6 +362,17 @@
 		161089941FA31D810095FE34 /* CloudManager+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Storage.swift"; sourceTree = "<group>"; };
 		1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Cloud.swift"; sourceTree = "<group>"; };
 		1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Cloud.swift"; sourceTree = "<group>"; };
+		161718C42094D333005ABD6C /* MacGladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacGladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		161718C62094D333005ABD6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		161718C82094D333005ABD6C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		161718CA2094D334005ABD6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		161718CD2094D334005ABD6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		161718CF2094D334005ABD6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		161718D02094D334005ABD6C /* MacGladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladys.entitlements; sourceTree = "<group>"; };
+		161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
+		161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
+		161718DC2094D7F7005ABD6C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		161718E22094DEB0005ABD6C /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		1619E8121EFF3745000087DD /* GladysFiles.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysFiles.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1619E8141EFF3745000087DD /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderExtension.swift; sourceTree = "<group>"; };
@@ -399,6 +431,8 @@
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compression.swift; sourceTree = "<group>"; };
+		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		168FE05C20952E4D00E740E9 /* DropCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropCell.xib; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -466,6 +500,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		161718C12094D333005ABD6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1619E80F1EFF3745000087DD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -641,6 +683,24 @@
 			path = Types;
 			sourceTree = "<group>";
 		};
+		161718C52094D333005ABD6C /* MacGladys */ = {
+			isa = PBXGroup;
+			children = (
+				161718C62094D333005ABD6C /* AppDelegate.swift */,
+				161718C82094D333005ABD6C /* ViewController.swift */,
+				161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */,
+				161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */,
+				161718DC2094D7F7005ABD6C /* Model.swift */,
+				161718E22094DEB0005ABD6C /* CloudManager.swift */,
+				161718CA2094D334005ABD6C /* Assets.xcassets */,
+				161718CC2094D334005ABD6C /* Main.storyboard */,
+				161718CF2094D334005ABD6C /* Info.plist */,
+				161718D02094D334005ABD6C /* MacGladys.entitlements */,
+				168FE05C20952E4D00E740E9 /* DropCell.xib */,
+			);
+			path = MacGladys;
+			sourceTree = "<group>";
+		};
 		1619E8131EFF3745000087DD /* GladysFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -717,6 +777,7 @@
 				16A4E7E11FBB844A00D60596 /* GladysWatch */,
 				16A4E7F01FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AE1FD41C1C00EC480D /* GladysMessage */,
+				161718C52094D333005ABD6C /* MacGladys */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				F997D53C5E7A383D99BD35DB /* Pods */,
@@ -735,6 +796,7 @@
 				16A4E7E01FBB844A00D60596 /* GladysWatch.app */,
 				16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */,
 				1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */,
+				161718C42094D333005ABD6C /* MacGladys.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -859,6 +921,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				168FE05820951ABC00E740E9 /* CloudKit.framework */,
 				16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */,
 				16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */,
 				166AEB3D1F696B5400A77D16 /* openssl.framework */,
@@ -900,6 +963,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		161718C32094D333005ABD6C /* MacGladys */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 161718D32094D334005ABD6C /* Build configuration list for PBXNativeTarget "MacGladys" */;
+			buildPhases = (
+				161718C02094D333005ABD6C /* Sources */,
+				161718C12094D333005ABD6C /* Frameworks */,
+				161718C22094D333005ABD6C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacGladys;
+			productName = MacGladys;
+			productReference = 161718C42094D333005ABD6C /* MacGladys.app */;
+			productType = "com.apple.product-type.application";
+		};
 		1619E8111EFF3745000087DD /* GladysFiles */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1619E8211EFF3745000087DD /* Build configuration list for PBXNativeTarget "GladysFiles" */;
@@ -1077,10 +1157,25 @@
 		1678F9C51EF475FE005697CB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0910;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
+					161718C32094D333005ABD6C = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
+					};
 					1619E8111EFF3745000087DD = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Manual;
@@ -1197,11 +1292,23 @@
 				16A4E7DF1FBB844A00D60596 /* GladysWatch */,
 				16A4E7EB1FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AA1FD41C1B00EC480D /* GladysMessage */,
+				161718C32094D333005ABD6C /* MacGladys */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		161718C22094D333005ABD6C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				161718CB2094D334005ABD6C /* Assets.xcassets in Resources */,
+				161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */,
+				168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */,
+				161718CE2094D334005ABD6C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1619E8101EFF3745000087DD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1374,6 +1481,29 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		161718C02094D333005ABD6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */,
+				161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */,
+				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
+				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
+				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
+				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
+				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
+				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
+				161718E32094DEB0005ABD6C /* CloudManager.swift in Sources */,
+				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
+				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
+				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
+				161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */,
+				161718DD2094D7F7005ABD6C /* Model.swift in Sources */,
+				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
+				161718DE2094D870005ABD6C /* Types+MainApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1619E80E1EFF3745000087DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1638,6 +1768,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		161718CC2094D334005ABD6C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				161718CD2094D334005ABD6C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1681,6 +1819,59 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		161718D12094D334005ABD6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladys/MacGladys.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = MacGladys/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f0059045-1b3e-4568-9af4-e33e54cfdf53";
+				PROVISIONING_PROFILE_SPECIFIER = "MacGladys Dev";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		161718D22094D334005ABD6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladys/MacGladys.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MacGladys/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "e9ee1117-937e-4bd1-be42-7119f843e8c5";
+				PROVISIONING_PROFILE_SPECIFIER = "MacGladys Distribution";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 		1657B8BA1FD41C1C00EC480D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2209,6 +2400,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		161718D32094D334005ABD6C /* Build configuration list for PBXNativeTarget "MacGladys" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				161718D12094D334005ABD6C /* Debug */,
+				161718D22094D334005ABD6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		1619E8211EFF3745000087DD /* Build configuration list for PBXNativeTarget "GladysFiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
