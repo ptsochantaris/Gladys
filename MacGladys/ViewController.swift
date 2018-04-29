@@ -273,7 +273,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			if let types = p.types {
 				var count = 0
 				let i = NSItemProvider()
-				for type in types {
+				for type in types.filter({ $0.rawValue.contains(".") && !$0.rawValue.contains(" ") && !$0.rawValue.contains("dyn.") }) {
 					if let data = p.data(forType: type) {
 						if !data.isEmpty {
 							count += 1
@@ -285,7 +285,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					}
 				}
 				if count == 0 { return false }
-				let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil)
+				let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil, pasteboardName: p.name.rawValue)
 				for newItem in newItems {
 					loadingUUIDS.insert(newItem.uuid)
 					let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)

@@ -206,19 +206,19 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		needsCloudPush = true
 	}
 
-	static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
+	static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?, pasteboardName: String? = nil) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
+					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides, pasteboardName: pasteboardName)
 					res.append(item)
 				}
 			}
 			return res
 
 		} else {
-			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
+			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides, pasteboardName: pasteboardName)
 			return [item]
 		}
 	}
@@ -226,12 +226,12 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 	var loadCount = 0
 	weak var delegate: LoadCompletionDelegate?
 
-	private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
+	private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrides: ImportOverrides?, pasteboardName: String? = nil) {
 
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
-		suggestedName = nil
+		suggestedName = pasteboardName
 		needsReIngest = true
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""
