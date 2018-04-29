@@ -134,14 +134,14 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-iOS/CallbackURLKit.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-iOS/CallbackURLKit.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

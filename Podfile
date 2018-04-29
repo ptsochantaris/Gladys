@@ -13,3 +13,10 @@ end
 target 'GladysAction' do
   pod 'Fuzi', '~> 2'
 end
+
+target 'MacGladys' do
+  platform :osx, '10.13'
+  pod 'Fuzi', '~> 2'
+  pod 'ZIPFoundation'
+  pod 'CallbackURLKit'
+end

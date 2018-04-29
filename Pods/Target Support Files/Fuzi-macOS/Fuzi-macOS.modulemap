@@ -1,0 +1,6 @@
+framework module Fuzi {
+  umbrella header "Fuzi-macOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

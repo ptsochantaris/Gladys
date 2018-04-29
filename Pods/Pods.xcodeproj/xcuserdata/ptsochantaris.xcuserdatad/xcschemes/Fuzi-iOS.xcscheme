@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A9480DBBEFA1DE1DBFFE1158AF355A9"
-               BuildableName = "Pods_Gladys.framework"
-               BlueprintName = "Pods-Gladys"
+               BlueprintIdentifier = "87C8D48293F2B3E3753CFB59F7BF2D50"
+               BuildableName = "Fuzi.framework"
+               BlueprintName = "Fuzi-iOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A9480DBBEFA1DE1DBFFE1158AF355A9"
-            BuildableName = "Pods_Gladys.framework"
-            BlueprintName = "Pods-Gladys"
+            BlueprintIdentifier = "87C8D48293F2B3E3753CFB59F7BF2D50"
+            BuildableName = "Fuzi.framework"
+            BlueprintName = "Fuzi-iOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -1,5 +1,5 @@
 framework module Fuzi {
-  umbrella header "Fuzi-umbrella.h"
+  umbrella header "Fuzi-iOS-umbrella.h"
 
   export *
   module * { export * }

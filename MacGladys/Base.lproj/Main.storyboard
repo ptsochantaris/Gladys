@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -103,13 +102,13 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <connections>
-                            <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
+                            <outlet property="delegate" destination="B8D-0N-5wS" id="4iX-2L-hy7"/>
                         </connections>
                     </window>
                     <connections>
@@ -129,7 +128,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ufa-cz-jZo">
-                                <rect key="frame" x="18" y="458" width="52" height="18"/>
+                                <rect key="frame" x="18" y="458" width="633" height="18"/>
                                 <buttonCell key="cell" type="check" title="Sync" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kc7-qS-Irg">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -138,19 +137,20 @@
                                     <action selector="syncSwitchChanged:" target="XfG-lQ-9wD" id="sEm-z8-q0B"/>
                                 </connections>
                             </button>
-                            <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
-                                <rect key="frame" x="20" y="20" width="629" height="432"/>
+                            <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
+                                <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
                                 <clipView key="contentView" drawsBackground="NO" id="cWg-5F-dYQ">
-                                    <rect key="frame" x="1" y="1" width="627" height="430"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <collectionView id="OAb-Qq-Rfr">
-                                            <rect key="frame" x="0.0" y="0.0" width="627" height="158"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
                                                 <size key="itemSize" width="200" height="200"/>
+                                                <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
                                             </collectionViewFlowLayout>
-                                            <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="primaryBackgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <connections>
                                                 <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
                                                 <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
@@ -160,7 +160,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Sti-gx-BrF">
-                                    <rect key="frame" x="1" y="191" width="438" height="16"/>
+                                    <rect key="frame" x="-100" y="-100" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
@@ -172,10 +172,11 @@
                         <constraints>
                             <constraint firstItem="5qF-hq-TMY" firstAttribute="top" secondItem="ufa-cz-jZo" secondAttribute="bottom" constant="8" id="526-eY-JnZ"/>
                             <constraint firstItem="ufa-cz-jZo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="53n-75-yNl"/>
-                            <constraint firstAttribute="trailing" secondItem="5qF-hq-TMY" secondAttribute="trailing" constant="20" id="NA6-1g-AMK"/>
+                            <constraint firstAttribute="trailing" secondItem="5qF-hq-TMY" secondAttribute="trailing" id="NA6-1g-AMK"/>
                             <constraint firstItem="ufa-cz-jZo" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="NYI-ua-xB5"/>
-                            <constraint firstItem="5qF-hq-TMY" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="bx7-gV-U1K"/>
-                            <constraint firstAttribute="bottom" secondItem="5qF-hq-TMY" secondAttribute="bottom" constant="20" id="gZR-DG-voW"/>
+                            <constraint firstItem="5qF-hq-TMY" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="bx7-gV-U1K"/>
+                            <constraint firstAttribute="trailing" secondItem="ufa-cz-jZo" secondAttribute="trailing" constant="20" id="cvp-fZ-bEk"/>
+                            <constraint firstAttribute="bottom" secondItem="5qF-hq-TMY" secondAttribute="bottom" id="gZR-DG-voW"/>
                         </constraints>
                     </view>
                     <connections>

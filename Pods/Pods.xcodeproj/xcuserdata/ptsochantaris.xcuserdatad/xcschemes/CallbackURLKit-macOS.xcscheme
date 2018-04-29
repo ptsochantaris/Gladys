@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A9480DBBEFA1DE1DBFFE1158AF355A9"
-               BuildableName = "Pods_Gladys.framework"
-               BlueprintName = "Pods-Gladys"
+               BlueprintIdentifier = "5E266146DE69A467D41D17E04555323B"
+               BuildableName = "CallbackURLKit.framework"
+               BlueprintName = "CallbackURLKit-macOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A9480DBBEFA1DE1DBFFE1158AF355A9"
-            BuildableName = "Pods_Gladys.framework"
-            BlueprintName = "Pods-Gladys"
+            BlueprintIdentifier = "5E266146DE69A467D41D17E04555323B"
+            BuildableName = "CallbackURLKit.framework"
+            BlueprintName = "CallbackURLKit-macOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
