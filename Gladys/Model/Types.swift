@@ -1,7 +1,7 @@
 
 import Foundation
 
-#if MAINAPP
+#if MAINAPP || MAC
 let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
 let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
 #endif

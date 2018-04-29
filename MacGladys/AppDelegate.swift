@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import CoreSpotlight
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -29,6 +30,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
 		NSApplication.shared.windows.first(where: { $0.contentViewController is ViewController })?.makeKeyAndOrderFront(self)
+		return false
+	}
+
+	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]) -> Void) -> Bool {
+		if userActivity.activityType == CSSearchableItemActionType {
+			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
+			}
+			return true
+
+		} else if userActivity.activityType == CSQueryContinuationActionType {
+			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
+				ViewController.shared.startSearch(initialText: searchQuery)
+			}
+			return true
+
+		} else if userActivity.activityType == kGladysDetailViewingActivity {
+			if let itemIdentifier = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
+				ViewController.shared.highlightItem(with: itemIdentifier.uuidString, andOpen: true)
+			}
+			return true
+		}
+
 		return false
 	}
 }

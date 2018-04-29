@@ -13,9 +13,12 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var syncSwitch: NSButton!
 	@IBOutlet weak var syncSpinner: NSProgressIndicator!
 	@IBOutlet weak var deleteAllButton: NSButton!
+	@IBOutlet weak var displayNotesSwitch: NSButton!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
@@ -66,6 +69,11 @@ final class Preferences: NSViewController {
 				Model.resetEverything()
 			}
 		}
+	}
+
+	@IBAction func displayNotesSwitchSelected(_ sender: NSButton) {
+		PersistedOptions.displayNotesInMainView = sender.intValue == 1
+		ViewController.shared.reloadData()
 	}
 
 	@IBAction func syncSwitchChanged(_ sender: NSButton) {

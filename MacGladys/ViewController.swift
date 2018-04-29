@@ -15,11 +15,25 @@ func genericAlert(title: String, message: String) {
 	a.runModal()
 }
 
+final class WindowController: NSWindowController, NSWindowDelegate {
+	func windowDidResize(_ notification: Notification) {
+		ViewController.shared.sizeChanged(to: window!.frame.size)
+	}
+}
+
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
 	@IBOutlet weak var collection: NSCollectionView!
 
+	static var shared: ViewController! = nil
+
 	private let dropCellId = NSUserInterfaceItemIdentifier.init("DropCell")
 	private var loadingUUIDS = Set<UUID>()
+
+	static let labelColor = NSColor.labelColor
+	static let tintColor = #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
+
+	@IBOutlet weak var searchHolder: NSView!
+	@IBOutlet weak var searchBar: NSSearchField!
 
 	override func viewWillAppear() {
 		if let w = view.window {
@@ -28,10 +42,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		super.viewWillAppear()
 	}
 
+	func reloadData() {
+		collection.reloadData()
+	}
+
 	private var observers = [NSObjectProtocol]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		ViewController.shared = self
+		searchHolder.isHidden = true
 
 		let i = #imageLiteral(resourceName: "paper")
 		i.resizingMode = .tile
@@ -45,14 +66,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			sync()
 		}
 
-		let a1 = NotificationCenter.default.addObserver(forName: Notification.Name.ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
+		let a1 = NotificationCenter.default.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
 			self?.postSave()
 		}
 		observers.append(a1)
-		let a2 = NotificationCenter.default.addObserver(forName: Notification.Name.SaveComplete, object: nil, queue: .main) { [weak self] n in
+
+		let a2 = NotificationCenter.default.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] n in
 			self?.postSave()
 		}
 		observers.append(a2)
+
+		let a3 = NotificationCenter.default.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] n in
+			self?.collection.reloadData()
+		}
+		observers.append(a3)
+
 		print("Loaded with \(Model.drops.count) items")
 	}
 
@@ -61,6 +89,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		for i in Model.drops where i.needsReIngest {
 			loadingUUIDS.insert(i.uuid)
 			i.reIngest(delegate: self)
+			i.reIndex()
 		}
 	}
 
@@ -99,15 +128,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-		for i in indexPaths {
-			let o = Model.filteredDrops[i.item]
-			o.needsReIngest = true
-			loadingUUIDS.insert(o.uuid)
-			o.reIngest(delegate: self)
-		}
+		/*for i in indexPaths {
+			let item = collectionView.item(at: i)
+
+		}*/
 	}
 
-	override func viewWillTransition(to newSize: NSSize) {
+	func sizeChanged(to newSize: NSSize) {
 		updateCellSize(from: newSize)
 	}
 
@@ -120,9 +147,48 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	deinit {
-		print("deinit")
 		for o in observers {
 			NotificationCenter.default.removeObserver(o)
 		}
+	}
+
+	@IBAction func searchDoneSelected(_ sender: NSButton) {
+		resetSearch()
+	}
+
+	private func resetSearch() {
+		searchBar.stringValue = ""
+		searchHolder.isHidden = true
+		updateSearch()
+	}
+
+	@IBAction func findSelected(_ sender: NSMenuItem) {
+		searchHolder.isHidden = !searchHolder.isHidden
+	}
+
+	override func controlTextDidChange(_ obj: Notification) {
+		updateSearch()
+	}
+
+	private func updateSearch() {
+		let s = searchBar.stringValue
+		Model.filter = s.isEmpty ? nil : s
+	}
+
+	func highlightItem(with identifier: String, andOpen: Bool) {
+		resetSearch()
+		if let item = Model.item(uuid: identifier), let title = item.displayText.0 {
+			print("should highlight \(title) too, and handle `andOpen`")
+			if let i = Model.drops.index(of: item) {
+				let ip = IndexPath(item: i, section: 0)
+				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
+			}
+		}
+	}
+
+	func startSearch(initialText: String) {
+		searchHolder.isHidden = false
+		searchBar.stringValue = initialText
+		updateSearch()
 	}
 }

@@ -251,7 +251,7 @@ final class DropCell: NSCollectionViewItem {
 		bottomLabel.stringValue = bottomLabelText
 		bottomLabel.isHidden = bottomLabelText.isEmpty
 		bottomLabel.alignment = bottomLabelAlignment
-		bottomLabel.isHighlighted = bottomLabelHighlight
+		bottomLabel.textColor = bottomLabelHighlight ? ViewController.tintColor : ViewController.labelColor
 
 		image.isHidden = hideImage
 		cancelHolder.isHidden = hideCancel

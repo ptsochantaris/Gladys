@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -89,6 +90,12 @@
                                                 <action selector="selectAll:" target="Ady-hI-5gd" id="Jg9-Cv-3CH"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="yEM-2d-M5d"/>
+                                        <menuItem title="Toggle Search" tag="1" keyEquivalent="f" id="Yul-0G-k3w">
+                                            <connections>
+                                                <action selector="findSelected:" target="Ady-hI-5gd" id="uNe-2O-9bd"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -106,7 +113,7 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="230" height="330"/>
@@ -175,6 +182,17 @@
                                     <action selector="deleteLocalItemsSelected:" target="FB0-Ob-ymN" id="GF1-AM-v7x"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
+                                <rect key="frame" x="18" y="109" width="106" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Display Notes" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="d3Z-ev-luL">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="displayNotesSwitchSelected:" target="FB0-Ob-ymN" id="nBi-fd-Pug"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="5dG-DY-QCA"/>
@@ -189,6 +207,7 @@
                     </view>
                     <connections>
                         <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
+                        <outlet property="displayNotesSwitch" destination="NWy-dL-hAY" id="cTV-5A-q96"/>
                         <outlet property="syncSpinner" destination="i0H-2v-kpv" id="ltw-F6-LDm"/>
                         <outlet property="syncSwitch" destination="WFi-R6-MZO" id="MP1-yh-pnL"/>
                     </connections>
@@ -202,55 +221,104 @@
             <objects>
                 <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
+                        <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
-                                <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
-                                <clipView key="contentView" drawsBackground="NO" id="cWg-5F-dYQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <collectionView selectable="YES" id="OAb-Qq-Rfr">
-                                            <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                            <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
-                                                <size key="itemSize" width="200" height="200"/>
-                                                <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
-                                            </collectionViewFlowLayout>
-                                            <color key="primaryBackgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <connections>
-                                                <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
-                                                <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
-                                            </connections>
-                                        </collectionView>
-                                    </subviews>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Sti-gx-BrF">
-                                    <rect key="frame" x="-100" y="-100" width="438" height="16"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="omR-nC-4xD">
-                                    <rect key="frame" x="421" y="0.0" width="16" height="428"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
+                                <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
+                                <subviews>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
+                                        <rect key="frame" x="0.0" y="750" width="670" height="50"/>
+                                        <subviews>
+                                            <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
+                                                <rect key="frame" x="5" y="5" width="568" height="40"/>
+                                                <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search" usesSingleLineMode="YES" bezelStyle="round" id="tai-4w-9Jp">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </searchFieldCell>
+                                                <connections>
+                                                    <outlet property="delegate" destination="XfG-lQ-9wD" id="WuY-HM-N56"/>
+                                                </connections>
+                                            </searchField>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
+                                                <rect key="frame" x="584" y="7" width="72" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eek-0f-6mI">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="searchDoneSelected:" target="XfG-lQ-9wD" id="iSl-qC-Rqj"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="nZb-eu-7ee" firstAttribute="leading" secondItem="YpT-d8-ghf" secondAttribute="leading" constant="5" id="4BP-Bd-xcM"/>
+                                            <constraint firstAttribute="bottom" secondItem="nZb-eu-7ee" secondAttribute="bottom" constant="5" id="7hp-yW-VCU"/>
+                                            <constraint firstAttribute="trailing" secondItem="dsE-la-tYA" secondAttribute="trailing" constant="20" id="VK8-em-0Ih"/>
+                                            <constraint firstItem="nZb-eu-7ee" firstAttribute="top" secondItem="YpT-d8-ghf" secondAttribute="top" constant="5" id="dda-VU-lqi"/>
+                                            <constraint firstItem="dsE-la-tYA" firstAttribute="leading" secondItem="nZb-eu-7ee" secondAttribute="trailing" constant="8" id="h6L-H2-8Vg"/>
+                                            <constraint firstItem="dsE-la-tYA" firstAttribute="centerY" secondItem="YpT-d8-ghf" secondAttribute="centerY" id="nF8-en-dlx"/>
+                                        </constraints>
+                                    </customView>
+                                    <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
+                                        <rect key="frame" x="0.0" y="0.0" width="670" height="750"/>
+                                        <clipView key="contentView" drawsBackground="NO" id="cWg-5F-dYQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="670" height="750"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <collectionView selectable="YES" id="OAb-Qq-Rfr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="670" height="750"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
+                                                        <size key="itemSize" width="200" height="200"/>
+                                                        <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
+                                                    </collectionViewFlowLayout>
+                                                    <color key="primaryBackgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
+                                                        <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
+                                                    </connections>
+                                                </collectionView>
+                                            </subviews>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </clipView>
+                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Sti-gx-BrF">
+                                            <rect key="frame" x="-100" y="-100" width="438" height="16"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </scroller>
+                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="omR-nC-4xD">
+                                            <rect key="frame" x="614" y="0.0" width="16" height="599"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </scroller>
+                                    </scrollView>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="5qF-hq-TMY" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="1Pw-jK-6ch"/>
-                            <constraint firstAttribute="trailing" secondItem="5qF-hq-TMY" secondAttribute="trailing" id="NA6-1g-AMK"/>
-                            <constraint firstItem="5qF-hq-TMY" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="bx7-gV-U1K"/>
-                            <constraint firstAttribute="bottom" secondItem="5qF-hq-TMY" secondAttribute="bottom" id="gZR-DG-voW"/>
+                            <constraint firstAttribute="bottom" secondItem="E1G-ru-fcT" secondAttribute="bottom" id="L04-2L-qs8"/>
+                            <constraint firstAttribute="trailing" secondItem="E1G-ru-fcT" secondAttribute="trailing" id="RH3-4n-sY6"/>
+                            <constraint firstItem="E1G-ru-fcT" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="UnT-83-gBS"/>
+                            <constraint firstItem="E1G-ru-fcT" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="zqO-hM-HEQ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collection" destination="OAb-Qq-Rfr" id="hAL-dC-Z2v"/>
+                        <outlet property="searchBar" destination="nZb-eu-7ee" id="4zc-tb-JLi"/>
+                        <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="964" y="201"/>
+            <point key="canvasLocation" x="1052" y="201"/>
         </scene>
     </scenes>
 </document>
