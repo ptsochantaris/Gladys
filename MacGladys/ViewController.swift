@@ -164,6 +164,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@IBAction func findSelected(_ sender: NSMenuItem) {
 		searchHolder.isHidden = !searchHolder.isHidden
+		if !searchHolder.isHidden {
+			view.window?.makeFirstResponder(searchBar)
+		}
 	}
 
 	override func controlTextDidChange(_ obj: Notification) {

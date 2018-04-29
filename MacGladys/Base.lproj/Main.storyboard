@@ -230,10 +230,10 @@
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
                                         <rect key="frame" x="0.0" y="750" width="670" height="50"/>
                                         <subviews>
-                                            <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
-                                                <rect key="frame" x="5" y="5" width="568" height="40"/>
+                                            <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
+                                                <rect key="frame" x="5" y="5" width="591" height="40"/>
                                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search" usesSingleLineMode="YES" bezelStyle="round" id="tai-4w-9Jp">
-                                                    <font key="font" metaFont="system"/>
+                                                    <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </searchFieldCell>
@@ -242,10 +242,10 @@
                                                 </connections>
                                             </searchField>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
-                                                <rect key="frame" x="584" y="7" width="72" height="32"/>
-                                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eek-0f-6mI">
+                                                <rect key="frame" x="598" y="8" width="68" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="eek-0f-6mI">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="system"/>
+                                                    <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>
                                                 <connections>
                                                     <action selector="searchDoneSelected:" target="XfG-lQ-9wD" id="iSl-qC-Rqj"/>
@@ -255,7 +255,7 @@
                                         <constraints>
                                             <constraint firstItem="nZb-eu-7ee" firstAttribute="leading" secondItem="YpT-d8-ghf" secondAttribute="leading" constant="5" id="4BP-Bd-xcM"/>
                                             <constraint firstAttribute="bottom" secondItem="nZb-eu-7ee" secondAttribute="bottom" constant="5" id="7hp-yW-VCU"/>
-                                            <constraint firstAttribute="trailing" secondItem="dsE-la-tYA" secondAttribute="trailing" constant="20" id="VK8-em-0Ih"/>
+                                            <constraint firstAttribute="trailing" secondItem="dsE-la-tYA" secondAttribute="trailing" constant="10" id="VK8-em-0Ih"/>
                                             <constraint firstItem="nZb-eu-7ee" firstAttribute="top" secondItem="YpT-d8-ghf" secondAttribute="top" constant="5" id="dda-VU-lqi"/>
                                             <constraint firstItem="dsE-la-tYA" firstAttribute="leading" secondItem="nZb-eu-7ee" secondAttribute="trailing" constant="8" id="h6L-H2-8Vg"/>
                                             <constraint firstItem="dsE-la-tYA" firstAttribute="centerY" secondItem="YpT-d8-ghf" secondAttribute="centerY" id="nF8-en-dlx"/>
