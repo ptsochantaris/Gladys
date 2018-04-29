@@ -376,6 +376,10 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		typeItems.forEach { $0.cancelIngest() }
 	}
 
+	var shouldDisplayLoading: Bool {
+		return needsReIngest || loadingProgress != nil
+	}
+	
 	func reIngest(delegate: LoadCompletionDelegate) {
 		self.delegate = delegate
 		loadCount = typeItems.count
@@ -398,6 +402,19 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		}
 	}
 
+	var backgroundInfoObject: Any? {
+		var currentItem: Any?
+		var currentPriority = -1
+		for item in typeItems {
+			let (newItem, newPriority) = item.backgroundInfoObject
+			if let newItem = newItem, newPriority > currentPriority {
+				currentItem = newItem
+				currentPriority = newPriority
+			}
+		}
+		return currentItem
+	}
+	
 	static func sanitised(_ idenitfiers: [String]) -> [String] {
 		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
 		return idenitfiers.filter { typeIdentifier in

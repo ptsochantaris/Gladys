@@ -22,7 +22,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                            <connections>
+                                                <segue destination="sHv-ur-2N2" kind="modal" id="rfv-Zq-O4i"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -97,7 +101,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MacGladys" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10" y="-12"/>
+            <point key="canvasLocation" x="-108" y="1"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -105,10 +109,11 @@
                 <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="contentRect" x="196" y="240" width="230" height="330"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="230" height="330"/>
                         <connections>
-                            <outlet property="delegate" destination="B8D-0N-5wS" id="4iX-2L-hy7"/>
+                            <outlet property="delegate" destination="B8D-0N-5wS" id="Npf-tH-di6"/>
                         </connections>
                     </window>
                     <connections>
@@ -117,34 +122,97 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="155" y="337"/>
+            <point key="canvasLocation" x="406" y="201"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="KZR-7s-Aib">
+            <objects>
+                <windowController showSeguePresentationStyle="single" id="sHv-ur-2N2" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="eF5-Dp-Tbq">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="228" height="129"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                        <connections>
+                            <outlet property="delegate" destination="sHv-ur-2N2" id="pZj-No-Cnw"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="FB0-Ob-ymN" kind="relationship" relationship="window.shadowedContentViewController" id="15z-E6-Sjq"/>
+                    </connections>
+                </windowController>
+                <customObject id="vHt-Gx-Pgz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-108" y="282"/>
+        </scene>
+        <!--Preferences-->
+        <scene sceneID="fmd-1D-McK">
+            <objects>
+                <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="voj-7Z-m9G">
+                        <rect key="frame" x="0.0" y="0.0" width="281" height="186"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WFi-R6-MZO">
+                                <rect key="frame" x="18" y="150" width="95" height="18"/>
+                                <buttonCell key="cell" type="check" title="iCloud Sync" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="VGo-Z9-dOc">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="syncSwitchChanged:" target="FB0-Ob-ymN" id="m4l-iI-QcK"/>
+                                </connections>
+                            </button>
+                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="i0H-2v-kpv">
+                                <rect key="frame" x="119" y="151" width="16" height="16"/>
+                            </progressIndicator>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
+                                <rect key="frame" x="132" y="13" width="135" height="32"/>
+                                <buttonCell key="cell" type="push" title="Delete All Items" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Nwx-h9-SAd">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="deleteLocalItemsSelected:" target="FB0-Ob-ymN" id="GF1-AM-v7x"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="WFi-R6-MZO" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="5dG-DY-QCA"/>
+                            <constraint firstAttribute="trailing" secondItem="3y4-gH-maW" secondAttribute="trailing" constant="20" id="84V-TB-2wY"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="G62-lS-nXe"/>
+                            <constraint firstAttribute="bottom" secondItem="3y4-gH-maW" secondAttribute="bottom" constant="20" id="HZ8-xc-v6r"/>
+                            <constraint firstItem="i0H-2v-kpv" firstAttribute="leading" secondItem="WFi-R6-MZO" secondAttribute="trailing" constant="8" id="NAO-cN-tbA"/>
+                            <constraint firstItem="3y4-gH-maW" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" priority="250" constant="138" id="QAK-9G-lX1"/>
+                            <constraint firstItem="WFi-R6-MZO" firstAttribute="top" secondItem="voj-7Z-m9G" secondAttribute="top" constant="20" id="Zpt-o1-tmv"/>
+                            <constraint firstItem="i0H-2v-kpv" firstAttribute="centerY" secondItem="WFi-R6-MZO" secondAttribute="centerY" id="juX-U2-dtJ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
+                        <outlet property="syncSpinner" destination="i0H-2v-kpv" id="ltw-F6-LDm"/>
+                        <outlet property="syncSwitch" destination="WFi-R6-MZO" id="MP1-yh-pnL"/>
+                    </connections>
+                </viewController>
+                <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-108" y="649"/>
         </scene>
         <!--Gladys-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="669" height="494"/>
+                        <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ufa-cz-jZo">
-                                <rect key="frame" x="18" y="458" width="633" height="18"/>
-                                <buttonCell key="cell" type="check" title="Sync" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kc7-qS-Irg">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="syncSwitchChanged:" target="XfG-lQ-9wD" id="sEm-z8-q0B"/>
-                                </connections>
-                            </button>
                             <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
-                                <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
+                                <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
                                 <clipView key="contentView" drawsBackground="NO" id="cWg-5F-dYQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <collectionView id="OAb-Qq-Rfr">
-                                            <rect key="frame" x="0.0" y="0.0" width="669" height="452"/>
+                                        <collectionView selectable="YES" id="OAb-Qq-Rfr">
+                                            <rect key="frame" x="0.0" y="0.0" width="630" height="660"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
                                                 <size key="itemSize" width="200" height="200"/>
@@ -163,30 +231,26 @@
                                     <rect key="frame" x="-100" y="-100" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
-                                    <rect key="frame" x="234" y="1" width="15" height="143"/>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="omR-nC-4xD">
+                                    <rect key="frame" x="421" y="0.0" width="16" height="428"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="5qF-hq-TMY" firstAttribute="top" secondItem="ufa-cz-jZo" secondAttribute="bottom" constant="8" id="526-eY-JnZ"/>
-                            <constraint firstItem="ufa-cz-jZo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="53n-75-yNl"/>
+                            <constraint firstItem="5qF-hq-TMY" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="1Pw-jK-6ch"/>
                             <constraint firstAttribute="trailing" secondItem="5qF-hq-TMY" secondAttribute="trailing" id="NA6-1g-AMK"/>
-                            <constraint firstItem="ufa-cz-jZo" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="NYI-ua-xB5"/>
                             <constraint firstItem="5qF-hq-TMY" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="bx7-gV-U1K"/>
-                            <constraint firstAttribute="trailing" secondItem="ufa-cz-jZo" secondAttribute="trailing" constant="20" id="cvp-fZ-bEk"/>
                             <constraint firstAttribute="bottom" secondItem="5qF-hq-TMY" secondAttribute="bottom" id="gZR-DG-voW"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collection" destination="OAb-Qq-Rfr" id="hAL-dC-Z2v"/>
-                        <outlet property="syncSwitch" destination="ufa-cz-jZo" id="UFL-co-Z2B"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="249.5" y="861"/>
+            <point key="canvasLocation" x="964" y="201"/>
         </scene>
     </scenes>
 </document>

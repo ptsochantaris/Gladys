@@ -35,7 +35,6 @@ extension NSImage {
 		let offsetX = (Int(outputImagePixelWidth) - drawnImageWidthPixels) / 2
 		let offsetY = (Int(outputImagePixelHeight) - drawnImageHeightPixels) / 2
 
-		let imageRef = cgImage(forProposedRect: nil, context: nil, hints: nil)!
 		let c = CGContext(data: nil,
 						  width: Int(outputImagePixelWidth),
 						  height: Int(outputImagePixelHeight),
@@ -44,8 +43,10 @@ extension NSImage {
 						  space: CGColorSpaceCreateDeviceRGB(),
 						  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
 		c.interpolationQuality = .high
-		c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
 
-		return NSImage(cgImage: c.makeImage()!, size: CGSize(width: drawnImageWidthPixels, height: drawnImageHeightPixels))
+		let imageRef = cgImage(forProposedRect: nil, context: nil, hints: nil)!
+		c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
+		let i = NSImage(cgImage: c.makeImage()!, size: NSSize(width: outputImagePixelWidth, height: outputImagePixelHeight))
+		return i
 	}
 }

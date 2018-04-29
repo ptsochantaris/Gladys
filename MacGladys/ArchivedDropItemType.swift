@@ -442,7 +442,7 @@ final class ArchivedDropItemType: Codable {
 	var displayIcon: NSImage? {
 		set {
 			let ipath = imagePath
-			if let n = newValue, let r = n.representations.first as? NSBitmapImageRep, let data = r.representation(using: .png, properties: [:]) {
+			if let n = newValue, let data = n.tiffRepresentation {
 				try? data.write(to: ipath)
 			} else if FileManager.default.fileExists(atPath: ipath.path) {
 				try? FileManager.default.removeItem(at: ipath)
@@ -474,6 +474,13 @@ final class ArchivedDropItemType: Codable {
 
 	func markUpdated() {
 		updatedAt = Date()
+	}
+
+	var backgroundInfoObject: (Any?, Int) {
+		switch representedClass {
+		case "MKMapItem": return (decode() as? MKMapItem, 30)
+		default: return (nil, 0)
+		}
 	}
 
 	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
