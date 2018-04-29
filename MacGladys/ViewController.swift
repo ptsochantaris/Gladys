@@ -54,6 +54,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		ViewController.shared = self
 		searchHolder.isHidden = true
 
+		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
+		collection.setDraggingSourceOperationMask(.move, forLocal: true)
+
 		let i = #imageLiteral(resourceName: "paper")
 		i.resizingMode = .tile
 		let v = NSImageView(image: i)
@@ -67,6 +70,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		let a1 = NotificationCenter.default.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
+			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
 			self?.postSave()
 		}
 		observers.append(a1)
@@ -193,5 +197,59 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		searchHolder.isHidden = false
 		searchBar.stringValue = initialText
 		updateSearch()
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+		return Model.filteredDrops[indexPath.item].pasteboardWriter
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
+		let writers = indexPaths.map { Model.filteredDrops[$0.item].pasteboardWriter }
+		pasteboard.writeObjects(writers)
+		return true
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+		return !indexPaths.map { Model.filteredDrops[$0.item].isLocked }.contains(true)
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView {
+			return .move
+		} else {
+			return .copy
+		}
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
+		draggingIndexPath = indexPaths.first
+	}
+
+	private var draggingIndexPath: IndexPath?
+
+	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
+		draggingIndexPath = nil
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPath = draggingIndexPath {
+
+			let sourceItem = Model.filteredDrops[draggingIndexPath.item]
+			let sourceIndex = Model.drops.index(of: sourceItem)!
+			var destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			if destinationIndex > sourceIndex {
+				destinationIndex -= 1
+			}
+			Model.drops.remove(at: sourceIndex)
+			Model.drops.insert(sourceItem, at: destinationIndex)
+			Model.forceUpdateFilter(signalUpdate: false)
+			collectionView.reloadData()
+			Model.save()
+			return true
+		} else {
+
+
+			return false
+		}
 	}
 }

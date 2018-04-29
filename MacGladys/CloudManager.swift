@@ -441,7 +441,7 @@ final class CloudManager {
 	/////////////////////////////////////////////////// Push
 
 	static func received(notificationInfo: [AnyHashable : Any]) {
-		NSApplication.shared.dockTile.badgeLabel = nil
+		NSApplication.shared.dockTile.badgeLabel = ""
 		if !syncSwitchedOn { return }
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)

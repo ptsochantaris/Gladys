@@ -459,4 +459,14 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		}
 		return p
 	}
+
+	var pasteboardWriter: NSPasteboardWriting {
+		let pi = NSPasteboardItem()
+		for type in typeItems {
+			if let b = type.bytes {
+				pi.setData(b, forType: NSPasteboard.PasteboardType(type.typeIdentifier))
+			}
+		}
+		return pi
+	}
 }
