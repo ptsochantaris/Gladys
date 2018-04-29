@@ -1194,4 +1194,13 @@ final class ArchivedDropItemType: Codable {
 		}
 		return nil
 	}
+
+	func deleteFromStorage() {
+		let fm = FileManager.default
+		if fm.fileExists(atPath: folderUrl.path) {
+			log("Removing component storage at: \(folderUrl.path)")
+			try? fm.removeItem(at: folderUrl)
+		}
+		CloudManager.markAsDeleted(uuid: uuid)
+	}
 }

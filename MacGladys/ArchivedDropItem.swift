@@ -206,8 +206,6 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		needsCloudPush = true
 	}
 
-	#if MAINAPP || ACTIONEXTENSION
-
 	static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
@@ -233,7 +231,7 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
-		suggestedName = providers.first!.suggestedName
+		suggestedName = nil
 		needsReIngest = true
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""
@@ -245,8 +243,6 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 		loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
-
-	#endif
 
 	init(from record: CKRecord, children: [CKRecord]) {
 		let myUUID = UUID(uuidString: record.recordID.recordName)!
@@ -357,9 +353,6 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 			try! f.removeItem(at: folderUrl)
 		}
 	}
-
-	var loadCount = 0
-	weak var delegate: LoadCompletionDelegate?
 
 	func loadCompleted(sender: AnyObject) {
 		loadCount = loadCount - 1

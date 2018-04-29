@@ -260,10 +260,8 @@ final class DropCell: NSCollectionViewItem {
 	}
 
 	@IBAction func cancelSelected(_ sender: NSButton) {
-		//progressView.observedProgress = nil
-		//if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
-			//ViewController.shared.deleteRequested(for: [archivedDropItem])
-		//}
+		if let archivedDropItem = representedObject as? ArchivedDropItem, archivedDropItem.shouldDisplayLoading {
+			ViewController.shared.deleteRequested(for: [archivedDropItem])
+		}
 	}
-
 }

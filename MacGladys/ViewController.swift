@@ -70,6 +70,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		let a1 = NotificationCenter.default.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
+			self?.detectExternalDeletions()
 			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
 			self?.postSave()
 		}
@@ -86,6 +87,27 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		observers.append(a3)
 
 		print("Loaded with \(Model.drops.count) items")
+	}
+
+	private func detectExternalDeletions() {
+		var shouldSaveInAnyCase = false
+		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
+			let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
+			if componentsToDelete.count > 0 {
+				item.typeItems = item.typeItems.filter { !$0.needsDeletion }
+				for c in componentsToDelete {
+					c.deleteFromStorage()
+				}
+				item.needsReIngest = true
+				shouldSaveInAnyCase = !CloudManager.syncing // this could be from the file provider
+			}
+		}
+		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
+		if itemsToDelete.count > 0 {
+			deleteRequested(for: itemsToDelete) // will also save
+		} else if shouldSaveInAnyCase {
+			Model.save()
+		}
 	}
 
 	private func postSave() {
@@ -247,9 +269,56 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			Model.save()
 			return true
 		} else {
-
-
+			let p = draggingInfo.draggingPasteboard()
+			if let types = p.types {
+				var count = 0
+				let i = NSItemProvider()
+				for type in types {
+					if let data = p.data(forType: type) {
+						if !data.isEmpty {
+							count += 1
+							i.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+								callback(data, nil)
+								return nil
+							}
+						}
+					}
+				}
+				if count == 0 { return false }
+				let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil)
+				for newItem in newItems {
+					loadingUUIDS.insert(newItem.uuid)
+					let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+					Model.drops.insert(newItem, at: destinationIndex)
+				}
+				Model.forceUpdateFilter(signalUpdate: false)
+				collectionView.reloadData()
+				Model.save()
+				return true
+			}
 			return false
 		}
+	}
+
+	func deleteRequested(for items: [ArchivedDropItem]) {
+
+		for item in items {
+
+			if item.shouldDisplayLoading {
+				item.cancelIngest()
+			}
+
+			let uuid = item.uuid
+			loadingUUIDS.remove(uuid)
+
+			if let i = Model.filteredDrops.index(where: { $0.uuid == uuid }) {
+				Model.removeItemFromList(uuid: uuid)
+				collection.deleteItems(at: [IndexPath(item: i, section: 0)])
+			}
+
+			item.delete()
+		}
+
+		Model.save()
 	}
 }
