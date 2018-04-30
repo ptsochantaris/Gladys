@@ -409,7 +409,7 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 	}
 	
 	static func sanitised(_ idenitfiers: [String]) -> [String] {
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
+		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", "com.apple.finder.node"]
 		return idenitfiers.filter { typeIdentifier in
 			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
 		}

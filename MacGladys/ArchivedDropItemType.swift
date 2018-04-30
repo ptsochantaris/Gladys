@@ -779,18 +779,19 @@ final class ArchivedDropItemType: Codable {
 			var directory: ObjCBool = false
 			if fm.fileExists(atPath: item.path, isDirectory: &directory) {
 				do {
+					let data: Data
 					if directory.boolValue {
 						let tempURL = URL(fileURLWithPath: NSTemporaryDirectory() + "/" + UUID().uuidString + ".zip")
 						let a = Archive(url: tempURL, accessMode: .create)!
 						let dirName = item.lastPathComponent
 						let item = item.deletingLastPathComponent()
 						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
-						bytes = try Data(contentsOf: tempURL)
+						data = try Data(contentsOf: tempURL)
 						try fm.removeItem(at: tempURL)
 						typeIdentifier = kUTTypeZipArchive as String
 						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
 					} else {
-						bytes = try Data(contentsOf: item)
+						data = try Data(contentsOf: item)
 						let ext = item.pathExtension
 						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
 							typeIdentifier = uti as String
@@ -800,12 +801,15 @@ final class ArchivedDropItemType: Codable {
 					accessoryTitle = item.lastPathComponent
 					representedClass = "NSData"
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
+					handleData(data)
+
 				} catch {
 					bytes = data
 					representedClass = "URL"
 					setTitleInfo(item.lastPathComponent, 6)
 					log("      could not read data from file, treating as local file url: \(item.absoluteString)")
 					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+					completeIngest()
 				}
 			} else {
 				bytes = data
@@ -813,8 +817,8 @@ final class ArchivedDropItemType: Codable {
 				setTitleInfo(item.lastPathComponent, 6)
 				log("      received local file url for non-existent file: \(item.absoluteString)")
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+				completeIngest()
 			}
-			completeIngest()
 
 		} else {
 			bytes = data

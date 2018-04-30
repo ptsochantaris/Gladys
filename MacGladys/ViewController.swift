@@ -294,7 +294,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					Model.drops.insert(newItem, at: destinationIndex)
 				}
 				Model.forceUpdateFilter(signalUpdate: true)
-				Model.save()
 				return true
 			}
 			return false
