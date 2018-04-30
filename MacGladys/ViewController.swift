@@ -56,6 +56,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
 		collection.setDraggingSourceOperationMask(.move, forLocal: true)
+		collection.setDraggingSourceOperationMask(.copy, forLocal: false)
 
 		let i = #imageLiteral(resourceName: "paper")
 		i.resizingMode = .tile
@@ -71,12 +72,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a1 = NotificationCenter.default.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
 			self?.detectExternalDeletions()
-			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
+			Model.forceUpdateFilter(signalUpdate: true) // refresh filtered items
 			self?.postSave()
 		}
 		observers.append(a1)
 
 		let a2 = NotificationCenter.default.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] n in
+			self?.collection.reloadData()
 			self?.postSave()
 		}
 		observers.append(a2)
@@ -111,7 +113,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func postSave() {
-		collection.reloadData()
 		for i in Model.drops where i.needsReIngest {
 			loadingUUIDS.insert(i.uuid)
 			i.reIngest(delegate: self)
@@ -236,11 +237,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView {
-			return .move
-		} else {
-			return .copy
-		}
+		return draggingIndexPath == nil ? .copy : .move
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
@@ -264,8 +261,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 			Model.drops.remove(at: sourceIndex)
 			Model.drops.insert(sourceItem, at: destinationIndex)
-			Model.forceUpdateFilter(signalUpdate: false)
-			collectionView.reloadData()
+			Model.forceUpdateFilter(signalUpdate: true)
 			Model.save()
 			return true
 		} else {
@@ -291,8 +287,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 					Model.drops.insert(newItem, at: destinationIndex)
 				}
-				Model.forceUpdateFilter(signalUpdate: false)
-				collectionView.reloadData()
+				Model.forceUpdateFilter(signalUpdate: true)
 				Model.save()
 				return true
 			}

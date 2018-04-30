@@ -115,10 +115,21 @@ final class DropCell: NSCollectionViewItem {
 		image.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
 	}
 
+	private var archivedDropItem: ArchivedDropItem? {
+		return representedObject as? ArchivedDropItem
+	}
+
+	private var shortcutMenu: NSMenu? {
+		guard let item = archivedDropItem else { return nil }
+		let m = NSMenu(title: item.displayTitleOrUuid)
+		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
+		return m
+	}
+
 	override func viewWillLayout() {
 		super.viewWillLayout()
 
-		let item = representedObject as? ArchivedDropItem
+		let item = archivedDropItem
 
 		var wantMapView = false
 		var hideCancel = true
@@ -138,6 +149,8 @@ final class DropCell: NSCollectionViewItem {
 		} else {
 			progressView.stopAnimation(nil)
 		}
+
+		view.menu = shortcutMenu
 
 		if let item = item {
 
@@ -259,8 +272,14 @@ final class DropCell: NSCollectionViewItem {
 		mergeImage.isHidden = hideMerge
 	}
 
+	@objc private func deleteSelected() {
+		if let archivedDropItem = archivedDropItem {
+			ViewController.shared.deleteRequested(for: [archivedDropItem])
+		}
+	}
+
 	@IBAction func cancelSelected(_ sender: NSButton) {
-		if let archivedDropItem = representedObject as? ArchivedDropItem, archivedDropItem.shouldDisplayLoading {
+		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
 		}
 	}

@@ -97,6 +97,8 @@ final class ArchivedDropItemType: Codable {
 					return url
 				}
 			}
+		} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = NSURL(string: s) {
+			return u
 		}
 		return nil
 	}
@@ -387,7 +389,13 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var contentDescription: String {
-		return typeDescription ?? "Other (\(representedClass))"
+		if let typeDescription = typeDescription {
+			return typeDescription
+		} else if representedClass.isEmpty {
+			return typeIdentifier
+		} else {
+			return "Other (\(representedClass))"
+		}
 	}
 
 	var sizeInBytes: Int64 {
