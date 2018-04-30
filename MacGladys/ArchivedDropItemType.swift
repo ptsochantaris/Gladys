@@ -12,6 +12,7 @@ import CloudKit
 import AVFoundation
 import MapKit
 import Fuzi
+import ZIPFoundation
 
 final class ArchivedDropItemType: Codable {
 
@@ -644,7 +645,7 @@ final class ArchivedDropItemType: Codable {
 			s.isTransferring = false
 			if let data = data {
 				ArchivedDropItemType.ingestQueue.async {
-					log(">> Received: [\(provider)] type: [\(s.typeIdentifier)]")
+					log(">> Received type: [\(s.typeIdentifier)]")
 					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage) {
 						overallProgress.completedUnitCount += 1
 					}
@@ -751,19 +752,74 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
+	private func appendDirectory(_ baseURL: URL, chain: [String], archive: Archive, fm: FileManager) throws {
+		let joinedChain = chain.joined(separator: "/")
+		let dirURL = baseURL.appendingPathComponent(joinedChain)
+		for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
+			let newURL = dirURL.appendingPathComponent(file)
+			var directory: ObjCBool = false
+			if fm.fileExists(atPath: newURL.path, isDirectory: &directory) {
+				if directory.boolValue {
+					var newChain = chain
+					newChain.append(file)
+					try appendDirectory(baseURL, chain: newChain, archive: archive, fm: fm)
+				} else {
+					print("compressing file \(newURL)")
+					let path = joinedChain + "/" + file
+					try archive.addEntry(with: path, relativeTo: baseURL)
+				}
+			}
+		}
+	}
 
 	private func handleUrl(_ item: URL, _ data: Data) {
 
-		bytes = data
-		representedClass = "URL"
-
 		if item.isFileURL {
-			setTitleInfo(item.lastPathComponent, 6)
-			log("      received local file url: \(item.absoluteString)")
-			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+			let fm = FileManager.default
+			var directory: ObjCBool = false
+			if fm.fileExists(atPath: item.path, isDirectory: &directory) {
+				do {
+					if directory.boolValue {
+						let tempURL = URL(fileURLWithPath: NSTemporaryDirectory() + "/" + UUID().uuidString + ".zip")
+						let a = Archive(url: tempURL, accessMode: .create)!
+						let dirName = item.lastPathComponent
+						let item = item.deletingLastPathComponent()
+						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
+						bytes = try Data(contentsOf: tempURL)
+						try fm.removeItem(at: tempURL)
+						typeIdentifier = kUTTypeZipArchive as String
+						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
+					} else {
+						bytes = try Data(contentsOf: item)
+						let ext = item.pathExtension
+						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
+							typeIdentifier = uti as String
+						}
+						setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+					}
+					accessoryTitle = item.lastPathComponent
+					representedClass = "NSData"
+					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
+				} catch {
+					bytes = data
+					representedClass = "URL"
+					setTitleInfo(item.lastPathComponent, 6)
+					log("      could not read data from file, treating as local file url: \(item.absoluteString)")
+					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+				}
+			} else {
+				bytes = data
+				representedClass = "URL"
+				setTitleInfo(item.lastPathComponent, 6)
+				log("      received local file url for non-existent file: \(item.absoluteString)")
+				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+			}
 			completeIngest()
-			return
+
 		} else {
+			bytes = data
+			representedClass = "URL"
+
 			setTitleInfo(item.absoluteString, 6)
 			log("      received remote url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)

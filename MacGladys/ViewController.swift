@@ -113,7 +113,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func postSave() {
-		for i in Model.drops where i.needsReIngest {
+		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !loadingUUIDS.contains($0.uuid) }
+		for i in itemsToReIngest {
 			loadingUUIDS.insert(i.uuid)
 			i.reIngest(delegate: self)
 			i.reIndex()
@@ -274,8 +275,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 						if !data.isEmpty {
 							count += 1
 							i.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-								callback(data, nil)
-								return nil
+								let p = Progress()
+								p.totalUnitCount = 1
+								DispatchQueue.global(qos: .userInitiated).async {
+									callback(data, nil)
+									p.completedUnitCount = 1
+								}
+								return p
 							}
 						}
 					}
