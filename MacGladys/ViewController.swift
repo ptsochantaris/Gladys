@@ -129,7 +129,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		for i in itemsToReIngest {
 			loadingUUIDS.insert(i.uuid)
 			i.reIngest(delegate: self)
-			i.reIndex()
 		}
 	}
 
@@ -146,6 +145,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func loadCompleted(sender: AnyObject) {
 		guard let o = sender as? ArchivedDropItem else { return }
 		o.needsReIngest = false
+		o.reIndex()
 		loadingUUIDS.remove(o.uuid)
 		if let i = Model.filteredDrops.index(of: o) {
 			let ip = IndexPath(item: i, section: 0)
