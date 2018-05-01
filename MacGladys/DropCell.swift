@@ -122,6 +122,7 @@ final class DropCell: NSCollectionViewItem {
 	private var shortcutMenu: NSMenu? {
 		guard let item = archivedDropItem else { return nil }
 		let m = NSMenu(title: item.displayTitleOrUuid)
+		m.addItem(withTitle: "Copy", action: #selector(copySelected), keyEquivalent: "")
 		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
 		return m
 	}
@@ -272,6 +273,10 @@ final class DropCell: NSCollectionViewItem {
 		mergeImage.isHidden = hideMerge
 	}
 
+	@objc private func copySelected() {
+		ViewController.shared.copy(nil)
+	}
+
 	@objc private func deleteSelected() {
 		if let archivedDropItem = archivedDropItem {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
@@ -281,6 +286,26 @@ final class DropCell: NSCollectionViewItem {
 	@IBAction func cancelSelected(_ sender: NSButton) {
 		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
+		}
+	}
+
+	override var isSelected: Bool {
+		didSet {
+			guard let l = view.layer else { return }
+			if isSelected {
+				l.borderColor = ViewController.tintColor.cgColor
+				l.borderWidth = 2
+			} else {
+				l.borderColor = NSColor.clear.cgColor
+				l.borderWidth = 0
+			}
+		}
+	}
+
+	override func mouseDown(with event: NSEvent) {
+		super.mouseDown(with: event)
+		if event.clickCount == 2 {
+			ViewController.shared.selected()
 		}
 	}
 }

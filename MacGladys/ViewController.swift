@@ -16,8 +16,20 @@ func genericAlert(title: String, message: String) {
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
-	func windowDidResize(_ notification: Notification) {
-		ViewController.shared.sizeChanged(to: window!.frame.size)
+	func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
+		ViewController.shared.sizeChanged(to: frameSize)
+		return frameSize
+	}
+}
+
+final class GladysCollection: NSCollectionView {
+
+	override func keyDown(with event: NSEvent) {
+		if event.keyCode == 36 {
+			ViewController.shared.selected()
+		} else {
+			super.keyDown(with: event)
+		}
 	}
 }
 
@@ -156,10 +168,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-		/*for i in indexPaths {
-			let item = collectionView.item(at: i)
+	}
 
-		}*/
+	func selected() {
+		guard let i = collection.selectionIndexPaths.first else { return }
+		let item = Model.filteredDrops[i.item]
+		print(item.uuid)
 	}
 
 	func sizeChanged(to newSize: NSSize) {
@@ -167,10 +181,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func updateCellSize(from frameSize: NSSize) {
-		let w = frameSize.width - 20
-		let columns = (w / 200).rounded(.down)
-		let leftOver = w.truncatingRemainder(dividingBy: 200)
-		let s = 190 + (leftOver / columns)
+		let baseSize: CGFloat = 180
+		let w = frameSize.width - 10
+		let columns = (w / baseSize).rounded(.down)
+		let leftOver = w.truncatingRemainder(dividingBy: baseSize)
+		let s = (baseSize - 10) + (leftOver / columns)
 		(collection.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: s)
 	}
 
@@ -267,37 +282,41 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return true
 		} else {
 			let p = draggingInfo.draggingPasteboard()
-			if let types = p.types {
-				var count = 0
-				let i = NSItemProvider()
-				for type in types.filter({ $0.rawValue.contains(".") && !$0.rawValue.contains(" ") && !$0.rawValue.contains("dyn.") }) {
-					if let data = p.data(forType: type) {
-						if !data.isEmpty {
-							count += 1
-							i.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-								let p = Progress()
-								p.totalUnitCount = 1
-								DispatchQueue.global(qos: .userInitiated).async {
-									callback(data, nil)
-									p.completedUnitCount = 1
-								}
-								return p
-							}
+			return addItem(from: p, at: indexPath)
+		}
+	}
+
+	@discardableResult
+	private func addItem(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
+		guard let types = pasteBoard.types else { return false }
+
+		var count = 0
+		let i = NSItemProvider()
+		for type in types.filter({ $0.rawValue.contains(".") && !$0.rawValue.contains(" ") && !$0.rawValue.contains("dyn.") }) {
+			if let data = pasteBoard.data(forType: type) {
+				if !data.isEmpty {
+					count += 1
+					i.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+						let p = Progress()
+						p.totalUnitCount = 1
+						DispatchQueue.global(qos: .userInitiated).async {
+							callback(data, nil)
+							p.completedUnitCount = 1
 						}
+						return p
 					}
 				}
-				if count == 0 { return false }
-				let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil, pasteboardName: p.name.rawValue)
-				for newItem in newItems {
-					loadingUUIDS.insert(newItem.uuid)
-					let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-					Model.drops.insert(newItem, at: destinationIndex)
-				}
-				Model.forceUpdateFilter(signalUpdate: true)
-				return true
 			}
-			return false
 		}
+		if count == 0 { return false }
+		let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue)
+		for newItem in newItems {
+			loadingUUIDS.insert(newItem.uuid)
+			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			Model.drops.insert(newItem, at: destinationIndex)
+		}
+		Model.forceUpdateFilter(signalUpdate: true)
+		return true
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
@@ -320,5 +339,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		Model.save()
+	}
+
+	@objc func copy(_ sender: Any?) {
+		guard let i = collection.selectionIndexPaths.first else { return }
+		let item = Model.filteredDrops[i.item]
+		let g = NSPasteboard.general
+		g.clearContents()
+		g.writeObjects([item.pasteboardWriter])
+	}
+
+	@objc func paste(_ sender: Any?) {
+		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
 	}
 }
