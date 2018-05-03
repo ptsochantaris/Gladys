@@ -1232,23 +1232,6 @@ final class ArchivedDropItemType: Codable {
 		displayTitleAlignment = alignment
 	}
 
-	static var droppedIds: Set<UUID>?
-
-	func register(with provider: NSItemProvider) {
-		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
-			let p = Progress(totalUnitCount: 1)
-			p.completedUnitCount = 1
-			DispatchQueue.global(qos: .userInitiated).async {
-				log("Responding with data block")
-				DispatchQueue.main.async {
-					ArchivedDropItemType.droppedIds?.insert(self.parentUuid)
-				}
-				completion(self.dataForWrappedItem ?? self.bytes, nil)
-			}
-			return p
-		}
-	}
-
 	var dataForWrappedItem: Data? {
 		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
 			let decoded = decode()

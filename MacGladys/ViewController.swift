@@ -272,25 +272,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
-		ArchivedDropItemType.droppedIds = Set<UUID>()
 		draggingIndexPaths = Array(indexPaths)
 	}
 
 	private var draggingIndexPaths: [IndexPath]?
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
-		draggingIndexPaths = nil
-
-		if let droppedIds = ArchivedDropItemType.droppedIds {
+		if let d = draggingIndexPaths, !d.isEmpty {
 			if PersistedOptions.removeItemsWhenDraggedOut {
-				let items = droppedIds.compactMap { Model.item(uuid: $0) }
-				if items.count > 0 {
-					deleteRequested(for: items)
-				}
+				let items = d.map { Model.filteredDrops[$0.item] }
+				deleteRequested(for: items)
 			}
-			ArchivedDropItemType.droppedIds = nil
+			draggingIndexPaths = nil
 		}
-
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
