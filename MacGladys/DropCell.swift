@@ -112,7 +112,7 @@ final class DropCell: NSCollectionViewItem {
 		topLabel.maximumNumberOfLines = 2
 		bottomLabel.maximumNumberOfLines = 2
 		image.layer?.cornerRadius = 5
-		image.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+		image.layer?.backgroundColor = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
 	}
 
 	private var archivedDropItem: ArchivedDropItem? {
@@ -278,9 +278,7 @@ final class DropCell: NSCollectionViewItem {
 	}
 
 	@objc private func deleteSelected() {
-		if let archivedDropItem = archivedDropItem {
-			ViewController.shared.deleteRequested(for: [archivedDropItem])
-		}
+		ViewController.shared.delete(nil)
 	}
 
 	@IBAction func cancelSelected(_ sender: NSButton) {

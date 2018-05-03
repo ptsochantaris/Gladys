@@ -12,13 +12,24 @@ import Cocoa
 final class Preferences: NSViewController {
 	@IBOutlet weak var syncSwitch: NSButton!
 	@IBOutlet weak var syncSpinner: NSProgressIndicator!
+	@IBOutlet weak var syncNowButton: NSButton!
+
 	@IBOutlet weak var deleteAllButton: NSButton!
+
 	@IBOutlet weak var displayNotesSwitch: NSButton!
+	@IBOutlet weak var separateItemsSwitch: NSButton!
+	@IBOutlet weak var moveSwitch: NSButton!
+	@IBOutlet weak var autoLabelSwitch: NSButton!
+	@IBOutlet weak var autoMergingSwitch: NSButton!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
+		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
+		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
+		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
+		autoMergingSwitch.integerValue = PersistedOptions.allowMergeOfTypeItems ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
@@ -31,14 +42,16 @@ final class Preferences: NSViewController {
 
 		if CloudManager.syncTransitioning || CloudManager.syncing {
 			syncSwitch.isEnabled = false
+			syncNowButton.isEnabled = false
+			deleteAllButton.isEnabled = false
 			syncSwitch.title = CloudManager.syncString
 			syncSpinner.startAnimation(nil)
-			deleteAllButton.isEnabled = false
 		} else {
 			syncSwitch.isEnabled = true
+			syncNowButton.isEnabled = CloudManager.syncSwitchedOn
+			deleteAllButton.isEnabled = true
 			syncSwitch.title = "iCloud Sync"
 			syncSpinner.stopAnimation(nil)
-			deleteAllButton.isEnabled = true
 		}
 	}
 
@@ -72,8 +85,24 @@ final class Preferences: NSViewController {
 	}
 
 	@IBAction func displayNotesSwitchSelected(_ sender: NSButton) {
-		PersistedOptions.displayNotesInMainView = sender.intValue == 1
+		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
 		ViewController.shared.reloadData()
+	}
+
+	@IBAction func multipleSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.separateItemPreference = sender.integerValue == 1
+	}
+
+	@IBAction func moveSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.removeItemsWhenDraggedOut = sender.integerValue == 1
+	}
+
+	@IBAction func autoLabelSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.dontAutoLabelNewItems = sender.integerValue == 1
+	}
+
+	@IBAction func mergingSwitchSelected(_ sender: NSButton) {
+		PersistedOptions.allowMergeOfTypeItems = sender.integerValue == 1
 	}
 
 	@IBAction func syncSwitchChanged(_ sender: NSButton) {

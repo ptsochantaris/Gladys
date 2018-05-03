@@ -51,6 +51,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if let w = view.window {
 			updateCellSize(from: w.frame.size)
 		}
+		updateTitle()
 		super.viewWillAppear()
 	}
 
@@ -100,7 +101,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		observers.append(a3)
 
+		let a4 = NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] n in
+			self?.updateTitle()
+		}
+		observers.append(a4)
+
 		print("Loaded with \(Model.drops.count) items")
+		updateTitle()
+	}
+
+	private func updateTitle() {
+		if let syncStatus = CloudManager.syncProgressString {
+			view.window?.title = "Gladys: \(syncStatus)"
+		} else {
+			view.window?.title = "Gladys"
+		}
 	}
 
 	private func detectExternalDeletions() {
@@ -342,11 +357,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func copy(_ sender: Any?) {
-		guard let i = collection.selectionIndexPaths.first else { return }
-		let item = Model.filteredDrops[i.item]
 		let g = NSPasteboard.general
 		g.clearContents()
-		g.writeObjects([item.pasteboardWriter])
+		for index in collection.selectionIndexPaths {
+			let item = Model.filteredDrops[index.item]
+			g.writeObjects([item.pasteboardWriter])
+		}
+	}
+
+	@objc func delete(_ sender: Any?) {
+		let items = collection.selectionIndexPaths.map { Model.filteredDrops[$0.item] }
+		if !items.isEmpty {
+			ViewController.shared.deleteRequested(for: items)
+		}
 	}
 
 	@objc func paste(_ sender: Any?) {
