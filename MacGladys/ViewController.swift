@@ -268,30 +268,44 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
-		return draggingIndexPath == nil ? .copy : .move
+		return draggingIndexPaths == nil ? .copy : .move
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
-		draggingIndexPath = indexPaths.first
+		ArchivedDropItemType.droppedIds = Set<UUID>()
+		draggingIndexPaths = Array(indexPaths)
 	}
 
-	private var draggingIndexPath: IndexPath?
+	private var draggingIndexPaths: [IndexPath]?
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
-		draggingIndexPath = nil
+		draggingIndexPaths = nil
+
+		if let droppedIds = ArchivedDropItemType.droppedIds {
+			if PersistedOptions.removeItemsWhenDraggedOut {
+				let items = droppedIds.compactMap { Model.item(uuid: $0) }
+				if items.count > 0 {
+					deleteRequested(for: items)
+				}
+			}
+			ArchivedDropItemType.droppedIds = nil
+		}
+
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPath = draggingIndexPath {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPaths = draggingIndexPaths {
 
-			let sourceItem = Model.filteredDrops[draggingIndexPath.item]
-			let sourceIndex = Model.drops.index(of: sourceItem)!
 			var destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-			if destinationIndex > sourceIndex {
-				destinationIndex -= 1
+			for draggingIndexPath in draggingIndexPaths.sorted(by: { $0.item > $1.item }) {
+				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
+				let sourceIndex = Model.drops.index(of: sourceItem)!
+				if destinationIndex > sourceIndex {
+					destinationIndex -= 1
+				}
+				Model.drops.remove(at: sourceIndex)
+				Model.drops.insert(sourceItem, at: destinationIndex)
 			}
-			Model.drops.remove(at: sourceIndex)
-			Model.drops.insert(sourceItem, at: destinationIndex)
 			Model.forceUpdateFilter(signalUpdate: true)
 			Model.save()
 			return true
