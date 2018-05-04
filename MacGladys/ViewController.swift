@@ -83,28 +83,36 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			sync()
 		}
 
-		let a1 = NotificationCenter.default.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] n in
+		let n = NotificationCenter.default
+
+		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
 			self?.detectExternalDeletions()
+			Model.rebuildLabels()
 			Model.forceUpdateFilter(signalUpdate: true) // refresh filtered items
 			self?.postSave()
 		}
 		observers.append(a1)
 
-		let a2 = NotificationCenter.default.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] n in
+		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.reloadData()
 			self?.postSave()
 		}
 		observers.append(a2)
 
-		let a3 = NotificationCenter.default.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] n in
+		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.reloadData()
 		}
 		observers.append(a3)
 
-		let a4 = NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] n in
+		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
 		}
 		observers.append(a4)
+
+		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { _ in
+			Model.forceUpdateFilter(signalUpdate: true)
+		}
+		observers.append(a5)
 
 		print("Loaded with \(Model.drops.count) items")
 		updateTitle()

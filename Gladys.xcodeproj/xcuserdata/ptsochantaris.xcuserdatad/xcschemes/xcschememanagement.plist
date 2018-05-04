@@ -32,7 +32,7 @@
 		<key>GladysMessage.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>17</integer>
+			<integer>15</integer>
 		</dict>
 		<key>GladysToday.xcscheme</key>
 		<dict>
@@ -42,12 +42,12 @@
 		<key>GladysWatch (Complication).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>17</integer>
 		</dict>
 		<key>GladysWatch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>16</integer>
 		</dict>
 		<key>MacGladys.xcscheme</key>
 		<dict>
