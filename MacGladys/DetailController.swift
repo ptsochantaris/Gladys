@@ -198,18 +198,47 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		return i
 	}
 
-	func componentCellWantsCopy(_ componentCell: ComponentCell) {
-		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
+	private func copy(item: ArchivedDropItemType) {
 		let p = NSPasteboard.general
 		p.clearContents()
-		p.writeObjects([i.pasteboardWriter])
+		p.writeObjects([item.pasteboardWriter])
+	}
+
+	private func delete(at index: Int) {
+		item.typeItems.remove(at: index)
+		components.reloadData()
+		saveItem()
+	}
+
+	func componentCellWantsCopy(_ componentCell: ComponentCell) {
+		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
+		copy(item: i)
 	}
 
 	func componentCellWantsDelete(_ componentCell: ComponentCell) {
 		guard let i = item.typeItems.index(where: { $0.uuid == (componentCell.representedObject as! ArchivedDropItemType).uuid }) else { return }
-		item.typeItems.remove(at: i)
-		components.reloadData()
-		saveItem()
+		delete(at: i)
+	}
+
+	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+		switch menuItem.action {
+		case #selector(copy(_:)), #selector(delete(_:)):
+			return components.selectionIndexes.count > 0
+		default:
+			return true
+		}
+	}
+
+	@objc func copy(_ sender: Any?) {
+		if let i = components.selectionIndexes.first {
+			copy(item: item.typeItems[i])
+		}
+	}
+
+	@objc func delete(_ sender: Any?) {
+		if let i = components.selectionIndexes.first {
+			delete(at: i)
+		}
 	}
 
 	override func viewWillLayout() {

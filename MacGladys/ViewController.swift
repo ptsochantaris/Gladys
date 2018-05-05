@@ -408,6 +408,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
 	}
 
+	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+		switch menuItem.action {
+		case #selector(copy(_:)), #selector(delete(_:)):
+			return collection.selectionIndexes.count > 0
+		case #selector(paste(_:)):
+			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
+		default:
+			return true
+		}
+	}
+
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: nil)
 		if segue.identifier?.rawValue == "showDetail",
