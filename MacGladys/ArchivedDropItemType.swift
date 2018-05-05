@@ -1254,4 +1254,30 @@ final class ArchivedDropItemType: Codable {
 		}
 		CloudManager.markAsDeleted(uuid: uuid)
 	}
+
+	var itemForShare: (Any?, Int) {
+
+		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+			return (contact, 12)
+		}
+
+		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
+			return (item, 15)
+		}
+
+		if let url = encodedUrl {
+
+			if representedClass == "URL" {
+				return (url, 10)
+			}
+
+			if typeIdentifier == "public.url" {
+				return (url, 5)
+			}
+
+			return (url, 3)
+		}
+
+		return (bytes, 0)
+	}
 }

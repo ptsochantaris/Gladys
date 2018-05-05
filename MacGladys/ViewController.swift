@@ -196,7 +196,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func selected() {
 		guard let i = collection.selectionIndexPaths.first else { return }
 		let item = Model.filteredDrops[i.item]
-		print(item.uuid)
+		collection.deselectAll(nil)
+		item.tryOpen(from: self)
 	}
 
 	func sizeChanged(to newSize: NSSize) {
@@ -372,17 +373,55 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.save()
 	}
 
+	@objc func info(_ sender: Any?) {
+		let g = NSPasteboard.general
+		g.clearContents()
+		var paths = collection.selectionIndexPaths
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
+			let ip = IndexPath(item: index, section: 0)
+			paths.insert(ip)
+		}
+		for index in paths {
+			let item = Model.filteredDrops[index.item]
+			// TODO: info
+		}
+	}
+
+	@objc func open(_ sender: Any?) {
+		let g = NSPasteboard.general
+		g.clearContents()
+		var paths = collection.selectionIndexPaths
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
+			let ip = IndexPath(item: index, section: 0)
+			paths.insert(ip)
+		}
+		for index in paths {
+			let item = Model.filteredDrops[index.item]
+			item.tryOpen(from: self)
+		}
+	}
+
 	@objc func copy(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		for index in collection.selectionIndexPaths {
+		var paths = collection.selectionIndexPaths
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
+			let ip = IndexPath(item: index, section: 0)
+			paths.insert(ip)
+		}
+		for index in paths {
 			let item = Model.filteredDrops[index.item]
 			g.writeObjects([item.pasteboardWriter])
 		}
 	}
 
 	@objc func delete(_ sender: Any?) {
-		let items = collection.selectionIndexPaths.map { Model.filteredDrops[$0.item] }
+		var paths = collection.selectionIndexPaths
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
+			let ip = IndexPath(item: index, section: 0)
+			paths.insert(ip)
+		}
+		let items = paths.map { Model.filteredDrops[$0.item] }
 		if !items.isEmpty {
 			ViewController.shared.deleteRequested(for: items)
 		}

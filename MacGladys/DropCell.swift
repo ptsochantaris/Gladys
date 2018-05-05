@@ -122,6 +122,8 @@ final class DropCell: NSCollectionViewItem {
 	private var shortcutMenu: NSMenu? {
 		guard let item = archivedDropItem else { return nil }
 		let m = NSMenu(title: item.displayTitleOrUuid)
+		m.addItem(withTitle: "Open", action: #selector(openSelected), keyEquivalent: "")
+		m.addItem(withTitle: "Info", action: #selector(infoSelected), keyEquivalent: "")
 		m.addItem(withTitle: "Copy", action: #selector(copySelected), keyEquivalent: "")
 		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
 		return m
@@ -273,12 +275,20 @@ final class DropCell: NSCollectionViewItem {
 		mergeImage.isHidden = hideMerge
 	}
 
+	@objc private func infoSelected() {
+		ViewController.shared.info(self)
+	}
+
+	@objc private func openSelected() {
+		ViewController.shared.open(self)
+	}
+
 	@objc private func copySelected() {
-		ViewController.shared.copy(nil)
+		ViewController.shared.copy(self)
 	}
 
 	@objc private func deleteSelected() {
-		ViewController.shared.delete(nil)
+		ViewController.shared.delete(self)
 	}
 
 	@IBAction func cancelSelected(_ sender: NSButton) {

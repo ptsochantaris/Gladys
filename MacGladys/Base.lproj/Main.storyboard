@@ -96,6 +96,23 @@ CA
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Item" id="TlP-eF-ggR">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Item" id="b4e-f2-nAD">
+                                    <items>
+                                        <menuItem title="Open" keyEquivalent="o" id="ule-AE-fv8">
+                                            <connections>
+                                                <action selector="open:" target="Ady-hI-5gd" id="cFE-gZ-dXN"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Info" keyEquivalent="i" id="Dhl-Vg-fBT">
+                                            <connections>
+                                                <action selector="info:" target="Ady-hI-5gd" id="U6p-vQ-Vzn"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Window" id="rmA-vu-vKJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="lZT-rh-hfH">
@@ -336,7 +353,7 @@ CA
                 </windowController>
                 <customObject id="yMN-dr-ilU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="27" y="466"/>
+            <point key="canvasLocation" x="27" y="364"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -431,7 +448,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="27" y="927.5"/>
+            <point key="canvasLocation" x="27" y="831"/>
         </scene>
         <!--Gladys-->
         <scene sceneID="hIz-AP-VOD">

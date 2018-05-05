@@ -16,6 +16,8 @@ import Foundation
 import Cocoa
 import CloudKit
 import CoreSpotlight
+import MapKit
+import ContactsUI
 
 final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
@@ -473,4 +475,66 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		}
 		return pi
 	}
+
+
+	var addedString: String {
+		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+	}
+
+	func tryOpen(from viewController: NSViewController) {
+		let (shareItem, typeItem) = itemForShare
+		if let shareItem = shareItem as? MKMapItem {
+			shareItem.openInMaps(launchOptions: [:])
+
+		} else if let contact = shareItem as? CNContact {
+			let c = CNContactViewController(nibName: nil, bundle: nil)
+			c.contact = contact
+			viewController.presentViewControllerAsModalWindow(c)
+
+		} else if let item = shareItem as? URL {
+			if !NSWorkspace.shared.open(item) {
+				let message: String
+				if item.isFileURL {
+					message = "macOS does not recognise the type of this file"
+				} else {
+					message = "macOS does not recognise the type of this link"
+				}
+				genericAlert(title: "Can't Open", message: message)
+			}
+		} else if let typeItem = typeItem {
+			NSWorkspace.shared.openFile(typeItem.bytesPath.path)
+		}
+	}
+
+	var shareableComponents: [Any] {
+		var items = typeItems.compactMap { $0.itemForShare.0 }
+		if let text = displayText.0, URL(string: text) == nil {
+			items.append(text)
+		}
+		return items
+	}
+
+	private var itemForShare: (Any?, ArchivedDropItemType?) {
+		var priority = -1
+		var item: Any?
+		var typeItem: ArchivedDropItemType?
+
+		for i in typeItems {
+			let (newItem, newPriority) = i.itemForShare
+			if let newItem = newItem, newPriority > priority {
+				item = newItem
+				priority = newPriority
+				typeItem = i
+			}
+		}
+		return (item, typeItem)
+	}
+
+	private static let mediumFormatter: DateFormatter = {
+		let d = DateFormatter()
+		d.doesRelativeDateFormatting = true
+		d.dateStyle = .medium
+		d.timeStyle = .medium
+		return d
+	}()
 }
