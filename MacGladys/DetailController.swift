@@ -8,11 +8,10 @@
 
 import Cocoa
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource {
 
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var notesField: NSTextField!
-	@IBOutlet weak var components: NSScrollView!
 
 	@IBOutlet weak var moveLabelUpButton: NSButton!
 	@IBOutlet weak var moveLabelDownButton: NSButton!
@@ -20,6 +19,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet weak var labels: NSTableView!
 	@IBOutlet weak var labelAdd: NSButton!
 	@IBOutlet weak var labelRemove: NSButton!
+
+	@IBOutlet weak var components: NSCollectionView!
+	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -39,6 +41,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		updateInfo()
 		labels.delegate = self
 		labels.dataSource = self
+
+		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
+		activity.title = item.displayTitleOrUuid
+		activity.isEligibleForSearch = false
+		activity.isEligibleForHandoff = true
+		activity.isEligibleForPublicIndexing = false
+		userActivity = activity
 	}
 
 	@objc private func updateInfo() {
@@ -157,5 +166,29 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			saveItem()
 			labels.selectRowIndexes(IndexSet(integer: selected+1), byExtendingSelection: false)
 		}
+	}
+
+	override func updateUserActivityState(_ userActivity: NSUserActivity) {
+		super.updateUserActivityState(userActivity)
+		userActivity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+		return item.typeItems.count
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+		let i = collectionView.makeItem(withIdentifier: componentCellId, for: indexPath)
+		i.representedObject = item.typeItems[indexPath.item]
+		return i
+	}
+
+	override func viewWillLayout() {
+		super.viewWillLayout()
+
+		let w = components.frame.size.width
+		let columns = (w / 250.0).rounded(.down)
+		let s = ((w - ((columns+1) * 10)) / columns).rounded(.down)
+		(components.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: 89)
 	}
 }

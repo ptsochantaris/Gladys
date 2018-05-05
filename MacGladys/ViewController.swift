@@ -15,30 +15,25 @@ func genericAlert(title: String, message: String) {
 	a.runModal()
 }
 
+protocol SizeChangeListener {
+	func sizeChanged(to newSize: NSSize)
+}
+
 final class WindowController: NSWindowController, NSWindowDelegate {
 	func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
-		ViewController.shared.sizeChanged(to: frameSize)
+		if let c = contentViewController as? SizeChangeListener {
+			c.sizeChanged(to: frameSize)
+		}
 		return frameSize
 	}
 }
 
-final class GladysCollection: NSCollectionView {
-
-	override func keyDown(with event: NSEvent) {
-		if event.keyCode == 36 {
-			ViewController.shared.selected()
-		} else {
-			super.keyDown(with: event)
-		}
-	}
-}
-
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, SizeChangeListener {
 	@IBOutlet weak var collection: NSCollectionView!
 
 	static var shared: ViewController! = nil
 
-	private let dropCellId = NSUserInterfaceItemIdentifier.init("DropCell")
+	private let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 	private var loadingUUIDS = Set<UUID>()
 
 	static let labelColor = NSColor.labelColor
@@ -188,16 +183,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let i = collectionView.makeItem(withIdentifier: dropCellId, for: indexPath)
 		i.representedObject = Model.filteredDrops[indexPath.item]
 		return i
-	}
-
-	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-	}
-
-	func selected() {
-		guard let i = collection.selectionIndexPaths.first else { return }
-		let item = Model.filteredDrops[i.item]
-		collection.deselectAll(nil)
-		item.tryOpen(from: self)
 	}
 
 	func sizeChanged(to newSize: NSSize) {

@@ -12,8 +12,6 @@ import CoreSpotlight
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
-
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])

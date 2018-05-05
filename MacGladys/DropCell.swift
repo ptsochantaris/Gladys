@@ -325,7 +325,7 @@ final class DropCell: NSCollectionViewItem {
 	override func mouseDown(with event: NSEvent) {
 		super.mouseDown(with: event)
 		if event.clickCount == 2 {
-			ViewController.shared.selected()
+			ViewController.shared.info(self)
 		}
 	}
 }

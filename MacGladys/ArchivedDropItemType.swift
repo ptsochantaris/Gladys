@@ -1280,4 +1280,12 @@ final class ArchivedDropItemType: Codable {
 
 		return (bytes, 0)
 	}
+
+	var dataExists: Bool {
+		return FileManager.default.fileExists(atPath: bytesPath.path)
+	}
+
+	var sizeDescription: String? {
+		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
+	}
 }

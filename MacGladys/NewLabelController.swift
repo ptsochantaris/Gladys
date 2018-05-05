@@ -33,9 +33,12 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 	}
 
 	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-		let s = labelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-		if !s.isEmpty {
-			done(s)
+		if commandSelector.description == "insertNewline:" {
+			let s = labelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+			if !s.isEmpty {
+				done(s)
+				return true
+			}
 		}
 		return false
 	}
