@@ -222,11 +222,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func highlightItem(with identifier: String, andOpen: Bool) {
 		resetSearch()
-		if let item = Model.item(uuid: identifier), let title = item.displayText.0 {
-			print("should highlight \(title) too, and handle `andOpen`")
+		if let item = Model.item(uuid: identifier) {
 			if let i = Model.drops.index(of: item) {
 				let ip = IndexPath(item: i, section: 0)
 				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
+				collection.selectionIndexes = IndexSet(integer: i)
+				info(nil)
 			}
 		}
 	}
