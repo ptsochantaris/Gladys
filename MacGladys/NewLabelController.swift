@@ -32,11 +32,16 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 		labels.reloadData()
 	}
 
-	override func controlTextDidEndEditing(_ obj: Notification) {
+	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		let s = labelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
 		if !s.isEmpty {
 			done(s)
 		}
+		return false
+	}
+
+	override func complete(_ sender: Any?) {
+		super.complete(sender)
 	}
 
 	func numberOfRows(in tableView: NSTableView) -> Int {
@@ -49,9 +54,10 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 		return cell
 	}
 
-	func tableViewSelectionDidChange(_ notification: Notification) {
+	func tableViewSelectionIsChanging(_ notification: Notification) {
 		if let selected = labels.selectedRowIndexes.first {
 			let item = filteredLabels[selected]
+			labelField.stringValue = item.name
 			done(item.name)
 		}
 	}
