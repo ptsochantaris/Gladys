@@ -141,6 +141,7 @@
 		168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
 		168A0CED1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
+		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
 		168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168FE05C20952E4D00E740E9 /* DropCell.xib */; };
 		168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE05E2095363900E740E9 /* NSImage+Extensions.swift */; };
@@ -439,6 +440,7 @@
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compression.swift; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
+		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
 		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		168FE05C20952E4D00E740E9 /* DropCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropCell.xib; sourceTree = "<group>"; };
 		168FE05E2095363900E740E9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -717,6 +719,7 @@
 				168FE0622095D16800E740E9 /* Preferences.swift */,
 				167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */,
 				168D2CAA209DADF3005041CF /* DetailController.swift */,
+				168D2CAC209DCC53005041CF /* NewLabelController.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -1575,6 +1578,7 @@
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
+				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager.swift in Sources */,
