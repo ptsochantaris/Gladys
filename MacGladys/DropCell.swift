@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 import MapKit
 
-final class MiniMapView: NSImageView {
+final class MiniMapView: NSView {
 
 	private var coordinate: CLLocationCoordinate2D?
 	private static let cache = NSCache<NSString, NSImage>()
@@ -24,36 +24,33 @@ final class MiniMapView: NSImageView {
 			newCoordinate.latitude == coordinate.latitude,
 			newCoordinate.longitude == coordinate.longitude { return }
 
-		image = nil
+		layer?.contents = nil
 		coordinate = newCoordinate
+		go()
 	}
 
 	init(at location: MKMapItem) {
 		super.init(frame: .zero)
-		//imageScaling = .scaleNone
+		wantsLayer = true
+		layer?.contentsGravity = kCAGravityResizeAspectFill
 		show(location: location)
 	}
 
-	override func layout() {
-		super.layout()
-
+	private func go() {
 		guard let coordinate = coordinate else { return }
-		if bounds.isEmpty { return }
-		if let image = image, image.size == bounds.size { return }
 
-		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
+		let cacheKey = NSString(format: "%f %f", coordinate.latitude, coordinate.longitude)
 		if let existingImage = MiniMapView.cache.object(forKey: cacheKey) {
-			image = existingImage
+			layer?.contents = existingImage
 			return
 		}
 
 		if let o = snapshotOptions {
-			if !(o.region.center.latitude != coordinate.latitude || o.region.center.longitude != coordinate.longitude || o.size != bounds.size) {
+			if !(o.region.center.latitude != coordinate.latitude || o.region.center.longitude != coordinate.longitude) {
 				return
 			}
 		}
 
-		isHidden = true
 		snapshotter?.cancel()
 		snapshotter = nil
 		snapshotOptions = nil
@@ -62,7 +59,7 @@ final class MiniMapView: NSImageView {
 		O.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
 		O.showsBuildings = true
 		O.showsPointsOfInterest = true
-		O.size = bounds.size
+		O.size = NSSize(width: 512, height: 512)
 		snapshotOptions = O
 
 		let S = MKMapSnapshotter(options: O)
@@ -73,8 +70,7 @@ final class MiniMapView: NSImageView {
 				let img = snapshot.image
 				MiniMapView.cache.setObject(img, forKey: cacheKey)
 				DispatchQueue.main.async { [weak self] in
-					self?.image = img
-					self?.isHidden = false
+					self?.layer?.contents = img
 				}
 			}
 			if let error = error {

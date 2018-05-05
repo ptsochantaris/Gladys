@@ -475,7 +475,7 @@ CA
         <scene sceneID="cff-UB-nbI">
             <objects>
                 <viewController title="Details" showSeguePresentationStyle="single" id="Rwu-fi-fru" customClass="DetailController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="erh-hp-niQ">
+                    <view key="view" wantsLayer="YES" id="erh-hp-niQ">
                         <rect key="frame" x="0.0" y="0.0" width="500" height="510"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -523,10 +523,10 @@ CA
                                     </subviews>
                                 </view>
                             </box>
-                            <box fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
+                            <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
                                 <rect key="frame" x="17" y="16" width="466" height="238"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <view key="contentView" id="JgQ-7V-7Ja">
+                                <view key="contentView" wantsLayer="YES" id="JgQ-7V-7Ja">
                                     <rect key="frame" x="2" y="2" width="462" height="221"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -769,7 +769,7 @@ CA
                         <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
+                            <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
                                 <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
                                 <subviews>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
