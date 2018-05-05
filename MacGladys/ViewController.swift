@@ -383,7 +383,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		for index in paths {
 			let item = Model.filteredDrops[index.item]
-			// TODO: info
+			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
 		}
 	}
 
@@ -429,5 +429,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func paste(_ sender: Any?) {
 		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
+	}
+
+	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: nil)
+		if segue.identifier?.rawValue == "showDetail",
+			let item = sender as? ArchivedDropItem,
+			let window = segue.destinationController as? NSWindowController,
+			let d = window.contentViewController as? DetailController {
+
+			d.representedObject = item
+		}
 	}
 }

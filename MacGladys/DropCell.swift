@@ -113,6 +113,15 @@ final class DropCell: NSCollectionViewItem {
 		bottomLabel.maximumNumberOfLines = 2
 		image.layer?.cornerRadius = 5
 		image.layer?.backgroundColor = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
+
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
+	}
+
+	@objc private func itemModified(_ notification: Notification) {
+		if (notification.object as? ArchivedDropItem) == archivedDropItem {
+			reDecorate()
+		}
 	}
 
 	private var archivedDropItem: ArchivedDropItem? {
@@ -131,7 +140,10 @@ final class DropCell: NSCollectionViewItem {
 
 	override func viewWillLayout() {
 		super.viewWillLayout()
+		reDecorate()
+	}
 
+	private func reDecorate() {
 		let item = archivedDropItem
 
 		var wantMapView = false

@@ -158,6 +158,10 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 	var displayText: (String?, NSTextAlignment) {
 		guard titleOverride.isEmpty else { return (titleOverride, .center) }
+		return nonOverridenText
+	}
+
+	var nonOverridenText: (String?, NSTextAlignment) {
 		if let a = typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
 		let highestPriorityItem = typeItems.max { $0.displayTitlePriority < $1.displayTitlePriority }
@@ -537,4 +541,8 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		d.timeStyle = .medium
 		return d
 	}()
+
+	func postModified() {
+		NotificationCenter.default.post(name: .ItemModified, object: self)
+	}
 }

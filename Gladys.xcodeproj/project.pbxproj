@@ -140,6 +140,7 @@
 		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
 		168A0CED1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
+		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
 		168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168FE05C20952E4D00E740E9 /* DropCell.xib */; };
 		168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE05E2095363900E740E9 /* NSImage+Extensions.swift */; };
@@ -437,6 +438,7 @@
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compression.swift; sourceTree = "<group>"; };
+		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		168FE05C20952E4D00E740E9 /* DropCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropCell.xib; sourceTree = "<group>"; };
 		168FE05E2095363900E740E9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -714,6 +716,7 @@
 				168FE0602095B3C900E740E9 /* DropCell.swift */,
 				168FE0622095D16800E740E9 /* Preferences.swift */,
 				167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */,
+				168D2CAA209DADF3005041CF /* DetailController.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -1564,6 +1567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */,
+				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
