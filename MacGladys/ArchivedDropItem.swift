@@ -545,4 +545,12 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 	func postModified() {
 		NotificationCenter.default.post(name: .ItemModified, object: self)
 	}
+
+	func renumberTypeItems() {
+		var count = 0
+		for i in typeItems {
+			i.order = count
+			count += 1
+		}
+	}
 }

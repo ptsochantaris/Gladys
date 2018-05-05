@@ -15,20 +15,7 @@ func genericAlert(title: String, message: String) {
 	a.runModal()
 }
 
-protocol SizeChangeListener {
-	func sizeChanged(to newSize: NSSize)
-}
-
-final class WindowController: NSWindowController, NSWindowDelegate {
-	func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
-		if let c = contentViewController as? SizeChangeListener {
-			c.sizeChanged(to: frameSize)
-		}
-		return frameSize
-	}
-}
-
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, SizeChangeListener {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
 	@IBOutlet weak var collection: NSCollectionView!
 
 	static var shared: ViewController! = nil
@@ -185,8 +172,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		return i
 	}
 
-	func sizeChanged(to newSize: NSSize) {
-		updateCellSize(from: newSize)
+	override func viewWillLayout() {
+		super.viewWillLayout()
+		if let f = view.window?.frame.size {
+			updateCellSize(from: f)
+		}
 	}
 
 	private func updateCellSize(from frameSize: NSSize) {
@@ -262,6 +252,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
+		proposedDropOperation.pointee = .before
 		return draggingIndexPaths == nil ? .copy : .move
 	}
 

@@ -26,6 +26,17 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		NotificationCenter.default.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(checkForRemoved), name: .SaveComplete, object: nil)
+
+		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
+		components.setDraggingSourceOperationMask(.move, forLocal: true)
+		components.setDraggingSourceOperationMask(.copy, forLocal: false)
+	}
+
+	@objc func checkForRemoved() {
+		if Model.item(uuid: item.uuid) == nil {
+			view.window?.close()
+		}
 	}
 
 	deinit {
@@ -115,6 +126,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private func saveItem() {
+		if Model.item(uuid: item.uuid) == nil {
+			return
+		}
 		item.markUpdated()
 		item.postModified()
 		item.reIndex()
@@ -190,5 +204,59 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let columns = (w / 250.0).rounded(.down)
 		let s = ((w - ((columns+1) * 10)) / columns).rounded(.down)
 		(components.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: 89)
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+		return item.typeItems[indexPath.item].pasteboardWriter
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
+		let writers = indexPaths.map { item.typeItems[$0.item].pasteboardWriter }
+		pasteboard.writeObjects(writers)
+		return true
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+		return true
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView {
+			proposedDropOperation.pointee = .before
+			return .move
+		} else {
+			return []
+		}
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
+		draggingIndexPaths = Array(indexPaths)
+	}
+
+	private var draggingIndexPaths: [IndexPath]?
+
+	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
+		draggingIndexPaths = nil
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
+
+			let sourceItem = item.typeItems[draggingIndexPath.item]
+			let sourceIndex = draggingIndexPath.item
+			var destinationIndex = indexPath.item
+			if destinationIndex > sourceIndex {
+				destinationIndex -= 1
+			}
+			item.typeItems.remove(at: sourceIndex)
+			item.typeItems.insert(sourceItem, at: destinationIndex)
+			item.renumberTypeItems()
+			saveItem()
+
+			components.reloadData()
+			return true
+		}
+
+		return false
 	}
 }

@@ -159,7 +159,7 @@ CA
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
                         <rect key="contentRect" x="210" y="240" width="216" height="193"/>
@@ -537,7 +537,7 @@ CA
                                                 <rect key="frame" x="0.0" y="0.0" width="462" height="221"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <collectionView ambiguous="YES" selectable="YES" allowsMultipleSelection="YES" id="BBo-Ew-YtR">
+                                                    <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR">
                                                         <rect key="frame" x="0.0" y="0.0" width="462" height="158"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="hsh-fK-JSS">

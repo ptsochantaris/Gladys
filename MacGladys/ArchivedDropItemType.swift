@@ -1288,4 +1288,23 @@ final class ArchivedDropItemType: Codable {
 	var sizeDescription: String? {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
+
+	var pasteboardWriter: NSPasteboardWriting {
+		let pi = NSPasteboardItem()
+		if let b = bytes {
+			let tid = NSPasteboard.PasteboardType(typeIdentifier)
+			if b.isPlist {
+				if let e = encodedUrl, let s = e.absoluteString {
+					pi.setString(s, forType: tid)
+				} else if let d = decode() as? String {
+					pi.setString(d, forType: tid)
+				} else {
+					pi.setPropertyList(b, forType: tid)
+				}
+			} else {
+				pi.setData(b, forType: tid)
+			}
+		}
+		return pi
+	}
 }
