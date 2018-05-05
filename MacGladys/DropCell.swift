@@ -130,6 +130,7 @@ final class DropCell: NSCollectionViewItem {
 		m.addItem(withTitle: "Open", action: #selector(openSelected), keyEquivalent: "")
 		m.addItem(withTitle: "Info", action: #selector(infoSelected), keyEquivalent: "")
 		m.addItem(withTitle: "Copy", action: #selector(copySelected), keyEquivalent: "")
+		m.addItem(NSMenuItem.separator())
 		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
 		return m
 	}

@@ -444,6 +444,7 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 			var order = 0
 			for typeIdentifier in identifiers {
+				if !UTTypeConformsTo(typeIdentifier as CFString, kUTTypeItem) { continue }
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
 					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
 					order += 1

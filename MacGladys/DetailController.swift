@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate {
 
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var notesField: NSTextField!
@@ -192,9 +192,24 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-		let i = collectionView.makeItem(withIdentifier: componentCellId, for: indexPath)
+		let i = collectionView.makeItem(withIdentifier: componentCellId, for: indexPath) as! ComponentCell
+		i.delegate = self
 		i.representedObject = item.typeItems[indexPath.item]
 		return i
+	}
+
+	func componentCellWantsCopy(_ componentCell: ComponentCell) {
+		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
+		let p = NSPasteboard.general
+		p.clearContents()
+		p.writeObjects([i.pasteboardWriter])
+	}
+
+	func componentCellWantsDelete(_ componentCell: ComponentCell) {
+		guard let i = item.typeItems.index(where: { $0.uuid == (componentCell.representedObject as! ArchivedDropItemType).uuid }) else { return }
+		item.typeItems.remove(at: i)
+		components.reloadData()
+		saveItem()
 	}
 
 	override func viewWillLayout() {
