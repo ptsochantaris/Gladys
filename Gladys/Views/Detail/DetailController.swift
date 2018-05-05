@@ -656,7 +656,9 @@ final class DetailController: GladysViewController,
 			return
 		}
 
-		performSegue(withIdentifier: "addLabel", sender: indexPath)
+		DispatchQueue.main.async {
+			self.performSegue(withIdentifier: "addLabel", sender: indexPath)
+		}
 	}
 
 	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?) {
