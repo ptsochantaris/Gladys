@@ -184,7 +184,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let w = frameSize.width - 10
 		let columns = (w / baseSize).rounded(.down)
 		let leftOver = w.truncatingRemainder(dividingBy: baseSize)
-		let s = (baseSize - 10) + (leftOver / columns)
+		let s = ((baseSize - 10) + (leftOver / columns)).rounded(.down)
 		(collection.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: s)
 	}
 
