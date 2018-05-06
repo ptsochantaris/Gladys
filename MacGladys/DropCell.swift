@@ -125,7 +125,7 @@ final class DropCell: NSCollectionViewItem {
 	}
 
 	private var shortcutMenu: NSMenu? {
-		guard let item = archivedDropItem else { return nil }
+		guard let item = archivedDropItem, !item.isLocked else { return nil }
 		let m = NSMenu(title: item.displayTitleOrUuid)
 		m.addItem(withTitle: "Open", action: #selector(openSelected), keyEquivalent: "")
 		m.addItem(withTitle: "Info", action: #selector(infoSelected), keyEquivalent: "")

@@ -41,6 +41,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.reloadData()
 	}
 
+	func updateDragOperationIndicators() {
+		collection.setDraggingSourceOperationMask(.move, forLocal: true)
+		collection.setDraggingSourceOperationMask(PersistedOptions.removeItemsWhenDraggedOut ? .move : .copy, forLocal: false)
+	}
+
 	private var observers = [NSObjectProtocol]()
 
 	override func viewDidLoad() {
@@ -50,8 +55,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		searchHolder.isHidden = true
 
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
-		collection.setDraggingSourceOperationMask(.move, forLocal: true)
-		collection.setDraggingSourceOperationMask(.copy, forLocal: false)
+		updateDragOperationIndicators()
 
 		let i = #imageLiteral(resourceName: "paper")
 		i.resizingMode = .tile
@@ -349,13 +353,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func info(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var paths = collection.selectionIndexPaths
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
-			let ip = IndexPath(item: index, section: 0)
-			paths.insert(ip)
+		var items = Set(actionableSelectedItems)
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
+			items.insert(item)
 		}
-		for index in paths {
-			let item = Model.filteredDrops[index.item]
+		for item in items {
 			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
 		}
 	}
@@ -363,13 +365,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var paths = collection.selectionIndexPaths
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
-			let ip = IndexPath(item: index, section: 0)
-			paths.insert(ip)
+		var items = Set(actionableSelectedItems)
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
+			items.insert(item)
 		}
-		for index in paths {
-			let item = Model.filteredDrops[index.item]
+		for item in items {
 			item.tryOpen(from: self)
 		}
 	}
@@ -377,13 +377,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func copy(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var paths = collection.selectionIndexPaths
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
-			let ip = IndexPath(item: index, section: 0)
-			paths.insert(ip)
+		var items = Set(actionableSelectedItems)
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
+			items.insert(item)
 		}
-		for index in paths {
-			let item = Model.filteredDrops[index.item]
+		for item in items {
 			if let pi = item.pasteboardItem {
 				g.writeObjects([pi])
 			}
@@ -391,14 +389,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func delete(_ sender: Any?) {
-		var paths = collection.selectionIndexPaths
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: item) {
-			let ip = IndexPath(item: index, section: 0)
-			paths.insert(ip)
+		var items = Set(actionableSelectedItems)
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
+			items.insert(item)
 		}
-		let items = paths.map { Model.filteredDrops[$0.item] }
 		if !items.isEmpty {
-			ViewController.shared.deleteRequested(for: items)
+			ViewController.shared.deleteRequested(for: Array(items))
 		}
 	}
 
@@ -406,10 +402,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
 	}
 
+	var actionableSelectedItems: [ArchivedDropItem] {
+		return collection.selectionIndexPaths.compactMap {
+			let item = Model.filteredDrops[$0.item]
+			return item.isLocked ? nil : item
+		}
+	}
+
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
 		case #selector(copy(_:)), #selector(delete(_:)):
-			return collection.selectionIndexes.count > 0
+			return actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		default:

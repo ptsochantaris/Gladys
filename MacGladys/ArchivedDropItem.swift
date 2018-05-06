@@ -19,7 +19,7 @@ import CoreSpotlight
 import MapKit
 import ContactsUI
 
-final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
+final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 
 	let suggestedName: String?
 	let uuid: UUID
@@ -130,6 +130,10 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
 		return lhs.uuid == rhs.uuid
+	}
+
+	var hashValue: Int {
+		return uuid.hashValue
 	}
 
 	var sizeInBytes: Int64 {

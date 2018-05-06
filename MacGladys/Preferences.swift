@@ -95,6 +95,7 @@ final class Preferences: NSViewController {
 
 	@IBAction func moveSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.removeItemsWhenDraggedOut = sender.integerValue == 1
+		ViewController.shared.updateDragOperationIndicators()
 	}
 
 	@IBAction func autoLabelSwitchChanged(_ sender: NSButton) {
