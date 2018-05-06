@@ -117,6 +117,31 @@ CA
                                                 <action selector="archive:" target="Ady-hI-5gd" id="4a4-dQ-cK4"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Lock" id="Nds-FG-QWI">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Lock" id="yyE-Ad-fAE">
+                                                <items>
+                                                    <menuItem title="Create Lock" id="ZgQ-Zg-pOf">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="createLock:" target="Ady-hI-5gd" id="uSR-H4-eau"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Remove Lock" id="Kep-sY-eFw">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="removeLock:" target="Ady-hI-5gd" id="lxu-KF-7pk"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Unlock" id="p7e-t6-Tva">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="unlock:" target="Ady-hI-5gd" id="9G7-P5-tZF"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

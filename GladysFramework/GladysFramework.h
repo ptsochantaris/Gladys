@@ -19,3 +19,7 @@ FOUNDATION_EXPORT const unsigned char GladysFrameworkVersionString[];
 BOOL verifyIapReceipt();
 
 NSData *sha1(NSString *input);
+
+NSString *bundleId = @"build.bru.Gladys.GladysFramework";
+NSString *receiptId = @"build.bru.Gladys";
+

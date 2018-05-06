@@ -158,7 +158,7 @@ BOOL verifyIapReceipt() {
 	}
 
 	// Load the Apple Root CA (downloaded from https://www.apple.com/certificateauthority/)
-	NSBundle *bundle = [NSBundle bundleWithIdentifier:@"build.bru.Gladys.GladysFramework"];
+	NSBundle *bundle = [NSBundle bundleWithIdentifier:bundleId];
 	NSURL *appleRootURL = [bundle URLForResource:@"AppleIncRootCertificate" withExtension:@"cer"];
 	NSData *appleRootData = [NSData dataWithContentsOfURL:appleRootURL];
 	BIO *appleRootBIO = BIO_new(BIO_s_mem());
@@ -312,7 +312,7 @@ BOOL verifyIapReceipt() {
 	}
 
 	// Check the bundle identifier
-	if (![bundleIdString isEqualToString:@"build.bru.Gladys"]) {
+	if (![bundleIdString isEqualToString:receiptId]) {
 		return NO;
 	}
 

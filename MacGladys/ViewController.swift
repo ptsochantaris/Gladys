@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import MacGladysFramework
 
 func genericAlert(title: String, message: String) {
 	let a = NSAlert()
@@ -257,7 +258,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return !indexPaths.map { Model.filteredDrops[$0.item].isLocked }.contains(true)
+		return !indexPaths.map { Model.filteredDrops[$0.item].needsUnlock }.contains(true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
@@ -359,6 +360,63 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.save()
 	}
 
+	@objc func removeLock(_ sender: Any?) {
+		guard let item = lockedSelectedItems.first else { return }
+
+		let a = NSAlert()
+		a.messageText = "Remove Lock"
+		a.informativeText = "Please enter the password you provided when locking this item"
+		a.addButton(withTitle: "Remove Lock")
+		a.addButton(withTitle: "Cancel")
+		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
+		input.placeholderString = "Password"
+		a.accessoryView = input
+		a.window.initialFirstResponder = input
+		a.beginSheetModal(for: view.window!) { [weak self] response in
+			if response.rawValue == 1000 {
+				let text = input.stringValue
+				if item.lockPassword == sha1(text) {
+					item.lockPassword = nil
+					item.lockHint = nil
+					item.needsUnlock = false
+					item.markUpdated()
+					item.postModified()
+					Model.save()
+				} else {
+					self?.removeLock(sender)
+				}
+			}
+		}
+	}
+
+	@objc func createLock(_ sender: Any?) {
+	}
+
+	@objc func unlock(_ sender: Any?) {
+		guard let item = lockedSelectedItems.first else { return }
+
+		let a = NSAlert()
+		a.messageText = "Access Locked Item"
+		a.informativeText = "Please enter the password you provided when locking this item"
+		a.addButton(withTitle: "Unlock")
+		a.addButton(withTitle: "Cancel")
+		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
+		input.placeholderString = "Password"
+		a.accessoryView = input
+		a.window.initialFirstResponder = input
+		a.beginSheetModal(for: view.window!) { [weak self] response in
+			if response.rawValue == 1000 {
+				let text = input.stringValue
+				if item.lockPassword == sha1(text) {
+					item.needsUnlock = false
+					item.postModified()
+				} else {
+					self?.unlock(sender)
+				}
+			}
+		}
+	}
+
 	@objc func info(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
@@ -411,10 +469,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
 	}
 
-	var actionableSelectedItems: [ArchivedDropItem] {
+	private var actionableSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.filteredDrops[$0.item]
-			return item.isLocked ? nil : item
+			return item.needsUnlock ? nil : item
+		}
+	}
+
+	private var lockedSelectedItems: [ArchivedDropItem] {
+		return collection.selectionIndexPaths.compactMap {
+			let item = Model.filteredDrops[$0.item]
+			return item.isLocked ? item : nil
 		}
 	}
 
@@ -424,6 +489,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
+		case #selector(unlock(_:)), #selector(removeLock(_:)):
+			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count > 0
+		case #selector(createLock(_:)):
+			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count > 0
 		default:
 			return true
 		}

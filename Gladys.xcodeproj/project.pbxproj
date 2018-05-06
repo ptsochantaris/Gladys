@@ -63,7 +63,7 @@
 		1611485E209FA265008BB332 /* MacGladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1611485B209FA1B6008BB332 /* MacGladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16114865209FA58D008BB332 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16114864209FA58D008BB332 /* libssl.a */; };
 		16114867209FA5A0008BB332 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16114866209FA5A0008BB332 /* libcrypto.a */; };
-		16114869209FB4DD008BB332 /* MacGladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 16114868209FB4DD008BB332 /* MacGladysFramework.h */; };
+		1611486B209FBC79008BB332 /* MacGladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 1611486A209FBC79008BB332 /* MacGladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
 		161718CB2094D334005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161718CA2094D334005ABD6C /* Assets.xcassets */; };
@@ -399,11 +399,11 @@
 		1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Cloud.swift"; sourceTree = "<group>"; };
 		1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Cloud.swift"; sourceTree = "<group>"; };
 		1611485B209FA1B6008BB332 /* MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MacGladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1611485C209FA1B6008BB332 /* GladysFramework copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GladysFramework copy-Info.plist"; path = "/Volumes/UserData/ptsochantaris/Documents/Gladys/GladysFramework copy-Info.plist"; sourceTree = "<absolute>"; };
 		16114862209FA440008BB332 /* libboringssl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libboringssl.tbd; path = usr/lib/libboringssl.tbd; sourceTree = SDKROOT; };
 		16114864209FA58D008BB332 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libssl.a; sourceTree = "<group>"; };
 		16114866209FA5A0008BB332 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libcrypto.a; sourceTree = "<group>"; };
-		16114868209FB4DD008BB332 /* MacGladysFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacGladysFramework.h; sourceTree = "<group>"; };
+		1611486A209FBC79008BB332 /* MacGladysFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacGladysFramework.h; sourceTree = "<group>"; };
+		1611486E209FC04E008BB332 /* MacGladysFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MacGladysFramework.h; path = GladysFramework/MacGladysFramework.h; sourceTree = "<group>"; };
 		161718C42094D333005ABD6C /* MacGladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacGladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161718C62094D333005ABD6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		161718C82094D333005ABD6C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -832,7 +832,7 @@
 			isa = PBXGroup;
 			children = (
 				167574011F12C22500385079 /* GladysFramework.h */,
-				16114868209FB4DD008BB332 /* MacGladysFramework.h */,
+				1611486A209FBC79008BB332 /* MacGladysFramework.h */,
 				167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */,
 				167A18D41F128A9300B7F0AF /* VerifyReceipt.m */,
 				167574021F12C22500385079 /* Info.plist */,
@@ -843,6 +843,7 @@
 		1678F9C41EF475FE005697CB = {
 			isa = PBXGroup;
 			children = (
+				1611486E209FC04E008BB332 /* MacGladysFramework.h */,
 				1678F9CF1EF475FE005697CB /* Gladys */,
 				16287AE81EFB03FD007188AE /* GladysIndex */,
 				1619E8131EFF3745000087DD /* GladysFiles */,
@@ -856,7 +857,6 @@
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				F997D53C5E7A383D99BD35DB /* Pods */,
-				1611485C209FA1B6008BB332 /* GladysFramework copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1039,7 +1039,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16114869209FB4DD008BB332 /* MacGladysFramework.h in Headers */,
+				1611486B209FBC79008BB332 /* MacGladysFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2026,18 +2026,19 @@
 		16114859209FA1B6008BB332 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				HEADER_SEARCH_PATHS = /usr/local/opt/openssl/include;
-				INFOPLIST_FILE = GladysFramework/Info.plist;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/opt/openssl/include,
+					"$(SRC_DIR)/GladysFramework",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/GladysFramework/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2045,7 +2046,7 @@
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
 				OTHER_LDFLAGS = "-L/usr/local/opt/openssl/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.GladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -2058,18 +2059,19 @@
 		1611485A209FA1B6008BB332 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				HEADER_SEARCH_PATHS = /usr/local/opt/openssl/include;
-				INFOPLIST_FILE = GladysFramework/Info.plist;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/opt/openssl/include,
+					"$(SRC_DIR)/GladysFramework",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/GladysFramework/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2077,7 +2079,7 @@
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
 				OTHER_LDFLAGS = "-L/usr/local/opt/openssl/lib";
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.GladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;

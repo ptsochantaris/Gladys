@@ -133,7 +133,7 @@ final class DropCell: NSCollectionViewItem {
 	}
 
 	private var shortcutMenu: NSMenu? {
-		guard let item = archivedDropItem, !item.isLocked else { return nil }
+		guard let item = archivedDropItem, !item.needsUnlock else { return nil }
 		let m = NSMenu(title: item.displayTitleOrUuid)
 		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
 		m.addItem("Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
@@ -330,7 +330,11 @@ final class DropCell: NSCollectionViewItem {
 	override func mouseDown(with event: NSEvent) {
 		super.mouseDown(with: event)
 		if event.clickCount == 2 {
-			ViewController.shared.info(self)
+			if let a = archivedDropItem, a.needsUnlock {
+				ViewController.shared.unlock(self)
+			} else {
+				ViewController.shared.info(self)
+			}
 		}
 	}
 }
