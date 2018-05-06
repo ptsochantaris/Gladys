@@ -56,6 +56,7 @@
 		1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
 		161089A01FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
 		161089A11FA322C10095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
+		16114840209F95C3008BB332 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
 		161718CB2094D334005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161718CA2094D334005ABD6C /* Assets.xcassets */; };
@@ -1595,6 +1596,7 @@
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
+				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,

@@ -15,7 +15,7 @@ import Fuzi
 import ZIPFoundation
 import ContactsUI
 
-final class ArchivedDropItemType: Codable {
+final class ArchivedDropItemType: Codable, Equatable {
 
 	private enum CodingKeys : String, CodingKey {
 		case typeIdentifier
@@ -95,6 +95,18 @@ final class ArchivedDropItemType: Codable {
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
 		isTransferring = false
+	}
+
+	static func == (lhs: ArchivedDropItemType, rhs: ArchivedDropItemType) -> Bool {
+		return lhs.uuid == rhs.uuid
+	}
+
+	var isArchivable: Bool {
+		if let e = encodedUrl, !e.isFileURL, e.host != nil, let s = e.scheme, s.hasPrefix("http") {
+			return true
+		} else {
+			return false
+		}
 	}
 
 	var encodedUrl: NSURL? {
@@ -788,7 +800,7 @@ final class ArchivedDropItemType: Codable {
 						let item = item.deletingLastPathComponent()
 						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
 						data = try Data(contentsOf: tempURL)
-						try fm.removeItem(at: tempURL)
+						try? fm.removeItem(at: tempURL)
 						typeIdentifier = kUTTypeZipArchive as String
 						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
 					} else {

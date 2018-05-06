@@ -39,12 +39,17 @@
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
+                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="ovu-M6-dNb">
+                            <rect key="frame" x="103" y="30" width="16" height="16"/>
+                        </progressIndicator>
                     </subviews>
                     <constraints>
                         <constraint firstItem="Mx3-iM-ytA" firstAttribute="centerY" secondItem="RgJ-Gg-iLg" secondAttribute="centerY" id="4C5-pd-CXc"/>
                         <constraint firstAttribute="trailing" secondItem="Mx3-iM-ytA" secondAttribute="trailing" constant="8" id="715-kf-chv"/>
                         <constraint firstItem="Mx3-iM-ytA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RgJ-Gg-iLg" secondAttribute="top" constant="8" id="7Tc-4k-KeQ"/>
                         <constraint firstItem="Mx3-iM-ytA" firstAttribute="leading" secondItem="RgJ-Gg-iLg" secondAttribute="leading" constant="8" id="E41-Tm-fM8"/>
+                        <constraint firstItem="ovu-M6-dNb" firstAttribute="centerX" secondItem="RgJ-Gg-iLg" secondAttribute="centerX" id="Exr-QB-xwh"/>
+                        <constraint firstItem="ovu-M6-dNb" firstAttribute="centerY" secondItem="RgJ-Gg-iLg" secondAttribute="centerY" id="P2S-o9-R2q"/>
                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Mx3-iM-ytA" secondAttribute="bottom" constant="8" id="zXE-Ql-roV"/>
                     </constraints>
                 </customView>
@@ -71,6 +76,7 @@
                 <outlet property="descriptionLabel" destination="jUw-9F-8ne" id="wzP-4h-EzT"/>
                 <outlet property="previewLabel" destination="Mx3-iM-ytA" id="eAG-e3-Sxv"/>
                 <outlet property="sizeLabel" destination="2r1-WK-wlk" id="FZl-F7-m0a"/>
+                <outlet property="spinner" destination="ovu-M6-dNb" id="iZi-kH-WAa"/>
                 <outlet property="view" destination="c22-O7-iKe" id="rAd-fE-g6U"/>
             </connections>
         </collectionViewItem>

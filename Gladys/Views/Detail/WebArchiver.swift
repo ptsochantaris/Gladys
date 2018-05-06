@@ -1,7 +1,9 @@
 // Heavily modified from BiblioArchiver
 // Created by huangluyang on 16/5/19.
 
+#if os(iOS)
 import MobileCoreServices
+#endif
 import Foundation
 import Fuzi
 

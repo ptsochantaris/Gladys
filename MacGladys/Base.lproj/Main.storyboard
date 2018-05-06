@@ -106,9 +106,15 @@ CA
                                                 <action selector="open:" target="Ady-hI-5gd" id="cFE-gZ-dXN"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Info" keyEquivalent="i" id="Dhl-Vg-fBT">
+                                        <menuItem title="Get Info" keyEquivalent="i" id="Dhl-Vg-fBT">
                                             <connections>
                                                 <action selector="info:" target="Ady-hI-5gd" id="U6p-vQ-Vzn"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Archive URL" keyEquivalent="a" id="ygF-A5-oQx">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="archive:" target="Ady-hI-5gd" id="4a4-dQ-cK4"/>
                                             </connections>
                                         </menuItem>
                                     </items>

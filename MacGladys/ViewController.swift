@@ -332,7 +332,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 			Model.drops.insert(newItem, at: destinationIndex)
 		}
-		Model.forceUpdateFilter(signalUpdate: true)
+		Model.forceUpdateFilter(signalUpdate: false)
+		collection.reloadData()
 		return true
 	}
 

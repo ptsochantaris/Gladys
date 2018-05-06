@@ -125,7 +125,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 
 		item.labels.insert(label, at: newIndex)
-		tableView.reloadData()
 		saveItem()
 		return true
 	}
@@ -152,7 +151,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBAction func removeSelected(_ sender: NSButton) {
 		if let selected = labels.selectedRowIndexes.first {
 			item.labels.remove(at: selected)
-			labels.reloadData()
 			saveItem()
 			labels.selectRowIndexes([], byExtendingSelection: false)
 		}
@@ -193,7 +191,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		if !item.labels.contains(label) {
 			item.labels.append(label)
 			saveItem()
-			labels.reloadData()
 		}
 	}
 
@@ -220,28 +217,37 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private func delete(at index: Int) {
+		let component = item.typeItems[index]
 		item.typeItems.remove(at: index)
-		components.reloadData()
+		component.deleteFromStorage()
+		item.renumberTypeItems()
 		saveItem()
 	}
 
-	func componentCellWantsOpen(_ componentCell: ComponentCell) {
-		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
-		i.tryOpen(from: self)
-	}
+	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action) {
+		guard let i = componentCell.representedObject as? ArchivedDropItemType, let index = item.typeItems.index(of: i) else { return }
 
-	func componentCellWantsCopy(_ componentCell: ComponentCell) {
-		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
-		copy(item: i)
-	}
+		components.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
 
-	func componentCellWantsDelete(_ componentCell: ComponentCell) {
-		guard let i = item.typeItems.index(where: { $0.uuid == (componentCell.representedObject as! ArchivedDropItemType).uuid }) else { return }
-		delete(at: i)
+		switch action {
+		case .open:
+			i.tryOpen(from: self)
+		case .copy:
+			copy(item: i)
+		case .delete:
+			delete(at: index)
+		case .archive:
+			archive(nil)
+		}
 	}
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
+		case #selector(archive(_:)):
+			let count = components.selectionIndexPaths.count
+			if count == 0 { return false }
+			let selectedComponentsThatCanBeArchived = components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }
+			return selectedComponentsThatCanBeArchived.count == count
 		case #selector(copy(_:)), #selector(delete(_:)), #selector(open(_:)):
 			return components.selectionIndexes.count > 0
 		default:
@@ -264,6 +270,30 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@objc func delete(_ sender: Any?) {
 		if let i = components.selectionIndexes.first {
 			delete(at: i)
+		}
+	}
+
+	@objc func archive(_ sender: Any?) {
+		guard let i = components.selectionIndexes.first else { return }
+		let component = item.typeItems[i]
+		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
+		cell.animateArchiving = true
+
+		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
+			if let error = error {
+				DispatchQueue.main.async {
+					genericAlert(title: "Archiving failed", message: error.finalDescription)
+				}
+			} else if let data = data, let typeIdentifier = typeIdentifier {
+				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+				DispatchQueue.main.async {
+					self.item.typeItems.append(newTypeItem)
+					self.saveItem()
+				}
+			}
+			DispatchQueue.main.async {
+				cell.animateArchiving = false
+			}
 		}
 	}
 
@@ -320,8 +350,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			item.typeItems.insert(sourceItem, at: destinationIndex)
 			item.renumberTypeItems()
 			saveItem()
-
-			components.reloadData()
 			return true
 		}
 
