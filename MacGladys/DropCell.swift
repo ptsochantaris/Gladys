@@ -133,14 +133,22 @@ final class DropCell: NSCollectionViewItem {
 	}
 
 	private var shortcutMenu: NSMenu? {
-		guard let item = archivedDropItem, !item.needsUnlock else { return nil }
-		let m = NSMenu(title: item.displayTitleOrUuid)
-		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
-		m.addItem("Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
-		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
-		m.addItem(NSMenuItem.separator())
-		m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
-		return m
+		guard let item = archivedDropItem else { return nil }
+		if item.needsUnlock {
+			let m = NSMenu()
+			m.addItem("Unlock", action: #selector(unlockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			m.addItem("Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			return m
+		} else {
+			let m = NSMenu(title: item.displayTitleOrUuid)
+			m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
+			m.addItem("Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
+			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
+			m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			m.addItem(NSMenuItem.separator())
+			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
+			return m
+		}
 	}
 
 	override func viewWillLayout() {
@@ -302,6 +310,18 @@ final class DropCell: NSCollectionViewItem {
 
 	@objc private func copySelected() {
 		ViewController.shared.copy(self)
+	}
+
+	@objc private func lockSelected() {
+		ViewController.shared.createLock(self)
+	}
+
+	@objc private func unlockSelected() {
+		ViewController.shared.unlock(self)
+	}
+
+	@objc private func removeLockSelected() {
+		ViewController.shared.removeLock(self)
 	}
 
 	@objc private func deleteSelected() {

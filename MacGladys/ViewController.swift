@@ -361,6 +361,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func removeLock(_ sender: Any?) {
+		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
+			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
+		}
 		guard let item = lockedSelectedItems.first else { return }
 
 		let a = NSAlert()
@@ -389,6 +392,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func createLock(_ sender: Any?) {
+		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
+			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
+		}
 		guard let item = actionableSelectedItems.first else { return }
 
 		let a = NSAlert()
@@ -400,6 +406,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		password.placeholderString = "Password"
 		let hint = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
 		hint.placeholderString = "Hint or description"
+		hint.stringValue = item.displayText.0 ?? ""
 		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 290, height: 56))
 		input.addSubview(password)
 		input.addSubview(hint)
@@ -421,6 +428,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func unlock(_ sender: Any?) {
+		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
+			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
+		}
 		guard let item = lockedSelectedItems.first else { return }
 
 		let a = NSAlert()
