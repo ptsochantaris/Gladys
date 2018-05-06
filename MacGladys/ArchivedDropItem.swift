@@ -462,25 +462,9 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 	var pasteboardWriter: NSPasteboardWriting {
 		let pi = NSPasteboardItem()
-		for type in typeItems {
-			if let b = type.bytes {
-				let tid = NSPasteboard.PasteboardType(type.typeIdentifier)
-				if b.isPlist {
-					if let e = type.encodedUrl, let s = e.absoluteString {
-						pi.setString(s, forType: tid)
-					} else if let d = type.decode() as? String {
-						pi.setString(d, forType: tid)
-					} else {
-						pi.setPropertyList(b, forType: tid)
-					}
-				} else {
-					pi.setData(b, forType: tid)
-				}
-			}
-		}
+		typeItems.forEach { $0.add(to: pi) }
 		return pi
 	}
-
 
 	var addedString: String {
 		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)

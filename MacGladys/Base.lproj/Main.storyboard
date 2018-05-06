@@ -353,7 +353,7 @@ CA
                 </windowController>
                 <customObject id="yMN-dr-ilU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-13" y="294"/>
+            <point key="canvasLocation" x="-43" y="294"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">

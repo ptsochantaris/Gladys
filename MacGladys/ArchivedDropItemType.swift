@@ -1289,22 +1289,25 @@ final class ArchivedDropItemType: Codable {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
+	func add(to pasteboardItem: NSPasteboardItem) {
+		guard let b = bytes else { return }
+		let tid = NSPasteboard.PasteboardType(typeIdentifier)
+		if b.isPlist {
+			if let e = encodedUrl, let s = e.absoluteString {
+				pasteboardItem.setString(s, forType: tid)
+			} else if let d = decode() as? String {
+				pasteboardItem.setString(d, forType: tid)
+			} else {
+				pasteboardItem.setPropertyList(b, forType: tid)
+			}
+		} else {
+			pasteboardItem.setData(b, forType: tid)
+		}
+	}
+
 	var pasteboardWriter: NSPasteboardWriting {
 		let pi = NSPasteboardItem()
-		if let b = bytes {
-			let tid = NSPasteboard.PasteboardType(typeIdentifier)
-			if b.isPlist {
-				if let e = encodedUrl, let s = e.absoluteString {
-					pi.setString(s, forType: tid)
-				} else if let d = decode() as? String {
-					pi.setString(d, forType: tid)
-				} else {
-					pi.setPropertyList(b, forType: tid)
-				}
-			} else {
-				pi.setData(b, forType: tid)
-			}
-		}
+		add(to: pi)
 		return pi
 	}
 }
