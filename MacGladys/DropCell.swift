@@ -88,6 +88,14 @@ final class MiniMapView: NSView {
 	}
 }
 
+extension NSMenu {
+	func addItem(_ title: String, action: Selector, keyEquivalent: String, keyEquivalentModifierMask: NSEvent.ModifierFlags) {
+		let menuItem = NSMenuItem(title: title, action: action, keyEquivalent: keyEquivalent)
+		menuItem.keyEquivalentModifierMask = keyEquivalentModifierMask
+		addItem(menuItem)
+	}
+}
+
 final class DropCell: NSCollectionViewItem {
 
 	@IBOutlet weak var topLabel: NSTextField!
@@ -127,11 +135,11 @@ final class DropCell: NSCollectionViewItem {
 	private var shortcutMenu: NSMenu? {
 		guard let item = archivedDropItem, !item.isLocked else { return nil }
 		let m = NSMenu(title: item.displayTitleOrUuid)
-		m.addItem(withTitle: "Open", action: #selector(openSelected), keyEquivalent: "")
-		m.addItem(withTitle: "Info", action: #selector(infoSelected), keyEquivalent: "")
-		m.addItem(withTitle: "Copy", action: #selector(copySelected), keyEquivalent: "")
+		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
+		m.addItem("Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
+		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 		m.addItem(NSMenuItem.separator())
-		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
+		m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		return m
 	}
 

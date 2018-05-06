@@ -44,9 +44,9 @@ final class ComponentCell: NSCollectionViewItem {
 	private var shortcutMenu: NSMenu? {
 		guard let item = representedObject as? ArchivedDropItemType else { return nil }
 		let m = NSMenu(title: item.displayTitle ?? "")
-		m.addItem(withTitle: "Copy", action: #selector(copySelected), keyEquivalent: "")
+		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 		m.addItem(NSMenuItem.separator())
-		m.addItem(withTitle: "Delete", action: #selector(deleteSelected), keyEquivalent: "")
+		m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		return m
 	}
 

@@ -476,18 +476,18 @@ CA
             <objects>
                 <viewController title="Details" showSeguePresentationStyle="single" id="Rwu-fi-fru" customClass="DetailController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="erh-hp-niQ">
-                        <rect key="frame" x="0.0" y="0.0" width="730" height="420"/>
+                        <rect key="frame" x="0.0" y="0.0" width="795" height="420"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box fixedFrame="YES" title="Title" translatesAutoresizingMaskIntoConstraints="NO" id="FdJ-MC-QCX">
-                                <rect key="frame" x="17" y="286" width="415" height="114"/>
+                                <rect key="frame" x="17" y="286" width="480" height="114"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="yeP-ZB-5jk">
-                                    <rect key="frame" x="2" y="2" width="411" height="97"/>
+                                    <rect key="frame" x="2" y="2" width="476" height="97"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jUb-CE-X30">
-                                            <rect key="frame" x="10" y="10" width="391" height="79"/>
+                                            <rect key="frame" x="10" y="10" width="456" height="79"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" drawsBackground="YES" id="Bhv-8W-CfG">
                                                 <font key="font" metaFont="system"/>
@@ -502,14 +502,14 @@ CA
                                 </view>
                             </box>
                             <box fixedFrame="YES" title="Notes" translatesAutoresizingMaskIntoConstraints="NO" id="cDx-xd-k0n">
-                                <rect key="frame" x="17" y="168" width="415" height="114"/>
+                                <rect key="frame" x="17" y="168" width="480" height="114"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="dIZ-F8-tCb">
-                                    <rect key="frame" x="2" y="2" width="411" height="97"/>
+                                    <rect key="frame" x="2" y="2" width="476" height="97"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M6G-2V-6vE">
-                                            <rect key="frame" x="10" y="10" width="391" height="79"/>
+                                            <rect key="frame" x="10" y="10" width="456" height="79"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" drawsBackground="YES" id="XaU-LH-r9Z">
                                                 <font key="font" metaFont="system"/>
@@ -524,21 +524,21 @@ CA
                                 </view>
                             </box>
                             <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
-                                <rect key="frame" x="17" y="16" width="696" height="148"/>
+                                <rect key="frame" x="17" y="16" width="761" height="148"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <view key="contentView" wantsLayer="YES" id="JgQ-7V-7Ja">
-                                    <rect key="frame" x="2" y="2" width="692" height="131"/>
+                                    <rect key="frame" x="2" y="2" width="757" height="131"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView wantsLayer="YES" fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Xd-6M-Nq7">
-                                            <rect key="frame" x="0.0" y="0.0" width="692" height="131"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="0r2-bk-NHM">
-                                                <rect key="frame" x="0.0" y="0.0" width="692" height="131"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR">
-                                                        <rect key="frame" x="0.0" y="0.0" width="692" height="131"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="hsh-fK-JSS">
                                                             <size key="itemSize" width="160" height="160"/>
@@ -566,7 +566,7 @@ CA
                                 </view>
                             </box>
                             <box fixedFrame="YES" title="Labels" translatesAutoresizingMaskIntoConstraints="NO" id="OM8-Rk-nPi">
-                                <rect key="frame" x="442" y="168" width="271" height="232"/>
+                                <rect key="frame" x="507" y="168" width="271" height="232"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="G4i-ig-Fal">
                                     <rect key="frame" x="2" y="2" width="267" height="215"/>
@@ -651,7 +651,7 @@ CA
                 </viewController>
                 <customObject id="seu-dC-0fN" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1462" y="260.5"/>
+            <point key="canvasLocation" x="1567" y="148"/>
         </scene>
         <!--New Label Controller-->
         <scene sceneID="dtH-pl-EKw">
@@ -735,7 +735,7 @@ CA
                 </viewController>
                 <customObject id="cAS-pQ-QjR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2001" y="71"/>
+            <point key="canvasLocation" x="2148" y="148"/>
         </scene>
         <!--Gladys-->
         <scene sceneID="hIz-AP-VOD">
