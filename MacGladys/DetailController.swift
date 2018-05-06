@@ -201,7 +201,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	private func copy(item: ArchivedDropItemType) {
 		let p = NSPasteboard.general
 		p.clearContents()
-		p.writeObjects([item.pasteboardWriter])
+		p.writeObjects([item.pasteboardItem])
 	}
 
 	private func delete(at index: Int) {
@@ -250,13 +250,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		(components.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: 89)
 	}
 
-	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return item.typeItems[indexPath.item].pasteboardWriter
-	}
-
 	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-		let writers = indexPaths.map { item.typeItems[$0.item].pasteboardWriter }
-		pasteboard.writeObjects(writers)
+		let pasteboardItems = indexPaths.map { item.typeItems[$0.item].pasteboardItem }
+		pasteboard.writeObjects(pasteboardItems)
 		return true
 	}
 

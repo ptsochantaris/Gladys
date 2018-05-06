@@ -238,13 +238,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateSearch()
 	}
 
-	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return Model.filteredDrops[indexPath.item].pasteboardWriter
-	}
-
 	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-		let writers = indexPaths.map { Model.filteredDrops[$0.item].pasteboardWriter }
-		pasteboard.writeObjects(writers)
+		let pasteboardItems = indexPaths.map { Model.filteredDrops[$0.item].pasteboardItem }
+		pasteboard.writeObjects(pasteboardItems)
 		return true
 	}
 
@@ -388,7 +384,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		for index in paths {
 			let item = Model.filteredDrops[index.item]
-			g.writeObjects([item.pasteboardWriter])
+			g.writeObjects([item.pasteboardItem])
 		}
 	}
 

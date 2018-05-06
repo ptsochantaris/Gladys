@@ -460,7 +460,7 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		return p
 	}
 
-	var pasteboardWriter: NSPasteboardWriting {
+	var pasteboardItem: NSPasteboardItem {
 		let pi = NSPasteboardItem()
 		typeItems.forEach { $0.add(to: pi) }
 		return pi

@@ -1305,7 +1305,7 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var pasteboardWriter: NSPasteboardWriting {
+	var pasteboardItem: NSPasteboardItem {
 		let pi = NSPasteboardItem()
 		add(to: pi)
 		return pi
