@@ -19,11 +19,6 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>GladysFramework.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
-		</dict>
 		<key>GladysIndex.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -32,7 +27,7 @@
 		<key>GladysMessage.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>17</integer>
 		</dict>
 		<key>GladysToday.xcscheme</key>
 		<dict>
@@ -42,12 +37,12 @@
 		<key>GladysWatch (Complication).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>17</integer>
+			<integer>16</integer>
 		</dict>
 		<key>GladysWatch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>15</integer>
 		</dict>
 		<key>MacGladys.xcscheme</key>
 		<dict>
@@ -57,6 +52,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1611484F209FA1B6008BB332</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>161718C32094D333005ABD6C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>1619E8111EFF3745000087DD</key>
 		<dict>
 			<key>primary</key>

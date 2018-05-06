@@ -1,4 +1,4 @@
-@import UIKit;
+@import Foundation;
 
 #import <openssl/pkcs7.h>
 #import <openssl/objects.h>
