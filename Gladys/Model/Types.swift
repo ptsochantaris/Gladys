@@ -26,3 +26,17 @@ extension Error {
 		return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
 	}
 }
+
+extension String {
+	var filenameSafe: String {
+		if let url = URL(string: self) {
+			if let host = url.host {
+				return host + "-" + url.path.split(separator: "/").joined(separator: "-")
+			} else {
+				return url.path.split(separator: "/").joined(separator: "-")
+			}
+		} else {
+			return self.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
+		}
+	}
+}

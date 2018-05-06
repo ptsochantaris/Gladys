@@ -95,8 +95,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			Model.forceUpdateFilter(signalUpdate: true)
 		}
 		observers.append(a5)
-
-		print("Loaded with \(Model.drops.count) items")
 		updateTitle()
 	}
 

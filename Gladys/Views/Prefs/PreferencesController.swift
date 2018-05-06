@@ -151,16 +151,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 			if let archive = Archive(url: tempPath, accessMode: .create) {
 				for item in dropsCopy {
-					var dir = item.displayTitleOrUuid
-					if let url = URL(string: dir) {
-						if let host = url.host {
-							dir = host + "-" + url.path.split(separator: "/").joined(separator: "-")
-						} else {
-							dir = url.path.split(separator: "/").joined(separator: "-")
-						}
-					} else {
-						dir = dir.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
-					}
+					let dir = item.displayTitleOrUuid.filenameSafe
 					if item.typeItems.count == 1 {
 						let typeItem = item.typeItems.first!
 						self.addItem(typeItem, directory: nil, name: dir, in: archive)
