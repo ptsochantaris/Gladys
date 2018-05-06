@@ -34,9 +34,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 
+	private var lastUpdate = Date.distantPast
+
 	@objc func checkForRemoved() {
 		if Model.item(uuid: item.uuid) == nil {
 			view.window?.close()
+		} else if lastUpdate != item.updatedAt {
+			updateInfo()
 		}
 	}
 
@@ -69,6 +73,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		notesField.stringValue = item.note
 		labels.reloadData()
 		updateLabelButtons()
+		components.reloadData()
+		lastUpdate = item.updatedAt
 	}
 
 	override func viewWillDisappear() {
