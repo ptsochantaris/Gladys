@@ -365,7 +365,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a = NSAlert()
 		a.messageText = "Remove Lock"
-		a.informativeText = "Please enter the password you provided when locking this item"
+		a.informativeText = "Please enter the password you provided when locking this item."
 		a.addButton(withTitle: "Remove Lock")
 		a.addButton(withTitle: "Cancel")
 		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
@@ -380,7 +380,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					item.lockHint = nil
 					item.needsUnlock = false
 					item.markUpdated()
-					item.postModified()
 					Model.save()
 				} else {
 					self?.removeLock(sender)
@@ -390,6 +389,35 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func createLock(_ sender: Any?) {
+		guard let item = actionableSelectedItems.first else { return }
+
+		let a = NSAlert()
+		a.messageText = "Lock Item"
+		a.informativeText = "Please enter a password to use for unlocking this item, and an optional hint or description to display on the locked item."
+		a.addButton(withTitle: "Lock")
+		a.addButton(withTitle: "Cancel")
+		let password = NSSecureTextField(frame: NSRect(x: 0, y: 32, width: 290, height: 24))
+		password.placeholderString = "Password"
+		let hint = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
+		hint.placeholderString = "Hint or description"
+		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 290, height: 56))
+		input.addSubview(password)
+		input.addSubview(hint)
+		a.accessoryView = input
+		a.window.initialFirstResponder = password
+		a.beginSheetModal(for: view.window!) { [weak self] response in
+			if response.rawValue == 1000 {
+				let text = password.stringValue
+				if !text.isEmpty {
+					item.needsUnlock = true
+					item.lockPassword = sha1(text)
+					item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
+					Model.save()
+				} else {
+					self?.createLock(sender)
+				}
+			}
+		}
 	}
 
 	@objc func unlock(_ sender: Any?) {
@@ -397,7 +425,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a = NSAlert()
 		a.messageText = "Access Locked Item"
-		a.informativeText = "Please enter the password you provided when locking this item"
+		a.informativeText = "Please enter the password you provided when locking this item."
 		a.addButton(withTitle: "Unlock")
 		a.addButton(withTitle: "Cancel")
 		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
