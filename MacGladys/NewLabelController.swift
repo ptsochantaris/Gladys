@@ -61,6 +61,7 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 		if let selected = labels.selectedRowIndexes.first {
 			let item = filteredLabels[selected]
 			labelField.stringValue = item.name
+			labels.reloadData()
 			done(item.name)
 		}
 	}

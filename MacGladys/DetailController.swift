@@ -13,9 +13,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var notesField: NSTextField!
 
-	@IBOutlet weak var moveLabelUpButton: NSButton!
-	@IBOutlet weak var moveLabelDownButton: NSButton!
-
 	@IBOutlet weak var labels: NSTableView!
 	@IBOutlet weak var labelAdd: NSButton!
 	@IBOutlet weak var labelRemove: NSButton!
@@ -31,6 +28,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
 		components.setDraggingSourceOperationMask(.copy, forLocal: false)
+
+		labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
+		labels.setDraggingSourceOperationMask(.move, forLocal: true)
+		labels.setDraggingSourceOperationMask(.copy, forLocal: false)
 	}
 
 	@objc func checkForRemoved() {
@@ -89,16 +90,42 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		updateLabelButtons()
 	}
 
-	private func updateLabelButtons() {
-		if let selected = labels.selectedRowIndexes.first {
-			removeButton.isEnabled = labels.selectedRowIndexes.count > 0
-			moveLabelDownButton.isEnabled = selected < item.labels.count - 1
-			moveLabelUpButton.isEnabled = selected > 0
-		} else {
-			removeButton.isEnabled = false
-			moveLabelUpButton.isEnabled = false
-			moveLabelDownButton.isEnabled = false
+	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+		let p = NSPasteboardItem()
+		p.setString(item.labels[row], forType: NSPasteboard.PasteboardType(kUTTypeText as String))
+		return p
+	}
+
+	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+		return dropOperation == .above ? .move : []
+	}
+
+	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+		let p = info.draggingPasteboard()
+		guard let label = p.string(forType: NSPasteboard.PasteboardType(kUTTypeText as String)) ??
+			p.string(forType: NSPasteboard.PasteboardType(kUTTypePlainText as String)) ??
+			p.string(forType: NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)) else { return false }
+
+		var newIndex = row
+
+		if let oldIndex = item.labels.index(of: label) {
+			if oldIndex < newIndex {
+				newIndex -= 1
+			}
+			if oldIndex == newIndex {
+				return true
+			}
+			item.labels.remove(at: oldIndex)
 		}
+
+		item.labels.insert(label, at: newIndex)
+		tableView.reloadData()
+		saveItem()
+		return true
+	}
+
+	private func updateLabelButtons() {
+		removeButton.isEnabled = labels.selectedRowIndexes.count > 0
 	}
 
 	private var notesDirty = false, titleDirty = false
@@ -161,24 +188,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			item.labels.append(label)
 			saveItem()
 			labels.reloadData()
-		}
-	}
-
-	@IBAction func labelMoveUpButtonSelected(_ sender: NSButton) {
-		if let selected = labels.selectedRowIndexes.first, selected > 0 {
-			item.labels.swapAt(selected, selected-1)
-			labels.reloadData()
-			saveItem()
-			labels.selectRowIndexes(IndexSet(integer: selected-1), byExtendingSelection: false)
-		}
-	}
-
-	@IBAction func labelMoveDownButtonSelected(_ sender: NSButton) {
-		if let selected = labels.selectedRowIndexes.first, selected < item.labels.count - 1 {
-			item.labels.swapAt(selected, selected+1)
-			labels.reloadData()
-			saveItem()
-			labels.selectRowIndexes(IndexSet(integer: selected+1), byExtendingSelection: false)
 		}
 	}
 
