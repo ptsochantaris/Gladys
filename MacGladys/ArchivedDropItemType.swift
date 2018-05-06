@@ -1310,4 +1310,8 @@ final class ArchivedDropItemType: Codable {
 		add(to: pi)
 		return pi
 	}
+
+	var filePromise: GladysFilePromiseProvider {
+		return GladysFilePromiseProvider(dropItemType: self, title: displayTitle ?? typeIdentifier)
+	}
 }

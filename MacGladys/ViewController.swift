@@ -239,8 +239,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-		let pasteboardItems = indexPaths.map { Model.filteredDrops[$0.item].pasteboardItem }
+		let pasteboardItems = indexPaths.compactMap { Model.filteredDrops[$0.item].pasteboardItem }
 		pasteboard.writeObjects(pasteboardItems)
+		let filePromises = indexPaths.compactMap { Model.filteredDrops[$0.item].filePromise }
+		pasteboard.writeObjects(filePromises)
 		return true
 	}
 
@@ -384,7 +386,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		for index in paths {
 			let item = Model.filteredDrops[index.item]
-			g.writeObjects([item.pasteboardItem])
+			if let pi = item.pasteboardItem {
+				g.writeObjects([pi])
+			}
 		}
 	}
 

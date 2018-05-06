@@ -19,6 +19,35 @@ import CoreSpotlight
 import MapKit
 import ContactsUI
 
+class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDelegate {
+
+	let bytes: Data
+	let title: String
+
+	init(dropItemType: ArchivedDropItemType, title: String) {
+		self.title = title
+		self.bytes = dropItemType.bytes ?? Data()
+		super.init()
+		self.fileType = dropItemType.typeIdentifier
+		self.delegate = self
+	}
+
+	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
+		DispatchQueue.global(qos: .userInitiated).async {
+			do {
+				try self.bytes.write(to: url)
+				completionHandler(nil)
+			} catch {
+				completionHandler(error)
+			}
+		}
+	}
+
+	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
+		return title
+	}
+}
+
 final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 
 	let suggestedName: String?
@@ -460,10 +489,17 @@ final class ArchivedDropItem: Codable, Equatable, LoadCompletionDelegate {
 		return p
 	}
 
-	var pasteboardItem: NSPasteboardItem {
+	var pasteboardItem: NSPasteboardItem? {
+		if typeItems.isEmpty { return nil }
 		let pi = NSPasteboardItem()
 		typeItems.forEach { $0.add(to: pi) }
 		return pi
+	}
+
+	var filePromise: GladysFilePromiseProvider? {
+		if typeItems.isEmpty { return nil }
+		let t = typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) }) ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeData) }) ?? typeItems.first!
+		return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
 	}
 
 	var addedString: String {
