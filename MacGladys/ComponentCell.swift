@@ -9,6 +9,7 @@
 import Cocoa
 
 protocol ComponentCellDelegate: class {
+	func componentCellWantsOpen(_ componentCell: ComponentCell)
 	func componentCellWantsCopy(_ componentCell: ComponentCell)
 	func componentCellWantsDelete(_ componentCell: ComponentCell)
 }
@@ -44,10 +45,22 @@ final class ComponentCell: NSCollectionViewItem {
 	private var shortcutMenu: NSMenu? {
 		guard let item = representedObject as? ArchivedDropItemType else { return nil }
 		let m = NSMenu(title: item.displayTitle ?? "")
+		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
 		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 		m.addItem(NSMenuItem.separator())
 		m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		return m
+	}
+
+	override func mouseDown(with event: NSEvent) {
+		super.mouseDown(with: event)
+		if event.clickCount == 2 {
+			openSelected()
+		}
+	}
+
+	@objc private func openSelected() {
+		delegate?.componentCellWantsOpen(self)
 	}
 
 	@objc private func copySelected() {

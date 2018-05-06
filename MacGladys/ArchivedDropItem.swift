@@ -17,7 +17,6 @@ import Cocoa
 import CloudKit
 import CoreSpotlight
 import MapKit
-import ContactsUI
 
 final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 
@@ -482,28 +481,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 	}
 
 	func tryOpen(from viewController: NSViewController) {
-		let (shareItem, typeItem) = itemForShare
-		if let shareItem = shareItem as? MKMapItem {
-			shareItem.openInMaps(launchOptions: [:])
-
-		} else if let contact = shareItem as? CNContact {
-			let c = CNContactViewController(nibName: nil, bundle: nil)
-			c.contact = contact
-			viewController.presentViewControllerAsModalWindow(c)
-
-		} else if let item = shareItem as? URL {
-			if !NSWorkspace.shared.open(item) {
-				let message: String
-				if item.isFileURL {
-					message = "macOS does not recognise the type of this file"
-				} else {
-					message = "macOS does not recognise the type of this link"
-				}
-				genericAlert(title: "Can't Open", message: message)
-			}
-		} else if let typeItem = typeItem {
-			NSWorkspace.shared.openFile(typeItem.bytesPath.path)
-		}
+		mostRelevantOpenItem?.tryOpen(from: viewController)
 	}
 
 	var shareableComponents: [Any] {
@@ -514,20 +492,8 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 		return items
 	}
 
-	private var itemForShare: (Any?, ArchivedDropItemType?) {
-		var priority = -1
-		var item: Any?
-		var typeItem: ArchivedDropItemType?
-
-		for i in typeItems {
-			let (newItem, newPriority) = i.itemForShare
-			if let newItem = newItem, newPriority > priority {
-				item = newItem
-				priority = newPriority
-				typeItem = i
-			}
-		}
-		return (item, typeItem)
+	private var mostRelevantOpenItem: ArchivedDropItemType? {
+		return typeItems.max { $0.itemForShare.1 < $1.itemForShare.1 }
 	}
 
 	private static let mediumFormatter: DateFormatter = {

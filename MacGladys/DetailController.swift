@@ -219,6 +219,11 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		saveItem()
 	}
 
+	func componentCellWantsOpen(_ componentCell: ComponentCell) {
+		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
+		i.tryOpen(from: self)
+	}
+
 	func componentCellWantsCopy(_ componentCell: ComponentCell) {
 		guard let i = componentCell.representedObject as? ArchivedDropItemType else { return }
 		copy(item: i)
@@ -231,7 +236,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(delete(_:)):
+		case #selector(copy(_:)), #selector(delete(_:)), #selector(open(_:)):
 			return components.selectionIndexes.count > 0
 		default:
 			return true
@@ -241,6 +246,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@objc func copy(_ sender: Any?) {
 		if let i = components.selectionIndexes.first {
 			copy(item: item.typeItems[i])
+		}
+	}
+
+	@objc func open(_ sender: Any?) {
+		if let i = components.selectionIndexes.first {
+			item.typeItems[i].tryOpen(from: self)
 		}
 	}
 

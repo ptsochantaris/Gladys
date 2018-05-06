@@ -80,12 +80,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		observers.append(a1)
 
 		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
+			self?.updateTitle()
 			self?.collection.reloadData()
 			self?.postSave()
 		}
 		observers.append(a2)
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
+			self?.updateTitle()
 			self?.collection.reloadData()
 		}
 		observers.append(a3)
@@ -103,10 +105,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func updateTitle() {
-		if let syncStatus = CloudManager.syncProgressString {
-			view.window?.title = "Gladys: \(syncStatus)"
+		var title: String
+		if Model.isFilteringLabels {
+			title = Model.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
-			view.window?.title = "Gladys"
+			title = "Gladys"
+		}
+		if let syncStatus = CloudManager.syncProgressString {
+			view.window?.title = "\(title): \(syncStatus)"
+		} else {
+			view.window?.title = title
 		}
 	}
 

@@ -13,6 +13,7 @@ import AVFoundation
 import MapKit
 import Fuzi
 import ZIPFoundation
+import ContactsUI
 
 final class ArchivedDropItemType: Codable {
 
@@ -1279,6 +1280,32 @@ final class ArchivedDropItemType: Codable {
 		}
 
 		return (bytes, 0)
+	}
+
+	func tryOpen(from viewController: NSViewController) {
+		let shareItem = itemForShare.0
+
+		if let shareItem = shareItem as? MKMapItem {
+			shareItem.openInMaps(launchOptions: [:])
+
+		} else if let contact = shareItem as? CNContact {
+			let c = CNContactViewController(nibName: nil, bundle: nil)
+			c.contact = contact
+			viewController.presentViewControllerAsModalWindow(c)
+
+		} else if let item = shareItem as? URL {
+			if !NSWorkspace.shared.open(item) {
+				let message: String
+				if item.isFileURL {
+					message = "macOS does not recognise the type of this file"
+				} else {
+					message = "macOS does not recognise the type of this link"
+				}
+				genericAlert(title: "Can't Open", message: message)
+			}
+		} else {
+			NSWorkspace.shared.openFile(bytesPath.path)
+		}
 	}
 
 	var dataExists: Bool {
