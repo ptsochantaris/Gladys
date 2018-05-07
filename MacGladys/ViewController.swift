@@ -16,6 +16,12 @@ func genericAlert(title: String, message: String) {
 	a.runModal()
 }
 
+final class WindowController: NSWindowController, NSWindowDelegate {
+	func windowDidResignKey(_ notification: Notification) {
+		ViewController.shared.lockUnlockedItems()
+	}
+}
+
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
 	@IBOutlet weak var collection: NSCollectionView!
 
@@ -102,6 +108,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			Model.forceUpdateFilter(signalUpdate: true)
 		}
 		observers.append(a5)
+
 		updateTitle()
 	}
 
@@ -452,6 +459,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					self?.unlock(sender)
 				}
 			}
+		}
+	}
+
+	func lockUnlockedItems() {
+		for i in Model.drops where i.isLocked && !i.needsUnlock {
+			i.needsUnlock = true
+			i.postModified()
 		}
 	}
 
