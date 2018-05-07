@@ -142,8 +142,9 @@ final class DropCell: NSCollectionViewItem {
 		} else {
 			let m = NSMenu(title: item.displayTitleOrUuid)
 			m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
-			m.addItem("Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
+			m.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
+			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 			m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 			m.addItem(NSMenuItem.separator())
 			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
@@ -314,6 +315,10 @@ final class DropCell: NSCollectionViewItem {
 
 	@objc private func lockSelected() {
 		ViewController.shared.createLock(self)
+	}
+
+	@objc private func shareSelected() {
+		ViewController.shared.shareSelected(self)
 	}
 
 	@objc private func unlockSelected() {

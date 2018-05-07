@@ -111,6 +111,11 @@ CA
                                                 <action selector="info:" target="Ady-hI-5gd" id="U6p-vQ-Vzn"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Share" keyEquivalent="S" id="APo-zj-gqc">
+                                            <connections>
+                                                <action selector="shareSelected:" target="Ady-hI-5gd" id="LdJ-Fb-OvR"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Archive URL" keyEquivalent="a" id="ygF-A5-oQx">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>

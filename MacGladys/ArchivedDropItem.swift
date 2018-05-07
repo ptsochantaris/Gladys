@@ -484,15 +484,7 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 		mostRelevantOpenItem?.tryOpen(from: viewController)
 	}
 
-	var shareableComponents: [Any] {
-		var items = typeItems.compactMap { $0.itemForShare.0 }
-		if let text = displayText.0, URL(string: text) == nil {
-			items.append(text)
-		}
-		return items
-	}
-
-	private var mostRelevantOpenItem: ArchivedDropItemType? {
+	var mostRelevantOpenItem: ArchivedDropItemType? {
 		return typeItems.max { $0.itemForShare.1 < $1.itemForShare.1 }
 	}
 

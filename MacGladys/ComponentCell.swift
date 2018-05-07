@@ -15,7 +15,7 @@ protocol ComponentCellDelegate: class {
 final class ComponentCell: NSCollectionViewItem {
 
 	enum Action {
-		case open, copy, delete, archive
+		case open, copy, delete, archive, share
 	}
 
 	@IBOutlet weak var descriptionLabel: NSTextField!
@@ -57,6 +57,7 @@ final class ComponentCell: NSCollectionViewItem {
 		let m = NSMenu(title: item.displayTitle ?? "")
 		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
 		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
+		m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 		if item.isArchivable {
 			m.addItem("Archive", action: #selector(archiveSelected), keyEquivalent: "a", keyEquivalentModifierMask: [.command, .option])
 		}
@@ -78,6 +79,10 @@ final class ComponentCell: NSCollectionViewItem {
 
 	@objc private func copySelected() {
 		delegate?.componentCell(self, wants: .copy)
+	}
+
+	@objc private func shareSelected() {
+		delegate?.componentCell(self, wants: .share)
 	}
 
 	@objc private func deleteSelected() {

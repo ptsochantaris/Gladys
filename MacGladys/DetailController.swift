@@ -227,6 +227,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action) {
 		guard let i = componentCell.representedObject as? ArchivedDropItemType, let index = item.typeItems.index(of: i) else { return }
 
+		components.deselectAll(nil)
 		components.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
 
 		switch action {
@@ -238,6 +239,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			delete(at: index)
 		case .archive:
 			archive(nil)
+		case .share:
+			shareSelected(i)
 		}
 	}
 
@@ -248,7 +251,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			if count == 0 { return false }
 			let selectedComponentsThatCanBeArchived = components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }
 			return selectedComponentsThatCanBeArchived.count == count
-		case #selector(copy(_:)), #selector(delete(_:)), #selector(open(_:)):
+		case #selector(copy(_:)), #selector(delete(_:)), #selector(open(_:)), #selector(shareSelected(_:)):
 			return components.selectionIndexes.count > 0
 		default:
 			return true
@@ -271,6 +274,20 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		if let i = components.selectionIndexes.first {
 			delete(at: i)
 		}
+	}
+
+	@objc func shareSelected(_ sender: Any?) {
+		guard let i = components.selectionIndexes.first,
+			let cell = components.item(at: IndexPath(item: i, section: 0)),
+			let itemToShare = cell.representedObject as? ArchivedDropItemType,
+			let shareableItem = itemToShare.itemForShare.0
+			else { return }
+
+		let p = NSSharingServicePicker(items: [shareableItem])
+		let f = cell.view.frame
+		let centerFrame = NSRect(origin: CGPoint(x: f.midX-1, y: f.midY-1), size: CGSize(width: 2, height: 2))
+		p.show(relativeTo: centerFrame, of: components, preferredEdge: .minY)
+
 	}
 
 	@objc func archive(_ sender: Any?) {

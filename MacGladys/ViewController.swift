@@ -244,6 +244,26 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc func shareSelected(_ sender: Any?) {
+		var items = Set(actionableSelectedItems)
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
+			items = [item]
+		}
+
+		guard let itemToShare = items.first,
+			let shareableItem = itemToShare.mostRelevantOpenItem?.itemForShare.0,
+			let i = Model.filteredDrops.index(of: itemToShare),
+			let cell = collection.item(at: IndexPath(item: i, section: 0))
+			else { return }
+
+		collection.deselectAll(nil)
+		collection.selectItems(at: [IndexPath(item: i, section: 0)], scrollPosition: [])
+		let p = NSSharingServicePicker(items: [shareableItem])
+		let f = cell.view.frame
+		let centerFrame = NSRect(origin: CGPoint(x: f.midX-1, y: f.midY-1), size: CGSize(width: 2, height: 2))
+		p.show(relativeTo: centerFrame, of: collection, preferredEdge: .minY)
+	}
+
 	@IBAction func searchDoneSelected(_ sender: NSButton) {
 		resetSearch()
 	}
@@ -571,7 +591,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(delete(_:)):
+		case #selector(copy(_:)), #selector(delete(_:)), #selector(shareSelected(_:)):
 			return actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
