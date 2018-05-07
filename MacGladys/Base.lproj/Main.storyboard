@@ -149,15 +149,15 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="lZT-rh-hfH">
                                     <items>
-                                        <menuItem title="Minimize" keyEquivalent="m" id="OwK-Eh-1Nx">
-                                            <connections>
-                                                <action selector="performMiniaturize:" target="Ady-hI-5gd" id="sIl-hh-4Me"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Zoom" id="Ieh-XZ-iIu">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="performZoom:" target="Ady-hI-5gd" id="KJa-7w-C5g"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Close" keyEquivalent="w" id="Vla-Tz-N1J">
+                                            <connections>
+                                                <action selector="performClose:" target="Ady-hI-5gd" id="Rld-3f-PTa"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="L2p-Cr-uyZ"/>
@@ -589,7 +589,7 @@ CA
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="ywt-Tt-abE">
-                                                <rect key="frame" x="676" y="0.0" width="16" height="109"/>
+                                                <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -657,7 +657,7 @@ CA
                                                 </subviews>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="VaU-Fx-TJk">
-                                                <rect key="frame" x="0.0" y="144" width="237" height="16"/>
+                                                <rect key="frame" x="0.0" y="-16" width="0.0" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="6ei-jG-zD7">
