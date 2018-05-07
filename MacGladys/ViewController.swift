@@ -307,21 +307,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return true
 		} else {
 			let p = draggingInfo.draggingPasteboard()
-			return addItem(from: p, at: indexPath)
+			return addItems(from: p, at: indexPath)
 		}
 	}
 
 	@discardableResult
-	private func addItem(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
-		guard let types = pasteBoard.types else { return false }
+	private func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
+		guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
-		var count = 0
-		let i = NSItemProvider()
-		for type in types.filter({ $0.rawValue.contains(".") && !$0.rawValue.contains(" ") && !$0.rawValue.contains("dyn.") }) {
-			if let data = pasteBoard.data(forType: type) {
-				if !data.isEmpty {
+		let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
+			let extractor = NSItemProvider()
+			var count = 0
+			for type in pasteboardItem.types {
+				if let data = pasteboardItem.data(forType: type), !data.isEmpty {
 					count += 1
-					i.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+					extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
 						let p = Progress()
 						p.totalUnitCount = 1
 						DispatchQueue.global(qos: .userInitiated).async {
@@ -332,13 +332,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					}
 				}
 			}
+			return count > 0 ? extractor : nil
 		}
-		if count == 0 { return false }
-		let newItems = ArchivedDropItem.importData(providers: [i], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue)
-		for newItem in newItems {
-			loadingUUIDS.insert(newItem.uuid)
-			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-			Model.drops.insert(newItem, at: destinationIndex)
+
+		for provider in itemProviders {
+			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
+				loadingUUIDS.insert(newItem.uuid)
+				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+				Model.drops.insert(newItem, at: destinationIndex)
+			}
 		}
 		Model.forceUpdateFilter(signalUpdate: false)
 		collection.reloadData()
@@ -518,7 +520,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func paste(_ sender: Any?) {
-		addItem(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
+		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
 	}
 
 	private var actionableSelectedItems: [ArchivedDropItem] {
