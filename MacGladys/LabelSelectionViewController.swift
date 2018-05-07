@@ -21,6 +21,13 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	override var preferredContentSize: NSSize {
+		set {}
+		get {
+			return NSSize(width: 200, height: ViewController.shared.view.bounds.size.height)
+		}
+	}
+
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		return filteredLabels.count
 	}

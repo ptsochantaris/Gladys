@@ -21,6 +21,10 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		ViewController.shared.lockUnlockedItems()
 	}
 
+	func windowDidBecomeKey(_ notification: Notification) {
+		ViewController.shared.isKey()
+	}
+
 	func windowDidMove(_ notification: Notification) {
 		if let w = window, w.isVisible {
 			lastWindowPosition = w.frame
@@ -51,6 +55,11 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		if let f = lastWindowPosition {
 			window?.setFrame(f, display: false)
 		}
+		let v = window?.contentView
+		let i = #imageLiteral(resourceName: "paper")
+		i.resizingMode = .tile
+		v?.layer?.contents = i
+		v?.layer?.contentsGravity = kCAGravityResize
 	}
 }
 
@@ -67,6 +76,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@IBOutlet weak var searchHolder: NSView!
 	@IBOutlet weak var searchBar: NSSearchField!
+
+	@IBOutlet weak var emptyView: NSImageView!
+	@IBOutlet weak var emptyLabel: NSTextField!
 
 	override func viewWillAppear() {
 		if let w = view.window {
@@ -93,14 +105,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		ViewController.shared = self
 		searchHolder.isHidden = true
 
-		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
+		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		updateDragOperationIndicators()
-
-		let i = #imageLiteral(resourceName: "paper")
-		i.resizingMode = .tile
-		let v = NSImageView(image: i)
-		v.imageScaling = .scaleAxesIndependently
-		collection.backgroundView = v
 
 		Model.reloadDataIfNeeded()
 
@@ -142,6 +148,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		observers.append(a5)
 
 		updateTitle()
+		updateEmptyView()
+
+		if Model.drops.count == 0 {
+			blurb("Ready! Drop me stuff.")
+		}
 	}
 
 	private func updateTitle() {
@@ -152,9 +163,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			title = "Gladys"
 		}
 		if let syncStatus = CloudManager.syncProgressString {
-			view.window?.title = "\(title): \(syncStatus)"
+			view.window?.title = "\(title) — \(syncStatus)"
 		} else {
 			view.window?.title = title
+		}
+	}
+
+	func isKey() {
+		if Model.filteredDrops.count == 0 {
+			blurb(Greetings.randomGreetLine)
 		}
 	}
 
@@ -185,6 +202,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			loadingUUIDS.insert(i.uuid)
 			i.reIngest(delegate: self)
 		}
+		updateEmptyView()
 	}
 
 	private func sync() {
@@ -421,6 +439,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		Model.save()
+
+		if Model.filteredDrops.count == 0 {
+			blurb(Greetings.randomCleanLine)
+		}
 	}
 
 	@objc func removeLock(_ sender: Any?) {
@@ -537,6 +559,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	private var labelController: LabelSelectionViewController?
+	@objc func showLabels(_ sender: Any?) {
+		if let l = labelController {
+			l.view.window?.close()
+			labelController = nil
+		} else {
+			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showLabels"), sender: nil)
+		}
+	}
+
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
@@ -608,12 +640,36 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: nil)
-		if segue.identifier?.rawValue == "showDetail",
-			let item = sender as? ArchivedDropItem,
-			let window = segue.destinationController as? NSWindowController,
-			let d = window.contentViewController as? DetailController {
+		switch segue.identifier?.rawValue {
+		case "showDetail":
+			if let item = sender as? ArchivedDropItem,
+				let window = segue.destinationController as? NSWindowController,
+				let d = window.contentViewController as? DetailController {
+				d.representedObject = item
+			}
 
-			d.representedObject = item
+		case "showLabels":
+			labelController = segue.destinationController as? LabelSelectionViewController
+
+		default: break
+		}
+	}
+
+	private func updateEmptyView() {
+		if Model.drops.count == 0 && emptyView.alphaValue < 1 {
+			emptyView.animator().alphaValue = 1
+
+		} else if emptyView.alphaValue > 0, Model.drops.count > 0 {
+			emptyView.animator().alphaValue = 0
+		}
+	}
+
+	private func blurb(_ text: String) {
+		emptyLabel.alphaValue = 0
+		emptyLabel.stringValue = text
+		emptyLabel.animator().alphaValue = 1
+		DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
+			self?.emptyLabel.animator().alphaValue = 0
 		}
 	}
 }

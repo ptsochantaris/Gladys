@@ -82,6 +82,15 @@ final class Preferences: NSViewController {
 		}
 	}
 
+	@IBAction func syncNowSelected(_ sender: NSButton) {
+		CloudManager.sync { [weak self] error in
+			if let error = error, let s = self {
+				let a = NSAlert(error: error)
+				a.beginSheetModal(for: s.view.window!) { response in }
+			}
+		}
+	}
+
 	@IBAction func displayNotesSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
 		ViewController.shared.reloadData()

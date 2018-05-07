@@ -813,7 +813,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			}
 		}
 		if emptyView != nil {
-			blurb(randomGreetLine)
+			blurb(Greetings.randomGreetLine)
 		}
 	}
 
@@ -1231,7 +1231,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				view.layoutIfNeeded()
 				setEditing(false, animated: true)
 			}
-			blurb(randomCleanLine)
+			blurb(Greetings.randomCleanLine)
 		} else {
 			if isEditing {
 				setEditing(false, animated: true)
@@ -1247,44 +1247,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			resetSearch(andLabels: true)
 		}
 	}
-
-	private var randomCleanLine: String {
-		let count = UInt32(ViewController.cleanLines.count)
-		return ViewController.cleanLines[Int(arc4random_uniform(count))]
-	}
-	private static let cleanLines = [
-		"Tidy!",
-		"Woosh!",
-		"Spotless!",
-		"Clean desk!",
-		"Neeext!",
-		"Peekaboo!",
-		"Cool!",
-		"Zap!",
-		"Nice!",
-		"Feels all empty now!",
-		"Very Zen!",
-		"So much space!",
-	]
-
-	private var randomGreetLine: String {
-		let count = UInt32(ViewController.greetLines.count)
-		return ViewController.greetLines[Int(arc4random_uniform(count))]
-	}
-	private static let greetLines = [
-		"Drop me more stuff!",
-		"What's next?",
-		"Hey there.",
-		"Hi boss!",
-		"Feed me!",
-		"What's up?",
-		"What can I hold for you?",
-		"Gimme.",
-		"Quiet day?",
-		"How can I help?",
-		"Howdy!",
-		"Ready!",
-	]
 
 	func loadCompleted(sender: AnyObject) {
 

@@ -168,7 +168,7 @@ CA
                                         <menuItem isSeparatorItem="YES" id="L2p-Cr-uyZ"/>
                                         <menuItem title="Show Labels" keyEquivalent="l" id="fWc-2Z-SF2">
                                             <connections>
-                                                <segue destination="0gQ-9P-VSG" kind="show" id="DSt-MV-Vky"/>
+                                                <action selector="showLabels:" target="Ady-hI-5gd" id="zfa-bJ-Kl7"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eV5-lg-Zj5"/>
@@ -211,7 +211,7 @@ CA
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="410" y="-187"/>
+            <point key="canvasLocation" x="89" y="-292"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="KZR-7s-Aib">
@@ -271,7 +271,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="deleteLocalItemsSelected:" target="FB0-Ob-ymN" id="e4J-54-ZUP"/>
+                                    <action selector="syncNowSelected:" target="FB0-Ob-ymN" id="Me4-XV-mIw"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
@@ -357,42 +357,22 @@ CA
             </objects>
             <point key="canvasLocation" x="-387" y="426.5"/>
         </scene>
-        <!--Window Controller-->
-        <scene sceneID="OBC-bw-EFK">
-            <objects>
-                <windowController storyboardIdentifier="LabelSelection" showSeguePresentationStyle="single" id="0gQ-9P-VSG" sceneMemberID="viewController">
-                    <window key="window" title="Labels" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="GTz-Hr-4Of">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
-                        <rect key="contentRect" x="695" y="461" width="220" height="129"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-                        <connections>
-                            <outlet property="delegate" destination="0gQ-9P-VSG" id="59M-c7-rJc"/>
-                        </connections>
-                    </window>
-                    <connections>
-                        <segue destination="VWp-gh-Zmf" kind="relationship" relationship="window.shadowedContentViewController" id="fsb-5B-QNB"/>
-                    </connections>
-                </windowController>
-                <customObject id="yMN-dr-ilU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-43" y="294"/>
-        </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
             <objects>
                 <viewController showSeguePresentationStyle="single" id="VWp-gh-Zmf" customClass="LabelSelectionViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="kPb-rg-yCd">
-                        <rect key="frame" x="0.0" y="0.0" width="220" height="325"/>
+                        <rect key="frame" x="0.0" y="0.0" width="220" height="407"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="32" horizontalPageScroll="10" verticalLineScroll="32" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4do-k6-VWU">
-                                <rect key="frame" x="0.0" y="0.0" width="220" height="287"/>
+                                <rect key="frame" x="0.0" y="0.0" width="220" height="369"/>
                                 <clipView key="contentView" id="aPX-nq-eVS">
-                                    <rect key="frame" x="0.0" y="0.0" width="220" height="287"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="369"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="none" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="30" id="yJM-4j-0nL">
-                                            <rect key="frame" x="0.0" y="0.0" width="220" height="287"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="220" height="369"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -428,7 +408,7 @@ CA
                                 </scroller>
                             </scrollView>
                             <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNH-xY-GXq">
-                                <rect key="frame" x="8" y="295" width="117" height="22"/>
+                                <rect key="frame" x="8" y="377" width="117" height="22"/>
                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="Cko-sD-5di">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -439,7 +419,7 @@ CA
                                 </connections>
                             </searchField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cOa-3j-ku3">
-                                <rect key="frame" x="127" y="289" width="91" height="32"/>
+                                <rect key="frame" x="127" y="371" width="91" height="32"/>
                                 <buttonCell key="cell" type="push" title="Clear All" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="TQN-BF-Bij">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -470,7 +450,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12" y="462"/>
+            <point key="canvasLocation" x="668" y="684"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -491,7 +471,7 @@ CA
                 </windowController>
                 <customObject id="mDV-64-xWs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1381" y="-34"/>
+            <point key="canvasLocation" x="1370" y="60"/>
         </scene>
         <!--Details-->
         <scene sceneID="cff-UB-nbI">
@@ -673,7 +653,7 @@ CA
                 </viewController>
                 <customObject id="seu-dC-0fN" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1567" y="148"/>
+            <point key="canvasLocation" x="1572" y="218"/>
         </scene>
         <!--New Label Controller-->
         <scene sceneID="dtH-pl-EKw">
@@ -764,17 +744,17 @@ CA
             <objects>
                 <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="670" height="937"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
-                                <rect key="frame" x="0.0" y="0.0" width="670" height="800"/>
+                                <rect key="frame" x="0.0" y="0.0" width="670" height="937"/>
                                 <subviews>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
-                                        <rect key="frame" x="0.0" y="768" width="670" height="32"/>
+                                    <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
+                                        <rect key="frame" x="0.0" y="905" width="670" height="32"/>
                                         <subviews>
                                             <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
-                                                <rect key="frame" x="5" y="5" width="591" height="22"/>
+                                                <rect key="frame" x="5" y="5" width="599" height="22"/>
                                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search" usesSingleLineMode="YES" bezelStyle="round" id="tai-4w-9Jp">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -784,8 +764,8 @@ CA
                                                     <outlet property="delegate" destination="XfG-lQ-9wD" id="WuY-HM-N56"/>
                                                 </connections>
                                             </searchField>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
-                                                <rect key="frame" x="598" y="-1" width="68" height="32"/>
+                                            <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
+                                                <rect key="frame" x="603" y="-1" width="68" height="32"/>
                                                 <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="eek-0f-6mI">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
@@ -797,27 +777,27 @@ CA
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="nZb-eu-7ee" firstAttribute="leading" secondItem="YpT-d8-ghf" secondAttribute="leading" constant="5" id="4BP-Bd-xcM"/>
+                                            <constraint firstItem="dsE-la-tYA" firstAttribute="centerY" secondItem="nZb-eu-7ee" secondAttribute="centerY" id="7UF-LK-KeH"/>
                                             <constraint firstAttribute="bottom" secondItem="nZb-eu-7ee" secondAttribute="bottom" constant="5" id="7hp-yW-VCU"/>
-                                            <constraint firstAttribute="trailing" secondItem="dsE-la-tYA" secondAttribute="trailing" constant="10" id="VK8-em-0Ih"/>
+                                            <constraint firstAttribute="trailing" secondItem="dsE-la-tYA" secondAttribute="trailing" constant="5" id="VK8-em-0Ih"/>
                                             <constraint firstItem="nZb-eu-7ee" firstAttribute="top" secondItem="YpT-d8-ghf" secondAttribute="top" constant="5" id="dda-VU-lqi"/>
-                                            <constraint firstItem="dsE-la-tYA" firstAttribute="leading" secondItem="nZb-eu-7ee" secondAttribute="trailing" constant="8" id="h6L-H2-8Vg"/>
-                                            <constraint firstItem="dsE-la-tYA" firstAttribute="centerY" secondItem="YpT-d8-ghf" secondAttribute="centerY" id="nF8-en-dlx"/>
+                                            <constraint firstItem="dsE-la-tYA" firstAttribute="leading" secondItem="nZb-eu-7ee" secondAttribute="trailing" constant="5" id="h6L-H2-8Vg"/>
                                         </constraints>
                                     </customView>
                                     <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
-                                        <rect key="frame" x="0.0" y="0.0" width="670" height="768"/>
-                                        <clipView key="contentView" drawsBackground="NO" id="cWg-5F-dYQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="670" height="768"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="670" height="905"/>
+                                        <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" id="cWg-5F-dYQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="670" height="905"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <collectionView selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="670" height="750"/>
+                                                <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="670" height="905"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
                                                         <size key="itemSize" width="100" height="100"/>
                                                         <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
                                                     </collectionViewFlowLayout>
-                                                    <color key="primaryBackgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="primaryBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
                                                         <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
@@ -831,7 +811,7 @@ CA
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="omR-nC-4xD">
-                                            <rect key="frame" x="614" y="0.0" width="16" height="599"/>
+                                            <rect key="frame" x="654" y="0.0" width="16" height="880"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
@@ -845,28 +825,53 @@ CA
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
+                                <rect key="frame" x="253" y="381" width="164" height="14"/>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec..." id="KT6-PW-u6g">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f">
+                                <rect key="frame" x="255" y="399" width="160" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="EiP-iW-5E6"/>
+                                    <constraint firstAttribute="height" constant="160" id="mam-JU-oXS"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="a9k-6h-nKz"/>
+                            </imageView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="A2v-Sl-Y1f" firstAttribute="centerX" secondItem="0yl-hH-17A" secondAttribute="centerX" id="0xh-Ga-0zk"/>
+                            <constraint firstItem="A2v-Sl-Y1f" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="2Tz-zZ-LZ8"/>
                             <constraint firstAttribute="bottom" secondItem="E1G-ru-fcT" secondAttribute="bottom" id="L04-2L-qs8"/>
                             <constraint firstAttribute="trailing" secondItem="E1G-ru-fcT" secondAttribute="trailing" id="RH3-4n-sY6"/>
                             <constraint firstItem="E1G-ru-fcT" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="UnT-83-gBS"/>
+                            <constraint firstItem="0yl-hH-17A" firstAttribute="width" secondItem="A2v-Sl-Y1f" secondAttribute="width" id="g7B-WP-UU2"/>
+                            <constraint firstItem="A2v-Sl-Y1f" firstAttribute="bottom" secondItem="0yl-hH-17A" secondAttribute="top" constant="-4" id="jnR-we-oqQ"/>
+                            <constraint firstItem="A2v-Sl-Y1f" firstAttribute="centerY" secondItem="m2S-Jp-Qdl" secondAttribute="centerY" constant="-10" id="tyc-0C-WMU"/>
                             <constraint firstItem="E1G-ru-fcT" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="zqO-hM-HEQ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collection" destination="OAb-Qq-Rfr" id="hAL-dC-Z2v"/>
+                        <outlet property="emptyLabel" destination="0yl-hH-17A" id="K2z-vn-sPB"/>
+                        <outlet property="emptyView" destination="A2v-Sl-Y1f" id="GDB-mq-1QQ"/>
                         <outlet property="searchBar" destination="nZb-eu-7ee" id="4zc-tb-JLi"/>
                         <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
+                        <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="OAb-Qq-Rfr" popoverBehavior="semitransient" preferredEdge="maxX" id="pvz-ms-nO1"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="671" y="190"/>
+            <point key="canvasLocation" x="668" y="-93.5"/>
         </scene>
     </scenes>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
+        <image name="gladysImage" width="1024" height="1024"/>
     </resources>
 </document>
