@@ -220,6 +220,27 @@
 		16CD7D7A20A108550039E6C2 /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16CD7D7C20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7B20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift */; };
 		16CD7D7D20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7B20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift */; };
+		16CD7D7F20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8020A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8120A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8220A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8320A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8420A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8520A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16CD7D8720A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8820A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8920A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8A20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8B20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8C20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8D20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */; };
+		16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */; };
+		16CD7D9220A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
+		16CD7D9320A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
+		16CD7D9420A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
+		16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
+		16CD7D9620A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -538,6 +559,10 @@
 		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+IngestCommon.swift"; sourceTree = "<group>"; };
 		16CD7D7B20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+UICommon.swift"; sourceTree = "<group>"; };
+		16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Common.swift"; sourceTree = "<group>"; };
+		16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Common.swift"; sourceTree = "<group>"; };
+		16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UICommon.swift"; sourceTree = "<group>"; };
+		16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+CopyCommon.swift"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -741,6 +766,7 @@
 			isa = PBXGroup;
 			children = (
 				16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */,
+				16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */,
 				169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */,
 				16CD7D7B20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift */,
 				169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */,
@@ -756,11 +782,14 @@
 			isa = PBXGroup;
 			children = (
 				16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */,
+				16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */,
 				169763131F15669000537776 /* ArchivedDropItemType+UI.swift */,
+				16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */,
 				169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */,
 				16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */,
 				1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */,
 				16969BB91FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift */,
+				16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */,
 				1657B8CB1FD4482A00EC480D /* ArchivedDropItemType+Preview.swift */,
 				169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */,
 			);
@@ -1701,6 +1730,7 @@
 				1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */,
 				16CD7D7A20A108550039E6C2 /* ArchivedDropItem+Ingest.swift in Sources */,
 				161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */,
+				16CD7D8520A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
@@ -1713,6 +1743,7 @@
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
+				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager.swift in Sources */,
@@ -1721,6 +1752,8 @@
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
 				161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */,
+				16CD7D9620A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
+				16CD7D8D20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				161718DD2094D7F7005ABD6C /* Model.swift in Sources */,
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				161718DE2094D870005ABD6C /* Types+MainApp.swift in Sources */,
@@ -1739,6 +1772,8 @@
 				1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */,
 				162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */,
 				160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */,
+				16CD7D8A20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
+				16CD7D8220A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				169763181F1566DE00537776 /* ArchivedDropItemType+Tagging.swift in Sources */,
 				162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */,
 				1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */,
@@ -1770,7 +1805,9 @@
 				16287AF71EFB05E9007188AE /* Types.swift in Sources */,
 				1602F3202030E57A0036E2B0 /* UIImage+Extensions.swift in Sources */,
 				1602F3232030E5B40036E2B0 /* Data+Extensions.swift in Sources */,
+				16CD7D8020A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				16287AF51EFB05E0007188AE /* ArchivedDropItem.swift in Sources */,
+				16CD7D8820A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1795,6 +1832,7 @@
 				161089981FA320280095FE34 /* CloudManager+Storage.swift in Sources */,
 				161089991FA320560095FE34 /* Types+MainApp.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
+				16CD7D8120A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				1657B8D61FD44A0000EC480D /* ArchivedDropItemType+Preview.swift in Sources */,
 				1602F3282030E5F20036E2B0 /* Notifications.swift in Sources */,
 				1602F3312030E64C0036E2B0 /* UIImage+Extensions.swift in Sources */,
@@ -1803,7 +1841,9 @@
 				16CD7D7420A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
 				16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */,
+				16CD7D9320A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */,
+				16CD7D8920A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1820,9 +1860,12 @@
 				169C07DE2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
+				16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
+				16CD7D8C20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
 				1602F32E2030E6310036E2B0 /* Data+Extensions.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */,
+				16CD7D8420A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedDropItem+Messages.swift in Sources */,
 				1602F32F2030E63B0036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -1858,6 +1901,7 @@
 				1602F3182030E4C90036E2B0 /* Data+Extensions.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				168A0CE81FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
+				16CD7D9220A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
 				161089931FA31D0D0095FE34 /* CloudManager+MainApp.swift in Sources */,
@@ -1878,6 +1922,7 @@
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
 				162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
+				16CD7D7F20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
 				165173031F99483E006CAF0A /* GladysViewController.swift in Sources */,
@@ -1904,8 +1949,10 @@
 				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
+				16CD7D8720A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1602F31F2030E5550036E2B0 /* Notifications.swift in Sources */,
+				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
@@ -1922,6 +1969,7 @@
 			files = (
 				16969BAD1FB0E675007B2F77 /* ArchivedDropItemType.swift in Sources */,
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
+				16CD7D8B20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
 				1602F32D2030E6240036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16969BB01FB0E6B1007B2F77 /* Model+SimpleCoordinator.swift in Sources */,
@@ -1929,6 +1977,8 @@
 				16969BAF1FB0E69C007B2F77 /* Types.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				1602F3292030E5FA0036E2B0 /* UIImage+Extensions.swift in Sources */,
+				16CD7D8320A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
+				16CD7D9420A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16969BAE1FB0E688007B2F77 /* Model.swift in Sources */,
 				1602F32C2030E6200036E2B0 /* Data+Extensions.swift in Sources */,
 				16969BBB1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,

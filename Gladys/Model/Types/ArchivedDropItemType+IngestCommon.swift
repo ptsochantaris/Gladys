@@ -13,10 +13,8 @@ import Contacts
 #if os(iOS)
 import UIKit
 import MobileCoreServices
-typealias IMAGE = UIImage
 #else
 import Cocoa
-typealias IMAGE = NSImage
 #endif
 
 extension ArchivedDropItemType {
