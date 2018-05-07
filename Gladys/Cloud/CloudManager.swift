@@ -6,7 +6,9 @@
 //  Copyright © 2017 Paul Tsochantaris. All rights reserved.
 //
 
+#if os(iOS)
 import UIKit
+#endif
 import CloudKit
 
 final class CloudManager {
@@ -33,9 +35,7 @@ final class CloudManager {
 		}
 	}
 
-	/////////////////////////////////////////////
-
-	private static func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
+	static private func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
 		var previousSequence = uuidSequence
 		for localItem in currentSequence {
 			if !previousSequence.contains(localItem) { // we have a new item
@@ -49,7 +49,9 @@ final class CloudManager {
 	@discardableResult
 	static func sendUpdatesUp(completion: @escaping (Error?)->Void) -> Progress? {
 		if !syncSwitchedOn {
+			#if MAINAPP || ACTIONEXTENSION
 			CloudManager.shareActionIsActioningIds = []
+			#endif
 			completion(nil)
 			return nil
 		}
@@ -77,7 +79,7 @@ final class CloudManager {
 				return payload
 			}
 			return nil
-		}.flatBunch(minSize: 10)
+			}.flatBunch(minSize: 10)
 
 		var deletionIdsSnapshot = deletionQueue
 		if idsToPush.count > 0 {
@@ -123,7 +125,7 @@ final class CloudManager {
 		if payloadsToPush.count == 0 && recordsToDelete.count == 0 {
 			log("No further changes to push up")
 			#if MAINAPP
-				CloudManager.shareActionIsActioningIds = []
+			CloudManager.shareActionIsActioningIds = []
 			#endif
 			completion(nil)
 			return nil
@@ -221,7 +223,7 @@ final class CloudManager {
 		}
 		group.notify(queue: DispatchQueue.main) {
 			#if MAINAPP
-				CloudManager.shareActionIsActioningIds = []
+			CloudManager.shareActionIsActioningIds = []
 			#endif
 			completion(latestError)
 		}
