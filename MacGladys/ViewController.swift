@@ -148,11 +148,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		observers.append(a5)
 
 		updateTitle()
-		updateEmptyView()
+		postSave()
 
 		if Model.drops.count == 0 {
 			blurb("Ready! Drop me stuff.")
 		}
+
+
 	}
 
 	private func updateTitle() {

@@ -11,49 +11,6 @@ import GladysFramework
 
 extension ArchivedDropItem {
 
-	func delete() {
-		isDeleting = true
-		if cloudKitRecord != nil {
-			CloudManager.markAsDeleted(uuid: uuid)
-		} else {
-			log("No cloud record for this item, skipping cloud delete")
-		}
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
-			if let error = error {
-				log("Error while deleting an index \(error)")
-			}
-		}
-		let f = FileManager.default
-		if f.fileExists(atPath: folderUrl.path) {
-			try! f.removeItem(at: folderUrl)
-		}
-	}
-
-	func renumberTypeItems() {
-		var count = 0
-		for i in typeItems {
-			i.order = count
-			count += 1
-		}
-	}
-
-	var shouldDisplayLoading: Bool {
-		return needsReIngest || loadingProgress != nil
-	}
-
-	var backgroundInfoObject: Any? {
-		var currentItem: Any?
-		var currentPriority = -1
-		for item in typeItems {
-			let (newItem, newPriority) = item.backgroundInfoObject
-			if let newItem = newItem, newPriority > currentPriority {
-				currentItem = newItem
-				currentPriority = newPriority
-			}
-		}
-		return currentItem
-	}
-
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
 
 		guard index < labels.count else {
@@ -150,22 +107,6 @@ extension ArchivedDropItem {
 				completion(false)
 			}
 		}
-	}
-
-	func postModified() {
-		NotificationCenter.default.post(name: .ItemModified, object: self)
-	}
-
-	private static let mediumFormatter: DateFormatter = {
-		let d = DateFormatter()
-		d.doesRelativeDateFormatting = true
-		d.dateStyle = .medium
-		d.timeStyle = .medium
-		return d
-	}()
-
-	var addedString: String {
-		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
 	var shareableComponents: [Any] {

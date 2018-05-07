@@ -8,7 +8,14 @@ struct ImportOverrides {
 }
 
 extension ArchivedDropItem: LoadCompletionDelegate {
-	
+
+	static func sanitised(_ idenitfiers: [String]) -> [String] {
+		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
+		return idenitfiers.filter { typeIdentifier in
+			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
+		}
+	}
+
 	func loadCompleted(sender: AnyObject) {
 		loadCount = loadCount - 1
 		if loadCount <= 0 {
@@ -46,13 +53,6 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
-	static func sanitised(_ idenitfiers: [String]) -> [String] {
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
-		return idenitfiers.filter { typeIdentifier in
-			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
-		}
-	}
-
 	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
 		var progressChildren = [Progress]()
@@ -76,6 +76,10 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 
 			var order = 0
 			for typeIdentifier in identifiers {
+				#if os(OSX) // TODO: perhaps do this on iOS too?
+				let cfid = typeIdentifier as CFString
+				if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { continue }
+				#endif
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
 					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
 					order += 1

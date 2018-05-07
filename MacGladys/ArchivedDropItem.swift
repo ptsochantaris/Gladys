@@ -6,19 +6,13 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-struct ImportOverrides {
-	let title: String?
-	let note: String?
-	let labels: [String]?
-}
-
 import Foundation
 import Cocoa
 import CloudKit
 import CoreSpotlight
 import MapKit
 
-final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
+final class ArchivedDropItem: Codable, Hashable {
 
 	let suggestedName: String?
 	let uuid: UUID
@@ -345,125 +339,6 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 		}
 	}
 
-	func delete() {
-		isDeleting = true
-		if cloudKitRecord != nil {
-			CloudManager.markAsDeleted(uuid: uuid)
-		} else {
-			log("No cloud record for this item, skipping cloud delete")
-		}
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
-			if let error = error {
-				log("Error while deleting an index \(error)")
-			}
-		}
-		let f = FileManager.default
-		if f.fileExists(atPath: folderUrl.path) {
-			try! f.removeItem(at: folderUrl)
-		}
-	}
-
-	func loadCompleted(sender: AnyObject) {
-		loadCount = loadCount - 1
-		if loadCount <= 0 {
-			loadingProgress = nil
-			if let d = delegate {
-				delegate = nil
-				d.loadCompleted(sender: self)
-			}
-		}
-	}
-
-	func cancelIngest() {
-		typeItems.forEach { $0.cancelIngest() }
-	}
-
-	var shouldDisplayLoading: Bool {
-		return needsReIngest || loadingProgress != nil
-	}
-	
-	func reIngest(delegate: LoadCompletionDelegate) {
-		self.delegate = delegate
-		loadCount = typeItems.count
-		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
-		needsUnlock = lockPassword != nil && !wasExplicitlyUnlocked
-		let p = Progress(totalUnitCount: Int64(loadCount * 100))
-		loadingProgress = p
-		if typeItems.count == 0 { // can happen for example when all components are removed
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-				self.loadCompleted(sender: self)
-			}
-		} else {
-			if typeItems.count > 1 && typeItems.filter({ $0.order != 0 }).count > 0 { // some type items have an order set, enforce it
-				typeItems.sort { $0.order < $1.order }
-			}
-			typeItems.forEach {
-				let cp = $0.reIngest(delegate: self)
-				p.addChild(cp, withPendingUnitCount: 100)
-			}
-		}
-	}
-
-	var backgroundInfoObject: Any? {
-		var currentItem: Any?
-		var currentPriority = -1
-		for item in typeItems {
-			let (newItem, newPriority) = item.backgroundInfoObject
-			if let newItem = newItem, newPriority > currentPriority {
-				currentItem = newItem
-				currentPriority = newPriority
-			}
-		}
-		return currentItem
-	}
-	
-	static func sanitised(_ idenitfiers: [String]) -> [String] {
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", "com.apple.finder.node"]
-		return idenitfiers.filter { typeIdentifier in
-			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
-		}
-	}
-
-	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) -> Progress {
-		self.delegate = delegate
-		var progressChildren = [Progress]()
-
-		for provider in providers {
-
-			var identifiers = ArchivedDropItem.sanitised(provider.registeredTypeIdentifiers)
-			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
-
-			if let limit = limitToType {
-				identifiers = [limit]
-			}
-
-			func addTypeItem(type: String, encodeUIImage: Bool, order: Int) {
-				loadCount += 1
-				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self, order: order)
-				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage)
-				progressChildren.append(p)
-				typeItems.append(i)
-			}
-
-			var order = 0
-			for typeIdentifier in identifiers {
-				let cfid = typeIdentifier as CFString
-				if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { continue }
-				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
-					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
-					order += 1
-				}
-				addTypeItem(type: typeIdentifier, encodeUIImage: false, order: order)
-				order += 1
-			}
-		}
-		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))
-		for c in progressChildren {
-			p.addChild(c, withPendingUnitCount: 100)
-		}
-		return p
-	}
-
 	var pasteboardItem: NSPasteboardItem? {
 		if typeItems.isEmpty { return nil }
 		let pi = NSPasteboardItem()
@@ -477,35 +352,11 @@ final class ArchivedDropItem: Codable, LoadCompletionDelegate, Hashable {
 		return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
 	}
 
-	var addedString: String {
-		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
-	}
-
 	func tryOpen(from viewController: NSViewController) {
 		mostRelevantOpenItem?.tryOpen(from: viewController)
 	}
 
 	var mostRelevantOpenItem: ArchivedDropItemType? {
 		return typeItems.max { $0.itemForShare.1 < $1.itemForShare.1 }
-	}
-
-	private static let mediumFormatter: DateFormatter = {
-		let d = DateFormatter()
-		d.doesRelativeDateFormatting = true
-		d.dateStyle = .medium
-		d.timeStyle = .medium
-		return d
-	}()
-
-	func postModified() {
-		NotificationCenter.default.post(name: .ItemModified, object: self)
-	}
-
-	func renumberTypeItems() {
-		var count = 0
-		for i in typeItems {
-			i.order = count
-			count += 1
-		}
 	}
 }

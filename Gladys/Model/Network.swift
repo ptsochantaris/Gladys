@@ -16,20 +16,16 @@ class Network {
 		return o
 	}()
 
-	static func start(with request: URLRequest, result: @escaping (Data?, URLResponse?, Error?) -> Void) {
-		let g = DispatchSemaphore(value: 0)
-		let task = URLSession.shared.dataTask(with: request) { data, response, error in
-			result(data, response, error)
-			g.signal()
+	static func fetch(_ url: URL, method: String? = nil, result: @escaping (Data?, URLResponse?, Error?) -> Void) {
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+		var request = URLRequest(url: url)
+		if let method = method {
+			request.httpMethod = method
 		}
-		taskQueue.addOperation {
-			task.resume()
-			g.wait()
-		}
-	}
-	
-	static func start(with url: URL, result: @escaping (Data?, URLResponse?, Error?) -> Void) {
+		request.setValue("Gladys/\(v) (iOS; iOS)", forHTTPHeaderField: "User-Agent")
+
 		let g = DispatchSemaphore(value: 0)
+
 		let task = URLSession.shared.dataTask(with: url) { data, response, error in
 			result(data, response, error)
 			g.signal()
