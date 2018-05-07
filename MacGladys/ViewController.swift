@@ -22,8 +22,14 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 
 	func windowDidMove(_ notification: Notification) {
-		if let f = window?.frame {
-			lastWindowPosition = f
+		if let w = window, w.isVisible {
+			lastWindowPosition = w.frame
+		}
+	}
+
+	func windowDidResize(_ notification: Notification) {
+		if let w = window, w.isVisible {
+			lastWindowPosition = w.frame
 		}
 	}
 
