@@ -528,14 +528,6 @@ final class CloudManager {
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
-		createZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
-			if let error = error {
-				log("Error while creating zone: \(error.finalDescription)")
-				DispatchQueue.main.async {
-					completion(error)
-				}
-			}
-		}
 
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.shouldSendContentAvailable = true
@@ -546,14 +538,6 @@ final class CloudManager {
 
 		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
 		subscribeToZone.addDependency(createZone)
-		subscribeToZone.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
-			if let error = error {
-				log("Error while updating zone subscription: \(error.finalDescription)")
-				DispatchQueue.main.async {
-					completion(error)
-				}
-			}
-		}
 
 		let positionListId = CKRecordID(recordName: "PositionList", zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
@@ -561,7 +545,7 @@ final class CloudManager {
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
-					log("Error while fetching inital item sequence: \(error.finalDescription)")
+					log("Error while activating: \(error.finalDescription)")
 					completion(error)
 				} else {
 					if let sequenceRecord = ids2records?[positionListId], let sequence = sequenceRecord["positionList"] as? [String] {
