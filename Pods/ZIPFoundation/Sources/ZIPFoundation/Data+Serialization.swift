@@ -26,7 +26,7 @@ extension Data {
         return self.subdata(in: start..<start+MemoryLayout<T>.size).withUnsafeBytes { $0.pointee }
     }
 
-    static func readStructure<T>(from file:UnsafeMutablePointer<FILE>, at offset: Int) -> T? where T: DataSerializable {
+    static func readStruct<T>(from file: UnsafeMutablePointer<FILE>, at offset: Int) -> T? where T: DataSerializable {
         fseek(file, offset, SEEK_SET)
         guard let data = try? self.readChunk(of: T.size, from: file) else {
             return nil
@@ -57,7 +57,11 @@ extension Data {
     }
 
     static func readChunk(of size: Int, from file: UnsafeMutablePointer<FILE>) throws -> Data {
+        #if swift(>=4.1)
+        let bytes = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 1)
+        #else
         let bytes = UnsafeMutableRawPointer.allocate(bytes: size, alignedTo: 1)
+        #endif
         let bytesRead = fread(bytes, 1, size, file)
         let error = ferror(file)
         if error > 0 {

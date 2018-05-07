@@ -15,7 +15,8 @@ public let defaultReadChunkSize = UInt32(16*1024)
 /// The default chunk size when writing entry data to an archive.
 public let defaultWriteChunkSize = defaultReadChunkSize
 /// The default permissions for newly added entries.
-public let defaultPermissions = UInt16(0o644)
+public let defaultFilePermissions = UInt16(0o644)
+public let defaultDirectoryPermissions = UInt16(0o755)
 let defaultPOSIXBufferSize = defaultReadChunkSize
 let defaultDirectoryUnitCount = Int64(1)
 let minDirectoryEndOffset = 22
@@ -177,30 +178,30 @@ public final class Archive: Sequence {
     public func makeIterator() -> AnyIterator<Entry> {
         let endOfCentralDirectoryRecord = self.endOfCentralDirectoryRecord
         var directoryIndex = Int(endOfCentralDirectoryRecord.offsetToStartOfCentralDirectory)
-        var i = 0
+        var index = 0
         return AnyIterator {
-            guard i < Int(endOfCentralDirectoryRecord.totalNumberOfEntriesInCentralDirectory) else { return nil }
-            guard let centralDirStruct: CentralDirectoryStructure = Data.readStructure(from: self.archiveFile,
-                                                                                             at: directoryIndex) else {
-                                                                                                return nil
+            guard index < Int(endOfCentralDirectoryRecord.totalNumberOfEntriesInCentralDirectory) else { return nil }
+            guard let centralDirStruct: CentralDirectoryStructure = Data.readStruct(from: self.archiveFile,
+                                                                                    at: directoryIndex) else {
+                                                                                        return nil
             }
             let offset = Int(centralDirStruct.relativeOffsetOfLocalHeader)
-            guard let localFileHeader: LocalFileHeader = Data.readStructure(from: self.archiveFile,
-                                                                            at: offset) else { return nil }
+            guard let localFileHeader: LocalFileHeader = Data.readStruct(from: self.archiveFile,
+                                                                         at: offset) else { return nil }
             var dataDescriptor: DataDescriptor? = nil
             if centralDirStruct.usesDataDescriptor {
                 let additionalSize = Int(localFileHeader.fileNameLength + localFileHeader.extraFieldLength)
                 let isCompressed = centralDirStruct.compressionMethod != CompressionMethod.none.rawValue
                 let dataSize = isCompressed ? centralDirStruct.compressedSize : centralDirStruct.uncompressedSize
                 let descriptorPosition = offset + LocalFileHeader.size + additionalSize + Int(dataSize)
-                dataDescriptor = Data.readStructure(from: self.archiveFile, at: descriptorPosition)
+                dataDescriptor = Data.readStruct(from: self.archiveFile, at: descriptorPosition)
             }
             defer {
                 directoryIndex += CentralDirectoryStructure.size
                 directoryIndex += Int(centralDirStruct.fileNameLength)
                 directoryIndex += Int(centralDirStruct.extraFieldLength)
                 directoryIndex += Int(centralDirStruct.fileCommentLength)
-                i += 1
+                index += 1
             }
             return Entry(centralDirectoryStructure: centralDirStruct,
                          localFileHeader: localFileHeader, dataDescriptor: dataDescriptor)
@@ -224,19 +225,19 @@ public final class Archive: Sequence {
     private static func scanForEndOfCentralDirectoryRecord(in file: UnsafeMutablePointer<FILE>)
         -> EndOfCentralDirectoryRecord? {
         var directoryEnd = 0
-        var i = minDirectoryEndOffset
+        var index = minDirectoryEndOffset
         var fileStat = stat()
         fstat(fileno(file), &fileStat)
         let archiveLength = Int(fileStat.st_size)
-        while directoryEnd == 0 && i < maxDirectoryEndOffset && i <= archiveLength {
-            fseek(file, archiveLength - i, SEEK_SET)
+        while directoryEnd == 0 && index < maxDirectoryEndOffset && index <= archiveLength {
+            fseek(file, archiveLength - index, SEEK_SET)
             var potentialDirectoryEndTag: UInt32 = UInt32()
             fread(&potentialDirectoryEndTag, 1, MemoryLayout<UInt32>.size, file)
             if potentialDirectoryEndTag == UInt32(endOfCentralDirectoryStructSignature) {
-                directoryEnd = archiveLength - i
-                return Data.readStructure(from: file, at: directoryEnd)
+                directoryEnd = archiveLength - index
+                return Data.readStruct(from: file, at: directoryEnd)
             }
-            i += 1
+            index += 1
         }
         return nil
     }

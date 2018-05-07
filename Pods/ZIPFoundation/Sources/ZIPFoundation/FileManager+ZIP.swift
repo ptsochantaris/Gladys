@@ -124,8 +124,11 @@ extension FileManager {
         }
     }
 
-    class func attributes(from centralDirectoryStructure: CentralDirectoryStructure) -> [FileAttributeKey: Any] {
-        var attributes = [.posixPermissions: defaultPermissions,
+    class func attributes(from entry: Entry) -> [FileAttributeKey: Any] {
+        let centralDirectoryStructure = entry.centralDirectoryStructure
+        let entryType = entry.type
+        var attributes = [.posixPermissions: entryType ==
+            .directory ? defaultDirectoryPermissions : defaultFilePermissions,
                           .modificationDate: Date()] as [FileAttributeKey: Any]
         let versionMadeBy = centralDirectoryStructure.versionMadeBy
         let fileTime = centralDirectoryStructure.lastModFileTime
@@ -134,19 +137,21 @@ extension FileManager {
             return attributes
         }
         let externalFileAttributes = centralDirectoryStructure.externalFileAttributes
-        let permissions = self.permissions(for: externalFileAttributes, osType: osType)
+        let permissions = self.permissions(for: externalFileAttributes, osType: osType, entryType: entryType)
         attributes[.posixPermissions] = NSNumber(value: permissions)
         attributes[.modificationDate] = Date(dateTime: (fileDate, fileTime))
         return attributes
     }
 
-    class func permissions(for externalFileAttributes: UInt32, osType: Entry.OSType) -> UInt16 {
+    class func permissions(for externalFileAttributes: UInt32, osType: Entry.OSType,
+                           entryType: Entry.EntryType) -> UInt16 {
         switch osType {
         case .unix, .osx:
             let permissions = mode_t(externalFileAttributes >> 16) & (~S_IFMT)
+            let defaultPermissions = entryType == .directory ? defaultDirectoryPermissions : defaultFilePermissions
             return permissions == 0 ? defaultPermissions : UInt16(permissions)
         default:
-            return defaultPermissions
+            return entryType == .directory ? defaultDirectoryPermissions : defaultFilePermissions
         }
     }
 
@@ -263,3 +268,26 @@ extension Date {
         return (UInt16)((second/2) + (minute * 32) + (hour * 2048))
     }
 }
+
+#if swift(>=4.2)
+#else
+
+#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+#else
+
+// The swift-corelibs-foundation version of NSError.swift was missing a convenience method to create
+// error objects from error codes. (https://github.com/apple/swift-corelibs-foundation/pull/1420)
+// We have to provide an implementation for non-Darwin platforms using Swift versions < 4.2.
+
+public extension CocoaError {
+    public static func error(_ code: CocoaError.Code, userInfo: [AnyHashable: Any]? = nil, url: URL? = nil) -> Error {
+        var info: [String: Any] = userInfo as? [String: Any] ?? [:]
+        if let url = url {
+            info[NSURLErrorKey] = url
+        }
+        return NSError(domain: NSCocoaErrorDomain, code: code.rawValue, userInfo: info)
+    }
+}
+
+#endif
+#endif

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Paul Tsochantaris. All rights reserved.
 //
 
-@import Foundation;
+@import UIKit;
 
 //! Project version number for GladysFramework.
 FOUNDATION_EXPORT double GladysFrameworkVersionNumber;
@@ -16,7 +16,7 @@ FOUNDATION_EXPORT const unsigned char GladysFrameworkVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <GladysFramework/PublicHeader.h>
 
-BOOL verifyIapReceipt();
+BOOL verifyIapReceipt(void);
 
 NSData *sha1(NSString *input);
 
