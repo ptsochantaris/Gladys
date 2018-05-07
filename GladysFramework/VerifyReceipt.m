@@ -26,64 +26,6 @@ NSDateFormatter *makeFormatter() {
 	return formatter;
 }
 
-#if TARGET_OS_IPHONE
-
-NSData *getDeviceId(void) {
-	UIDevice *device = [UIDevice currentDevice];
-	NSUUID *identifier = [device identifierForVendor];
-	uuid_t uuid;
-	[identifier getUUIDBytes:uuid];
-	return [NSData dataWithBytes:(const void *)uuid length:16];
-}
-
-#else
-
-NSData *getDeviceId(void) {
-	kern_return_t             kernResult;
-	mach_port_t               master_port;
-	CFMutableDictionaryRef    matchingDict;
-	io_iterator_t             iterator;
-	io_object_t               service;
-	CFDataRef                 macAddress = nil;
-
-	kernResult = IOMasterPort(MACH_PORT_NULL, &master_port);
-	if (kernResult != KERN_SUCCESS) {
-		printf("IOMasterPort returned %d\n", kernResult);
-		return nil;
-	}
-
-	matchingDict = IOBSDNameMatching(master_port, 0, "en0");
-	if (!matchingDict) {
-		printf("IOBSDNameMatching returned empty dictionary\n");
-		return nil;
-	}
-
-	kernResult = IOServiceGetMatchingServices(master_port, matchingDict, &iterator);
-	if (kernResult != KERN_SUCCESS) {
-		printf("IOServiceGetMatchingServices returned %d\n", kernResult);
-		return nil;
-	}
-
-	while((service = IOIteratorNext(iterator)) != 0) {
-		io_object_t parentService;
-
-		kernResult = IORegistryEntryGetParentEntry(service, kIOServicePlane, &parentService);
-		if (kernResult == KERN_SUCCESS) {
-			if (macAddress) CFRelease(macAddress);
-			macAddress = (CFDataRef) IORegistryEntryCreateCFProperty(parentService, CFSTR("IOMACAddress"), kCFAllocatorDefault, 0);
-			IOObjectRelease(parentService);
-		} else {
-			printf("IORegistryEntryGetParentEntry returned %d\n", kernResult);
-		}
-
-		IOObjectRelease(service);
-	}
-	IOObjectRelease(iterator);
-
-	return (__bridge NSData *)macAddress;
-}
-#endif
-
 BOOL checkPayload(const unsigned char *ptr, long len) {
 	const unsigned char *end = ptr + len;
 	const unsigned char *str_ptr;
@@ -185,11 +127,11 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 }
 
 #ifdef DEBUG
-BOOL verifyIapReceipt() {
+BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 	return YES;
 }
 #else
-BOOL verifyIapReceipt() {
+BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 
 	NSURL *dataUrl = [[NSBundle mainBundle] appStoreReceiptURL];
 	if (!dataUrl) {
@@ -383,14 +325,12 @@ BOOL verifyIapReceipt() {
 	//return NO;
 	//}
 
-	NSData *guidData = getDeviceId();
-
 	unsigned char hash[20];
 
 	// Create a hashing context for computation
 	SHA_CTX ctx;
 	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, [guidData bytes], (size_t) [guidData length]);
+	SHA1_Update(&ctx, [deviceIdentifier bytes], (size_t) [deviceIdentifier length]);
 	SHA1_Update(&ctx, [opaqueData bytes], (size_t) [opaqueData length]);
 	SHA1_Update(&ctx, [bundleIdData bytes], (size_t) [bundleIdData length]);
 	SHA1_Final(hash, &ctx);

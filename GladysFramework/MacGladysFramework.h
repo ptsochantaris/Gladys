@@ -16,7 +16,7 @@ FOUNDATION_EXPORT const unsigned char MacGladysFrameworkVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <GladysFramework/PublicHeader.h>
 
-BOOL verifyIapReceipt(void);
+BOOL verifyIapReceipt(NSData *deviceIdentifier);
 
 NSData *sha1(NSString *input);
 

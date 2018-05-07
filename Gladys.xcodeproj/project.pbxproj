@@ -44,6 +44,7 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
+		1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
@@ -1287,7 +1288,7 @@
 								enabled = 1;
 							};
 							com.apple.Sandbox = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.iCloud = {
 								enabled = 1;
@@ -1678,6 +1679,7 @@
 			files = (
 				161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
+				1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */,
 				161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,

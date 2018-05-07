@@ -1506,7 +1506,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				             on: self)
 				SKPaymentQueue.default().finishTransaction(t)
 			case .purchased, .restored:
-				infiniteMode = verifyIapReceipt()
+				reVerifyInfiniteMode()
 				SKPaymentQueue.default().finishTransaction(t)
 				displayIapSuccess()
 			case .purchasing, .deferred:
