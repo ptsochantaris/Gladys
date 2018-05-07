@@ -20,6 +20,32 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	func windowDidResignKey(_ notification: Notification) {
 		ViewController.shared.lockUnlockedItems()
 	}
+
+	func windowDidMove(_ notification: Notification) {
+		if let f = window?.frame {
+			lastWindowPosition = f
+		}
+	}
+
+	var lastWindowPosition: NSRect? {
+		set {
+			PersistedOptions.defaults.setValue(newValue?.dictionaryRepresentation, forKey: "lastWindowPosition")
+		}
+		get {
+			if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
+				return NSRect(dictionaryRepresentation: d)
+			} else {
+				return nil
+			}
+		}
+	}
+
+	override func windowDidLoad() {
+		super.windowDidLoad()
+		if let f = lastWindowPosition {
+			window?.setFrame(f, display: false)
+		}
+	}
 }
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
@@ -88,14 +114,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
-			self?.collection.reloadData()
+			self?.reloadData()
 			self?.postSave()
 		}
 		observers.append(a2)
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
-			self?.collection.reloadData()
+			self?.reloadData()
 		}
 		observers.append(a3)
 
@@ -343,7 +369,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 		Model.forceUpdateFilter(signalUpdate: false)
-		collection.reloadData()
+		reloadData()
 		return true
 	}
 
