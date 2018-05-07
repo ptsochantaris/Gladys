@@ -20,7 +20,6 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var separateItemsSwitch: NSButton!
 	@IBOutlet weak var moveSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
-	@IBOutlet weak var autoMergingSwitch: NSButton!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -29,7 +28,6 @@ final class Preferences: NSViewController {
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
 		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
-		autoMergingSwitch.integerValue = PersistedOptions.allowMergeOfTypeItems ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
@@ -100,10 +98,6 @@ final class Preferences: NSViewController {
 
 	@IBAction func autoLabelSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.dontAutoLabelNewItems = sender.integerValue == 1
-	}
-
-	@IBAction func mergingSwitchSelected(_ sender: NSButton) {
-		PersistedOptions.allowMergeOfTypeItems = sender.integerValue == 1
 	}
 
 	@IBAction func syncSwitchChanged(_ sender: NSButton) {

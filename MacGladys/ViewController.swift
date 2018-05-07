@@ -261,7 +261,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let p = NSSharingServicePicker(items: [shareableItem])
 		let f = cell.view.frame
 		let centerFrame = NSRect(origin: CGPoint(x: f.midX-1, y: f.midY-1), size: CGSize(width: 2, height: 2))
-		p.show(relativeTo: centerFrame, of: collection, preferredEdge: .minY)
+		DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+			p.show(relativeTo: centerFrame, of: self.collection, preferredEdge: .minY)
+		}
 	}
 
 	@IBAction func searchDoneSelected(_ sender: NSButton) {

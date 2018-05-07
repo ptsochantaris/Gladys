@@ -238,11 +238,11 @@ CA
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="354" height="275"/>
+                        <rect key="frame" x="0.0" y="0.0" width="354" height="255"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WFi-R6-MZO">
-                                <rect key="frame" x="18" y="239" width="95" height="18"/>
+                                <rect key="frame" x="18" y="219" width="95" height="18"/>
                                 <buttonCell key="cell" type="check" title="iCloud Sync" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="VGo-Z9-dOc">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -252,7 +252,7 @@ CA
                                 </connections>
                             </button>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="i0H-2v-kpv">
-                                <rect key="frame" x="119" y="240" width="16" height="16"/>
+                                <rect key="frame" x="119" y="220" width="16" height="16"/>
                             </progressIndicator>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
                                 <rect key="frame" x="205" y="13" width="135" height="32"/>
@@ -265,7 +265,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="llh-zy-rJm">
-                                <rect key="frame" x="137" y="230" width="101" height="32"/>
+                                <rect key="frame" x="137" y="210" width="101" height="32"/>
                                 <buttonCell key="cell" type="push" title="Sync Now" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="p7z-kI-FuX">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -275,7 +275,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
-                                <rect key="frame" x="18" y="205" width="318" height="18"/>
+                                <rect key="frame" x="18" y="185" width="318" height="18"/>
                                 <buttonCell key="cell" type="check" title="Display notes in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="d3Z-ev-luL">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -285,7 +285,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MFg-OO-DD8">
-                                <rect key="frame" x="18" y="171" width="318" height="18"/>
+                                <rect key="frame" x="18" y="151" width="318" height="18"/>
                                 <buttonCell key="cell" type="check" title="Create separate items for each data component" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DcH-th-xVD">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -295,7 +295,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AOr-VA-w9Q">
-                                <rect key="frame" x="18" y="137" width="318" height="18"/>
+                                <rect key="frame" x="18" y="117" width="318" height="18"/>
                                 <buttonCell key="cell" type="check" title="Remove items that are dragged out" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="biJ-iP-91A">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -305,7 +305,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U1O-fZ-P8U">
-                                <rect key="frame" x="18" y="103" width="318" height="18"/>
+                                <rect key="frame" x="18" y="83" width="318" height="18"/>
                                 <buttonCell key="cell" type="check" title="Do not auto-label new items" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="8f2-s0-exM">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -314,20 +314,8 @@ CA
                                     <action selector="autoLabelSwitchChanged:" target="FB0-Ob-ymN" id="Gm2-I3-cNw"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bY5-5O-SMb">
-                                <rect key="frame" x="18" y="69" width="318" height="18"/>
-                                <buttonCell key="cell" type="check" title="Allow merging of data components" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="IPT-Wz-Clm">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="mergingSwitchSelected:" target="FB0-Ob-ymN" id="wOF-kh-jwL"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="bY5-5O-SMb" firstAttribute="trailing" secondItem="U1O-fZ-P8U" secondAttribute="trailing" id="1nH-3m-4T5"/>
-                            <constraint firstItem="3y4-gH-maW" firstAttribute="top" secondItem="bY5-5O-SMb" secondAttribute="bottom" constant="30" id="456-bL-Bvk"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="leading" secondItem="NWy-dL-hAY" secondAttribute="leading" id="4yc-7I-KXp"/>
                             <constraint firstItem="llh-zy-rJm" firstAttribute="leading" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="8" id="5cO-1U-CEI"/>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="5dG-DY-QCA"/>
@@ -336,6 +324,7 @@ CA
                             <constraint firstItem="llh-zy-rJm" firstAttribute="centerY" secondItem="i0H-2v-kpv" secondAttribute="centerY" id="9VA-79-yjU"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="G62-lS-nXe"/>
                             <constraint firstAttribute="bottom" secondItem="3y4-gH-maW" secondAttribute="bottom" constant="20" id="HZ8-xc-v6r"/>
+                            <constraint firstItem="3y4-gH-maW" firstAttribute="top" secondItem="U1O-fZ-P8U" secondAttribute="bottom" constant="44" id="KsU-bf-vsG"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="top" secondItem="NWy-dL-hAY" secondAttribute="bottom" constant="20" id="LT9-Rr-gE5"/>
                             <constraint firstItem="i0H-2v-kpv" firstAttribute="leading" secondItem="WFi-R6-MZO" secondAttribute="trailing" constant="8" id="NAO-cN-tbA"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="leading" secondItem="AOr-VA-w9Q" secondAttribute="leading" id="Pna-Bw-gIo"/>
@@ -343,12 +332,10 @@ CA
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="top" secondItem="WFi-R6-MZO" secondAttribute="bottom" constant="20" id="Svo-hD-DgX"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="llh-zy-rJm" secondAttribute="trailing" constant="122" id="TBQ-DF-zo6"/>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="top" secondItem="voj-7Z-m9G" secondAttribute="top" constant="20" id="Zpt-o1-tmv"/>
-                            <constraint firstItem="bY5-5O-SMb" firstAttribute="leading" secondItem="U1O-fZ-P8U" secondAttribute="leading" id="ZsM-V4-NKr"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="top" secondItem="MFg-OO-DD8" secondAttribute="bottom" constant="20" id="bkW-GJ-u8C"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="AOr-VA-w9Q" secondAttribute="bottom" constant="20" id="eEm-sF-Yhm"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="f3Z-yf-jqF"/>
                             <constraint firstItem="i0H-2v-kpv" firstAttribute="centerY" secondItem="WFi-R6-MZO" secondAttribute="centerY" id="juX-U2-dtJ"/>
-                            <constraint firstItem="bY5-5O-SMb" firstAttribute="top" secondItem="U1O-fZ-P8U" secondAttribute="bottom" constant="20" id="mH7-AV-wkD"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="leading" secondItem="MFg-OO-DD8" secondAttribute="leading" id="rOo-AO-5F6"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="trailing" secondItem="AOr-VA-w9Q" secondAttribute="trailing" id="tQP-aG-cap"/>
                             <constraint firstItem="3y4-gH-maW" firstAttribute="trailing" secondItem="MFg-OO-DD8" secondAttribute="trailing" id="u1F-7V-0MR"/>
@@ -357,7 +344,6 @@ CA
                     </view>
                     <connections>
                         <outlet property="autoLabelSwitch" destination="U1O-fZ-P8U" id="IMg-Yz-P4k"/>
-                        <outlet property="autoMergingSwitch" destination="bY5-5O-SMb" id="ziW-tz-tKB"/>
                         <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
                         <outlet property="displayNotesSwitch" destination="NWy-dL-hAY" id="cTV-5A-q96"/>
                         <outlet property="moveSwitch" destination="AOr-VA-w9Q" id="LD5-Up-5EN"/>
@@ -369,7 +355,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-387" y="437"/>
+            <point key="canvasLocation" x="-387" y="426.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="OBC-bw-EFK">
