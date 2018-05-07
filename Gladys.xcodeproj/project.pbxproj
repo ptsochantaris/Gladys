@@ -186,6 +186,8 @@
 		169C07DE2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		169E5E061FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */; };
 		169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */; };
+		169E646A20A0F04E003CB4C0 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E646920A0F04E003CB4C0 /* Network.swift */; };
+		169E646B20A0F04E003CB4C0 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E646920A0F04E003CB4C0 /* Network.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
@@ -503,6 +505,7 @@
 		169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Indexing.swift"; sourceTree = "<group>"; };
 		169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFilePresenter.swift; sourceTree = "<group>"; };
 		169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Sharing.swift"; sourceTree = "<group>"; };
+		169E646920A0F04E003CB4C0 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16A4E7E01FBB844A00D60596 /* GladysWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GladysWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -709,6 +712,7 @@
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
+				169E646920A0F04E003CB4C0 /* Network.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1707,6 +1711,7 @@
 				161718DD2094D7F7005ABD6C /* Model.swift in Sources */,
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				161718DE2094D870005ABD6C /* Types+MainApp.swift in Sources */,
+				169E646B20A0F04E003CB4C0 /* Network.swift in Sources */,
 				168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1832,6 +1837,7 @@
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
+				169E646A20A0F04E003CB4C0 /* Network.swift in Sources */,
 				1602F3182030E4C90036E2B0 /* Data+Extensions.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				168A0CE81FBCD1D300B63951 /* PersistedOptions.swift in Sources */,

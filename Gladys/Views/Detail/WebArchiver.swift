@@ -23,7 +23,7 @@ final class WebArchiver {
 	}
 
 	public static func archiveFromUrl(_ url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
-		let task = URLSession.shared.dataTask(with: url) { data, response, error in
+		Network.start(with: url) { data, response, error in
 			if let data = data, let response = response as? HTTPURLResponse {
 				if response.mimeType == "text/html" {
 					archiveWebpageFromUrl(url: url, data: data, response: response, completionHandler: completionHandler)
@@ -39,7 +39,6 @@ final class WebArchiver {
 				completionHandler(nil, nil, .FetchHTMLError)
 			}
 		}
-		task.resume()
 	}
 
 	public static func archiveWebpageFromUrl(url: URL, data: Data, response: HTTPURLResponse, completionHandler: @escaping ArchiveCompletionHandler) {
@@ -62,7 +61,7 @@ final class WebArchiver {
 				continue
 			}
 			downloadGroup.enter()
-			let task = URLSession.shared.dataTask(with: resourceUrl) { data, response, error in
+			Network.start(with: resourceUrl) { data, response, error in
 
 				guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
 					log("Download failed: \(path)")
@@ -87,7 +86,6 @@ final class WebArchiver {
 				log("Downloaded \(path)")
 				downloadGroup.leave()
 			}
-			task.resume()
 		}
 
 		downloadGroup.notify(queue: assembleQueue) {

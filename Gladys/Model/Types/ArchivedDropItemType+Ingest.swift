@@ -413,7 +413,7 @@ extension ArchivedDropItemType {
 			log("\(U): Investigating possible HTML title from this URL: \(url.absoluteString)")
 
 			request.httpMethod = "HEAD"
-			let headFetch = URLSession.shared.dataTask(with: request) { data, response, error in
+			Network.start(with: request) { data, response, error in
 				if let response = response as? HTTPURLResponse {
 					if let type = response.mimeType, type.hasPrefix("text/html") {
 						log("\(U): Content for this is HTML, will try to fetch title")
@@ -428,13 +428,12 @@ extension ArchivedDropItemType {
 					completion(nil, nil)
 				}
 			}
-			headFetch.resume()
 
 		} else {
 
 			log("\(U): Fetching HTML from URL: \(url.absoluteString)")
 
-			let fetch = URLSession.shared.dataTask(with: request) { data, response, error in
+			Network.start(with: request) { data, response, error in
 				if let data = data,
 					let text = (String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii)),
 					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
@@ -501,14 +500,13 @@ extension ArchivedDropItemType {
 					completion(nil, nil)
 				}
 			}
-			fetch.resume()
 		}
 	}
 
 	private static func fetchImage(url: URL?, completion: @escaping (UIImage?)->Void) {
 		guard let url = url else { completion(nil); return }
 		let request = ArchivedDropItemType.webRequest(for: url)
-		URLSession.shared.dataTask(with: request) { data, response, error in
+		Network.start(with: request) { data, response, error in
 			if let data = data {
 				log("Image fetched for \(url)")
 				completion(UIImage(data: data))
@@ -516,7 +514,7 @@ extension ArchivedDropItemType {
 				log("Error fetching site icon from \(url)")
 				completion(nil)
 			}
-		}.resume()
+		}
 	}
 
 	private func completeIngest() {
