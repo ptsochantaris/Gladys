@@ -1,18 +1,21 @@
 //
-//  CloudManager+MainApp.swift
+//  CloudManager+UICommon.swift
 //  Gladys
 //
-//  Created by Paul Tsochantaris on 27/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
+//  Created by Paul Tsochantaris on 08/05/2018.
+//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
+import Foundation
 import CloudKit
+#if os(iOS)
 import UIKit
+#else
+import Cocoa
+#endif
 
 extension CloudManager {
 
-	//////////////////////////////////////////////// UI
-	
 	private static let agoFormatter: DateComponentsFormatter = {
 		let f = DateComponentsFormatter()
 		f.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute, .second]
@@ -38,30 +41,6 @@ extension CloudManager {
 			return "Never"
 		}
 	}
-
-	/////////////////////////////////////////////////// Push
-
-	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		UIApplication.shared.applicationIconBadgeNumber = 0
-		if !syncSwitchedOn { return }
-
-		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
-		if notification.subscriptionID == "private-changes" {
-			log("Received zone change push")
-			if UIApplication.shared.applicationState == .background {
-				Model.reloadDataIfNeeded()
-			}
-			sync { error in
-				if error != nil {
-					completionHandler(.failed)
-				} else {
-					completionHandler(.newData)
-				}
-			}
-		}
-	}
-
-	///////////////////////////////////////////////// Activation
 
 	static func activate(completion: @escaping (Error?)->Void) {
 
@@ -106,10 +85,16 @@ extension CloudManager {
 					uuidSequence = []
 					uuidSequenceRecord = nil
 					zoneChangeToken = nil
+					#if MAINAPP
 					shareActionIsActioningIds = []
+					#endif
 					syncSwitchedOn = false
 					lastiCloudAccount = nil
+					#if os(iOS)
 					UIApplication.shared.unregisterForRemoteNotifications()
+					#else
+					NSApplication.shared.unregisterForRemoteNotifications()
+					#endif
 					for item in Model.drops {
 						item.cloudKitRecord = nil
 						for typeItem in item.typeItems {
@@ -128,7 +113,11 @@ extension CloudManager {
 
 	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
 
+		#if os(iOS)
 		UIApplication.shared.registerForRemoteNotifications()
+		#else
+		NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
+		#endif
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
@@ -172,8 +161,6 @@ extension CloudManager {
 		go(fetchInitialUUIDSequence)
 	}
 
-	/////////////////////////////////////////// Wipe Zone
-
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [zoneId])
@@ -188,9 +175,20 @@ extension CloudManager {
 		go(deleteZone)
 	}
 
-	/////////////////////////////////////////// Fetching
+	private static func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
+		let childrenOfThisItem = drawChildrenFrom.filter {
+			if let ref = $0["parent"] as? CKReference {
+				if ref.recordID == record.recordID {
+					return true
+				}
+			}
+			return false
+		}
+		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
+		Model.drops.insert(item, at: 0)
+	}
 
-	private static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
+	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
 
 		var updatedSequence = false
 		var newDrops = [CKRecord]()
@@ -370,175 +368,5 @@ extension CloudManager {
 			}
 		}
 		go(operation)
-	}
-
-	private static func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
-		let childrenOfThisItem = drawChildrenFrom.filter {
-			if let ref = $0["parent"] as? CKReference {
-				if ref.recordID == record.recordID {
-					return true
-				}
-			}
-			return false
-		}
-		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
-		Model.drops.insert(item, at: 0)
-	}
-
-	////////////////////////////////////////////////
-
-	static func opportunisticSyncIfNeeded(isStartup: Bool) {
-		if syncSwitchedOn && !syncing && (isStartup || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60) {
-			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
-			sync { error in
-				if let error = error {
-					log("Error in foregrounding sync: \(error.finalDescription)")
-				}
-			}
-		}
-	}
-
-	/////////////////////////////////////////////// Whole sync
-
-	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
-
-		if let l = lastiCloudAccount {
-			let newToken = FileManager.default.ubiquityIdentityToken
-			if !l.isEqual(newToken) {
-				// shutdown
-				deactivate(force: true) { _ in
-					completion(nil)
-				}
-				if newToken == nil {
-					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.", on: ViewController.shared)
-				} else {
-					genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.", on: ViewController.shared)
-				}
-				return
-			}
-		}
-
-		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil) { error in
-			guard let ckError = error as? CKError else {
-				completion(error)
-				return
-			}
-
-			switch ckError.code {
-
-			case .notAuthenticated,
-				 .assetNotAvailable,
-			     .managedAccountRestricted,
-			     .missingEntitlement,
-			     .zoneNotFound,
-			     .incompatibleVersion,
-			     .userDeletedZone,
-			     .badDatabase,
-			     .badContainer:
-
-				// shutdown
-				if let e = error {
-					genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.finalDescription)\"", on: ViewController.shared)
-				}
-				deactivate(force: true) { _ in
-					completion(nil)
-				}
-
-			case .assetFileModified,
-			     .changeTokenExpired,
-			     .requestRateLimited,
-			     .serverResponseLost,
-			     .serviceUnavailable,
-			     .zoneBusy:
-
-				let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 3.0
-				syncRateLimited = true
-				DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
-					syncRateLimited = false
-					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: nil, completion: completion)
-				}
-
-			case .alreadyShared,
-			     .assetFileNotFound,
-			     .batchRequestFailed,
-			     .constraintViolation,
-			     .internalError,
-			     .invalidArguments,
-			     .limitExceeded,
-			     .permissionFailure,
-			     .participantMayNeedVerification,
-			     .quotaExceeded,
-			     .referenceViolation,
-			     .serverRejectedRequest,
-			     .tooManyParticipants,
-			     .operationCancelled,
-			     .resultsTruncated,
-			     .unknownItem,
-			     .serverRecordChanged,
-			     .networkFailure,
-			     .networkUnavailable,
-			     .partialFailure:
-
-				// regular failure
-				completion(error)
-			}
-		}
-	}
-
-	static private func _sync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier?, completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn { completion(nil); return }
-
-		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
-			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
-			completion(nil)
-			return
-		}
-
-		if syncing && !force {
-			syncDirty = true
-			completion(nil)
-			return
-		}
-
-		let bgTask: UIBackgroundTaskIdentifier
-		if let e = existingBgTask {
-			bgTask = e
-		} else {
-			log("Starting cloud sync background task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
-		}
-
-		syncing = true
-		syncDirty = false
-
-		func done(_ error: Error?) {
-			syncing = false
-			if let e = error {
-				log("Sync failure: \(e.finalDescription)")
-			}
-			completion(error)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-				log("Ending cloud sync background task")
-				UIApplication.shared.endBackgroundTask(bgTask)
-			}
-		}
-
-		sendUpdatesUp { error in
-			if let error = error {
-				done(error)
-				return
-			}
-
-			fetchDatabaseChanges { error in
-				if let error = error {
-					done(error)
-				} else if syncDirty {
-					_sync(force: true, overridingWiFiPreference:overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
-				} else {
-					lastSyncCompletion = Date()
-					done(nil)
-				}
-			}
-		}
 	}
 }

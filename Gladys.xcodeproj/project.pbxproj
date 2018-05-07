@@ -48,10 +48,10 @@
 		160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
-		161089931FA31D0D0095FE34 /* CloudManager+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089921FA31D0D0095FE34 /* CloudManager+MainApp.swift */; };
-		161089951FA31D810095FE34 /* CloudManager+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089941FA31D810095FE34 /* CloudManager+Storage.swift */; };
+		161089931FA31D0D0095FE34 /* CloudManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089921FA31D0D0095FE34 /* CloudManager+UI.swift */; };
+		161089951FA31D810095FE34 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089941FA31D810095FE34 /* CloudManager+iOS.swift */; };
 		161089971FA320250095FE34 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
-		161089981FA320280095FE34 /* CloudManager+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089941FA31D810095FE34 /* CloudManager+Storage.swift */; };
+		161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089941FA31D810095FE34 /* CloudManager+iOS.swift */; };
 		161089991FA320560095FE34 /* Types+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162027901FA1A9FC00E8D964 /* Types+MainApp.swift */; };
 		1610899B1FA322260095FE34 /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
 		1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
@@ -242,6 +242,8 @@
 		16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
 		16CD7D9620A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
 		16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
+		16CD7D9D20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
+		16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -428,8 +430,8 @@
 		160A54641F90B2BE001ADC9E /* Model+FileProviderCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+FileProviderCoordinator.swift"; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
-		161089921FA31D0D0095FE34 /* CloudManager+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+MainApp.swift"; sourceTree = "<group>"; };
-		161089941FA31D810095FE34 /* CloudManager+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Storage.swift"; sourceTree = "<group>"; };
+		161089921FA31D0D0095FE34 /* CloudManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+UI.swift"; sourceTree = "<group>"; };
+		161089941FA31D810095FE34 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+iOS.swift"; sourceTree = "<group>"; };
 		1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Cloud.swift"; sourceTree = "<group>"; };
 		1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Cloud.swift"; sourceTree = "<group>"; };
 		1611485B209FA1B6008BB332 /* MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MacGladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -564,6 +566,7 @@
 		16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Common.swift"; sourceTree = "<group>"; };
 		16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UICommon.swift"; sourceTree = "<group>"; };
 		16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+CopyCommon.swift"; sourceTree = "<group>"; };
+		16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+UICommon.swift"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -756,8 +759,9 @@
 			isa = PBXGroup;
 			children = (
 				16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */,
-				161089941FA31D810095FE34 /* CloudManager+Storage.swift */,
-				161089921FA31D0D0095FE34 /* CloudManager+MainApp.swift */,
+				161089941FA31D810095FE34 /* CloudManager+iOS.swift */,
+				161089921FA31D0D0095FE34 /* CloudManager+UI.swift */,
+				16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */,
 				168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */,
 			);
 			path = Cloud;
@@ -1737,6 +1741,7 @@
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
+				16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
@@ -1831,7 +1836,7 @@
 				16CD7D7120A0FE8B0039E6C2 /* Network.swift in Sources */,
 				161089A11FA322C10095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
-				161089981FA320280095FE34 /* CloudManager+Storage.swift in Sources */,
+				161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */,
 				161089991FA320560095FE34 /* Types+MainApp.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
@@ -1906,7 +1911,7 @@
 				16CD7D9220A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
-				161089931FA31D0D0095FE34 /* CloudManager+MainApp.swift in Sources */,
+				161089931FA31D0D0095FE34 /* CloudManager+UI.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
@@ -1919,6 +1924,7 @@
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* ArchivedDropItemType.swift in Sources */,
+				16CD7D9D20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
@@ -1931,7 +1937,7 @@
 				163845FC1EF8629700CB8D97 /* Types.swift in Sources */,
 				16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
-				161089951FA31D810095FE34 /* CloudManager+Storage.swift in Sources */,
+				161089951FA31D810095FE34 /* CloudManager+iOS.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
