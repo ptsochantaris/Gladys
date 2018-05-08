@@ -210,22 +210,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		]
 	}
 
-	private func checkInfiniteMode(for insertCount: Int) -> Bool {
-		if !infiniteMode && insertCount > 0 {
-			let newTotal = Model.drops.count + insertCount
-			if newTotal > nonInfiniteItemLimit {
-				IAPManager.shared.displayRequest(newTotal: newTotal)
-				return true
-			}
-		}
-		return false
-	}
-
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
 		endMergeMode()
 
-		if checkInfiniteMode(for: countInserts(in: coordinator.session)) {
+		if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
 			return
 		}
 
@@ -710,7 +699,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			return .noData
 		}
 
-		if checkInfiniteMode(for: 1) {
+		if IAPManager.shared.checkInfiniteMode(for: 1) {
 			return .tooManyItems
 		}
 

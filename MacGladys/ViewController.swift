@@ -421,6 +421,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return count > 0 ? extractor : nil
 		}
 
+		if IAPManager.shared.checkInfiniteMode(for: itemProviders.count) {
+			return false
+		}
+
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
 				loadingUUIDS.insert(newItem.uuid)
@@ -696,10 +700,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
 					   cancelTitle: String? = nil) {
 
+		assert(Thread.isMainThread)
+
 		if Model.isFiltering {
 			ViewController.shared.resetSearch(andLabels: true)
 		}
 
-
+		let a = NSAlert()
+		a.messageText = title
+		a.informativeText = subtitle
+		if let cancelTitle = cancelTitle {
+			a.addButton(withTitle: cancelTitle)
+		}
+		if let actionTitle = actionTitle {
+			a.addButton(withTitle: actionTitle)
+		}
+		if let destructiveTitle = destructiveTitle {
+			a.addButton(withTitle: destructiveTitle)
+		}
+		a.beginSheetModal(for: view.window!) { response in
+			switch response.rawValue {
+			case 1001:
+				actionAction?()
+			case 1002:
+				destructiveAction?()
+			default:
+				break
+			}
+		}
 	}
 }
