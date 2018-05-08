@@ -145,8 +145,8 @@
 		168A0CE81FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
-		168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
-		168A0CED1FBCE9A100B63951 /* compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* compression.swift */; };
+		168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
+		168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
@@ -518,7 +518,7 @@
 		168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "GladysWatch Extension.entitlements"; sourceTree = "<group>"; };
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
-		168A0CEB1FBCE9A100B63951 /* compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = compression.swift; sourceTree = "<group>"; };
+		168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Compression.swift"; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
 		168D2CAE209E0770005041CF /* ComponentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComponentCell.xib; sourceTree = "<group>"; };
@@ -711,6 +711,7 @@
 				1602F3172030E4C90036E2B0 /* Data+Extensions.swift */,
 				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
 				1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */,
+				168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -747,13 +748,11 @@
 			isa = PBXGroup;
 			children = (
 				16CD7DC820A12B770039E6C2 /* Model */,
-				1602F3192030E4D70036E2B0 /* Extensions */,
 				1610899D1FA322580095FE34 /* Items */,
 				1610899E1FA3225C0095FE34 /* Types */,
 				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
-				168A0CEB1FBCE9A100B63951 /* compression.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
 				169E646920A0F04E003CB4C0 /* Network.swift */,
@@ -942,6 +941,7 @@
 				16E27BCC1EFC5F9D00FD0818 /* Support */,
 				161089961FA3200F0095FE34 /* Cloud */,
 				16D2C7111EF5A6D3009B97F9 /* Views */,
+				1602F3192030E4D70036E2B0 /* Extensions */,
 				16101E8F1EF5A23000CCBD3C /* Models */,
 			);
 			path = Gladys;
@@ -1928,7 +1928,7 @@
 				161089A01FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */,
-				168A0CEC1FBCE9A100B63951 /* compression.swift in Sources */,
+				168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
@@ -2034,7 +2034,7 @@
 				16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */,
 				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
-				168A0CED1FBCE9A100B63951 /* compression.swift in Sources */,
+				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 				16A4E7F61FBB844A00D60596 /* ComplicationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
