@@ -139,10 +139,9 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 					genericAlert(title: "There was an error completing this purchase",
 								 message: t.error?.finalDescription,
 								 on: ViewController.shared)
-					SKPaymentQueue.default().finishTransaction(t)
 				case .purchased, .restored:
-					reVerifyInfiniteMode()
 					SKPaymentQueue.default().finishTransaction(t)
+					reVerifyInfiniteMode()
 					self?.displaySuccess()
 				case .purchasing, .deferred:
 					break
