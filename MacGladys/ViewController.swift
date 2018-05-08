@@ -9,11 +9,13 @@
 import Cocoa
 import MacGladysFramework
 
-func genericAlert(title: String, message: String) {
+func genericAlert(title: String, message: String?, on viewController: NSViewController) {
 	let a = NSAlert()
 	a.messageText = title
-	a.informativeText = message
-	a.runModal()
+	if let message = message {
+		a.informativeText = message
+	}
+	a.beginSheetModal(for: viewController.view.window!, completionHandler: nil)
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
@@ -287,13 +289,23 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@IBAction func searchDoneSelected(_ sender: NSButton) {
-		resetSearch()
+		resetSearch(andLabels: false)
 	}
 
-	private func resetSearch() {
+	private func resetSearch(andLabels: Bool) {
 		searchBar.stringValue = ""
 		searchHolder.isHidden = true
 		updateSearch()
+
+		if andLabels {
+			Model.disableAllLabels()
+		}
+
+		if Model.filter == nil { // because the next line won't have any effect if it's already nil
+			Model.forceUpdateFilter(signalUpdate: true)
+		} else {
+			Model.filter = nil
+		}
 	}
 
 	@IBAction func findSelected(_ sender: NSMenuItem) {
@@ -313,7 +325,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func highlightItem(with identifier: String, andOpen: Bool) {
-		resetSearch()
+		resetSearch(andLabels: true)
 		if let item = Model.item(uuid: identifier) {
 			if let i = Model.drops.index(of: item) {
 				let ip = IndexPath(item: i, section: 0)
@@ -677,5 +689,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
 			self?.emptyLabel.animator().alphaValue = 0
 		}
+	}
+
+	func showIAPPrompt(title: String, subtitle: String,
+					   actionTitle: String? = nil, actionAction: (()->Void)? = nil,
+					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
+					   cancelTitle: String? = nil) {
+
+		if Model.isFiltering {
+			ViewController.shared.resetSearch(andLabels: true)
+		}
+
+
 	}
 }

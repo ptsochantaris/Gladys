@@ -61,6 +61,6 @@ final class AboutController: GladysViewController {
 
 	@IBAction func unlimitedSelected(_ sender: UIButton) {
 		done()
-		ViewController.shared.displayIAPRequest(newTotal: -1)
+		IAPManager.shared.displayRequest(newTotal: -1)
 	}
 }

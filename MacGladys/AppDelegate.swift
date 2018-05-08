@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
 		}
+		IAPManager.shared.start()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {

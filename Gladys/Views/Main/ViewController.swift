@@ -1,7 +1,6 @@
 
 import UIKit
 import CoreSpotlight
-import StoreKit
 import GladysFramework
 
 enum PasteResult {
@@ -34,8 +33,8 @@ let mainWindow: UIWindow = {
 	return UIApplication.shared.windows.first!
 }()
 
-final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate, SKProductsRequestDelegate,
-	UISearchControllerDelegate, UISearchResultsUpdating, SKPaymentTransactionObserver, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
+final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate,
+	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
@@ -215,7 +214,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if !infiniteMode && insertCount > 0 {
 			let newTotal = Model.drops.count + insertCount
 			if newTotal > nonInfiniteItemLimit {
-				displayIAPRequest(newTotal: newTotal)
+				IAPManager.shared.displayRequest(newTotal: newTotal)
 				return true
 			}
 		}
@@ -634,9 +633,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		updateEmptyView(animated: false)
 		emptyView?.alpha = PersistedOptions.darkMode ? 0.5 : 1
 		blurb("Ready! Drop me stuff.")
-
-		SKPaymentQueue.default().add(self)
-		fetchIap()
 
 		checkForUpgrade()
 		cloudStatusChanged()
@@ -1295,7 +1291,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
-	private func resetSearch(andLabels: Bool) {
+	func resetSearch(andLabels: Bool) {
 		guard let s = navigationItem.searchController else { return }
 		s.searchResultsUpdater = nil
 		s.delegate = nil
@@ -1351,130 +1347,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		archivedItemCollectionView.performBatchUpdates({
 			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
 		})
-	}
-
-	///////////////////////////// IAP
-
-	private var iapFetchCallbackCount: Int?
-	private var infiniteModeItem: SKProduct?
-
-	private func fetchIap() {
-		if !infiniteMode {
-			let r = SKProductsRequest(productIdentifiers: ["INFINITE"])
-			r.delegate = self
-			r.start()
-		}
-	}
-
-	func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-		infiniteModeItem = response.products.first
-		iapFetchCompletion()
-	}
-
-	func request(_ request: SKRequest, didFailWithError error: Error) {
-		log("Error fetching IAP items: \(error.finalDescription)")
-		iapFetchCompletion()
-	}
-
-	private func iapFetchCompletion() {
-		if let c = iapFetchCallbackCount {
-			iapFetchCallbackCount = nil
-			displayIAPRequest(newTotal: c)
-		}
-	}
-
-	func displayIAPRequest(newTotal: Int) {
-
-		guard infiniteMode == false else { return }
-
-		if Model.isFiltering {
-			resetSearch(andLabels: true)
-		}
-		dismissAnyPopOver()
-
-		guard let infiniteModeItem = infiniteModeItem else {
-			let message: String
-			if newTotal == -1 {
-				message = "We cannot seem to fetch the in-app purchase information at this time. Please check your Internet connection and try again in a moment."
-			} else {
-				message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
-			}
-			let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
-			a.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { action in
-				self.iapFetchCallbackCount = newTotal
-				self.fetchIap()
-			}))
-			a.addAction(UIAlertAction(title: "Later", style: .cancel))
-			present(a, animated: true) {
-				self.fetchIap()
-			}
-			return
-		}
-
-		let f = NumberFormatter()
-		f.numberStyle = .currency
-		f.locale = infiniteModeItem.priceLocale
-		let infiniteModeItemPrice = f.string(from: infiniteModeItem.price)!
-		let message: String
-		if newTotal == -1 {
-			message = "You can expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
-		} else {
-			message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or expand Gladys to hold unlimited items with a one-time purchase of \(infiniteModeItemPrice)"
-		}
-
-		let a = UIAlertController(title: "Gladys Unlimited", message: message, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: "Buy for \(infiniteModeItemPrice)", style: .destructive, handler: { action in
-			let payment = SKPayment(product: infiniteModeItem)
-			SKPaymentQueue.default().add(payment)
-		}))
-		a.addAction(UIAlertAction(title: "Restore previous purchase", style: .default, handler: { action in
-			SKPaymentQueue.default().restoreCompletedTransactions()
-		}))
-		if newTotal == -1 {
-			a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-		} else {
-			a.addAction(UIAlertAction(title: "Never mind, I'll delete old stuff", style: .cancel))
-		}
-		present(a, animated: true)
-	}
-
-	private func displayIapSuccess() {
-		genericAlert(title: "You can now add unlimited items!",
-		             message: "Thank you for supporting Gladys!",
-		             on: self)
-	}
-
-	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-		if !infiniteMode {
-			genericAlert(title: "Purchase could not be restored",
-			             message: "Are you sure you purchased this from the App Store account that you are currently using?",
-			             on: self)
-		}
-	}
-
-	func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-		genericAlert(title: "There was an error restoring your purchase",
-		             message: error.finalDescription,
-		             on: self)
-	}
-
-	func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-		for t in transactions.filter({ $0.payment.productIdentifier == "INFINITE" }) {
-			switch t.transactionState {
-			case .failed:
-				SKPaymentQueue.default().finishTransaction(t)
-				genericAlert(title: "There was an error completing this purchase",
-				             message: t.error?.finalDescription,
-				             on: self)
-				SKPaymentQueue.default().finishTransaction(t)
-			case .purchased, .restored:
-				reVerifyInfiniteMode()
-				SKPaymentQueue.default().finishTransaction(t)
-				displayIapSuccess()
-			case .purchasing, .deferred:
-				break
-			}
-		}
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -1561,6 +1433,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			UIKeyCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), discoverabilityTitle: "Toggle Edit Mode")
 		])
 		return a
+	}
+
+	func showIAPPrompt(title: String, subtitle: String,
+					   actionTitle: String? = nil, actionAction: (()->Void)? = nil,
+					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
+					   cancelTitle: String? = nil) {
+
+		if Model.isFiltering {
+			ViewController.shared.resetSearch(andLabels: true)
+		}
+
+		ViewController.shared.dismissAnyPopOver()
+
+		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
+		if let destructiveTitle = destructiveTitle {
+			a.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: { _ in destructiveAction?() }))
+		}
+		if let actionTitle = actionTitle {
+			a.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { _ in actionAction?() }))
+		}
+		if let cancelTitle = cancelTitle {
+			a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
+		}
+		present(a, animated: true)
 	}
 }
 

@@ -156,6 +156,8 @@
 		168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE05E2095363900E740E9 /* NSImage+Extensions.swift */; };
 		168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0602095B3C900E740E9 /* DropCell.swift */; };
 		168FE0632095D16800E740E9 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0622095D16800E740E9 /* Preferences.swift */; };
+		1695218920A23B5200FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
+		1695218A20A240A000FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -528,6 +530,7 @@
 		168FE05E2095363900E740E9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		1695218820A23B5200FFE817 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -756,6 +759,7 @@
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
 				169E646920A0F04E003CB4C0 /* Network.swift */,
+				1695218820A23B5200FFE817 /* IAPManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1768,6 +1772,7 @@
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
+				1695218A20A240A000FFE817 /* IAPManager.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
@@ -1994,6 +1999,7 @@
 				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
+				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 				1610899B1FA322260095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
@@ -2153,7 +2159,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2186,11 +2192,11 @@
 		1611485A209FA1B6008BB332 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2259,7 +2265,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = MacGladys/MacGladys.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
@@ -2272,8 +2278,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D MAC";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e9ee1117-937e-4bd1-be42-7119f843e8c5";
-				PROVISIONING_PROFILE_SPECIFIER = "MacGladys Distribution";
+				PROVISIONING_PROFILE = "7175c2f4-2cf4-44c8-b767-365ed55cf10b";
+				PROVISIONING_PROFILE_SPECIFIER = "MacGladys App Store";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
 			};
@@ -2464,7 +2470,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2629,7 +2635,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;

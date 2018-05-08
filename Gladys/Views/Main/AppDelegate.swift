@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-				ViewController.shared.displayIAPRequest(newTotal: t)
+				IAPManager.shared.displayRequest(newTotal: t)
 			}
 			return true
 
@@ -70,6 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 		log("Initial reachability status: \(reachability.status.name)")
 		CallbackSupport.setupCallbackSupport()
+		IAPManager.shared.start()
 		return true
 	}
 

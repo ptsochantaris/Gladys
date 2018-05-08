@@ -22,4 +22,4 @@ NSData *sha1(NSString *input);
 
 NSString *bundleId = @"build.bru.Gladys.GladysFramework";
 NSString *receiptId = @"build.bru.Gladys";
-
+NSString *infiniteId = @"INFINITE";

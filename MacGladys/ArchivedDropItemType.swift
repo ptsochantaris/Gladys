@@ -479,7 +479,7 @@ final class ArchivedDropItemType: Codable {
 				} else {
 					message = "macOS does not recognise the type of this link"
 				}
-				genericAlert(title: "Can't Open", message: message)
+				genericAlert(title: "Can't Open", message: message, on: viewController)
 			}
 		} else {
 			NSWorkspace.shared.openFile(bytesPath.path)

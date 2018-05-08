@@ -116,7 +116,7 @@ final class Preferences: NSViewController {
 			CloudManager.deactivate(force: false) { error in
 				DispatchQueue.main.async {
 					if let error = error {
-						genericAlert(title: "Could not change state", message: error.finalDescription)
+						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
 					}
 				}
 			}
@@ -124,7 +124,7 @@ final class Preferences: NSViewController {
 			CloudManager.activate { error in
 				DispatchQueue.main.async {
 					if let error = error {
-						genericAlert(title: "Could not change state", message: error.finalDescription)
+						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
 					}
 				}
 			}

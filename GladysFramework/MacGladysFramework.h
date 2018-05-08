@@ -22,3 +22,4 @@ NSData *sha1(NSString *input);
 
 NSString *bundleId = @"build.bru.MacGladys.MacGladysFramework";
 NSString *receiptId = @"build.bru.MacGladys";
+NSString *infiniteId = @"MACINFINITE";
