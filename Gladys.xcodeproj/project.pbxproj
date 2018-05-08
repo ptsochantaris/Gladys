@@ -250,6 +250,10 @@
 		16CD7DB620A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
 		16CD7DB820A124390039E6C2 /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
 		16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
+		16CD7DC020A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */; };
+		16CD7DC220A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */; };
+		16CD7DC320A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */; };
+		16CD7DC620A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -574,6 +578,7 @@
 		16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+UICommon.swift"; sourceTree = "<group>"; };
 		16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Common.swift"; sourceTree = "<group>"; };
 		16CD7DB720A124390039E6C2 /* Model+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UICommon.swift"; sourceTree = "<group>"; };
+		16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SavingCommon.swift"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -755,6 +760,7 @@
 				16CD7DB720A124390039E6C2 /* Model+UICommon.swift */,
 				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
 				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
+				16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */,
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
@@ -1762,6 +1768,7 @@
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
+				16CD7DC620A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
@@ -1802,6 +1809,7 @@
 				169C07DC2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1619E8221EFF3A36000087DD /* Model.swift in Sources */,
 				1602F3212030E5870036E2B0 /* UIImage+Extensions.swift in Sources */,
+				16CD7DC320A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */,
 				169E5E061FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
 				1697631A1F15680600537776 /* ArchivedDropItem+Tagging.swift in Sources */,
 				1602F3222030E5A50036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -1846,6 +1854,7 @@
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				161089971FA320250095FE34 /* CloudManager.swift in Sources */,
 				16CD7D7120A0FE8B0039E6C2 /* Network.swift in Sources */,
+				16CD7DC220A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */,
 				161089A11FA322C10095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
 				161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */,
@@ -1933,6 +1942,7 @@
 				167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */,
 				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
 				16E034FA20A0D8E200B9EE1A /* Greetings.swift in Sources */,
+				16CD7DC020A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */,
 				1657B8CC1FD4482A00EC480D /* ArchivedDropItemType+Preview.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
