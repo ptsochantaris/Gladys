@@ -78,7 +78,7 @@
 		161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
 		161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
-		161718E32094DEB0005ABD6C /* CloudManagerMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718E22094DEB0005ABD6C /* CloudManagerMac.swift */; };
+		161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */; };
 		161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899A1FA322260095FE34 /* ArchivedDropItem+Cloud.swift */; };
 		161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1610899F1FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift */; };
 		161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
@@ -241,6 +241,13 @@
 		16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16CD7D9D20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
 		16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
+		16CD7DB020A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB120A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB220A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB320A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB420A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB520A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
+		16CD7DB620A121BD0039E6C2 /* Model+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -446,7 +453,7 @@
 		161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
 		161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
 		161718DC2094D7F7005ABD6C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		161718E22094DEB0005ABD6C /* CloudManagerMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManagerMac.swift; sourceTree = "<group>"; };
+		161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mac.swift"; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		1619E8121EFF3745000087DD /* GladysFiles.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysFiles.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1619E8141EFF3745000087DD /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderExtension.swift; sourceTree = "<group>"; };
@@ -563,6 +570,7 @@
 		16CD7D8E20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+UICommon.swift"; sourceTree = "<group>"; };
 		16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+CopyCommon.swift"; sourceTree = "<group>"; };
 		16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+UICommon.swift"; sourceTree = "<group>"; };
+		16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Common.swift"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -737,6 +745,7 @@
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
 				16A223E41EF67FC7009EEEBC /* Model.swift */,
+				16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */,
 				16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */,
 				168A0CEB1FBCE9A100B63951 /* compression.swift */,
 				16EDB3761F2361EB001CC65C /* Model+MainApp.swift */,
@@ -804,7 +813,7 @@
 				161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */,
 				161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */,
 				161718DC2094D7F7005ABD6C /* Model.swift */,
-				161718E22094DEB0005ABD6C /* CloudManagerMac.swift */,
+				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
 				161718CA2094D334005ABD6C /* Assets.xcassets */,
 				161718CF2094D334005ABD6C /* Info.plist */,
@@ -1734,6 +1743,7 @@
 				16CD7D8520A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
+				16CD7DB620A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
@@ -1748,7 +1758,7 @@
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
-				161718E32094DEB0005ABD6C /* CloudManagerMac.swift in Sources */,
+				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
@@ -1778,6 +1788,7 @@
 				169763181F1566DE00537776 /* ArchivedDropItemType+Tagging.swift in Sources */,
 				162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */,
 				1619E8171EFF3745000087DD /* FileProviderItem.swift in Sources */,
+				16CD7DB320A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */,
 				1619E8251EFF3B54000087DD /* Types.swift in Sources */,
 				1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */,
@@ -1797,6 +1808,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
+				16CD7DB120A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */,
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
@@ -1817,6 +1829,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16CD7DB220A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				1604A3351F091D79005A477E /* Types.swift in Sources */,
 				16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */,
 				168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
@@ -1858,6 +1871,7 @@
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
 				169C07DE2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
+				16CD7DB520A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
 				16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
@@ -1887,6 +1901,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16CD7D7320A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
+				16CD7DB020A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				161089A01FA322A90095FE34 /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
@@ -1967,6 +1982,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16CD7DB420A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				16969BAD1FB0E675007B2F77 /* ArchivedDropItemType.swift in Sources */,
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,

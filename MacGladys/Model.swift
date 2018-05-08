@@ -4,41 +4,6 @@ import CoreSpotlight
 
 final class Model {
 
-	static var drops = [ArchivedDropItem]()
-	static var dataFileLastModified = Date.distantPast
-
-	static var appStorageUrl: URL = {
-		return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!
-	}()
-
-	static var itemsDirectoryUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
-	}()
-
-	static var legacyFileUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
-	}()
-
-	static func modificationDate(for url: URL) -> Date? {
-		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
-	}
-
-	static func item(uuid: String) -> ArchivedDropItem? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.first { $0.uuid == uuidData }
-	}
-
-	static func item(uuid: UUID) -> ArchivedDropItem? {
-		return drops.first { $0.uuid == uuid }
-	}
-
-	static func typeItem(uuid: String) -> ArchivedDropItemType? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
-	}
-
-	private static var isStarted = false
-
 	static func reset() {
 		drops.removeAll(keepingCapacity: false)
 		dataFileLastModified = .distantPast
@@ -245,10 +210,6 @@ final class Model {
 					}
 				}
 			}
-		}
-
-		if fm.fileExists(atPath: legacyFileUrl.path) {
-			try? fm.removeItem(at: legacyFileUrl)
 		}
 
 		if let dataModified = modificationDate(for: url) {

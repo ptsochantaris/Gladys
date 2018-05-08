@@ -6,46 +6,12 @@ import Foundation
 
 final class Model {
 
-	static var drops = [ArchivedDropItem]()
-	static var dataFileLastModified = Date.distantPast
 	static var legacyFileLastModified = Date.distantPast
 	static var legacyMode = true
-
-	static var appStorageUrl: URL = {
-		#if MAINAPP || FILEPROVIDER
-			return NSFileProviderManager.default.documentStorageURL
-		#else
-			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!.appendingPathComponent("File Provider Storage")
-		#endif
-	}()
-
-	static var itemsDirectoryUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
-	}()
 
 	static var legacyFileUrl: URL = {
 		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
 	}()
-
-	static func modificationDate(for url: URL) -> Date? {
-		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
-	}
-
-	static func item(uuid: String) -> ArchivedDropItem? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.first { $0.uuid == uuidData }
-	}
-
-	static func item(uuid: UUID) -> ArchivedDropItem? {
-		return drops.first { $0.uuid == uuid }
-	}
-
-	static func typeItem(uuid: String) -> ArchivedDropItemType? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
-	}
-
-	private static var isStarted = false
 
 	static func reset() {
 		drops.removeAll(keepingCapacity: false)
