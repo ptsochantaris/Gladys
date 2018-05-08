@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if os(iOS)
+import FileProvider
+#endif
 
 extension Model {
 	static var drops = [ArchivedDropItem]()
