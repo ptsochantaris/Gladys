@@ -8,6 +8,8 @@
 
 import Cocoa
 
+final class ComponentCollectionView: NSCollectionView {}
+
 final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate {
 
 	@IBOutlet weak var titleField: NSTextField!
@@ -25,7 +27,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		NotificationCenter.default.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(checkForRemoved), name: .SaveComplete, object: nil)
 
-		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String)])
+		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
 		components.setDraggingSourceOperationMask(.copy, forLocal: false)
 
@@ -337,9 +339,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView {
+		if draggingInfo.draggingSource() is ComponentCollectionView {
 			proposedDropOperation.pointee = .before
-			return .move
+			return collectionView == components ? .move : .copy
 		} else {
 			return []
 		}
@@ -356,21 +358,30 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
+		if let s = draggingInfo.draggingSource() as? ComponentCollectionView {
 
-			let sourceItem = item.typeItems[draggingIndexPath.item]
-			let sourceIndex = draggingIndexPath.item
 			var destinationIndex = indexPath.item
-			if destinationIndex > sourceIndex {
-				destinationIndex -= 1
-			}
-			item.typeItems.remove(at: sourceIndex)
-			item.typeItems.insert(sourceItem, at: destinationIndex)
-			item.renumberTypeItems()
-			saveItem()
-			return true
-		}
+			if s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
+				let sourceItem = item.typeItems[draggingIndexPath.item]
+				let sourceIndex = draggingIndexPath.item
+				if destinationIndex > sourceIndex {
+					destinationIndex -= 1
+				}
+				item.typeItems.remove(at: sourceIndex)
+				item.typeItems.insert(sourceItem, at: destinationIndex)
+				item.renumberTypeItems()
+				saveItem()
+				return true
 
+			} else if let pasteboardItem = draggingInfo.draggingPasteboard().pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
+				let typeItem = ArchivedDropItemType(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
+				item.typeItems.insert(typeItem, at: destinationIndex)
+				item.needsReIngest = true
+				item.renumberTypeItems()
+				saveItem()
+				return true
+			}
+		}
 		return false
 	}
 }

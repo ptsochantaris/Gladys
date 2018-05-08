@@ -539,7 +539,7 @@ CA
                                                 <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR">
+                                                    <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR" customClass="ComponentCollectionView" customModule="MacGladys" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="hsh-fK-JSS">
