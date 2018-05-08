@@ -743,30 +743,22 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
-		16101E8F1EF5A23000CCBD3C /* Model */ = {
+		16101E8F1EF5A23000CCBD3C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				16CD7DC820A12B770039E6C2 /* Model */,
 				1602F3192030E4D70036E2B0 /* Extensions */,
 				1610899D1FA322580095FE34 /* Items */,
 				1610899E1FA3225C0095FE34 /* Types */,
 				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
-				16A223E41EF67FC7009EEEBC /* Model.swift */,
-				16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */,
-				16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */,
 				168A0CEB1FBCE9A100B63951 /* compression.swift */,
-				16EDB3761F2361EB001CC65C /* Model+UI.swift */,
-				16CD7DB720A124390039E6C2 /* Model+UICommon.swift */,
-				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
-				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
-				16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */,
-				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
 				169E646920A0F04E003CB4C0 /* Network.swift */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		161089961FA3200F0095FE34 /* Cloud */ = {
@@ -950,7 +942,7 @@
 				16E27BCC1EFC5F9D00FD0818 /* Support */,
 				161089961FA3200F0095FE34 /* Cloud */,
 				16D2C7111EF5A6D3009B97F9 /* Views */,
-				16101E8F1EF5A23000CCBD3C /* Model */,
+				16101E8F1EF5A23000CCBD3C /* Models */,
 			);
 			path = Gladys;
 			sourceTree = "<group>";
@@ -1032,6 +1024,22 @@
 				16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */,
 			);
 			path = Labels;
+			sourceTree = "<group>";
+		};
+		16CD7DC820A12B770039E6C2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				16A223E41EF67FC7009EEEBC /* Model.swift */,
+				16CD7DAF20A121BD0039E6C2 /* Model+Common.swift */,
+				16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */,
+				16EDB3761F2361EB001CC65C /* Model+UI.swift */,
+				16CD7DB720A124390039E6C2 /* Model+UICommon.swift */,
+				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
+				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
+				16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */,
+				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		16D2C7111EF5A6D3009B97F9 /* Views */ = {
