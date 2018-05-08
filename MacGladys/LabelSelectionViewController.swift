@@ -28,6 +28,11 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		}
 	}
 
+	override func viewWillDisappear() {
+		super.viewWillDisappear()
+		ViewController.shared.labelsDone()
+	}
+
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		return filteredLabels.count
 	}
@@ -44,7 +49,17 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
 		let item = filteredLabels[row]
 		let cell = tableColumn?.dataCell as? NSButtonCell
-		cell?.title = item.name
+		let title = NSMutableAttributedString(string: item.name + "\n", attributes: [
+			NSAttributedStringKey.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
+			NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+			])
+		let itemCount = item.count == 1 ? "1 item" : "\(item.count) items"
+		let subtitle = NSAttributedString(string: itemCount, attributes: [
+			NSAttributedStringKey.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .mini)),
+			NSAttributedStringKey.foregroundColor: NSColor.secondaryLabelColor,
+			])
+		title.append(subtitle)
+		cell?.attributedTitle = title
 		cell?.integerValue = item.enabled ? 1 : 0
 		return cell
 	}

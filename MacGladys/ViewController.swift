@@ -657,6 +657,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	func labelsDone() {
+		labelController = nil
+	}
+
 	private func updateEmptyView() {
 		if Model.drops.count == 0 && emptyView.alphaValue < 1 {
 			emptyView.animator().alphaValue = 1
