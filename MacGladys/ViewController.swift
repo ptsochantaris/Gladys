@@ -363,7 +363,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
-		proposedDropOperation.pointee = .before
+		proposedDropOperation.pointee = .on
 		return draggingIndexPaths == nil ? .copy : .move
 	}
 
@@ -386,13 +386,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
 		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPaths = draggingIndexPaths {
 
-			var destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 			for draggingIndexPath in draggingIndexPaths.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
 				let sourceIndex = Model.drops.index(of: sourceItem)!
-				if destinationIndex > sourceIndex {
-					destinationIndex -= 1
-				}
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
 				collection.animator().moveItem(at: IndexPath(item: sourceIndex, section: 0), to: IndexPath(item: destinationIndex, section: 0))

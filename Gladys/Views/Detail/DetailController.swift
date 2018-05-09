@@ -605,10 +605,7 @@ final class DetailController: GladysViewController,
 
 				} else if destinationIndexPath.section == 3, previousIndex.section == 3 {
 
-					var destinationIndex = destinationIndexPath.row
-					if destinationIndex > previousIndex.row {
-						destinationIndex -= 1
-					}
+					let destinationIndex = destinationIndexPath.row
 					let sourceItem = item.typeItems[previousIndex.row]
 					item.typeItems.remove(at: previousIndex.row)
 					item.typeItems.insert(sourceItem, at: destinationIndex)

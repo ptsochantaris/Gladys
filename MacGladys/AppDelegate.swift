@@ -54,5 +54,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		return false
 	}
+
+	/*func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+		Model.saveIsDueToSyncFetch = true
+		Model.queueNextSaveCallback {
+			NSApplication.shared.reply(toApplicationShouldTerminate: true)
+		}
+		Model.save()
+		return NSApplication.TerminateReply.terminateLater
+	}*/
 }
 

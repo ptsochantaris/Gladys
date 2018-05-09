@@ -223,6 +223,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		item.typeItems.remove(at: index)
 		component.deleteFromStorage()
 		item.renumberTypeItems()
+		components.animator().deleteItems(at: [IndexPath(item: index, section: 0)])
 		saveItem()
 	}
 
@@ -340,7 +341,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
 		if draggingInfo.draggingSource() is ComponentCollectionView {
-			proposedDropOperation.pointee = .before
+			proposedDropOperation.pointee = .on
 			return collectionView == components ? .move : .copy
 		} else {
 			return []
@@ -360,16 +361,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
 		if let s = draggingInfo.draggingSource() as? ComponentCollectionView {
 
-			var destinationIndex = indexPath.item
+			let destinationIndex = indexPath.item
 			if s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
 				let sourceItem = item.typeItems[draggingIndexPath.item]
 				let sourceIndex = draggingIndexPath.item
-				if destinationIndex > sourceIndex {
-					destinationIndex -= 1
-				}
 				item.typeItems.remove(at: sourceIndex)
 				item.typeItems.insert(sourceItem, at: destinationIndex)
 				item.renumberTypeItems()
+				components.animator().moveItem(at: draggingIndexPath, to: indexPath)
+				components.deselectAll(nil)
 				saveItem()
 				return true
 
@@ -378,6 +378,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 				item.typeItems.insert(typeItem, at: destinationIndex)
 				item.needsReIngest = true
 				item.renumberTypeItems()
+				components.animator().insertItems(at: [indexPath])
 				saveItem()
 				return true
 			}
