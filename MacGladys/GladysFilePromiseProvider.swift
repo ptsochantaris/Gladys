@@ -12,13 +12,19 @@ import Cocoa
 class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDelegate {
 
 	let bytes: Data
-	let title: String
+	let filename: String
 
 	init(dropItemType: ArchivedDropItemType, title: String) {
-		if let ext = dropItemType.fileExtension, !title.hasSuffix("." + ext) {
-			self.title = title.filenameSafe + "." + ext
+		if let ext = dropItemType.fileExtension {
+			let suffix = "." + ext
+			if title.hasSuffix(suffix) {
+				let removedSuffix = String(title.dropLast(suffix.count))
+				filename = removedSuffix.filenameSafe + "." + ext
+			} else {
+				filename = title.filenameSafe + "." + ext
+			}
 		} else {
-			self.title = title.filenameSafe
+			filename = title.filenameSafe
 		}
 		if dropItemType.typeIdentifier == "public.url", let s = dropItemType.encodedUrl?.absoluteString {
 			bytes = "[InternetShortcut]\r\nURL=\(s)\r\n".data(using: .utf8)!
@@ -42,6 +48,6 @@ class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDel
 	}
 
 	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
-		return title
+		return filename
 	}
 }
