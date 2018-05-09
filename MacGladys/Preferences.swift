@@ -15,11 +15,16 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var syncNowButton: NSButton!
 
 	@IBOutlet weak var deleteAllButton: NSButton!
+	@IBOutlet weak var doneButton: NSButton!
 
 	@IBOutlet weak var displayNotesSwitch: NSButton!
 	@IBOutlet weak var separateItemsSwitch: NSButton!
 	@IBOutlet weak var moveSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
+
+	@IBAction func doneSelected(_ sender: NSButton) {
+		dismiss(nil)
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,6 +38,11 @@ final class Preferences: NSViewController {
 			self?.updateSyncSwitches()
 		}
 		updateSyncSwitches()
+	}
+
+	override func viewWillAppear() {
+		super.viewWillAppear()
+		view.window!.initialFirstResponder = doneButton
 	}
 
 	private func updateSyncSwitches() {

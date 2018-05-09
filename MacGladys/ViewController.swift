@@ -608,6 +608,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc func showPreferences(_ sender: Any?) {
+		performSegue(withIdentifier: NSStoryboardSegue.Identifier("showPreferences"), sender: nil)
+	}
+
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()

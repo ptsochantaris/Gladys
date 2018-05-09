@@ -26,7 +26,7 @@
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
-                                                <segue destination="sHv-ur-2N2" kind="modal" id="rfv-Zq-O4i"/>
+                                                <action selector="showPreferences:" target="Ady-hI-5gd" id="Mjf-YP-T59"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
@@ -190,7 +190,7 @@ CA
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MacGladys" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="67" y="-273"/>
+            <point key="canvasLocation" x="217" y="-297"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -213,26 +213,6 @@ CA
             </objects>
             <point key="canvasLocation" x="666" y="-422"/>
         </scene>
-        <!--Window Controller-->
-        <scene sceneID="KZR-7s-Aib">
-            <objects>
-                <windowController showSeguePresentationStyle="single" id="sHv-ur-2N2" sceneMemberID="viewController">
-                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="eF5-Dp-Tbq">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
-                        <rect key="contentRect" x="425" y="461" width="228" height="129"/>
-                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-                        <connections>
-                            <outlet property="delegate" destination="sHv-ur-2N2" id="pZj-No-Cnw"/>
-                        </connections>
-                    </window>
-                    <connections>
-                        <segue destination="FB0-Ob-ymN" kind="relationship" relationship="window.shadowedContentViewController" id="15z-E6-Sjq"/>
-                    </connections>
-                </windowController>
-                <customObject id="vHt-Gx-Pgz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="66" y="47"/>
-        </scene>
         <!--Preferences-->
         <scene sceneID="fmd-1D-McK">
             <objects>
@@ -248,20 +228,20 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="syncSwitchChanged:" target="FB0-Ob-ymN" id="m4l-iI-QcK"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="m4l-iI-QcK"/>
                                 </connections>
                             </button>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="i0H-2v-kpv">
                                 <rect key="frame" x="119" y="220" width="16" height="16"/>
                             </progressIndicator>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
-                                <rect key="frame" x="205" y="13" width="135" height="32"/>
+                                <rect key="frame" x="14" y="13" width="135" height="32"/>
                                 <buttonCell key="cell" type="push" title="Delete All Items" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Nwx-h9-SAd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="deleteLocalItemsSelected:" target="FB0-Ob-ymN" id="GF1-AM-v7x"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="GF1-AM-v7x"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="llh-zy-rJm">
@@ -271,47 +251,57 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="syncNowSelected:" target="FB0-Ob-ymN" id="Me4-XV-mIw"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="Me4-XV-mIw"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
-                                <rect key="frame" x="18" y="185" width="318" height="18"/>
+                                <rect key="frame" x="18" y="185" width="312" height="18"/>
                                 <buttonCell key="cell" type="check" title="Display notes in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="d3Z-ev-luL">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="displayNotesSwitchSelected:" target="FB0-Ob-ymN" id="nBi-fd-Pug"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="nBi-fd-Pug"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MFg-OO-DD8">
-                                <rect key="frame" x="18" y="151" width="318" height="18"/>
+                                <rect key="frame" x="18" y="151" width="312" height="18"/>
                                 <buttonCell key="cell" type="check" title="Create separate items for each data component" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DcH-th-xVD">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="multipleSwitchChanged:" target="FB0-Ob-ymN" id="2UH-Tz-1Oa"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="2UH-Tz-1Oa"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AOr-VA-w9Q">
-                                <rect key="frame" x="18" y="117" width="318" height="18"/>
+                                <rect key="frame" x="18" y="117" width="312" height="18"/>
                                 <buttonCell key="cell" type="check" title="Remove items that are dragged out" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="biJ-iP-91A">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="moveSwitchChanged:" target="FB0-Ob-ymN" id="ync-Dt-lzh"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="ync-Dt-lzh"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U1O-fZ-P8U">
-                                <rect key="frame" x="18" y="83" width="318" height="18"/>
+                                <rect key="frame" x="18" y="83" width="312" height="18"/>
                                 <buttonCell key="cell" type="check" title="Do not auto-label new items" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="8f2-s0-exM">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="autoLabelSwitchChanged:" target="FB0-Ob-ymN" id="Gm2-I3-cNw"/>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="Gm2-I3-cNw"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hg6-iA-08k">
+                                <rect key="frame" x="268" y="13" width="72" height="32"/>
+                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qX6-Nj-iu0">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="vN5-Yu-z1J"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -319,7 +309,7 @@ CA
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="leading" secondItem="NWy-dL-hAY" secondAttribute="leading" id="4yc-7I-KXp"/>
                             <constraint firstItem="llh-zy-rJm" firstAttribute="leading" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="8" id="5cO-1U-CEI"/>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="5dG-DY-QCA"/>
-                            <constraint firstAttribute="trailing" secondItem="3y4-gH-maW" secondAttribute="trailing" constant="20" id="84V-TB-2wY"/>
+                            <constraint firstItem="hg6-iA-08k" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3y4-gH-maW" secondAttribute="trailing" constant="20" id="7Qm-bx-vLe"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="trailing" secondItem="MFg-OO-DD8" secondAttribute="trailing" id="8ry-mK-l1H"/>
                             <constraint firstItem="llh-zy-rJm" firstAttribute="centerY" secondItem="i0H-2v-kpv" secondAttribute="centerY" id="9VA-79-yjU"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="G62-lS-nXe"/>
@@ -328,7 +318,7 @@ CA
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="top" secondItem="NWy-dL-hAY" secondAttribute="bottom" constant="20" id="LT9-Rr-gE5"/>
                             <constraint firstItem="i0H-2v-kpv" firstAttribute="leading" secondItem="WFi-R6-MZO" secondAttribute="trailing" constant="8" id="NAO-cN-tbA"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="leading" secondItem="AOr-VA-w9Q" secondAttribute="leading" id="Pna-Bw-gIo"/>
-                            <constraint firstItem="3y4-gH-maW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="138" id="QAK-9G-lX1"/>
+                            <constraint firstItem="3y4-gH-maW" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="QAK-9G-lX1"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="top" secondItem="WFi-R6-MZO" secondAttribute="bottom" constant="20" id="Svo-hD-DgX"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="llh-zy-rJm" secondAttribute="trailing" constant="122" id="TBQ-DF-zo6"/>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="top" secondItem="voj-7Z-m9G" secondAttribute="top" constant="20" id="Zpt-o1-tmv"/>
@@ -336,9 +326,10 @@ CA
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="AOr-VA-w9Q" secondAttribute="bottom" constant="20" id="eEm-sF-Yhm"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="f3Z-yf-jqF"/>
                             <constraint firstItem="i0H-2v-kpv" firstAttribute="centerY" secondItem="WFi-R6-MZO" secondAttribute="centerY" id="juX-U2-dtJ"/>
+                            <constraint firstAttribute="bottom" secondItem="hg6-iA-08k" secondAttribute="bottom" constant="20" id="lce-xX-uIe"/>
+                            <constraint firstAttribute="trailing" secondItem="hg6-iA-08k" secondAttribute="trailing" constant="20" id="lfw-Xj-UMk"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="leading" secondItem="MFg-OO-DD8" secondAttribute="leading" id="rOo-AO-5F6"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="trailing" secondItem="AOr-VA-w9Q" secondAttribute="trailing" id="tQP-aG-cap"/>
-                            <constraint firstItem="3y4-gH-maW" firstAttribute="trailing" secondItem="MFg-OO-DD8" secondAttribute="trailing" id="u1F-7V-0MR"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="leading" secondItem="WFi-R6-MZO" secondAttribute="leading" id="uJ1-4Z-ELv"/>
                         </constraints>
                     </view>
@@ -346,6 +337,7 @@ CA
                         <outlet property="autoLabelSwitch" destination="U1O-fZ-P8U" id="IMg-Yz-P4k"/>
                         <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
                         <outlet property="displayNotesSwitch" destination="NWy-dL-hAY" id="cTV-5A-q96"/>
+                        <outlet property="doneButton" destination="hg6-iA-08k" id="dmO-sL-kye"/>
                         <outlet property="moveSwitch" destination="AOr-VA-w9Q" id="LD5-Up-5EN"/>
                         <outlet property="separateItemsSwitch" destination="MFg-OO-DD8" id="raI-jc-nax"/>
                         <outlet property="syncNowButton" destination="llh-zy-rJm" id="rzy-eJ-Z6f"/>
@@ -355,7 +347,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="66" y="460"/>
+            <point key="canvasLocation" x="449" y="587"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -450,7 +442,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="666" y="556"/>
+            <point key="canvasLocation" x="788" y="562"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -862,6 +854,7 @@ CA
                         <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="OAb-Qq-Rfr" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
+                        <segue destination="FB0-Ob-ymN" kind="sheet" identifier="showPreferences" id="li5-My-Fv1"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
