@@ -75,7 +75,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		notesField.stringValue = item.note
 		labels.reloadData()
 		updateLabelButtons()
-		components.reloadData()
+		components.animator().reloadData()
 		lastUpdate = item.updatedAt
 	}
 

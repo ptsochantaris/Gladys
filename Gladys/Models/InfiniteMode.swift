@@ -67,9 +67,17 @@ fileprivate func getDeviceId() -> Data {
 
 /////////////
 
+#if DEBUG
+
+let infiniteMode = true
+func reVerifyInfiniteMode() {}
+
+#else
+
 var infiniteMode = verifyIapReceipt(getDeviceId())
 let nonInfiniteItemLimit = 10
-
 func reVerifyInfiniteMode() {
 	infiniteMode = verifyIapReceipt(getDeviceId())
 }
+
+#endif

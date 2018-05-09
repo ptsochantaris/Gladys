@@ -12,7 +12,7 @@ class Network {
 
 	static private var taskQueue: OperationQueue = {
 		let o = OperationQueue()
-		o.maxConcurrentOperationCount = 4
+		o.maxConcurrentOperationCount = 8
 		return o
 	}()
 

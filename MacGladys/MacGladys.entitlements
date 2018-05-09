@@ -20,5 +20,7 @@
 	<array>
 		<string>group.build.bru.Gladys</string>
 	</array>
+	<key>com.apple.security.network.client</key>
+	<true/>
 </dict>
 </plist>

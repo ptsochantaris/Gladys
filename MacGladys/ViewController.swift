@@ -90,8 +90,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		super.viewWillAppear()
 	}
 
-	func reloadData() {
-		collection.reloadData()
+	func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
+		if let inserting = inserting {
+			collection.deselectAll(nil)
+			collection.animator().insertItems(at: Set(inserting))
+		} else if let deleting = deleting {
+			collection.deselectAll(nil)
+			collection.animator().deleteItems(at: Set(deleting))
+		} else {
+			collection.animator().reloadData()
+		}
 	}
 
 	func updateDragOperationIndicators() {
@@ -387,8 +395,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				}
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
+				collection.animator().moveItem(at: IndexPath(item: sourceIndex, section: 0), to: IndexPath(item: destinationIndex, section: 0))
+				collection.deselectAll(nil)
 			}
-			Model.forceUpdateFilter(signalUpdate: true)
+			Model.forceUpdateFilter(signalUpdate: false)
 			Model.save()
 			return true
 		} else {
@@ -425,20 +435,27 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return false
 		}
 
+		var insertedIndexPaths = [IndexPath]()
+		var count = 0
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
 				loadingUUIDS.insert(newItem.uuid)
 				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 				Model.drops.insert(newItem, at: destinationIndex)
+
+				let finalIndex = IndexPath(item: destinationIndex + count, section: 0)
+				insertedIndexPaths.append(finalIndex)
+				count += 1
 			}
 		}
 		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData()
+		reloadData(inserting: insertedIndexPaths)
 		return true
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
+		var ipsToRemove = [IndexPath]()
 		for item in items {
 
 			if item.shouldDisplayLoading {
@@ -450,10 +467,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 			if let i = Model.filteredDrops.index(where: { $0.uuid == uuid }) {
 				Model.removeItemFromList(uuid: uuid)
-				collection.deleteItems(at: [IndexPath(item: i, section: 0)])
+				ipsToRemove.append(IndexPath(item: i, section: 0))
 			}
 
 			item.delete()
+		}
+
+		if !ipsToRemove.isEmpty {
+			reloadData(deleting: ipsToRemove)
 		}
 
 		Model.save()
