@@ -40,11 +40,11 @@ extension Model {
 
 	static var appStorageUrl: URL = {
 		#if MAC
-			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: PersistedOptions.groupName)!
 		#elseif MAINAPP || FILEPROVIDER
 			return NSFileProviderManager.default.documentStorageURL
 		#else
-			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.build.bru.Gladys")!.appendingPathComponent("File Provider Storage")
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: PersistedOptions.groupName)!.appendingPathComponent("File Provider Storage")
 		#endif
 	}()
 }

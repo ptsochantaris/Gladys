@@ -40,7 +40,7 @@ class Greetings {
 		"Hi!",
 		"Feed me!",
 		"What's up?",
-		"What can I hold for you?",
+		"What can I keep for you?",
 		"Gimme.",
 		"Quiet day?",
 		"How can I help?",

@@ -228,7 +228,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="m4l-iI-QcK"/>
+                                    <action selector="syncSwitchChanged:" target="FB0-Ob-ymN" id="tje-sj-Lb0"/>
                                 </connections>
                             </button>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="i0H-2v-kpv">
@@ -241,7 +241,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="GF1-AM-v7x"/>
+                                    <action selector="deleteLocalItemsSelected:" target="FB0-Ob-ymN" id="sm6-Dt-OeW"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="llh-zy-rJm">
@@ -251,7 +251,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="Me4-XV-mIw"/>
+                                    <action selector="syncNowSelected:" target="FB0-Ob-ymN" id="Vc5-FC-bJn"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
@@ -261,7 +261,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="nBi-fd-Pug"/>
+                                    <action selector="displayNotesSwitchSelected:" target="FB0-Ob-ymN" id="czW-QE-aGC"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MFg-OO-DD8">
@@ -271,7 +271,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="2UH-Tz-1Oa"/>
+                                    <action selector="multipleSwitchChanged:" target="FB0-Ob-ymN" id="2jE-wY-k9T"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AOr-VA-w9Q">
@@ -281,7 +281,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="ync-Dt-lzh"/>
+                                    <action selector="moveSwitchChanged:" target="FB0-Ob-ymN" id="Sum-7Q-NFS"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U1O-fZ-P8U">
@@ -291,7 +291,7 @@ CA
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="doneSelected:" target="FB0-Ob-ymN" id="Gm2-I3-cNw"/>
+                                    <action selector="autoLabelSwitchChanged:" target="FB0-Ob-ymN" id="MJo-VO-GY7"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hg6-iA-08k">
@@ -320,7 +320,7 @@ CA
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="leading" secondItem="AOr-VA-w9Q" secondAttribute="leading" id="Pna-Bw-gIo"/>
                             <constraint firstItem="3y4-gH-maW" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="QAK-9G-lX1"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="top" secondItem="WFi-R6-MZO" secondAttribute="bottom" constant="20" id="Svo-hD-DgX"/>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="llh-zy-rJm" secondAttribute="trailing" constant="122" id="TBQ-DF-zo6"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="llh-zy-rJm" secondAttribute="trailing" constant="20" id="TBQ-DF-zo6"/>
                             <constraint firstItem="WFi-R6-MZO" firstAttribute="top" secondItem="voj-7Z-m9G" secondAttribute="top" constant="20" id="Zpt-o1-tmv"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="top" secondItem="MFg-OO-DD8" secondAttribute="bottom" constant="20" id="bkW-GJ-u8C"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="AOr-VA-w9Q" secondAttribute="bottom" constant="20" id="eEm-sF-Yhm"/>
