@@ -27,6 +27,10 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 		fetch()
 	}
 
+	func stop() {
+		SKPaymentQueue.default().remove(self)
+	}
+
 	private func fetch() {
 		if !infiniteMode {
 			let r = SKProductsRequest(productIdentifiers: [IAPManager.id])

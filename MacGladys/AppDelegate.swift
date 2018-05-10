@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
-		// Insert code here to tear down your application
+		IAPManager.shared.stop()
 	}
 
 	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String : Any]) {

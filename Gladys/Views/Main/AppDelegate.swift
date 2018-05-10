@@ -74,6 +74,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
 
+	func applicationWillTerminate(_ application: UIApplication) {
+		IAPManager.shared.stop()
+	}
+
 	func applicationWillEnterForeground(_ application: UIApplication) {
 		CloudManager.opportunisticSyncIfNeeded(isStartup: false)
 	}
