@@ -10,12 +10,6 @@ import Foundation
 
 class PersistedOptions {
 
-	#if os(iOS)
-	static let groupName = "group.build.bru.Gladys"
-	#else
-	static let groupName = "X727JSJUGJ.build.bru.MacGladys"
-	#endif
-
 	static var defaults = UserDefaults(suiteName: groupName)!
 
 	static func migrateBrokenDefaults() { // keep this around for a while

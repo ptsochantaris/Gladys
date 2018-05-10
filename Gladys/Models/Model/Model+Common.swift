@@ -40,11 +40,11 @@ extension Model {
 
 	static var appStorageUrl: URL = {
 		#if MAC
-			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: PersistedOptions.groupName)!
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
 		#elseif MAINAPP || FILEPROVIDER
 			return NSFileProviderManager.default.documentStorageURL
 		#else
-			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: PersistedOptions.groupName)!.appendingPathComponent("File Provider Storage")
+			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("File Provider Storage")
 		#endif
 	}()
 }
