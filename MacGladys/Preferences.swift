@@ -46,7 +46,6 @@ final class Preferences: NSViewController {
 	}
 
 	private func updateSyncSwitches() {
-		syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
 
 		if CloudManager.syncTransitioning || CloudManager.syncing {
 			syncSwitch.isEnabled = false
@@ -60,6 +59,7 @@ final class Preferences: NSViewController {
 			deleteAllButton.isEnabled = true
 			syncSwitch.title = "iCloud Sync"
 			syncSpinner.stopAnimation(nil)
+			syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
 		}
 	}
 
