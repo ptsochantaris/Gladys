@@ -15,7 +15,6 @@
                 <outlet property="cancelHolder" destination="duN-D4-5gc" id="T4h-ZG-jLF"/>
                 <outlet property="image" destination="NZY-Vj-9PZ" id="zRO-Yi-3aJ"/>
                 <outlet property="lockImage" destination="yh6-B4-WQQ" id="dpN-qb-qou"/>
-                <outlet property="mergeImage" destination="qMY-A1-Ztw" id="EAQ-st-p0X"/>
                 <outlet property="progressView" destination="15T-lS-AOB" id="fHG-oV-O9s"/>
                 <outlet property="topLabel" destination="Man-El-psZ" id="YUj-lO-uqG"/>
                 <outlet property="view" destination="zta-tj-lHd" id="lVx-8r-5Oa"/>
@@ -39,10 +38,10 @@
                                     </textFieldCell>
                                 </textField>
                                 <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ">
-                                    <rect key="frame" x="0.0" y="173" width="283" height="195"/>
+                                    <rect key="frame" x="0.0" y="140" width="283" height="228"/>
                                 </customView>
                                 <customView wantsLayer="YES" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="duN-D4-5gc" userLabel="Cancel Holder">
-                                    <rect key="frame" x="0.0" y="78" width="283" height="90"/>
+                                    <rect key="frame" x="0.0" y="45" width="283" height="90"/>
                                     <subviews>
                                         <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
                                             <rect key="frame" x="134" y="58" width="16" height="16"/>
@@ -70,12 +69,8 @@ Gw
                                     </constraints>
                                 </customView>
                                 <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ">
-                                    <rect key="frame" x="133" y="51" width="17" height="22"/>
+                                    <rect key="frame" x="133" y="18" width="17" height="22"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
-                                </imageView>
-                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="qMY-A1-Ztw">
-                                    <rect key="frame" x="128" y="18" width="28" height="28"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="iconPlusCircle" id="b3i-5h-9Ny"/>
                                 </imageView>
                                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
                                     <rect key="frame" x="124" y="0.0" width="35" height="13"/>
@@ -100,10 +95,8 @@ Gw
                                 <integer value="1000"/>
                                 <integer value="1000"/>
                                 <integer value="1000"/>
-                                <integer value="1000"/>
                             </visibilityPriorities>
                             <customSpacing>
-                                <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
@@ -133,7 +126,6 @@ Gw
         </customView>
     </objects>
     <resources>
-        <image name="iconPlusCircle" width="28" height="28"/>
         <image name="locked" width="17" height="22"/>
     </resources>
 </document>

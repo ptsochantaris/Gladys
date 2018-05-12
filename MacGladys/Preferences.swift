@@ -16,6 +16,7 @@ final class Preferences: NSViewController {
 
 	@IBOutlet weak var deleteAllButton: NSButton!
 	@IBOutlet weak var doneButton: NSButton!
+	@IBOutlet weak var eraseAlliCloudDataButton: NSButton!
 
 	@IBOutlet weak var displayNotesSwitch: NSButton!
 	@IBOutlet weak var separateItemsSwitch: NSButton!
@@ -51,12 +52,14 @@ final class Preferences: NSViewController {
 			syncSwitch.isEnabled = false
 			syncNowButton.isEnabled = false
 			deleteAllButton.isEnabled = false
+			eraseAlliCloudDataButton.isEnabled = false
 			syncSwitch.title = CloudManager.syncString
 			syncSpinner.startAnimation(nil)
 		} else {
 			syncSwitch.isEnabled = true
 			syncNowButton.isEnabled = CloudManager.syncSwitchedOn
 			deleteAllButton.isEnabled = true
+			eraseAlliCloudDataButton.isEnabled = false
 			syncSwitch.title = "iCloud Sync"
 			syncSpinner.stopAnimation(nil)
 			syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
@@ -137,6 +140,42 @@ final class Preferences: NSViewController {
 						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
 					}
 				}
+			}
+		}
+	}
+
+	@IBAction func eraseiCloudDataSelected(_ sender: NSButton) {
+		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
+			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
+		} else {
+			let a = NSAlert()
+			a.messageText = "Are you sure?"
+			a.informativeText = "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled."
+			a.addButton(withTitle: "Delete iCloud Data")
+			a.addButton(withTitle: "Cancel")
+
+			a.beginSheetModal(for: view.window!) { [weak self] response in
+				if response == .alertFirstButtonReturn {
+					self?.eraseiCloudData()
+				}
+			}
+		}
+	}
+
+	private func eraseiCloudData() {
+		syncNowButton.isEnabled = false
+		syncSwitch.isEnabled = false
+		syncNowButton.isEnabled = false
+		eraseAlliCloudDataButton.isEnabled = false
+		CloudManager.eraseZoneIfNeeded { [weak self] error in
+			guard let s = self else { return }
+			s.eraseAlliCloudDataButton.isEnabled = true
+			s.syncSwitch.isEnabled = true
+			s.syncSwitch.isEnabled = true
+			if let error = error {
+				genericAlert(title: "Error", message: error.finalDescription, on: s)
+			} else {
+				genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud", on: s)
 			}
 		}
 	}

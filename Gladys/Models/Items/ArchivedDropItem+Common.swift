@@ -11,9 +11,11 @@ import CloudKit
 #if os(iOS)
 import UIKit
 typealias IMAGE = UIImage
+typealias COLOR = UIColor
 #else
 import Cocoa
 typealias IMAGE = NSImage
+typealias COLOR = NSColor
 #endif
 
 extension ArchivedDropItem: Hashable {

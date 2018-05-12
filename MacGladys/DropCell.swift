@@ -88,6 +88,8 @@ final class MiniMapView: NSView {
 	}
 }
 
+final class ColourView: NSView {}
+
 extension NSMenu {
 	func addItem(_ title: String, action: Selector, keyEquivalent: String, keyEquivalentModifierMask: NSEvent.ModifierFlags) {
 		let menuItem = NSMenuItem(title: title, action: action, keyEquivalent: keyEquivalent)
@@ -104,10 +106,8 @@ final class DropCell: NSCollectionViewItem {
 	@IBOutlet weak var progressView: NSProgressIndicator!
 	@IBOutlet weak var cancelHolder: NSView!
 	@IBOutlet weak var lockImage: NSImageView!
-	@IBOutlet weak var mergeImage: NSImageView!
 
-	var mergeMode = false
-	private var existingMapView: MiniMapView?
+	private var existingPreviewView: NSView?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -160,11 +160,11 @@ final class DropCell: NSCollectionViewItem {
 	private func reDecorate() {
 		let item = archivedDropItem
 
+		var wantColourView = false
 		var wantMapView = false
 		var hideCancel = true
 		var hideImage = true
 		var hideLock = true
-		var hideMerge = true
 
 		var topLabelText = ""
 		var topLabelAlignment = NSTextAlignment.center
@@ -192,13 +192,6 @@ final class DropCell: NSCollectionViewItem {
 				image.layer?.contents = nil
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint ?? ""
-
-			} else if mergeMode {
-				hideMerge = false
-				hideImage = true
-				image.layer?.contents = nil
-				topLabelAlignment = .center
-				topLabelText = "Add data component"
 
 			} else {
 
@@ -258,9 +251,12 @@ final class DropCell: NSCollectionViewItem {
 				if image.layer?.contentsGravity == kCAGravityCenter, let backgroundItem = item.backgroundInfoObject {
 					if let mapItem = backgroundItem as? MKMapItem {
 						wantMapView = true
-						if let m = existingMapView {
+						if let m = existingPreviewView as? MiniMapView {
 							m.show(location: mapItem)
 						} else {
+							if let m = existingPreviewView {
+								m.removeFromSuperview()
+							}
 							let m = MiniMapView(at: mapItem)
 							m.translatesAutoresizingMaskIntoConstraints = false
 							image.addSubview(m)
@@ -271,7 +267,29 @@ final class DropCell: NSCollectionViewItem {
 								m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
 								])
 
-							existingMapView = m
+							existingPreviewView = m
+						}
+					} else if let colourItem = backgroundItem as? NSColor {
+						wantColourView = true
+						if let m = existingPreviewView as? ColourView {
+							m.layer?.backgroundColor = colourItem.cgColor
+						} else {
+							if let m = existingPreviewView {
+								m.removeFromSuperview()
+							}
+							let m = ColourView()
+							m.wantsLayer = true
+							m.layer?.backgroundColor = colourItem.cgColor
+							m.translatesAutoresizingMaskIntoConstraints = false
+							image.addSubview(m)
+							NSLayoutConstraint.activate([
+								m.leadingAnchor.constraint(equalTo: image.leadingAnchor),
+								m.trailingAnchor.constraint(equalTo: image.trailingAnchor),
+								m.topAnchor.constraint(equalTo: image.topAnchor),
+								m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
+								])
+
+							existingPreviewView = m
 						}
 					}
 				}
@@ -281,9 +299,9 @@ final class DropCell: NSCollectionViewItem {
 			image.layer?.contents = nil
 		}
 
-		if !wantMapView, let e = existingMapView {
+		if !(wantMapView || wantColourView), let e = existingPreviewView {
 			e.removeFromSuperview()
-			existingMapView = nil
+			existingPreviewView = nil
 		}
 
 		topLabel.stringValue = topLabelText
@@ -298,7 +316,6 @@ final class DropCell: NSCollectionViewItem {
 		image.isHidden = hideImage
 		cancelHolder.isHidden = hideCancel
 		lockImage.isHidden = hideLock
-		mergeImage.isHidden = hideMerge
 	}
 
 	@objc private func infoSelected() {

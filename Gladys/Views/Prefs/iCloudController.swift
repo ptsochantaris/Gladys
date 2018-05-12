@@ -14,8 +14,9 @@ final class iCloudController: GladysViewController {
 	@IBOutlet weak var icloudSwitch: UISwitch!
 	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
-	@IBOutlet weak var eraseAlliCloudData: UIBarButtonItem!
+	@IBOutlet weak var eraseAlliCloudData: UIButton!
 	@IBOutlet weak var actionUploadSwitch: UISwitch!
+	@IBOutlet weak var syncNowButton: UIBarButtonItem!
 
 	@IBOutlet var headerLabels: [UILabel]!
 	@IBOutlet var subtitleLabels: [UILabel]!
@@ -54,6 +55,7 @@ final class iCloudController: GladysViewController {
 		icloudSwitch.onTintColor = view.tintColor
 		limitToWiFiSwitch.onTintColor = view.tintColor
 		actionUploadSwitch.onTintColor = view.tintColor
+		eraseAlliCloudData.tintColor = view.tintColor
 		if PersistedOptions.darkMode {
 			for l in headerLabels {
 				l.textColor = UIColor.lightGray
@@ -71,7 +73,7 @@ final class iCloudController: GladysViewController {
 		}
 	}
 
-	@IBAction func eraseiCloudDataSelected(_ sender: UIBarButtonItem) {
+	@IBAction func eraseiCloudDataSelected(_ sender: UIButton) {
 		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
 			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
 		} else {
@@ -87,6 +89,8 @@ final class iCloudController: GladysViewController {
 
 	private func eraseiCloudData() {
 		icloudSwitch.isEnabled = false
+		eraseAlliCloudData.isEnabled = false
+		syncNowButton.isEnabled = false
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		self.eraseAlliCloudData.isEnabled = false
 		CloudManager.eraseZoneIfNeeded { error in
@@ -118,6 +122,18 @@ final class iCloudController: GladysViewController {
 			icloudLabel.text = "iCloud Sync"
 			icloudSpinner.stopAnimating()
 			icloudSwitch.isOn = CloudManager.syncSwitchedOn
+		}
+		eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
+		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn
+	}
+
+	@IBAction func syncNowSelected(_ sender: UIBarButtonItem) {
+		CloudManager.sync { error in
+			DispatchQueue.main.async {
+				if let error = error {
+					genericAlert(title: "Sync Error", message: error.finalDescription, on: self)
+				}
+			}
 		}
 	}
 

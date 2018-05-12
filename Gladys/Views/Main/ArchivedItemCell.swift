@@ -38,6 +38,8 @@ final class GladysImageView: UIImageView {
 	}
 }
 
+final class ColourView: UIView {}
+
 final class MiniMapView: UIImageView {
 
 	private var coordinate: CLLocationCoordinate2D?
@@ -408,7 +410,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		mergeMode = false
 	}
 
-	private var existingMapView: MiniMapView?
+	private var existingPreviewView: UIView?
 
 	var lowMemoryMode = false
 
@@ -439,6 +441,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private func decorate(with item: ArchivedDropItem?) {
 
+		var wantColourView = false
 		var wantMapView = false
 		var hideCancel = true
 		var hideImage = true
@@ -553,16 +556,30 @@ final class ArchivedItemCell: UICollectionViewCell {
 				if image.contentMode == .center, let backgroundItem = item.backgroundInfoObject {
 					if let mapItem = backgroundItem as? MKMapItem {
 						wantMapView = true
-						if let m = existingMapView {
+						if let m = existingPreviewView as? MiniMapView {
 							m.show(location: mapItem)
 						} else {
+							if let e = existingPreviewView {
+								e.removeFromSuperview()
+							}
 							let m = MiniMapView(at: mapItem)
 							image.cover(with: m)
-							existingMapView = m
+							existingPreviewView = m
 						}
 
 					} else if let color = backgroundItem as? UIColor {
-						image.backgroundColor = color // TODO - perhaps a custom view over the current one
+						wantColourView = true
+						if let c = existingPreviewView as? ColourView {
+							c.backgroundColor = color
+						} else {
+							if let e = existingPreviewView {
+								e.removeFromSuperview()
+							}
+							let c = ColourView()
+							c.backgroundColor = color
+							image.cover(with: c)
+							existingPreviewView = c
+						}
 					}
 				}
 			}
@@ -572,9 +589,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 			progressView.observedProgress = nil
 		}
 
-		if !wantMapView, let e = existingMapView {
+		if !(wantColourView || wantMapView), let e = existingPreviewView {
 			e.removeFromSuperview()
-			existingMapView = nil
+			existingPreviewView = nil
 		}
 
 		progressView.isHidden = hideProgress

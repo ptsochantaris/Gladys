@@ -121,7 +121,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.reloadDataIfNeeded()
 
 		if CloudManager.syncSwitchedOn {
-			sync()
+			CloudManager.sync { error in
+				DispatchQueue.main.async {
+					if let error = error {
+						print("Sync Error: \(error.finalDescription)")
+					}
+				}
+			}
 		}
 
 		let n = NotificationCenter.default
@@ -215,16 +221,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			i.reIngest(delegate: self)
 		}
 		updateEmptyView()
-	}
-
-	private func sync() {
-		CloudManager.sync { error in
-			DispatchQueue.main.async {
-				if let error = error {
-					print("Sync Error: \(error.finalDescription)")
-				}
-			}
-		}
 	}
 
 	func loadCompleted(sender: AnyObject) {

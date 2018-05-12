@@ -925,14 +925,14 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="64" width="320" height="487"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
-                                        <rect key="frame" x="40" y="277" width="240" height="70"/>
+                                        <rect key="frame" x="40" y="264.5" width="240" height="70"/>
                                         <string key="text">Gladys stores data in your private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
-                                        <rect key="frame" x="40" y="361" width="240" height="70"/>
+                                        <rect key="frame" x="40" y="392.5" width="240" height="70"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -991,7 +991,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can request a manual sync by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
-                                        <rect key="frame" x="40" y="229" width="240" height="34"/>
+                                        <rect key="frame" x="40" y="216.5" width="240" height="34"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1018,6 +1018,13 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="kbo-iY-5gJ" firstAttribute="centerY" secondItem="2DE-Ie-MEF" secondAttribute="centerY" id="tU4-rl-M7Y"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLr-xZ-jCb">
+                                        <rect key="frame" x="96" y="348.5" width="128" height="30"/>
+                                        <state key="normal" title="Delete iCloud Data"/>
+                                        <connections>
+                                            <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="13R-i5-FJZ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="88n-uM-fcL" firstAttribute="width" secondItem="XAu-Zj-d4Q" secondAttribute="width" id="3zY-Tb-oea"/>
@@ -1027,10 +1034,10 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="guO-CQ-KTM" firstAttribute="trailing" secondItem="bc6-6V-O7h" secondAttribute="trailing" id="F1s-vp-nlN"/>
                                     <constraint firstItem="2DE-Ie-MEF" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" id="Fgy-KI-pdP"/>
                                     <constraint firstItem="88n-uM-fcL" firstAttribute="top" secondItem="XAu-Zj-d4Q" secondAttribute="top" constant="20" id="Fo6-tl-mhi"/>
+                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="2DE-Ie-MEF" secondAttribute="bottom" constant="14" id="HaI-Sc-fIZ"/>
                                     <constraint firstItem="52a-oW-xMk" firstAttribute="trailing" secondItem="guO-CQ-KTM" secondAttribute="trailing" id="J79-wo-Bh1"/>
                                     <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="cSP-79-0Wg" secondAttribute="bottom" constant="14" id="L5Q-O2-wbK"/>
                                     <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="leading" id="LgD-Tx-6Lx"/>
-                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="2DE-Ie-MEF" secondAttribute="bottom" constant="26.5" id="Ml2-Vs-Chq"/>
                                     <constraint firstAttribute="trailing" secondItem="cSP-79-0Wg" secondAttribute="trailing" constant="40" id="MtB-VX-rTN"/>
                                     <constraint firstItem="ehw-1I-mk8" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" id="Nfc-Zo-SiI"/>
                                     <constraint firstItem="88n-uM-fcL" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" id="OMN-F7-cP7"/>
@@ -1042,7 +1049,9 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstAttribute="trailing" secondItem="RxQ-uD-Ykw" secondAttribute="trailing" constant="40" id="cdi-Wp-g6N"/>
                                     <constraint firstAttribute="trailing" secondItem="2DE-Ie-MEF" secondAttribute="trailing" id="eOg-p7-WhM"/>
                                     <constraint firstAttribute="bottom" secondItem="BZ8-I2-EIj" secondAttribute="bottom" constant="30" id="fFb-Y0-BB5"/>
-                                    <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" constant="14" id="p0L-Pz-lhf"/>
+                                    <constraint firstItem="VLr-xZ-jCb" firstAttribute="top" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" constant="14" id="m8C-QG-keC"/>
+                                    <constraint firstItem="VLr-xZ-jCb" firstAttribute="centerX" secondItem="cSP-79-0Wg" secondAttribute="centerX" id="qAQ-eW-edE"/>
+                                    <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="VLr-xZ-jCb" secondAttribute="bottom" constant="14" id="vAt-ix-5xm"/>
                                     <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="wHH-75-4wB"/>
                                     <constraint firstItem="52a-oW-xMk" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="leading" id="xTq-Fx-qH1"/>
                                     <constraint firstItem="cSP-79-0Wg" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" constant="40" id="xgt-Xc-vVW"/>
@@ -1058,20 +1067,21 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
                     <navigationItem key="navigationItem" id="fpO-3k-GDD">
-                        <barButtonItem key="leftBarButtonItem" title="Delete iCloud Data" id="7JS-kd-eCS">
+                        <barButtonItem key="leftBarButtonItem" title="Sync Now" id="6if-e9-dgE">
                             <connections>
-                                <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" id="j4c-6Y-KsL"/>
+                                <action selector="syncNowSelected:" destination="PmV-gD-gyX" id="WZj-Aj-lCs"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <size key="freeformSize" width="320" height="600"/>
                     <connections>
                         <outlet property="actionUploadSwitch" destination="kbo-iY-5gJ" id="db1-w9-fGy"/>
-                        <outlet property="eraseAlliCloudData" destination="7JS-kd-eCS" id="YXc-ZP-82j"/>
+                        <outlet property="eraseAlliCloudData" destination="VLr-xZ-jCb" id="V0k-pl-e6K"/>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
                         <outlet property="limitToWiFiSwitch" destination="i3g-cz-xkx" id="bwk-rQ-871"/>
+                        <outlet property="syncNowButton" destination="6if-e9-dgE" id="M7T-dE-gyP"/>
                         <outletCollection property="headerLabels" destination="52a-oW-xMk" collectionClass="NSMutableArray" id="OnS-3D-U2A"/>
                         <outletCollection property="subtitleLabels" destination="RxQ-uD-Ykw" collectionClass="NSMutableArray" id="ic4-79-J8x"/>
                         <outletCollection property="headerLabels" destination="guO-CQ-KTM" collectionClass="NSMutableArray" id="V5e-eB-wHG"/>
@@ -1876,7 +1886,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

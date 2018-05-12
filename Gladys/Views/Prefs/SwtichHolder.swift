@@ -53,6 +53,9 @@ final class SwitchHolder: UIView {
 
 	override func accessibilityActivate() -> Bool {
 		switchControl?.isOn = !(switchControl?.isOn ?? false)
+		if let control = switchControl, let target = control.allTargets.first as NSObjectProtocol?, let action = control.actions(forTarget: target, forControlEvent: .valueChanged)?.first {
+			target.perform(Selector(action), with: control)
+		}
 		return true
 	}
 }
