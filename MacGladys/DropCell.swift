@@ -242,7 +242,7 @@ final class DropCell: NSCollectionViewItem {
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				case .circle:
-					image.layer?.contentsGravity = kCAGravityResize
+					image.layer?.contentsGravity = kCAGravityResizeAspectFill
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				}

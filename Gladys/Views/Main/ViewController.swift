@@ -508,7 +508,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			collectionView.reloadItems(at: [indexPath])
 
 		} else if item.needsUnlock {
-			item.unlock(from: self, label: "Unlock Item", action: "Unlock") { success in
+			item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
 				if success {
 					item.needsUnlock = false
 					collectionView.reloadItems(at: [indexPath])

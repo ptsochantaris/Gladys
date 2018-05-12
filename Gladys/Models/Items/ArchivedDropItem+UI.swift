@@ -29,6 +29,7 @@ extension ArchivedDropItem {
 		let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		a.addTextField { textField in
 			textField.placeholder = "Password"
+			textField.isSecureTextEntry = true
 		}
 		if requestHint {
 			a.addTextField { [weak self] textField in
@@ -94,8 +95,8 @@ extension ArchivedDropItem {
 		}
 	}
 
-	func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
-		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please provide the password for this item") { [weak self] password, hint in
+	private func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
+		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please provide the password for this item.") { [weak self] password, hint in
 			guard let password = password else {
 				completion(false)
 				return
@@ -104,6 +105,7 @@ extension ArchivedDropItem {
 				self?.needsUnlock = false
 				completion(true)
 			} else {
+				genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.", on: ViewController.top)
 				completion(false)
 			}
 		}
