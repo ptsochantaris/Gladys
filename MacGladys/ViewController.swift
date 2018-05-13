@@ -631,6 +631,22 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc func moveToTop(_ sender: Any?) {
+		var items = actionableSelectedItems
+		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, !items.contains(item) {
+			items.append(item)
+		}
+		for item in items {
+			if let i = Model.drops.index(of: item) {
+				Model.drops.remove(at: i)
+				Model.drops.insert(item, at: 0)
+			}
+		}
+		Model.forceUpdateFilter(signalUpdate: false)
+		reloadData()
+		Model.save()
+	}
+
 	@objc func delete(_ sender: Any?) {
 		var items = Set(actionableSelectedItems)
 		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
@@ -661,7 +677,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(delete(_:)), #selector(shareSelected(_:)):
+		case #selector(copy(_:)), #selector(delete(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
 			return actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0

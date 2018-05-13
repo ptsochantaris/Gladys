@@ -101,14 +101,19 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Item" id="b4e-f2-nAD">
                                     <items>
+                                        <menuItem title="Get Info" keyEquivalent="i" id="Dhl-Vg-fBT">
+                                            <connections>
+                                                <action selector="info:" target="Ady-hI-5gd" id="U6p-vQ-Vzn"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Open" keyEquivalent="o" id="ule-AE-fv8">
                                             <connections>
                                                 <action selector="open:" target="Ady-hI-5gd" id="cFE-gZ-dXN"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Get Info" keyEquivalent="i" id="Dhl-Vg-fBT">
+                                        <menuItem title="Move To Top" keyEquivalent="m" id="lZT-ig-v0S">
                                             <connections>
-                                                <action selector="info:" target="Ady-hI-5gd" id="U6p-vQ-Vzn"/>
+                                                <action selector="moveToTop:" target="Ady-hI-5gd" id="g5i-WC-vnV"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Share" keyEquivalent="S" id="APo-zj-gqc">
