@@ -738,12 +738,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	func sendToTop(item: ArchivedDropItem) {
-		if let i = Model.drops.index(of: item) {
-			Model.drops.remove(at: i)
-			Model.drops.insert(item, at: 0)
-			Model.save()
-			Model.forceUpdateFilter(signalUpdate: true)
-		}
+		guard let i = Model.drops.index(of: item) else { return }
+		Model.drops.remove(at: i)
+		Model.drops.insert(item, at: 0)
+		Model.forceUpdateFilter(signalUpdate: false)
+		reloadData()
+		Model.save()
 	}
 
 	private func checkForUpgrade() {
@@ -1366,6 +1366,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	///////////////////////////// Accessibility
 
 	private var mostRecentIndexPathActioned: IndexPath?
+
+	func noteLastActionedItem(_ item: ArchivedDropItem) {
+		if let i = Model.filteredDrops.index(of: item) {
+			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
+		}
+	}
 
 	private var closestIndexPathSinceLast: IndexPath? {
 		let count = Model.filteredDrops.count
