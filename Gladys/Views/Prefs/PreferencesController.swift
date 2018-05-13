@@ -111,15 +111,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		return "[InternetShortcut]\r\nURL=\(url.absoluteString)\r\n"
 	}
 
-	private func truncate(string: String, limit: Int) -> String {
-		if string.count > limit {
-			let s = string.startIndex
-			let e = string.index(string.startIndex, offsetBy: limit)
-			return String(string[s..<e])
-		}
-		return string
-	}
-
 	private var eligibleDropsForExport: [ArchivedDropItem] {
 		let items = PersistedOptions.exportOnlyVisibleItems ? Model.threadSafeFilteredDrops : Model.threadSafeDrops
 		return items.filter { $0.goodToSave }
@@ -204,23 +195,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			bytes = typeItem.dataForWrappedItem ?? typeItem.bytes
 		}
 		if let B = bytes ?? typeItem.bytes {
-
-			var name = name
-			if let ext = typeItem.fileExtension {
-				name = truncate(string: name, limit: 255 - (ext.count+1)) + "." + ext
-			} else {
-				name = truncate(string: name, limit: 255)
-			}
-
-			if let directory = directory {
-				let directory = truncate(string: directory, limit: 255)
-				name = directory + "/" + name
-			}
-
-			// for now, remove in a few weeks
-			name = name.replacingOccurrences(of: "\0", with: "")
-
-			try? archive.addEntry(with: name, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
+			let timmedName = typeItem.prepareFilename(name: name, directory: directory)
+			try? archive.addEntry(with: timmedName, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
 				return B[pos ..< pos+size]
 			}
 		}

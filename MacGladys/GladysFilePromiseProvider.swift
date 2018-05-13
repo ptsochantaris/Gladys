@@ -15,17 +15,9 @@ class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDel
 	let filename: String
 
 	init(dropItemType: ArchivedDropItemType, title: String) {
-		if let ext = dropItemType.fileExtension {
-			let suffix = "." + ext
-			if title.hasSuffix(suffix) {
-				let removedSuffix = String(title.dropLast(suffix.count))
-				filename = removedSuffix.filenameSafe + "." + ext
-			} else {
-				filename = title.filenameSafe + "." + ext
-			}
-		} else {
-			filename = title.filenameSafe
-		}
+
+		filename = dropItemType.prepareFilename(name: title, directory: nil)
+
 		if dropItemType.typeIdentifier == "public.url", let s = dropItemType.encodedUrl?.absoluteString {
 			bytes = "[InternetShortcut]\r\nURL=\(s)\r\n".data(using: .utf8)!
 		} else {

@@ -403,14 +403,8 @@ final class ArchivedDropItemType: Codable {
 	func add(to pasteboardItem: NSPasteboardItem) {
 		guard let b = bytes else { return }
 		let tid = NSPasteboard.PasteboardType(typeIdentifier)
-		if b.isPlist {
-			if let e = encodedUrl, let s = e.absoluteString {
-				pasteboardItem.setString(s, forType: tid)
-			} else if let d = decode() as? String {
-				pasteboardItem.setString(d, forType: tid)
-			} else {
-				pasteboardItem.setPropertyList(b, forType: tid)
-			}
+		if let e = encodedUrl, let s = e.absoluteString {
+			pasteboardItem.setString(s, forType: tid)
 		} else {
 			pasteboardItem.setData(b, forType: tid)
 		}
@@ -422,8 +416,12 @@ final class ArchivedDropItemType: Codable {
 		return pi
 	}
 
-	var filePromise: GladysFilePromiseProvider {
-		return GladysFilePromiseProvider(dropItemType: self, title: displayTitle ?? typeIdentifier)
+	var filePromise: GladysFilePromiseProvider? {
+		if typeConforms(to: kUTTypeContent) || typeConforms(to: kUTTypeItem) {
+			return GladysFilePromiseProvider(dropItemType: self, title: displayTitle ?? typeIdentifier)
+		} else {
+			return nil
+		}
 	}
 
 	lazy var imagePath: URL = {

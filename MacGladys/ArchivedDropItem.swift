@@ -199,7 +199,7 @@ final class ArchivedDropItem: Codable {
 
 	var filePromise: GladysFilePromiseProvider? {
 		if typeItems.isEmpty { return nil }
-		let t = typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) }) ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeData) }) ?? typeItems.first!
+		let t = typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first!
 		return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
 	}
 

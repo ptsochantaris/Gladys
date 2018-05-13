@@ -330,8 +330,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
 		let pasteboardItems = indexPaths.map { item.typeItems[$0.item].pasteboardItem }
 		pasteboard.writeObjects(pasteboardItems)
-		let filePromises = indexPaths.map { item.typeItems[$0.item].filePromise }
-		pasteboard.writeObjects(filePromises)
+		let filePromises = indexPaths.compactMap { item.typeItems[$0.item].filePromise }
+		if !filePromises.isEmpty {
+			pasteboard.writeObjects(filePromises)
+		}
 		return true
 	}
 
