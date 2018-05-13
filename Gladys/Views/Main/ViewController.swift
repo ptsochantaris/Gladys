@@ -508,6 +508,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			collectionView.reloadItems(at: [indexPath])
 
 		} else if item.needsUnlock {
+			mostRecentIndexPathActioned = indexPath
 			item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
 				if success {
 					item.needsUnlock = false
@@ -1099,7 +1100,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		calculateItemSize()
 
-		archivedItemCollectionView.performBatchUpdates({})
+		archivedItemCollectionView.reloadData()
 	}
 
 	/////////////////////////////////

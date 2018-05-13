@@ -136,6 +136,7 @@ final class MiniMapView: UIImageView {
 final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var image: GladysImageView!
 	@IBOutlet weak var bottomLabel: UILabel!
+	@IBOutlet weak var labelsLabel: HighlightLabel!
 	@IBOutlet weak var bottomLabelDistance: NSLayoutConstraint!
 	@IBOutlet weak var topLabel: UILabel!
 	@IBOutlet weak var topLabelDistance: NSLayoutConstraint!
@@ -143,6 +144,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var cancelButton: UIButton!
 	@IBOutlet weak var lockImage: UIImageView!
 	@IBOutlet weak var mergeImage: UIImageView!
+	@IBOutlet weak var labelsDistance: NSLayoutConstraint!
 
 	private var selectionImage: UIImageView?
 	private var editHolder: UIView?
@@ -155,12 +157,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	override func tintColorDidChange() {
-		selectionImage?.tintColor = tintColor
-		cancelButton?.tintColor = tintColor
-		lockImage.tintColor = tintColor
-		mergeImage.tintColor = tintColor
-		topLabel.highlightedTextColor = tintColor
-		bottomLabel.highlightedTextColor = tintColor
+		let c = tintColor
+		selectionImage?.tintColor = c
+		cancelButton?.tintColor = c
+		lockImage.tintColor = c
+		mergeImage.tintColor = c
+		labelsLabel.tintColor = c
+		topLabel.highlightedTextColor = c
+		bottomLabel.highlightedTextColor = c
 	}
 
 	@objc private func darkModeChanged() {
@@ -481,6 +485,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var bottomLabelText: String?
 		var bottomLabelHighlight = false
 		var bottomLabelAlignment: NSTextAlignment?
+		var labels: [String]?
 
 		if let item = item {
 
@@ -533,27 +538,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 				topLabelAlignment = titleInfo.1
 				topLabelText = titleInfo.0
 
-				var redText: String?
 				if PersistedOptions.displayNotesInMainView && !item.note.isEmpty {
-					redText = item.note
-				}
-				if PersistedOptions.displayLabelsInMainView && item.labels.count > 0 {
-					let labelText = item.labels.joined(separator: ", ")
-					if redText == nil {
-						redText = labelText
-					} else {
-						redText!.append(" (" + labelText + ")")
-					}
-				}
-
-				if let redText = redText {
-					bottomLabelText = redText
+					bottomLabelText = item.note
 					bottomLabelHighlight = true
 				} else if let url = item.associatedWebURL {
 					bottomLabelText = url.absoluteString
 					if topLabelText == bottomLabelText {
 						topLabelText = nil
 					}
+				}
+
+				let wideMode = ViewController.shared.itemSize.height > 145
+
+				if wideMode && PersistedOptions.displayLabelsInMainView {
+					labels = item.labels
 				}
 
 				if bottomLabelText == nil && topLabelText != nil {
@@ -572,7 +570,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				case .center:
 					image.contentMode = .center
 					image.circle = false
-					primaryLabel.numberOfLines = ViewController.shared.itemSize.height > 145 ? 8 : 2
+					primaryLabel.numberOfLines = wideMode ? 8 : 2
 					secondaryLabel.numberOfLines = 2
 				case .fill:
 					image.contentMode = .scaleAspectFill
@@ -643,6 +641,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 		bottomLabelDistance.constant = (bottomLabelText == nil) ? 0 : 7
 		bottomLabel.textAlignment = bottomLabelAlignment ?? .center
 		bottomLabel.isHighlighted = bottomLabelHighlight
+
+		if let labels = labels {
+			labelsDistance.constant = 3
+			labelsLabel.labels = labels
+		} else {
+			labelsDistance.constant = 0
+			labelsLabel.labels = []
+		}
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
@@ -719,7 +725,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			if shouldDisplayLoading {
 				return nil
 			}
-			return topLabel.text
+			return (topLabel.text ?? "") + ((archivedDropItem?.isLocked ?? false) ? "\nItem Locked" : "")
 		}
 	}
 
@@ -729,7 +735,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 			if shouldDisplayLoading {
 				return "Processing item. Activate to cancel."
 			} else {
-				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomLabel.text].compactMap { $0 }.joined(separator: "\n")
+				var bottomText = ""
+				if PersistedOptions.displayLabelsInMainView, let l = archivedDropItem?.labels, !l.isEmpty {
+					bottomText.append(l.joined(separator: ", "))
+				}
+				if let l = bottomLabel.text {
+					if !bottomText.isEmpty {
+						bottomText.append("\n")
+					}
+					bottomText.append(l)
+				}
+				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomText].compactMap { $0 }.joined(separator: "\n")
 			}
 		}
 	}

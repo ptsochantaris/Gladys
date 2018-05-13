@@ -45,7 +45,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
-                                                    <rect key="frame" x="8" y="30" width="284" height="240.5"/>
+                                                    <rect key="frame" x="8" y="30" width="284" height="221"/>
                                                     <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEc-YZ-ZGZ">
@@ -73,6 +73,12 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconPlusCircle" translatesAutoresizingMaskIntoConstraints="NO" id="7Cz-Ex-aln">
                                                     <rect key="frame" x="135.5" y="38" width="28" height="28"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Axq-ka-HoY" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                    <rect key="frame" x="8" y="258" width="284" height="13.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                    <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </view>
                                         <constraints>
@@ -81,27 +87,32 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="v3H-LC-FOH" secondAttribute="trailing" id="54Q-4S-UsC"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="5lP-ga-4TG"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="width" secondItem="x5M-NP-dlj" secondAttribute="width" multiplier="0.6" id="6Py-cb-5dZ"/>
+                                            <constraint firstItem="Axq-ka-HoY" firstAttribute="trailing" secondItem="x5M-NP-dlj" secondAttribute="trailingMargin" id="I2g-w3-RF1"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" constant="-10" id="Lox-2y-iXm"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="Lnk-SW-KkP" secondAttribute="trailing" id="MLn-ck-mTO"/>
                                             <constraint firstItem="7Cz-Ex-aln" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="WmQ-wo-Fei"/>
                                             <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="top" secondItem="vTy-88-2LK" secondAttribute="bottom" constant="25" id="YCi-M1-v2Z"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YFJ-Zr-9jg"/>
+                                            <constraint firstItem="Axq-ka-HoY" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="7" id="dJC-3c-hXD"/>
+                                            <constraint firstItem="Axq-ka-HoY" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="fFI-w3-Ca7"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="top" secondItem="Lnk-SW-KkP" secondAttribute="bottom" constant="8" id="fR2-e0-xPA"/>
                                             <constraint firstItem="2DN-HK-OAe" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="kPI-Kb-kTW"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="lX8-Z5-Y4P"/>
                                             <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="centerX" secondItem="g2k-cT-VHS" secondAttribute="centerX" id="rRb-4u-PDd"/>
                                             <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" priority="750" id="tCq-Kc-mNY"/>
+                                            <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="Axq-ka-HoY" secondAttribute="bottom" constant="7" id="u8n-iU-nM6"/>
                                             <constraint firstItem="2DN-HK-OAe" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="uIz-TY-yqr"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
                                             <constraint firstItem="7Cz-Ex-aln" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="top" constant="8" id="vcD-ge-jlS"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
-                                            <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="bottom" constant="8" id="zYq-Vr-jMB"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="bottomLabel" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
-                                            <outlet property="bottomLabelDistance" destination="zYq-Vr-jMB" id="b5Z-Uo-UfU"/>
+                                            <outlet property="bottomLabelDistance" destination="dJC-3c-hXD" id="0u2-bq-f4P"/>
                                             <outlet property="cancelButton" destination="mEc-YZ-ZGZ" id="D4Y-sH-UBm"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
+                                            <outlet property="labelsDistance" destination="u8n-iU-nM6" id="Be1-96-Qht"/>
+                                            <outlet property="labelsLabel" destination="Axq-ka-HoY" id="nJn-ab-giS"/>
                                             <outlet property="lockImage" destination="2DN-HK-OAe" id="thp-hn-MyS"/>
                                             <outlet property="mergeImage" destination="7Cz-Ex-aln" id="boM-VZ-ZMD"/>
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
