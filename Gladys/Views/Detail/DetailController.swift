@@ -423,6 +423,7 @@ final class DetailController: GladysViewController,
 			table.deleteRows(at: [indexPath], with: .automatic)
 			view.setNeedsLayout()
 			makeIndexAndSaveItem()
+			item.postModified()
 		} else {
 			removeTypeItem(at: indexPath)
 		}
@@ -577,11 +578,13 @@ final class DetailController: GladysViewController,
 					if previousIndex.section == 2 {
 						item.labels.remove(at: previousIndex.row)
 						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+						item.postModified()
 						tableView.performBatchUpdates({
 							tableView.reloadData()
 						})
 					} else {
 						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+						item.postModified()
 						tableView.performBatchUpdates({
 							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 						})
@@ -681,6 +684,7 @@ final class DetailController: GladysViewController,
 			table.insertRows(at: [indexPath], with: .automatic)
 		}
 		makeIndexAndSaveItem()
+		item.postModified()
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {

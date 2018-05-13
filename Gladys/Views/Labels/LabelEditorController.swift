@@ -86,6 +86,7 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0) {
 					item.labels.append(toggle)
+					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
@@ -93,6 +94,7 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0), !item.labels.contains(toggle) {
 					item.labels.append(toggle)
+					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
@@ -100,6 +102,7 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle) {
 					item.labels.remove(at: i)
+					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}

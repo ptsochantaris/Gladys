@@ -19,9 +19,15 @@ final class OptionsController: GladysViewController {
 	@IBOutlet weak var darkModeSwitch: UISwitch!
 	@IBOutlet weak var fullScreenSwitch: UISwitch!
 	@IBOutlet weak var mergeSwitch: UISwitch!
+	@IBOutlet weak var displayLabelsInMainViewSwitch: UISwitch!
 
 	@IBOutlet var headerLabels: [UILabel]!
 	@IBOutlet var subtitleLabels: [UILabel]!
+
+	@IBAction func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.displayLabelsInMainView = sender.isOn
+		ViewController.shared.reloadData()
+	}
 
 	@IBAction func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
 		PersistedOptions.showCopyMoveSwitchSelector = sender.isOn
@@ -71,6 +77,7 @@ final class OptionsController: GladysViewController {
 		removeItemsWhenDraggedOutSwitch.onTintColor = view.tintColor
 		dontAutoLabelNewItemsSwitch.onTintColor = view.tintColor
 		displayNotesInMainViewSwitch.onTintColor = view.tintColor
+		displayLabelsInMainViewSwitch.onTintColor = view.tintColor
 		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
 		darkModeSwitch.onTintColor = view.tintColor
 		fullScreenSwitch.onTintColor = view.tintColor
@@ -111,6 +118,9 @@ final class OptionsController: GladysViewController {
 
 		displayNotesInMainViewSwitch.tintColor = .lightGray
 		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
+
+		displayLabelsInMainViewSwitch.tintColor = .lightGray
+		displayLabelsInMainViewSwitch.isOn = PersistedOptions.displayLabelsInMainView
 
 		showCopyMoveSwitchSelectorSwitch.tintColor = .lightGray
 		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector

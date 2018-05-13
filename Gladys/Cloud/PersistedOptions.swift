@@ -91,6 +91,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var displayLabelsInMainView: Bool {
+		get {
+			return defaults.bool(forKey: "displayLabelsInMainView")
+		}
+		set {
+			defaults.set(newValue, forKey: "displayLabelsInMainView")
+			defaults.synchronize()
+		}
+	}
+
 	static var watchComplicationText: String {
 		get {
 			return defaults.string(forKey: "watchComplicationText") ?? ""

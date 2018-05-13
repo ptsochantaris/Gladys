@@ -533,8 +533,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 				topLabelAlignment = titleInfo.1
 				topLabelText = titleInfo.0
 
+				var redText: String?
 				if PersistedOptions.displayNotesInMainView && !item.note.isEmpty {
-					bottomLabelText = item.note
+					redText = item.note
+				}
+				if PersistedOptions.displayLabelsInMainView && item.labels.count > 0 {
+					let labelText = item.labels.joined(separator: ", ")
+					if redText == nil {
+						redText = labelText
+					} else {
+						redText!.append(" (" + labelText + ")")
+					}
+				}
+
+				if let redText = redText {
+					bottomLabelText = redText
 					bottomLabelHighlight = true
 				} else if let url = item.associatedWebURL {
 					bottomLabelText = url.absoluteString
