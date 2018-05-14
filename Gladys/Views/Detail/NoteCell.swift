@@ -137,7 +137,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	override var isAccessibilityElement: Bool {
 		set {}
 		get {
-			return true
+			return !textView.isFirstResponder
 		}
 	}
 }

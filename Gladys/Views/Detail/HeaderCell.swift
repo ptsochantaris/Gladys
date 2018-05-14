@@ -136,7 +136,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	override var isAccessibilityElement: Bool {
 		set {}
 		get {
-			return true
+			return !label.isFirstResponder
 		}
 	}
 }

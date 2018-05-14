@@ -1514,19 +1514,19 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="deleteSelected:" destination="Ftr-GB-y6U" id="xDc-PW-PZ5"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="kv1-lH-cn9"/>
                         <barButtonItem image="locked" id="6XJ-Ig-GJa">
                             <connections>
                                 <action selector="lockButtonSelected:" destination="Ftr-GB-y6U" id="eOB-u1-hMH"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="kv1-lH-cn9"/>
                         <barButtonItem enabled="NO" title="Added" width="206" style="plain" id="wmE-wj-aN7"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="vfd-Pt-HIw"/>
                         <barButtonItem image="pasteSmall" id="WNg-a3-4ZW">
                             <connections>
                                 <action selector="copySelected:" destination="Ftr-GB-y6U" id="jy0-Qq-38b"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="vfd-Pt-HIw"/>
                         <barButtonItem systemItem="action" id="3fs-bH-AAg">
                             <connections>
                                 <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>

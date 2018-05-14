@@ -157,17 +157,17 @@ final class DetailCell: UITableViewCell {
 		set {}
 		get {
 			var actions = [UIAccessibilityCustomAction]()
-			if !editButton.isHidden {
-				actions.append(UIAccessibilityCustomAction(name: "Edit Text", target: self, selector: #selector(previewSelected)))
+			if viewHeight.constant > 0 {
+				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
 			}
-			if !archiveButton.isHidden {
+			if editHeight.constant > 0 {
+				actions.append(UIAccessibilityCustomAction(name: "Edit Text", target: self, selector: #selector(editSelected(_:))))
+			}
+			if archiveHeight.constant > 0 {
 				actions.append(UIAccessibilityCustomAction(name: "Archive Link Target", target: self, selector: #selector(archiveSelected(_:))))
 			}
-			if !inspectButton.isHidden {
+			if inspectHeight.constant > 0 {
 				actions.append(UIAccessibilityCustomAction(name: "Inspect Item", target: self, selector: #selector(inspectSelected(_:))))
-			}
-			if !viewButton.isHidden {
-				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
 			}
 			return actions
 		}

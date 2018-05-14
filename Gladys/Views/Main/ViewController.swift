@@ -424,9 +424,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-		if segue.identifier == "showPreferences",
-			let t = segue.destination as? UITabBarController,
-			let p = t.popoverPresentationController {
+		switch segue.identifier {
+
+		case "showPreferences":
+			guard let t = segue.destination as? UITabBarController,
+				let p = t.popoverPresentationController
+				else { return }
 
 			p.permittedArrowDirections = [.any]
 			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
@@ -440,28 +443,31 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				n.view.backgroundColor = c
 			}
 
-		} else if segue.identifier == "showDetail",
-			let item = sender as? ArchivedDropItem,
-			let indexPath = mostRecentIndexPathActioned,
-			let n = segue.destination as? UINavigationController,
-			let d = n.topViewController as? DetailController,
-			let p = n.popoverPresentationController {
+		case "showDetail":
+			guard let item = sender as? ArchivedDropItem,
+				let indexPath = mostRecentIndexPathActioned,
+				let n = segue.destination as? UINavigationController,
+				let d = n.topViewController as? DetailController,
+				let p = n.popoverPresentationController,
+				let cell = archivedItemCollectionView.cellForItem(at: indexPath)
+				else { return }
 
 			d.item = item
-			if let cell = archivedItemCollectionView.cellForItem(at: indexPath) {
-				let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
-				p.permittedArrowDirections = [.down, .left, .right]
-				p.sourceView =  navigationController!.view
-				p.sourceRect = cellRect
-				p.delegate = self
-				let c = patternColor
-				p.backgroundColor = c
-				n.view.backgroundColor = c
-			}
 
-		} else if segue.identifier == "showLabels",
-			let n = segue.destination as? UINavigationController,
-			let p = n.popoverPresentationController {
+			let c = patternColor
+			n.view.backgroundColor = c
+
+			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
+			p.permittedArrowDirections = [.down, .left, .right]
+			p.sourceView =  navigationController!.view
+			p.sourceRect = cellRect
+			p.delegate = self
+			p.backgroundColor = c
+
+		case "showLabels":
+			guard let n = segue.destination as? UINavigationController,
+				let p = n.popoverPresentationController
+				else { return }
 
 			p.delegate = self
 			if PersistedOptions.darkMode {
@@ -471,10 +477,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				setEditing(false, animated: true)
 			}
 
-		} else if segue.identifier == "showLabelEditor",
-			let n = segue.destination as? UINavigationController,
-			let e = n.topViewController as? LabelEditorController,
-			let p = n.popoverPresentationController {
+		case "showLabelEditor":
+			guard let n = segue.destination as? UINavigationController,
+				let e = n.topViewController as? LabelEditorController,
+				let p = n.popoverPresentationController
+				else { return }
 
 			p.delegate = self
 			if PersistedOptions.darkMode {
@@ -486,6 +493,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					self?.setEditing(false, animated: true)
 				}
 			}
+
+		default: break
 		}
 	}
 
