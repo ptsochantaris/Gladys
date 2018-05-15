@@ -128,6 +128,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		item.labels.insert(label, at: newIndex)
 		saveItem()
+		labels.selectRowIndexes(IndexSet(integer: newIndex), byExtendingSelection: false)
 		return true
 	}
 
