@@ -72,11 +72,19 @@ let nonInfiniteItemLimit = 10
 #if DEBUG
 
 let infiniteMode = true
+let receiptExists = true
 func reVerifyInfiniteMode() {}
 
 #else
 
 var infiniteMode = verifyIapReceipt(getDeviceId())
+var receiptExists: Bool {
+	if let receiptUrl = Bundle.main.appStoreReceiptURL {
+		return FileManager.default.fileExists(atPath: receiptUrl.path)
+	} else {
+		return false
+	}
+}
 func reVerifyInfiniteMode() {
 	infiniteMode = verifyIapReceipt(getDeviceId())
 	NotificationCenter.default.post(name: .IAPModeChanged, object: nil)

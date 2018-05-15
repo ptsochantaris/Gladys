@@ -8,11 +8,16 @@
 
 import Cocoa
 import CoreSpotlight
+import MacGladysFramework
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
+
+		if !receiptExists {
+			exit(173)
+		}
 
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
