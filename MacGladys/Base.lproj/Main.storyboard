@@ -20,7 +20,19 @@
                                         <menuItem title="About MacGladys" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
+                                                <action selector="aboutSelected:" target="Voe-Tx-rLC" id="hsb-tO-Wfq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Infinite Mode..." id="AN3-Zt-BA7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="infiniteModeSelected:" target="Voe-Tx-rLC" id="6QJ-2h-jF9"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="MacGladys Web Site..." id="7cq-xg-8be">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openWebSite:" target="Voe-Tx-rLC" id="WHc-LY-m83"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -192,7 +204,11 @@ CA
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MacGladys" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MacGladys" customModuleProvider="target">
+                    <connections>
+                        <outlet property="infiniteModeMenuEntry" destination="AN3-Zt-BA7" id="K7A-T0-Hhy"/>
+                    </connections>
+                </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="217" y="-297"/>
@@ -364,10 +380,9 @@ CA
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="zx9-oG-vp9"/>
                                     </constraints>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u98-Pl-GoC">
-                                <rect key="frame" x="25" y="171" width="183" height="18"/>
+                                <rect key="frame" x="25" y="171" width="389" height="18"/>
                                 <buttonCell key="cell" type="check" title="Display labels in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="irC-kW-UCv">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -380,6 +395,7 @@ CA
                         <constraints>
                             <constraint firstItem="hg6-iA-08k" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3y4-gH-maW" secondAttribute="trailing" constant="20" id="7Qm-bx-vLe"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="trailing" secondItem="MFg-OO-DD8" secondAttribute="trailing" id="8ry-mK-l1H"/>
+                            <constraint firstItem="u98-Pl-GoC" firstAttribute="trailing" secondItem="QIW-HV-EGK" secondAttribute="trailing" id="AV3-kO-PSB"/>
                             <constraint firstAttribute="bottom" secondItem="3y4-gH-maW" secondAttribute="bottom" constant="20" id="HZ8-xc-v6r"/>
                             <constraint firstItem="u98-Pl-GoC" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="8" id="It2-KR-eWR"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="QIW-HV-EGK" secondAttribute="trailing" id="JCy-Ku-1SZ"/>
@@ -422,7 +438,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="425" y="687"/>
+            <point key="canvasLocation" x="418" y="704"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -517,7 +533,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="815" y="562"/>
+            <point key="canvasLocation" x="816" y="562"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -569,7 +585,6 @@ CA
                                         </textField>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box fixedFrame="YES" title="Notes" translatesAutoresizingMaskIntoConstraints="NO" id="cDx-xd-k0n">
                                 <rect key="frame" x="17" y="168" width="480" height="114"/>
@@ -592,7 +607,6 @@ CA
                                         </textField>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
                                 <rect key="frame" x="17" y="16" width="761" height="148"/>
@@ -635,7 +649,6 @@ CA
                                         </scrollView>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box fixedFrame="YES" title="Labels" translatesAutoresizingMaskIntoConstraints="NO" id="OM8-Rk-nPi">
                                 <rect key="frame" x="507" y="168" width="271" height="232"/>
@@ -708,7 +721,6 @@ CA
                                         </scrollView>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                         </subviews>
                     </view>

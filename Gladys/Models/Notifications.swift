@@ -20,4 +20,5 @@ extension Notification.Name {
 	static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
 	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 	static let DarkModeChanged = Notification.Name("DarkModeChanged")
+	static let IAPModeChanged = Notification.Name("IAPModeChanged")
 }

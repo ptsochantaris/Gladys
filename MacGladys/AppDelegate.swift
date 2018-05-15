@@ -18,6 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
 		}
 		IAPManager.shared.start()
+		NotificationCenter.default.addObserver(self, selector: #selector(iapChanged), name: .IAPModeChanged, object: nil)
+		infiniteModeMenuEntry.isHidden = infiniteMode
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -54,6 +56,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		return false
+	}
+
+	@IBAction func aboutSelected(_ sender: NSMenuItem) {
+		let p = NSMutableParagraphStyle()
+		p.alignment = .center
+		p.lineSpacing = 1
+		let font = NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .small))
+		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
+			NSAttributedStringKey.font: font,
+			NSAttributedStringKey.paragraphStyle: p,
+			])
+		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
+	}
+
+	@IBOutlet weak var infiniteModeMenuEntry: NSMenuItem!
+	@objc private func iapChanged() {
+		infiniteModeMenuEntry.isHidden = infiniteMode
+	}
+
+	@IBAction func infiniteModeSelected(_ sender: NSMenuItem) {
+		IAPManager.shared.displayRequest(newTotal: -1)
+	}
+
+	@IBAction func openWebSite(_ sender: NSMenuItem) {
+		NSWorkspace.shared.open(URL(string: "https://www.bru.build/app/gladys")!)
 	}
 
 	/*func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {

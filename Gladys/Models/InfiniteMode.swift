@@ -77,6 +77,9 @@ func reVerifyInfiniteMode() {}
 #else
 
 var infiniteMode = verifyIapReceipt(getDeviceId())
-func reVerifyInfiniteMode() { infiniteMode = verifyIapReceipt(getDeviceId()) }
+func reVerifyInfiniteMode() {
+	infiniteMode = verifyIapReceipt(getDeviceId())
+	NotificationCenter.default.post(name: .IAPModeChanged, object: nil)
+}
 
 #endif
