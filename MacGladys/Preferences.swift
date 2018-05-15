@@ -19,6 +19,7 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var eraseAlliCloudDataButton: NSButton!
 
 	@IBOutlet weak var displayNotesSwitch: NSButton!
+	@IBOutlet weak var displayLabelsSwitch: NSButton!
 	@IBOutlet weak var separateItemsSwitch: NSButton!
 	@IBOutlet weak var moveSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
@@ -31,6 +32,7 @@ final class Preferences: NSViewController {
 		super.viewDidLoad()
 
 		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
+		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
 		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
@@ -106,6 +108,11 @@ final class Preferences: NSViewController {
 
 	@IBAction func displayNotesSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
+		ViewController.shared.reloadData()
+	}
+
+	@IBAction func displayLabelsSwitchSelected(_ sender: NSButton) {
+		PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
 		ViewController.shared.reloadData()
 	}
 

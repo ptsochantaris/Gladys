@@ -223,7 +223,7 @@ CA
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="431" height="456"/>
+                        <rect key="frame" x="0.0" y="0.0" width="431" height="490"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
@@ -237,7 +237,7 @@ CA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
-                                <rect key="frame" x="25" y="171" width="389" height="18"/>
+                                <rect key="frame" x="25" y="205" width="389" height="18"/>
                                 <buttonCell key="cell" type="check" title="Display notes in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="d3Z-ev-luL">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -287,7 +287,7 @@ CA
                                 </connections>
                             </button>
                             <box title="iCloud Sync" translatesAutoresizingMaskIntoConstraints="NO" id="I7j-E4-XFn">
-                                <rect key="frame" x="17" y="205" width="397" height="231"/>
+                                <rect key="frame" x="17" y="239" width="397" height="231"/>
                                 <view key="contentView" id="QIW-HV-EGK">
                                     <rect key="frame" x="2" y="2" width="393" height="214"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -364,16 +364,27 @@ CA
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="zx9-oG-vp9"/>
                                     </constraints>
                                 </view>
+                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u98-Pl-GoC">
+                                <rect key="frame" x="25" y="171" width="183" height="18"/>
+                                <buttonCell key="cell" type="check" title="Display labels in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="irC-kW-UCv">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="displayLabelsSwitchSelected:" target="FB0-Ob-ymN" id="eEM-YL-bdX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="hg6-iA-08k" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3y4-gH-maW" secondAttribute="trailing" constant="20" id="7Qm-bx-vLe"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="trailing" secondItem="MFg-OO-DD8" secondAttribute="trailing" id="8ry-mK-l1H"/>
                             <constraint firstAttribute="bottom" secondItem="3y4-gH-maW" secondAttribute="bottom" constant="20" id="HZ8-xc-v6r"/>
+                            <constraint firstItem="u98-Pl-GoC" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="8" id="It2-KR-eWR"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="QIW-HV-EGK" secondAttribute="trailing" id="JCy-Ku-1SZ"/>
                             <constraint firstAttribute="trailing" secondItem="I7j-E4-XFn" secondAttribute="trailing" constant="20" id="Jhe-Kd-1Rm"/>
                             <constraint firstItem="3y4-gH-maW" firstAttribute="top" secondItem="U1O-fZ-P8U" secondAttribute="bottom" constant="30" id="KsU-bf-vsG"/>
-                            <constraint firstItem="MFg-OO-DD8" firstAttribute="top" secondItem="NWy-dL-hAY" secondAttribute="bottom" constant="20" id="LT9-Rr-gE5"/>
                             <constraint firstItem="3y4-gH-maW" firstAttribute="leading" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="QAK-9G-lX1"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="top" secondItem="QIW-HV-EGK" secondAttribute="bottom" constant="20" id="QFa-Mm-eeJ"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="8" id="Rfh-aD-Bbn"/>
@@ -385,17 +396,20 @@ CA
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="8" id="c2M-Ma-7Yi"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="AOr-VA-w9Q" secondAttribute="bottom" constant="20" id="eEm-sF-Yhm"/>
                             <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="f3Z-yf-jqF"/>
+                            <constraint firstItem="u98-Pl-GoC" firstAttribute="top" secondItem="NWy-dL-hAY" secondAttribute="bottom" constant="20" id="jAP-ro-GgC"/>
                             <constraint firstAttribute="bottom" secondItem="hg6-iA-08k" secondAttribute="bottom" constant="20" id="lce-xX-uIe"/>
                             <constraint firstAttribute="trailing" secondItem="hg6-iA-08k" secondAttribute="trailing" constant="20" id="lfw-Xj-UMk"/>
                             <constraint firstItem="AOr-VA-w9Q" firstAttribute="trailing" secondItem="QIW-HV-EGK" secondAttribute="trailing" id="oNz-Xu-CYf"/>
                             <constraint firstItem="NWy-dL-hAY" firstAttribute="trailing" secondItem="QIW-HV-EGK" secondAttribute="trailing" id="tDh-p1-gth"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="trailing" secondItem="AOr-VA-w9Q" secondAttribute="trailing" id="tQP-aG-cap"/>
+                            <constraint firstItem="MFg-OO-DD8" firstAttribute="top" secondItem="u98-Pl-GoC" secondAttribute="bottom" constant="20" id="uMH-Lm-XeN"/>
                             <constraint firstItem="U1O-fZ-P8U" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="8" id="x3L-r6-uD7"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="autoLabelSwitch" destination="U1O-fZ-P8U" id="IMg-Yz-P4k"/>
                         <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
+                        <outlet property="displayLabelsSwitch" destination="u98-Pl-GoC" id="5ox-Te-P13"/>
                         <outlet property="displayNotesSwitch" destination="NWy-dL-hAY" id="cTV-5A-q96"/>
                         <outlet property="doneButton" destination="hg6-iA-08k" id="dmO-sL-kye"/>
                         <outlet property="eraseAlliCloudDataButton" destination="9FN-4v-wue" id="FtF-3b-kD8"/>
@@ -555,6 +569,7 @@ CA
                                         </textField>
                                     </subviews>
                                 </view>
+                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box fixedFrame="YES" title="Notes" translatesAutoresizingMaskIntoConstraints="NO" id="cDx-xd-k0n">
                                 <rect key="frame" x="17" y="168" width="480" height="114"/>
@@ -577,6 +592,7 @@ CA
                                         </textField>
                                     </subviews>
                                 </view>
+                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
                                 <rect key="frame" x="17" y="16" width="761" height="148"/>
@@ -619,6 +635,7 @@ CA
                                         </scrollView>
                                     </subviews>
                                 </view>
+                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box fixedFrame="YES" title="Labels" translatesAutoresizingMaskIntoConstraints="NO" id="OM8-Rk-nPi">
                                 <rect key="frame" x="507" y="168" width="271" height="232"/>
@@ -691,6 +708,7 @@ CA
                                         </scrollView>
                                     </subviews>
                                 </view>
+                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                         </subviews>
                     </view>

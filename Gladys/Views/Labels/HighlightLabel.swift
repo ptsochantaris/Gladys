@@ -17,9 +17,12 @@ final class HighlightLabel: UILabel {
 		}
 	}
 
-	override func tintColorDidChange() {
-		super.tintColorDidChange()
-		update()
+	override var tintColor: UIColor! {
+		didSet {
+			if oldValue != tintColor {
+				update()
+			}
+		}
 	}
 
 	private func update() {
@@ -44,7 +47,6 @@ final class HighlightLabel: UILabel {
 			start += len + separator.count
 		}
 		attributedText = string
-		setNeedsDisplay()
 	}
 
 	override func draw(_ rect: CGRect) {

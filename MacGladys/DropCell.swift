@@ -10,6 +10,95 @@ import Foundation
 import Cocoa
 import MapKit
 
+final class TokenTextField: NSTextField {
+	var labels: [String]? {
+		didSet {
+
+			guard let labels = labels, !labels.isEmpty else {
+				attributedStringValue = NSAttributedString()
+				return
+			}
+
+			let p = NSMutableParagraphStyle()
+			p.alignment = alignment
+			p.lineBreakMode = .byWordWrapping
+			p.lineSpacing = 3
+
+			let separator = "   "
+
+			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
+				NSAttributedStringKey.font: font!,
+				NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1),
+				NSAttributedStringKey.paragraphStyle: p
+				])
+
+			var start = 0
+			for label in labels {
+				let len = label.count
+				string.addAttribute(NSAttributedStringKey("HighlightText"), value: 1, range: NSMakeRange(start, len))
+				start += len + separator.count
+			}
+			attributedStringValue = string
+			setNeedsDisplay()
+		}
+	}
+
+	override func draw(_ dirtyRect: NSRect) {
+
+		guard !attributedStringValue.string.isEmpty, let labels = labels, let context = NSGraphicsContext.current?.cgContext else { return }
+
+		let highlightColor = #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)
+
+		let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
+
+		let path = CGMutablePath()
+		path.addRect(dirtyRect)
+
+		let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, nil)
+
+		context.textMatrix = .identity
+		context.translateBy(x: 0, y: dirtyRect.size.height)
+		context.scaleBy(x: 1, y: -1)
+
+		if labels.count > 0 {
+
+			let lines = CTFrameGetLines(totalFrame) as NSArray
+			let lineCount = lines.count
+
+			for index in 0 ..< lineCount {
+				let line = lines[index] as! CTLine
+
+				var origins = [CGPoint](repeating: .zero, count: lineCount)
+				CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
+				let lineFrame = CTLineGetBoundsWithOptions(line, [])
+				let offset: CGFloat = index < (lineCount-1) ? 2 : -6
+				let lineStart = (dirtyRect.width - lineFrame.width + offset) * 0.5
+
+				for r in CTLineGetGlyphRuns(line) as NSArray {
+
+					let run = r as! CTRun
+					let attributes = CTRunGetAttributes(run) as NSDictionary
+
+					if attributes["HighlightText"] != nil {
+						var runBounds = lineFrame
+
+						runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
+						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
+						runBounds.origin.y = origins[index].y - 2.5
+
+						context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
+						context.setLineWidth(0.5)
+						context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
+						context.strokePath()
+					}
+				}
+			}
+		}
+
+		CTFrameDraw(totalFrame, context)
+	}
+}
+
 final class MiniMapView: NSView {
 
 	private var coordinate: CLLocationCoordinate2D?
@@ -106,6 +195,7 @@ final class DropCell: NSCollectionViewItem {
 	@IBOutlet weak var progressView: NSProgressIndicator!
 	@IBOutlet weak var cancelHolder: NSView!
 	@IBOutlet weak var lockImage: NSImageView!
+	@IBOutlet weak var labelTokenField: TokenTextField!
 
 	private var existingPreviewView: NSView?
 
@@ -166,6 +256,7 @@ final class DropCell: NSCollectionViewItem {
 		var hideCancel = true
 		var hideImage = true
 		var hideLock = true
+		var hideLabels = true
 
 		var topLabelText = ""
 		var topLabelAlignment = NSTextAlignment.center
@@ -217,6 +308,10 @@ final class DropCell: NSCollectionViewItem {
 					}
 				}
 
+				if PersistedOptions.displayLabelsInMainView && !item.labels.isEmpty {
+					hideLabels = false
+				}
+
 				if bottomLabelText.isEmpty && !topLabelText.isEmpty {
 					bottomLabelText = topLabelText
 					bottomLabelAlignment = topLabelAlignment
@@ -232,7 +327,7 @@ final class DropCell: NSCollectionViewItem {
 				switch item.displayMode {
 				case .center:
 					image.layer?.contentsGravity = kCAGravityCenter
-					primaryLabel.maximumNumberOfLines = 8
+					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				case .fill:
 					image.layer?.contentsGravity = kCAGravityResizeAspectFill
@@ -304,6 +399,9 @@ final class DropCell: NSCollectionViewItem {
 			e.removeFromSuperview()
 			existingPreviewView = nil
 		}
+
+		labelTokenField.isHidden = hideLabels
+		labelTokenField.labels = item?.labels
 
 		topLabel.stringValue = topLabelText
 		topLabel.isHidden = topLabelText.isEmpty
