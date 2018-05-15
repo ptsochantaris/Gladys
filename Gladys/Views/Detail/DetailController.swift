@@ -669,6 +669,16 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		if UIAccessibilityIsVoiceOverRunning() { // weird hack for word mode
+			let left = -scrollView.adjustedContentInset.left
+			if scrollView.contentOffset.x < left {
+				let top = -scrollView.adjustedContentInset.top
+				scrollView.contentOffset = CGPoint(x: left, y: top)
+			}
+		}
+	}
+
 	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?) {
 
 		guard let indexPath = table.indexPathForSelectedRow else { return }
