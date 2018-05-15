@@ -29,7 +29,8 @@ final class TokenTextField: NSTextField {
 			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
 				NSAttributedStringKey.font: font!,
 				NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1),
-				NSAttributedStringKey.paragraphStyle: p
+				NSAttributedStringKey.paragraphStyle: p,
+				NSAttributedStringKey.baselineOffset: -2,
 				])
 
 			var start = 0
@@ -41,6 +42,12 @@ final class TokenTextField: NSTextField {
 			attributedStringValue = string
 			setNeedsDisplay()
 		}
+	}
+
+	override var intrinsicContentSize: NSSize {
+		var s = super.intrinsicContentSize
+		s.height += 2
+		return s
 	}
 
 	override func draw(_ dirtyRect: NSRect) {
@@ -84,7 +91,7 @@ final class TokenTextField: NSTextField {
 
 						runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
 						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
-						runBounds.origin.y = origins[index].y - 2.5
+						runBounds.origin.y = origins[index].y - 4.5
 
 						context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
 						context.setLineWidth(0.5)
