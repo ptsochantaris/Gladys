@@ -39,6 +39,10 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		}
 	}
 
+	func windowDidEndLiveResize(_ notification: Notification) {
+		ViewController.shared.collection.reloadData()
+	}
+
 	var lastWindowPosition: NSRect? {
 		set {
 			PersistedOptions.defaults.setValue(newValue?.dictionaryRepresentation, forKey: "lastWindowPosition")
