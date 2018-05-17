@@ -19,11 +19,11 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	private var itemsPerRow: Int {
 		let s = itemsView.bounds.size
 		if s.width < 320 {
-			return min(2, Model.drops.count)
+			return min(2, Model.visibleDrops.count)
 		} else if s.width < 400 {
-			return min(3, Model.drops.count)
+			return min(3, Model.visibleDrops.count)
 		} else {
-			return min(4, Model.drops.count)
+			return min(4, Model.visibleDrops.count)
 		}
 	}
 
@@ -38,18 +38,18 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
-		return min(count, Model.drops.count)
+		return min(count, Model.visibleDrops.count)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodayCell", for: indexPath) as! TodayCell
-		cell.dropItem = Model.drops[indexPath.row]
+		cell.dropItem = Model.visibleDrops[indexPath.row]
 		return cell
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		Model.reloadDataIfNeeded()
-		let drop = Model.drops[indexPath.row]
+		let drop = Model.visibleDrops[indexPath.row]
 		drop.copyToPasteboard()
 		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
 			self.copiedLabel.alpha = 1
@@ -65,13 +65,13 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		Model.reloadDataIfNeeded()
-		let drop = Model.drops[indexPath.row]
+		let drop = Model.visibleDrops[indexPath.row]
 		return [drop.dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
 		Model.reloadDataIfNeeded()
-		let item = Model.drops[indexPath.row].dragItem
+		let item = Model.visibleDrops[indexPath.row].dragItem
 		if !session.items.contains(item) {
 			return [item]
 		} else {
@@ -97,7 +97,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	private func updateUI() {
 		Model.reloadDataIfNeeded()
 		copiedLabel.alpha = 0
-		emptyLabel.isHidden = Model.drops.count > 0
+		emptyLabel.isHidden = Model.visibleDrops.count > 0
 		itemsView.reloadData()
 		itemsView.layoutIfNeeded()
 		preferredContentSize = itemsView.contentSize

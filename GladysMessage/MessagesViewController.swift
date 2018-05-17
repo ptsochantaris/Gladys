@@ -106,7 +106,7 @@ UICollectionViewDataSource, UISearchBarDelegate {
 		updateItemSize(for: view.bounds.size)
 		itemsView.reloadData()
 	}
-    
+
 	deinit {
 		log("iMessage app dismissed")
 	}

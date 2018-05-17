@@ -147,5 +147,12 @@ final class Model {
 			}
 		}
 	}
+
+	static var visibleDrops: [ArchivedDropItem] {
+		if Model.legacyMode {
+			return []
+		}
+		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil }
+	}
 }
 
