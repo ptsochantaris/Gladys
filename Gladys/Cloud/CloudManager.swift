@@ -8,6 +8,8 @@
 
 #if os(iOS)
 import UIKit
+#else
+import Cocoa
 #endif
 import CloudKit
 
@@ -297,6 +299,9 @@ final class CloudManager {
 				syncProgressString = syncing ? "Syncing" : nil
 				#if MAINAPP
 				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
+				#endif
+				#if MAC
+				NSApplication.shared.dockTile.badgeLabel = syncing ? "↔" : nil
 				#endif
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 			}

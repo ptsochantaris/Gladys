@@ -13,8 +13,12 @@ import CloudKit
 extension CloudManager {
 
 	static func received(notificationInfo: [AnyHashable : Any]) {
-		NSApplication.shared.dockTile.badgeLabel = ""
-		if !syncSwitchedOn { return }
+		if !syncSwitchedOn {
+			DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+				NSApplication.shared.dockTile.badgeLabel = nil
+			}
+			return
+		}
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
 		if notification.subscriptionID == "private-changes" {
