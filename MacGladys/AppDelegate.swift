@@ -85,7 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@IBAction func openWebSite(_ sender: NSMenuItem) {
-		NSWorkspace.shared.open(URL(string: "https://www.bru.build/app/gladys")!)
+		NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
 	}
 
 	/*func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
