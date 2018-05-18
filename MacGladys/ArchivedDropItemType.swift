@@ -154,14 +154,6 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var backgroundInfoObject: (Any?, Int) {
-		switch representedClass {
-		case "MKMapItem": return (decode() as? MKMapItem, 30)
-		case "UIColor": return (decode() as? NSColor, 30)
-		default: return (nil, 0)
-		}
-	}
-
 	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
 
 		self.typeIdentifier = typeIdentifier

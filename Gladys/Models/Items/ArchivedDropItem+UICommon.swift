@@ -23,19 +23,6 @@ extension ArchivedDropItem {
 		return needsReIngest || loadingProgress != nil
 	}
 
-	var backgroundInfoObject: Any? {
-		var currentItem: Any?
-		var currentPriority = -1
-		for item in typeItems {
-			let (newItem, newPriority) = item.backgroundInfoObject
-			if let newItem = newItem, newPriority > currentPriority {
-				currentItem = newItem
-				currentPriority = newPriority
-			}
-		}
-		return currentItem
-	}
-
 	func delete() {
 		isDeleting = true
 		if cloudKitRecord != nil {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 let todayCellFormatter: DateFormatter = {
 	let d = DateFormatter()
@@ -21,6 +22,8 @@ final class TodayCell: UICollectionViewCell {
 	@IBOutlet weak var topLabel: UILabel!
 	@IBOutlet weak var bottomLabel: UILabel!
 	@IBOutlet weak var imageView: UIImageView!
+
+	private var existingPreviewView: UIView?
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -42,22 +45,60 @@ final class TodayCell: UICollectionViewCell {
 
 	var dropItem: ArchivedDropItem? {
 		didSet {
-			if let dropItem = dropItem {
-				topLabel.text = dropItem.displayText.0
-				bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
-				imageView.image = dropItem.displayIcon
-				switch dropItem.displayMode {
-				case .center:
-					imageView.contentMode = .center
-				case .circle:
-					imageView.contentMode = .center
-				case .fill:
-					imageView.contentMode = .scaleAspectFill
-				case .fit:
-					imageView.contentMode = .scaleAspectFit
+			guard let dropItem = dropItem else { return }
+			topLabel.text = dropItem.displayText.0
+			bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
+			imageView.image = dropItem.displayIcon
+			switch dropItem.displayMode {
+			case .center:
+				imageView.contentMode = .center
+			case .circle:
+				imageView.contentMode = .center
+			case .fill:
+				imageView.contentMode = .scaleAspectFill
+			case .fit:
+				imageView.contentMode = .scaleAspectFit
+			}
+			accessibilityLabel = "Added " + (bottomLabel.text ?? "")
+			accessibilityValue = topLabel.text ?? ""
+
+			var wantMapView = false
+			var wantColourView = false
+
+			// if we're showing an icon, let's try to enhance things a bit
+			if imageView.contentMode == .center, let backgroundItem = dropItem.backgroundInfoObject {
+				if let mapItem = backgroundItem as? MKMapItem {
+					wantMapView = true
+					if let m = existingPreviewView as? MiniMapView {
+						m.show(location: mapItem)
+					} else {
+						if let e = existingPreviewView {
+							e.removeFromSuperview()
+						}
+						let m = MiniMapView(at: mapItem)
+						imageView.cover(with: m)
+						existingPreviewView = m
+					}
+
+				} else if let color = backgroundItem as? UIColor {
+					wantColourView = true
+					if let c = existingPreviewView as? ColourView {
+						c.backgroundColor = color
+					} else {
+						if let e = existingPreviewView {
+							e.removeFromSuperview()
+						}
+						let c = ColourView()
+						c.backgroundColor = color
+						imageView.cover(with: c)
+						existingPreviewView = c
+					}
 				}
-				accessibilityLabel = "Added " + (bottomLabel.text ?? "")
-				accessibilityValue = topLabel.text ?? ""
+			}
+
+			if !wantMapView && !wantColourView, let e = existingPreviewView {
+				e.removeFromSuperview()
+				existingPreviewView = nil
 			}
 		}
 	}

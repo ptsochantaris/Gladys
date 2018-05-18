@@ -24,14 +24,6 @@ extension ArchivedDropItemType {
 		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
 	}
 
-	var backgroundInfoObject: (Any?, Int) {
-		switch representedClass {
-		case "MKMapItem": return (decode() as? MKMapItem, 30)
-		case "UIColor": return (decode() as? UIColor, 10)
-		default: return (nil, 0)
-		}
-	}
-
 	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
 
 		if QLPreviewController.canPreview(previewTempPath as NSURL) {
