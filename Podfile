@@ -17,6 +17,6 @@ end
 target 'MacGladys' do
   platform :osx, '10.13'
   pod 'Fuzi', '~> 2'
+  pod 'HotKey'
   pod 'ZIPFoundation'
-  pod 'CallbackURLKit'
 end

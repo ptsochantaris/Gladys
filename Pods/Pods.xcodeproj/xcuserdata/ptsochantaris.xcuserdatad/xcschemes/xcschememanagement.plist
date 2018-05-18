@@ -4,28 +4,28 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CallbackURLKit-iOS.xcscheme</key>
+		<key>CallbackURLKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>CallbackURLKit-macOS.xcscheme</key>
+		<key>Fuzi-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
-		<key>Fuzi-iOS.xcscheme</key>
+		<key>Fuzi-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
-		<key>Fuzi-macOS.xcscheme</key>
+		<key>HotKey.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

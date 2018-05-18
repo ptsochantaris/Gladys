@@ -1,5 +1,5 @@
 framework module CallbackURLKit {
-  umbrella header "CallbackURLKit-iOS-umbrella.h"
+  umbrella header "CallbackURLKit-umbrella.h"
 
   export *
   module * { export * }

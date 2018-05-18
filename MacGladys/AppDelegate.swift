@@ -9,9 +9,36 @@
 import Cocoa
 import CoreSpotlight
 import MacGladysFramework
+import HotKey
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+	static private var hotKey: HotKey?
+
+	static func updateHotkey() {
+		let hotKeyCode = PersistedOptions.hotkeyChar
+		let enable = hotKeyCode >= 0 && (PersistedOptions.hotkeyCmd || PersistedOptions.hotkeyOption || PersistedOptions.hotkeyCtrl)
+		if enable {
+			var modifiers = NSEvent.ModifierFlags()
+			if PersistedOptions.hotkeyOption { modifiers = modifiers.union(.option) }
+			if PersistedOptions.hotkeyShift { modifiers = modifiers.union(.shift) }
+			if PersistedOptions.hotkeyCtrl { modifiers = modifiers.union(.control) }
+			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
+			hotKey = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
+			hotKey?.keyDownHandler = {
+				if let w = ViewController.shared.view.window {
+					if w.isVisible {
+						w.close()
+					} else {
+						w.makeKeyAndOrderFront(nil)
+					}
+				}
+			}
+		} else {
+			hotKey = nil
+		}
+	}
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
@@ -22,9 +49,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
 		}
+
 		IAPManager.shared.start()
 		NotificationCenter.default.addObserver(self, selector: #selector(iapChanged), name: .IAPModeChanged, object: nil)
 		infiniteModeMenuEntry.isHidden = infiniteMode
+
+		AppDelegate.updateHotkey()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -96,5 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		Model.save()
 		return NSApplication.TerminateReply.terminateLater
 	}*/
+
+
 }
 

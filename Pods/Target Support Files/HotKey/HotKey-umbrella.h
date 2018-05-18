@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double CallbackURLKitVersionNumber;
-FOUNDATION_EXPORT const unsigned char CallbackURLKitVersionString[];
+FOUNDATION_EXPORT double HotKeyVersionNumber;
+FOUNDATION_EXPORT const unsigned char HotKeyVersionString[];
 

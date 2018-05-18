@@ -134,12 +134,12 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-iOS/CallbackURLKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit/CallbackURLKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS/ZIPFoundation.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-iOS/CallbackURLKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit/CallbackURLKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS/ZIPFoundation.framework"
 fi

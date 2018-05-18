@@ -1630,7 +1630,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Gladys/Pods-Gladys-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CallbackURLKit-iOS/CallbackURLKit.framework",
+				"${BUILT_PRODUCTS_DIR}/CallbackURLKit/CallbackURLKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework",
 				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS/ZIPFoundation.framework",
 			);
@@ -1700,15 +1700,15 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework",
 				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/HotKey/HotKey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CallbackURLKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fuzi.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HotKey.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2195,6 +2195,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_LDFLAGS = (
 					"-L/usr/local/opt/openssl/lib",
 					/usr/local/opt/openssl/lib/libssl.a,
@@ -2236,6 +2237,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_LDFLAGS = (
 					"-L/usr/local/opt/openssl/lib",
 					/usr/local/opt/openssl/lib/libssl.a,

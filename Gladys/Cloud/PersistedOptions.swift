@@ -170,4 +170,51 @@ class PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var hotkeyCmd: Bool {
+		get {
+			return defaults.bool(forKey: "hotkeyCmd")
+		}
+		set {
+			defaults.set(newValue, forKey: "hotkeyCmd")
+			defaults.synchronize()
+		}
+	}
+	static var hotkeyOption: Bool {
+		get {
+			return defaults.bool(forKey: "hotkeyOption")
+		}
+		set {
+			defaults.set(newValue, forKey: "hotkeyOption")
+			defaults.synchronize()
+		}
+	}
+	static var hotkeyShift: Bool {
+		get {
+			return defaults.bool(forKey: "hotkeyShift")
+		}
+		set {
+			defaults.set(newValue, forKey: "hotkeyShift")
+			defaults.synchronize()
+		}
+	}
+	static var hotkeyCtrl: Bool {
+		get {
+			return defaults.bool(forKey: "hotkeyCtrl")
+		}
+		set {
+			defaults.set(newValue, forKey: "hotkeyCtrl")
+			defaults.synchronize()
+		}
+	}
+	static var hotkeyChar: Int {
+		get {
+			
+			return defaults.integer(forKey: "hotkeyChar")
+		}
+		set {
+			defaults.set(newValue, forKey: "hotkeyChar")
+			defaults.synchronize()
+		}
+	}
 }

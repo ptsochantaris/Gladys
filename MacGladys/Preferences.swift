@@ -24,6 +24,13 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var moveSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
 
+	@IBOutlet weak var hotkeyCmd: NSButton!
+	@IBOutlet weak var hotkeyOption: NSButton!
+	@IBOutlet weak var hotkeyShift: NSButton!
+	@IBOutlet weak var hotkeyChar: NSPopUpButton!
+	@IBOutlet weak var hotkeyCtrl: NSButton!
+	private let keyMap = [0, 11, 8, 2, 14, 3, 5, 4, 34, 38, 40, 37, 46, 45, 31, 35, 12, 15, 1, 17, 32, 9, 13, 7, 16, 6]
+
 	@IBAction func doneSelected(_ sender: NSButton) {
 		dismiss(nil)
 	}
@@ -34,18 +41,81 @@ final class Preferences: NSViewController {
 		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
 		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
-		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
+		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
 		}
 		updateSyncSwitches()
+		setupHotkeySection()
+	}
+
+	private func setupHotkeySection() {
+		if let m = hotkeyChar.menu {
+			m.removeAllItems()
+			m.addItem(withTitle: "None", action: #selector(hotkeyCharChanged), keyEquivalent: "")
+			for char in "abcdefghijklmnopqrstuvwxyz".uppercased() {
+				m.addItem(withTitle: "\(char)", action: #selector(hotkeyCharChanged), keyEquivalent: "")
+			}
+		}
+		hotkeyCmd.integerValue = PersistedOptions.hotkeyCmd ? 1 : 0
+		hotkeyOption.integerValue = PersistedOptions.hotkeyOption ? 1 : 0
+		hotkeyShift.integerValue = PersistedOptions.hotkeyShift ? 1 : 0
+		hotkeyCtrl.integerValue = PersistedOptions.hotkeyCtrl ? 1 : 0
+		if PersistedOptions.hotkeyChar >= 0, let index = keyMap.index(of: PersistedOptions.hotkeyChar), let item = hotkeyChar.item(at: index + 1) {
+			hotkeyChar.select(item)
+		} else {
+			hotkeyChar.select(hotkeyChar.menu?.items.first)
+		}
+		updateHotkeyState()
 	}
 
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		view.window!.initialFirstResponder = doneButton
+	}
+
+	@objc private func hotkeyCharChanged() {
+		if hotkeyChar.indexOfSelectedItem == 0 {
+			PersistedOptions.hotkeyChar = -1
+		} else {
+			PersistedOptions.hotkeyChar = keyMap[hotkeyChar.indexOfSelectedItem - 1]
+		}
+		updateHotkeyState()
+	}
+
+	@IBAction func hotkeyCmdChanged(_ sender: NSButton) {
+		PersistedOptions.hotkeyCmd = sender.integerValue == 1
+		updateHotkeyState()
+	}
+
+	@IBAction func hotkeyOptionChanged(_ sender: NSButton) {
+		PersistedOptions.hotkeyOption = sender.integerValue == 1
+		updateHotkeyState()
+	}
+
+	@IBAction func hotkeyShiftChanged(_ sender: NSButton) {
+		PersistedOptions.hotkeyShift = sender.integerValue == 1
+		updateHotkeyState()
+	}
+
+	@IBAction func hotkeyCtrlChaned(_ sender: NSButton) {
+		PersistedOptions.hotkeyCtrl = sender.integerValue == 1
+		updateHotkeyState()
+	}
+
+	private func updateHotkeyState() {
+		let enable = hotkeyCmd.integerValue == 1 || hotkeyOption.integerValue == 1 || hotkeyCtrl.integerValue == 1
+		hotkeyShift.isEnabled = enable
+		hotkeyChar.isEnabled = enable
+		if !enable {
+			hotkeyChar.select(hotkeyChar.menu?.item(at: 0))
+			hotkeyShift.integerValue = 0
+			PersistedOptions.hotkeyChar = 0
+			PersistedOptions.hotkeyShift = false
+		}
+		AppDelegate.updateHotkey()
 	}
 
 	private func updateSyncSwitches() {
@@ -186,4 +256,6 @@ final class Preferences: NSViewController {
 			}
 		}
 	}
+
+
 }
