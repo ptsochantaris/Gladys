@@ -61,8 +61,6 @@
 		16114857209FA1B6008BB332 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */; };
 		1611485D209FA265008BB332 /* MacGladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1611485B209FA1B6008BB332 /* MacGladysFramework.framework */; };
 		1611485E209FA265008BB332 /* MacGladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1611485B209FA1B6008BB332 /* MacGladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		16114865209FA58D008BB332 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16114864209FA58D008BB332 /* libssl.a */; };
-		16114867209FA5A0008BB332 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16114866209FA5A0008BB332 /* libcrypto.a */; };
 		1611486B209FBC79008BB332 /* MacGladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 1611486A209FBC79008BB332 /* MacGladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
@@ -628,8 +626,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16114867209FA5A0008BB332 /* libcrypto.a in Frameworks */,
-				16114865209FA58D008BB332 /* libssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2199,7 +2195,11 @@
 					"$(inherited)",
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
-				OTHER_LDFLAGS = "-L/usr/local/opt/openssl/lib";
+				OTHER_LDFLAGS = (
+					"-L/usr/local/opt/openssl/lib",
+					/usr/local/opt/openssl/lib/libssl.a,
+					/usr/local/opt/openssl/lib/libcrypto.a,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2236,7 +2236,11 @@
 					"$(inherited)",
 					/usr/local/Cellar/openssl/1.0.2o_1/lib,
 				);
-				OTHER_LDFLAGS = "-L/usr/local/opt/openssl/lib";
+				OTHER_LDFLAGS = (
+					"-L/usr/local/opt/openssl/lib",
+					/usr/local/opt/openssl/lib/libssl.a,
+					/usr/local/opt/openssl/lib/libcrypto.a,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
