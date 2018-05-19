@@ -13,7 +13,7 @@ extension ArchivedDropItemType {
 	func cloudKitUpdate(from record: CKRecord) {
 		updatedAt = record["updatedAt"] as! Date
 		typeIdentifier = record["typeIdentifier"] as! String
-		representedClass = record["representedClass"] as! String
+		representedClass = RepresentedClass(name: record["representedClass"] as! String)
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0
@@ -47,7 +47,7 @@ extension ArchivedDropItemType {
 		record["createdAt"] = createdAt as NSDate
 		record["updatedAt"] = updatedAt as NSDate
 		record["typeIdentifier"] = typeIdentifier as NSString
-		record["representedClass"] = representedClass as NSString
+		record["representedClass"] = representedClass.name as NSString
 		record["classWasWrapped"] = NSNumber(value: classWasWrapped ? 1 : 0)
 		record["accessoryTitle"] = accessoryTitle as NSString?
 		record["order"] = order as NSNumber

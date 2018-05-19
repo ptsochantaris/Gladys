@@ -41,7 +41,7 @@ extension ArchivedDropItemType {
 
 		if let url = encodedUrl {
 
-			if representedClass == "URL" {
+			if representedClass == .url {
 				return (url, 10)
 			}
 

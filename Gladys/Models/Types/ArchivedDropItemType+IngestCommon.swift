@@ -68,7 +68,7 @@ extension ArchivedDropItemType {
 			log("      received string: \(item)")
 			setTitleInfo(item as String, 10)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-			representedClass = "NSString"
+			representedClass = .string
 			bytes = data
 			completeIngest()
 
@@ -76,7 +76,7 @@ extension ArchivedDropItemType {
 			log("      received attributed string: \(item)")
 			setTitleInfo(item.string, 7)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-			representedClass = "NSAttributedString"
+			representedClass = .attributedString
 			bytes = data
 			completeIngest()
 
@@ -84,7 +84,7 @@ extension ArchivedDropItemType {
 			log("      received color: \(item)")
 			setTitleInfo("Color \(item.hexValue)", 0)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
-			representedClass = "UIColor"
+			representedClass = .color
 			bytes = data
 			completeIngest()
 
@@ -94,18 +94,18 @@ extension ArchivedDropItemType {
 			#if os(iOS)
 			if encodeAnyUIImage {
 				log("      will encode it to JPEG, as it's the only image in this parent item")
-				representedClass = "NSData"
+				representedClass = .data
 				typeIdentifier = kUTTypeJPEG as String
 				classWasWrapped = false
 				DispatchQueue.main.sync {
 					bytes = UIImageJPEGRepresentation(item, 1)
 				}
 			} else {
-				representedClass = "UIImage"
+				representedClass = .image
 				bytes = data
 			}
 			#else
-			representedClass = "UIImage"
+			representedClass = .image
 			bytes = data
 			#endif
 			completeIngest()
@@ -113,7 +113,7 @@ extension ArchivedDropItemType {
 		} else if let item = item as? MKMapItem {
 			log("      received map item: \(item)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
-			representedClass = "MKMapItem"
+			representedClass = .mapItem
 			bytes = data
 			completeIngest()
 
@@ -128,7 +128,7 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Items", 1)
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			representedClass = "NSArray"
+			representedClass = .array
 			bytes = data
 			completeIngest()
 
@@ -140,13 +140,13 @@ extension ArchivedDropItemType {
 				setTitleInfo("\(item.count) Entries", 1)
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			representedClass = "NSDictionary"
+			representedClass = .dictionary
 			bytes = data
 			completeIngest()
 
 		} else {
 			log("      received data: \(data)")
-			representedClass = "NSData"
+			representedClass = .data
 			handleData(data)
 		}
 	}

@@ -149,8 +149,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 					} else {
 						for typeItem in item.typeItems {
-							let d = typeItem.typeDescription ?? typeItem.filenameTypeIdentifier
-							self.addItem(typeItem, directory: dir, name: d, in: archive)
+							self.addItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
 						}
 					}
 					p.completedUnitCount += 1

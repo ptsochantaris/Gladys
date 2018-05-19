@@ -53,7 +53,7 @@ final class ArchivedDropItemType: Codable {
 	init(from decoder: Decoder) throws {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
-		representedClass = try v.decode(String.self, forKey: .representedClass)
+		representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
 		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
@@ -87,7 +87,7 @@ final class ArchivedDropItemType: Codable {
 	let parentUuid: UUID
 	let createdAt: Date
 	var updatedAt: Date
-	var representedClass: String
+	var representedClass: RepresentedClass
 	var classWasWrapped: Bool
 	var loadingError: Error?
 	var needsDeletion: Bool
@@ -148,7 +148,7 @@ final class ArchivedDropItemType: Codable {
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
-		representedClass = "NSData"
+		representedClass = .data
 		delegate = nil
 		bytes = data
 	}
@@ -176,7 +176,7 @@ final class ArchivedDropItemType: Codable {
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
-		representedClass = ""
+		representedClass = .unknown(name: "")
 	}
 	#endif
 
@@ -200,7 +200,7 @@ final class ArchivedDropItemType: Codable {
 		createdAt = record["createdAt"] as! Date
 		updatedAt = record["updatedAt"] as! Date
 		typeIdentifier = record["typeIdentifier"] as! String
-		representedClass = record["representedClass"] as! String
+		representedClass = RepresentedClass(name: record["representedClass"] as! String)
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0

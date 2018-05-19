@@ -154,6 +154,7 @@
 		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
 		168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
+		168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C940E20B0572700F4139D /* NSColor+Extensions.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
@@ -543,6 +544,7 @@
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Compression.swift"; sourceTree = "<group>"; };
+		168C940E20B0572700F4139D /* NSColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
 		168D2CAE209E0770005041CF /* ComponentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComponentCell.xib; sourceTree = "<group>"; };
@@ -866,6 +868,7 @@
 				168D2CAC209DCC53005041CF /* NewLabelController.swift */,
 				168D2CB0209E0988005041CF /* ComponentCell.swift */,
 				1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */,
+				168C940E20B0572700F4139D /* NSColor+Extensions.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -1906,6 +1909,7 @@
 				161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */,
 				16CD7D9620A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16CD7D8D20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
+				168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */,
 				161718DD2094D7F7005ABD6C /* Model.swift in Sources */,
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				169E646B20A0F04E003CB4C0 /* Network.swift in Sources */,

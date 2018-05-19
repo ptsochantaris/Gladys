@@ -337,7 +337,6 @@ CA
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="k6W-tC-lCK" secondAttribute="bottom" constant="20" id="p97-Ar-LP8"/>
                                         <constraint firstItem="WFi-R6-MZO" firstAttribute="leading" secondItem="QIW-HV-EGK" secondAttribute="leading" constant="20" id="ugr-D3-w0b"/>
                                         <constraint firstItem="i0H-2v-kpv" firstAttribute="centerY" secondItem="WFi-R6-MZO" secondAttribute="centerY" id="xnx-DK-47g"/>
-                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="i0H-2v-kpv" secondAttribute="trailing" constant="20" id="zx9-oG-vp9"/>
                                     </constraints>
                                 </view>
                             </box>
@@ -541,7 +540,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="307.5" y="630.5"/>
+            <point key="canvasLocation" x="340" y="631"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -636,7 +635,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="816" y="562"/>
+            <point key="canvasLocation" x="826" y="562"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">

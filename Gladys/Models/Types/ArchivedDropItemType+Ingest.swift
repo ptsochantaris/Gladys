@@ -19,7 +19,7 @@ extension ArchivedDropItemType {
 	func handleUrl(_ item: URL, _ data: Data) {
 		
 		bytes = data
-		representedClass = "URL"
+		representedClass = .url
 		
 		if item.isFileURL {
 			setTitleInfo(item.lastPathComponent, 6)

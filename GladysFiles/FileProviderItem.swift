@@ -128,7 +128,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 
 		} else if let typeItem = typeItem {
 
-			let filename = typeItem.contentDescription
+			let filename = typeItem.typeDescription
 			if let e = typeItem.fileExtension {
 				return "\(filename).\(e)"
 			}

@@ -13,18 +13,6 @@ import MapKit
 import ZIPFoundation
 import ContactsUI
 
-extension NSColor {
-	var hexValue: String {
-		guard let convertedColor = usingColorSpaceName(.calibratedRGB) else { return "#000000"}
-		var redFloatValue:CGFloat = 0.0, greenFloatValue:CGFloat = 0.0, blueFloatValue:CGFloat = 0.0
-		convertedColor.getRed(&redFloatValue, green: &greenFloatValue, blue: &blueFloatValue, alpha: nil)
-		let r = Int(redFloatValue * 255.99999)
-		let g = Int(greenFloatValue * 255.99999)
-		let b = Int(blueFloatValue * 255.99999)
-		return String(format: "#%02X%02X%02X", r, g, b)
-	}
-}
-
 final class ArchivedDropItemType: Codable {
 
 	private enum CodingKeys : String, CodingKey {
@@ -75,7 +63,7 @@ final class ArchivedDropItemType: Codable {
 	init(from decoder: Decoder) throws {
 		let v = try decoder.container(keyedBy: CodingKeys.self)
 		typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
-		representedClass = try v.decode(String.self, forKey: .representedClass)
+		representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
 		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 		uuid = try v.decode(UUID.self, forKey: .uuid)
 		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
@@ -117,7 +105,7 @@ final class ArchivedDropItemType: Codable {
 	let parentUuid: UUID
 	let createdAt: Date
 	var updatedAt: Date
-	var representedClass: String
+	var representedClass: RepresentedClass
 	var classWasWrapped: Bool
 	var loadingError: Error?
 	var needsDeletion: Bool
@@ -174,7 +162,7 @@ final class ArchivedDropItemType: Codable {
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
-		representedClass = "NSData"
+		representedClass = .data
 		delegate = nil
 		bytes = data
 	}
@@ -200,7 +188,7 @@ final class ArchivedDropItemType: Codable {
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
-		representedClass = ""
+		representedClass = .unknown(name: "")
 	}
 
 	init(from record: CKRecord, parentUuid: UUID) {
@@ -223,7 +211,7 @@ final class ArchivedDropItemType: Codable {
 		createdAt = record["createdAt"] as! Date
 		updatedAt = record["updatedAt"] as! Date
 		typeIdentifier = record["typeIdentifier"] as! String
-		representedClass = record["representedClass"] as! String
+		representedClass = RepresentedClass(name: record["representedClass"] as! String)
 		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0
@@ -268,6 +256,9 @@ final class ArchivedDropItemType: Codable {
 		let joinedChain = chain.joined(separator: "/")
 		let dirURL = baseURL.appendingPathComponent(joinedChain)
 		for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
+			if loadingAborted {
+				break
+			}
 			let newURL = dirURL.appendingPathComponent(file)
 			var directory: ObjCBool = false
 			if fm.fileExists(atPath: newURL.path, isDirectory: &directory) {
@@ -293,31 +284,38 @@ final class ArchivedDropItemType: Codable {
 				do {
 					let data: Data
 					if directory.boolValue {
+						typeIdentifier = kUTTypeZipArchive as String
+						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
+
 						let tempURL = URL(fileURLWithPath: NSTemporaryDirectory() + "/" + UUID().uuidString + ".zip")
 						let a = Archive(url: tempURL, accessMode: .create)!
 						let dirName = item.lastPathComponent
 						let item = item.deletingLastPathComponent()
 						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
+						if loadingAborted {
+							completeIngest()
+							return
+						}
 						data = try Data(contentsOf: tempURL)
 						try? fm.removeItem(at: tempURL)
-						typeIdentifier = kUTTypeZipArchive as String
-						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
 					} else {
 						data = try Data(contentsOf: item)
 						let ext = item.pathExtension
 						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
 							typeIdentifier = uti as String
+						} else {
+							typeIdentifier = kUTTypeData as String
 						}
 						setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 					}
 					accessoryTitle = item.lastPathComponent
-					representedClass = "NSData"
+					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
 					handleData(data)
 
 				} catch {
 					bytes = data
-					representedClass = "URL"
+					representedClass = .url
 					setTitleInfo(item.lastPathComponent, 6)
 					log("      could not read data from file, treating as local file url: \(item.absoluteString)")
 					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
@@ -325,7 +323,7 @@ final class ArchivedDropItemType: Codable {
 				}
 			} else {
 				bytes = data
-				representedClass = "URL"
+				representedClass = .url
 				setTitleInfo(item.lastPathComponent, 6)
 				log("      received local file url for non-existent file: \(item.absoluteString)")
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
@@ -334,7 +332,7 @@ final class ArchivedDropItemType: Codable {
 
 		} else {
 			bytes = data
-			representedClass = "URL"
+			representedClass = .url
 
 			setTitleInfo(item.absoluteString, 6)
 			log("      received remote url: \(item.absoluteString)")

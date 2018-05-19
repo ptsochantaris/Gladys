@@ -105,7 +105,7 @@ extension ArchivedDropItemType: Equatable {
 		return nil
 	}
 
-	var typeDescription: String? {
+	var typeDescription: String {
 
 		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
 			let t = desc as String
@@ -300,34 +300,11 @@ extension ArchivedDropItemType: Equatable {
 			return "Markdown Text"
 		}
 
-		switch representedClass {
-		case "NSData": return "Data"
-		case "NSString": return "Text"
-		case "NSAttributedString": return "Rich Text"
-		case "UIColor": return "Color"
-		case "UIImage": return "Image"
-		case "MKMapItem": return "Map Location"
-		case "NSArray": return "List"
-		case "NSDictionary": return "Associative List"
-		case "URL": return "Link"
-		default: break
-		}
-
-		return nil
+		return representedClass.description
 	}
 
 	func typeConforms(to parent: CFString) -> Bool {
 		return UTTypeConformsTo(typeIdentifier as CFString, parent)
-	}
-
-	var contentDescription: String {
-		if let typeDescription = typeDescription {
-			return typeDescription
-		} else if representedClass.isEmpty {
-			return typeIdentifier
-		} else {
-			return "Other (\(representedClass))"
-		}
 	}
 
 	var sizeInBytes: Int64 {

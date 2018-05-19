@@ -16,8 +16,8 @@ import MapKit
 extension ArchivedDropItemType {
 	var backgroundInfoObject: (Any?, Int) {
 		switch representedClass {
-		case "MKMapItem": return (decode() as? MKMapItem, 30)
-		case "UIColor": return (decode() as? COLOR, 30)
+		case .mapItem: return (decode() as? MKMapItem, 30)
+		case .color: return (decode() as? COLOR, 30)
 		default: return (nil, 0)
 		}
 	}

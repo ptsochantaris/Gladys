@@ -342,7 +342,7 @@ final class DetailController: GladysViewController,
 			if showTypeDetails {
 				cell.desc.text = typeEntry.typeIdentifier.uppercased()
 			} else {
-				cell.desc.text = typeEntry.contentDescription.uppercased()
+				cell.desc.text = typeEntry.typeDescription.uppercased()
 			}
 
 			return cell
@@ -469,7 +469,7 @@ final class DetailController: GladysViewController,
 			
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
-			e.title = typeEntry.contentDescription + " (\(size))"
+			e.title = typeEntry.typeDescription + " (\(size))"
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,

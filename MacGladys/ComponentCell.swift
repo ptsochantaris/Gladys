@@ -97,7 +97,7 @@ final class ComponentCell: NSCollectionViewItem {
 		guard let typeEntry = representedObject as? ArchivedDropItemType else { return }
 
 		sizeLabel.stringValue = typeEntry.sizeDescription ?? ""
-		descriptionLabel.stringValue = "\(typeEntry.contentDescription.uppercased()) (\(typeEntry.typeIdentifier.uppercased()))"
+		descriptionLabel.stringValue = "\(typeEntry.typeDescription.uppercased()) (\(typeEntry.typeIdentifier.uppercased()))"
 		if animateArchiving {
 			spinner.startAnimation(nil)
 			previewLabel.isHidden = true
