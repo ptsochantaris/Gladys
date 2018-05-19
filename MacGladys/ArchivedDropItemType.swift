@@ -257,6 +257,7 @@ final class ArchivedDropItemType: Codable {
 		let dirURL = baseURL.appendingPathComponent(joinedChain)
 		for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
 			if loadingAborted {
+				log("      Interrupted zip operation since ingest was aborted")
 				break
 			}
 			let newURL = dirURL.appendingPathComponent(file)
@@ -267,7 +268,7 @@ final class ArchivedDropItemType: Codable {
 					newChain.append(file)
 					try appendDirectory(baseURL, chain: newChain, archive: archive, fm: fm)
 				} else {
-					print("compressing file \(newURL)")
+					log("      Compressing \(newURL.path)")
 					let path = joinedChain + "/" + file
 					try archive.addEntry(with: path, relativeTo: baseURL)
 				}
@@ -293,7 +294,7 @@ final class ArchivedDropItemType: Codable {
 						let item = item.deletingLastPathComponent()
 						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
 						if loadingAborted {
-							completeIngest()
+							log("      Cancelled zip operation since ingest was aborted")
 							return
 						}
 						data = try Data(contentsOf: tempURL)
