@@ -16,23 +16,21 @@ extension UIColor {
 
 extension ArchivedDropItemType {
 
-	func handleUrl(_ item: URL, _ data: Data) {
+	func handleUrl(_ url: URL, _ data: Data) {
 		
 		bytes = data
 		representedClass = .url
+		setTitle(from: url)
 		
-		if item.isFileURL {
-			setTitleInfo(item.lastPathComponent, 6)
-			log("      received local file url: \(item.absoluteString)")
+		if url.isFileURL {
+			log("      received local file url: \(url.path)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			completeIngest()
-			return
 		} else {
-			setTitleInfo(item.absoluteString, 6)
-			log("      received remote url: \(item.absoluteString)")
+			log("      received remote url: \(url.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-			if let s = item.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: item) { [weak self] title, image in
+			if let s = url.scheme, s.hasPrefix("http") {
+				fetchWebPreview(for: url) { [weak self] title, image in
 					if self?.loadingAborted ?? true { return }
 					self?.accessoryTitle = title ?? self?.accessoryTitle
 					if let image = image {

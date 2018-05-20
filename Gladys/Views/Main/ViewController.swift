@@ -29,6 +29,22 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 	}
 }
 
+func getInput(from: UIViewController, title: String, action: String, previousValue: String?, completion: @escaping (String?)->Void) {
+	let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+	a.addTextField { textField in
+		textField.placeholder = title
+		textField.text = previousValue
+	}
+	a.addAction(UIAlertAction(title: action, style: .default, handler: { ac in
+		let result = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+		completion(result)
+	}))
+	a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { ac in
+		completion(nil)
+	}))
+	from.present(a, animated: true)
+}
+
 let mainWindow: UIWindow = {
 	return UIApplication.shared.windows.first!
 }()

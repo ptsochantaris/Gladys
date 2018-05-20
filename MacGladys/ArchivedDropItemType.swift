@@ -278,6 +278,8 @@ final class ArchivedDropItemType: Codable {
 
 	func handleUrl(_ item: URL, _ data: Data) {
 
+		setTitle(from: item)
+
 		if item.isFileURL {
 			let fm = FileManager.default
 			var directory: ObjCBool = false
@@ -317,7 +319,6 @@ final class ArchivedDropItemType: Codable {
 				} catch {
 					bytes = data
 					representedClass = .url
-					setTitleInfo(item.lastPathComponent, 6)
 					log("      could not read data from file, treating as local file url: \(item.absoluteString)")
 					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 					completeIngest()
@@ -325,7 +326,6 @@ final class ArchivedDropItemType: Codable {
 			} else {
 				bytes = data
 				representedClass = .url
-				setTitleInfo(item.lastPathComponent, 6)
 				log("      received local file url for non-existent file: \(item.absoluteString)")
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 				completeIngest()
@@ -335,7 +335,6 @@ final class ArchivedDropItemType: Codable {
 			bytes = data
 			representedClass = .url
 
-			setTitleInfo(item.absoluteString, 6)
 			log("      received remote url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 			if let s = item.scheme, s.hasPrefix("http") {

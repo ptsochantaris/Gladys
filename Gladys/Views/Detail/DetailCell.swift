@@ -59,7 +59,7 @@ final class DetailCell: UITableViewCell {
 		inspectButton.accessibilityLabel = "Inspect raw data"
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
-		editButton.accessibilityLabel = "Edit text item"
+		editButton.accessibilityLabel = "Edit item"
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -161,7 +161,7 @@ final class DetailCell: UITableViewCell {
 				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
 			}
 			if editHeight.constant > 0 {
-				actions.append(UIAccessibilityCustomAction(name: "Edit Text", target: self, selector: #selector(editSelected(_:))))
+				actions.append(UIAccessibilityCustomAction(name: "Edit Item", target: self, selector: #selector(editSelected(_:))))
 			}
 			if archiveHeight.constant > 0 {
 				actions.append(UIAccessibilityCustomAction(name: "Archive Link Target", target: self, selector: #selector(archiveSelected(_:))))

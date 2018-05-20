@@ -151,6 +151,36 @@ extension ArchivedDropItemType {
 		}
 	}
 
+	func setTitle(from url: URL) {
+		if url.isFileURL {
+			setTitleInfo(url.lastPathComponent, 6)
+		} else {
+			setTitleInfo(url.absoluteString, 6)
+		}
+	}
+
+	func replaceURL(_ url: NSURL) {
+		guard typeIdentifier == "public.url" || typeIdentifier == "public.file-url" else { return }
+
+		let decoded = decode()
+		if decoded is NSURL {
+			bytes = try? PropertyListSerialization.data(fromPropertyList: url, format: .binary, options: 0)
+		} else if let array = decoded as? NSArray {
+			let newArray = array.map { (item: Any) -> Any in
+				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+					return url.absoluteString?.data(using: .utf8) ?? Data()
+				} else {
+					return item
+				}
+			}
+			bytes = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
+		} else {
+			bytes = url.absoluteString?.data(using: .utf8)
+		}
+		setTitle(from: url as URL)
+		markUpdated()
+	}
+
 	func setLoadingError(_ message: String) {
 		loadingError = NSError(domain: "build.build.Gladys.loadingError", code: 5, userInfo: [NSLocalizedDescriptionKey: message])
 		log("Error: \(message)")

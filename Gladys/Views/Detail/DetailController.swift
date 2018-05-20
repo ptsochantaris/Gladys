@@ -355,7 +355,8 @@ final class DetailController: GladysViewController,
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
 
-		if let i = typeEntry.encodedUrl, !i.isFileURL {
+		let itemURL = typeEntry.encodedUrl
+		if let i = itemURL, !i.isFileURL {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
 					s.archiveWebComponent(cell: c, url: i as URL)
@@ -365,7 +366,11 @@ final class DetailController: GladysViewController,
 			cell.archiveCallback = nil
 		}
 
-		if typeEntry.isRichText || typeEntry.isText {
+		if itemURL != nil {
+			cell.editCallback = { [weak self] in
+				self?.editURL(typeEntry)
+			}
+		} else if typeEntry.isRichText || typeEntry.isText {
 			cell.editCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
 			}
@@ -391,6 +396,17 @@ final class DetailController: GladysViewController,
 			}
 		} else {
 			cell.viewCallback = nil
+		}
+	}
+
+	private func editURL(_ typeItem: ArchivedDropItemType) {
+		getInput(from: self, title: "Edit URL", action: "Change", previousValue: typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
+			if let newValue = newValue, let newURL = NSURL(string: newValue) {
+				typeItem.replaceURL(newURL)
+				self?.item.needsReIngest = true
+				self?.makeIndexAndSaveItem()
+				self?.table.reloadData()
+			}
 		}
 	}
 
