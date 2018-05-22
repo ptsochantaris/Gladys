@@ -108,7 +108,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func updateDragOperationIndicators() {
 		collection.setDraggingSourceOperationMask(.move, forLocal: true)
-		collection.setDraggingSourceOperationMask(cmdPressed ? .move : .copy, forLocal: false)
+		collection.setDraggingSourceOperationMask(optionPressed ? .every : .copy, forLocal: false)
 	}
 
 	private var observers = [NSObjectProtocol]()
@@ -175,8 +175,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	private var cmdPressed: Bool {
-		return NSApp.currentEvent?.modifierFlags.contains(.command) ?? false
+	private var optionPressed: Bool {
+		return NSApp.currentEvent?.modifierFlags.contains(.option) ?? false
 	}
 
 	private func updateTitle() {
@@ -378,7 +378,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
 		if let d = draggingIndexPaths, !d.isEmpty {
-			if cmdPressed {
+			if optionPressed {
 				let items = d.map { Model.filteredDrops[$0.item] }
 				deleteRequested(for: items)
 			}
