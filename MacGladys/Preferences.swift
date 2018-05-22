@@ -21,7 +21,6 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var displayNotesSwitch: NSButton!
 	@IBOutlet weak var displayLabelsSwitch: NSButton!
 	@IBOutlet weak var separateItemsSwitch: NSButton!
-	@IBOutlet weak var moveSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
 
 	@IBOutlet weak var hotkeyCmd: NSButton!
@@ -42,7 +41,6 @@ final class Preferences: NSViewController {
 		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
-		moveSwitch.integerValue = PersistedOptions.removeItemsWhenDraggedOut ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
@@ -188,11 +186,6 @@ final class Preferences: NSViewController {
 
 	@IBAction func multipleSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.separateItemPreference = sender.integerValue == 1
-	}
-
-	@IBAction func moveSwitchChanged(_ sender: NSButton) {
-		PersistedOptions.removeItemsWhenDraggedOut = sender.integerValue == 1
-		ViewController.shared.updateDragOperationIndicators()
 	}
 
 	@IBAction func autoLabelSwitchChanged(_ sender: NSButton) {

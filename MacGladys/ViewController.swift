@@ -106,9 +106,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	func updateDragOperationIndicators() {
+	private func updateDragOperationIndicators() {
 		collection.setDraggingSourceOperationMask(.move, forLocal: true)
-		collection.setDraggingSourceOperationMask(PersistedOptions.removeItemsWhenDraggedOut ? .move : .copy, forLocal: false)
+		collection.setDraggingSourceOperationMask(cmdPressed ? .move : .copy, forLocal: false)
 	}
 
 	private var observers = [NSObjectProtocol]()
@@ -173,8 +173,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if Model.drops.count == 0 {
 			blurb("Ready! Drop me stuff.")
 		}
+	}
 
-
+	private var cmdPressed: Bool {
+		return NSApp.currentEvent?.modifierFlags.contains(.command) ?? false
 	}
 
 	private func updateTitle() {
@@ -368,6 +370,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItemsAt indexPaths: Set<IndexPath>) {
+		updateDragOperationIndicators()
 		draggingIndexPaths = Array(indexPaths)
 	}
 
@@ -375,7 +378,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
 		if let d = draggingIndexPaths, !d.isEmpty {
-			if PersistedOptions.removeItemsWhenDraggedOut {
+			if cmdPressed {
 				let items = d.map { Model.filteredDrops[$0.item] }
 				deleteRequested(for: items)
 			}
@@ -384,10 +387,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let draggingIndexPaths = draggingIndexPaths {
+		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let dip = draggingIndexPaths {
 
+			draggingIndexPaths = nil
+			if let firstDip = dip.first, firstDip == indexPath {
+				return false
+			}
+			
 			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-			for draggingIndexPath in draggingIndexPaths.sorted(by: { $0.item > $1.item }) {
+			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
 				let sourceIndex = Model.drops.index(of: sourceItem)!
 				Model.drops.remove(at: sourceIndex)

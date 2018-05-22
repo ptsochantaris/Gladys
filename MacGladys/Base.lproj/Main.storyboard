@@ -239,7 +239,7 @@ CA
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="501" height="485"/>
+                        <rect key="frame" x="0.0" y="0.0" width="501" height="463"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
@@ -263,7 +263,7 @@ CA
                                 </connections>
                             </button>
                             <box title="iCloud Sync" translatesAutoresizingMaskIntoConstraints="NO" id="I7j-E4-XFn">
-                                <rect key="frame" x="17" y="281" width="467" height="184"/>
+                                <rect key="frame" x="17" y="259" width="467" height="184"/>
                                 <view key="contentView" id="QIW-HV-EGK">
                                     <rect key="frame" x="2" y="2" width="463" height="167"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -418,13 +418,13 @@ CA
                                 </view>
                             </box>
                             <box title="Display Options" translatesAutoresizingMaskIntoConstraints="NO" id="4by-e2-vOi">
-                                <rect key="frame" x="17" y="124" width="468" height="151"/>
+                                <rect key="frame" x="17" y="124" width="468" height="129"/>
                                 <view key="contentView" id="Tqb-Ex-FJh">
-                                    <rect key="frame" x="2" y="2" width="464" height="134"/>
+                                    <rect key="frame" x="2" y="2" width="464" height="112"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWy-dL-hAY">
-                                            <rect key="frame" x="18" y="102" width="428" height="18"/>
+                                            <rect key="frame" x="18" y="80" width="428" height="18"/>
                                             <buttonCell key="cell" type="check" title="Display notes in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="d3Z-ev-luL">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -434,23 +434,13 @@ CA
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MFg-OO-DD8">
-                                            <rect key="frame" x="18" y="58" width="428" height="18"/>
+                                            <rect key="frame" x="18" y="36" width="428" height="18"/>
                                             <buttonCell key="cell" type="check" title="Create separate items for each data component" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DcH-th-xVD">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
                                                 <action selector="multipleSwitchChanged:" target="FB0-Ob-ymN" id="2jE-wY-k9T"/>
-                                            </connections>
-                                        </button>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AOr-VA-w9Q">
-                                            <rect key="frame" x="18" y="36" width="428" height="18"/>
-                                            <buttonCell key="cell" type="check" title="Remove items that are dragged out" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="biJ-iP-91A">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="moveSwitchChanged:" target="FB0-Ob-ymN" id="Sum-7Q-NFS"/>
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U1O-fZ-P8U">
@@ -464,7 +454,7 @@ CA
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u98-Pl-GoC">
-                                            <rect key="frame" x="18" y="80" width="428" height="18"/>
+                                            <rect key="frame" x="18" y="58" width="428" height="18"/>
                                             <buttonCell key="cell" type="check" title="Display labels in main view" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="irC-kW-UCv">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -475,15 +465,12 @@ CA
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="MFg-OO-DD8" secondAttribute="bottom" constant="8" id="26e-fq-8XJ"/>
                                         <constraint firstItem="NWy-dL-hAY" firstAttribute="leading" secondItem="Tqb-Ex-FJh" secondAttribute="leading" constant="20" id="3Jw-qC-dbk"/>
                                         <constraint firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" constant="20" id="3gb-vJ-VWx"/>
                                         <constraint firstItem="NWy-dL-hAY" firstAttribute="top" secondItem="Tqb-Ex-FJh" secondAttribute="top" constant="16" id="3z0-iR-qJd"/>
                                         <constraint firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" constant="20" id="4Qn-oQ-f97"/>
                                         <constraint firstAttribute="bottom" secondItem="U1O-fZ-P8U" secondAttribute="bottom" constant="16" id="C6h-0S-lKU"/>
-                                        <constraint firstItem="AOr-VA-w9Q" firstAttribute="top" secondItem="MFg-OO-DD8" secondAttribute="bottom" constant="8" id="CCL-QS-dHC"/>
-                                        <constraint firstItem="AOr-VA-w9Q" firstAttribute="leading" secondItem="NWy-dL-hAY" secondAttribute="leading" id="HuO-Zc-Rrk"/>
-                                        <constraint firstItem="AOr-VA-w9Q" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="K4g-10-Q6V"/>
-                                        <constraint firstItem="U1O-fZ-P8U" firstAttribute="top" secondItem="AOr-VA-w9Q" secondAttribute="bottom" constant="8" id="NkC-vt-Ozn"/>
                                         <constraint firstItem="MFg-OO-DD8" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="Nv4-Sf-UdC"/>
                                         <constraint firstItem="MFg-OO-DD8" firstAttribute="top" secondItem="u98-Pl-GoC" secondAttribute="bottom" constant="8" id="Oyy-a3-mmj"/>
                                         <constraint firstItem="u98-Pl-GoC" firstAttribute="trailing" secondItem="NWy-dL-hAY" secondAttribute="trailing" id="P2p-jv-QFm"/>
@@ -527,7 +514,6 @@ CA
                         <outlet property="hotkeyCtrl" destination="aTB-co-R59" id="FXT-ge-h1Y"/>
                         <outlet property="hotkeyOption" destination="bvP-5m-ui6" id="AY4-7X-Ico"/>
                         <outlet property="hotkeyShift" destination="sC7-Co-Inp" id="OnE-6r-xxP"/>
-                        <outlet property="moveSwitch" destination="AOr-VA-w9Q" id="LD5-Up-5EN"/>
                         <outlet property="separateItemsSwitch" destination="MFg-OO-DD8" id="raI-jc-nax"/>
                         <outlet property="syncNowButton" destination="llh-zy-rJm" id="rzy-eJ-Z6f"/>
                         <outlet property="syncSpinner" destination="i0H-2v-kpv" id="ltw-F6-LDm"/>

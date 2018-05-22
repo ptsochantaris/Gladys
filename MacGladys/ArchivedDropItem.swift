@@ -197,10 +197,16 @@ final class ArchivedDropItem: Codable {
 		return pi
 	}
 
+	var typeItemPreferred: ArchivedDropItemType? {
+		return typeItems.max { $0.itemForShare.1 < $1.itemForShare.1 }
+	}
+
 	var filePromise: GladysFilePromiseProvider? {
-		if typeItems.isEmpty { return nil }
-		let t = typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first!
-		return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
+		if let t = typeItemPreferred ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first {
+			return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
+		} else {
+			return nil
+		}
 	}
 
 	func tryOpen(from viewController: NSViewController) {
