@@ -113,6 +113,10 @@ extension ArchivedDropItemType: Equatable {
 		return typeIdentifier == "public.url"
 	}
 
+	var isWebArchive: Bool {
+		return typeIdentifier == "com.apple.webarchive"
+	}
+
 	var typeDescription: String {
 
 		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {

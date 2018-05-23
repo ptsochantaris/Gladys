@@ -35,7 +35,7 @@ extension ArchivedDropItemType {
 			q.preferredContentSize = mainWindow.bounds.size
 			return q
 
-		} else if typeIdentifier == "com.apple.webarchive" {
+		} else if isWebArchive {
 			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading..."
 			d.webArchive = PreviewItem(typeItem: self)

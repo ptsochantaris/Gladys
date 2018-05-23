@@ -123,7 +123,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 			previewLabel.alignment = typeEntry.displayTitleAlignment
 		} else if typeEntry.dataExists {
 			previewLabel.alphaValue = 0.7
-			if typeEntry.typeIdentifier == "com.apple.webarchive" {
+			if typeEntry.isWebArchive {
 				previewLabel.stringValue = ComponentCell.shortFormatter.string(from: typeEntry.createdAt)
 			} else {
 				previewLabel.stringValue = "Binary Data"

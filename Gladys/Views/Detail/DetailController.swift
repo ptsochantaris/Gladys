@@ -321,7 +321,7 @@ final class DetailController: GladysViewController,
 				setCallbacks(for: cell, for: typeEntry)
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
-				if typeEntry.typeIdentifier == "com.apple.webarchive" {
+				if typeEntry.isWebArchive {
 					cell.name.text = DetailController.shortFormatter.string(from: typeEntry.createdAt)
 				} else {
 					cell.name.text = "Binary Data"
