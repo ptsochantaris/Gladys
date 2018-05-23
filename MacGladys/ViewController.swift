@@ -444,6 +444,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
 				Model.loadingUUIDs.insert(newItem.uuid)
+
+				if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+					newItem.labels = Model.enabledLabelsForItems
+				}
+				
 				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 				Model.drops.insert(newItem, at: destinationIndex)
 
@@ -452,8 +457,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				count += 1
 			}
 		}
-		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData(inserting: insertedIndexPaths)
+		if Model.isFiltering {
+			Model.forceUpdateFilter(signalUpdate: true)
+		} else {
+			Model.forceUpdateFilter(signalUpdate: false)
+			reloadData(inserting: insertedIndexPaths)
+		}
 		return true
 	}
 
