@@ -90,7 +90,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 	private func endBgTaskIfNeeded() {
-		if loadingUUIDs.count == 0, let b = bgTask {
+		if Model.loadingUUIDs.count == 0, let b = bgTask {
 			log("Ending background ingest task")
 			UIApplication.shared.endBackgroundTask(b)
 			bgTask = nil
@@ -304,7 +304,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 						self.focusInitialAccessibilityElement()
 					})
 
-					loadingUUIDs.insert(item.uuid)
+					Model.loadingUUIDs.insert(item.uuid)
 					if itemVisiblyInserted {
 						firstDestinationPath = destinationIndexPath
 					}
@@ -322,8 +322,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			updateEmptyView(animated: true)
 		}
 	}
-
-	private var loadingUUIDs = Set<UUID>()
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -753,7 +751,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			updateEmptyView(animated: true)
 
-			loadingUUIDs.insert(item.uuid)
+			Model.loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
 		return .success
@@ -893,9 +891,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		deleteButton.isEnabled = count > 0
 		editLabelsButton.isEnabled = count > 0
 
-		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !loadingUUIDs.contains($0.uuid) }
+		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !Model.loadingUUIDs.contains($0.uuid) }
 		for item in itemsToReIngest {
-			loadingUUIDs.insert(item.uuid)
+			Model.loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()
 			ArchivedItemCell.clearCachedImage(for: item)
 			item.reIngest(delegate: self)
@@ -1212,23 +1210,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
-		for item in items {
-
-			if item.shouldDisplayLoading {
-				item.cancelIngest()
-			}
-
-			let uuid = item.uuid
-			loadingUUIDs.remove(uuid)
-
-			if let i = Model.filteredDrops.index(where: { $0.uuid == uuid }) {
-			    Model.removeItemFromList(uuid: uuid)
-				archivedItemCollectionView.performBatchUpdates({
-					self.archivedItemCollectionView.deleteItems(at: [IndexPath(item: i, section: 0)])
-				})
-			}
-
-			item.delete()
+		let ipsToRemove = Model.delete(items: items)
+		if !ipsToRemove.isEmpty {
+			archivedItemCollectionView.performBatchUpdates({
+				self.archivedItemCollectionView.deleteItems(at: ipsToRemove)
+			})
 		}
 
 	    Model.save()
@@ -1288,8 +1274,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			}
 		}
 
-		loadingUUIDs.remove(item.uuid)
-		if loadingUUIDs.count == 0 {
+		Model.loadingUUIDs.remove(item.uuid)
+		if Model.loadingUUIDs.count == 0 {
 			Model.save()
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
 		}

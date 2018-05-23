@@ -75,7 +75,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	static var shared: ViewController! = nil
 
 	private let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
-	private var loadingUUIDS = Set<UUID>()
 
 	static let labelColor = NSColor.labelColor
 	static let tintColor = #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
@@ -221,9 +220,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func postSave() {
-		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !loadingUUIDS.contains($0.uuid) }
+		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !Model.loadingUUIDs.contains($0.uuid) }
 		for i in itemsToReIngest {
-			loadingUUIDS.insert(i.uuid)
+			Model.loadingUUIDs.insert(i.uuid)
 			i.reIngest(delegate: self)
 		}
 		updateEmptyView()
@@ -233,12 +232,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		guard let o = sender as? ArchivedDropItem else { return }
 		o.needsReIngest = false
 		o.reIndex()
-		loadingUUIDS.remove(o.uuid)
+		Model.loadingUUIDs.remove(o.uuid)
 		if let i = Model.filteredDrops.index(of: o) {
 			let ip = IndexPath(item: i, section: 0)
 			collection.reloadItems(at: [ip])
 		}
-		if loadingUUIDS.count == 0 {
+		if Model.loadingUUIDs.count == 0 {
 			print("Ingest complete")
 			Model.save()
 		}
@@ -444,7 +443,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		var count = 0
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
-				loadingUUIDS.insert(newItem.uuid)
+				Model.loadingUUIDs.insert(newItem.uuid)
 				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 				Model.drops.insert(newItem, at: destinationIndex)
 
@@ -460,24 +459,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
-		var ipsToRemove = [IndexPath]()
-		for item in items {
-
-			if item.shouldDisplayLoading {
-				item.cancelIngest()
-			}
-
-			let uuid = item.uuid
-			loadingUUIDS.remove(uuid)
-
-			if let i = Model.filteredDrops.index(where: { $0.uuid == uuid }) {
-				Model.removeItemFromList(uuid: uuid)
-				ipsToRemove.append(IndexPath(item: i, section: 0))
-			}
-
-			item.delete()
-		}
-
+		let ipsToRemove = Model.delete(items: items)
 		if !ipsToRemove.isEmpty {
 			reloadData(deleting: ipsToRemove)
 		}

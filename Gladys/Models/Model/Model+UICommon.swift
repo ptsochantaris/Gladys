@@ -17,6 +17,8 @@ import Cocoa
 extension Model {
 	static var saveIsDueToSyncFetch = false
 
+	static var loadingUUIDs = Set<UUID>()
+
 	private static var modelFilter: String?
 	private static var currentFilterQuery: CSSearchQuery?
 	private static var cachedFilteredDrops: [ArchivedDropItem]?
@@ -59,15 +61,6 @@ extension Model {
 			} else {
 				return $0
 			}
-		}
-	}
-
-	static func removeItemFromList(uuid: UUID) {
-		if let x = drops.index(where: { $0.uuid == uuid }) {
-			drops.remove(at: x)
-		}
-		if let x = cachedFilteredDrops?.index(where: { $0.uuid == uuid }) {
-			cachedFilteredDrops!.remove(at: x)
 		}
 	}
 
@@ -331,5 +324,38 @@ extension Model {
 		}
 
 		return changesToVisibleItems
+	}
+
+	static func delete(items: [ArchivedDropItem]) -> [IndexPath] {
+		var ipsToRemove = [IndexPath]()
+		var uuidsToRemove = [UUID]()
+
+		for item in items {
+
+			if item.shouldDisplayLoading {
+				item.cancelIngest()
+			}
+
+			let uuid = item.uuid
+			loadingUUIDs.remove(uuid)
+			uuidsToRemove.append(uuid)
+
+			if let i = filteredDrops.index(where: { $0.uuid == uuid }) {
+				ipsToRemove.append(IndexPath(item: i, section: 0))
+			}
+
+			item.delete()
+		}
+
+		for uuid in uuidsToRemove {
+			if let x = drops.index(where: { $0.uuid == uuid }) {
+				drops.remove(at: x)
+			}
+			if let x = cachedFilteredDrops?.index(where: { $0.uuid == uuid }) {
+				cachedFilteredDrops!.remove(at: x)
+			}
+		}
+
+		return ipsToRemove
 	}
 }
