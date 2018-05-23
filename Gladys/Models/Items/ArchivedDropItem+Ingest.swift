@@ -23,6 +23,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 			if let d = delegate {
 				delegate = nil
 				d.loadCompleted(sender: self)
+				NotificationCenter.default.post(name: .IngestComplete, object: self)
 			}
 		}
 	}

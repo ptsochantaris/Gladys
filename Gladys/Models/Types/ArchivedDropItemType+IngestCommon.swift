@@ -160,7 +160,7 @@ extension ArchivedDropItemType {
 	}
 
 	func replaceURL(_ url: NSURL) {
-		guard typeIdentifier == "public.url" || typeIdentifier == "public.file-url" else { return }
+		guard isURL else { return }
 
 		let decoded = decode()
 		if decoded is NSURL {

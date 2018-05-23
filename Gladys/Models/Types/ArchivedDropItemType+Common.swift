@@ -71,7 +71,7 @@ extension ArchivedDropItemType: Equatable {
 	}
 
 	var encodedUrl: NSURL? {
-		guard typeIdentifier == "public.url" || typeIdentifier == "public.file-url" else { return nil }
+		guard isURL else { return nil }
 
 		let decoded = decode()
 		if let u = decoded as? NSURL {
@@ -96,13 +96,21 @@ extension ArchivedDropItemType: Equatable {
 				return t
 			}
 		}
-		if typeIdentifier == "public.url" {
+		if isWebURL {
 			return "url"
 		}
 		if typeIdentifier.hasSuffix("-plain-text") {
 			return "txt"
 		}
 		return nil
+	}
+
+	var isURL: Bool {
+		return typeConforms(to: kUTTypeURL)
+	}
+
+	var isWebURL: Bool {
+		return typeIdentifier == "public.url"
 	}
 
 	var typeDescription: String {

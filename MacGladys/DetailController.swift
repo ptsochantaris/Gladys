@@ -24,8 +24,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		NotificationCenter.default.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(checkForRemoved), name: .SaveComplete, object: nil)
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: representedObject)
+		n.addObserver(self, selector: #selector(updateInfo), name: .IngestComplete, object: representedObject)
 
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
@@ -245,18 +246,26 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			archive(nil)
 		case .share:
 			shareSelected(i)
+		case .edit:
+			editCurrent(i)
+		case .focus:
+			break
 		}
 	}
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+
+		let count = components.selectionIndexPaths.count
+		if count == 0 { return false }
+
 		switch menuItem.action {
+
 		case #selector(archive(_:)):
-			let count = components.selectionIndexPaths.count
-			if count == 0 { return false }
-			let selectedComponentsThatCanBeArchived = components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }
-			return selectedComponentsThatCanBeArchived.count == count
-		case #selector(copy(_:)), #selector(delete(_:)), #selector(open(_:)), #selector(shareSelected(_:)):
-			return components.selectionIndexes.count > 0
+			return components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
+
+		case #selector(editCurrent(_:)):
+			return components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
+
 		default:
 			return true
 		}
@@ -292,6 +301,40 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let centerFrame = NSRect(origin: CGPoint(x: f.midX-1, y: f.midY-1), size: CGSize(width: 2, height: 2))
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
 			p.show(relativeTo: centerFrame, of: self.components, preferredEdge: .minY)
+		}
+	}
+
+	@objc func editCurrent(_ sender: Any?) {
+		guard let i = components.selectionIndexes.first else { return }
+		let typeItem = item.typeItems[i]
+		guard let urlString = typeItem.encodedUrl?.absoluteString else { return }
+
+		let a = NSAlert()
+		a.messageText = "Edit URL"
+		a.addButton(withTitle: "Update")
+		a.addButton(withTitle: "Cancel")
+		let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
+		textField.placeholderString = urlString
+		textField.usesSingleLineMode = true
+		textField.maximumNumberOfLines = 1
+		textField.lineBreakMode = .byTruncatingTail
+		textField.stringValue = urlString
+		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 400, height: 24))
+		input.addSubview(textField)
+		a.accessoryView = input
+		a.window.initialFirstResponder = textField
+		a.beginSheetModal(for: view.window!) { [weak self] response in
+			if response.rawValue == 1000 {
+				if let newURL = NSURL(string: textField.stringValue) {
+					typeItem.replaceURL(newURL)
+					self?.item.markUpdated()
+					self?.item.needsReIngest = true
+					self?.saveItem()
+				} else if let s = self {
+					genericAlert(title: "This is not a valid URL", message: textField.stringValue, on: s)
+					self?.editCurrent(sender)
+				}
+			}
 		}
 	}
 

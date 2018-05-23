@@ -184,7 +184,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	private func addItem(_ typeItem: ArchivedDropItemType, directory: String?, name: String, in archive: Archive) {
 
 		var bytes: Data?
-		if typeItem.typeIdentifier == "public.url",
+		if typeItem.isWebURL,
 			let url = typeItem.encodedUrl,
 			let data = makeLink(url as URL).data(using: .utf8) {
 

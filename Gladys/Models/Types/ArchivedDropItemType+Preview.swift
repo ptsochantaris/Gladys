@@ -71,6 +71,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canPreview: Bool {
-		return typeIdentifier == "public.url" || typeIdentifier == "com.apple.webarchive" || QLPreviewController.canPreview(previewTempPath as NSURL)
+		return isWebURL || typeIdentifier == "com.apple.webarchive" || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }

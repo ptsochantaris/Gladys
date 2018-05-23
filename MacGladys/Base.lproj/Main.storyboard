@@ -133,11 +133,24 @@ CA
                                                 <action selector="shareSelected:" target="Ady-hI-5gd" id="LdJ-Fb-OvR"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Archive URL" keyEquivalent="a" id="ygF-A5-oQx">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="archive:" target="Ady-hI-5gd" id="4a4-dQ-cK4"/>
-                                            </connections>
+                                        <menuItem title="URL" id="NJd-Fx-8sX">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="URL" id="vIS-rU-iVZ">
+                                                <items>
+                                                    <menuItem title="Edit" keyEquivalent="e" id="nCG-aL-6wC">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="editCurrent:" target="Ady-hI-5gd" id="aXQ-Gy-47H"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Archive" keyEquivalent="a" id="ygF-A5-oQx">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="archive:" target="Ady-hI-5gd" id="4a4-dQ-cK4"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
                                         <menuItem title="Lock" id="Nds-FG-QWI">
                                             <modifierMask key="keyEquivalentModifierMask"/>

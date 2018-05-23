@@ -21,4 +21,5 @@ extension Notification.Name {
 	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 	static let DarkModeChanged = Notification.Name("DarkModeChanged")
 	static let IAPModeChanged = Notification.Name("IAPModeChanged")
+	static let IngestComplete = Notification.Name("IngestComplete")
 }

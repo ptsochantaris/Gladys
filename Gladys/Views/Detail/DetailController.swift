@@ -55,7 +55,8 @@ final class DetailController: GladysViewController,
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
-		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
 
 	private func updateLockButton() {
@@ -107,7 +108,7 @@ final class DetailController: GladysViewController,
 		activity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
 	}
 
-	private func updateUI() {
+	@objc private func updateUI() {
 		view.endEditing(true)
 		item = Model.item(uuid: item.uuid)
 		if item == nil {
@@ -116,10 +117,6 @@ final class DetailController: GladysViewController,
 			table.reloadData()
 			sizeWindow()
 		}
-	}
-
-	@objc private func externalDataUpdate() {
-		updateUI()
 	}
 
 	override var preferredContentSize: CGSize {

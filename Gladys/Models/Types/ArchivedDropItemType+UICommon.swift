@@ -45,7 +45,7 @@ extension ArchivedDropItemType {
 				return (url, 10)
 			}
 
-			if typeIdentifier == "public.url" {
+			if isWebURL {
 				return (url, 5)
 			}
 

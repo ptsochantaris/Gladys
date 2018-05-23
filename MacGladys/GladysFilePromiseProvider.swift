@@ -18,7 +18,7 @@ class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDel
 
 		filename = dropItemType.prepareFilename(name: title.filenameSafe, directory: nil)
 
-		if dropItemType.typeIdentifier == "public.url", let s = dropItemType.encodedUrl?.absoluteString {
+		if dropItemType.isWebURL, let s = dropItemType.encodedUrl?.absoluteString {
 			bytes = "[InternetShortcut]\r\nURL=\(s)\r\n".data(using: .utf8)!
 		} else {
 			bytes = dropItemType.dataForWrappedItem ?? dropItemType.bytes ?? Data()
