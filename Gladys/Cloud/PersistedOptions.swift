@@ -217,4 +217,14 @@ class PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var unconfirmedDeletes: Bool {
+		get {
+			return defaults.bool(forKey: "unconfirmedDeletes")
+		}
+		set {
+			defaults.set(newValue, forKey: "unconfirmedDeletes")
+			defaults.synchronize()
+		}
+	}
 }

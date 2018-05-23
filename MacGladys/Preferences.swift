@@ -192,6 +192,11 @@ final class Preferences: NSViewController {
 		PersistedOptions.dontAutoLabelNewItems = sender.integerValue == 1
 	}
 
+	@IBAction func resetWarningsSelected(_ sender: NSButton) {
+		PersistedOptions.unconfirmedDeletes = false
+		sender.isEnabled = false
+	}
+
 	@IBAction func syncSwitchChanged(_ sender: NSButton) {
 		syncSwitch.isEnabled = false
 

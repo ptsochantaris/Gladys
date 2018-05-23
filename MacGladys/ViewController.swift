@@ -462,7 +462,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		if Model.forceUpdateFilter(signalUpdate: false) {
 			reloadData(inserting: insertedIndexPaths)
-		} else if count > 0 {
+		} else if Model.isFiltering && count > 0 {
 			let a = NSAlert()
 			a.messageText = count > 1 ? "Items Added" : "Item Added"
 			a.beginSheetModal(for: view.window!, completionHandler: nil)
@@ -660,7 +660,24 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			items.insert(item)
 		}
 		if !items.isEmpty {
-			ViewController.shared.deleteRequested(for: Array(items))
+			if PersistedOptions.unconfirmedDeletes {
+				ViewController.shared.deleteRequested(for: Array(items))
+			} else {
+				let a = NSAlert()
+				a.messageText = items.count > 1 ? "Are you sure you want to delete these \(items.count) items?" : "Are you sure you want to delete this item?"
+				a.addButton(withTitle: "Delete")
+				a.addButton(withTitle: "Cancel")
+				a.showsSuppressionButton = true
+				a.suppressionButton?.title = "Don't ask me again"
+				a.beginSheetModal(for: view.window!) { response in
+					if response.rawValue == 1000 {
+						ViewController.shared.deleteRequested(for: Array(items))
+						if let s = a.suppressionButton, s.integerValue > 0 {
+							PersistedOptions.unconfirmedDeletes = true
+						}
+					}
+				}
+			}
 		}
 	}
 
