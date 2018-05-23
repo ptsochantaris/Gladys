@@ -356,14 +356,6 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	var previewTempPath: URL {
-		if let f = fileExtension {
-			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
-		} else {
-			return bytesPath
-		}
-	}
-
 	func tryOpen(from viewController: NSViewController) {
 		let shareItem = itemForShare.0
 
@@ -430,4 +422,12 @@ final class ArchivedDropItemType: Codable {
 		}
 		return url
 	}()
+
+	var quickLookItem: PreviewItem {
+		return PreviewItem(typeItem: self)
+	}
+
+	var canPreview: Bool {
+		return fileExtension != nil // TODO
+	}
 }

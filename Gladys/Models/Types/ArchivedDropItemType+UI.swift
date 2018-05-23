@@ -5,7 +5,7 @@ import Contacts
 import CloudKit
 import QuickLook
 
-extension ArchivedDropItemType {
+extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
@@ -50,5 +50,17 @@ extension ArchivedDropItemType {
 			return d
 		}
 		return nil
+	}
+
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+		return 1
+	}
+
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+		return PreviewItem(typeItem: self)
+	}
+
+	var canPreview: Bool {
+		return isWebURL || isWebArchive || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }

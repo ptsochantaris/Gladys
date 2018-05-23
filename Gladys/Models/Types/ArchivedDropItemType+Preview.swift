@@ -7,9 +7,14 @@
 //
 
 import Foundation
-import QuickLook
 
-extension ArchivedDropItemType: QLPreviewControllerDataSource {
+#if os(iOS)
+import QuickLook
+#else
+import Quartz
+#endif
+
+extension ArchivedDropItemType {
 
 	var previewTempPath: URL {
 		if let f = fileExtension {
@@ -17,14 +22,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		} else {
 			return bytesPath
 		}
-	}
-
-	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return 1
-	}
-
-	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		return PreviewItem(typeItem: self)
 	}
 
 	class PreviewItem: NSObject, QLPreviewItem {
@@ -68,9 +65,5 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 				}
 			}
 		}
-	}
-
-	var canPreview: Bool {
-		return isWebURL || isWebArchive || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }

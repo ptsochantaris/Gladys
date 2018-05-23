@@ -201,6 +201,12 @@ CA
                                                 <action selector="showLabels:" target="Ady-hI-5gd" id="zfa-bJ-Kl7"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Toggle Quicklook" keyEquivalent=" " id="lwl-R5-EOJ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleQuickLookPreviewPanel:" target="Ady-hI-5gd" id="TZQ-te-Hn3"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eV5-lg-Zj5"/>
                                         <menuItem title="Bring All to Front" id="iKt-sI-iyj">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -981,7 +987,7 @@ CA
                                             <rect key="frame" x="0.0" y="0.0" width="670" height="370"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr">
+                                                <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="MacGladys" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="670" height="370"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">

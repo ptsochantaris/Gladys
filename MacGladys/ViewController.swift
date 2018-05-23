@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Quartz
 import MacGladysFramework
 
 func genericAlert(title: String, message: String?, on viewController: NSViewController) {
@@ -69,7 +70,17 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 }
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate {
+final class MainCollectionView: NSCollectionView {
+	override func keyDown(with event: NSEvent) {
+		if event.charactersIgnoringModifiers == " " {
+			ViewController.shared.toggleQuickLookPreviewPanel(self)
+		} else {
+			super.keyDown(with: event)
+		}
+	}
+}
+
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 	@IBOutlet weak var collection: NSCollectionView!
 
 	static var shared: ViewController! = nil
@@ -709,8 +720,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count > 0
 		case #selector(createLock(_:)):
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count > 0
+		case #selector(toggleQuickLookPreviewPanel(_:)):
+			return collection.selectionIndexPaths.count > 0
 		default:
 			return true
+		}
+	}
+
+	@objc func toggleQuickLookPreviewPanel(_ sender: Any?) {
+		if QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
+			QLPreviewPanel.shared().orderOut(nil)
+		} else {
+			QLPreviewPanel.shared().makeKeyAndOrderFront(nil)
 		}
 	}
 
@@ -786,5 +807,34 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				break
 			}
 		}
+	}
+
+	override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
+		return collection.selectionIndexPaths.count > 0
+	}
+
+	private var previewPanel: QLPreviewPanel?
+	override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
+		previewPanel = panel
+		panel.delegate = self
+		panel.dataSource = self
+	}
+
+	override func endPreviewPanelControl(_ panel: QLPreviewPanel!) {
+		previewPanel = nil
+	}
+
+	func numberOfPreviewItems(in panel: QLPreviewPanel!) -> Int {
+		return collection.selectionIndexPaths.count
+	}
+
+	func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
+		let index = collection.selectionIndexPaths.sorted()[index].item
+		for typeItem in Model.filteredDrops[index].typeItems {
+			if typeItem.canPreview {
+				return typeItem.quickLookItem
+			}
+		}
+		return nil
 	}
 }
