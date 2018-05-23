@@ -445,23 +445,27 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
 				Model.loadingUUIDs.insert(newItem.uuid)
 
-				if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-					newItem.labels = Model.enabledLabelsForItems
+				var modelIndex = indexPath.item
+				if Model.isFiltering {
+					modelIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+					if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+						newItem.labels = Model.enabledLabelsForItems
+					}
 				}
-				
-				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-				Model.drops.insert(newItem, at: destinationIndex)
+				Model.drops.insert(newItem, at: modelIndex)
 
-				let finalIndex = IndexPath(item: destinationIndex + count, section: 0)
+				let finalIndex = IndexPath(item: indexPath.item + count, section: 0)
 				insertedIndexPaths.append(finalIndex)
 				count += 1
 			}
 		}
-		if Model.isFiltering {
-			Model.forceUpdateFilter(signalUpdate: true)
-		} else {
-			Model.forceUpdateFilter(signalUpdate: false)
+
+		if Model.forceUpdateFilter(signalUpdate: false) {
 			reloadData(inserting: insertedIndexPaths)
+		} else if count > 0 {
+			let a = NSAlert()
+			a.messageText = count > 1 ? "Items Added" : "Item Added"
+			a.beginSheetModal(for: view.window!, completionHandler: nil)
 		}
 		return true
 	}
