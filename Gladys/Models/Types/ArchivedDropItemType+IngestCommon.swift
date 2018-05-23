@@ -284,32 +284,34 @@ extension ArchivedDropItemType {
 	}
 
 	func generateMoviePreview() -> IMAGE? {
+		var result: IMAGE?
+		let fm = FileManager.default
+		let tempPath = previewTempPath
+
 		do {
-			let fm = FileManager.default
-			let tempPath = previewTempPath
 			if fm.fileExists(atPath: tempPath.path) {
-				try? fm.removeItem(at: tempPath)
+				try fm.removeItem(at: tempPath)
 			}
-			try? fm.linkItem(at: bytesPath, to: tempPath)
+
+			try fm.createSymbolicLink(at: tempPath, withDestinationURL: bytesPath)
 
 			let asset = AVURLAsset(url: tempPath , options: nil)
 			let imgGenerator = AVAssetImageGenerator(asset: asset)
 			imgGenerator.appliesPreferredTrackTransform = true
 			let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
 
-			if fm.fileExists(atPath: tempPath.path) {
-				try? fm.removeItem(at: tempPath)
-			}
 			#if os(iOS)
-			return UIImage(cgImage: cgImage)
+			result = UIImage(cgImage: cgImage)
 			#else
-			return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+			result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
 			#endif
 
 		} catch let error {
 			print("Error generating movie thumbnail: \(error.finalDescription)")
-			return nil
 		}
+
+		try? fm.removeItem(at: tempPath)
+		return result
 	}
 
 	func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, IMAGE?)->Void) {

@@ -49,7 +49,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 				if let data = typeItem.dataForWrappedItem {
 					try? data.write(to: tempPath)
 				} else {
-					try? fm.linkItem(at: blobPath, to: tempPath)
+					try? fm.createSymbolicLink(at: tempPath, withDestinationURL: blobPath)
 				}
 				log("Created temporary file for preview")
 				previewItemURL = tempPath
