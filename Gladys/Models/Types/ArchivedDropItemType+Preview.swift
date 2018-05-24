@@ -18,7 +18,7 @@ extension ArchivedDropItemType {
 
 	var previewTempPath: URL {
 		if let f = fileExtension {
-			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gladys-preview-blob", isDirectory: false).appendingPathExtension(f)
+			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension(f)
 		} else {
 			return bytesPath
 		}

@@ -254,6 +254,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+		if collection.selectionIndexPaths.count > 0 && QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
+			QLPreviewPanel.shared().reloadData()
+		}
+	}
+
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
 		return Model.filteredDrops.count
 	}
@@ -836,5 +842,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 		return nil
+	}
+
+	func previewPanel(_ panel: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+		if event.type == .keyDown {
+			collection.keyDown(with: event)
+			return true
+		}
+		return false
 	}
 }
