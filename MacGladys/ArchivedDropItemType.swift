@@ -290,7 +290,7 @@ final class ArchivedDropItemType: Codable {
 						typeIdentifier = kUTTypeZipArchive as String
 						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
 
-						let tempURL = URL(fileURLWithPath: NSTemporaryDirectory() + "/" + UUID().uuidString + ".zip")
+						let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
 						let a = Archive(url: tempURL, accessMode: .create)!
 						let dirName = item.lastPathComponent
 						let item = item.deletingLastPathComponent()
@@ -427,7 +427,11 @@ final class ArchivedDropItemType: Codable {
 		return PreviewItem(typeItem: self)
 	}
 
+	var parent: ArchivedDropItem? {
+		return Model.item(uuid: parentUuid)
+	}
+
 	var canPreview: Bool {
-		return fileExtension != nil // TODO
+		return fileExtension != nil && !(parent?.needsUnlock ?? true) // TODO
 	}
 }

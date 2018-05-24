@@ -20,7 +20,7 @@ func genericAlert(title: String, message: String?, on viewController: NSViewCont
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
-	func windowDidResignKey(_ notification: Notification) {
+	func windowWillClose(_ notification: Notification) {
 		ViewController.shared.lockUnlockedItems()
 	}
 
@@ -537,6 +537,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
 		}
 		guard let item = actionableSelectedItems.first else { return }
+
+		if item.isLocked && !item.needsUnlock {
+			item.needsUnlock = true
+			item.postModified()
+			return
+		}
 
 		let a = NSAlert()
 		a.messageText = "Lock Item"

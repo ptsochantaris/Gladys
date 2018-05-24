@@ -18,7 +18,7 @@ extension ArchivedDropItemType {
 
 	var previewTempPath: URL {
 		if let f = fileExtension {
-			return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension(f)
+			return Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension(f)
 		} else {
 			return bytesPath
 		}
@@ -34,23 +34,22 @@ extension ArchivedDropItemType {
 			let blobPath = typeItem.bytesPath
 			let tempPath = typeItem.previewTempPath
 
-			if blobPath == tempPath {
-				previewItemURL = blobPath
-				needsCleanup = false
-			} else {
-				let fm = FileManager.default
-				if fm.fileExists(atPath: tempPath.path) {
-					try? fm.removeItem(at: tempPath)
-				}
+			needsCleanup = blobPath != tempPath
 
-				if let data = typeItem.dataForWrappedItem {
-					try? data.write(to: tempPath)
-				} else {
-					try? fm.createSymbolicLink(at: tempPath, withDestinationURL: blobPath)
+			if needsCleanup {
+				let fm = FileManager.default
+				if !fm.fileExists(atPath: tempPath.path) {
+					if let data = typeItem.dataForWrappedItem {
+						try? data.write(to: tempPath)
+						log("Created temporary file for preview: \(tempPath.path)")
+					} else {
+						try? fm.linkItem(at: blobPath, to: tempPath)
+						log("Linked temporary file for preview: \(tempPath.path)")
+					}
 				}
-				log("Created temporary file for preview")
 				previewItemURL = tempPath
-				needsCleanup = true
+			} else {
+				previewItemURL = blobPath
 			}
 
 			previewItemTitle = typeItem.oneTitle

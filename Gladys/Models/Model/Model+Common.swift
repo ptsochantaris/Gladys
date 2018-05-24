@@ -20,6 +20,16 @@ extension Model {
 		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
 	}()
 
+	static var temporaryDirectoryUrl: URL = {
+		let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
+		let fm = FileManager.default
+		if fm.fileExists(atPath: url.path) {
+			try? fm.removeItem(at: url)
+		}
+		try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		return url
+	}()
+
 	static func item(uuid: String) -> ArchivedDropItem? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.first { $0.uuid == uuidData }

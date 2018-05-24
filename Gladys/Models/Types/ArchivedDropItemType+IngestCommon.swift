@@ -293,7 +293,7 @@ extension ArchivedDropItemType {
 				try fm.removeItem(at: tempPath)
 			}
 
-			try fm.createSymbolicLink(at: tempPath, withDestinationURL: bytesPath)
+			try fm.linkItem(at: bytesPath, to: tempPath)
 
 			let asset = AVURLAsset(url: tempPath , options: nil)
 			let imgGenerator = AVAssetImageGenerator(asset: asset)
@@ -310,7 +310,9 @@ extension ArchivedDropItemType {
 			print("Error generating movie thumbnail: \(error.finalDescription)")
 		}
 
-		try? fm.removeItem(at: tempPath)
+		if tempPath != bytesPath {
+			try? fm.removeItem(at: tempPath)
+		}
 		return result
 	}
 
