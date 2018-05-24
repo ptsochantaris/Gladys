@@ -398,11 +398,16 @@ final class DetailController: GladysViewController,
 
 	private func editURL(_ typeItem: ArchivedDropItemType) {
 		getInput(from: self, title: "Edit URL", action: "Change", previousValue: typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
+			guard let s = self else { return }
 			if let newValue = newValue, let newURL = NSURL(string: newValue) {
 				typeItem.replaceURL(newURL)
-				self?.item.needsReIngest = true
-				self?.makeIndexAndSaveItem()
-				self?.table.reloadData()
+				s.item.needsReIngest = true
+				s.makeIndexAndSaveItem()
+				s.table.reloadData()
+			} else if newValue != nil {
+				genericAlert(title: "This is not a valid URL", message: newValue, on: s) { [weak self] in
+					self?.editURL(typeItem)
+				}
 			}
 		}
 	}

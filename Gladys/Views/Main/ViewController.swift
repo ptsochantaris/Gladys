@@ -7,10 +7,10 @@ enum PasteResult {
 	case success, noData, tooManyItems
 }
 
-func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true) {
+func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true, completion: (()->Void)? = nil) {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if showOK {
-		a.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
 	}
 
 	var finalVC: UIViewController! = viewController
@@ -24,7 +24,7 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 
 	if !showOK {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-			a.dismiss(animated: true)
+			a.dismiss(animated: true, completion: completion)
 		}
 	}
 }
