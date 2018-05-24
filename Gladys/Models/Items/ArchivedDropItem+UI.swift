@@ -153,30 +153,29 @@ extension ArchivedDropItem {
 	}
 
 	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
-		if let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) {
-			let n = QLHostingViewController(rootViewController: q)
-			n.preferredContentSize = mainWindow.bounds.size
-			n.view.tintColor = ViewController.shared.view.tintColor
-			if let sourceBar = ViewController.shared.navigationController?.navigationBar {
-				n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-				n.navigationBar.barTintColor = sourceBar.barTintColor
-				n.navigationBar.tintColor = sourceBar.tintColor
-			}
-			if PersistedOptions.fullScreenPreviews {
-				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
+		guard let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) else { return }
+		let n = QLHostingViewController(rootViewController: q)
+		n.preferredContentSize = mainWindow.bounds.size
+		n.view.tintColor = ViewController.shared.view.tintColor
+		if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+			n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
+			n.navigationBar.barTintColor = sourceBar.barTintColor
+			n.navigationBar.tintColor = sourceBar.tintColor
+		}
+		if PersistedOptions.fullScreenPreviews {
+			let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
+			q.navigationItem.rightBarButtonItem = r
+		} else {
+			n.modalPresentationStyle = .popover
+			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
+				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
-			} else {
-				n.modalPresentationStyle = .popover
-				if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
-					let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
-					q.navigationItem.rightBarButtonItem = r
-				}
 			}
-			ViewController.shared.present(n, animated: true)
-			if let p = q.popoverPresentationController {
-				p.sourceView = from
-				p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
-			}
+		}
+		ViewController.shared.present(n, animated: true)
+		if let p = q.popoverPresentationController {
+			p.sourceView = from
+			p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}
 	}
 

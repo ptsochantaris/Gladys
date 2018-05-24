@@ -17,7 +17,9 @@ import Quartz
 extension ArchivedDropItemType {
 
 	var previewTempPath: URL {
-		if let f = fileExtension {
+		if isWebURL {
+			return Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension("webloc")
+		} else if let f = fileExtension {
 			return Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension(f)
 		} else {
 			return bytesPath
@@ -39,7 +41,10 @@ extension ArchivedDropItemType {
 			if needsCleanup {
 				let fm = FileManager.default
 				if !fm.fileExists(atPath: tempPath.path) {
-					if let data = typeItem.dataForWrappedItem {
+					if tempPath.pathExtension == "webloc", let url = typeItem.encodedUrl { // only happens on macOS, iOS uses another view for previewing
+						try? PropertyListSerialization.data(fromPropertyList: ["URL": url.absoluteString], format: .binary, options: 0).write(to: tempPath)
+						log("Created temporary webloc for preview: \(tempPath.path)")
+					} else if let data = typeItem.dataForWrappedItem {
 						try? data.write(to: tempPath)
 						log("Created temporary file for preview: \(tempPath.path)")
 					} else {
@@ -60,7 +65,7 @@ extension ArchivedDropItemType {
 				let fm = FileManager.default
 				if fm.fileExists(atPath: previewItemURL.path) {
 					try? fm.removeItem(at: previewItemURL)
-					log("Removed temporary file for preview")
+					log("Removed temporary preview at \(previewItemURL.path)")
 				}
 			}
 		}

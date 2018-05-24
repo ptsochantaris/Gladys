@@ -26,7 +26,14 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
 	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
 
-		if QLPreviewController.canPreview(previewTempPath as NSURL) {
+		if isWebURL, let url = encodedUrl {
+			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			d.title = "Loading..."
+			d.address = url as URL
+			d.navigationItem.rightBarButtonItem = extraRightButton
+			return d
+
+		} else if QLPreviewController.canPreview(previewTempPath as NSURL) {
 			let q = QLPreviewController()
 			q.title = oneTitle
 			q.dataSource = self
@@ -41,14 +48,8 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			d.webArchive = PreviewItem(typeItem: self)
 			d.navigationItem.rightBarButtonItem = extraRightButton
 			return d
-
-		} else if let url = encodedUrl {
-			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-			d.title = "Loading..."
-			d.address = url as URL
-			d.navigationItem.rightBarButtonItem = extraRightButton
-			return d
 		}
+		
 		return nil
 	}
 
@@ -61,6 +62,6 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
 	var canPreview: Bool {
-		return isWebURL || isWebArchive || QLPreviewController.canPreview(previewTempPath as NSURL)
+		return isWebArchive || QLPreviewController.canPreview(previewTempPath as NSURL)
 	}
 }
