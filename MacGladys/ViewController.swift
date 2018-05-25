@@ -68,6 +68,15 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		v?.layer?.contents = i
 		v?.layer?.contentsGravity = kCAGravityResize
 	}
+
+	private var firstShow = true
+	override func showWindow(_ sender: Any?) {
+		if firstShow && PersistedOptions.hideMainWindowAtStartup {
+			return
+		}
+		firstShow = false
+		super.showWindow(sender)
+	}
 }
 
 final class MainCollectionView: NSCollectionView {
