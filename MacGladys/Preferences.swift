@@ -22,6 +22,8 @@ final class Preferences: NSViewController {
 	@IBOutlet weak var displayLabelsSwitch: NSButton!
 	@IBOutlet weak var separateItemsSwitch: NSButton!
 	@IBOutlet weak var autoLabelSwitch: NSButton!
+	@IBOutlet weak var launchAtLoginSwitch: NSButton!
+	@IBOutlet weak var hideMainWindowSwitch: NSButton!
 
 	@IBOutlet weak var hotkeyCmd: NSButton!
 	@IBOutlet weak var hotkeyOption: NSButton!
@@ -41,6 +43,8 @@ final class Preferences: NSViewController {
 		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
+		launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
+		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 
 		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
 			self?.updateSyncSwitches()
@@ -72,6 +76,14 @@ final class Preferences: NSViewController {
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		view.window!.initialFirstResponder = doneButton
+	}
+
+	@IBAction func launchAtLoginSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.launchAtLogin = sender.integerValue == 1
+	}
+
+	@IBAction func hideMainWindowAtLaunchSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.hideMainWindowAtStartup = sender.integerValue == 1
 	}
 
 	@objc private func hotkeyCharChanged() {

@@ -42,6 +42,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
+		LauncherCommon.killHelper()
+
 		if !receiptExists {
 			exit(173)
 		}

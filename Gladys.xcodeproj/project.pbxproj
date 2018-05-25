@@ -160,6 +160,11 @@
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
 		168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CB0209E0988005041CF /* ComponentCell.swift */; };
+		168DFB0120B85F3D002C603D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168DFB0020B85F3D002C603D /* AppDelegate.swift */; };
+		168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168DFB0E20B85F84002C603D /* LauncherCommon.swift */; };
+		168DFB1020B85F84002C603D /* LauncherCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168DFB0E20B85F84002C603D /* LauncherCommon.swift */; };
+		168DFB1420B8852D002C603D /* MacGladysHelper.app in Embed Helper */ = {isa = PBXBuildFile; fileRef = 168DFAFE20B85F3D002C603D /* MacGladysHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169D54B320B85026004E518E /* ServiceManagement.framework */; };
 		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
 		168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168FE05C20952E4D00E740E9 /* DropCell.xib */; };
 		168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE05E2095363900E740E9 /* NSImage+Extensions.swift */; };
@@ -297,6 +302,7 @@
 		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
+		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
@@ -343,6 +349,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1657B8AA1FD41C1B00EC480D;
 			remoteInfo = GladysMessage;
+		};
+		168DFB1520B88559002C603D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 168DFAFD20B85F3D002C603D;
+			remoteInfo = MacGladysHelper;
 		};
 		169426471F12D2F800F3A0A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -417,6 +430,17 @@
 				16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		169D54B120B84FAC004E518E /* Embed Helper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				168DFB1420B8852D002C603D /* MacGladysHelper.app in Embed Helper */,
+			);
+			name = "Embed Helper";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		16A4E8021FBB844A00D60596 /* Embed App Extensions */ = {
@@ -550,6 +574,11 @@
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
 		168D2CAE209E0770005041CF /* ComponentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComponentCell.xib; sourceTree = "<group>"; };
 		168D2CB0209E0988005041CF /* ComponentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentCell.swift; sourceTree = "<group>"; };
+		168DFAFE20B85F3D002C603D /* MacGladysHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacGladysHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		168DFB0020B85F3D002C603D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		168DFB0920B85F3D002C603D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		168DFB0A20B85F3D002C603D /* MacGladysHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysHelper.entitlements; sourceTree = "<group>"; };
+		168DFB0E20B85F84002C603D /* LauncherCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherCommon.swift; sourceTree = "<group>"; };
 		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		168FE05C20952E4D00E740E9 /* DropCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropCell.xib; sourceTree = "<group>"; };
 		168FE05E2095363900E740E9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -572,6 +601,7 @@
 		169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+UI.swift"; sourceTree = "<group>"; };
 		169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Indexing.swift"; sourceTree = "<group>"; };
 		169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFilePresenter.swift; sourceTree = "<group>"; };
+		169D54B320B85026004E518E /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/ServiceManagement.framework; sourceTree = DEVELOPER_DIR; };
 		169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Sharing.swift"; sourceTree = "<group>"; };
 		169E646920A0F04E003CB4C0 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
@@ -626,6 +656,7 @@
 		16EDB37D1F23650A001CC65C /* Model+Saving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Saving.swift"; sourceTree = "<group>"; };
 		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
+		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Ingest.swift"; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
@@ -662,6 +693,7 @@
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				C4B9676CDFC19C48F217E858 /* Pods_MacGladys.framework in Frameworks */,
 				1611485D209FA265008BB332 /* MacGladysFramework.framework in Frameworks */,
+				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,6 +744,13 @@
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 				527CA18CF4A2617DFCFB09DE /* Pods_Gladys.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		168DFAFB20B85F3D002C603D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,6 +991,7 @@
 				16A4E7F01FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AE1FD41C1C00EC480D /* GladysMessage */,
 				161718C52094D333005ABD6C /* MacGladys */,
+				168DFAFF20B85F3D002C603D /* MacGladysHelper */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				F997D53C5E7A383D99BD35DB /* Pods */,
@@ -972,6 +1012,7 @@
 				1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */,
 				161718C42094D333005ABD6C /* MacGladys.app */,
 				1611485B209FA1B6008BB332 /* MacGladysFramework.framework */,
+				168DFAFE20B85F3D002C603D /* MacGladysHelper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -986,6 +1027,18 @@
 				16101E8F1EF5A23000CCBD3C /* Models */,
 			);
 			path = Gladys;
+			sourceTree = "<group>";
+		};
+		168DFAFF20B85F3D002C603D /* MacGladysHelper */ = {
+			isa = PBXGroup;
+			children = (
+				168DFB0020B85F3D002C603D /* AppDelegate.swift */,
+				168DFB0E20B85F84002C603D /* LauncherCommon.swift */,
+				168DFB0920B85F3D002C603D /* Info.plist */,
+				168DFB0A20B85F3D002C603D /* MacGladysHelper.entitlements */,
+				16F063FB20B895CD00ABF32A /* main.swift */,
+			);
+			path = MacGladysHelper;
 			sourceTree = "<group>";
 		};
 		16969B9E1FB0E41E007B2F77 /* GladysToday */ = {
@@ -1115,6 +1168,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				169D54B320B85026004E518E /* ServiceManagement.framework */,
 				16114866209FA5A0008BB332 /* libcrypto.a */,
 				16114864209FA58D008BB332 /* libssl.a */,
 				16114862209FA440008BB332 /* libboringssl.tbd */,
@@ -1186,7 +1240,6 @@
 				16114852209FA1B6008BB332 /* Frameworks */,
 				16114854209FA1B6008BB332 /* Headers */,
 				16114856209FA1B6008BB332 /* Resources */,
-				6B3F34A5BED3FB44DD00ACD4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1206,12 +1259,13 @@
 				161718C12094D333005ABD6C /* Frameworks */,
 				161718C22094D333005ABD6C /* Resources */,
 				AC7F00DFEFA2A277B9B68917 /* [CP] Embed Pods Frameworks */,
-				5E68E24A4C9F36D940F9FE02 /* [CP] Copy Pods Resources */,
 				16114861209FA266008BB332 /* Embed Frameworks */,
+				169D54B120B84FAC004E518E /* Embed Helper */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				168DFB1620B88559002C603D /* PBXTargetDependency */,
 				16114860209FA265008BB332 /* PBXTargetDependency */,
 			);
 			name = MacGladys;
@@ -1261,7 +1315,6 @@
 				164136891F09195000B34574 /* Sources */,
 				1641368A1F09195000B34574 /* Frameworks */,
 				1641368B1F09195000B34574 /* Resources */,
-				9B50067CDA349BF722752B17 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1299,7 +1352,6 @@
 				167573FB1F12C22500385079 /* Frameworks */,
 				167573FC1F12C22500385079 /* Headers */,
 				167573FD1F12C22500385079 /* Resources */,
-				ED539C71292956C69F779A88 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1321,7 +1373,6 @@
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
 				55126A92F371ED18466EEA6F /* [CP] Embed Pods Frameworks */,
-				20A8563264B9861F58F5452E /* [CP] Copy Pods Resources */,
 				16A4E8041FBB844A00D60596 /* Embed Watch Content */,
 			);
 			buildRules = (
@@ -1338,6 +1389,23 @@
 			name = Gladys;
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
+			productType = "com.apple.product-type.application";
+		};
+		168DFAFD20B85F3D002C603D /* MacGladysHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 168DFB0D20B85F3D002C603D /* Build configuration list for PBXNativeTarget "MacGladysHelper" */;
+			buildPhases = (
+				168DFAFA20B85F3D002C603D /* Sources */,
+				168DFAFB20B85F3D002C603D /* Frameworks */,
+				168DFAFC20B85F3D002C603D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacGladysHelper;
+			productName = MacGladysHelper;
+			productReference = 168DFAFE20B85F3D002C603D /* MacGladysHelper.app */;
 			productType = "com.apple.product-type.application";
 		};
 		16969B9A1FB0E41E007B2F77 /* GladysToday */ = {
@@ -1489,6 +1557,10 @@
 							};
 						};
 					};
+					168DFAFD20B85F3D002C603D = {
+						CreatedOnToolsVersion = 9.3.1;
+						ProvisioningStyle = Automatic;
+					};
 					16969B9A1FB0E41E007B2F77 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
@@ -1542,6 +1614,7 @@
 				1657B8AA1FD41C1B00EC480D /* GladysMessage */,
 				161718C32094D333005ABD6C /* MacGladys */,
 				1611484F209FA1B6008BB332 /* MacGladysFramework */,
+				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -1620,6 +1693,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		168DFAFC20B85F3D002C603D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16969B991FB0E41E007B2F77 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1648,21 +1728,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		20A8563264B9861F58F5452E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Gladys/Pods-Gladys-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		55126A92F371ED18466EEA6F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1701,51 +1766,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5E68E24A4C9F36D940F9FE02 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6B3F34A5BED3FB44DD00ACD4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9B50067CDA349BF722752B17 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AC7F00DFEFA2A277B9B68917 /* [CP] Embed Pods Frameworks */ = {
@@ -1842,21 +1862,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		ED539C71292956C69F779A88 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GladysFramework/Pods-GladysFramework-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1896,6 +1901,7 @@
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
+				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
@@ -2142,6 +2148,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		168DFAFA20B85F3D002C603D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168DFB1020B85F84002C603D /* LauncherCommon.swift in Sources */,
+				168DFB0120B85F3D002C603D /* AppDelegate.swift in Sources */,
+				16F063FC20B895CD00ABF32A /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16969B971FB0E41E007B2F77 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2211,6 +2227,11 @@
 			isa = PBXTargetDependency;
 			target = 1657B8AA1FD41C1B00EC480D /* GladysMessage */;
 			targetProxy = 1657B8B71FD41C1C00EC480D /* PBXContainerItemProxy */;
+		};
+		168DFB1620B88559002C603D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 168DFAFD20B85F3D002C603D /* MacGladysHelper */;
+			targetProxy = 168DFB1520B88559002C603D /* PBXContainerItemProxy */;
 		};
 		169426481F12D2F800F3A0A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2451,6 +2472,53 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		168DFB0B20B85F3D002C603D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladysHelper/MacGladysHelper.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				INFOPLIST_FILE = MacGladysHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladysHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		168DFB0C20B85F3D002C603D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladysHelper/MacGladysHelper.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MacGladysHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladysHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -3007,6 +3075,15 @@
 			buildConfigurations = (
 				1694264F1F12D58700F3A0A4 /* Debug */,
 				169426551F12D59B00F3A0A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		168DFB0D20B85F3D002C603D /* Build configuration list for PBXNativeTarget "MacGladysHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168DFB0B20B85F3D002C603D /* Debug */,
+				168DFB0C20B85F3D002C603D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

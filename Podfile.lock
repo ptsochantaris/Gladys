@@ -14,6 +14,14 @@ DEPENDENCIES:
   - OpenSSL-Universal
   - ZIPFoundation
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CallbackURLKit
+    - Fuzi
+    - HotKey
+    - OpenSSL-Universal
+    - ZIPFoundation
+
 SPEC CHECKSUMS:
   CallbackURLKit: eebcf4ecbb70dc8c970f9fcf1ff70162c5ea0965
   Fuzi: 8c57344debff6d3a0c76a9e0f549152defdaaa48
@@ -23,4 +31,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: fb4a3cadbe81fc12bf7cfe28a12ec7e6e394b3e1
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

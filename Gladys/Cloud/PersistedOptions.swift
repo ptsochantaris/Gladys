@@ -7,6 +7,10 @@
 //
 
 import Foundation
+#if MAC
+import Cocoa
+import ServiceManagement
+#endif
 
 class PersistedOptions {
 
@@ -171,6 +175,8 @@ class PersistedOptions {
 		}
 	}
 
+	#if MAC
+
 	static var hotkeyCmd: Bool {
 		get {
 			return defaults.bool(forKey: "hotkeyCmd")
@@ -227,4 +233,27 @@ class PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var hideMainWindowAtStartup: Bool {
+		get {
+			return defaults.bool(forKey: "hideMainWindowAtStartup")
+		}
+		set {
+			defaults.set(newValue, forKey: "hideMainWindowAtStartup")
+			defaults.synchronize()
+		}
+	}
+
+	static var launchAtLogin: Bool {
+		get {
+			return defaults.bool(forKey: "launchAtLogin")
+		}
+		set {
+			defaults.set(newValue, forKey: "launchAtLogin")
+			defaults.synchronize()
+			SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
+		}
+	}
+
+	#endif
 }
