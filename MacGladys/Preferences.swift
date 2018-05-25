@@ -141,7 +141,7 @@ final class Preferences: NSViewController {
 			syncSwitch.isEnabled = true
 			syncNowButton.isEnabled = CloudManager.syncSwitchedOn
 			deleteAllButton.isEnabled = true
-			eraseAlliCloudDataButton.isEnabled = false
+			eraseAlliCloudDataButton.isEnabled = true
 			syncSwitch.title = "iCloud Sync"
 			syncSpinner.stopAnimation(nil)
 			syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
