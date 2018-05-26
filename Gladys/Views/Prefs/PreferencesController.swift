@@ -107,10 +107,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		return [UIDragItem(itemProvider: i)]
 	}
 
-	private func makeLink(_ url: URL) -> String {
-		return "[InternetShortcut]\r\nURL=\(url.absoluteString)\r\n"
-	}
-
 	private var eligibleDropsForExport: [ArchivedDropItem] {
 		let items = PersistedOptions.exportOnlyVisibleItems ? Model.threadSafeFilteredDrops : Model.threadSafeDrops
 		return items.filter { $0.goodToSave }
@@ -184,10 +180,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	private func addItem(_ typeItem: ArchivedDropItemType, directory: String?, name: String, in archive: Archive) {
 
 		var bytes: Data?
-		if typeItem.isWebURL,
-			let url = typeItem.encodedUrl,
-			let data = makeLink(url as URL).data(using: .utf8) {
-
+		if typeItem.isWebURL, let url = typeItem.encodedUrl, let data = url.urlFileContent {
 			bytes = data
 
 		} else if typeItem.classWasWrapped {

@@ -16,16 +16,24 @@ class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDel
 
 	init(dropItemType: ArchivedDropItemType, title: String) {
 
-		filename = dropItemType.prepareFilename(name: title.filenameSafe, directory: nil)
+		var titleMinusExtension = title
+		if let ext = dropItemType.fileExtension {
+			if ext == "jpeg", title.hasSuffix(".jpg") {
+				titleMinusExtension = String(titleMinusExtension.dropLast(4))
+			} else if titleMinusExtension.hasSuffix("." + ext) {
+				titleMinusExtension = String(titleMinusExtension.dropLast(ext.count + 1))
+			}
+		}
+		filename = dropItemType.prepareFilename(name: titleMinusExtension.macFilenameSafe, directory: nil)
 
-		if dropItemType.isWebURL, let s = dropItemType.encodedUrl?.absoluteString {
-			bytes = "[InternetShortcut]\r\nURL=\(s)\r\n".data(using: .utf8)!
+		if dropItemType.isWebURL, let s = dropItemType.encodedUrl {
+			bytes = s.urlFileContent ?? Data()
 		} else {
 			bytes = dropItemType.dataForWrappedItem ?? dropItemType.bytes ?? Data()
 		}
 		super.init()
-		self.fileType = dropItemType.typeIdentifier
-		self.delegate = self
+		fileType = dropItemType.typeIdentifier
+		delegate = self
 	}
 
 	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {

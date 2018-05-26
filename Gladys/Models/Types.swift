@@ -36,8 +36,28 @@ extension String {
 				return url.path.split(separator: "/").joined(separator: "-")
 			}
 		} else {
-			return self.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
+			return replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
 		}
+	}
+	var macFilenameSafe: String {
+		if let url = URL(string: self) {
+			if let host = url.host {
+				return host + "-" + url.path.split(separator: "/").joined(separator: "-")
+			} else {
+				return url.path.split(separator: "/").joined(separator: "-")
+			}
+		} else {
+			return replacingOccurrences(of: "/", with: "-")
+		}
+	}
+}
+
+extension NSURL {
+	var urlFileContent: Data? {
+		if let a = absoluteString {
+			return "[InternetShortcut]\r\nURL=\(a)\r\n".data(using: .utf8)
+		}
+		return nil
 	}
 }
 
