@@ -1467,7 +1467,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
 					1611484F209FA1B6008BB332 = {
@@ -2316,7 +2316,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2345,7 +2345,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C087CC713A09341FAB8535B0 /* Pods-MacGladysFramework.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2661,7 +2661,7 @@
 			baseConfigurationReference = 80C629F4BDFF60D82C8CDCEC /* Pods-GladysFramework.debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2824,7 +2824,7 @@
 			baseConfigurationReference = 52BBB6F95BA55BC5DD47A9E6 /* Pods-GladysFramework.release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

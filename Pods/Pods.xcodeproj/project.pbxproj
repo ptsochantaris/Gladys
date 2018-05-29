@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -137,7 +137,7 @@
 /* Begin PBXFileReference section */
 		00EC9CFED5B6FA9055FFBB0BEDFE7B9D /* asn1t.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1t.h; path = "include-ios/openssl/asn1t.h"; sourceTree = "<group>"; };
 		0199E12F59CC7445183A8EB77D525409 /* hmac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = hmac.h; path = "include-macos/openssl/hmac.h"; sourceTree = "<group>"; };
-		027B378EA1461CFB138E418C3BF5B7BF /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		027B378EA1461CFB138E418C3BF5B7BF /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		02B5BFB4224E94FA9BDA5C81FA5F897B /* Pods-MacGladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MacGladysFramework.release.xcconfig"; sourceTree = "<group>"; };
 		02F9C0B34C12E5EEB3C6E397331DD742 /* ZIPFoundation-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ZIPFoundation-macOS-dummy.m"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS-dummy.m"; sourceTree = "<group>"; };
 		035B1A1B5300ABC2EC28F447C85D4AFE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -249,13 +249,13 @@
 		6967988636D15486F7A828DAC0E452C1 /* CallbackURLKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CallbackURLKit-umbrella.h"; sourceTree = "<group>"; };
 		6B470E06A9DF926BA750D2FECEAC0BEC /* Pods-GladysFramework.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-GladysFramework.modulemap"; sourceTree = "<group>"; };
 		6BCE0DB612C09D516170054BCC90AE09 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		6E165E07459A4424264B525FDF5BED77 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Gladys.framework; path = "Pods-Gladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E165E07459A4424264B525FDF5BED77 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		703B2A84CCDFFF81455BACC397E17004 /* md4.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = md4.h; path = "include-ios/openssl/md4.h"; sourceTree = "<group>"; };
 		70CAC555950102848171028AB067777D /* ec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ec.h; path = "include-macos/openssl/ec.h"; sourceTree = "<group>"; };
 		7157479E76EC2ADCACDE5CB29ADC0C3A /* des_old.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = des_old.h; path = "include-ios/openssl/des_old.h"; sourceTree = "<group>"; };
 		716CAE0E15B09A52E8FD574469AEDA50 /* evp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = evp.h; path = "include-ios/openssl/evp.h"; sourceTree = "<group>"; };
 		721610C4BF1E47B6E7CF617665FC523D /* asn1.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1.h; path = "include-ios/openssl/asn1.h"; sourceTree = "<group>"; };
-		733F51C0816B24B16E5C4019781BBD38 /* Pods_MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MacGladysFramework.framework; path = "Pods-MacGladysFramework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		733F51C0816B24B16E5C4019781BBD38 /* Pods_MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75C97DD3564C551BE428FA7D0AAE1127 /* des_old.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = des_old.h; path = "include-macos/openssl/des_old.h"; sourceTree = "<group>"; };
 		75FFF94214F2FCDB97A74E7E4D49D305 /* ripemd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ripemd.h; path = "include-macos/openssl/ripemd.h"; sourceTree = "<group>"; };
 		76369C8A4D74F6CD00901BC76327EAE4 /* Fuzi-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Fuzi-iOS.xcconfig"; sourceTree = "<group>"; };
@@ -294,7 +294,7 @@
 		90A9134C21194988368A342D9CB9E895 /* stack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = stack.h; path = "include-macos/openssl/stack.h"; sourceTree = "<group>"; };
 		9127535E77655C67C6D7B26EF46DB123 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		91F1C8E590FFE794196E5C74039E1FA5 /* Queryable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Queryable.swift; path = Sources/Queryable.swift; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		93C61044D3F5EB6C83507F4567B2CCA6 /* cmac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = cmac.h; path = "include-ios/openssl/cmac.h"; sourceTree = "<group>"; };
 		9410EE9DCBD1436C7EFEE6983D8437FE /* tls1.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tls1.h; path = "include-macos/openssl/tls1.h"; sourceTree = "<group>"; };
 		961F25139CAEBE4502B98634F85F73F8 /* Pods-MacGladysFramework-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MacGladysFramework-resources.sh"; sourceTree = "<group>"; };
@@ -310,21 +310,21 @@
 		A2FED9432C90BE2FF4DCB82F288C1BB2 /* obj_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = obj_mac.h; path = "include-macos/openssl/obj_mac.h"; sourceTree = "<group>"; };
 		A57EBF6EB918DCCD76E8AF76B4B1C8C7 /* rand.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rand.h; path = "include-ios/openssl/rand.h"; sourceTree = "<group>"; };
 		A5B58266AAA4C1B6FC4BB70E8576F21F /* ssl3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl3.h; path = "include-macos/openssl/ssl3.h"; sourceTree = "<group>"; };
-		A61D7AB21A71743658500406D60A481D /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A61D7AB21A71743658500406D60A481D /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7AB594135CA522A41F975E8D418854A /* opensslconf.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = opensslconf.h; path = "include-ios/openssl/opensslconf.h"; sourceTree = "<group>"; };
 		A7C520D874C9CB778F83F13C16E217F0 /* obj_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = obj_mac.h; path = "include-ios/openssl/obj_mac.h"; sourceTree = "<group>"; };
-		A7E6F39ECCF85C8551633DFAE97C5466 /* Pods_GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GladysFramework.framework; path = "Pods-GladysFramework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7E6F39ECCF85C8551633DFAE97C5466 /* Pods_GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8938770E0F14C800F94B8211954E587 /* HotKey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HotKey.swift; path = Sources/HotKey/HotKey.swift; sourceTree = "<group>"; };
 		A92D5DA0BD43BD53137F8C13447B4A0F /* Pods-Gladys-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-resources.sh"; sourceTree = "<group>"; };
 		A9F0EFC065FD34A93C5D53BA8B63EE5B /* Pods-Gladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Gladys.modulemap"; sourceTree = "<group>"; };
-		AB1225BA63AF27765DBF1DC5FD8E805D /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CallbackURLKit.framework; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB1225BA63AF27765DBF1DC5FD8E805D /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6F959B0F664699D0F7DD24E62D6702 /* txt_db.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = txt_db.h; path = "include-ios/openssl/txt_db.h"; sourceTree = "<group>"; };
 		ABB9B2A6BCBDE5ECFC24821E40F25C8D /* libssl.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libssl.a; path = "lib-macos/libssl.a"; sourceTree = "<group>"; };
 		AC3E110C004DB79CFE55C19249C28079 /* Archive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Archive.swift; path = Sources/ZIPFoundation/Archive.swift; sourceTree = "<group>"; };
 		ADEDAD45AE3B9878C6332CDAB81D376E /* Pods-GladysAction-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GladysAction-resources.sh"; sourceTree = "<group>"; };
-		AE371DD3E6F9BEB7867B089669AF9680 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE371DD3E6F9BEB7867B089669AF9680 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEA88160CCB2E6CA9E168C50AD9FBE7B /* comp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = comp.h; path = "include-ios/openssl/comp.h"; sourceTree = "<group>"; };
-		AF20BF8EA0D00EA809242EB9CFDF60FC /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GladysAction.framework; path = "Pods-GladysAction.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF20BF8EA0D00EA809242EB9CFDF60FC /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0D99896CD1F38E1B15A086D8815EF6A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B0DEFA0611F0878547AAA30B3EAAF4DC /* Pods-GladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
 		B11B8EEFDCAC0F2AA8BFC94A1BBCB5F6 /* err.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = err.h; path = "include-ios/openssl/err.h"; sourceTree = "<group>"; };
@@ -349,7 +349,7 @@
 		C33115B1620905F27B470E254A452FB3 /* safestack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = safestack.h; path = "include-macos/openssl/safestack.h"; sourceTree = "<group>"; };
 		C331DC8B842A7CB75D24F93DFF80916A /* kssl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = kssl.h; path = "include-ios/openssl/kssl.h"; sourceTree = "<group>"; };
 		C347D5B399EE68384513E8756AC92A26 /* CallbackURLKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CallbackURLKit.swift; path = Sources/CallbackURLKit.swift; sourceTree = "<group>"; };
-		C449739CC25418664420A9B85A4B9A26 /* Pods_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MacGladys.framework; path = "Pods-MacGladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C449739CC25418664420A9B85A4B9A26 /* Pods_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C48E17678049440A3FBDFE5B9972F336 /* rsa.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rsa.h; path = "include-macos/openssl/rsa.h"; sourceTree = "<group>"; };
 		C4F0B0A97F6D69D245426A8562FD9683 /* Pods-MacGladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-MacGladys.modulemap"; sourceTree = "<group>"; };
 		C676138DBB1030CB232464DD22CC0A71 /* x509_vfy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = x509_vfy.h; path = "include-ios/openssl/x509_vfy.h"; sourceTree = "<group>"; };
@@ -384,7 +384,7 @@
 		E2CACDC0F8BD5E5B33FAA29828BCA5C4 /* ZIPFoundation-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "ZIPFoundation-iOS.xcconfig"; sourceTree = "<group>"; };
 		E46812B600932EE6A8BDEBB91DEE92AA /* rc2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rc2.h; path = "include-macos/openssl/rc2.h"; sourceTree = "<group>"; };
 		E6568160EF8E0FB88F5371BD621325B3 /* bio.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bio.h; path = "include-macos/openssl/bio.h"; sourceTree = "<group>"; };
-		E73A5EF7CB70F27587ABBFB4E8D0895C /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E73A5EF7CB70F27587ABBFB4E8D0895C /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E76D20F71D5678D75ED5871E74EF8780 /* CallbackURLKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = CallbackURLKit.modulemap; sourceTree = "<group>"; };
 		E77608C89F63CEC62F5A28AFB8EC3F88 /* HotKeysController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HotKeysController.swift; path = Sources/HotKey/HotKeysController.swift; sourceTree = "<group>"; };
 		E7AF90F2AB6FFE14AA7C4C27EF08B7FD /* pem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pem.h; path = "include-ios/openssl/pem.h"; sourceTree = "<group>"; };
@@ -411,7 +411,7 @@
 		FDF507A7D1E0C773DCB1A983931A1621 /* Pods-MacGladys-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MacGladys-umbrella.h"; sourceTree = "<group>"; };
 		FECC5D17C73512F29D3A9783C28C598A /* HotKey.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = HotKey.modulemap; sourceTree = "<group>"; };
 		FFA18B3DB9E1519D5A6C3A4704171988 /* pem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pem.h; path = "include-macos/openssl/pem.h"; sourceTree = "<group>"; };
-		FFB31A7CBF7FEF4BE05F4237DB0C009B /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HotKey.framework; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFB31A7CBF7FEF4BE05F4237DB0C009B /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -541,7 +541,6 @@
 				4183084068CFB0A37C96FA9097BF1B31 /* Core */,
 				58E5E6D97CC2621CDB3DE3C137AD56DB /* Support Files */,
 			);
-			name = CallbackURLKit;
 			path = CallbackURLKit;
 			sourceTree = "<group>";
 		};
@@ -672,7 +671,6 @@
 				91F1C8E590FFE794196E5C74039E1FA5 /* Queryable.swift */,
 				FDF6B2B6B91E38280323F8C27360C8F3 /* Support Files */,
 			);
-			name = Fuzi;
 			path = Fuzi;
 			sourceTree = "<group>";
 		};
@@ -842,7 +840,6 @@
 				4743EAEBD2CDBD985CC996AFBA9DFE09 /* x509v3.h */,
 				4191F1DEAAA7302B6DFD98FBFB5A3AF4 /* Frameworks */,
 			);
-			name = "OpenSSL-Universal";
 			path = "OpenSSL-Universal";
 			sourceTree = "<group>";
 		};
@@ -870,7 +867,6 @@
 				DEFB8EDB2CBF2A19128012AAA370A266 /* NSEventModifierFlags+HotKey.swift */,
 				AF0F05443A846A6AA8109AEA14E767E2 /* Support Files */,
 			);
-			name = HotKey;
 			path = HotKey;
 			sourceTree = "<group>";
 		};
@@ -886,7 +882,6 @@
 				460BDC4F6B457EDD1F7CF3619D62289D /* FileManager+ZIP.swift */,
 				E5C3C93A40B5BBEC5A06AD0FBE3B8C96 /* Support Files */,
 			);
-			name = ZIPFoundation;
 			path = ZIPFoundation;
 			sourceTree = "<group>";
 		};
@@ -1276,7 +1271,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1811,6 +1806,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
