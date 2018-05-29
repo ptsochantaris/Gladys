@@ -27,6 +27,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: representedObject)
 		n.addObserver(self, selector: #selector(updateInfo), name: .IngestComplete, object: representedObject)
+		n.addObserver(self, selector: #selector(checkForChanges), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(checkForChanges), name: .SaveComplete, object: nil)
 
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
@@ -39,7 +41,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	private var lastUpdate = Date.distantPast
 
-	@objc func checkForRemoved() {
+	@objc func checkForChanges() {
 		if Model.item(uuid: item.uuid) == nil {
 			view.window?.close()
 		} else if lastUpdate != item.updatedAt {
