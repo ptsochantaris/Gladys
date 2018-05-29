@@ -40,6 +40,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+	func application(_ sender: NSApplication, openFiles filenames: [String]) {
+		ViewController.shared.importFiles(paths: filenames)
+	}
+
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
 		LauncherCommon.killHelper()

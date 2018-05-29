@@ -461,6 +461,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return count > 0 ? extractor : nil
 		}
 
+		return _addItems(itemProviders: itemProviders, name: pasteBoard.name.rawValue, indexPath: indexPath)
+	}
+
+	@discardableResult
+	private func _addItems(itemProviders: [NSItemProvider], name: String?, indexPath: IndexPath) -> Bool {
 		if IAPManager.shared.checkInfiniteMode(for: itemProviders.count) {
 			return false
 		}
@@ -468,7 +473,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		var insertedIndexPaths = [IndexPath]()
 		var count = 0
 		for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: pasteBoard.name.rawValue) {
+			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: name) {
 				Model.loadingUUIDs.insert(newItem.uuid)
 
 				var modelIndex = indexPath.item
@@ -494,6 +499,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			a.beginSheetModal(for: view.window!, completionHandler: nil)
 		}
 		return true
+	}
+
+	func importFiles(paths: [String]) {
+		let providers = paths.compactMap { path -> NSItemProvider? in
+			let url = NSURL(fileURLWithPath: path)
+			var isDir: ObjCBool = false
+			FileManager.default.fileExists(atPath: url.path ?? "", isDirectory: &isDir)
+			if isDir.boolValue {
+				return NSItemProvider(item: url, typeIdentifier: kUTTypeFileURL as String)
+			} else {
+				return NSItemProvider(contentsOf: url as URL)
+			}
+		}
+		_addItems(itemProviders: providers, name: nil, indexPath: IndexPath(item: 0, section: 0))
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
