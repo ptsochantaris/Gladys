@@ -302,12 +302,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func shareSelected(_ sender: Any?) {
-		var items = Set(actionableSelectedItems)
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
-			items = [item]
-		}
-
-		guard let itemToShare = items.first,
+		guard let itemToShare = actionableSelectedItems.first,
 			let shareableItem = itemToShare.mostRelevantOpenItem?.itemForShare.0,
 			let i = Model.filteredDrops.index(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
@@ -560,10 +555,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@objc func createLock(_ sender: Any?) {
-		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
-			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
+	func addCellToSelection(_ sender: DropCell) {
+		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
+			let newIp = IndexPath(item: index, section: 0)
+			if !collection.selectionIndexPaths.contains(newIp) {
+				collection.selectionIndexPaths = [newIp]
+			}
 		}
+	}
+
+	@objc func createLock(_ sender: Any?) {
 		guard let item = actionableSelectedItems.first else { return }
 
 		if item.isLocked && !item.needsUnlock {
@@ -603,9 +604,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func unlock(_ sender: Any?) {
-		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
-			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
-		}
 		guard let item = lockedSelectedItems.first else { return }
 
 		let a = NSAlert()
@@ -640,11 +638,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func info(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var items = Set(actionableSelectedItems)
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
-			items.insert(item)
-		}
-		for item in items {
+		for item in actionableSelectedItems {
 			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
 		}
 	}
@@ -666,11 +660,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var items = Set(actionableSelectedItems)
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
-			items.insert(item)
-		}
-		for item in items {
+		for item in actionableSelectedItems {
 			item.tryOpen(from: self)
 		}
 	}
@@ -678,11 +668,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func copy(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		var items = Set(actionableSelectedItems)
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
-			items.insert(item)
-		}
-		for item in items {
+		for item in actionableSelectedItems {
 			if let pi = item.pasteboardItem {
 				g.writeObjects([pi])
 			}
@@ -690,11 +676,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func moveToTop(_ sender: Any?) {
-		var items = actionableSelectedItems
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem, !items.contains(item) {
-			items.append(item)
-		}
-		for item in items {
+		for item in actionableSelectedItems {
 			if let i = Model.drops.index(of: item) {
 				Model.drops.remove(at: i)
 				Model.drops.insert(item, at: 0)
@@ -706,13 +688,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func delete(_ sender: Any?) {
-		var items = Set(actionableSelectedItems)
-		if let cell = sender as? DropCell, let item = cell.representedObject as? ArchivedDropItem {
-			items.insert(item)
-		}
+		let items = actionableSelectedItems
 		if !items.isEmpty {
 			if PersistedOptions.unconfirmedDeletes {
-				ViewController.shared.deleteRequested(for: Array(items))
+				ViewController.shared.deleteRequested(for: items)
 			} else {
 				let a = NSAlert()
 				a.messageText = items.count > 1 ? "Are you sure you want to delete these \(items.count) items?" : "Are you sure you want to delete this item?"
@@ -722,7 +701,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				a.suppressionButton?.title = "Don't ask me again"
 				a.beginSheetModal(for: view.window!) { response in
 					if response.rawValue == 1000 {
-						ViewController.shared.deleteRequested(for: Array(items))
+						ViewController.shared.deleteRequested(for: items)
 						if let s = a.suppressionButton, s.integerValue > 0 {
 							PersistedOptions.unconfirmedDeletes = true
 						}
@@ -757,10 +736,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		case #selector(unlock(_:)), #selector(removeLock(_:)):
-			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count > 0
+			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
-			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count > 0
-		case #selector(toggleQuickLookPreviewPanel(_:)):
+			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
+		case #selector(toggleQuickLookPreviewPanel(_:)), #selector(info(_:)), #selector(open(_:)):
 			return collection.selectionIndexPaths.count > 0
 		default:
 			return true

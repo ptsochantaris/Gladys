@@ -206,7 +206,7 @@ extension NSMenu {
 	}
 }
 
-final class DropCell: NSCollectionViewItem {
+final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	@IBOutlet weak var topLabel: NSTextField!
 	@IBOutlet weak var bottomLabel: NSTextField!
@@ -247,6 +247,7 @@ final class DropCell: NSCollectionViewItem {
 			let m = NSMenu()
 			m.addItem("Unlock", action: #selector(unlockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 			m.addItem("Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			m.delegate = self
 			return m
 		} else {
 			let m = NSMenu(title: item.displayTitleOrUuid)
@@ -255,9 +256,11 @@ final class DropCell: NSCollectionViewItem {
 			m.addItem("Move To Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
+			m.addItem(NSMenuItem.separator())
 			m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 			m.addItem(NSMenuItem.separator())
 			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
+			m.delegate = self
 			return m
 		}
 	}
@@ -475,6 +478,19 @@ final class DropCell: NSCollectionViewItem {
 	@IBAction func cancelSelected(_ sender: NSButton) {
 		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
+		}
+	}
+
+	func menuWillOpen(_ menu: NSMenu) {
+		ViewController.shared.addCellToSelection(self)
+	}
+
+	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+		switch menuItem.title {
+		case "Lock", "Unlock", "Remove Lock":
+			return ViewController.shared.collection.selectionIndexPaths.count == 1
+		default:
+			return true
 		}
 	}
 

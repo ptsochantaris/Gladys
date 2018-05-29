@@ -29,12 +29,6 @@
                                                 <action selector="infiniteModeSelected:" target="Voe-Tx-rLC" id="6QJ-2h-jF9"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="MacGladys Web Site..." id="7cq-xg-8be">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openWebSite:" target="Voe-Tx-rLC" id="WHc-LY-m83"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
@@ -212,6 +206,19 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="arrangeInFront:" target="Ady-hI-5gd" id="FoP-De-A03"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Help" id="rvU-z6-TUv">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Help" systemMenu="help" id="API-3Y-b90">
+                                    <items>
+                                        <menuItem title="MacGladys Web Site..." id="7cq-xg-8be">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openWebSite:" target="Voe-Tx-rLC" id="WHc-LY-m83"/>
                                             </connections>
                                         </menuItem>
                                     </items>

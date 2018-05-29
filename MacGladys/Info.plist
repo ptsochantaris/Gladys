@@ -34,7 +34,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.1.16</string>
 	<key>CFBundleVersion</key>
-	<string>516</string>
+	<string>517</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
@@ -58,6 +58,10 @@
 				<key>default</key>
 				<string>Keep in Gladys</string>
 			</dict>
+			<key>NSMessage</key>
+			<string>handleServices</string>
+			<key>NSPortName</key>
+			<string>MacGladys</string>
 			<key>NSRequiredContext</key>
 			<dict>
 				<key>NSServiceCategory</key>
@@ -65,10 +69,6 @@
 			</dict>
 			<key>NSReturnTypes</key>
 			<array/>
-			<key>NSMessage</key>
-			<string>handleServices</string>
-			<key>NSPortName</key>
-			<string>MacGladys</string>
 			<key>NSSendTypes</key>
 			<array>
 				<string>pubic.item</string>
