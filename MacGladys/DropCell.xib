@@ -21,10 +21,10 @@
                 <outlet property="view" destination="zta-tj-lHd" id="lVx-8r-5Oa"/>
             </connections>
         </collectionViewItem>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zta-tj-lHd">
+        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zta-tj-lHd" customClass="FirstMouseView" customModule="MacGladys" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="303" height="453"/>
             <subviews>
-                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UsM-5Y-85M" userLabel="View">
+                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UsM-5Y-85M" userLabel="View" customClass="FirstMouseView" customModule="MacGladys" customModuleProvider="target">
                     <rect key="frame" x="10" y="10" width="283" height="433"/>
                     <subviews>
                         <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
@@ -38,10 +38,10 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ">
+                                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="MacGladys" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="158" width="283" height="257"/>
                                 </customView>
-                                <customView wantsLayer="YES" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="duN-D4-5gc" userLabel="Cancel Holder">
+                                <customView wantsLayer="YES" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="duN-D4-5gc" userLabel="Cancel Holder" customClass="FirstMouseView" customModule="MacGladys" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="63" width="283" height="90"/>
                                     <subviews>
                                         <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
@@ -69,7 +69,7 @@ Gw
                                         <constraint firstAttribute="height" constant="90" id="vFJ-bE-ay9"/>
                                     </constraints>
                                 </customView>
-                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ">
+                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="MacGladys" customModuleProvider="target">
                                     <rect key="frame" x="133" y="36" width="17" height="22"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
                                 </imageView>

@@ -10,6 +10,18 @@ import Foundation
 import Cocoa
 import MapKit
 
+class FirstMouseView: NSView {
+	override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+		return true
+	}
+}
+
+class FirstMouseImageView: NSImageView {
+	override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+		return true
+	}
+}
+
 final class TokenTextField: NSTextField {
 	var labels: [String]? {
 		didSet {
@@ -106,7 +118,7 @@ final class TokenTextField: NSTextField {
 	}
 }
 
-final class MiniMapView: NSView {
+final class MiniMapView: FirstMouseView {
 
 	private var coordinate: CLLocationCoordinate2D?
 	private static let cache = NSCache<NSString, NSImage>()
@@ -184,7 +196,7 @@ final class MiniMapView: NSView {
 	}
 }
 
-final class ColourView: NSView {}
+final class ColourView: FirstMouseView {}
 
 extension NSMenu {
 	func addItem(_ title: String, action: Selector, keyEquivalent: String, keyEquivalentModifierMask: NSEvent.ModifierFlags) {
@@ -198,13 +210,13 @@ final class DropCell: NSCollectionViewItem {
 
 	@IBOutlet weak var topLabel: NSTextField!
 	@IBOutlet weak var bottomLabel: NSTextField!
-	@IBOutlet weak var image: NSView!
+	@IBOutlet weak var image: FirstMouseView!
 	@IBOutlet weak var progressView: NSProgressIndicator!
-	@IBOutlet weak var cancelHolder: NSView!
+	@IBOutlet weak var cancelHolder: FirstMouseView!
 	@IBOutlet weak var lockImage: NSImageView!
 	@IBOutlet weak var labelTokenField: TokenTextField!
 
-	private var existingPreviewView: NSView?
+	private var existingPreviewView: FirstMouseView?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

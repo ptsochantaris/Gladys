@@ -1035,6 +1035,22 @@ CA
                         <rect key="frame" x="0.0" y="0.0" width="670" height="408"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
+                                <rect key="frame" x="253" y="116" width="164" height="14"/>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec..." id="KT6-PW-u6g">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f" customClass="FirstMouseImageView" customModule="MacGladys" customModuleProvider="target">
+                                <rect key="frame" x="255" y="134" width="160" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="EiP-iW-5E6"/>
+                                    <constraint firstAttribute="height" constant="160" id="mam-JU-oXS"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="a9k-6h-nKz"/>
+                            </imageView>
                             <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
                                 <rect key="frame" x="0.0" y="0.0" width="670" height="408"/>
                                 <subviews>
@@ -1113,22 +1129,6 @@ CA
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
-                                <rect key="frame" x="253" y="116" width="164" height="14"/>
-                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec..." id="KT6-PW-u6g">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f">
-                                <rect key="frame" x="255" y="134" width="160" height="160"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="160" id="EiP-iW-5E6"/>
-                                    <constraint firstAttribute="height" constant="160" id="mam-JU-oXS"/>
-                                </constraints>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="a9k-6h-nKz"/>
-                            </imageView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="A2v-Sl-Y1f" firstAttribute="centerX" secondItem="0yl-hH-17A" secondAttribute="centerX" id="0xh-Ga-0zk"/>
