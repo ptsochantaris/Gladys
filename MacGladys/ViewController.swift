@@ -428,12 +428,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return true
 		} else {
 			let p = draggingInfo.draggingPasteboard()
-			return addItems(from: p, at: indexPath)
+			return addItems(from: p, at: indexPath, overrides: nil)
 		}
 	}
 
 	@discardableResult
-	func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
+	func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
 		guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
 		let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
@@ -456,11 +456,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return count > 0 ? extractor : nil
 		}
 
-		return _addItems(itemProviders: itemProviders, name: pasteBoard.name.rawValue, indexPath: indexPath)
+		if itemProviders.isEmpty {
+			return false
+		}
+
+		return _addItems(itemProviders: itemProviders, name: pasteBoard.name.rawValue, indexPath: indexPath, overrides: overrides)
 	}
 
 	@discardableResult
-	private func _addItems(itemProviders: [NSItemProvider], name: String?, indexPath: IndexPath) -> Bool {
+	private func _addItems(itemProviders: [NSItemProvider], name: String?, indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
 		if IAPManager.shared.checkInfiniteMode(for: itemProviders.count) {
 			return false
 		}
@@ -468,7 +472,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		var insertedIndexPaths = [IndexPath]()
 		var count = 0
 		for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil, pasteboardName: name) {
+			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides, pasteboardName: name) {
 				Model.loadingUUIDs.insert(newItem.uuid)
 
 				var modelIndex = indexPath.item
@@ -507,7 +511,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return NSItemProvider(contentsOf: url as URL)
 			}
 		}
-		_addItems(itemProviders: providers, name: nil, indexPath: IndexPath(item: 0, section: 0))
+		_addItems(itemProviders: providers, name: nil, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {
@@ -712,7 +716,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func paste(_ sender: Any?) {
-		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0))
+		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
 	private var actionableSelectedItems: [ArchivedDropItem] {

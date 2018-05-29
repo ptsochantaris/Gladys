@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0940"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E99CBB4242E6307E2CCF26191CC74AC4"
+               BlueprintIdentifier = "E89F979BD3445D46D209DD770620131B"
                BuildableName = "ZIPFoundation.framework"
                BlueprintName = "ZIPFoundation-macOS"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E99CBB4242E6307E2CCF26191CC74AC4"
+            BlueprintIdentifier = "E89F979BD3445D46D209DD770620131B"
             BuildableName = "ZIPFoundation.framework"
             BlueprintName = "ZIPFoundation-macOS"
             ReferencedContainer = "container:Pods.xcodeproj">

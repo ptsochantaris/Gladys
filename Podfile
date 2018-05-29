@@ -20,6 +20,7 @@ target 'MacGladys' do
   pod 'Fuzi', '~> 2'
   pod 'HotKey'
   pod 'ZIPFoundation'
+  pod 'CallbackURLKit'
 end
 
 target 'GladysFramework' do

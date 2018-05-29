@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0940"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F1C858452D8B87DD2F7C586C87C41554"
+               BlueprintIdentifier = "3BAA94C65D1CBC394AB08A01F4911724"
                BuildableName = "CallbackURLKit.framework"
-               BlueprintName = "CallbackURLKit"
+               BlueprintName = "CallbackURLKit-iOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1C858452D8B87DD2F7C586C87C41554"
+            BlueprintIdentifier = "3BAA94C65D1CBC394AB08A01F4911724"
             BuildableName = "CallbackURLKit.framework"
-            BlueprintName = "CallbackURLKit"
+            BlueprintName = "CallbackURLKit-iOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

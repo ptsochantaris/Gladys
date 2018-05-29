@@ -18,6 +18,12 @@ typealias IMAGE = NSImage
 typealias COLOR = NSColor
 #endif
 
+struct ImportOverrides {
+	let title: String?
+	let note: String?
+	let labels: [String]?
+}
+
 extension ArchivedDropItem: Hashable {
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
