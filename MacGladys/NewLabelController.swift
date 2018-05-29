@@ -68,6 +68,6 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 
 	private func done(_ label: String) {
 		delegate?.newLabelController(self, selectedLabel: label)
-		dismiss(self)
+		dismiss(nil)
 	}
 }

@@ -646,8 +646,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	private var labelController: LabelSelectionViewController?
 	@objc func showLabels(_ sender: Any?) {
 		if let l = labelController {
-			l.view.window?.close()
 			labelController = nil
+			l.dismiss(nil)
 		} else {
 			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showLabels"), sender: nil)
 		}
@@ -769,10 +769,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		default: break
 		}
-	}
-
-	func labelsDone() {
-		labelController = nil
 	}
 
 	private func updateEmptyView() {

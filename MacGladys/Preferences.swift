@@ -46,11 +46,13 @@ final class Preferences: NSViewController {
 		launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 
-		NotificationCenter.default.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: OperationQueue.main) { [weak self] n in
-			self?.updateSyncSwitches()
-		}
+		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
 		setupHotkeySection()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	private func setupHotkeySection() {
@@ -128,8 +130,8 @@ final class Preferences: NSViewController {
 		AppDelegate.updateHotkey()
 	}
 
-	private func updateSyncSwitches() {
-
+	@objc private func updateSyncSwitches() {
+		assert(Thread.isMainThread)
 		if CloudManager.syncTransitioning || CloudManager.syncing {
 			syncSwitch.isEnabled = false
 			syncNowButton.isEnabled = false

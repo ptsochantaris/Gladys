@@ -13,8 +13,9 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
+		let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
 		labelsUpdated()
 	}
 
@@ -27,11 +28,6 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		get {
 			return NSSize(width: 200, height: ViewController.shared.view.bounds.size.height)
 		}
-	}
-
-	override func viewWillDisappear() {
-		super.viewWillDisappear()
-		ViewController.shared.labelsDone()
 	}
 
 	func numberOfRows(in tableView: NSTableView) -> Int {
