@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.1.16</string>
 	<key>CFBundleVersion</key>
-	<string>517</string>
+	<string>518</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -31,16 +31,12 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<string>SUBQUERY (
-                extensionItems,
-                $extensionItem,
-                SUBQUERY (
-                $extensionItem.attachments,
-                $attachment,
-                (
-                           ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.item"
-                )
-
-    ).@count == $extensionItem.attachments.@count
+  extensionItems, $extensionItem, SUBQUERY (
+    $extensionItem.attachments, $attachment, (
+         ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.content"
+      || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.item"
+    )
+  ).@count == $extensionItem.attachments.@count
 ).@count &gt;= 1</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
