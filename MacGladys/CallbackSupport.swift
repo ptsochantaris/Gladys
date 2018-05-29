@@ -14,7 +14,7 @@ struct CallbackSupport {
 		let m = Manager.shared
 		m.callbackURLScheme = Manager.urlSchemes?.first
 		m["paste-clipboard"] = { parameters, success, failure, cancel in
-			let result = handlePasteRequest(title: parameters["title"], note: parameters["note"], labels: parameters["labels"], skipVisibleErrors: true)
+			let result = handlePasteRequest(title: parameters["title"], note: parameters["note"], labels: parameters["labels"])
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 				if result {
 					success(nil)
@@ -26,7 +26,7 @@ struct CallbackSupport {
 	}
 
 	@discardableResult
-	static func handlePasteRequest(title: String?, note: String?, labels: String?, skipVisibleErrors: Bool) -> Bool {
+	static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Bool {
 		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
 		return ViewController.shared.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: importOverrides)
