@@ -50,6 +50,32 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Keep in Gladys</string>
+			</dict>
+			<key>NSRequiredContext</key>
+			<dict>
+				<key>NSServiceCategory</key>
+				<string>General</string>
+			</dict>
+			<key>NSReturnTypes</key>
+			<array/>
+			<key>NSMessage</key>
+			<string>handleServices</string>
+			<key>NSPortName</key>
+			<string>MacGladys</string>
+			<key>NSSendTypes</key>
+			<array>
+				<string>pubic.item</string>
+				<string>public.content</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>build.bru.Gladys.item.view</string>

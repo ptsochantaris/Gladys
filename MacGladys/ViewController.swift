@@ -438,7 +438,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@discardableResult
-	private func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
+	func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath) -> Bool {
 		guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
 		let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in

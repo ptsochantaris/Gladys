@@ -44,6 +44,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		ViewController.shared.importFiles(paths: filenames)
 	}
 
+	class ServicesProvider: NSObject {
+		@objc func handleServices(_ pboard: NSPasteboard, userData: String, error: AutoreleasingUnsafeMutablePointer<NSString>) {
+			ViewController.shared.addItems(from: pboard, at: IndexPath(item: 0, section: 0))
+		}
+	}
+
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
 		LauncherCommon.killHelper()
@@ -61,6 +67,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		infiniteModeMenuEntry.isHidden = infiniteMode
 
 		AppDelegate.updateHotkey()
+
+		NSApplication.shared.servicesProvider = ServicesProvider()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
