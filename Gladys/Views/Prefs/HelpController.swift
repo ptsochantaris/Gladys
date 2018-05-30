@@ -66,7 +66,18 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "HelpControllerCell", for: indexPath) as! HelpControllerCell
 		cell.label.text = label(for: indexPath.section)
+		cell.selectionStyle = indexPath.section == 7 ? .default : .none
 		return cell
+	}
+
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 7 {
+			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			d.title = "Loading..."
+			d.address = URL(string: "http://www.bru.build/gladys-for-macos")
+			navigationController?.pushViewController(d, animated: true)
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
 	}
 
 	private func label(for section: Int) -> String? {
@@ -78,7 +89,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		case 4: return "The 'Keep in Gladys' share-sheet extension can be used from inside apps that don't support drag-and-drop. Please bear in mind that the type of data which is sent using this method may be less detailed than the data that is provided by drag-and-drop.\n\nThe Apple Watch app allows for quick browsing and copying of recent items. Force-press an item to bring up more options, such as copying it to the clipboard, or opening the item's info view on your phone.\n\nThe Today Widget allows fast access to recently added items from the home screen. You can tap on an item to quickly copy it to the clipboard.\n\nThe iMessage app allows you to quickly search and add an item from Gladys to a message."
 		case 5: return "Gladys supports the x-callback-url scheme for interoperability with other apps.\n\nCurrently it supports one action: 'paste-clipboard', and you can invoke it like this:\n\ngladys://x-callback-url/paste-clipboard\n?title=Override%20The%20Title\n&labels=Pasted%20Item,New%20Items\n&note=Some%20Notes\n\nAll the parameters are optional, but be sure to properly url-encode special characters, such as spaces. The callbacks support x-success and x-error parameters."
 		case 6: return "Gladys does not monitor or report anything at all. You can find a detailed description of the privacy policy on the Gladys web site from the link in the About panel."
-		case 7: return "There is currently no macOS version of Gladys.\n\nLike so many users who have contacted me and politely expressed their interest in such a version, I too really want to create one as soon as limited time and resources allow.\n\nMeanwhile, please note that Gladys does work seamlessly with Handoff, meaning that short/medium text items can be pasted into Gladys after being copied on a Mac, and vice-versa."
+		case 7: return "If you also use a Mac, you may find MacGladys to be a valuable companion to this app.\n\n• A fully-fledged version of Gladys for macOS that matches almost every feature.\n• It's a totally native macOS app that follows the conventions of the Mac desktop.\n• Syncs with Gladys on iOS.\n\nFind more about it by selecting this entry."
 		default: return nil
 		}
 	}

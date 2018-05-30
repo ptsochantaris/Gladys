@@ -145,6 +145,7 @@
 		166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F920BEDCC600DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
+		166E72FA20BEE61B00DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		167574031F12C22500385079 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1675740C1F12C2A500385079 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */; };
 		1675740D1F12C2A800385079 /* VerifyReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = 167A18D41F128A9300B7F0AF /* VerifyReceipt.m */; };
@@ -2151,6 +2152,7 @@
 				16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16CD7D8C20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
+				166E72FA20BEE61B00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F32E2030E6310036E2B0 /* Data+Extensions.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */,
 				16CD7D8420A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
