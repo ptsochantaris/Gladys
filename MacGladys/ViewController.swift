@@ -461,11 +461,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return false
 		}
 
-		return _addItems(itemProviders: itemProviders, name: pasteBoard.name.rawValue, indexPath: indexPath, overrides: overrides)
+		return addItems(itemProviders: itemProviders, name: pasteBoard.name.rawValue, indexPath: indexPath, overrides: overrides)
 	}
 
 	@discardableResult
-	private func _addItems(itemProviders: [NSItemProvider], name: String?, indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
+	func addItems(itemProviders: [NSItemProvider], name: String?, indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
 		if IAPManager.shared.checkInfiniteMode(for: itemProviders.count) {
 			return false
 		}
@@ -512,7 +512,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return NSItemProvider(contentsOf: url as URL)
 			}
 		}
-		_addItems(itemProviders: providers, name: nil, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
+		addItems(itemProviders: providers, name: nil, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
 	func deleteRequested(for items: [ArchivedDropItem]) {

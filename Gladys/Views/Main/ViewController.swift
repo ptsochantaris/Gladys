@@ -710,12 +710,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
-		pasteClipboard()
+		addItems(from: UIPasteboard.general.itemProviders)
 	}
 
 	@discardableResult
-	func pasteClipboard(overrides: ImportOverrides? = nil, skipVisibleErrors: Bool = false) -> PasteResult {
-		let providers = UIPasteboard.general.itemProviders
+	func addItems(from providers: [NSItemProvider], overrides: ImportOverrides? = nil, skipVisibleErrors: Bool = false) -> PasteResult {
 		if providers.count == 0 {
 			if !skipVisibleErrors {
 				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)

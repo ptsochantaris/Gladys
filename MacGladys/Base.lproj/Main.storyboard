@@ -23,7 +23,7 @@
                                                 <action selector="aboutSelected:" target="Voe-Tx-rLC" id="hsb-tO-Wfq"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Infinite Mode..." id="AN3-Zt-BA7">
+                                        <menuItem title="Unlimited Mode..." id="AN3-Zt-BA7">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="infiniteModeSelected:" target="Voe-Tx-rLC" id="6QJ-2h-jF9"/>
