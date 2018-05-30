@@ -32,11 +32,11 @@
 			<string>SUBQUERY (
   extensionItems, $extensionItem, SUBQUERY (
     $extensionItem.attachments, $attachment, (
-         ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.content"
-      || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.item"
+         (ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.content" OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.item")
+		 AND NONE $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.directory"
     )
   ).@count == $extensionItem.attachments.@count
-).@count &gt;= 1</string>
+).@count >= 1</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>

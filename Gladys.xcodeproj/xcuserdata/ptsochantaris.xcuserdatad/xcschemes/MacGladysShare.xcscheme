@@ -68,8 +68,8 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
-         BundleIdentifier = "com.apple.Notes"
-         FilePath = "/Applications/Notes.app">
+         BundleIdentifier = "com.apple.finder"
+         FilePath = "/System/Library/CoreServices/Finder.app">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference
