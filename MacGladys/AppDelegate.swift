@@ -45,12 +45,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	class ServicesProvider: NSObject {
+		var urlEventBeforeLaunch = false
+
 		@objc func handleServices(_ pboard: NSPasteboard, userData: String, error: AutoreleasingUnsafeMutablePointer<NSString>) {
 			ViewController.shared.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil)
 		}
 
 		@objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
 			if let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue, let url = URL(string: urlString) {
+				urlEventBeforeLaunch = true
 				CallbackSupport.handlePossibleCallbackURL(url: url)
 			}
 		}
@@ -59,14 +62,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	private let servicesProvider = ServicesProvider()
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		let s = NSAppleEventManager.shared()
-		s.setEventHandler(servicesProvider,
-						  andSelector: #selector(ServicesProvider.handleURLEvent(event:replyEvent:)),
-						  forEventClass: AEEventClass(kInternetEventClass),
-						  andEventID: AEEventID(kAEGetURL))
-	}
-
-	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
 		LauncherCommon.killHelper()
 
@@ -75,6 +70,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		CallbackSupport.setupCallbackSupport()
+
+		let s = NSAppleEventManager.shared()
+		s.setEventHandler(servicesProvider,
+						  andSelector: #selector(ServicesProvider.handleURLEvent(event:replyEvent:)),
+						  forEventClass: AEEventClass(kInternetEventClass),
+						  andEventID: AEEventID(kAEGetURL))
 
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])

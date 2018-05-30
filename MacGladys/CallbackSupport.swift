@@ -23,6 +23,14 @@ struct CallbackSupport {
 				}
 			}
 		}
+		m["paste-share-pasteboard"] = { parameters, success, failure, cancel in
+			let pasteboard = NSPasteboard(name: sharingPasteboard)
+			ViewController.shared.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: nil)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				ViewController.shared.reloadData()
+				DistributedNotificationCenter.default().post(name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
+			}
+		}
 	}
 
 	@discardableResult

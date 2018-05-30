@@ -54,6 +54,11 @@
 			<key>orderHint</key>
 			<integer>21</integer>
 		</dict>
+		<key>MacGladysShare.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>22</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -78,6 +83,11 @@
 			<true/>
 		</dict>
 		<key>1641368C1F09195000B34574</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>164947CB20BEAA6200BD1BEB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

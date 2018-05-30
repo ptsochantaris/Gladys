@@ -15,7 +15,7 @@ extension ArchivedDropItemType {
 			if let s = decoded as? String {
 				return s.data(using: .utf8)
 			} else if let s = decoded as? NSAttributedString {
-				return try? s.data(from: NSMakeRange(0, s.string.count), documentAttributes: [:])
+				return s.toData
 			} else if let s = decoded as? NSURL {
 				return s.absoluteString?.data(using: .utf8)
 			}

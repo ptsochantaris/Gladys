@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ShareViewController" customModule="MacGladysShare" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelButton" destination="aF4-FD-N2y" id="n4m-cS-J0g"/>
+                <outlet property="spinner" destination="x2b-TE-rf5" id="eyt-Sc-4SF"/>
+                <outlet property="view" destination="1" id="2"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="292" height="196"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aNc-0i-CWK">
+                    <rect key="frame" x="96" y="159" width="100" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Keep in Gladys" id="0xp-rC-2gr">
+                        <font key="font" metaFont="systemBold"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="x2b-TE-rf5">
+                    <rect key="frame" x="138" y="80" width="16" height="16"/>
+                </progressIndicator>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aF4-FD-N2y">
+                    <rect key="frame" x="196" y="13" width="82" height="32"/>
+                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GtV-OB-Scr">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                    </buttonCell>
+                    <connections>
+                        <action selector="cancelButtonSelected:" target="-2" id="XU4-Jd-kM4"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ihA-Ff-rwU">
+                    <rect key="frame" x="99" y="134" width="94" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Loading data..." id="V2W-ru-LK6">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="aF4-FD-N2y" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" id="LA0-tb-IMy"/>
+                <constraint firstItem="x2b-TE-rf5" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" constant="10" id="Qp4-jS-gRJ"/>
+                <constraint firstAttribute="bottom" secondItem="aF4-FD-N2y" secondAttribute="bottom" constant="20" id="W76-vC-L3T"/>
+                <constraint firstItem="x2b-TE-rf5" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="ap0-fF-5S6"/>
+                <constraint firstItem="ihA-Ff-rwU" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="gXA-Pv-QWy"/>
+                <constraint firstAttribute="trailing" secondItem="aF4-FD-N2y" secondAttribute="trailing" constant="20" id="shN-Qc-6wV"/>
+                <constraint firstAttribute="centerX" secondItem="aNc-0i-CWK" secondAttribute="centerX" id="uV3-Wn-RA3"/>
+                <constraint firstItem="ihA-Ff-rwU" firstAttribute="top" secondItem="aNc-0i-CWK" secondAttribute="bottom" constant="8" id="ug7-ob-E6M"/>
+                <constraint firstItem="aNc-0i-CWK" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="vpR-tf-ebx"/>
+            </constraints>
+            <point key="canvasLocation" x="187" y="166"/>
+        </customView>
+    </objects>
+</document>
