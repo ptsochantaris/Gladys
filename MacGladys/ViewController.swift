@@ -143,16 +143,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		Model.reloadDataIfNeeded()
 
-		if CloudManager.syncSwitchedOn {
-			CloudManager.sync { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						print("Sync Error: \(error.finalDescription)")
-					}
-				}
-			}
-		}
-
 		let n = NotificationCenter.default
 
 		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
@@ -186,6 +176,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			Model.forceUpdateFilter(signalUpdate: true)
 		}
 		observers.append(a5)
+
+		if CloudManager.syncSwitchedOn {
+			CloudManager.sync { error in
+				DispatchQueue.main.async {
+					if let error = error {
+						log("Sync Error: \(error.finalDescription)")
+					}
+				}
+			}
+		}
 
 		updateTitle()
 		postSave()
@@ -259,7 +259,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			collection.reloadItems(at: [ip])
 		}
 		if Model.loadingUUIDs.count == 0 {
-			print("Ingest complete")
+			log("Ingest complete")
 			Model.save()
 		}
 	}

@@ -20,20 +20,20 @@ fileprivate func getDeviceId() -> Data {
 	var master_port = mach_port_t()
 	var kernResult = IOMasterPort(mach_port_t(MACH_PORT_NULL), &master_port)
 	if kernResult != KERN_SUCCESS {
-		print("IOMasterPort returned \(kernResult)")
+		log("IOMasterPort returned \(kernResult)")
 		return Data()
 	}
 
 	let matchingDict = IOBSDNameMatching(master_port, 0, "en0")
 	if matchingDict == nil {
-		print("IOBSDNameMatching returned empty dictionary")
+		log("IOBSDNameMatching returned empty dictionary")
 		return Data()
 	}
 
 	var iterator = io_iterator_t()
 	kernResult = IOServiceGetMatchingServices(master_port, matchingDict, &iterator)
 	if kernResult != KERN_SUCCESS {
-		print("IOServiceGetMatchingServices returned \(kernResult)")
+		log("IOServiceGetMatchingServices returned \(kernResult)")
 		return Data()
 	}
 
@@ -50,7 +50,7 @@ fileprivate func getDeviceId() -> Data {
 			macAddress = (m as! CFData)
 			IOObjectRelease(parentService)
 		} else {
-			print("IORegistryEntryGetParentEntry returned \(kernResult)")
+			log("IORegistryEntryGetParentEntry returned \(kernResult)")
 		}
 
 		IOObjectRelease(service)

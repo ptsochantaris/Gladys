@@ -307,7 +307,7 @@ extension ArchivedDropItemType {
 			#endif
 
 		} catch let error {
-			print("Error generating movie thumbnail: \(error.finalDescription)")
+			log("Error generating movie thumbnail: \(error.finalDescription)")
 		}
 
 		if tempPath != bytesPath {
