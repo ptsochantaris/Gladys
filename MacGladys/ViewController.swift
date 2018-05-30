@@ -158,7 +158,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
 			self?.detectExternalDeletions()
 			Model.rebuildLabels()
-			Model.forceUpdateFilter(signalUpdate: true) // refresh filtered items
+			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
+			self?.reloadData()
 			self?.postSave()
 		}
 		observers.append(a1)

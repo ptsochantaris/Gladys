@@ -78,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 						  andEventID: AEEventID(kAEGetURL))
 
 		if CloudManager.syncSwitchedOn {
-			NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
+			NSApplication.shared.registerForRemoteNotifications(matching: [])
 		}
 
 		IAPManager.shared.start()

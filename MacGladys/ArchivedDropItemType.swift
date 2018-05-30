@@ -319,7 +319,7 @@ final class ArchivedDropItemType: Codable {
 				} catch {
 					bytes = data
 					representedClass = .url
-					log("      could not read data from file, treating as local file url: \(item.absoluteString)")
+					log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
 					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 					completeIngest()
 				}

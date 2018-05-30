@@ -116,7 +116,7 @@ extension CloudManager {
 		#if os(iOS)
 		UIApplication.shared.registerForRemoteNotifications()
 		#else
-		NSApplication.shared.registerForRemoteNotifications(matching: [.badge])
+		NSApplication.shared.registerForRemoteNotifications(matching: [])
 		#endif
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
