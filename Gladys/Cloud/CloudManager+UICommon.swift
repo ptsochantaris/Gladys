@@ -326,11 +326,11 @@ extension CloudManager {
 				}
 
 				if updatedSequence || newDrops.count > 0 {
-					let sequence = uuidSequence
+					let sequence = uuidSequence.compactMap { UUID(uuidString: $0) }
 					if sequence.count > 0 {
 						Model.drops.sort { i1, i2 in
-							let p1 = sequence.index(of: i1.uuid.uuidString) ?? -1
-							let p2 = sequence.index(of: i2.uuid.uuidString) ?? -1
+							let p1 = sequence.index(of: i1.uuid) ?? -1
+							let p2 = sequence.index(of: i2.uuid) ?? -1
 							return p1 < p2
 						}
 					}
@@ -339,6 +339,7 @@ extension CloudManager {
 				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
 
 				if itemsModified || updatedSequence{
+					log("Posting external data update notification")
 					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 				}
 
