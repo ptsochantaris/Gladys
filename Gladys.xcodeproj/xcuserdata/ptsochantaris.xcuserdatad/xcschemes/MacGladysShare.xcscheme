@@ -68,6 +68,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
+         BundleIdentifier = "com.apple.Notes"
          FilePath = "/Applications/Notes.app">
       </PathRunnable>
       <MacroExpansion>
