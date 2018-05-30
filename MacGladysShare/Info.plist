@@ -36,7 +36,7 @@
 		 AND NONE $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.directory"
     )
   ).@count == $extensionItem.attachments.@count
-).@count >= 1</string>
+).@count &gt;= 1</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
