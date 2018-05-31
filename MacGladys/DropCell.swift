@@ -233,12 +233,19 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	@objc private func itemModified(_ notification: Notification) {
 		if (notification.object as? ArchivedDropItem) == archivedDropItem {
+			representedObject = notification.object
 			reDecorate()
 		}
 	}
 
 	private var archivedDropItem: ArchivedDropItem? {
 		return representedObject as? ArchivedDropItem
+	}
+
+	override var representedObject: Any? {
+		didSet {
+			view.needsLayout = true
+		}
 	}
 
 	private var shortcutMenu: NSMenu? {

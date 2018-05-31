@@ -8,7 +8,7 @@ let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid
 
 func log(_ line: @autoclosure ()->String) {
 	#if DEBUG
-		NSLog(line())
+		NSLog("%@", line())
 	#endif
 }
 
