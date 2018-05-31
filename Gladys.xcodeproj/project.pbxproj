@@ -72,7 +72,7 @@
 		161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
 		161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
 		161718DB2094D7A6005ABD6C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
-		161718DD2094D7F7005ABD6C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718DC2094D7F7005ABD6C /* Model.swift */; };
+		161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718DC2094D7F7005ABD6C /* Model+Mac.swift */; };
 		161718DF2094DAE2005ABD6C /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
 		161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
@@ -305,6 +305,8 @@
 		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
+		16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
+		16ED386320C08FAA00B9BFDA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+UI.swift */; };
@@ -538,7 +540,7 @@
 		161718D02094D334005ABD6C /* MacGladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladys.entitlements; sourceTree = "<group>"; };
 		161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItem.swift; sourceTree = "<group>"; };
 		161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
-		161718DC2094D7F7005ABD6C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		161718DC2094D7F7005ABD6C /* Model+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Mac.swift"; sourceTree = "<group>"; };
 		161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mac.swift"; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		1619E8121EFF3745000087DD /* GladysFiles.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysFiles.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -941,7 +943,7 @@
 				161718C82094D333005ABD6C /* ViewController.swift */,
 				161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */,
 				161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */,
-				161718DC2094D7F7005ABD6C /* Model.swift */,
+				161718DC2094D7F7005ABD6C /* Model+Mac.swift */,
 				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
 				161718CA2094D334005ABD6C /* Assets.xcassets */,
@@ -2005,6 +2007,7 @@
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
+				16ED386320C08FAA00B9BFDA /* Model.swift in Sources */,
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
 				16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */,
@@ -2015,6 +2018,7 @@
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
+				16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */,
@@ -2022,7 +2026,7 @@
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				16CD7D8D20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */,
-				161718DD2094D7F7005ABD6C /* Model.swift in Sources */,
+				161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */,
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				169E646B20A0F04E003CB4C0 /* Network.swift in Sources */,
 				16CD7D7D20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */,

@@ -1,8 +1,5 @@
 
 import Foundation
-#if MAINAPP || FILEPROVIDER
-	import FileProvider
-#endif
 
 final class Model {
 
