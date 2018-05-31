@@ -294,7 +294,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		var bottomLabelHighlight = false
 		var bottomLabelAlignment = NSTextAlignment.center
 
-		if item?.loadingProgress != nil {
+		let showLoading = item?.shouldDisplayLoading ?? false
+		if showLoading {
 			progressView.startAnimation(nil)
 		} else {
 			progressView.stopAnimation(nil)
@@ -304,7 +305,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 		if let item = item {
 
-			if item.shouldDisplayLoading {
+			if showLoading {
 				hideCancel = false
 				image.layer?.contents = nil
 

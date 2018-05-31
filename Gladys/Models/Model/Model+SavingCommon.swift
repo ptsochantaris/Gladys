@@ -23,15 +23,6 @@ extension Model {
 		nextSaveCallbacks!.append(callback)
 	}
 
-	private static func performAnyNextSaveCallbacks() {
-		if let n = nextSaveCallbacks {
-			for callback in n {
-				callback()
-			}
-			nextSaveCallbacks = nil
-		}
-	}
-
 	static func save() {
 		assert(Thread.isMainThread)
 
@@ -74,7 +65,12 @@ extension Model {
 					performSave()
 				} else {
 					isSaving = false
-					performAnyNextSaveCallbacks()
+					if let n = nextSaveCallbacks {
+						for callback in n {
+							callback()
+						}
+						nextSaveCallbacks = nil
+					}
 					saveComplete()
 				}
 			}

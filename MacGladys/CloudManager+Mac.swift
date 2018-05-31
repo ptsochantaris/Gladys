@@ -26,9 +26,7 @@ extension CloudManager {
 			Model.reloadDataIfNeeded()
 			sync { error in
 				if let error = error {
-					log("Push sync result: \(error.finalDescription)")
-				} else {
-					log("Push sync done")
+					log("Notification-triggered sync error: \(error.finalDescription)")
 				}
 			}
 		}
