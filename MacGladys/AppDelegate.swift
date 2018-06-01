@@ -85,9 +85,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NotificationCenter.default.addObserver(self, selector: #selector(iapChanged), name: .IAPModeChanged, object: nil)
 		infiniteModeMenuEntry.isHidden = infiniteMode
 
-		AppDelegate.updateHotkey()
-
 		NSApplication.shared.servicesProvider = servicesProvider
+	}
+
+	func applicationDidFinishLaunching(_ notification: Notification) {
+		AppDelegate.updateHotkey()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
