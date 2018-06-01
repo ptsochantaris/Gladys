@@ -79,7 +79,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 }
 
-final class MainCollectionView: NSCollectionView {
+final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	override func keyDown(with event: NSEvent) {
 		if event.charactersIgnoringModifiers == " " {
 			ViewController.shared.toggleQuickLookPreviewPanel(self)
@@ -87,10 +87,57 @@ final class MainCollectionView: NSCollectionView {
 			super.keyDown(with: event)
 		}
 	}
+
+	var actionableSelectedItems: [ArchivedDropItem] {
+		return selectionIndexPaths.compactMap {
+			let item = Model.filteredDrops[$0.item]
+			return item.needsUnlock ? nil : item
+		}
+	}
+
+	private var selectedTypes = Set<NSPasteboard.PasteboardType>()
+
+	override func validRequestor(forSendType sendType: NSPasteboard.PasteboardType?, returnType: NSPasteboard.PasteboardType?) -> Any? {
+		if returnType == nil, let s = sendType, selectedTypes.contains(s) {
+			return self
+		}
+		return super.validRequestor(forSendType: sendType, returnType: returnType)
+	}
+
+	func updateServices() {
+		var sendTypes = Set<NSPasteboard.PasteboardType>()
+
+		for item in actionableSelectedItems {
+			for t in item.typeItems.map({ NSPasteboard.PasteboardType($0.typeIdentifier) }) {
+				sendTypes.insert(t)
+			}
+		}
+		selectedTypes = sendTypes
+		NSApplication.shared.registerServicesMenuSendTypes(Array(sendTypes), returnTypes: [])
+	}
+
+	func readSelection(from pboard: NSPasteboard) -> Bool {
+		return false
+	}
+
+	func writeSelection(to pboard: NSPasteboard, types: [NSPasteboard.PasteboardType]) -> Bool {
+		let objectsToWrite = actionableSelectedItems.compactMap { $0.pasteboardItem }
+		if objectsToWrite.isEmpty {
+			return false
+		} else {
+			pboard.writeObjects(objectsToWrite)
+			return true
+		}
+	}
+
+	override func selectItems(at indexPaths: Set<IndexPath>, scrollPosition: NSCollectionView.ScrollPosition) {
+		super.selectItems(at: indexPaths, scrollPosition: scrollPosition)
+		updateServices()
+	}
 }
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
-	@IBOutlet weak var collection: NSCollectionView!
+	@IBOutlet weak var collection: MainCollectionView!
 
 	static var shared: ViewController! = nil
 
@@ -208,10 +255,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		} else {
 			title = "Gladys"
 		}
+
+		let items = collection.actionableSelectedItems
+
 		if let syncStatus = CloudManager.syncProgressString {
 			view.window?.title = "\(title) — \(syncStatus)"
-		} else if collection.selectionIndexPaths.count > 0 {
-			let selectedItems = actionableSelectedItems.map { $0.uuid }
+
+		} else if items.count > 0 {
+			let selectedItems = items.map { $0.uuid }
 			let size = Model.sizeForItems(uuids: selectedItems)
 			let sizeString = diskSizeFormatter.string(fromByteCount: size)
 			let selectedReport: String
@@ -221,9 +272,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
 			}
 			view.window?.title = "\(title) — \(selectedReport)"
+
 		} else {
 			view.window?.title = title
 		}
+
+		collection.updateServices()
 	}
 
 	func isKey() {
@@ -321,7 +375,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func shareSelected(_ sender: Any?) {
-		guard let itemToShare = actionableSelectedItems.first,
+		guard let itemToShare = collection.actionableSelectedItems.first,
 			let shareableItem = itemToShare.mostRelevantOpenItem?.itemForShare.0,
 			let i = Model.filteredDrops.index(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
@@ -588,7 +642,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func createLock(_ sender: Any?) {
-		guard let item = actionableSelectedItems.first else { return }
+		guard let item = collection.actionableSelectedItems.first else { return }
 
 		if item.isLocked && !item.needsUnlock {
 			item.needsUnlock = true
@@ -661,7 +715,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func info(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		for item in actionableSelectedItems {
+		for item in collection.actionableSelectedItems {
 			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
 		}
 	}
@@ -683,7 +737,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		for item in actionableSelectedItems {
+		for item in collection.actionableSelectedItems {
 			item.tryOpen(from: self)
 		}
 	}
@@ -691,7 +745,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@objc func copy(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
-		for item in actionableSelectedItems {
+		for item in collection.actionableSelectedItems {
 			if let pi = item.pasteboardItem {
 				g.writeObjects([pi])
 			}
@@ -699,7 +753,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func moveToTop(_ sender: Any?) {
-		for item in actionableSelectedItems {
+		for item in collection.actionableSelectedItems {
 			if let i = Model.drops.index(of: item) {
 				Model.drops.remove(at: i)
 				Model.drops.insert(item, at: 0)
@@ -711,7 +765,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func delete(_ sender: Any?) {
-		let items = actionableSelectedItems
+		let items = collection.actionableSelectedItems
 		if !items.isEmpty {
 			if PersistedOptions.unconfirmedDeletes {
 				ViewController.shared.deleteRequested(for: items)
@@ -738,13 +792,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-	private var actionableSelectedItems: [ArchivedDropItem] {
-		return collection.selectionIndexPaths.compactMap {
-			let item = Model.filteredDrops[$0.item]
-			return item.needsUnlock ? nil : item
-		}
-	}
-
 	private var lockedSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.filteredDrops[$0.item]
@@ -755,7 +802,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
 		case #selector(copy(_:)), #selector(delete(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
-			return actionableSelectedItems.count > 0
+			return collection.actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		case #selector(unlock(_:)), #selector(removeLock(_:)):
@@ -763,7 +810,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(createLock(_:)):
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)), #selector(info(_:)), #selector(open(_:)):
-			let selectedItems = actionableSelectedItems
+			let selectedItems = collection.actionableSelectedItems
 			if selectedItems.count > 1 {
 				menuItem.title = "Quick Look Selected Items"
 				return true
