@@ -26,7 +26,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	override var preferredContentSize: NSSize {
 		set {}
 		get {
-			return NSSize(width: 200, height: ViewController.shared.view.bounds.size.height)
+			return NSSize(width: 200, height: ViewController.shared.view.frame.size.height)
 		}
 	}
 
@@ -36,10 +36,11 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 
 	private var filteredLabels: [Model.LabelToggle] {
 		let text = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+		let toggles = Model.labelToggles.filter { $0.count > 0 }
 		if text.isEmpty {
-			return Model.labelToggles
+			return toggles
 		} else {
-			return Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(text) }
+			return toggles.filter { $0.name.localizedCaseInsensitiveContains(text) }
 		}
 	}
 

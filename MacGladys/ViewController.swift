@@ -173,8 +173,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		observers.append(a4)
 
-		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { _ in
+		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			Model.forceUpdateFilter(signalUpdate: true)
+			self?.updateTitle()
 		}
 		observers.append(a5)
 
@@ -209,6 +210,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		if let syncStatus = CloudManager.syncProgressString {
 			view.window?.title = "\(title) — \(syncStatus)"
+		} else if collection.selectionIndexPaths.count > 0 {
+			let selectedItems = actionableSelectedItems.map { $0.uuid }
+			let size = Model.sizeForItems(uuids: selectedItems)
+			let sizeString = diskSizeFormatter.string(fromByteCount: size)
+			let selectedReport: String
+			if selectedItems.count == 1 {
+				selectedReport = "Selected Item: \(sizeString)"
+			} else {
+				selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
+			}
+			view.window?.title = "\(title) — \(selectedReport)"
 		} else {
 			view.window?.title = title
 		}
@@ -269,6 +281,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if collection.selectionIndexPaths.count > 0 && QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
 			QLPreviewPanel.shared().reloadData()
 		}
+		updateTitle()
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+		updateTitle()
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
