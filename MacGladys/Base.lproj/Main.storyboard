@@ -89,6 +89,19 @@
                                                 <action selector="zipSelected:" target="Voe-Tx-rLC" id="9Dl-mY-FH6"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="eRd-hm-2NX"/>
+                                        <menuItem title="Quick Look" keyEquivalent=" " id="lwl-R5-EOJ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleQuickLookPreviewPanel:" target="Ady-hI-5gd" id="TZQ-te-Hn3"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="JX2-iB-erx"/>
+                                        <menuItem title="Close Window" keyEquivalent="w" id="kWW-qX-DNg">
+                                            <connections>
+                                                <action selector="performClose:" target="Ady-hI-5gd" id="Hip-CJ-XoK"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -209,21 +222,10 @@ CA
                                                 <action selector="performZoom:" target="Ady-hI-5gd" id="KJa-7w-C5g"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Close" keyEquivalent="w" id="Vla-Tz-N1J">
-                                            <connections>
-                                                <action selector="performClose:" target="Ady-hI-5gd" id="Rld-3f-PTa"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="L2p-Cr-uyZ"/>
                                         <menuItem title="Toggle Labels" keyEquivalent="l" id="fWc-2Z-SF2">
                                             <connections>
                                                 <action selector="showLabels:" target="Ady-hI-5gd" id="zfa-bJ-Kl7"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Toggle Quicklook" keyEquivalent=" " id="lwl-R5-EOJ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleQuickLookPreviewPanel:" target="Ady-hI-5gd" id="TZQ-te-Hn3"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eV5-lg-Zj5"/>

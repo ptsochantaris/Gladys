@@ -55,15 +55,6 @@ extension ArchivedDropItemType {
 		return (bytes, 0)
 	}
 
-	private func truncate(string: String, limit: Int) -> String {
-		if string.count > limit {
-			let s = string.startIndex
-			let e = string.index(string.startIndex, offsetBy: limit)
-			return String(string[s..<e])
-		}
-		return string
-	}
-
 	func prepareFilename(name: String, directory: String?) -> String {
 		var name = name
 
@@ -81,13 +72,13 @@ extension ArchivedDropItemType {
 				name = String(name.dropLast(ext.count + 1))
 			}
 
-			name = truncate(string: name, limit: 255 - (ext.count + 1)) + "." + ext
+			name = name.truncate(limit: 255 - (ext.count + 1)) + "." + ext
 		} else {
-			name = truncate(string: name, limit: 255)
+			name = name.truncate(limit: 255)
 		}
 
 		if let directory = directory {
-			name = truncate(string: directory, limit: 255) + "/" + name
+			name = directory.truncate(limit: 255) + "/" + name
 		}
 
 		// for now, remove in a few weeks

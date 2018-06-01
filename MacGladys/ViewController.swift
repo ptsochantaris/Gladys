@@ -763,7 +763,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(createLock(_:)):
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)), #selector(info(_:)), #selector(open(_:)):
-			return collection.selectionIndexPaths.count > 0
+			let selectedItems = actionableSelectedItems
+			if selectedItems.count > 1 {
+				menuItem.title = "Quick Look Selected Items"
+				return true
+			} else if let first = selectedItems.first {
+				menuItem.title = "Quick Look \"\(first.displayTitleOrUuid.truncateWithEllipses(limit: 30))\""
+				return true
+			} else {
+				menuItem.title = "Quick Look"
+				return false
+			}
 		default:
 			return true
 		}
