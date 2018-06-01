@@ -307,6 +307,9 @@
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16ED386320C08FAA00B9BFDA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16ED386420C14CF900B9BFDA /* gladysIcon64.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */; };
+		16ED386620C14F4500B9BFDA /* Model+ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */; };
+		16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */; };
 		16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+UI.swift */; };
@@ -693,6 +696,7 @@
 		16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ImportExport.swift"; sourceTree = "<group>"; };
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
 		16EDB3761F2361EB001CC65C /* Model+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UI.swift"; sourceTree = "<group>"; };
 		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
@@ -1201,6 +1205,7 @@
 				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
 				16CD7DBF20A1293C0039E6C2 /* Model+SavingCommon.swift */,
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
+				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1725,6 +1730,7 @@
 			files = (
 				16CE19ED20BE0D8D00A2D513 /* gladysIcon320.png in Resources */,
 				161718CB2094D334005ABD6C /* Assets.xcassets in Resources */,
+				16ED386420C14CF900B9BFDA /* gladysIcon64.png in Resources */,
 				168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */,
 				161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */,
 				168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */,
@@ -2016,6 +2022,7 @@
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
+				16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
 				16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */,
@@ -2239,6 +2246,7 @@
 				1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */,
 				16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */,
 				169763151F15669000537776 /* ArchivedDropItemType+UI.swift in Sources */,
+				16ED386620C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				16E781BC1FE97AD90071ED9C /* LabelEditorController.swift in Sources */,

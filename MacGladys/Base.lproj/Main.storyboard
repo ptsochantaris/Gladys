@@ -67,6 +67,31 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="File" id="P1e-EG-AfR">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File" id="zin-Ce-zvK">
+                                    <items>
+                                        <menuItem title="Import Archive..." id="cM4-ss-B6A">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="importSelected:" target="Voe-Tx-rLC" id="6pQ-jH-dNj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Export Archive..." id="CF4-cu-qSI">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="exportSelected:" target="Voe-Tx-rLC" id="ZPv-e0-dzp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Create ZIP..." id="Q3Q-zK-YJY">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="zipSelected:" target="Voe-Tx-rLC" id="9Dl-mY-FH6"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Edit" id="RWT-e8-86E">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Edit" id="Bzb-kv-WNq">

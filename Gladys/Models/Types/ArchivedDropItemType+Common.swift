@@ -340,7 +340,7 @@ extension ArchivedDropItemType: Equatable {
 
 		return sizeItem(path: bytesPath)
 	}
-
+	
 	private var cloudKitDataPath: URL {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
 	}

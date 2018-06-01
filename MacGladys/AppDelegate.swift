@@ -153,15 +153,110 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
 	}
 
-	/*func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-		Model.saveIsDueToSyncFetch = true
-		Model.queueNextSaveCallback {
-			NSApplication.shared.reply(toApplicationShouldTerminate: true)
+	/////////////////////////////////////////////////////////////////
+
+	@IBAction func importSelected(_ sender: NSMenuItem) {
+
+		let w = ViewController.shared.view.window!
+		if !w.isVisible {
+			w.makeKeyAndOrderFront(nil)
 		}
-		Model.save()
-		return NSApplication.TerminateReply.terminateLater
-	}*/
 
+		let o = NSOpenPanel()
+		o.title = "Import Archive…"
+		o.prompt = "Import"
+		o.message = "Select an archive from which to\nmerge items into your existing collection."
+		o.isExtensionHidden = true
+		o.allowedFileTypes = ["build.bru.gladys.archive"]
+		o.beginSheetModal(for: w) { response in
+			if response == .OK, let url = o.url {
+				DispatchQueue.main.async {
+					let fm = FileManager.default
+					let localURL = Model.temporaryDirectoryUrl.appendingPathComponent("importedArchive.gladysArchive")
+					if fm.fileExists(atPath: localURL.path) {
+						try! fm.removeItem(at: localURL)
+					}
+					try! fm.copyItem(at: url, to: localURL)
+					Model.importData(from: localURL) { success in
+						// thread
+						if !success {
+							DispatchQueue.main.async {
+								genericAlert(title: "Could not import data", message: "This archive could not be imported. The package may be corrupt or you may not have sufficient access permissions.", on: ViewController.shared)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
+	@IBAction func exportSelected(_ sender: NSMenuItem) {
+
+		let w = ViewController.shared.view.window!
+		if !w.isVisible {
+			w.makeKeyAndOrderFront(nil)
+		}
+
+		let s = NSSavePanel()
+		s.title = "Export Archive…"
+		s.prompt = "Export"
+		s.message = "Export your colection for importing\nto other devices, or as backup."
+		s.isExtensionHidden = true
+		s.nameFieldStringValue = "Gladys Archive"
+		s.allowedFileTypes = ["build.bru.gladys.archive"]
+		s.beginSheetModal(for: w) { response in
+			if response == .OK, let selectedUrl = s.url {
+				Model.createArchive { createdUrl in
+					// thread
+					let fm = FileManager.default
+					if fm.fileExists(atPath: selectedUrl.path) {
+						try! fm.removeItem(at: selectedUrl)
+					}
+					try! fm.moveItem(at: createdUrl, to: selectedUrl)
+					NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+				}
+			}
+		}
+	}
+
+	@objc private func onlyVisibleItemsToggled(_ sender: NSButton) {
+		PersistedOptions.exportOnlyVisibleItems = sender.integerValue == 1
+	}
+
+	@IBAction func zipSelected(_ sender: NSMenuItem) {
+
+		let w = ViewController.shared.view.window!
+		if !w.isVisible {
+			w.makeKeyAndOrderFront(nil)
+		}
+
+		let optionView = NSView(frame: NSRect(x: 0, y: 0, width: 200, height: 44))
+		let selectItemsOnlyOption = NSButton(checkboxWithTitle: "Add only visible items", target: self, action: #selector(onlyVisibleItemsToggled(_:)))
+		selectItemsOnlyOption.integerValue = PersistedOptions.exportOnlyVisibleItems ? 1 : 0
+		selectItemsOnlyOption.frame = optionView.bounds
+		optionView.addSubview(selectItemsOnlyOption)
+
+		let s = NSSavePanel()
+		s.accessoryView = optionView
+		s.title = "Create ZIP…"
+		s.prompt = "Create ZIP"
+		s.message = "Create a ZIP file of the current collection."
+		s.isExtensionHidden = true
+		s.nameFieldStringValue = "Gladys"
+		s.allowedFileTypes = [kUTTypeZipArchive as String]
+		s.beginSheetModal(for: w) { response in
+			if response == .OK, let selectedUrl = s.url {
+				Model.createZip { createdUrl in
+					// thread
+					let fm = FileManager.default
+					if fm.fileExists(atPath: selectedUrl.path) {
+						try! fm.removeItem(at: selectedUrl)
+					}
+					try! fm.moveItem(at: createdUrl, to: selectedUrl)
+					NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+				}
+			}
+		}
+	}
 }
 

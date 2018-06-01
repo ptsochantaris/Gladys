@@ -66,15 +66,28 @@ extension ArchivedDropItemType {
 
 	func prepareFilename(name: String, directory: String?) -> String {
 		var name = name
+
 		if let ext = fileExtension {
-			name = truncate(string: name, limit: 255 - (ext.count+1)) + "." + ext
+			if ext == "jpeg", name.hasSuffix(".jpg") {
+				name = String(name.dropLast(4))
+
+			} else if ext == "mpeg", name.hasSuffix(".mpg") {
+				name = String(name.dropLast(4))
+
+			} else if ext == "html", name.hasSuffix(".htm") {
+				name = String(name.dropLast(4))
+
+			} else if name.hasSuffix("." + ext) {
+				name = String(name.dropLast(ext.count + 1))
+			}
+
+			name = truncate(string: name, limit: 255 - (ext.count + 1)) + "." + ext
 		} else {
 			name = truncate(string: name, limit: 255)
 		}
 
 		if let directory = directory {
-			let directory = truncate(string: directory, limit: 255)
-			name = directory + "/" + name
+			name = truncate(string: directory, limit: 255) + "/" + name
 		}
 
 		// for now, remove in a few weeks

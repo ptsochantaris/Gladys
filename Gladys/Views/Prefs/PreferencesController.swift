@@ -3,7 +3,7 @@ import UIKit
 import MobileCoreServices
 import ZIPFoundation
 
-final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate, FileManagerDelegate {
+final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
 	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
 
@@ -41,157 +41,61 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 	}
 
-	@discardableResult
-	private func createArchive(completion: @escaping (URL)->Void) -> Progress {
-		let eligibleItems = eligibleDropsForExport
-		let count = 2 + eligibleItems.count
-		let p = Progress(totalUnitCount: Int64(count))
-
-		DispatchQueue.main.async {
-			self.spinner.startAnimating()
-			self.exportOnlyVisibleSwitch.isEnabled = false
-			self.infoLabel.isHidden = true
+	private func showExportActivity(_ show: Bool) {
+		if show {
+			spinner.startAnimating()
+		} else {
+			spinner.stopAnimating()
 		}
-
-		DispatchQueue.global(qos: .userInitiated).async {
-
-			let fm = FileManager.default
-			let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys Archive.gladysArchive")
-			if fm.fileExists(atPath: tempPath.path) {
-				try! fm.removeItem(at: tempPath)
-			}
-
-			p.completedUnitCount += 1
-
-			try! fm.createDirectory(at: tempPath, withIntermediateDirectories: true, attributes: nil)
-			for item in eligibleItems {
-				let uuidString = item.uuid.uuidString
-				let sourceForItem = Model.appStorageUrl.appendingPathComponent(uuidString)
-				let destinationForItem = tempPath.appendingPathComponent(uuidString)
-				fm.delegate = self
-				try! fm.copyItem(at: sourceForItem, to: destinationForItem)
-				fm.delegate = nil
-				p.completedUnitCount += 1
-			}
-
-			let data = try! JSONEncoder().encode(eligibleItems)
-			try! data.write(to: tempPath.appendingPathComponent("items.json"))
-			p.completedUnitCount += 1
-
-			completion(tempPath)
-
-			DispatchQueue.main.async {
-				self.spinner.stopAnimating()
-				self.exportOnlyVisibleSwitch.isEnabled = true
-				self.infoLabel.isHidden = false
-			}
-		}
-
-		return p
+		exportOnlyVisibleSwitch.isEnabled = !show
+		infoLabel.isHidden = show
 	}
 
-	func fileManager(_ fileManager: FileManager, shouldCopyItemAt srcURL: URL, to dstURL: URL) -> Bool {
-		let components = srcURL.pathComponents
-		return !components.contains { $0 == "shared-blob" || $0 == "ck-record" }
+	private func showZipActivity(_ show: Bool) {
+		if show {
+			zipSpinner.startAnimating()
+
+		} else {
+			zipSpinner.stopAnimating()
+		}
+		exportOnlyVisibleSwitch.isEnabled = !show
+		zipImage.isHidden = show
 	}
 
 	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
 		i.registerFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive", fileOptions: [], visibility: .all) { completion -> Progress? in
-			return self.createArchive { url in
+			DispatchQueue.main.async {
+				self.showExportActivity(true)
+			}
+			return Model.createArchive { url in
 				completion(url, false, nil)
 				try! FileManager.default.removeItem(at: url)
+				DispatchQueue.main.async {
+					self.showExportActivity(false)
+				}
 			}
 		}
 		return [UIDragItem(itemProvider: i)]
-	}
-
-	private var eligibleDropsForExport: [ArchivedDropItem] {
-		let items = PersistedOptions.exportOnlyVisibleItems ? Model.threadSafeFilteredDrops : Model.threadSafeDrops
-		return items.filter { $0.goodToSave }
-	}
-
-	@discardableResult
-	private func createZip(completion: @escaping (URL)->Void) -> Progress {
-
-		DispatchQueue.main.async {
-			self.zipSpinner.startAnimating()
-			self.exportOnlyVisibleSwitch.isEnabled = false
-			self.zipImage.isHidden = true
-		}
-
-		let dropsCopy = eligibleDropsForExport
-		let itemCount = Int64(1 + dropsCopy.count)
-		let p = Progress(totalUnitCount: itemCount)
-
-		let tempPath = Model.appStorageUrl.deletingLastPathComponent().appendingPathComponent("Gladys.zip")
-
-		DispatchQueue.global(qos: .userInitiated).async {
-
-			let fm = FileManager.default
-			if fm.fileExists(atPath: tempPath.path) {
-				try! fm.removeItem(at: tempPath)
-			}
-
-			p.completedUnitCount += 1
-
-			if let archive = Archive(url: tempPath, accessMode: .create) {
-				for item in dropsCopy {
-					let dir = item.displayTitleOrUuid.filenameSafe
-					if item.typeItems.count == 1 {
-						let typeItem = item.typeItems.first!
-						self.addItem(typeItem, directory: nil, name: dir, in: archive)
-
-					} else {
-						for typeItem in item.typeItems {
-							self.addItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
-						}
-					}
-					p.completedUnitCount += 1
-				}
-			}
-
-			completion(tempPath)
-
-			DispatchQueue.main.async {
-				self.zipSpinner.stopAnimating()
-				self.exportOnlyVisibleSwitch.isEnabled = true
-				self.zipImage.isHidden = false
-			}
-
-		}
-
-		return p
 	}
 
 	private var zipDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys.zip"
 		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
-			return self.createZip { url in
+			DispatchQueue.main.async {
+				self.showZipActivity(true)
+			}
+			return Model.createZip { url in
 				completion(url, false, nil)
 				try! FileManager.default.removeItem(at: url)
+				DispatchQueue.main.async {
+					self.showZipActivity(false)
+				}
 			}
 		}
 		return [UIDragItem(itemProvider: i)]
-	}
-
-	private func addItem(_ typeItem: ArchivedDropItemType, directory: String?, name: String, in archive: Archive) {
-
-		var bytes: Data?
-		if typeItem.isWebURL, let url = typeItem.encodedUrl, let data = url.urlFileContent {
-			bytes = data
-
-		} else if typeItem.classWasWrapped {
-			bytes = typeItem.dataForWrappedItem ?? typeItem.bytes
-		}
-		if let B = bytes ?? typeItem.bytes {
-			let timmedName = typeItem.prepareFilename(name: name, directory: directory)
-			try? archive.addEntry(with: timmedName, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
-				return B[pos ..< pos+size]
-			}
-		}
 	}
 
 	func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
@@ -348,7 +252,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@objc private func updateUI() {
 		spinner.stopAnimating()
 		exportOnlyVisibleSwitch.isEnabled = true
-		let count = eligibleDropsForExport.count
+		let count = Model.eligibleDropsForExport.count
 		if PersistedOptions.exportOnlyVisibleItems {
 			if count > 0 {
 				let size = diskSizeFormatter.string(fromByteCount: Model.sizeOfVisibleItemsInBytes)
@@ -393,8 +297,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func exportSelected() {
-		createArchive { url in
+		DispatchQueue.main.async {
+			self.showExportActivity(true)
+		}
+		Model.createArchive { url in
 			self.export(to: url)
+			DispatchQueue.main.async {
+				self.showExportActivity(false)
+			}
 		}
 	}
 
@@ -425,8 +335,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	@objc private func zipSelected() {
-		createZip { url in
+		DispatchQueue.main.async {
+			self.showZipActivity(true)
+		}
+		Model.createZip { url in
 			self.export(to: url)
+			DispatchQueue.main.async {
+				self.showZipActivity(false)
+			}
 		}
 	}
 

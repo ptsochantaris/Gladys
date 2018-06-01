@@ -9,6 +9,29 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>gladysArchive</string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>gladysIcon64.png</string>
+				<string>gladysIcon320.png</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Gladys Archive</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>build.bru.gladys.archive</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>*</string>
 			</array>
 			<key>CFBundleTypeName</key>
@@ -94,6 +117,35 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>build.bru.Gladys.item.view</string>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.package</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gladys Archive</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>gladysIcon64</string>
+				<string>gladysIcon320</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>build.bru.gladys.archive</string>
+			<key>UTTypeSize320IconFile</key>
+			<string>gladysIcon320</string>
+			<key>UTTypeSize64IconFile</key>
+			<string>gladysIcon64</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gladysArchive</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

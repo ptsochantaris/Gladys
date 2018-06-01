@@ -149,6 +149,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.detectExternalDeletions()
 			Model.rebuildLabels()
 			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
+			self?.updateEmptyView()
 			self?.reloadData()
 			self?.postSave()
 		}
@@ -782,6 +783,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		} else if emptyView.alphaValue > 0, Model.drops.count > 0 {
 			emptyView.animator().alphaValue = 0
+			emptyLabel.animator().alphaValue = 0
 		}
 	}
 
