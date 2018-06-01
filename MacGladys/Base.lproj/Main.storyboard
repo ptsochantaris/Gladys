@@ -1181,7 +1181,7 @@ CA
                         <outlet property="searchBar" destination="nZb-eu-7ee" id="4zc-tb-JLi"/>
                         <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
-                        <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="OAb-Qq-Rfr" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
+                        <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
                         <segue destination="FB0-Ob-ymN" kind="sheet" identifier="showPreferences" id="li5-My-Fv1"/>
                     </connections>
                 </viewController>
