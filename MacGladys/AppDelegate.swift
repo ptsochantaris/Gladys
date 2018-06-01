@@ -171,22 +171,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		o.beginSheetModal(for: w) { response in
 			if response == .OK, let url = o.url {
 				DispatchQueue.main.async {
-					let fm = FileManager.default
-					let localURL = Model.temporaryDirectoryUrl.appendingPathComponent("importedArchive.gladysArchive")
-					if fm.fileExists(atPath: localURL.path) {
-						try! fm.removeItem(at: localURL)
-					}
-					try! fm.copyItem(at: url, to: localURL)
-					Model.importData(from: localURL) { success in
-						// thread
-						if !success {
-							DispatchQueue.main.async {
-								genericAlert(title: "Could not import data", message: "This archive could not be imported. The package may be corrupt or you may not have sufficient access permissions.", on: ViewController.shared)
-							}
-						}
+					do {
+						try Model.importData(from: url, removingOriginal: false)
+					} catch {
+						self.alertOnMainThread(error: error)
 					}
 				}
 			}
+		}
+	}
+
+	private func alertOnMainThread(error: Error) {
+		DispatchQueue.main.async {
+			let a = NSAlert(error: error)
+			a.beginSheetModal(for: ViewController.shared.view.window!, completionHandler: nil)
 		}
 	}
 
@@ -206,14 +204,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		s.allowedFileTypes = ["build.bru.gladys.archive"]
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
-				Model.createArchive { createdUrl in
-					// thread
-					let fm = FileManager.default
-					if fm.fileExists(atPath: selectedUrl.path) {
-						try! fm.removeItem(at: selectedUrl)
-					}
-					try! fm.moveItem(at: createdUrl, to: selectedUrl)
-					NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+				assert(Thread.isMainThread)
+				Model.createArchive { createdUrl, error in
+					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
 			}
 		}
@@ -246,17 +239,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		s.allowedFileTypes = [kUTTypeZipArchive as String]
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
-				Model.createZip { createdUrl in
-					// thread
-					let fm = FileManager.default
-					if fm.fileExists(atPath: selectedUrl.path) {
-						try! fm.removeItem(at: selectedUrl)
-					}
-					try! fm.moveItem(at: createdUrl, to: selectedUrl)
-					NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+				assert(Thread.isMainThread)
+				Model.createZip { createdUrl, error in
+					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
 			}
 		}
 	}
-}
 
+	private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
+		// thread
+		guard let createdUrl = createdUrl else {
+			if let error = error {
+				self.alertOnMainThread(error: error)
+			}
+			return
+		}
+
+		do {
+			let fm = FileManager.default
+			if fm.fileExists(atPath: selectedUrl.path) {
+				try fm.removeItem(at: selectedUrl)
+			}
+			try fm.moveItem(at: createdUrl, to: selectedUrl)
+			NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+		} catch {
+			self.alertOnMainThread(error: error)
+		}
+	}
+}

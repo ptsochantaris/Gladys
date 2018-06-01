@@ -1,7 +1,6 @@
 
 import UIKit
 import MobileCoreServices
-import ZIPFoundation
 
 final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
@@ -62,6 +61,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		zipImage.isHidden = show
 	}
 
+	private func alertOnMainThread(error: Error) {
+		DispatchQueue.main.async {
+			genericAlert(title: "Error", message: error.localizedDescription, on: ViewController.shared)
+		}
+	}
+
 	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
@@ -69,9 +74,13 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			DispatchQueue.main.async {
 				self.showExportActivity(true)
 			}
-			return Model.createArchive { url in
-				completion(url, false, nil)
-				try! FileManager.default.removeItem(at: url)
+			return Model.createArchive { url, error in
+				completion(url, false, error)
+				if let url = url {
+					try? FileManager.default.removeItem(at: url)
+				} else if let error = error {
+					self.alertOnMainThread(error: error)
+				}
 				DispatchQueue.main.async {
 					self.showExportActivity(false)
 				}
@@ -87,9 +96,13 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			DispatchQueue.main.async {
 				self.showZipActivity(true)
 			}
-			return Model.createZip { url in
-				completion(url, false, nil)
-				try! FileManager.default.removeItem(at: url)
+			return Model.createZip { url, error in
+				completion(url, false, error)
+				if let url = url {
+					try? FileManager.default.removeItem(at: url)
+				} else if let error = error {
+					self.alertOnMainThread(error: error)
+				}
 				DispatchQueue.main.async {
 					self.showZipActivity(false)
 				}
@@ -122,7 +135,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 					return
 				}
 				if let url = url {
-					self.importArchive(from: url)
+					DispatchQueue.main.sync { // sync is intentional, to keep the data around
+						self.importArchive(from: url)
+					}
 				} else {
 					DispatchQueue.main.async {
 						if let e = error {
@@ -300,8 +315,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		DispatchQueue.main.async {
 			self.showExportActivity(true)
 		}
-		Model.createArchive { url in
-			self.export(to: url)
+		Model.createArchive { url, error in
+			self.completeOperation(to: url, error: error)
 			DispatchQueue.main.async {
 				self.showExportActivity(false)
 			}
@@ -315,17 +330,20 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func importArchive(from url: URL) {
-	    Model.importData(from: url) { success in
-			DispatchQueue.main.async {
-				if !success {
-					genericAlert(title: "Could not import data", message: "Contents were corrupted", on: self)
-				}
-				self.updateUI()
-			}
+		do {
+	    	try Model.importData(from: url, removingOriginal: true)
+		} catch {
+			alertOnMainThread(error: error)
 		}
+		updateUI()
 	}
 
-	private func export(to url: URL) {
+	private func completeOperation(to url: URL?, error: Error?) {
+		if let error = error {
+			alertOnMainThread(error: error)
+			return
+		}
+		guard let url = url else { return }
 		DispatchQueue.main.async {
 			self.exportingFileURL = url
 			let p = UIDocumentPickerViewController(url: url, in: .exportToService)
@@ -338,8 +356,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		DispatchQueue.main.async {
 			self.showZipActivity(true)
 		}
-		Model.createZip { url in
-			self.export(to: url)
+		Model.createZip { url, error in
+			self.completeOperation(to: url, error: error)
 			DispatchQueue.main.async {
 				self.showZipActivity(false)
 			}
@@ -353,9 +371,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			infoLabel.text = nil
 			spinner.startAnimating()
 			exportOnlyVisibleSwitch.isEnabled = false
-			DispatchQueue.global(qos: .userInitiated).async {
-				self.importArchive(from: urls.first!)
-			}
+			importArchive(from: urls.first!)
 		}
 		controller.dismiss(animated: true)
 	}
