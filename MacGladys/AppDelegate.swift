@@ -105,6 +105,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return false
 	}
 
+	func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool {
+		return false
+	}
+
 	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]) -> Void) -> Bool {
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
@@ -167,7 +171,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		o.prompt = "Import"
 		o.message = "Select an archive from which to\nmerge items into your existing collection."
 		o.isExtensionHidden = true
-		o.allowedFileTypes = ["build.bru.gladys.archive"]
+		o.allowedFileTypes = ["gladysArchive"]
 		o.beginSheetModal(for: w) { response in
 			if response == .OK, let url = o.url {
 				DispatchQueue.main.async {
@@ -201,13 +205,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		s.message = "Export your colection for importing\nto other devices, or as backup."
 		s.isExtensionHidden = true
 		s.nameFieldStringValue = "Gladys Archive"
-		s.allowedFileTypes = ["build.bru.gladys.archive"]
+		s.allowedFileTypes = ["gladysArchive"]
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
-				assert(Thread.isMainThread)
-				Model.createArchive { createdUrl, error in
+				let p = Model.createArchive { createdUrl, error in
 					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
+				ViewController.shared.startProgress(for: p)
 			}
 		}
 	}
@@ -240,15 +244,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
 				assert(Thread.isMainThread)
-				Model.createZip { createdUrl, error in
+				let p = Model.createZip { createdUrl, error in
 					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
+				ViewController.shared.startProgress(for: p)
 			}
 		}
 	}
 
 	private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
 		// thread
+		DispatchQueue.main.async {
+			ViewController.shared.endProgress()
+		}
+
 		guard let createdUrl = createdUrl else {
 			if let error = error {
 				self.alertOnMainThread(error: error)
@@ -262,6 +271,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				try fm.removeItem(at: selectedUrl)
 			}
 			try fm.moveItem(at: createdUrl, to: selectedUrl)
+			try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
 			NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
 		} catch {
 			self.alertOnMainThread(error: error)

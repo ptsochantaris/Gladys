@@ -11,11 +11,8 @@
 			<array>
 				<string>gladysArchive</string>
 			</array>
-			<key>CFBundleTypeIconFiles</key>
-			<array>
-				<string>gladysIcon64.png</string>
-				<string>gladysIcon320.png</string>
-			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>gladysIconLarge</string>
 			<key>CFBundleTypeName</key>
 			<string>Gladys Archive</string>
 			<key>CFBundleTypeRole</key>
@@ -62,7 +59,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string>gladysIcon320</string>
+			<string>gladysIconLarge</string>
 			<key>CFBundleURLName</key>
 			<string>build.bru.Gladys</string>
 			<key>CFBundleURLSchemes</key>
@@ -127,17 +124,10 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Gladys Archive</string>
-			<key>UTTypeIconFiles</key>
-			<array>
-				<string>gladysIcon64</string>
-				<string>gladysIcon320</string>
-			</array>
+			<key>UTTypeIconFile</key>
+			<string>gladysIconLarge</string>
 			<key>UTTypeIdentifier</key>
 			<string>build.bru.gladys.archive</string>
-			<key>UTTypeSize320IconFile</key>
-			<string>gladysIcon320</string>
-			<key>UTTypeSize64IconFile</key>
-			<string>gladysIcon64</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

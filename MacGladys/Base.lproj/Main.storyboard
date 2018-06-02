@@ -263,8 +263,48 @@ CA
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="wFq-Bh-Uz5"/>
             </objects>
             <point key="canvasLocation" x="217" y="-297"/>
+        </scene>
+        <!--Progress View Controller-->
+        <scene sceneID="LSu-cs-qiS">
+            <objects>
+                <viewController id="rmF-nd-Zeh" customClass="ProgressViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="YAH-US-hch">
+                        <rect key="frame" x="0.0" y="0.0" width="315" height="83"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <progressIndicator wantsLayer="YES" maxValue="1000" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="r9u-ad-wui">
+                                <rect key="frame" x="20" y="19" width="275" height="20"/>
+                            </progressIndicator>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="URt-Q6-6hF">
+                                <rect key="frame" x="18" y="46" width="279" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Please Wait..." id="JKf-71-7ZN">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="r9u-ad-wui" secondAttribute="trailing" constant="20" id="5Xn-UR-vjl"/>
+                            <constraint firstItem="r9u-ad-wui" firstAttribute="top" secondItem="URt-Q6-6hF" secondAttribute="bottom" constant="8" id="JTc-7y-QwS"/>
+                            <constraint firstAttribute="trailing" secondItem="URt-Q6-6hF" secondAttribute="trailing" constant="20" id="JxW-EQ-43T"/>
+                            <constraint firstItem="URt-Q6-6hF" firstAttribute="leading" secondItem="YAH-US-hch" secondAttribute="leading" constant="20" id="KJm-fi-y6U"/>
+                            <constraint firstItem="URt-Q6-6hF" firstAttribute="top" secondItem="YAH-US-hch" secondAttribute="top" constant="20" id="TXN-78-XAX"/>
+                            <constraint firstItem="r9u-ad-wui" firstAttribute="leading" secondItem="YAH-US-hch" secondAttribute="leading" constant="20" id="wNY-v5-44J"/>
+                            <constraint firstAttribute="bottom" secondItem="r9u-ad-wui" secondAttribute="bottom" constant="20" id="x0H-y9-E49"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="progressIndicator" destination="r9u-ad-wui" id="eVu-Gk-Irz"/>
+                        <outlet property="titleLabel" destination="URt-Q6-6hF" id="l0t-4x-LKp"/>
+                    </connections>
+                </viewController>
+                <customObject id="URB-7s-OFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="218" y="585"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -677,7 +717,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="588" y="735"/>
+            <point key="canvasLocation" x="666" y="819"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -772,7 +812,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="989" y="562"/>
+            <point key="canvasLocation" x="1066" y="646"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -1185,6 +1225,7 @@ CA
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
                         <segue destination="FB0-Ob-ymN" kind="sheet" identifier="showPreferences" id="li5-My-Fv1"/>
+                        <segue destination="rmF-nd-Zeh" kind="sheet" identifier="showProgress" id="wwQ-Kz-x6M"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

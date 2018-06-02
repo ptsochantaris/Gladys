@@ -847,6 +847,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case "showLabels":
 			labelController = segue.destinationController as? LabelSelectionViewController
 
+		case "showProgress":
+			progressController = segue.destinationController as? ProgressViewController
+
 		default: break
 		}
 	}
@@ -940,5 +943,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return true
 		}
 		return false
+	}
+
+	private var progressController: ProgressViewController?
+
+	func startProgress(for progress: Progress) {
+		if progressController != nil {
+			endProgress()
+		}
+		performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "showProgress"), sender: self)
+		progressController?.startMonitoring(progress: progress)
+	}
+
+	func endProgress() {
+		progressController?.endMonitoring()
+		progressController?.dismiss(self)
+		progressController = nil
 	}
 }
