@@ -809,7 +809,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
-		case #selector(toggleQuickLookPreviewPanel(_:)), #selector(info(_:)), #selector(open(_:)):
+		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
 			if selectedItems.count > 1 {
 				menuItem.title = "Quick Look Selected Items"
@@ -821,6 +821,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				menuItem.title = "Quick Look"
 				return false
 			}
+		case #selector(info(_:)), #selector(open(_:)):
+			return collection.actionableSelectedItems.count > 0
 		default:
 			return true
 		}
@@ -948,11 +950,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	private var progressController: ProgressViewController?
 
 	func startProgress(for progress: Progress) {
-		if progressController != nil {
+		if isDisplayingProgress {
 			endProgress()
 		}
 		performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "showProgress"), sender: self)
 		progressController?.startMonitoring(progress: progress)
+	}
+
+	var isDisplayingProgress: Bool {
+		return progressController != nil
 	}
 
 	func endProgress() {

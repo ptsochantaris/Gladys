@@ -252,6 +252,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+		switch menuItem.action {
+		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
+			return !ViewController.shared.isDisplayingProgress
+		default:
+			return true
+		}
+	}
+
 	private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
 		// thread
 		DispatchQueue.main.async {
