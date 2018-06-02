@@ -260,7 +260,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			let m = NSMenu(title: item.displayTitleOrUuid)
 			m.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
 			m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
-			m.addItem("Move To Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
+			m.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 			m.addItem(NSMenuItem.separator())

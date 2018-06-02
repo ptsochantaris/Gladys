@@ -910,6 +910,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	//////////////////////////////////////////////////// Quicklook
+
 	override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
 		return collection.selectionIndexPaths.count > 0
 	}
@@ -946,6 +948,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		return false
 	}
+
+	/////////////////////////////////////////// Progress reports
 
 	private var progressController: ProgressViewController?
 

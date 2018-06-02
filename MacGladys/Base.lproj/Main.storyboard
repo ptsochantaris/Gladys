@@ -155,7 +155,7 @@ CA
                                                 <action selector="open:" target="Ady-hI-5gd" id="cFE-gZ-dXN"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Move To Top" keyEquivalent="m" id="lZT-ig-v0S">
+                                        <menuItem title="Move to Top" keyEquivalent="m" id="lZT-ig-v0S">
                                             <connections>
                                                 <action selector="moveToTop:" target="Ady-hI-5gd" id="g5i-WC-vnV"/>
                                             </connections>
@@ -163,6 +163,12 @@ CA
                                         <menuItem title="Share" keyEquivalent="S" id="APo-zj-gqc">
                                             <connections>
                                                 <action selector="shareSelected:" target="Ady-hI-5gd" id="LdJ-Fb-OvR"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Reveal in Finder" keyEquivalent="r" id="ioC-Jz-pVG">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="revealCurrent:" target="Ady-hI-5gd" id="sBc-Qf-Z40"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="URL" id="NJd-Fx-8sX">

@@ -7,10 +7,20 @@
 //
 
 import Cocoa
+import Quartz
 
-final class ComponentCollectionView: NSCollectionView {}
+final class ComponentCollectionView: NSCollectionView {
+	weak var detailController: DetailController?
+	override func keyDown(with event: NSEvent) {
+		if event.charactersIgnoringModifiers == " " {
+			detailController?.toggleQuickLookPreviewPanel(self)
+		} else {
+			super.keyDown(with: event)
+		}
+	}
+}
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var notesField: NSTextField!
@@ -19,7 +29,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet weak var labelAdd: NSButton!
 	@IBOutlet weak var labelRemove: NSButton!
 
-	@IBOutlet weak var components: NSCollectionView!
+	@IBOutlet weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
 
 	override func viewDidLoad() {
@@ -33,6 +43,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
 		components.setDraggingSourceOperationMask(.copy, forLocal: false)
+
+		components.detailController = self
 
 		labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
 		labels.setDraggingSourceOperationMask(.move, forLocal: true)
@@ -250,9 +262,18 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			shareSelected(i)
 		case .edit:
 			editCurrent(i)
+		case .reveal:
+			revealCurrent(i)
 		case .focus:
 			break
 		}
+	}
+
+	private var selectedItem: ArchivedDropItemType? {
+		if let index = components.selectionIndexes.first {
+			return item.typeItems[index]
+		}
+		return nil
 	}
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -268,20 +289,29 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		case #selector(editCurrent(_:)):
 			return components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
 
+		case #selector(toggleQuickLookPreviewPanel(_:)):
+			if let first = selectedItem, first.canPreview {
+				menuItem.title = "Quick Look \"\(first.oneTitle.truncateWithEllipses(limit: 30))\""
+				return true
+			} else {
+				menuItem.title = "Quick Look"
+				return false
+			}
+
 		default:
 			return true
 		}
 	}
 
 	@objc func copy(_ sender: Any?) {
-		if let i = components.selectionIndexes.first {
-			copy(item: item.typeItems[i])
+		if let i = selectedItem {
+			copy(item: i)
 		}
 	}
 
 	@objc func open(_ sender: Any?) {
-		if let i = components.selectionIndexes.first {
-			item.typeItems[i].tryOpen(from: self)
+		if let i = selectedItem {
+			i.tryOpen(from: self)
 		}
 	}
 
@@ -307,8 +337,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@objc func editCurrent(_ sender: Any?) {
-		guard let i = components.selectionIndexes.first else { return }
-		let typeItem = item.typeItems[i]
+		guard let typeItem = selectedItem else { return }
 		guard let urlString = typeItem.encodedUrl?.absoluteString else { return }
 
 		let a = NSAlert()
@@ -337,6 +366,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 					self?.editCurrent(sender)
 				}
 			}
+		}
+	}
+
+	@objc func revealCurrent(_ sender: Any?) {
+		if let typeItem = selectedItem {
+			NSWorkspace.shared.activateFileViewerSelecting([typeItem.bytesPath])
 		}
 	}
 
@@ -432,5 +467,53 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			}
 		}
 		return false
+	}
+
+	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+		previewPanel?.reloadData()
+	}
+
+	//////////////////////////////////////////////////// Quicklook
+
+	override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
+		if let currentItem = selectedItem {
+			return currentItem.canPreview
+		}
+		return false
+	}
+
+	private var previewPanel: QLPreviewPanel?
+	override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
+		previewPanel = panel
+		panel.delegate = self
+		panel.dataSource = self
+	}
+
+	override func endPreviewPanelControl(_ panel: QLPreviewPanel!) {
+		previewPanel = nil
+	}
+
+	func numberOfPreviewItems(in panel: QLPreviewPanel!) -> Int {
+		return 1
+	}
+
+	func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
+		return selectedItem?.quickLookItem
+	}
+
+	func previewPanel(_ panel: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+		if event.type == .keyDown {
+			components.keyDown(with: event)
+			return true
+		}
+		return false
+	}
+
+	@objc func toggleQuickLookPreviewPanel(_ sender: Any?) {
+		if QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
+			QLPreviewPanel.shared().orderOut(nil)
+		} else if let currentItem = selectedItem, currentItem.canPreview {
+			QLPreviewPanel.shared().makeKeyAndOrderFront(nil)
+		}
 	}
 }
