@@ -111,9 +111,15 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 	}
 
 	private func displaySuccess() {
-		genericAlert(title: "You can now add unlimited items!",
-					 message: "Thank you for supporting Gladys!",
-					 on: ViewController.shared)
+		if infiniteMode {
+			genericAlert(title: "You can now add unlimited items!",
+						 message: "Thank you for supporting Gladys.",
+						 on: ViewController.shared)
+		} else {
+			genericAlert(title: "Something went wrong with the purchase on the App Store side",
+						 message: "Please try again in a moment. You will not be charged twice if your purchase has already gone through.",
+						 on: ViewController.shared)
+		}
 	}
 
 	func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {

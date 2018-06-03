@@ -63,21 +63,8 @@ fileprivate func getDeviceId() -> Data {
 		return Data()
 	}
 }
-#endif
 
-/////////////
-
-let nonInfiniteItemLimit = 10
-
-#if DEBUG
-
-let infiniteMode = true
-let receiptExists = true
-func reVerifyInfiniteMode() {}
-
-#else
-
-var infiniteMode = verifyIapReceipt(getDeviceId())
+//var receiptExists = true
 var receiptExists: Bool {
 	if let receiptUrl = Bundle.main.appStoreReceiptURL {
 		return FileManager.default.fileExists(atPath: receiptUrl.path)
@@ -85,9 +72,16 @@ var receiptExists: Bool {
 		return false
 	}
 }
+
+#endif
+
+let nonInfiniteItemLimit = 10
+
+//var infiniteMode = true
+var infiniteMode = verifyIapReceipt(getDeviceId())
+
+//func reVerifyInfiniteMode {}
 func reVerifyInfiniteMode() {
 	infiniteMode = verifyIapReceipt(getDeviceId())
 	NotificationCenter.default.post(name: .IAPModeChanged, object: nil)
 }
-
-#endif
