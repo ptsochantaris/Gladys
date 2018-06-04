@@ -30,7 +30,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "161718C32094D333005ABD6C"
-               BuildableName = "MacGladys.app"
+               BuildableName = "Gladys.app"
                BlueprintName = "MacGladys"
                ReferencedContainer = "container:Gladys.xcodeproj">
             </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "161718C32094D333005ABD6C"
-            BuildableName = "MacGladys.app"
+            BuildableName = "Gladys.app"
             BlueprintName = "MacGladys"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "161718C32094D333005ABD6C"
-            BuildableName = "MacGladys.app"
+            BuildableName = "Gladys.app"
             BlueprintName = "MacGladys"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>

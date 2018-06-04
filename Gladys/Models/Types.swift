@@ -1,5 +1,8 @@
 
 import Foundation
+#if DEBUG
+import os.log
+#endif
 
 #if MAINAPP || MAC
 let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
@@ -8,7 +11,7 @@ let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid
 
 func log(_ line: @autoclosure ()->String) {
 	#if DEBUG
-		NSLog("%@", line())
+	os_log("%{public}@", line())
 	#endif
 }
 
