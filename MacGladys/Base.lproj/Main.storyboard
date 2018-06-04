@@ -13,11 +13,11 @@
                 <application id="hnw-xV-0zn" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
                         <items>
-                            <menuItem title="MacGladys" id="1Xt-HY-uBw">
+                            <menuItem title="Gladys" id="1Xt-HY-uBw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="MacGladys" systemMenu="apple" id="uQy-DD-JDr">
+                                <menu key="submenu" title="Gladys" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About MacGladys" id="5kV-Vb-QxS">
+                                        <menuItem title="About Gladys" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="aboutSelected:" target="Voe-Tx-rLC" id="hsb-tO-Wfq"/>
@@ -41,7 +41,7 @@
                                             <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide MacGladys" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide Gladys" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
@@ -59,7 +59,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                                        <menuItem title="Quit MacGladys" keyEquivalent="q" id="4sb-4s-VLi">
+                                        <menuItem title="Quit Gladys" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
                                             </connections>
@@ -241,6 +241,13 @@ CA
                                                 <action selector="arrangeInFront:" target="Ady-hI-5gd" id="FoP-De-A03"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="djC-HT-RtX"/>
+                                        <menuItem title="Gladys" id="tqY-Q1-Bxc">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showMain:" target="Ady-hI-5gd" id="4Au-gm-jkb"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -248,7 +255,7 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="API-3Y-b90">
                                     <items>
-                                        <menuItem title="MacGladys Web Site..." id="7cq-xg-8be">
+                                        <menuItem title="Gladys Web Site..." id="7cq-xg-8be">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="openWebSite:" target="Voe-Tx-rLC" id="WHc-LY-m83"/>
@@ -263,7 +270,7 @@ CA
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MacGladys" customModuleProvider="target">
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Gladys" customModuleProvider="target">
                     <connections>
                         <outlet property="infiniteModeMenuEntry" destination="AN3-Zt-BA7" id="K7A-T0-Hhy"/>
                     </connections>
@@ -276,7 +283,7 @@ CA
         <!--Progress View Controller-->
         <scene sceneID="LSu-cs-qiS">
             <objects>
-                <viewController id="rmF-nd-Zeh" customClass="ProgressViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rmF-nd-Zeh" customClass="ProgressViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="YAH-US-hch">
                         <rect key="frame" x="0.0" y="0.0" width="315" height="83"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -315,7 +322,7 @@ CA
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
                         <rect key="contentRect" x="210" y="240" width="190" height="190"/>
@@ -336,7 +343,7 @@ CA
         <!--Preferences-->
         <scene sceneID="fmd-1D-McK">
             <objects>
-                <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
                         <rect key="frame" x="0.0" y="0.0" width="514" height="552"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -728,7 +735,7 @@ CA
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
             <objects>
-                <viewController showSeguePresentationStyle="single" id="VWp-gh-Zmf" customClass="LabelSelectionViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController showSeguePresentationStyle="single" id="VWp-gh-Zmf" customClass="LabelSelectionViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="kPb-rg-yCd">
                         <rect key="frame" x="0.0" y="0.0" width="220" height="205"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -844,7 +851,7 @@ CA
         <!--Details-->
         <scene sceneID="cff-UB-nbI">
             <objects>
-                <viewController title="Details" showSeguePresentationStyle="single" id="Rwu-fi-fru" customClass="DetailController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Details" showSeguePresentationStyle="single" id="Rwu-fi-fru" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="erh-hp-niQ">
                         <rect key="frame" x="0.0" y="0.0" width="795" height="420"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -907,7 +914,7 @@ CA
                                                 <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR" customClass="ComponentCollectionView" customModule="MacGladys" customModuleProvider="target">
+                                                    <collectionView ambiguous="YES" selectable="YES" id="BBo-Ew-YtR" customClass="ComponentCollectionView" customModule="Gladys" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="757" height="131"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="hsh-fK-JSS">
@@ -1026,7 +1033,7 @@ CA
         <!--New Label Controller-->
         <scene sceneID="dtH-pl-EKw">
             <objects>
-                <viewController id="gNv-h2-b4E" customClass="NewLabelController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="gNv-h2-b4E" customClass="NewLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="Gsn-Jo-TRL">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1110,7 +1117,7 @@ CA
         <!--Gladys-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="MacGladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="670" height="408"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1123,7 +1130,7 @@ CA
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f" customClass="FirstMouseImageView" customModule="MacGladys" customModuleProvider="target">
+                            <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
                                 <rect key="frame" x="255" y="134" width="160" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="EiP-iW-5E6"/>
@@ -1174,7 +1181,7 @@ CA
                                             <rect key="frame" x="0.0" y="0.0" width="670" height="370"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="MacGladys" customModuleProvider="target">
+                                                <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="Gladys" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="670" height="370"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">

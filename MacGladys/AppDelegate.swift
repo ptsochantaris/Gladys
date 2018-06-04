@@ -29,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			hotKey?.keyDownHandler = {
 				if let w = ViewController.shared.view.window {
 					if w.isVisible {
-						w.close()
+						w.orderOut(nil)
 					} else {
 						w.makeKeyAndOrderFront(nil)
 					}
@@ -256,8 +256,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		switch menuItem.action {
 		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
 			return !ViewController.shared.isDisplayingProgress
+		case #selector(showMain(_:)):
+			if let w = ViewController.shared.view.window {
+				menuItem.title = w.title
+				menuItem.isHidden = w.isVisible
+			}
+			return !menuItem.isHidden
 		default:
 			return true
+		}
+	}
+
+	@objc private func showMain(_ sender: Any?) {
+		if let w = ViewController.shared.view.window {
+			w.makeKeyAndOrderFront(nil)
 		}
 	}
 

@@ -534,7 +534,7 @@
 		16114864209FA58D008BB332 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libssl.a; sourceTree = "<group>"; };
 		16114866209FA5A0008BB332 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libcrypto.a; sourceTree = "<group>"; };
 		1611486A209FBC79008BB332 /* MacGladysFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacGladysFramework.h; sourceTree = "<group>"; };
-		161718C42094D333005ABD6C /* MacGladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacGladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		161718C42094D333005ABD6C /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161718C62094D333005ABD6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		161718C82094D333005ABD6C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		161718CA2094D334005ABD6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1084,7 +1084,7 @@
 				16A4E7E01FBB844A00D60596 /* GladysWatch.app */,
 				16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */,
 				1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */,
-				161718C42094D333005ABD6C /* MacGladys.app */,
+				161718C42094D333005ABD6C /* Gladys.app */,
 				1611485B209FA1B6008BB332 /* MacGladysFramework.framework */,
 				168DFAFE20B85F3D002C603D /* MacGladysHelper.app */,
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
@@ -1348,7 +1348,7 @@
 			);
 			name = MacGladys;
 			productName = MacGladys;
-			productReference = 161718C42094D333005ABD6C /* MacGladys.app */;
+			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1619E8111EFF3745000087DD /* GladysFiles */ = {
@@ -2537,7 +2537,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D MAC";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
@@ -2566,7 +2566,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D MAC";
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
