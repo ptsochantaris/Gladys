@@ -3,8 +3,9 @@
 #import <openssl/x509.h>
 #import <openssl/evp.h>
 #import <CommonCrypto/CommonCrypto.h>
+#import <TargetConditionals.h>
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 #import "GladysFramework.h"
 #else
 #import "MacGladysFramework.h"
