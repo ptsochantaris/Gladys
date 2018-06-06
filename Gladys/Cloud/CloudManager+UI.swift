@@ -16,7 +16,7 @@ extension CloudManager {
 		if !syncSwitchedOn { return }
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
-		if notification.subscriptionID == "private-changes" {
+		if notification.subscriptionID == privateDatabaseSubscriptionId {
 			log("Received zone change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()

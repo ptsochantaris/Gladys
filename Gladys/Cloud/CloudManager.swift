@@ -49,11 +49,18 @@ extension Array where Element == [CKRecord] {
 
 final class CloudManager {
 
+	static let privateDatabaseSubscriptionId = "private-changes"
+
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
 	static func go(_ operation: CKDatabaseOperation) {
 		operation.qualityOfService = .userInitiated
 		container.privateCloudDatabase.add(operation)
+	}
+
+	static func goShared(_ operation: CKDatabaseOperation) {
+		operation.qualityOfService = .userInitiated
+		container.sharedCloudDatabase.add(operation)
 	}
 
 	static var syncDirty = false

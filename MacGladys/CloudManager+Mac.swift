@@ -21,7 +21,7 @@ extension CloudManager {
 		}
 
 		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
-		if notification.subscriptionID == "private-changes" {
+		if notification.subscriptionID == privateDatabaseSubscriptionId {
 			log("Received zone change push")
 			Model.reloadDataIfNeeded()
 			sync { error in

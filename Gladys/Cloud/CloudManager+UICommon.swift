@@ -82,7 +82,7 @@ extension CloudManager {
 
 	static func deactivate(force: Bool, completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
-		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: ["private-changes"])
+		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			DispatchQueue.main.async {
 				if let error = error, !force {
@@ -120,6 +120,16 @@ extension CloudManager {
 		go(ms)
 	}
 
+	private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
+		let notificationInfo = CKNotificationInfo()
+		notificationInfo.shouldSendContentAvailable = true
+		notificationInfo.shouldBadge = true
+
+		let subscription = CKDatabaseSubscription(subscriptionID: id)
+		subscription.notificationInfo = notificationInfo
+		return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
+	}
+
 	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
 
 		#if os(iOS)
@@ -131,19 +141,12 @@ extension CloudManager {
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
 
-		let notificationInfo = CKNotificationInfo()
-		notificationInfo.shouldSendContentAvailable = true
-		notificationInfo.shouldBadge = true
-
-		let subscription = CKDatabaseSubscription(subscriptionID: "private-changes")
-		subscription.notificationInfo = notificationInfo
-
-		let subscribeToZone = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
-		subscribeToZone.addDependency(createZone)
+		let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
+		subscribeToPrivateDatabase.addDependency(createZone)
 
 		let positionListId = CKRecordID(recordName: "PositionList", zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
-		fetchInitialUUIDSequence.addDependency(subscribeToZone)
+		fetchInitialUUIDSequence.addDependency(subscribeToPrivateDatabase)
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
@@ -166,7 +169,7 @@ extension CloudManager {
 		}
 
 		go(createZone)
-		go(subscribeToZone)
+		go(subscribeToPrivateDatabase)
 		go(fetchInitialUUIDSequence)
 	}
 
