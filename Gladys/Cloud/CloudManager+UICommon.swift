@@ -52,22 +52,31 @@ extension CloudManager {
 		syncTransitioning = true
 		container.accountStatus { status, error in
 			DispatchQueue.main.async {
-				if status == .available {
+				switch status {
+				case .available:
 					log("User has iCloud, can activate cloud sync")
 					proceedWithActivation { error in
 						completion(error)
 						syncTransitioning = false
 					}
-				} else {
-					syncTransitioning = false
-					log("User not logged into iCloud")
-					if let error = error {
-						completion(error)
-					} else {
-						completion(NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "You are not logged into iCloud on this device."]))
-					}
+				case .couldNotDetermine:
+					activationFailure(error: error, reason: "There was an error while trying to retrieve your account status.", completion: completion)
+				case .noAccount:
+					activationFailure(error: error, reason: "You are not logged into iCloud on this device.", completion: completion)
+				case .restricted:
+					activationFailure(error: error, reason: "iCloud access is restricted on this device due to policy or parental controls.", completion: completion)
 				}
 			}
+		}
+	}
+
+	static private func activationFailure(error: Error?, reason: String, completion: (Error?)->Void) {
+		syncTransitioning = false
+		log("Activation failure, reason: \(reason)")
+		if let error = error {
+			completion(error)
+		} else {
+			completion(NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: reason]))
 		}
 	}
 
