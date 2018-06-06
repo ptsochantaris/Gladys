@@ -50,6 +50,7 @@ extension Array where Element == [CKRecord] {
 final class CloudManager {
 
 	static let privateDatabaseSubscriptionId = "private-changes"
+	static let sharedDatabaseSubscriptionId = "shared-changes"
 
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
@@ -349,6 +350,17 @@ final class CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "syncSwitchedOn")
+			PersistedOptions.defaults.synchronize()
+		}
+	}
+
+	static var migratedSharing: Bool {
+		get {
+			return PersistedOptions.defaults.bool(forKey: "migratedSharing")
+		}
+
+		set {
+			PersistedOptions.defaults.set(newValue, forKey: "migratedSharing")
 			PersistedOptions.defaults.synchronize()
 		}
 	}

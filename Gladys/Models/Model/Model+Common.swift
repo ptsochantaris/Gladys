@@ -16,11 +16,11 @@ extension Model {
 	static var dataFileLastModified = Date.distantPast
 	static var isStarted = false
 
-	static var itemsDirectoryUrl: URL = {
+	static let itemsDirectoryUrl: URL = {
 		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
 	}()
 
-	static var temporaryDirectoryUrl: URL = {
+	static let temporaryDirectoryUrl: URL = {
 		let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
 		let fm = FileManager.default
 		if fm.fileExists(atPath: url.path) {
@@ -48,7 +48,7 @@ extension Model {
 		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
 	}
 
-	static var appStorageUrl: URL = {
+	static let appStorageUrl: URL = {
 		#if MAC
 			return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
 		#elseif MAINAPP || FILEPROVIDER

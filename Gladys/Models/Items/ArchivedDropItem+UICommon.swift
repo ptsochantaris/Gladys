@@ -23,6 +23,13 @@ extension ArchivedDropItem {
 		return needsReIngest || loadingProgress != nil
 	}
 
+	func removeFromCloudkit() {
+		cloudKitRecord = nil
+		for typeItem in typeItems {
+			typeItem.cloudKitRecord = nil
+		}
+	}
+
 	func delete() {
 		isDeleting = true
 		if cloudKitRecord != nil {

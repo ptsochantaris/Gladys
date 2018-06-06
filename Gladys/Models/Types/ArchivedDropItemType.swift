@@ -241,21 +241,21 @@ final class ArchivedDropItemType: Codable {
 		bytes = typeItem.bytes
 	}
 
-	lazy var imagePath: URL = {
-		return self.folderUrl.appendingPathComponent("thumbnail.png")
-	}()
+	var imagePath: URL {
+		return folderUrl.appendingPathComponent("thumbnail.png")
+	}
 
-	lazy var bytesPath: URL = {
-		return self.folderUrl.appendingPathComponent("blob", isDirectory: false)
-	}()
+	var bytesPath: URL {
+		return folderUrl.appendingPathComponent("blob", isDirectory: false)
+	}
 
-	lazy var folderUrl: URL = {
-		let url = Model.appStorageUrl.appendingPathComponent(self.parentUuid.uuidString).appendingPathComponent(self.uuid.uuidString)
+	var folderUrl: URL {
+		let url = Model.appStorageUrl.appendingPathComponent(parentUuid.uuidString).appendingPathComponent(uuid.uuidString)
 		let f = FileManager.default
 		if !f.fileExists(atPath: url.path) {
 			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		}
 		return url
-	}()
+	}
 }
 

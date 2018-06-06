@@ -82,7 +82,11 @@ extension CloudManager {
 
 	static func deactivate(force: Bool, completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
+
+		let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
+
 		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
+		ms.addDependency(ss)
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			DispatchQueue.main.async {
 				if let error = error, !force {
@@ -105,10 +109,7 @@ extension CloudManager {
 					NSApplication.shared.unregisterForRemoteNotifications()
 					#endif
 					for item in Model.drops {
-						item.cloudKitRecord = nil
-						for typeItem in item.typeItems {
-							typeItem.cloudKitRecord = nil
-						}
+						item.removeFromCloudkit()
 					}
 					Model.save()
 					log("Cloud sync deactivation complete")
@@ -117,7 +118,21 @@ extension CloudManager {
 				syncTransitioning = false
 			}
 		}
+
+		goShared(ss)
 		go(ms)
+	}
+
+	static func checkMigrations() {
+		if syncSwitchedOn && !migratedSharing && !syncTransitioning {
+			let subscribe = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+			subscribe.modifySubscriptionsCompletionBlock = { _, _, error in
+				if error == nil {
+					migratedSharing = true
+				}
+			}
+			goShared(subscribe)
+		}
 	}
 
 	private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
@@ -144,9 +159,13 @@ extension CloudManager {
 		let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
 		subscribeToPrivateDatabase.addDependency(createZone)
 
+		let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+		subscribeToSharedDatabase.addDependency(createZone)
+
 		let positionListId = CKRecordID(recordName: "PositionList", zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
 		fetchInitialUUIDSequence.addDependency(subscribeToPrivateDatabase)
+		fetchInitialUUIDSequence.addDependency(subscribeToSharedDatabase)
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
@@ -162,6 +181,7 @@ extension CloudManager {
 						uuidSequence = []
 					}
 					syncSwitchedOn = true
+					migratedSharing = true
 					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
@@ -170,6 +190,7 @@ extension CloudManager {
 
 		go(createZone)
 		go(subscribeToPrivateDatabase)
+		goShared(subscribeToSharedDatabase)
 		go(fetchInitialUUIDSequence)
 	}
 

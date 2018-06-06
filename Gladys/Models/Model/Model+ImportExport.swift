@@ -32,11 +32,8 @@ extension Model {
 
 		item.needsReIngest = true
 		item.markUpdated()
-		item.cloudKitRecord = nil
-		for typeItem in item.typeItems {
-			typeItem.cloudKitRecord = nil
-		}
-
+		item.removeFromCloudkit()
+		
 		return true
 	}
 

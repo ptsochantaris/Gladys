@@ -114,14 +114,14 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = lockPassword != nil
 	}
 
-	lazy var folderUrl: URL = {
-		let url = Model.appStorageUrl.appendingPathComponent(self.uuid.uuidString)
+	var folderUrl: URL {
+		let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
 		let f = FileManager.default
 		if !f.fileExists(atPath: url.path) {
-			try? f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		}
 		return url
-	}()
+	}
 
 	static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?, pasteboardName: String? = nil) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {

@@ -6,7 +6,7 @@ final class Model {
 	static var legacyFileLastModified = Date.distantPast
 	static var legacyMode = true
 
-	static var legacyFileUrl: URL = {
+	static let legacyFileUrl: URL = {
 		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
 	}()
 
