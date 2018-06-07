@@ -404,7 +404,6 @@ extension CloudManager {
 		go(operation)
 	}
 
-
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
 
 		if let l = lastiCloudAccount {
@@ -488,5 +487,28 @@ extension CloudManager {
 				completion(error)
 			}
 		}
+	}
+
+	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+		let shareRecord = CKShare(rootRecord: rootRecord)
+		shareRecord[CKShareTitleKey] = item.displayTitleOrUuid as NSString
+		if let ip = item.imagePath, let data = NSData(contentsOf: ip) {
+			shareRecord[CKShareThumbnailImageDataKey] = data
+		}
+		let operation = CKModifyRecordsOperation(recordsToSave: [rootRecord, shareRecord], recordIDsToDelete: [])
+		operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
+			completion(shareRecord, container, error)
+		}
+
+		go(operation)
+	}
+
+	static func acceptShare(_ metadata: CKShareMetadata) {
+		let acceptShareOperation: CKAcceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
+		acceptShareOperation.qualityOfService = .userInteractive
+		acceptShareOperation.acceptSharesCompletionBlock = { error in
+			genericAlert(title: "Could not accept share", message: error?.localizedDescription, on: ViewController.shared)
+		}
+		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
 	}
 }

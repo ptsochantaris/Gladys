@@ -191,19 +191,27 @@ class GladysViewController: UIViewController {
 	private func showDone(_ show: Bool) {
 		switch doneLocation {
 		case .left:
-			if show && navigationItem.leftBarButtonItem == nil {
-				navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-			} else if !show && navigationItem.leftBarButtonItem != nil {
-				navigationItem.leftBarButtonItem = nil
+			var leftItems = navigationItem.leftBarButtonItems ?? []
+			if show && !leftItems.contains(doneButton) {
+				leftItems.insert(doneButton, at: 0)
+				navigationItem.leftBarButtonItems = leftItems
+			} else if !show && leftItems.contains(doneButton) {
+				navigationItem.leftBarButtonItems = leftItems.filter { $0 != doneButton }
 			}
 		case .right:
-			if show && navigationItem.rightBarButtonItem == nil {
-				navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-			} else if !show && navigationItem.rightBarButtonItem != nil {
-				navigationItem.rightBarButtonItem = nil
+			var rightItems = navigationItem.rightBarButtonItems ?? []
+			if show && !rightItems.contains(doneButton) {
+				rightItems.insert(doneButton, at: 0)
+				navigationItem.rightBarButtonItems = rightItems
+			} else if !show && rightItems.contains(doneButton) {
+				navigationItem.rightBarButtonItems = rightItems.filter { $0 != doneButton }
 			}
 		case .none:
 			break
 		}
 	}
+
+	private lazy var doneButton: UIBarButtonItem = {
+		return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+	}()
 }

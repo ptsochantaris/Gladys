@@ -1540,6 +1540,11 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="iconUserAdd" id="z3I-Nm-WFY">
+                            <connections>
+                                <action selector="inviteButtonSelected:" destination="Ftr-GB-y6U" id="Ra0-YG-oAN"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -1550,6 +1555,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="dateLabel" destination="l07-os-d4P" id="JOE-Kh-wcz"/>
                         <outlet property="dateLabelHolder" destination="fN7-m2-srM" id="Vnv-ky-h1d"/>
                         <outlet property="deleteButton" destination="mOK-KI-1To" id="dzB-nh-Tln"/>
+                        <outlet property="invitesButton" destination="z3I-Nm-WFY" id="nPx-kV-TGT"/>
                         <outlet property="lockButton" destination="6XJ-Ig-GJa" id="6Vz-p5-lP4"/>
                         <outlet property="openButton" destination="qFs-2B-sKz" id="BBT-G6-mGu"/>
                         <outlet property="shareButton" destination="3fs-bH-AAg" id="zUU-Mo-yBL"/>
@@ -1938,7 +1944,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="20" width="320" height="93"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2549,6 +2555,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconPencil" width="16" height="16"/>
         <image name="iconPlusCircle" width="28" height="28"/>
         <image name="iconSettings" width="28" height="28"/>
+        <image name="iconUserAdd" width="24" height="28"/>
         <image name="info" width="15" height="15"/>
         <image name="labels-unselected" width="28" height="22"/>
         <image name="locked" width="17" height="22"/>

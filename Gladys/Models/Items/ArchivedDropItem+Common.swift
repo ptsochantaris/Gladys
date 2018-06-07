@@ -109,6 +109,10 @@ extension ArchivedDropItem: Hashable {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
 	}
 
+	private var cloudKitShareDataPath: URL {
+		return folderUrl.appendingPathComponent("ck-share", isDirectory: false)
+	}
+
 	var needsCloudPush: Bool {
 		set {
 			let recordLocation = cloudKitDataPath
@@ -164,6 +168,34 @@ extension ArchivedDropItem: Hashable {
 				try? data.write(to: recordLocation, options: .atomic)
 
 				needsCloudPush = false
+			}
+		}
+	}
+
+	var cloudKitShareRecord: CKShare? {
+		get {
+			let recordLocation = cloudKitShareDataPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				let data = try! Data(contentsOf: recordLocation, options: [])
+				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				return CKShare(coder: coder)
+			} else {
+				return nil
+			}
+		}
+		set {
+			let recordLocation = cloudKitShareDataPath
+			if newValue == nil {
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
+			} else {
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue?.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
 			}
 		}
 	}

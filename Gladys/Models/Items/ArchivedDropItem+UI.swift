@@ -64,7 +64,7 @@ extension ArchivedDropItem {
 		if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
 			message = "Please provide a backup password in case Touch or Face ID fails. You can also provide an optional label to display while the item is locked."
 		} else {
-			message = "Please provide the password for unlocking this item. You can also provide an optional label to display while the item is locked."
+			message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
 		}
 		getPassword(from: from, title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
 			guard let password = password else {
@@ -96,7 +96,7 @@ extension ArchivedDropItem {
 	}
 
 	private func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
-		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please provide the password for this item.") { [weak self] password, hint in
+		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, hint in
 			guard let password = password else {
 				completion(false)
 				return

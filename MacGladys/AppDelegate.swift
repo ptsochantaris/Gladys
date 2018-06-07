@@ -10,6 +10,7 @@ import Cocoa
 import CoreSpotlight
 import MacGladysFramework
 import HotKey
+import CloudKit
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -298,5 +299,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		} catch {
 			self.alertOnMainThread(error: error)
 		}
+	}
+
+	func application(_ application: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShareMetadata) {
+		CloudManager.acceptShare(metadata)
 	}
 }

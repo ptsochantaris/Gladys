@@ -188,7 +188,7 @@ final class ArchivedDropItem: Codable {
 			return typeItems.contains { $0.isTransferring }
 		}
 
-		var goodToSave: Bool { // TODO: Check if data transfer is occuring, NOT ingest
+		var goodToSave: Bool {
 			return !isDeleting && !isTransferring
 		}
 	#endif

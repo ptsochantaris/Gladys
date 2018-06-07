@@ -1,9 +1,11 @@
 
 import UIKit
+import CloudKit
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate,
+	UICloudSharingControllerDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -18,6 +20,7 @@ final class DetailController: GladysViewController,
 	@IBOutlet weak var copyButton: UIBarButtonItem!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
 	@IBOutlet weak var lockButton: UIBarButtonItem!
+	@IBOutlet weak var invitesButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -35,6 +38,7 @@ final class DetailController: GladysViewController,
 		copyButton.accessibilityLabel = "Copy item to clipboard"
 		shareButton.accessibilityLabel = "Share"
 		updateLockButton()
+		updateInviteButton()
 
 		openButton.isEnabled = item.canOpen
 
@@ -69,6 +73,25 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	private func updateInviteButton() {
+		invitesButton.isEnabled = CloudManager.syncSwitchedOn
+		if item.cloudKitShareRecord == nil {
+			invitesButton.accessibilityLabel = "Add People"
+			invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
+		} else {
+			invitesButton.accessibilityLabel = "People"
+			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+		}
+	}
+
+	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
+		if item.cloudKitShareRecord == nil {
+			addInvites(sender)
+		} else {
+			editInvites(sender)
+		}
+	}
+
 	@IBAction func lockButtonSelected(_ sender: UIBarButtonItem) {
 		if item.isLocked {
 			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
@@ -96,6 +119,7 @@ final class DetailController: GladysViewController,
 			item.lockHint = nil
 		}
 		updateLockButton()
+		updateInviteButton()
 		makeIndexAndSaveItem()
 		item.postModified()
 		if item.needsUnlock {
@@ -749,5 +773,58 @@ final class DetailController: GladysViewController,
 
 	func textEditControllerMadeChanges(_ textEditController: TextEditController) {
 		table.reloadData()
+	}
+
+	//////////////////////////////// Sharing
+
+	private func addInvites(_ sender: Any) {
+		guard let barButtonItem = sender as? UIBarButtonItem, let rootRecord = item.cloudKitRecord else { return }
+
+		let cloudSharingController = UICloudSharingController { [weak self] (controller, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+			guard let s = self else { return }
+			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
+		}
+		presentCloudController(cloudSharingController, from: barButtonItem)
+	}
+
+	private func editInvites(_ sender: Any) {
+		guard let barButtonItem = sender as? UIBarButtonItem, let shareRecord = item.cloudKitShareRecord else { return }
+		let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
+		presentCloudController(cloudSharingController, from: barButtonItem)
+	}
+
+	private func presentCloudController(_ cloudSharingController: UICloudSharingController, from barButtonItem: UIBarButtonItem) {
+		if let popover = cloudSharingController.popoverPresentationController {
+			popover.barButtonItem = barButtonItem
+		}
+		cloudSharingController.delegate = self
+		present(cloudSharingController, animated: true) {}
+	}
+
+	func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+		genericAlert(title: "Could not share this item", message: error.localizedDescription, on: self)
+	}
+
+	func itemTitle(for csc: UICloudSharingController) -> String? {
+		return item.displayTitleOrUuid
+	}
+
+	func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+		item.cloudKitShareRecord = csc.share
+		updateInviteButton()
+	}
+
+	func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+		item.cloudKitShareRecord = nil
+		updateInviteButton()
+	}
+
+//https://www.icloud.com/share/0E7oRyC_NOsmdGk73Q_AZpKKw
+
+	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
+		if let ip = item.imagePath {
+			return try? Data(contentsOf: ip)
+		}
+		return nil
 	}
 }

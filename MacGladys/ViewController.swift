@@ -652,7 +652,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a = NSAlert()
 		a.messageText = "Lock Item"
-		a.informativeText = "Please enter a password to use for unlocking this item, and an optional hint or description to display on the locked item."
+		a.informativeText = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
 		a.addButton(withTitle: "Lock")
 		a.addButton(withTitle: "Cancel")
 		let password = NSSecureTextField(frame: NSRect(x: 0, y: 32, width: 290, height: 24))

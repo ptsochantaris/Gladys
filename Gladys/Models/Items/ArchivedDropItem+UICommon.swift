@@ -25,6 +25,7 @@ extension ArchivedDropItem {
 
 	func removeFromCloudkit() {
 		cloudKitRecord = nil
+		cloudKitShareRecord = nil
 		for typeItem in typeItems {
 			typeItem.cloudKitRecord = nil
 		}

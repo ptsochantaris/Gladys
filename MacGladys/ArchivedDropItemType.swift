@@ -432,6 +432,6 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var canPreview: Bool {
-		return fileExtension != nil && !(parent?.needsUnlock ?? true) // TODO
+		return fileExtension != nil && !(parent?.needsUnlock ?? true)
 	}
 }

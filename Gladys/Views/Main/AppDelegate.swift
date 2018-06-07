@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreSpotlight
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -105,6 +106,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 			completionHandler(true)
 		}
+	}
+
+	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
+		CloudManager.acceptShare(cloudKitShareMetadata)
 	}
 }
 

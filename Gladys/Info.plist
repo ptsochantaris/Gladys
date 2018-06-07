@@ -57,6 +57,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>527</string>
+	<key>CKSharingSupported</key>
+	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
