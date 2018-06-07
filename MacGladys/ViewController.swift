@@ -376,14 +376,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func shareSelected(_ sender: Any?) {
 		guard let itemToShare = collection.actionableSelectedItems.first,
-			let shareableItem = itemToShare.mostRelevantOpenItem?.itemForShare.0,
 			let i = Model.filteredDrops.index(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
 			else { return }
 
 		collection.deselectAll(nil)
 		collection.selectItems(at: [IndexPath(item: i, section: 0)], scrollPosition: [])
-		let p = NSSharingServicePicker(items: [shareableItem])
+		let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
 		let f = cell.view.frame
 		let centerFrame = NSRect(origin: CGPoint(x: f.midX-1, y: f.midY-1), size: CGSize(width: 2, height: 2))
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {

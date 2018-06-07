@@ -244,7 +244,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
 			guard let s = self else { return }
 			s.egress()
-			let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
+			let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
 			ViewController.shared.present(a, animated: true)
 			if let p = a.popoverPresentationController {
 				p.sourceView = s

@@ -9,6 +9,9 @@
 import Foundation
 import Contacts
 import MapKit
+#if os(iOS)
+import MobileCoreServices
+#endif
 
 extension ArchivedDropItemType {
 
@@ -29,30 +32,40 @@ extension ArchivedDropItemType {
 		CloudManager.markAsDeleted(uuid: uuid)
 	}
 
-	var itemForShare: (Any?, Int) {
-
-		if typeIdentifier == "public.vcard", let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
-			return (contact, 12)
-		}
+	var objectForShare: Any? {
 
 		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
-			return (item, 15)
+			return item
+		}
+
+		if typeConforms(to: kUTTypeVCard), let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+			return contact
 		}
 
 		if let url = encodedUrl {
-
-			if representedClass == .url {
-				return (url, 10)
-			}
-
-			if isWebURL {
-				return (url, 5)
-			}
-
-			return (url, 3)
+			return url
 		}
 
-		return (bytes, 0)
+		return decode()
+	}
+
+	var contentPriority: Int {
+
+		if typeIdentifier == "com.apple.mapkit.map-item" { return 140 }
+
+		if typeConforms(to: kUTTypeVCard) { return 120 }
+
+		if isURL {
+			if representedClass == .url { return 100 }
+			if isWebURL { return 80 }
+			return 60
+		}
+
+		if typeConforms(to: kUTTypeImage) { return 40 }
+
+		if typeConforms(to: kUTTypeText) { return 20 }
+
+		return 0
 	}
 
 	func prepareFilename(name: String, directory: String?) -> String {
@@ -83,5 +96,29 @@ extension ArchivedDropItemType {
 
 		// for now, remove in a few weeks
 		return name.replacingOccurrences(of: "\0", with: "")
+	}
+
+	var itemProviderForSharing: NSItemProvider {
+		let p = NSItemProvider()
+		#if os(iOS)
+		p.suggestedName = oneTitle
+		#endif
+		registerForSharing(with: p)
+		return p
+	}
+
+	func registerForSharing(with provider: NSItemProvider) {
+		if let w = objectForShare as? NSItemProviderWriting {
+			provider.registerObject(w, visibility: .all)
+		} else {
+			provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
+				let p = Progress(totalUnitCount: 1)
+				p.completedUnitCount = 1
+				DispatchQueue.global(qos: .userInitiated).async {
+					completion(self.dataForWrappedItem ?? self.bytes, nil)
+				}
+				return p
+			}
+		}
 	}
 }

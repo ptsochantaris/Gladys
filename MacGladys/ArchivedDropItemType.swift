@@ -357,7 +357,7 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	func tryOpen(from viewController: NSViewController) {
-		let shareItem = itemForShare.0
+		let shareItem = objectForShare
 
 		if let shareItem = shareItem as? MKMapItem {
 			shareItem.openInMaps(launchOptions: [:])

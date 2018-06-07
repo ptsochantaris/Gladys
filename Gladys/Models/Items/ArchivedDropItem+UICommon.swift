@@ -64,4 +64,14 @@ extension ArchivedDropItem {
 	var addedString: String {
 		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
+
+	var mostRelevantTypeItem: ArchivedDropItemType? {
+		return typeItems.max { $0.contentPriority < $1.contentPriority }
+	}
+
+	var itemProviderForSharing: NSItemProvider {
+		let p = NSItemProvider()
+		typeItems.forEach { $0.registerForSharing(with: p) }
+		return p
+	}
 }

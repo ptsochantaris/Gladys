@@ -225,7 +225,7 @@ final class DetailController: GladysViewController,
 	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
 		sharing = true
 		sizeWindow()
-		let a = UIActivityViewController(activityItems: item.shareableComponents, applicationActivities: nil)
+		let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
 		a.completionWithItemsHandler = { _, _, _,_ in
 			self.sharing = false
 			self.sizeWindow()

@@ -111,16 +111,8 @@ extension ArchivedDropItem {
 		}
 	}
 
-	var shareableComponents: [Any] {
-		var items = typeItems.compactMap { $0.itemForShare.0 }
-		if let text = displayText.0, URL(string: text) == nil {
-			items.append(text)
-		}
-		return items
-	}
-
 	var canOpen: Bool {
-		let item = itemForShare
+		let item = mostRelevantTypeItem?.objectForShare
 
 		if item is MKMapItem {
 			return true
@@ -187,22 +179,8 @@ extension ArchivedDropItem {
 		ViewController.shared.dismissAnyPopOver()
 	}
 
-	private var itemForShare: Any? {
-		var priority = -1
-		var item: Any?
-
-		for i in typeItems {
-			let (newItem, newPriority) = i.itemForShare
-			if let newItem = newItem, newPriority > priority {
-				item = newItem
-				priority = newPriority
-			}
-		}
-		return item
-	}
-
 	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
-		let item = itemForShare
+		let item = mostRelevantTypeItem?.objectForShare
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
 			completion(true)
