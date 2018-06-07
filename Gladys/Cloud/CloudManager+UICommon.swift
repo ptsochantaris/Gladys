@@ -221,18 +221,24 @@ extension CloudManager {
 		Model.drops.insert(item, at: 0)
 	}
 
-	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
-
+	private struct SyncState {
 		var updatedSequence = false
-		var newDrops = [CKRecord]()
-		var newTypeItemsToHookOntoDrops = [CKRecord]()
+		var newDrops = [CKRecord]() { didSet { updateProgress() } }
+		var newTypeItemsToHookOntoDrops = [CKRecord]() { didSet { updateProgress() } }
 
-		var typeUpdateCount = 0
-		var deletionCount = 0
-		var updateCount = 0
-		syncProgressString = "Fetching"
+		var typeUpdateCount = 0 { didSet { updateProgress() } }
+		var deletionCount = 0 { didSet { updateProgress() } }
+		var updateCount = 0 { didSet { updateProgress() } }
+		var newTypesAppended = 0
 
-		func updateProgress() {
+		let previousToken = zoneChangeToken
+		var newToken: CKServerChangeToken?
+
+		var itemsModified: Bool {
+			return typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
+		}
+
+		private func updateProgress() {
 			var components = [String]()
 
 			let newCount = newDrops.count
@@ -240,23 +246,26 @@ extension CloudManager {
 			if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
 
 			let newTypeCount = newTypeItemsToHookOntoDrops.count
-			if newTypeCount > 0 { components.append(newCount == 1 ? "1 Component" : "\(newTypeCount) Components") }
-			if typeUpdateCount > 0 { components.append(newCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
+			if newTypeCount > 0 { components.append(newTypeCount == 1 ? "1 Component" : "\(newTypeCount) Components") }
+
+			if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
 
 			if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+
 			if components.count > 0 {
 				syncProgressString = "Fetched " + components.joined(separator: ", ")
 			} else {
 				syncProgressString = "Fetching"
 			}
 		}
+	}
 
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let o = CKFetchRecordZoneChangesOptions()
-		let previousToken = zoneChangeToken
-		o.previousServerChangeToken = previousToken
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
-		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
+	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
+
+		syncProgressString = "Fetching"
+		var stats = SyncState()
+
+		let recordDeletedBlock = { (recordId: CKRecordID, recordType: String) in
 			let itemUUID = recordId.recordName
 			DispatchQueue.main.async {
 				switch recordType {
@@ -266,30 +275,28 @@ extension CloudManager {
 						item.needsDeletion = true
 						item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
 						item.cloudKitShareRecord = nil // get rid of useless file
-						deletionCount += 1
-						updateProgress()
+						stats.deletionCount += 1
 					}
 				case RecordType.component:
 					if let component = Model.typeItem(uuid: itemUUID) {
 						log("Component \(recordType) deletion: \(itemUUID)")
 						component.needsDeletion = true
 						component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-						deletionCount += 1
-						updateProgress()
+						stats.deletionCount += 1
 					}
 				case RecordType.share:
 					if let associatedItem = Model.item(shareId: itemUUID) {
 						log("Share record deleted for item \(associatedItem.uuid)")
 						associatedItem.cloudKitShareRecord = nil
-						deletionCount += 1
-						updateProgress()
+						stats.deletionCount += 1
 					}
 				default:
 					log("Warning: Received deletion for unknown record type: \(recordType)")
 				}
 			}
 		}
-		operation.recordChangedBlock = { record in
+
+		let recordChangedBlock = { (record: CKRecord) in
 			let itemUUID = record.recordID.recordName
 			let recordType = record.recordType
 			DispatchQueue.main.async {
@@ -301,13 +308,11 @@ extension CloudManager {
 						} else {
 							log("Will update existing local item for cloud record \(itemUUID)")
 							item.cloudKitUpdate(from: record)
-							updateCount += 1
-							updateProgress()
+							stats.updateCount += 1
 						}
 					} else {
 						log("Will create new local item for cloud record \(itemUUID)")
-						newDrops.append(record)
-						updateProgress()
+						stats.newDrops.append(record)
 					}
 				case RecordType.component:
 					if let typeItem = Model.typeItem(uuid: itemUUID) {
@@ -316,19 +321,17 @@ extension CloudManager {
 						} else {
 							log("Will update existing local type data: \(itemUUID)")
 							typeItem.cloudKitUpdate(from: record)
-							typeUpdateCount += 1
-							updateProgress()
+							stats.typeUpdateCount += 1
 						}
 					} else {
 						log("Will create new local type data: \(itemUUID)")
-						newTypeItemsToHookOntoDrops.append(record)
-						updateProgress()
+						stats.newTypeItemsToHookOntoDrops.append(record)
 					}
 				case RecordType.positionList:
 					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
-						updatedSequence = true
+						stats.updatedSequence = true
 						uuidSequenceRecord = record
 					} else {
 						log("Received non-updated position list record")
@@ -337,86 +340,99 @@ extension CloudManager {
 					if let share = record as? CKShare, let associatedItem = Model.item(shareId: itemUUID) {
 						log("Share record updated for item \(associatedItem.uuid)")
 						associatedItem.cloudKitShareRecord = share
-						updateCount += 1
-						updateProgress()
+						stats.updateCount += 1
 					}
 				default:
 					log("Warning: Received record update for unkown type: \(recordType)")
 				}
 			}
 		}
-		operation.recordZoneFetchCompletionBlock = { zoneId, token, data, moreComing, error in
+
+		let zoneFetchBlock = { (zoneId: CKRecordZoneID, token: CKServerChangeToken?, data: Data?, moreComing: Bool, error: Error?) in
 			DispatchQueue.main.async {
 				syncProgressString = "Applying updates"
 			}
-			DispatchQueue.main.async {
-
-				if (error as? CKError)?.code == .changeTokenExpired {
+			stats.newToken = token
+			if (error as? CKError)?.code == .changeTokenExpired {
+				DispatchQueue.main.async {
 					zoneChangeToken = nil
 					log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 					finalCompletion(error)
 					return
 				}
-
-				log("Zone \(zoneId.zoneName) changes fetch complete, processing")
-
-				var newTypesAppended = 0
-				for newTypeItemRecord in newTypeItemsToHookOntoDrops {
-					if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
-						let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
-						existingParent.typeItems.append(newTypeItem)
-						existingParent.needsReIngest = true
-						newTypesAppended += 1
-					}
-				}
-				for dropRecord in newDrops {
-					createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
-				}
-
-				if updatedSequence || newDrops.count > 0 {
-					let sequence = uuidSequence.compactMap { UUID(uuidString: $0) }
-					if sequence.count > 0 {
-						Model.drops.sort { i1, i2 in
-							let p1 = sequence.index(of: i1.uuid) ?? -1
-							let p2 = sequence.index(of: i2.uuid) ?? -1
-							return p1 < p2
-						}
-					}
-				}
-
-				let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
-
-				if itemsModified || updatedSequence{
-					log("Posting external data update notification")
-					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-				}
-
-				if itemsModified {
-					// need to save stuff that's been modified
-					Model.queueNextSaveCallback {
-						log("Comitting zone change token")
-						self.zoneChangeToken = token
-					}
-					Model.saveIsDueToSyncFetch = true
-					Model.save()
-				} else if previousToken != token {
-					// it was only a position record, most likely
-					if updatedSequence {
-						Model.saveIndexOnly()
-					}
-					log("Comitting zone change token")
-					self.zoneChangeToken = token
-				} else {
-					log("No updates available")
-				}
 			}
 		}
-		operation.fetchRecordZoneChangesCompletionBlock = { error in
+
+		let zoneFetchCompletionBlock = { (error: Error?) in
 			DispatchQueue.main.async {
 				finalCompletion(error)
 			}
 		}
-		go(operation)
+
+		let applyChanges = BlockOperation {
+			log("Private zone changes fetch complete, processing")
+
+			for newTypeItemRecord in stats.newTypeItemsToHookOntoDrops {
+				if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
+					let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
+					existingParent.typeItems.append(newTypeItem)
+					existingParent.needsReIngest = true
+					stats.newTypesAppended += 1
+				}
+			}
+			for dropRecord in stats.newDrops {
+				createNewArchivedDrop(from: dropRecord, drawChildrenFrom: stats.newTypeItemsToHookOntoDrops)
+			}
+
+			if stats.updatedSequence || stats.newDrops.count > 0 {
+				let sequence = uuidSequence.compactMap { UUID(uuidString: $0) }
+				if sequence.count > 0 {
+					Model.drops.sort { i1, i2 in
+						let p1 = sequence.index(of: i1.uuid) ?? -1
+						let p2 = sequence.index(of: i2.uuid) ?? -1
+						return p1 < p2
+					}
+				}
+			}
+
+			let itemsModified = stats.itemsModified
+
+			if itemsModified || stats.updatedSequence {
+				log("Posting external data update notification")
+				NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+			}
+
+			if itemsModified {
+				// need to save stuff that's been modified
+				Model.queueNextSaveCallback {
+					log("Comitting zone change token")
+					self.zoneChangeToken = stats.newToken
+				}
+				Model.saveIsDueToSyncFetch = true
+				Model.save()
+			} else if stats.previousToken != stats.newToken {
+				// it was only a position record, most likely
+				if stats.updatedSequence {
+					Model.saveIndexOnly()
+				}
+				log("Comitting zone change token")
+				self.zoneChangeToken = stats.newToken
+			} else {
+				log("No updates available")
+			}
+		}
+
+		let o = CKFetchRecordZoneChangesOptions()
+		o.previousServerChangeToken = stats.previousToken
+		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let fetchZoneChanges = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
+		fetchZoneChanges.recordWithIDWasDeletedBlock = recordDeletedBlock
+		fetchZoneChanges.recordChangedBlock = recordChangedBlock
+		fetchZoneChanges.recordZoneFetchCompletionBlock = zoneFetchBlock
+		fetchZoneChanges.fetchRecordZoneChangesCompletionBlock = zoneFetchCompletionBlock
+		applyChanges.addDependency(fetchZoneChanges)
+		go(fetchZoneChanges)
+		OperationQueue.main.addOperation(applyChanges)
 	}
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {

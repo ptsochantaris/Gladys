@@ -402,6 +402,25 @@ final class CloudManager {
 		}
 	}
 
+	static var sharedDatabaseChangeToken: CKServerChangeToken? {
+		get {
+			if let data = PersistedOptions.defaults.data(forKey: "sharedDatabaseChangeToken"), data.count > 0 {
+				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
+			} else {
+				return nil
+			}
+		}
+		set {
+			if let n = newValue {
+				let data = NSKeyedArchiver.archivedData(withRootObject: n)
+				PersistedOptions.defaults.set(data, forKey: "sharedDatabaseChangeToken")
+			} else {
+				PersistedOptions.defaults.set(Data(), forKey: "sharedDatabaseChangeToken")
+			}
+			PersistedOptions.defaults.synchronize()
+		}
+	}
+
 	static var uuidSequence: [String] {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
