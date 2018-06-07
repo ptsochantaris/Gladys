@@ -802,7 +802,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-		genericAlert(title: "Could not share this item", message: error.localizedDescription, on: self)
+		genericAlert(title: "Could not share this item", message: error.finalDescription, on: self)
 	}
 
 	func itemTitle(for csc: UICloudSharingController) -> String? {

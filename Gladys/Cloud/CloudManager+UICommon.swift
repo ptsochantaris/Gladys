@@ -264,6 +264,7 @@ extension CloudManager {
 						log("Drop \(recordType) deletion: \(itemUUID)")
 						item.needsDeletion = true
 						item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+						item.cloudKitShareRecord = nil // get rid of useless file
 						deletionCount += 1
 						updateProgress()
 					}
@@ -504,11 +505,13 @@ extension CloudManager {
 	}
 
 	static func acceptShare(_ metadata: CKShareMetadata) {
-		let acceptShareOperation: CKAcceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
-		acceptShareOperation.qualityOfService = .userInteractive
+		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
 		acceptShareOperation.acceptSharesCompletionBlock = { error in
-			genericAlert(title: "Could not accept share", message: error?.localizedDescription, on: ViewController.shared)
+			if let error = error {
+				genericAlert(title: "Could not accept share", message: error.finalDescription, on: ViewController.shared)
+			}
 		}
+		acceptShareOperation.qualityOfService = .userInteractive
 		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
 	}
 }
