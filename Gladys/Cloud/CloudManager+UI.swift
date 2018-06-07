@@ -15,9 +15,10 @@ extension CloudManager {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		if !syncSwitchedOn { return }
 
-		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
-		if notification.subscriptionID == privateDatabaseSubscriptionId || notification.subscriptionID == sharedDatabaseSubscriptionId {
-			log("Received DB change push")
+		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
+		switch notification.databaseScope {
+		case .private:
+			log("Received private DB change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
 			}
@@ -28,6 +29,9 @@ extension CloudManager {
 					completionHandler(.newData)
 				}
 			}
+		case .public: break
+		case .shared:
+			log("Received shared DB change push") // TODO
 		}
 	}
 

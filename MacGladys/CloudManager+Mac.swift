@@ -20,14 +20,18 @@ extension CloudManager {
 			return
 		}
 
-		let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo)
-		if notification.subscriptionID == privateDatabaseSubscriptionId || notification.subscriptionID == sharedDatabaseSubscriptionId {
-			log("Received DB change push")
+		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
+		switch notification.databaseScope {
+		case .private:
+			log("Received private DB change push")
 			sync { error in
 				if let error = error {
 					log("Notification-triggered sync error: \(error.finalDescription)")
 				}
 			}
+		case .public: break
+		case .shared:
+			log("Received shared DB change push") // TODO
 		}
 	}
 
