@@ -139,6 +139,8 @@ final class DetailController: GladysViewController,
 			done()
 		} else {
 			table.reloadData()
+			updateLockButton()
+			updateInviteButton()
 			sizeWindow()
 		}
 	}

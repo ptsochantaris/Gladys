@@ -33,7 +33,7 @@ extension ArchivedDropItem {
 		guard needsCloudPush && !needsDeletion && goodToSave else { return nil }
 
 		let record = cloudKitRecord ??
-			CKRecord(recordType: "ArchivedDropItem",
+			CKRecord(recordType: CloudManager.RecordType.item,
 			         recordID: CKRecordID(recordName: uuid.uuidString,
 			                              zoneID: CKRecordZoneID(zoneName: "archivedDropItems",
 			                                                     ownerName: CKCurrentUserDefaultName)))

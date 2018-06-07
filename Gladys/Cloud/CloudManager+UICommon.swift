@@ -162,7 +162,7 @@ extension CloudManager {
 		let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
 		subscribeToSharedDatabase.addDependency(createZone)
 
-		let positionListId = CKRecordID(recordName: "PositionList", zoneID: zone.zoneID)
+		let positionListId = CKRecordID(recordName: RecordType.positionList, zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
 		fetchInitialUUIDSequence.addDependency(subscribeToPrivateDatabase)
 		fetchInitialUUIDSequence.addDependency(subscribeToSharedDatabase)
@@ -257,9 +257,10 @@ extension CloudManager {
 		o.previousServerChangeToken = previousToken
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-			if recordType == "ArchivedDropItem" {
-				let itemUUID = recordId.recordName
-				DispatchQueue.main.async {
+			let itemUUID = recordId.recordName
+			DispatchQueue.main.async {
+				switch recordType {
+				case RecordType.item:
 					if let item = Model.item(uuid: itemUUID) {
 						log("Drop \(recordType) deletion: \(itemUUID)")
 						item.needsDeletion = true
@@ -268,10 +269,7 @@ extension CloudManager {
 						deletionCount += 1
 						updateProgress()
 					}
-				}
-			} else if recordType == "ArchivedDropItemType" {
-				let itemUUID = recordId.recordName
-				DispatchQueue.main.async {
+				case RecordType.component:
 					if let component = Model.typeItem(uuid: itemUUID) {
 						log("Component \(recordType) deletion: \(itemUUID)")
 						component.needsDeletion = true
@@ -279,15 +277,24 @@ extension CloudManager {
 						deletionCount += 1
 						updateProgress()
 					}
+				case RecordType.share:
+					if let associatedItem = Model.item(shareId: itemUUID) {
+						log("Share record deleted for item \(associatedItem.uuid)")
+						associatedItem.cloudKitShareRecord = nil
+						deletionCount += 1
+						updateProgress()
+					}
+				default:
+					log("Warning: Received deletion for unknown record type: \(recordType)")
 				}
 			}
 		}
 		operation.recordChangedBlock = { record in
 			let itemUUID = record.recordID.recordName
-
+			let recordType = record.recordType
 			DispatchQueue.main.async {
-
-				if record.recordType == "ArchivedDropItem" {
+				switch recordType {
+				case RecordType.item:
 					if let item = Model.item(uuid: itemUUID) {
 						if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item record \(itemUUID)")
@@ -302,8 +309,7 @@ extension CloudManager {
 						newDrops.append(record)
 						updateProgress()
 					}
-
-				} else if record.recordType == "ArchivedDropItemType" {
+				case RecordType.component:
 					if let typeItem = Model.typeItem(uuid: itemUUID) {
 						if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
 							log("Update but no changes to item type data record \(itemUUID)")
@@ -318,8 +324,7 @@ extension CloudManager {
 						newTypeItemsToHookOntoDrops.append(record)
 						updateProgress()
 					}
-
-				} else if itemUUID == "PositionList" {
+				case RecordType.positionList:
 					if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
 						log("Received an updated position list record")
 						uuidSequence = (record["positionList"] as? [String]) ?? []
@@ -328,6 +333,15 @@ extension CloudManager {
 					} else {
 						log("Received non-updated position list record")
 					}
+				case RecordType.share:
+					if let share = record as? CKShare, let associatedItem = Model.item(shareId: itemUUID) {
+						log("Share record updated for item \(associatedItem.uuid)")
+						associatedItem.cloudKitShareRecord = share
+						updateCount += 1
+						updateProgress()
+					}
+				default:
+					log("Warning: Received record update for unkown type: \(recordType)")
 				}
 			}
 		}

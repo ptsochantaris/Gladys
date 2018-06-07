@@ -49,6 +49,13 @@ extension Array where Element == [CKRecord] {
 
 final class CloudManager {
 
+	struct RecordType {
+		static let item = "ArchivedDropItem"
+		static let component = "ArchivedDropItemType"
+		static let positionList = "PositionList"
+		static let share = "cloudkit.share"
+	}
+	
 	static let privateDatabaseSubscriptionId = "private-changes"
 	static let sharedDatabaseSubscriptionId = "shared-changes"
 
@@ -154,7 +161,7 @@ final class CloudManager {
 			}
 
 			if let sequenceToSend = sequenceToSend {
-				let record = uuidSequenceRecord ?? CKRecord(recordType: "PositionList", recordID: CKRecordID(recordName: "PositionList", zoneID: zoneId))
+				let record = uuidSequenceRecord ?? CKRecord(recordType: RecordType.positionList, recordID: CKRecordID(recordName: RecordType.positionList, zoneID: zoneId))
 				record["positionList"] = sequenceToSend as NSArray
 				if payloadsToPush.count > 0 {
 					payloadsToPush[0].insert(record, at: 0)
@@ -238,7 +245,7 @@ final class CloudManager {
 					}
 					for record in updatedRecords ?? [] {
 						let itemUUID = record.recordID.recordName
-						if itemUUID == "PositionList" {
+						if itemUUID == RecordType.positionList {
 							uuidSequence = currentUUIDSequence
 							uuidSequenceRecord = record
 							log("Sent updated \(record.recordType) cloud record")

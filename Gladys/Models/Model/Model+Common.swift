@@ -39,6 +39,10 @@ extension Model {
 		return drops.first { $0.uuid == uuid }
 	}
 
+	static func item(shareId: String) -> ArchivedDropItem? {
+		return drops.first { $0.cloudKitShareRecord?.recordID.recordName == shareId }
+	}
+
 	static func typeItem(uuid: String) -> ArchivedDropItemType? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
