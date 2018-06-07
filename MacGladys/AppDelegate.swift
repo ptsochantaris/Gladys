@@ -189,7 +189,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func alertOnMainThread(error: Error) {
 		DispatchQueue.main.async {
-			let a = NSAlert(error: error)
+			let a = NSAlert()
+			a.alertStyle = .warning
+			a.messageText = "Operation Failed"
+			a.informativeText = error.finalDescription
 			a.beginSheetModal(for: ViewController.shared.view.window!, completionHandler: nil)
 		}
 	}

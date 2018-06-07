@@ -227,13 +227,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		observers.append(a5)
 
 		if CloudManager.syncSwitchedOn {
-			CloudManager.sync { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						log("Sync Error: \(error.finalDescription)")
-					}
-				}
-			}
+			CloudManager.sync { _ in }
 		}
 
 		updateTitle()

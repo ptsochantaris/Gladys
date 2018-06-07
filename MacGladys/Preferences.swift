@@ -182,7 +182,10 @@ final class Preferences: NSViewController {
 	@IBAction func syncNowSelected(_ sender: NSButton) {
 		CloudManager.sync { [weak self] error in
 			if let error = error, let s = self {
-				let a = NSAlert(error: error)
+				let a = NSAlert()
+				a.alertStyle = .warning
+				a.messageText = "Sync Failed"
+				a.informativeText = error.finalDescription
 				a.beginSheetModal(for: s.view.window!) { response in }
 			}
 		}
