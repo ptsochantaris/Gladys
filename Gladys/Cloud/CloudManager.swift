@@ -58,6 +58,7 @@ final class CloudManager {
 	
 	static let privateDatabaseSubscriptionId = "private-changes"
 	static let sharedDatabaseSubscriptionId = "shared-changes"
+	static let legacyZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
@@ -107,7 +108,7 @@ final class CloudManager {
 			return nil
 		}
 
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+		let zoneId = legacyZoneId
 
 		var idsToPush = [String]()
 		var dataItemsToPush = 0
@@ -383,63 +384,6 @@ final class CloudManager {
 			PersistedOptions.defaults.set(newValue, forKey: "shareActionShouldUpload")
 			PersistedOptions.defaults.synchronize()
 		}
-	}
-
-	static var zoneChangeToken: CKServerChangeToken? {
-		get {
-			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
-				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
-			} else {
-				return nil
-			}
-		}
-		set {
-			if let n = newValue {
-				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
-			} else {
-				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
-			}
-			PersistedOptions.defaults.synchronize()
-		}
-	}
-
-	static var sharedDatabaseChangeToken: CKServerChangeToken? {
-		get {
-			if let data = PersistedOptions.defaults.data(forKey: "sharedDatabaseChangeToken"), data.count > 0 {
-				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
-			} else {
-				return nil
-			}
-		}
-		set {
-			if let n = newValue {
-				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				PersistedOptions.defaults.set(data, forKey: "sharedDatabaseChangeToken")
-			} else {
-				PersistedOptions.defaults.set(Data(), forKey: "sharedDatabaseChangeToken")
-			}
-			PersistedOptions.defaults.synchronize()
-		}
-	}
-	static func sharedZoneToken(for zoneId: CKRecordZoneID) -> CKServerChangeToken? {
-		if let lookup = PersistedOptions.defaults.dictionary(forKey: "sharedDatabaseZoneTokens") as? [String : Data],
-			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName],
-			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
-			return token
-		}
-		return nil
-	}
-	static func setSharedZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZoneID) {
-		var lookup = PersistedOptions.defaults.dictionary(forKey: "sharedDatabaseZoneTokens") as? [String : Data] ?? [String : Data]()
-		let key = zoneId.ownerName + ":" + zoneId.zoneName
-		if let n = token {
-			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
-		} else {
-			lookup[key] = nil
-		}
-		PersistedOptions.defaults.set(lookup, forKey: "sharedDatabaseZoneTokens")
-		PersistedOptions.defaults.synchronize()
 	}
 
 	static var uuidSequence: [String] {

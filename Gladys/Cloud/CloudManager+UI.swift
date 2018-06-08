@@ -17,8 +17,8 @@ extension CloudManager {
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
 		switch notification.databaseScope {
-		case .private:
-			log("Received private DB change push")
+		case .private, .shared:
+			log("Received DB change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
 			}
@@ -30,8 +30,6 @@ extension CloudManager {
 				}
 			}
 		case .public: break
-		case .shared:
-			log("Received shared DB change push") // TODO
 		}
 	}
 

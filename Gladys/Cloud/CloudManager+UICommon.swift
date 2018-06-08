@@ -97,7 +97,8 @@ extension CloudManager {
 					lastSyncCompletion = .distantPast
 					uuidSequence = []
 					uuidSequenceRecord = nil
-					zoneChangeToken = nil
+					SyncState.wipeDatabaseTokens()
+					SyncState.wipeZoneTokens()
 					#if MAINAPP
 					shareActionIsActioningIds = []
 					#endif
@@ -124,6 +125,7 @@ extension CloudManager {
 	}
 
 	static func checkMigrations() {
+		SyncState.checkMigrations()
 		if syncSwitchedOn && !migratedSharing && !syncTransitioning {
 			let subscribe = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
 			subscribe.modifySubscriptionsCompletionBlock = { _, _, error in
@@ -195,8 +197,7 @@ extension CloudManager {
 	}
 
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [zoneId])
+		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [legacyZoneId])
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
 				log("Error while deleting zone: \(error.finalDescription)")
@@ -206,58 +207,6 @@ extension CloudManager {
 			}
 		}
 		go(deleteZone)
-	}
-
-	private static func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
-		let childrenOfThisItem = drawChildrenFrom.filter {
-			if let ref = $0["parent"] as? CKReference {
-				if ref.recordID == record.recordID {
-					return true
-				}
-			}
-			return false
-		}
-		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
-		Model.drops.insert(item, at: 0)
-	}
-
-	private class SyncState {
-		var updatedSequence = false
-		var newDrops = [CKRecord]() { didSet { updateProgress() } }
-		var newTypeItemsToHookOntoDrops = [CKRecord]() { didSet { updateProgress() } }
-
-		var typeUpdateCount = 0 { didSet { updateProgress() } }
-		var deletionCount = 0 { didSet { updateProgress() } }
-		var updateCount = 0 { didSet { updateProgress() } }
-		var newTypesAppended = 0
-
-		let previousToken = zoneChangeToken
-		var newToken: CKServerChangeToken?
-
-		var itemsModified: Bool {
-			return typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
-		}
-
-		private func updateProgress() {
-			var components = [String]()
-
-			let newCount = newDrops.count
-			if newCount > 0 { components.append(newCount == 1 ? "1 Drop" : "\(newCount) Drops") }
-			if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
-
-			let newTypeCount = newTypeItemsToHookOntoDrops.count
-			if newTypeCount > 0 { components.append(newTypeCount == 1 ? "1 Component" : "\(newTypeCount) Components") }
-
-			if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
-
-			if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-
-			if components.count > 0 {
-				syncProgressString = "Fetched " + components.joined(separator: ", ")
-			} else {
-				syncProgressString = "Fetching"
-			}
-		}
 	}
 
 	static private func recordDeleted(recordId: CKRecordID, recordType: String, stats: SyncState) {
@@ -343,107 +292,110 @@ extension CloudManager {
 		}
 	}
 
-	static private func applyChanges(stats: SyncState) {
-		log("Private zone changes fetch complete, processing")
-
-		for newTypeItemRecord in stats.newTypeItemsToHookOntoDrops {
-			if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
-				let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
-				existingParent.typeItems.append(newTypeItem)
-				existingParent.needsReIngest = true
-				stats.newTypesAppended += 1
-			}
-		}
-		for dropRecord in stats.newDrops {
-			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: stats.newTypeItemsToHookOntoDrops)
-		}
-
-		if stats.updatedSequence || stats.newDrops.count > 0 {
-			let sequence = uuidSequence.compactMap { UUID(uuidString: $0) }
-			if sequence.count > 0 {
-				Model.drops.sort { i1, i2 in
-					let p1 = sequence.index(of: i1.uuid) ?? -1
-					let p2 = sequence.index(of: i2.uuid) ?? -1
-					return p1 < p2
-				}
-			}
-		}
-
-		let itemsModified = stats.itemsModified
-
-		if itemsModified || stats.updatedSequence {
-			log("Posting external data update notification")
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-		}
-
-		if itemsModified {
-			// need to save stuff that's been modified
-			Model.queueNextSaveCallback {
-				log("Comitting zone change token")
-				self.zoneChangeToken = stats.newToken
-			}
-			Model.saveIsDueToSyncFetch = true
-			Model.save()
-		} else if stats.previousToken != stats.newToken {
-			// it was only a position record, most likely
-			if stats.updatedSequence {
-				Model.saveIndexOnly()
-			}
-			log("Comitting zone change token")
-			self.zoneChangeToken = stats.newToken
-		} else {
-			log("No updates available")
-		}
-	}
-
 	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: SyncState) {
-		stats.newToken = token
+		stats.newZoneTokens[zoneId] = token
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
-				zoneChangeToken = nil
+				SyncState.setZoneToken(nil, for: zoneId)
 				syncProgressString = "Retrying"
 				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 			}
-		} else {
-			DispatchQueue.main.async {
-				syncProgressString = "Applying updates"
-			}
-			DispatchQueue.main.async {
-				applyChanges(stats: stats)
+		}
+	}
+
+	static func fetchDatabaseChanges(completion: @escaping (Error?) -> Void) {
+		syncProgressString = "Fetching"
+		let stats = SyncState()
+		fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
+			if let error = error {
+				completion(error)
+			} else {
+				fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
+					if error == nil {
+						stats.commitChanges()
+					}
+					completion(error)
+				}
 			}
 		}
 	}
 
-	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
+	private static func fetchDBChanges(database: CKDatabase, stats: SyncState, completion: @escaping (Error?) -> Void) {
 
-		syncProgressString = "Fetching"
-		var finalError: Error?
-		let stats = SyncState()
+		log("Fetching changes from database \(database.databaseScope.rawValue)")
 
-		let o = CKFetchRecordZoneChangesOptions()
-		o.previousServerChangeToken = stats.previousToken
-		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let fetchPrivateZoneChanges = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
-		fetchPrivateZoneChanges.recordWithIDWasDeletedBlock = { recordId, recordType in
+		let databaseToken = SyncState.databaseToken(for: database.databaseScope.rawValue)
+		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
+		operation.recordZoneWithIDChangedBlock = { stats.changedZoneIDs.append($0) }
+		operation.recordZoneWithIDWasPurgedBlock = { stats.deletedZoneIDs.append($0) }
+		operation.recordZoneWithIDWasDeletedBlock = { stats.deletedZoneIDs.append($0) }
+		operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
+			if let error = error {
+				log("Shared database fetch operation failed: \(error.finalDescription)")
+				DispatchQueue.main.async {
+					completion(error)
+				}
+				return
+			}
+
+			if databaseToken == newToken {
+				log("No database changes detected")
+				DispatchQueue.main.async {
+					completion(nil)
+				}
+				return
+			}
+
+			stats.commitZoneDeletions()
+
+			fetchZoneChanges(database: database, stats: stats) { error in
+				if let error = error {
+					log("Error fetching zone changes for \(database): \(error.finalDescription)")
+				} else {
+					stats.newDatabaseTokens[database.databaseScope.rawValue] = newToken
+				}
+				DispatchQueue.main.async {
+					completion(error)
+				}
+			}
+		}
+		operation.qualityOfService = .userInitiated
+		database.add(operation)
+	}
+
+	private static func fetchZoneChanges(database: CKDatabase, stats: SyncState, completion: @escaping (Error?) -> Void) {
+
+		let zoneIDs = stats.changedZoneIDs
+		if zoneIDs.isEmpty {
+			log("No zones changed")
+			completion(nil)
+			return
+		}
+
+		log("Fetching changes to \(zoneIDs.count) zones in database \(database.databaseScope.rawValue)")
+
+		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
+		for zoneID in zoneIDs {
+			let options = CKFetchRecordZoneChangesOptions()
+			options.previousServerChangeToken = SyncState.zoneToken(for: zoneID)
+			optionsByRecordZoneID[zoneID] = options
+		}
+
+		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
+		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
 		}
-		fetchPrivateZoneChanges.recordChangedBlock = { record in
+		operation.recordChangedBlock = { record in
 			recordChanged(record: record, stats: stats)
 		}
-		fetchPrivateZoneChanges.recordZoneFetchCompletionBlock = { (zoneId: CKRecordZoneID, token: CKServerChangeToken?, _, _, error: Error?) in
+		operation.recordZoneFetchCompletionBlock = { (zoneId, token, _, _, error) in
 			zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)
 		}
-		fetchPrivateZoneChanges.fetchRecordZoneChangesCompletionBlock = { (error: Error?) in
-			finalError = error
+		operation.fetchRecordZoneChangesCompletionBlock = { error in
+			completion(error)
 		}
 
-		let allFetchesDoneOperation = BlockOperation {
-			finalCompletion(finalError)
-		}
-		allFetchesDoneOperation.addDependency(fetchPrivateZoneChanges)
-
-		go(fetchPrivateZoneChanges)
-		OperationQueue.main.addOperation(allFetchesDoneOperation)
+		database.add(operation)
 	}
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {

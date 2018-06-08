@@ -4,7 +4,7 @@ import Foundation
 extension ArchivedDropItem: LoadCompletionDelegate {
 
 	static func sanitised(_ idenitfiers: [String]) -> [String] {
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd"]
+		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", ".persisted"]
 		return idenitfiers.filter { typeIdentifier in
 			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
 		}
