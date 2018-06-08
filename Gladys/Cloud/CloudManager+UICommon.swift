@@ -197,12 +197,14 @@ extension CloudManager {
 	}
 
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
+		showNetwork = true
 		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [legacyZoneId])
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
 				log("Error while deleting zone: \(error.finalDescription)")
 			}
 			DispatchQueue.main.async {
+				showNetwork = false
 				completion(error)
 			}
 		}
@@ -524,10 +526,15 @@ extension CloudManager {
 	}
 
 	static func acceptShare(_ metadata: CKShareMetadata) {
+		if !syncSwitchedOn { return }
+		showNetwork = true
 		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
 		acceptShareOperation.acceptSharesCompletionBlock = { error in
-			if let error = error {
-				genericAlert(title: "Could not accept share", message: error.finalDescription, on: ViewController.shared)
+			DispatchQueue.main.async {
+				showNetwork = false
+				if let error = error {
+					genericAlert(title: "Could not accept share", message: error.finalDescription, on: ViewController.shared)
+				}
 			}
 		}
 		acceptShareOperation.qualityOfService = .userInteractive

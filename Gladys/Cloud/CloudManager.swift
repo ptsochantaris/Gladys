@@ -74,6 +74,17 @@ final class CloudManager {
 
 	static var syncDirty = false
 
+	static var showNetwork: Bool = false {
+		didSet {
+			#if MAINAPP
+			UIApplication.shared.isNetworkActivityIndicatorVisible = showNetwork
+			#endif
+			#if MAC
+			NSApplication.shared.dockTile.badgeLabel = showNetwork ? "↔" : nil
+			#endif
+		}
+	}
+
 	static var syncProgressString: String? {
 		didSet {
 			#if DEBUG
@@ -291,9 +302,7 @@ final class CloudManager {
 	static var syncTransitioning = false {
 		didSet {
 			if syncTransitioning != oldValue {
-				#if MAINAPP
-				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
-				#endif
+				showNetwork = syncing || syncTransitioning
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 			}
 		}
@@ -303,9 +312,7 @@ final class CloudManager {
 		didSet {
 			if syncTransitioning != oldValue {
 				syncProgressString = syncing ? "Pausing" : nil
-				#if MAINAPP
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				#endif
+				showNetwork = false
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 			}
 		}
@@ -315,12 +322,7 @@ final class CloudManager {
 		didSet {
 			if syncing != oldValue {
 				syncProgressString = syncing ? "Syncing" : nil
-				#if MAINAPP
-				UIApplication.shared.isNetworkActivityIndicatorVisible = syncing || syncTransitioning
-				#endif
-				#if MAC
-				NSApplication.shared.dockTile.badgeLabel = syncing ? "↔" : nil
-				#endif
+				showNetwork = syncing || syncTransitioning
 				NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
 			}
 		}

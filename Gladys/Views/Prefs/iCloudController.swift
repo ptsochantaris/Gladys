@@ -91,12 +91,10 @@ final class iCloudController: GladysViewController {
 		icloudSwitch.isEnabled = false
 		eraseAlliCloudData.isEnabled = false
 		syncNowButton.isEnabled = false
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		self.eraseAlliCloudData.isEnabled = false
 		CloudManager.eraseZoneIfNeeded { error in
 			self.eraseAlliCloudData.isEnabled = true
 			self.icloudSwitch.isEnabled = true
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			if let error = error {
 				genericAlert(title: "Error", message: error.finalDescription, on: self)
 			} else {
