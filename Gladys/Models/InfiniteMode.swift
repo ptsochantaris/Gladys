@@ -77,11 +77,14 @@ var receiptExists: Bool {
 
 let nonInfiniteItemLimit = 10
 
-//var infiniteMode = true
-var infiniteMode = verifyIapReceipt(getDeviceId())
+#if DEBUG
+var infiniteMode = true
+func reVerifyInfiniteMode() {}
+#else
 
-//func reVerifyInfiniteMode {}
+var infiniteMode = verifyIapReceipt(getDeviceId())
 func reVerifyInfiniteMode() {
 	infiniteMode = verifyIapReceipt(getDeviceId())
 	NotificationCenter.default.post(name: .IAPModeChanged, object: nil)
 }
+#endif

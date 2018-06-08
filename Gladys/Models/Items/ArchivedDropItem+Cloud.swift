@@ -21,6 +21,10 @@ extension ArchivedDropItem {
 		needsReIngest = true
 	}
 
+	var sharedFromElsewhere: Bool {
+		return cloudKitRecord?.recordID.zoneID != CloudManager.legacyZoneId
+	}
+
 	var populatedCloudKitRecord: CKRecord? {
 
 		#if MAINAPP

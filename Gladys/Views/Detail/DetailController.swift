@@ -78,10 +78,13 @@ final class DetailController: GladysViewController,
 		if item.cloudKitShareRecord == nil {
 			invitesButton.accessibilityLabel = "Add People"
 			invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
+			deleteButton.isEnabled = true
 		} else {
 			invitesButton.accessibilityLabel = "People"
 			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+			deleteButton.isEnabled = true
 		}
+		deleteButton.isEnabled = !item.sharedFromElsewhere
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
@@ -786,12 +789,14 @@ final class DetailController: GladysViewController,
 			guard let s = self else { return }
 			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
 		}
+		cloudSharingController.availablePermissions = []
 		presentCloudController(cloudSharingController, from: barButtonItem)
 	}
 
 	private func editInvites(_ sender: Any) {
 		guard let barButtonItem = sender as? UIBarButtonItem, let shareRecord = item.cloudKitShareRecord else { return }
 		let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
+		cloudSharingController.availablePermissions = []
 		presentCloudController(cloudSharingController, from: barButtonItem)
 	}
 
@@ -820,8 +825,6 @@ final class DetailController: GladysViewController,
 		item.cloudKitShareRecord = nil
 		updateInviteButton()
 	}
-
-//https://www.icloud.com/share/0E7oRyC_NOsmdGk73Q_AZpKKw
 
 	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
 		if let ip = item.imagePath {

@@ -4,6 +4,7 @@ class SyncState {
 	var updatedSequence = false
 	var newDrops = [CKRecord]() { didSet { updateProgress() } }
 	var newTypeItemsToHookOntoDrops = [CKRecord]() { didSet { updateProgress() } }
+	var newShareItemsToSetForDrops = [CKShare]()
 	
 	var typeUpdateCount = 0 { didSet { updateProgress() } }
 	var deletionCount = 0 { didSet { updateProgress() } }
@@ -34,7 +35,7 @@ class SyncState {
 		}
 	}
 
-	private func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
+	private func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord], drawSharesFrom: [CKShare]) {
 		let childrenOfThisItem = drawChildrenFrom.filter {
 			if let ref = $0["parent"] as? CKReference {
 				if ref.recordID == record.recordID {
@@ -44,6 +45,9 @@ class SyncState {
 			return false
 		}
 		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
+		if let shareRecordId = record.share?.recordID {
+			item.cloudKitShareRecord = drawSharesFrom.first { $0.recordID == shareRecordId }
+		}
 		Model.drops.insert(item, at: 0)
 	}
 	
@@ -60,7 +64,7 @@ class SyncState {
 			}
 		}
 		for dropRecord in newDrops {
-			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
+			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops, drawSharesFrom: newShareItemsToSetForDrops)
 		}
 		
 		if updatedSequence || newDrops.count > 0 {

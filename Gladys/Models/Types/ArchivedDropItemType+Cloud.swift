@@ -38,7 +38,8 @@ extension ArchivedDropItemType {
 		                                                             zoneID: zoneId))
 
 		let parentId = CKRecordID(recordName: parentUuid.uuidString, zoneID: zoneId)
-		record["parent"] = CKReference(recordID: parentId, action: CKReferenceAction.deleteSelf)
+		record.parent = CKReference(recordID: parentId, action: .none)
+		record["parent"] = CKReference(recordID: parentId, action: .deleteSelf)
 
 		if bytes != nil {
 			record["bytes"] = CKAsset(fileURL: bytesPath)

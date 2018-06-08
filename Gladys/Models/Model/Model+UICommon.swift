@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreSpotlight
+import CloudKit
 #if os(iOS)
 import CoreAudioKit
 #else
@@ -324,6 +325,12 @@ extension Model {
 		}
 
 		return changesToVisibleItems
+	}
+
+	static func removeItemsFromZone(_ zoneID: CKRecordZoneID) {
+		let itemsRelatedToZone = drops.filter { $0.cloudKitRecord?.recordID.zoneID == zoneID }
+		_ = delete(items: itemsRelatedToZone)
+		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	static func delete(items: [ArchivedDropItem]) -> [IndexPath] {

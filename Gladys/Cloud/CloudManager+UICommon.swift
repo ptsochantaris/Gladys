@@ -281,10 +281,15 @@ extension CloudManager {
 					log("Received non-updated position list record")
 				}
 			case RecordType.share:
-				if let share = record as? CKShare, let associatedItem = Model.item(shareId: itemUUID) {
-					log("Share record updated for item \(associatedItem.uuid)")
-					associatedItem.cloudKitShareRecord = share
-					stats.updateCount += 1
+				if let share = record as? CKShare {
+					if let associatedItem = Model.item(shareId: itemUUID) {
+						log("Share record updated for item \(associatedItem.uuid)")
+						associatedItem.cloudKitShareRecord = share
+						stats.updateCount += 1
+					} else {
+						log("Will create new share record for \(itemUUID)")
+						stats.newShareItemsToSetForDrops.append(share)
+					}
 				}
 			default:
 				log("Warning: Received record update for unkown type: \(recordType)")
@@ -307,17 +312,29 @@ extension CloudManager {
 	static func fetchDatabaseChanges(completion: @escaping (Error?) -> Void) {
 		syncProgressString = "Fetching"
 		let stats = SyncState()
+		var finalError: Error?
+
+		let group = DispatchGroup()
+		group.enter()
+		group.enter()
 		fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
 			if let error = error {
-				completion(error)
-			} else {
-				fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
-					if error == nil {
-						stats.commitChanges()
-					}
-					completion(error)
-				}
+				finalError = error
 			}
+			group.leave()
+		}
+		fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
+			if let error = error {
+				finalError = error
+			}
+			group.leave()
+		}
+
+		group.notify(queue: DispatchQueue.main) {
+			if finalError == nil {
+				stats.commitChanges()
+			}
+			completion(finalError)
 		}
 	}
 
@@ -341,28 +358,30 @@ extension CloudManager {
 				return
 			}
 
-			for deletedZoneId in deletedZoneIds {
-				// TODO: remove items that came from that zone too?
-				log("Detected zone deletion: \(deletedZoneId)")
-				SyncState.setZoneToken(nil, for: deletedZoneId)
+			DispatchQueue.main.async {
+				for deletedZoneId in deletedZoneIds {
+					log("Detected zone deletion: \(deletedZoneId)")
+					Model.removeItemsFromZone(deletedZoneId)
+					SyncState.setZoneToken(nil, for: deletedZoneId)
+				}
 			}
 
 			if changedZoneIds.isEmpty {
 				log("No database changes detected")
-				stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 				DispatchQueue.main.async {
+					stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 					completion(nil)
 				}
 				return
 			}
 
 			fetchZoneChanges(database: database, zoneIDs: changedZoneIds, stats: stats) { error in
-				if let error = error {
-					log("Error fetching zone changes for \(database): \(error.finalDescription)")
-				} else {
-					stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
-				}
 				DispatchQueue.main.async {
+					if let error = error {
+						log("Error fetching zone changes for \(database): \(error.finalDescription)")
+					} else {
+						stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
+					}
 					completion(error)
 				}
 			}

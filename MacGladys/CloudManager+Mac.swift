@@ -30,6 +30,7 @@ extension CloudManager {
 				}
 			}
 		case .public: break
+		}
 	}
 
 	static func _sync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
