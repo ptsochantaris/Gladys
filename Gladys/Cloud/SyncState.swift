@@ -10,11 +10,8 @@ class SyncState {
 	var updateCount = 0 { didSet { updateProgress() } }
 	var newTypesAppended = 0
 	
-	var newDatabaseTokens = [Int : CKServerChangeToken]()
-	var newZoneTokens = [CKRecordZoneID : CKServerChangeToken]()
-
-	var changedZoneIDs: [CKRecordZoneID] = []
-	var deletedZoneIDs: [CKRecordZoneID] = []
+	var updatedDatabaseTokens = [Int : CKServerChangeToken]()
+	var updatedZoneTokens = [CKRecordZoneID : CKServerChangeToken]()
 
 	private func updateProgress() {
 		var components = [String]()
@@ -91,7 +88,7 @@ class SyncState {
 			}
 			Model.saveIsDueToSyncFetch = true
 			Model.save()
-		} else if !newZoneTokens.isEmpty {
+		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
 				Model.saveIndexOnly()
@@ -99,15 +96,18 @@ class SyncState {
 			commitNewZoneTokens()
 		} else {
 			log("No updates available")
+			commitNewZoneTokens()
 		}
 	}
 
 	private func commitNewZoneTokens() {
-		log("Comitting change tokens")
-		for (zoneId, zoneToken) in newZoneTokens {
+		if updatedZoneTokens.count > 0 || updatedDatabaseTokens.count > 0 {
+			log("Comitting change tokens")
+		}
+		for (zoneId, zoneToken) in updatedZoneTokens {
 			SyncState.setZoneToken(zoneToken, for: zoneId)
 		}
-		for (databaseId, databaseToken) in newDatabaseTokens {
+		for (databaseId, databaseToken) in updatedDatabaseTokens {
 			SyncState.setDatabaseToken(databaseToken, for: databaseId)
 		}
 	}
@@ -129,13 +129,6 @@ class SyncState {
 			}
 			PersistedOptions.defaults.synchronize()
 		}
-	}
-
-	func commitZoneDeletions() {
-		for deletedZoneId in deletedZoneIDs {
-			SyncState.setZoneToken(nil, for: deletedZoneId)
-		}
-		deletedZoneIDs.removeAll()
 	}
 
 	static func checkMigrations() {

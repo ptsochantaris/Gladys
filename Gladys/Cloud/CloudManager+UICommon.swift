@@ -293,13 +293,14 @@ extension CloudManager {
 	}
 
 	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: SyncState) {
-		stats.newZoneTokens[zoneId] = token
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
 				SyncState.setZoneToken(nil, for: zoneId)
 				syncProgressString = "Retrying"
 				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 			}
+		} else {
+			stats.updatedZoneTokens[zoneId] = token
 		}
 	}
 
@@ -324,11 +325,13 @@ extension CloudManager {
 
 		log("Fetching changes from database \(database.databaseScope.rawValue)")
 
+		var changedZoneIds = [CKRecordZoneID]()
+		var deletedZoneIds = [CKRecordZoneID]()
 		let databaseToken = SyncState.databaseToken(for: database.databaseScope.rawValue)
 		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
-		operation.recordZoneWithIDChangedBlock = { stats.changedZoneIDs.append($0) }
-		operation.recordZoneWithIDWasPurgedBlock = { stats.deletedZoneIDs.append($0) }
-		operation.recordZoneWithIDWasDeletedBlock = { stats.deletedZoneIDs.append($0) }
+		operation.recordZoneWithIDChangedBlock = { changedZoneIds.append($0) }
+		operation.recordZoneWithIDWasPurgedBlock = { deletedZoneIds.append($0) }
+		operation.recordZoneWithIDWasDeletedBlock = { deletedZoneIds.append($0) }
 		operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
 			if let error = error {
 				log("Shared database fetch operation failed: \(error.finalDescription)")
@@ -338,21 +341,26 @@ extension CloudManager {
 				return
 			}
 
-			if databaseToken == newToken {
+			for deletedZoneId in deletedZoneIds {
+				// TODO: remove items that came from that zone too?
+				log("Detected zone deletion: \(deletedZoneId)")
+				SyncState.setZoneToken(nil, for: deletedZoneId)
+			}
+
+			if changedZoneIds.isEmpty {
 				log("No database changes detected")
+				stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 				DispatchQueue.main.async {
 					completion(nil)
 				}
 				return
 			}
 
-			stats.commitZoneDeletions()
-
-			fetchZoneChanges(database: database, stats: stats) { error in
+			fetchZoneChanges(database: database, zoneIDs: changedZoneIds, stats: stats) { error in
 				if let error = error {
 					log("Error fetching zone changes for \(database): \(error.finalDescription)")
 				} else {
-					stats.newDatabaseTokens[database.databaseScope.rawValue] = newToken
+					stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 				}
 				DispatchQueue.main.async {
 					completion(error)
@@ -363,9 +371,8 @@ extension CloudManager {
 		database.add(operation)
 	}
 
-	private static func fetchZoneChanges(database: CKDatabase, stats: SyncState, completion: @escaping (Error?) -> Void) {
+	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: SyncState, completion: @escaping (Error?) -> Void) {
 
-		let zoneIDs = stats.changedZoneIDs
 		if zoneIDs.isEmpty {
 			log("No zones changed")
 			completion(nil)
