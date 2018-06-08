@@ -417,28 +417,33 @@ extension CloudManager {
 	static func fetchDatabaseChanges(finalCompletion: @escaping (Error?)->Void) {
 
 		syncProgressString = "Fetching"
+		var finalError: Error?
 		let stats = SyncState()
 
 		let o = CKFetchRecordZoneChangesOptions()
 		o.previousServerChangeToken = stats.previousToken
 		let zoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
-		let fetchZoneChanges = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
-		fetchZoneChanges.recordWithIDWasDeletedBlock = { recordId, recordType in
+		let fetchPrivateZoneChanges = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneId], optionsByRecordZoneID: [zoneId : o])
+		fetchPrivateZoneChanges.recordWithIDWasDeletedBlock = { recordId, recordType in
 			recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
 		}
-		fetchZoneChanges.recordChangedBlock = { record in
+		fetchPrivateZoneChanges.recordChangedBlock = { record in
 			recordChanged(record: record, stats: stats)
 		}
-		fetchZoneChanges.recordZoneFetchCompletionBlock = { (zoneId: CKRecordZoneID, token: CKServerChangeToken?, _, _, error: Error?) in
+		fetchPrivateZoneChanges.recordZoneFetchCompletionBlock = { (zoneId: CKRecordZoneID, token: CKServerChangeToken?, _, _, error: Error?) in
 			zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)
 		}
-		fetchZoneChanges.fetchRecordZoneChangesCompletionBlock = { (error: Error?) in
-			DispatchQueue.main.async {
-				finalCompletion(error)
-			}
+		fetchPrivateZoneChanges.fetchRecordZoneChangesCompletionBlock = { (error: Error?) in
+			finalError = error
 		}
 
-		go(fetchZoneChanges)
+		let allFetchesDoneOperation = BlockOperation {
+			finalCompletion(finalError)
+		}
+		allFetchesDoneOperation.addDependency(fetchPrivateZoneChanges)
+
+		go(fetchPrivateZoneChanges)
+		OperationQueue.main.addOperation(allFetchesDoneOperation)
 	}
 
 	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {

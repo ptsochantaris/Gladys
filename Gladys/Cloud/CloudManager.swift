@@ -116,21 +116,23 @@ final class CloudManager {
 
 		let drops = Model.drops
 		var payloadsToPush = drops.compactMap { item -> [CKRecord]? in
-			if let itemRecord = item.populatedCloudKitRecord {
-				dataItemsToPush += item.typeItems.count
-				dropsToPush += 1
-				var payload = item.typeItems.compactMap { $0.populatedCloudKitRecord }
-				payload.append(itemRecord)
-
-				let itemId = item.uuid.uuidString
-				idsToPush.append(itemId)
-				uuid2progress[itemId] = Progress(totalUnitCount: 100)
-				item.typeItems.forEach { uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
-
-				return payload
+			guard let itemRecord = item.populatedCloudKitRecord else { return nil }
+			if itemRecord.recordID.zoneID != zoneId {
+				return nil // don't push changes to items shared by another user in this pass, for now // TODO
 			}
-			return nil
-			}.flatBunch(minSize: 10)
+			dataItemsToPush += item.typeItems.count
+			dropsToPush += 1
+			var payload = item.typeItems.compactMap { $0.populatedCloudKitRecord }
+			payload.append(itemRecord)
+
+			let itemId = item.uuid.uuidString
+			idsToPush.append(itemId)
+			uuid2progress[itemId] = Progress(totalUnitCount: 100)
+			item.typeItems.forEach { uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
+
+			return payload
+
+		}.flatBunch(minSize: 10)
 
 		var deletionIdsSnapshot = deletionQueue
 		if idsToPush.count > 0 {
@@ -419,6 +421,25 @@ final class CloudManager {
 			}
 			PersistedOptions.defaults.synchronize()
 		}
+	}
+	static func sharedZoneToken(for zoneId: CKRecordZoneID) -> CKServerChangeToken? {
+		if let lookup = PersistedOptions.defaults.dictionary(forKey: "sharedDatabaseZoneTokens") as? [String : Data],
+			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName],
+			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
+			return token
+		}
+		return nil
+	}
+	static func setSharedZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZoneID) {
+		var lookup = PersistedOptions.defaults.dictionary(forKey: "sharedDatabaseZoneTokens") as? [String : Data] ?? [String : Data]()
+		let key = zoneId.ownerName + ":" + zoneId.zoneName
+		if let n = token {
+			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
+		} else {
+			lookup[key] = nil
+		}
+		PersistedOptions.defaults.set(lookup, forKey: "sharedDatabaseZoneTokens")
+		PersistedOptions.defaults.synchronize()
 	}
 
 	static var uuidSequence: [String] {
