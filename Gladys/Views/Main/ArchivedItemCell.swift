@@ -23,8 +23,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet weak var mergeImage: UIImageView!
 	@IBOutlet weak var labelsDistance: NSLayoutConstraint!
 
-	private var selectionImage: UIImageView?
-	private var editHolder: UIView?
+	@IBOutlet weak var topLabelLeft: NSLayoutConstraint!
+
+	private var tickImage: UIImageView?
+	private var tickHolder: UIView?
+	private var shareImage: UIImageView?
+	private var shareHolder: UIView?
 
 	@IBAction func cancelSelected(_ sender: UIButton) {
 		progressView.observedProgress = nil
@@ -35,7 +39,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	override func tintColorDidChange() {
 		let c = tintColor
-		selectionImage?.tintColor = c
+		tickImage?.tintColor = c
+		shareImage?.tintColor = image.backgroundColor
 		cancelButton?.tintColor = c
 		lockImage.tintColor = c
 		mergeImage.tintColor = c
@@ -57,22 +62,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 			backgroundView?.backgroundColor = .lightGray
 			image.backgroundColor = ViewController.imageLightBackground
 		}
-		if isEditing {
-			let wasSelected = selectionImage?.isHighlighted ?? false
-			isEditing = false
-			isEditing = true
-			if wasSelected {
-				selectionImage?.isHighlighted = true
-			}
-		}
+		shareImage?.tintColor = image.backgroundColor
+		shareHolder?.backgroundColor = borderView.backgroundColor
+		tickHolder?.backgroundColor = borderView.backgroundColor
 	}
 
 	var isSelectedForAction: Bool {
 		set {
-			selectionImage?.isHighlighted = newValue
+			tickImage?.isHighlighted = newValue
 		}
 		get {
-			return selectionImage?.isHighlighted ?? false
+			return tickImage?.isHighlighted ?? false
 		}
 	}
 
@@ -88,7 +88,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	var isEditing: Bool = false {
 		didSet {
-			if isEditing && editHolder == nil && cancelButton.isHidden {
+			if isEditing && tickHolder == nil && cancelButton.isHidden {
 
 				let img = UIImageView(frame: .zero)
 				img.translatesAutoresizingMaskIntoConstraints = false
@@ -117,13 +117,54 @@ final class ArchivedItemCell: UICollectionViewCell {
 					img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
 				])
 
-				selectionImage = img
-				editHolder = holder
+				tickImage = img
+				tickHolder = holder
 
-			} else if !isEditing, let h = editHolder {
+			} else if !isEditing, let h = tickHolder {
 				h.removeFromSuperview()
-				selectionImage = nil
-				editHolder = nil
+				tickImage = nil
+				tickHolder = nil
+			}
+		}
+	}
+
+	var isShared: Bool = false {
+		didSet {
+			if isShared, shareHolder == nil {
+
+				let img = UIImageView(frame: .zero)
+				img.translatesAutoresizingMaskIntoConstraints = false
+				img.contentMode = .center
+				img.image = #imageLiteral(resourceName: "iconUserChecked")
+				img.tintColor = image.backgroundColor
+
+				let holder = UIView(frame: .zero)
+				holder.translatesAutoresizingMaskIntoConstraints = false
+				holder.backgroundColor = borderView.backgroundColor
+				holder.layer.cornerRadius = 10
+				holder.addSubview(img)
+				addSubview(holder)
+
+				NSLayoutConstraint.activate([
+					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+					holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+
+					holder.widthAnchor.constraint(equalToConstant: 50),
+					holder.heightAnchor.constraint(equalToConstant: 50),
+
+					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
+					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+					img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
+					img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
+					])
+
+				shareImage = img
+				shareHolder = holder
+
+			} else if !isShared, let h = shareHolder {
+				h.removeFromSuperview()
+				shareImage = nil
+				shareHolder = nil
 			}
 		}
 	}
@@ -251,11 +292,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 				p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
 			}
 		}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			s.confirmDelete(for: item, push: push)
-		}, style: .destructive, push: push))
+		if item.canDelete {
+			actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
+				guard let s = self else { return }
+				s.egress()
+				s.confirmDelete(for: item, push: push)
+			}, style: .destructive, push: push))
+		}
 		return actions
 	}
 
@@ -355,6 +398,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideProgress = true
 		var hideLock = true
 		var hideMerge = true
+		var shared = false
 
 		var topLabelText: String?
 		var topLabelAlignment: NSTextAlignment?
@@ -389,6 +433,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				hideImage = false
 				progressView.observedProgress = nil
+				shared = item.sharedFromElsewhere
 
 				let cacheKey = item.imageCacheKey
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
@@ -510,6 +555,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		progressView.isHidden = hideProgress
 
+		topLabelLeft.constant = shared ? 50 : 0
+
 		topLabel.text = topLabelText
 		topLabelDistance.constant = (topLabelText == nil) ? 0 : 7
 		topLabel.textAlignment = topLabelAlignment ?? .center
@@ -531,6 +578,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		cancelButton.isHidden = hideCancel
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
+		isShared = shared
 	}
 
 	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)

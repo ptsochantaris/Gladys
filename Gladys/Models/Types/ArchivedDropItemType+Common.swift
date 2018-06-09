@@ -347,28 +347,40 @@ extension ArchivedDropItemType: Equatable {
 
 	var cloudKitRecord: CKRecord? {
 		get {
+			let nsuuid = uuid as NSUUID
+			if let cachedValue = ArchivedDropItem.cloudKitRecordCache.object(forKey: nsuuid) {
+				return cachedValue
+			}
+
 			let recordLocation = cloudKitDataPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
 				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				return CKRecord(coder: coder)
+				let record = CKRecord(coder: coder)
+				if let record = record {
+					ArchivedDropItem.cloudKitRecordCache.setObject(record, forKey: nsuuid)
+				}
+				return record
 			} else {
 				return nil
 			}
 		}
 		set {
+			let nsuuid = uuid as NSUUID
 			let recordLocation = cloudKitDataPath
-			if newValue == nil {
+			if let newValue = newValue {
+				ArchivedDropItem.cloudKitRecordCache.setObject(newValue, forKey: nsuuid)
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			} else {
+				ArchivedDropItem.cloudKitRecordCache.removeObject(forKey: nsuuid)
 				let f = FileManager.default
 				if f.fileExists(atPath: recordLocation.path) {
 					try? f.removeItem(at: recordLocation)
 				}
-			} else {
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
 			}
 		}
 	}

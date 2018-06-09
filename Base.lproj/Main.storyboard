@@ -118,6 +118,7 @@
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
                                             <outlet property="topLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
                                             <outlet property="topLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
+                                            <outlet property="topLabelLeft" destination="vFh-bv-bO7" id="2fA-XY-3t4"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

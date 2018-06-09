@@ -656,6 +656,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			item.needsUnlock = true
 			item.postModified()
 		}
+		ArchivedDropItem.clearCaches()
 	}
 
 	@objc private func reachabilityChanged() {

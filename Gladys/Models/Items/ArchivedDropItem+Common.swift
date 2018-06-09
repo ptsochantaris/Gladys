@@ -26,6 +26,8 @@ struct ImportOverrides {
 
 extension ArchivedDropItem: Hashable {
 
+	static let privateZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
 		return lhs.uuid == rhs.uuid
 	}
@@ -142,61 +144,106 @@ extension ArchivedDropItem: Hashable {
 		}
 	}
 
+	var isReadOnly: Bool {
+		if sharedFromElsewhere, let permission = cloudKitShareRecord?.currentUserParticipant?.permission {
+			return permission != .readWrite
+		}
+		return false
+	}
+
+	var canDelete: Bool {
+		return !sharedFromElsewhere
+	}
+
+	var sharedFromElsewhere: Bool {
+		return cloudKitRecord?.recordID.zoneID != ArchivedDropItem.privateZoneId
+	}
+
+	static let cloudKitRecordCache = NSCache<NSUUID, CKRecord>()
 	var cloudKitRecord: CKRecord? {
 		get {
+			let nsuuid = uuid as NSUUID
+			if let cachedValue = ArchivedDropItem.cloudKitRecordCache.object(forKey: nsuuid) {
+				return cachedValue
+			}
+
 			let recordLocation = cloudKitDataPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
 				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				return CKRecord(coder: coder)
+				let record = CKRecord(coder: coder)
+				if let record = record {
+					ArchivedDropItem.cloudKitRecordCache.setObject(record, forKey: nsuuid)
+				}
+				return record
 			} else {
 				return nil
 			}
 		}
 		set {
 			let recordLocation = cloudKitDataPath
-			if newValue == nil {
-				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
-				}
-			} else {
+			let nsuuid = uuid as NSUUID
+			if let newValue = newValue {
+				ArchivedDropItem.cloudKitRecordCache.setObject(newValue, forKey: nsuuid)
+
 				let data = NSMutableData()
 				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
+				newValue.encodeSystemFields(with: coder)
 				coder.finishEncoding()
 				try? data.write(to: recordLocation, options: .atomic)
 
 				needsCloudPush = false
+			} else {
+				ArchivedDropItem.cloudKitRecordCache.removeObject(forKey: nsuuid)
+				let f = FileManager.default
+				if f.fileExists(atPath: recordLocation.path) {
+					try? f.removeItem(at: recordLocation)
+				}
 			}
 		}
 	}
 
+	private static let cloudKitShareCache = NSCache<NSUUID, CKShare>()
 	var cloudKitShareRecord: CKShare? {
 		get {
+			let nsuuid = uuid as NSUUID
+			if let cachedValue = ArchivedDropItem.cloudKitShareCache.object(forKey: nsuuid) {
+				return cachedValue
+			}
+
 			let recordLocation = cloudKitShareDataPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
 				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				return CKShare(coder: coder)
+				let record = CKShare(coder: coder)
+				ArchivedDropItem.cloudKitShareCache.setObject(record, forKey: nsuuid)
+				return record
 			} else {
 				return nil
 			}
 		}
 		set {
 			let recordLocation = cloudKitShareDataPath
-			if newValue == nil {
+			if let newValue = newValue {
+				ArchivedDropItem.cloudKitShareCache.setObject(newValue, forKey: uuid as NSUUID)
+
+				let data = NSMutableData()
+				let coder = NSKeyedArchiver(forWritingWith: data)
+				newValue.encodeSystemFields(with: coder)
+				coder.finishEncoding()
+				try? data.write(to: recordLocation, options: .atomic)
+			} else {
+				ArchivedDropItem.cloudKitShareCache.removeObject(forKey: uuid as NSUUID)
 				let f = FileManager.default
 				if f.fileExists(atPath: recordLocation.path) {
 					try? f.removeItem(at: recordLocation)
 				}
-			} else {
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
 			}
 		}
+	}
+
+	static func clearCaches() {
+		cloudKitRecordCache.removeAllObjects()
+		cloudKitShareCache.removeAllObjects()
 	}
 }

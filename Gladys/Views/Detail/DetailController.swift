@@ -71,6 +71,7 @@ final class DetailController: GladysViewController,
 			lockButton.accessibilityLabel = "Lock Item"
 			lockButton.image = #imageLiteral(resourceName: "unlocked")
 		}
+		lockButton.isEnabled = !item.isReadOnly
 	}
 
 	private func updateInviteButton() {
@@ -84,7 +85,10 @@ final class DetailController: GladysViewController,
 			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
 			deleteButton.isEnabled = true
 		}
-		deleteButton.isEnabled = !item.sharedFromElsewhere
+		deleteButton.isEnabled = item.canDelete
+		let readWrite = !item.isReadOnly
+		table.allowsSelection = readWrite
+		table.dragInteractionEnabled = readWrite
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
@@ -317,6 +321,7 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
 			cell.item = item
+			cell.isUserInteractionEnabled = !item.isReadOnly
 			cell.resizeCallback = { [weak self] caretRect, heightChange in
 				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
@@ -325,6 +330,7 @@ final class DetailController: GladysViewController,
 		} else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
 			cell.item = item
+			cell.isUserInteractionEnabled = !item.isReadOnly
 			cell.resizeCallback = { [weak self] caretRect, heightChange in
 				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
@@ -381,8 +387,10 @@ final class DetailController: GladysViewController,
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
 
+		let readOnly = item.isReadOnly
+
 		let itemURL = typeEntry.encodedUrl
-		if let i = itemURL, !i.isFileURL {
+		if !readOnly, let i = itemURL, !i.isFileURL {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
 					s.archiveWebComponent(cell: c, url: i as URL)
@@ -392,11 +400,11 @@ final class DetailController: GladysViewController,
 			cell.archiveCallback = nil
 		}
 
-		if itemURL != nil {
+		if !readOnly, itemURL != nil {
 			cell.editCallback = { [weak self] in
 				self?.editURL(typeEntry)
 			}
-		} else if typeEntry.isRichText || typeEntry.isText {
+		} else if !readOnly, (typeEntry.isRichText || typeEntry.isText) {
 			cell.editCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
 			}
