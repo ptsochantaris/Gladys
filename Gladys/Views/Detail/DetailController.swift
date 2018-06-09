@@ -789,14 +789,12 @@ final class DetailController: GladysViewController,
 			guard let s = self else { return }
 			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
 		}
-		cloudSharingController.availablePermissions = []
 		presentCloudController(cloudSharingController, from: barButtonItem)
 	}
 
 	private func editInvites(_ sender: Any) {
 		guard let barButtonItem = sender as? UIBarButtonItem, let shareRecord = item.cloudKitShareRecord else { return }
 		let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
-		cloudSharingController.availablePermissions = []
 		presentCloudController(cloudSharingController, from: barButtonItem)
 	}
 
@@ -804,6 +802,7 @@ final class DetailController: GladysViewController,
 		if let popover = cloudSharingController.popoverPresentationController {
 			popover.barButtonItem = barButtonItem
 		}
+		cloudSharingController.availablePermissions = []
 		cloudSharingController.delegate = self
 		present(cloudSharingController, animated: true) {}
 	}

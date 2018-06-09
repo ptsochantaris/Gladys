@@ -983,8 +983,8 @@ CA
                                 </connections>
                             </button>
                             <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xzk-AZ-MtV">
-                                <rect key="frame" x="671" y="351" width="110" height="32"/>
-                                <buttonCell key="cell" type="push" title="Add People" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0P2-jg-L9a">
+                                <rect key="frame" x="701" y="360" width="74" height="17"/>
+                                <buttonCell key="cell" type="bevel" title="Add People" bezelStyle="regularSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="0P2-jg-L9a">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -997,7 +997,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </box>
                             <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rp4-g7-han">
-                                <rect key="frame" x="87" y="362" width="584" height="14"/>
+                                <rect key="frame" x="87" y="362" width="608" height="14"/>
                                 <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="J8x-fu-LTz">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -1049,9 +1049,9 @@ CA
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="xzk-AZ-MtV" secondAttribute="trailing" constant="20" id="4eQ-6J-IMV"/>
-                            <constraint firstItem="xzk-AZ-MtV" firstAttribute="top" secondItem="erh-hp-niQ" secondAttribute="top" constant="14" id="SH1-L4-4gB"/>
                             <constraint firstItem="rp4-g7-han" firstAttribute="centerY" secondItem="hoI-GV-5ly" secondAttribute="centerY" id="VBe-sh-tcC"/>
                             <constraint firstItem="hoI-GV-5ly" firstAttribute="top" secondItem="erh-hp-niQ" secondAttribute="top" constant="14" id="VUM-8U-J2M"/>
+                            <constraint firstItem="xzk-AZ-MtV" firstAttribute="centerY" secondItem="hoI-GV-5ly" secondAttribute="centerY" id="hms-H4-NcZ"/>
                             <constraint firstItem="hoI-GV-5ly" firstAttribute="leading" secondItem="erh-hp-niQ" secondAttribute="leading" constant="20" id="kcX-ZX-1bB"/>
                             <constraint firstItem="rp4-g7-han" firstAttribute="leading" secondItem="hoI-GV-5ly" secondAttribute="trailing" constant="8" id="lDP-P2-KeV"/>
                             <constraint firstItem="xzk-AZ-MtV" firstAttribute="leading" secondItem="rp4-g7-han" secondAttribute="trailing" constant="8" id="tvE-Gl-tdR"/>

@@ -8,6 +8,7 @@
 
 import Cocoa
 import Quartz
+import CloudKit
 
 final class ComponentCollectionView: NSCollectionView {
 	weak var detailController: DetailController?
@@ -20,7 +21,7 @@ final class ComponentCollectionView: NSCollectionView {
 	}
 }
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate {
 
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var notesField: NSTextField!
@@ -97,6 +98,14 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		components.animator().reloadData()
 		lastUpdate = item.updatedAt
 		infoLabel.stringValue = item.addedString
+
+		inviteButton.isEnabled = CloudManager.syncSwitchedOn
+		if item.cloudKitShareRecord == nil {
+			inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
+		} else {
+			inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+		}
+
 	}
 
 	override func viewWillDisappear() {
@@ -522,10 +531,51 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: NSButton) {
-		log("invite")
+		if item.cloudKitShareRecord == nil {
+			addInvites(sender)
+		} else {
+			editInvites(sender)
+		}
+	}
+
+	private func addInvites(_ sender: Any) {
+		guard let rootRecord = item.cloudKitRecord else { return }
+
+		let itemProvider = NSItemProvider()
+		itemProvider.registerCloudKitShare { [weak self] (completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+			guard let s = self else { return }
+			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
+		}
+		let sharingService = NSSharingService(named: .cloudSharing)!
+		sharingService.delegate = self
+		sharingService.perform(withItems: [itemProvider])
+	}
+
+	private func editInvites(_ sender: Any) {
+		guard let shareRecord = item.cloudKitShareRecord else { return }
+
+		let itemProvider = NSItemProvider()
+		itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
+		let sharingService = NSSharingService(named: .cloudSharing)!
+		sharingService.delegate = self
+		sharingService.perform(withItems: [itemProvider])
 	}
 
 	@IBAction func openButtonSelected(_ sender: NSButton) {
 		item.tryOpen(from: self)
+	}
+
+	func sharingService(_ sharingService: NSSharingService, didSave share: CKShare) {
+		item.cloudKitShareRecord = share
+		updateInfo()
+	}
+
+	func sharingService(_ sharingService: NSSharingService, didStopSharing share: CKShare) {
+		item.cloudKitShareRecord = nil
+		updateInfo()
+	}
+
+	func options(for cloudKitSharingService: NSSharingService, share provider: NSItemProvider) -> NSSharingService.CloudKitOptions {
+		return []
 	}
 }
