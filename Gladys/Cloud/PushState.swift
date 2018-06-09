@@ -7,7 +7,6 @@ final class PushState {
 	private var dataItemsToPush: Int
 	private var dropsToPush: Int
 
-	private let idsToPush: [String]
 	private let uuid2progress = [String: Progress]()
 	private let recordsToDelete: [[CKRecordID]]
 	private let payloadsToPush: [[CKRecord]]
@@ -17,7 +16,8 @@ final class PushState {
 	init(zoneId: CKRecordZoneID) {
 		let drops = Model.drops
 
-		var _idsToPush = [String]()
+		var idsToPush = [String]()
+
 		var _dropsToPush = 0
 		var _dataItemsToPush = 0
 		var _uuid2progress = [String: Progress]()
@@ -32,7 +32,7 @@ final class PushState {
 			payload.append(itemRecord)
 
 			let itemId = item.uuid.uuidString
-			_idsToPush.append(itemId)
+			idsToPush.append(itemId)
 			_uuid2progress[itemId] = Progress(totalUnitCount: 100)
 			item.typeItems.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
 
@@ -40,9 +40,9 @@ final class PushState {
 			}.flatBunch(minSize: 10)
 
 		var snapshot = CloudManager.deletionQueue
-		if _idsToPush.count > 0 {
+		if idsToPush.count > 0 {
 			let previousCount = snapshot.count
-			snapshot = snapshot.filter { !_idsToPush.contains($0) }
+			snapshot = snapshot.filter { !idsToPush.contains($0) }
 			if snapshot.count != previousCount {
 				CloudManager.deletionQueue = snapshot
 			}
@@ -81,7 +81,6 @@ final class PushState {
 
 		dataItemsToPush = _dataItemsToPush
 		dropsToPush = _dropsToPush
-		idsToPush = _idsToPush
 		payloadsToPush = _payloadsToPush
 		recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 	}
