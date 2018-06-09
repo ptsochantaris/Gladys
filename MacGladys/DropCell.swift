@@ -215,8 +215,21 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet weak var cancelHolder: FirstMouseView!
 	@IBOutlet weak var lockImage: NSImageView!
 	@IBOutlet weak var labelTokenField: TokenTextField!
-
+	@IBOutlet weak var sharedIcon: NSImageView!
+	
 	private var existingPreviewView: FirstMouseView?
+
+	private static let shareImage: NSImage = {
+		let image = #imageLiteral(resourceName: "iconUserCheckedSmall")
+		image.isTemplate = false
+		image.lockFocus()
+		#colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1).set()
+
+		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
+		imageRect.fill(using: .sourceAtop)
+		image.unlockFocus()
+		return image
+	}()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -226,6 +239,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		bottomLabel.maximumNumberOfLines = 2
 		image.layer?.cornerRadius = 5
 		image.layer?.backgroundColor = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
+		sharedIcon.image = DropCell.shareImage
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
@@ -286,6 +300,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		var hideImage = true
 		var hideLock = true
 		var hideLabels = true
+		var share = false
 
 		var topLabelText = ""
 		var topLabelAlignment = NSTextAlignment.center
@@ -320,6 +335,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				hideImage = false
 
 				image.layer?.contents = item.displayIcon
+				share = item.sharedFromElsewhere
 
 				let primaryLabel: NSTextField
 				let secondaryLabel: NSTextField
@@ -445,6 +461,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		image.isHidden = hideImage
 		cancelHolder.isHidden = hideCancel
 		lockImage.isHidden = hideLock
+		sharedIcon.isHidden = !share
 	}
 
 	@objc private func infoSelected() {
