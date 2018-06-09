@@ -250,6 +250,7 @@
 		16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */; };
 		16C8166720CB0354001C12DF /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* SyncState.swift */; };
 		16C8166820CB0354001C12DF /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* SyncState.swift */; };
+		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */; };
 		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
 		16CD7D7120A0FE8B0039E6C2 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E646920A0F04E003CB4C0 /* Network.swift */; };
@@ -677,6 +678,7 @@
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
 		16C8166620CB0354001C12DF /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
+		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+IngestCommon.swift"; sourceTree = "<group>"; };
@@ -973,6 +975,7 @@
 				168C940E20B0572700F4139D /* NSColor+Extensions.swift */,
 				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
 				16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */,
+				16C8166A20CB4EF1001C12DF /* Application.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -2028,6 +2031,7 @@
 				16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				16CD7DC620A1293C0039E6C2 /* Model+SavingCommon.swift in Sources */,
+				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,

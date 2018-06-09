@@ -64,7 +64,9 @@ fileprivate func getDeviceId() -> Data {
 	}
 }
 
-//var receiptExists = true
+#if DEBUG
+var receiptExists = true
+#else
 var receiptExists: Bool {
 	if let receiptUrl = Bundle.main.appStoreReceiptURL {
 		return FileManager.default.fileExists(atPath: receiptUrl.path)
@@ -72,7 +74,7 @@ var receiptExists: Bool {
 		return false
 	}
 }
-
+#endif
 #endif
 
 let nonInfiniteItemLimit = 10

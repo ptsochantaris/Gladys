@@ -86,7 +86,7 @@
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>Gladys.Application</string>
 	<key>NSServices</key>
 	<array>
 		<dict>
