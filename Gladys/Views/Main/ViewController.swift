@@ -1122,8 +1122,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		lastSize = boundsSize
 
 		calculateItemSize()
-
-		archivedItemCollectionView.reloadData()
+		DispatchQueue.main.async { [weak self] in
+			self?.archivedItemCollectionView.reloadData()
+		}
 	}
 
 	/////////////////////////////////
