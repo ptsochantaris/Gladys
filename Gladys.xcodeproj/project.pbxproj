@@ -248,8 +248,8 @@
 		16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */; };
 		16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */; };
 		16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */; };
-		16C8166720CB0354001C12DF /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* SyncState.swift */; };
-		16C8166820CB0354001C12DF /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* SyncState.swift */; };
+		16C8166720CB0354001C12DF /* PullState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* PullState.swift */; };
+		16C8166820CB0354001C12DF /* PullState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* PullState.swift */; };
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */; };
 		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
@@ -327,6 +327,9 @@
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
+		16F2990720CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
+		16F2990820CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
+		16F2990920CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		527CA18CF4A2617DFCFB09DE /* Pods_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501C0EF1E6D9591705C4ACD6 /* Pods_Gladys.framework */; };
@@ -677,7 +680,7 @@
 		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
-		16C8166620CB0354001C12DF /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
+		16C8166620CB0354001C12DF /* PullState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullState.swift; sourceTree = "<group>"; };
 		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
@@ -713,6 +716,7 @@
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Ingest.swift"; sourceTree = "<group>"; };
+		16F2990620CBEF30005DE3AD /* PushState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushState.swift; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
 		256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys.release.xcconfig"; sourceTree = "<group>"; };
 		2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
@@ -907,7 +911,8 @@
 				161089921FA31D0D0095FE34 /* CloudManager+UI.swift */,
 				16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */,
 				168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */,
-				16C8166620CB0354001C12DF /* SyncState.swift */,
+				16C8166620CB0354001C12DF /* PullState.swift */,
+				16F2990620CBEF30005DE3AD /* PushState.swift */,
 			);
 			path = Cloud;
 			sourceTree = "<group>";
@@ -2007,6 +2012,7 @@
 				16CD7D8520A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
+				16F2990920CBEF30005DE3AD /* PushState.swift in Sources */,
 				16CD7DB620A121BD0039E6C2 /* Model+Common.swift in Sources */,
 				16559C9120A4CC55006C281D /* Global.swift in Sources */,
 				16C3A2D920AF770000A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
@@ -2016,7 +2022,7 @@
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
-				16C8166820CB0354001C12DF /* SyncState.swift in Sources */,
+				16C8166820CB0354001C12DF /* PullState.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1695218A20A240A000FFE817 /* IAPManager.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
@@ -2116,6 +2122,7 @@
 				1604A3351F091D79005A477E /* Types.swift in Sources */,
 				16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */,
 				168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
+				16F2990820CBEF30005DE3AD /* PushState.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
 				1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -2264,11 +2271,12 @@
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				16E781BC1FE97AD90071ED9C /* LabelEditorController.swift in Sources */,
 				16C3A2D120AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift in Sources */,
-				16C8166720CB0354001C12DF /* SyncState.swift in Sources */,
+				16C8166720CB0354001C12DF /* PullState.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */,
 				169C07DB2003835C00D34E47 /* ModelFilePresenter.swift in Sources */,
 				1602F31D2030E53D0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
+				16F2990720CBEF30005DE3AD /* PushState.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,

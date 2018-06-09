@@ -97,8 +97,8 @@ extension CloudManager {
 					lastSyncCompletion = .distantPast
 					uuidSequence = []
 					uuidSequenceRecord = nil
-					SyncState.wipeDatabaseTokens()
-					SyncState.wipeZoneTokens()
+					PullState.wipeDatabaseTokens()
+					PullState.wipeZoneTokens()
 					#if MAINAPP
 					shareActionIsActioningIds = []
 					#endif
@@ -125,7 +125,7 @@ extension CloudManager {
 	}
 
 	static func checkMigrations() {
-		SyncState.checkMigrations()
+		PullState.checkMigrations()
 		if syncSwitchedOn && !migratedSharing && !syncTransitioning {
 			let subscribe = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
 			subscribe.modifySubscriptionsCompletionBlock = { _, _, error in
@@ -211,7 +211,7 @@ extension CloudManager {
 		go(deleteZone)
 	}
 
-	static private func recordDeleted(recordId: CKRecordID, recordType: String, stats: SyncState) {
+	static private func recordDeleted(recordId: CKRecordID, recordType: String, stats: PullState) {
 		let itemUUID = recordId.recordName
 		DispatchQueue.main.async {
 			switch recordType {
@@ -242,7 +242,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func recordChanged(record: CKRecord, stats: SyncState) {
+	static private func recordChanged(record: CKRecord, stats: PullState) {
 		let itemUUID = record.recordID.recordName
 		let recordType = record.recordType
 		DispatchQueue.main.async {
@@ -299,10 +299,10 @@ extension CloudManager {
 		}
 	}
 
-	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: SyncState) {
+	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: PullState) {
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
-				SyncState.setZoneToken(nil, for: zoneId)
+				PullState.setZoneToken(nil, for: zoneId)
 				syncProgressString = "Retrying"
 				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 			}
@@ -313,7 +313,7 @@ extension CloudManager {
 
 	static func fetchDatabaseChanges(completion: @escaping (Error?) -> Void) {
 		syncProgressString = "Fetching"
-		let stats = SyncState()
+		let stats = PullState()
 		var finalError: Error?
 
 		let group = DispatchGroup()
@@ -340,13 +340,13 @@ extension CloudManager {
 		}
 	}
 
-	private static func fetchDBChanges(database: CKDatabase, stats: SyncState, completion: @escaping (Error?) -> Void) {
+	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?) -> Void) {
 
 		log("Fetching changes from database \(database.databaseScope.rawValue)")
 
 		var changedZoneIds = [CKRecordZoneID]()
 		var deletedZoneIds = [CKRecordZoneID]()
-		let databaseToken = SyncState.databaseToken(for: database.databaseScope.rawValue)
+		let databaseToken = PullState.databaseToken(for: database.databaseScope.rawValue)
 		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
 		operation.recordZoneWithIDChangedBlock = { changedZoneIds.append($0) }
 		operation.recordZoneWithIDWasPurgedBlock = { deletedZoneIds.append($0) }
@@ -364,7 +364,7 @@ extension CloudManager {
 				for deletedZoneId in deletedZoneIds {
 					log("Detected zone deletion: \(deletedZoneId)")
 					Model.removeItemsFromZone(deletedZoneId)
-					SyncState.setZoneToken(nil, for: deletedZoneId)
+					PullState.setZoneToken(nil, for: deletedZoneId)
 				}
 			}
 
@@ -392,14 +392,14 @@ extension CloudManager {
 		database.add(operation)
 	}
 
-	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: SyncState, completion: @escaping (Error?) -> Void) {
+	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: PullState, completion: @escaping (Error?) -> Void) {
 
 		log("Fetching changes to \(zoneIDs.count) zone(s) in database \(database.databaseScope.rawValue)")
 
 		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
 		for zoneID in zoneIDs {
 			let options = CKFetchRecordZoneChangesOptions()
-			options.previousServerChangeToken = SyncState.zoneToken(for: zoneID)
+			options.previousServerChangeToken = PullState.zoneToken(for: zoneID)
 			optionsByRecordZoneID[zoneID] = options
 		}
 

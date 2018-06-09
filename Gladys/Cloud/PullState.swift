@@ -1,6 +1,6 @@
 import CloudKit
 
-class SyncState {
+final class PullState {
 	var updatedSequence = false
 	var newDrops = [CKRecord]() { didSet { updateProgress() } }
 	var newTypeItemsToHookOntoDrops = [CKRecord]() { didSet { updateProgress() } }
@@ -109,10 +109,10 @@ class SyncState {
 			log("Comitting change tokens")
 		}
 		for (zoneId, zoneToken) in updatedZoneTokens {
-			SyncState.setZoneToken(zoneToken, for: zoneId)
+			PullState.setZoneToken(zoneToken, for: zoneId)
 		}
 		for (databaseId, databaseToken) in updatedDatabaseTokens {
-			SyncState.setDatabaseToken(databaseToken, for: databaseId)
+			PullState.setDatabaseToken(databaseToken, for: databaseId)
 		}
 	}
 
