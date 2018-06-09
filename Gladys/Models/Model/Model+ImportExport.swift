@@ -74,7 +74,7 @@ extension Model {
 	private class FileManagerFilter: NSObject, FileManagerDelegate {
 		func fileManager(_ fileManager: FileManager, shouldCopyItemAt srcURL: URL, to dstURL: URL) -> Bool {
 			let components = srcURL.pathComponents
-			return !components.contains { $0 == "shared-blob" || $0 == "ck-record" }
+			return !components.contains { $0 == "shared-blob" || $0 == "ck-record" || $0 == "ck-share" }
 		}
 	}
 
