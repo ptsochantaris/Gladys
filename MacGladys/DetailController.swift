@@ -48,7 +48,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
 		components.setDraggingSourceOperationMask(.copy, forLocal: false)
-
 		components.detailController = self
 
 		labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
@@ -106,6 +105,11 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
 		}
 
+		let readWrite = !item.isReadOnly
+		titleField.isEditable = readWrite
+		notesField.isEditable = readWrite
+		labelAdd.isEnabled = readWrite
+		labelRemove.isEnabled = readWrite
 	}
 
 	override func viewWillDisappear() {
@@ -134,7 +138,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-		return dropOperation == .above ? .move : []
+		return (!item.isReadOnly && dropOperation == .above) ? .move : []
 	}
 
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
@@ -298,10 +302,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		switch menuItem.action {
 
 		case #selector(archive(_:)):
-			return components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
+			return !item.isReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
 
 		case #selector(editCurrent(_:)):
-			return components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
+			return !item.isReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
+
+		case #selector(delete(_:)):
+			return !item.isReadOnly
 
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			if let first = selectedItem, first.canPreview {
@@ -432,7 +439,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return true
+		return !item.isReadOnly
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {

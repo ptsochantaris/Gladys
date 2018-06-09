@@ -277,10 +277,12 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			m.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
-			m.addItem(NSMenuItem.separator())
-			m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-			m.addItem(NSMenuItem.separator())
-			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
+			if !item.sharedFromElsewhere {
+				m.addItem(NSMenuItem.separator())
+				m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+				m.addItem(NSMenuItem.separator())
+				m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
+			}
 			m.delegate = self
 			return m
 		}
@@ -513,7 +515,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.title {
 		case "Lock", "Unlock", "Remove Lock":
-			return ViewController.shared.collection.selectionIndexPaths.count == 1
+			return ViewController.shared.collection.selectionIndexPaths.count == 1 && !(archivedDropItem?.isReadOnly ?? false)
 		default:
 			return true
 		}

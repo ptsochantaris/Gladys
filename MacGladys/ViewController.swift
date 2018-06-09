@@ -789,13 +789,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(delete(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
+		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
 			return collection.actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		case #selector(unlock(_:)), #selector(removeLock(_:)):
 			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
+			if collection.actionableSelectedItems.contains(where: { $0.isReadOnly} ) { return false }
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
@@ -811,6 +812,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		case #selector(info(_:)), #selector(open(_:)):
 			return collection.actionableSelectedItems.count > 0
+		case #selector(delete(_:)):
+			return !collection.actionableSelectedItems.contains { $0.sharedFromElsewhere }
 		default:
 			return true
 		}

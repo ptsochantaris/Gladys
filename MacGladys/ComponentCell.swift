@@ -59,12 +59,14 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 		m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 		m.addItem("Reveal in Finder", action: #selector(revealSelected), keyEquivalent: "r", keyEquivalentModifierMask: [.command, .option])
-		if item.isArchivable {
-			m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
-			m.addItem("Archive", action: #selector(archiveSelected), keyEquivalent: "a", keyEquivalentModifierMask: [.command, .option])
+		if let parent = Model.item(uuid: item.parentUuid), !parent.isReadOnly {
+			if item.isArchivable {
+				m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
+				m.addItem("Archive", action: #selector(archiveSelected), keyEquivalent: "a", keyEquivalentModifierMask: [.command, .option])
+			}
+			m.addItem(NSMenuItem.separator())
+			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		}
-		m.addItem(NSMenuItem.separator())
-		m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		m.delegate = self
 		return m
 	}
