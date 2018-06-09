@@ -575,4 +575,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		updateInfo()
 		Model.save()
 	}
+
+	func anchoringView(for sharingService: NSSharingService, showRelativeTo positioningRect: UnsafeMutablePointer<NSRect>, preferredEdge: UnsafeMutablePointer<NSRectEdge>) -> NSView? {
+		return inviteButton
+	}
 }
