@@ -88,7 +88,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@objc private func updateInfo() {
-		view.window?.title = item.displayText.0 ?? "Details"
+		let readWrite = !item.isReadOnly
+
+		view.window?.title = (item.displayText.0 ?? "Details") + (readWrite ? "" : " — Read Only")
 		titleField.placeholderString = item.nonOverridenText.0 ?? "Title"
 		titleField.stringValue = item.titleOverride
 		notesField.stringValue = item.note
@@ -99,13 +101,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		infoLabel.stringValue = item.addedString
 
 		inviteButton.isEnabled = CloudManager.syncSwitchedOn
-		if item.cloudKitShareRecord == nil {
-			inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
-		} else {
-			inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-		}
+		inviteButton.image = item.cloudKitShareRecord == nil ? #imageLiteral(resourceName: "iconUserAdd") : #imageLiteral(resourceName: "iconUserChecked")
 
-		let readWrite = !item.isReadOnly
 		titleField.isEditable = readWrite
 		notesField.isEditable = readWrite
 		labelAdd.isEnabled = readWrite

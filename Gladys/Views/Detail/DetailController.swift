@@ -89,6 +89,8 @@ final class DetailController: GladysViewController,
 		let readWrite = !item.isReadOnly
 		table.allowsSelection = readWrite
 		table.dragInteractionEnabled = readWrite
+
+		title = readWrite ? nil : "Read Only"
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
