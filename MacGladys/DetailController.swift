@@ -573,9 +573,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func sharingService(_ sharingService: NSSharingService, didStopSharing share: CKShare) {
 		item.cloudKitShareRecord = nil
 		updateInfo()
-	}
-
-	func options(for cloudKitSharingService: NSSharingService, share provider: NSItemProvider) -> NSSharingService.CloudKitOptions {
-		return []
+		Model.save()
 	}
 }

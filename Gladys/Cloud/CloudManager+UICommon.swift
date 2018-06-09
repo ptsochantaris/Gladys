@@ -394,13 +394,7 @@ extension CloudManager {
 
 	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: SyncState, completion: @escaping (Error?) -> Void) {
 
-		if zoneIDs.isEmpty {
-			log("No zones changed")
-			completion(nil)
-			return
-		}
-
-		log("Fetching changes to \(zoneIDs.count) zones in database \(database.databaseScope.rawValue)")
+		log("Fetching changes to \(zoneIDs.count) zone(s) in database \(database.databaseScope.rawValue)")
 
 		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
 		for zoneID in zoneIDs {
@@ -517,11 +511,12 @@ extension CloudManager {
 		if let ip = item.imagePath, let data = NSData(contentsOf: ip) {
 			shareRecord[CKShareThumbnailImageDataKey] = data
 		}
-		let operation = CKModifyRecordsOperation(recordsToSave: [rootRecord, shareRecord], recordIDsToDelete: [])
+		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
+		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
+		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
 		operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
 			completion(shareRecord, container, error)
 		}
-
 		go(operation)
 	}
 

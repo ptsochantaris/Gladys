@@ -802,7 +802,6 @@ final class DetailController: GladysViewController,
 		if let popover = cloudSharingController.popoverPresentationController {
 			popover.barButtonItem = barButtonItem
 		}
-		cloudSharingController.availablePermissions = []
 		cloudSharingController.delegate = self
 		present(cloudSharingController, animated: true) {}
 	}
@@ -823,6 +822,7 @@ final class DetailController: GladysViewController,
 	func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
 		item.cloudKitShareRecord = nil
 		updateInviteButton()
+		Model.save()
 	}
 
 	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
