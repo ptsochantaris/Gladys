@@ -29,6 +29,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet weak var labelAdd: NSButton!
 	@IBOutlet weak var labelRemove: NSButton!
 
+	@IBOutlet weak var inviteButton: NSButton!
+	@IBOutlet weak var openButton: NSButton!
+	@IBOutlet weak var infoLabel: NSTextField!
+
 	@IBOutlet weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
 
@@ -92,6 +96,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		updateLabelButtons()
 		components.animator().reloadData()
 		lastUpdate = item.updatedAt
+		infoLabel.stringValue = item.addedString
 	}
 
 	override func viewWillDisappear() {
@@ -514,5 +519,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		} else if let currentItem = selectedItem, currentItem.canPreview {
 			QLPreviewPanel.shared().makeKeyAndOrderFront(nil)
 		}
+	}
+
+	@IBAction func inviteButtonSelected(_ sender: NSButton) {
+		log("invite")
+	}
+
+	@IBAction func openButtonSelected(_ sender: NSButton) {
+		item.tryOpen(from: self)
 	}
 }

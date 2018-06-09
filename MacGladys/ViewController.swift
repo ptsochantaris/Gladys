@@ -255,16 +255,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if let syncStatus = CloudManager.syncProgressString {
 			view.window?.title = "\(title) — \(syncStatus)"
 
-		} else if items.count > 0 {
+		} else if items.count > 1 {
 			let selectedItems = items.map { $0.uuid }
 			let size = Model.sizeForItems(uuids: selectedItems)
 			let sizeString = diskSizeFormatter.string(fromByteCount: size)
-			let selectedReport: String
-			if selectedItems.count == 1 {
-				selectedReport = "Selected Item: \(sizeString)"
-			} else {
-				selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
-			}
+			let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
 			view.window?.title = "\(title) — \(selectedReport)"
 
 		} else {

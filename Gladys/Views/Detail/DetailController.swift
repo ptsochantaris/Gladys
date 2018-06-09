@@ -28,7 +28,7 @@ final class DetailController: GladysViewController,
 		doneLocation = .right
 
 		table.estimatedRowHeight = 120
-		table.rowHeight = UITableViewAutomaticDimension
+        table.rowHeight = UITableViewAutomaticDimension
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
