@@ -198,7 +198,7 @@ extension CloudManager {
 
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
 		showNetwork = true
-		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [legacyZoneId])
+		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [privateZoneId])
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
 				log("Error while deleting zone: \(error.finalDescription)")

@@ -137,7 +137,7 @@ final class PullState {
 
 	static func checkMigrations() {
 		if let token = legacyZoneChangeToken {
-			setZoneToken(token, for: CloudManager.legacyZoneId)
+			setZoneToken(token, for: CloudManager.privateZoneId)
 			legacyZoneChangeToken = nil
 		}
 	}

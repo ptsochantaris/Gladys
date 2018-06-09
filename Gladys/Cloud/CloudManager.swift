@@ -58,7 +58,7 @@ final class CloudManager {
 	
 	static let privateDatabaseSubscriptionId = "private-changes"
 	static let sharedDatabaseSubscriptionId = "shared-changes"
-	static let legacyZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+	static let privateZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
@@ -108,7 +108,7 @@ final class CloudManager {
 			return nil
 		}
 
-		let pushState = PushState(zoneId: legacyZoneId)
+		let pushState = PushState(zoneId: privateZoneId)
 
 		if pushState.nothingToSend {
 			log("No further changes to push up")

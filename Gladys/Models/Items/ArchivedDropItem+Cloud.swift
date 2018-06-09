@@ -22,7 +22,7 @@ extension ArchivedDropItem {
 	}
 
 	var sharedFromElsewhere: Bool {
-		return cloudKitRecord?.recordID.zoneID != CloudManager.legacyZoneId
+		return cloudKitRecord?.recordID.zoneID != CloudManager.privateZoneId
 	}
 
 	var populatedCloudKitRecord: CKRecord? {
