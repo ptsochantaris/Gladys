@@ -109,26 +109,21 @@ final class CloudManager {
 
 		let pushState = PushState(zoneId: ArchivedDropItem.privateZoneId)
 
-		if pushState.nothingToSend {
-			log("No further changes to push up")
-			#if MAINAPP
-			CloudManager.shareActionIsActioningIds = []
-			#endif
-			completion(nil)
-			return nil
-		}
-
-		let operations = pushState.deletionOperations + pushState.pushOperations
-
 		let doneOperation = BlockOperation {
 			#if MAINAPP
 			CloudManager.shareActionIsActioningIds = []
 			#endif
 			completion(pushState.latestError)
 		}
-		operations.forEach {
-			doneOperation.addDependency($0)
-			go($0)
+
+		let operations = pushState.operations
+		if operations.isEmpty {
+			log("No changes to push up")
+		} else {
+			operations.forEach {
+				doneOperation.addDependency($0)
+				go($0)
+			}
 		}
 		OperationQueue.main.addOperation(doneOperation)
 

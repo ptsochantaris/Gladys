@@ -178,7 +178,7 @@ final class PushState {
 		}
 	}
 
-	var nothingToSend: Bool {
-		return payloadsToPush.count == 0 && recordsToDelete.count == 0
+	var operations: [CKDatabaseOperation] {
+		return deletionOperations + pushOperations
 	}
 }

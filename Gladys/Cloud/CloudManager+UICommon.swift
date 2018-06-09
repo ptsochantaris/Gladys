@@ -83,45 +83,60 @@ extension CloudManager {
 	static func deactivate(force: Bool, completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
 
-		let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
+		var finalError: Error?
 
-		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
-		ms.addDependency(ss)
-		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
-			DispatchQueue.main.async {
-				if let error = error, !force {
-					log("Cloud sync deactivation failed")
-					completion(error)
-				} else {
-					deletionQueue.removeAll()
-					lastSyncCompletion = .distantPast
-					uuidSequence = []
-					uuidSequenceRecord = nil
-					PullState.wipeDatabaseTokens()
-					PullState.wipeZoneTokens()
-					#if MAINAPP
-					shareActionIsActioningIds = []
-					#endif
-					syncSwitchedOn = false
-					lastiCloudAccount = nil
-					#if os(iOS)
-					UIApplication.shared.unregisterForRemoteNotifications()
-					#else
-					NSApplication.shared.unregisterForRemoteNotifications()
-					#endif
-					for item in Model.drops {
-						item.removeFromCloudkit()
-					}
-					Model.save()
-					log("Cloud sync deactivation complete")
-					completion(nil)
-				}
-				syncTransitioning = false
+		let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
+		ss.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+			if let error = error {
+				finalError = error
 			}
 		}
 
+		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
+		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+			if let error = error {
+				finalError = error
+			}
+		}
+
+		let doneOperation = BlockOperation {
+			if let finalError = finalError, !force {
+				log("Cloud sync deactivation failed")
+				completion(finalError)
+			} else {
+				deletionQueue.removeAll()
+				lastSyncCompletion = .distantPast
+				uuidSequence = []
+				uuidSequenceRecord = nil
+				PullState.wipeDatabaseTokens()
+				PullState.wipeZoneTokens()
+				#if MAINAPP
+				shareActionIsActioningIds = []
+				#endif
+				syncSwitchedOn = false
+				lastiCloudAccount = nil
+				#if os(iOS)
+				UIApplication.shared.unregisterForRemoteNotifications()
+				#else
+				NSApplication.shared.unregisterForRemoteNotifications()
+				#endif
+				for item in Model.drops {
+					item.removeFromCloudkit()
+				}
+				Model.save()
+				log("Cloud sync deactivation complete")
+				completion(nil)
+			}
+			syncTransitioning = false
+		}
+
+		doneOperation.addDependency(ss)
 		goShared(ss)
+
+		doneOperation.addDependency(ms)
 		go(ms)
+
+		OperationQueue.main.addOperation(doneOperation)
 	}
 
 	static func checkMigrations() {
@@ -157,22 +172,47 @@ extension CloudManager {
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
+		createZone.modifyRecordZonesCompletionBlock = { _, _, error in
+			if let error = error {
+				abortActivation(error, completion: completion)
+			} else {
+				let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
+				subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
+					if let error = error {
+						abortActivation(error, completion: completion)
+					} else {
+						let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+						subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
+							if let error = error {
+								abortActivation(error, completion: completion)
+							} else {
+								fetchInitialUUIDSequence(zone: zone, completion: completion)
+							}
+						}
+						goShared(subscribeToSharedDatabase)
+					}
+				}
+				go(subscribeToPrivateDatabase)
+			}
+		}
+		go(createZone)
+	}
 
-		let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
-		subscribeToPrivateDatabase.addDependency(createZone)
+	static private func abortActivation(_ error: Error, completion: @escaping (Error?)->Void) {
+		DispatchQueue.main.async {
+			completion(error)
+			deactivate(force: true, completion: { _ in })
+		}
+	}
 
-		let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
-		subscribeToSharedDatabase.addDependency(createZone)
-
+	static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?)->Void) {
 		let positionListId = CKRecordID(recordName: RecordType.positionList, zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
-		fetchInitialUUIDSequence.addDependency(subscribeToPrivateDatabase)
-		fetchInitialUUIDSequence.addDependency(subscribeToSharedDatabase)
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
 					log("Error while activating: \(error.finalDescription)")
-					completion(error)
+					abortActivation(error, completion: completion)
 				} else {
 					if let sequenceRecord = ids2records?[positionListId], let sequence = sequenceRecord["positionList"] as? [String] {
 						log("Received initial record sequence")
@@ -190,9 +230,6 @@ extension CloudManager {
 			}
 		}
 
-		go(createZone)
-		go(subscribeToPrivateDatabase)
-		goShared(subscribeToSharedDatabase)
 		go(fetchInitialUUIDSequence)
 	}
 
