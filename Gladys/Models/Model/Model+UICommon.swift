@@ -337,7 +337,7 @@ extension Model {
 		var ipsToRemove = [IndexPath]()
 		var uuidsToRemove = [UUID]()
 
-		for item in items.filter({$0.canDelete}) {
+		for item in items.filter({ !$0.isImportedShare }) {
 
 			if item.shouldDisplayLoading {
 				item.cancelIngest()

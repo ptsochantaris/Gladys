@@ -59,7 +59,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 		m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 		m.addItem("Reveal in Finder", action: #selector(revealSelected), keyEquivalent: "r", keyEquivalentModifierMask: [.command, .option])
-		if let parent = Model.item(uuid: item.parentUuid), !parent.isReadOnly {
+		if let parent = Model.item(uuid: item.parentUuid), parent.shareMode != .elsewhereReadOnly {
 			if item.isArchivable {
 				m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
 				m.addItem("Archive", action: #selector(archiveSelected), keyEquivalent: "a", keyEquivalentModifierMask: [.command, .option])

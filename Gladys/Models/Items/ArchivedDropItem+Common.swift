@@ -144,19 +144,31 @@ extension ArchivedDropItem: Hashable {
 		}
 	}
 
-	var isReadOnly: Bool {
-		if sharedFromElsewhere, let permission = cloudKitShareRecord?.currentUserParticipant?.permission {
-			return permission != .readWrite
+	enum ShareMode {
+		case none, elsewhereReadOnly, elsewhereReadWrite, sharing
+	}
+
+	var shareMode: ShareMode {
+		if let shareRecord = cloudKitShareRecord {
+			if shareRecord.recordID.zoneID == ArchivedDropItem.privateZoneId {
+				return .sharing
+			} else if let permission = cloudKitShareRecord?.currentUserParticipant?.permission, permission == .readWrite {
+				return .elsewhereReadWrite
+			} else {
+				return .elsewhereReadOnly
+			}
+		} else {
+			return .none
 		}
-		return false
 	}
 
-	var canDelete: Bool {
-		return !sharedFromElsewhere
-	}
-
-	var sharedFromElsewhere: Bool {
-		return cloudKitRecord?.recordID.zoneID != ArchivedDropItem.privateZoneId
+	var isImportedShare: Bool {
+		switch shareMode {
+		case .elsewhereReadOnly, .elsewhereReadWrite:
+			return true
+		case .none, .sharing:
+			return false
+		}
 	}
 
 	static let cloudKitRecordCache = NSCache<NSUUID, CKRecord>()

@@ -220,10 +220,22 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	private var existingPreviewView: FirstMouseView?
 
 	private static let shareImage: NSImage = {
-		let image = #imageLiteral(resourceName: "iconUserCheckedSmall")
+		let image = #imageLiteral(resourceName: "iconUserCheckedSmall").copy() as! NSImage
 		image.isTemplate = false
 		image.lockFocus()
 		#colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1).set()
+
+		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
+		imageRect.fill(using: .sourceAtop)
+		image.unlockFocus()
+		return image
+	}()
+
+	private static let shareImageTinted: NSImage = {
+		let image = #imageLiteral(resourceName: "iconUserCheckedSmall").copy() as! NSImage
+		image.isTemplate = false
+		image.lockFocus()
+		#colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1).set()
 
 		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
 		imageRect.fill(using: .sourceAtop)
@@ -239,7 +251,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		bottomLabel.maximumNumberOfLines = 2
 		image.layer?.cornerRadius = 5
 		image.layer?.backgroundColor = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
-		sharedIcon.image = DropCell.shareImage
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
@@ -277,7 +288,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			m.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
-			if !item.sharedFromElsewhere {
+			if !item.isImportedShare {
 				m.addItem(NSMenuItem.separator())
 				m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 				m.addItem(NSMenuItem.separator())
@@ -302,7 +313,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		var hideImage = true
 		var hideLock = true
 		var hideLabels = true
-		var share = false
+		var share = ArchivedDropItem.ShareMode.none
 
 		var topLabelText = ""
 		var topLabelAlignment = NSTextAlignment.center
@@ -337,7 +348,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				hideImage = false
 
 				image.layer?.contents = item.displayIcon
-				share = item.sharedFromElsewhere
+				share = item.shareMode
 
 				let primaryLabel: NSTextField
 				let secondaryLabel: NSTextField
@@ -463,7 +474,18 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		image.isHidden = hideImage
 		cancelHolder.isHidden = hideCancel
 		lockImage.isHidden = hideLock
-		sharedIcon.isHidden = !share
+
+		switch share {
+		case .none:
+			sharedIcon.image = nil
+			sharedIcon.isHidden = true
+		case .elsewhereReadOnly, .elsewhereReadWrite:
+			sharedIcon.image = DropCell.shareImage
+			sharedIcon.isHidden = false
+		case .sharing:
+			sharedIcon.image = DropCell.shareImageTinted
+			sharedIcon.isHidden = false
+		}
 	}
 
 	@objc private func infoSelected() {
@@ -515,7 +537,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.title {
 		case "Lock", "Unlock", "Remove Lock":
-			return ViewController.shared.collection.selectionIndexPaths.count == 1 && !(archivedDropItem?.isReadOnly ?? false)
+			return ViewController.shared.collection.selectionIndexPaths.count == 1 && (archivedDropItem?.isImportedShare ?? false)
 		default:
 			return true
 		}

@@ -80,7 +80,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.dataSource = self
 
 		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-		activity.title = item.displayTitleOrUuid
+		activity.title = item.cloudKitSharingTitle
 		activity.isEligibleForSearch = false
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
@@ -88,7 +88,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@objc private func updateInfo() {
-		let readWrite = !item.isReadOnly
+		let shareMode = item.shareMode
+		let readWrite = shareMode != .elsewhereReadOnly
 
 		view.window?.title = (item.displayText.0 ?? "Details") + (readWrite ? "" : " — Read Only")
 		titleField.placeholderString = item.nonOverridenText.0 ?? "Title"
@@ -101,13 +102,45 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		infoLabel.stringValue = item.addedString
 
 		inviteButton.isEnabled = CloudManager.syncSwitchedOn
-		inviteButton.image = item.cloudKitShareRecord == nil ? #imageLiteral(resourceName: "iconUserAdd") : #imageLiteral(resourceName: "iconUserChecked")
+
+		switch shareMode {
+		case .none:
+			inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
+		case .elsewhereReadOnly, .elsewhereReadWrite:
+			inviteButton.image = DetailController.shareImage
+		case .sharing:
+			inviteButton.image = DetailController.shareImageTinted
+		}
 
 		titleField.isEditable = readWrite
 		notesField.isEditable = readWrite
 		labelAdd.isEnabled = readWrite
 		labelRemove.isEnabled = readWrite
 	}
+
+	private static let shareImage: NSImage = {
+		let image = #imageLiteral(resourceName: "iconUserChecked").copy() as! NSImage
+		image.isTemplate = false
+		image.lockFocus()
+		NSColor.headerTextColor.set()
+
+		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
+		imageRect.fill(using: .sourceAtop)
+		image.unlockFocus()
+		return image
+	}()
+
+	private static let shareImageTinted: NSImage = {
+		let image = #imageLiteral(resourceName: "iconUserChecked").copy() as! NSImage
+		image.isTemplate = false
+		image.lockFocus()
+		#colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1).set()
+
+		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
+		imageRect.fill(using: .sourceAtop)
+		image.unlockFocus()
+		return image
+	}()
 
 	override func viewWillDisappear() {
 		done()
@@ -135,7 +168,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-		return (!item.isReadOnly && dropOperation == .above) ? .move : []
+		return (item.shareMode != .elsewhereReadOnly && dropOperation == .above) ? .move : []
 	}
 
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
@@ -299,13 +332,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		switch menuItem.action {
 
 		case #selector(archive(_:)):
-			return !item.isReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
+			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
 
 		case #selector(editCurrent(_:)):
-			return !item.isReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
+			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
 
 		case #selector(delete(_:)):
-			return !item.isReadOnly
+			return item.shareMode != .elsewhereReadOnly
 
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			if let first = selectedItem, first.canPreview {
@@ -436,7 +469,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return !item.isReadOnly
+		return item.shareMode != .elsewhereReadOnly
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
@@ -562,6 +595,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
 		let sharingService = NSSharingService(named: .cloudSharing)!
 		sharingService.delegate = self
+		sharingService.subject = item.cloudKitSharingTitle
 		sharingService.perform(withItems: [itemProvider])
 	}
 

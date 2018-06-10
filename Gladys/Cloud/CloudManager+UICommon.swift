@@ -552,7 +552,7 @@ extension CloudManager {
 
 	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
 		let shareRecord = CKShare(rootRecord: rootRecord)
-		shareRecord[CKShareTitleKey] = item.displayTitleOrUuid as NSString
+		shareRecord[CKShareTitleKey] = item.cloudKitSharingTitle as NSString
 		if let ip = item.imagePath, let data = NSData(contentsOf: ip) {
 			shareRecord[CKShareThumbnailImageDataKey] = data
 		}

@@ -796,7 +796,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(unlock(_:)), #selector(removeLock(_:)):
 			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
-			if collection.actionableSelectedItems.contains(where: { $0.isReadOnly} ) { return false }
+			if collection.actionableSelectedItems.contains(where: { $0.isImportedShare }) { return false }
 			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
@@ -813,7 +813,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(info(_:)), #selector(open(_:)):
 			return collection.actionableSelectedItems.count > 0
 		case #selector(delete(_:)):
-			return !collection.actionableSelectedItems.contains { $0.sharedFromElsewhere }
+			return !collection.actionableSelectedItems.contains { $0.isImportedShare }
 		default:
 			return true
 		}

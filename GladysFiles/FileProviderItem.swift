@@ -114,16 +114,16 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
     
     var capabilities: NSFileProviderItemCapabilities {
 		if let t = typeItem, let parent = Model.item(uuid: t.parentUuid) {
-			if parent.isReadOnly {
+			if parent.shareMode == .elsewhereReadOnly {
 				return [.allowsReading]
 			} else {
 				return [.allowsReading, .allowsWriting, .allowsDeleting]
 			}
 		} else if let d = dropItem {
-			if d.canDelete {
-				return [.allowsReading, .allowsDeleting]
-			} else {
+			if d.isImportedShare {
 				return [.allowsReading]
+			} else {
+				return [.allowsReading, .allowsDeleting]
 			}
 		} else {
 			return [.allowsReading]

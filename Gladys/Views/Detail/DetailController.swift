@@ -71,26 +71,42 @@ final class DetailController: GladysViewController,
 			lockButton.accessibilityLabel = "Lock Item"
 			lockButton.image = #imageLiteral(resourceName: "unlocked")
 		}
-		lockButton.isEnabled = !item.isReadOnly
+		lockButton.isEnabled = !item.isImportedShare
 	}
 
 	private func updateInviteButton() {
 		invitesButton.isEnabled = CloudManager.syncSwitchedOn
-		if item.cloudKitShareRecord == nil {
-			invitesButton.accessibilityLabel = "Add People"
+
+		switch item.shareMode {
+		case .none:
 			invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
-			deleteButton.isEnabled = true
-		} else {
-			invitesButton.accessibilityLabel = "People"
+			invitesButton.accessibilityLabel = "Add People"
+			invitesButton.tintColor = ViewController.tintColor
+		case .elsewhereReadOnly, .elsewhereReadWrite:
 			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
-			deleteButton.isEnabled = true
+			invitesButton.accessibilityLabel = "People"
+			invitesButton.tintColor = .darkGray
+		case .sharing:
+			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+			invitesButton.accessibilityLabel = "People"
+			invitesButton.tintColor = ViewController.tintColor
 		}
-		deleteButton.isEnabled = item.canDelete
-		let readWrite = !item.isReadOnly
+
+		deleteButton.isEnabled = !item.isImportedShare
+		let readWrite = item.shareMode != .elsewhereReadOnly
 		table.allowsSelection = readWrite
 		table.dragInteractionEnabled = readWrite
 
 		title = readWrite ? nil : "Read Only"
+
+		var titleView: UILabel?
+		if let title = title, navigationItem.titleView == nil {
+			titleView = UILabel()
+			titleView!.text = title
+			titleView!.font = UIFont.preferredFont(forTextStyle: .caption1)
+			titleView?.textColor = ViewController.tintColor
+		}
+		navigationItem.titleView = titleView
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
@@ -323,7 +339,7 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
 			cell.item = item
-			cell.isUserInteractionEnabled = !item.isReadOnly
+			cell.isUserInteractionEnabled = item.shareMode != .elsewhereReadOnly
 			cell.resizeCallback = { [weak self] caretRect, heightChange in
 				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
@@ -332,7 +348,7 @@ final class DetailController: GladysViewController,
 		} else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
 			cell.item = item
-			cell.isUserInteractionEnabled = !item.isReadOnly
+			cell.isUserInteractionEnabled = item.shareMode != .elsewhereReadOnly
 			cell.resizeCallback = { [weak self] caretRect, heightChange in
 				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
 			}
@@ -389,10 +405,10 @@ final class DetailController: GladysViewController,
 			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
 		}
 
-		let readOnly = item.isReadOnly
+		let readWrite = item.shareMode != .elsewhereReadOnly
 
 		let itemURL = typeEntry.encodedUrl
-		if !readOnly, let i = itemURL, !i.isFileURL {
+		if readWrite, let i = itemURL, !i.isFileURL {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
 					s.archiveWebComponent(cell: c, url: i as URL)
@@ -402,11 +418,11 @@ final class DetailController: GladysViewController,
 			cell.archiveCallback = nil
 		}
 
-		if !readOnly, itemURL != nil {
+		if readWrite, itemURL != nil {
 			cell.editCallback = { [weak self] in
 				self?.editURL(typeEntry)
 			}
-		} else if !readOnly, (typeEntry.isRichText || typeEntry.isText) {
+		} else if readWrite, (typeEntry.isRichText || typeEntry.isText) {
 			cell.editCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
 			}
@@ -821,7 +837,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func itemTitle(for csc: UICloudSharingController) -> String? {
-		return item.displayTitleOrUuid
+		return item.cloudKitSharingTitle
 	}
 
 	func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {

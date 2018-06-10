@@ -37,10 +37,18 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
+	private var shareColor: UIColor? {
+		if archivedDropItem?.shareMode == .sharing {
+			return ViewController.tintColor
+		} else {
+			return image.backgroundColor
+		}
+	}
+
 	override func tintColorDidChange() {
 		let c = tintColor
 		tickImage?.tintColor = c
-		shareImage?.tintColor = image.backgroundColor
+		shareImage?.tintColor = shareColor
 		cancelButton?.tintColor = c
 		lockImage.tintColor = c
 		mergeImage.tintColor = c
@@ -62,7 +70,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			backgroundView?.backgroundColor = .lightGray
 			image.backgroundColor = ViewController.imageLightBackground
 		}
-		shareImage?.tintColor = image.backgroundColor
+		shareImage?.tintColor = shareColor
 		shareHolder?.backgroundColor = borderView.backgroundColor
 		tickHolder?.backgroundColor = borderView.backgroundColor
 	}
@@ -128,40 +136,47 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	var isShared: Bool = false {
+	var shareMode: ArchivedDropItem.ShareMode = ArchivedDropItem.ShareMode.none {
 		didSet {
-			if isShared, shareHolder == nil {
+			if oldValue == shareMode { return }
+			let shouldShow = shareMode != .none
+			if shouldShow, shareHolder == nil {
 
-				let img = UIImageView(frame: .zero)
-				img.translatesAutoresizingMaskIntoConstraints = false
-				img.contentMode = .center
-				img.image = #imageLiteral(resourceName: "iconUserChecked")
-				img.tintColor = image.backgroundColor
+				topLabelLeft.constant = 50
+				if shareHolder == nil {
+					let img = UIImageView(frame: .zero)
+					img.translatesAutoresizingMaskIntoConstraints = false
+					img.contentMode = .center
+					img.tintColor = shareColor
+					img.image = #imageLiteral(resourceName: "iconUserChecked")
 
-				let holder = UIView(frame: .zero)
-				holder.translatesAutoresizingMaskIntoConstraints = false
-				holder.backgroundColor = borderView.backgroundColor
-				holder.layer.cornerRadius = 10
-				holder.addSubview(img)
-				addSubview(holder)
+					let holder = UIView(frame: .zero)
+					holder.translatesAutoresizingMaskIntoConstraints = false
+					holder.backgroundColor = borderView.backgroundColor
+					holder.layer.cornerRadius = 10
+					holder.addSubview(img)
+					addSubview(holder)
 
-				NSLayoutConstraint.activate([
-					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-					holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+					NSLayoutConstraint.activate([
+						holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+						holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
 
-					holder.widthAnchor.constraint(equalToConstant: 50),
-					holder.heightAnchor.constraint(equalToConstant: 50),
+						holder.widthAnchor.constraint(equalToConstant: 50),
+						holder.heightAnchor.constraint(equalToConstant: 50),
 
-					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
-					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
-					img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
-					img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
-					])
+						img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
+						img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+						img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
+						img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
+						])
 
-				shareImage = img
-				shareHolder = holder
+					shareImage = img
+					shareHolder = holder
+				}
+				
 
-			} else if !isShared, let h = shareHolder {
+			} else if !shouldShow, let h = shareHolder {
+				topLabelLeft.constant = 0
 				h.removeFromSuperview()
 				shareImage = nil
 				shareHolder = nil
@@ -292,7 +307,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
 			}
 		}, style: .default, push: push))
-		if item.canDelete {
+		if !item.isImportedShare {
 			actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
 				guard let s = self else { return }
 				s.egress()
@@ -398,7 +413,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideProgress = true
 		var hideLock = true
 		var hideMerge = true
-		var shared = false
+		var shared = ArchivedDropItem.ShareMode.none
 
 		var topLabelText: String?
 		var topLabelAlignment: NSTextAlignment?
@@ -433,7 +448,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				hideImage = false
 				progressView.observedProgress = nil
-				shared = item.sharedFromElsewhere
+				shared = item.shareMode
 
 				let cacheKey = item.imageCacheKey
 				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
@@ -555,8 +570,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		progressView.isHidden = hideProgress
 
-		topLabelLeft.constant = shared ? 50 : 0
-
 		topLabel.text = topLabelText
 		topLabelDistance.constant = (topLabelText == nil) ? 0 : 7
 		topLabel.textAlignment = topLabelAlignment ?? .center
@@ -578,7 +591,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		cancelButton.isHidden = hideCancel
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
-		isShared = shared
+		shareMode = shared
 	}
 
 	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)

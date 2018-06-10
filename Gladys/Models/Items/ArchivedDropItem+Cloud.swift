@@ -21,6 +21,10 @@ extension ArchivedDropItem {
 		needsReIngest = true
 	}
 
+	var cloudKitSharingTitle: String {
+		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
+	}
+
 	var populatedCloudKitRecord: CKRecord? {
 
 		#if MAINAPP
