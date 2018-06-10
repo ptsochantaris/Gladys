@@ -7,13 +7,16 @@ final class PushState {
 	private var dataItemsToPush: Int
 	private var dropsToPush: Int
 
+	private let database: CKDatabase
 	private let uuid2progress = [String: Progress]()
 	private let recordsToDelete: [[CKRecordID]]
 	private let payloadsToPush: [[CKRecord]]
 	private let currentUUIDSequence: [String]
 	private let deletionIdsSnapshot: Set<String>
 
-	init(zoneId: CKRecordZoneID) {
+	init(zoneId: CKRecordZoneID, database: CKDatabase) {
+		self.database = database
+
 		let drops = Model.drops
 
 		var idsToPush = [String]()
@@ -39,50 +42,57 @@ final class PushState {
 			return payload
 			}.flatBunch(minSize: 10)
 
-		var snapshot = CloudManager.deletionQueue
-		if idsToPush.count > 0 {
-			let previousCount = snapshot.count
-			snapshot = snapshot.filter { !idsToPush.contains($0) }
-			if snapshot.count != previousCount {
-				CloudManager.deletionQueue = snapshot
+		if zoneId == ArchivedDropItem.privateZoneId {
+
+			var snapshot = CloudManager.deletionQueue
+			if idsToPush.count > 0 {
+				let previousCount = snapshot.count
+				snapshot = snapshot.filter { !idsToPush.contains($0) }
+				if snapshot.count != previousCount {
+					CloudManager.deletionQueue = snapshot
+				}
 			}
-		}
-		deletionIdsSnapshot = snapshot
+			deletionIdsSnapshot = snapshot
 
-		currentUUIDSequence = drops.map { $0.uuid.uuidString }
-		if PushState.sequenceNeedsUpload(currentUUIDSequence) {
+			currentUUIDSequence = drops.map { $0.uuid.uuidString }
+			if PushState.sequenceNeedsUpload(currentUUIDSequence) {
 
-			var sequenceToSend: [String]?
+				var sequenceToSend: [String]?
 
-			if CloudManager.lastSyncCompletion == .distantPast {
-				if currentUUIDSequence.count > 0 {
-					var mergedSequence = CloudManager.uuidSequence
-					for i in currentUUIDSequence.reversed() {
-						if !mergedSequence.contains(i) {
-							mergedSequence.insert(i, at: 0)
+				if CloudManager.lastSyncCompletion == .distantPast {
+					if currentUUIDSequence.count > 0 {
+						var mergedSequence = CloudManager.uuidSequence
+						for i in currentUUIDSequence.reversed() {
+							if !mergedSequence.contains(i) {
+								mergedSequence.insert(i, at: 0)
+							}
 						}
+						sequenceToSend = mergedSequence
 					}
-					sequenceToSend = mergedSequence
-				}
-			} else {
-				sequenceToSend = currentUUIDSequence
-			}
-
-			if let sequenceToSend = sequenceToSend {
-				let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecordID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
-				record["positionList"] = sequenceToSend as NSArray
-				if _payloadsToPush.count > 0 {
-					_payloadsToPush[0].insert(record, at: 0)
 				} else {
-					_payloadsToPush.append([record])
+					sequenceToSend = currentUUIDSequence
+				}
+
+				if let sequenceToSend = sequenceToSend {
+					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecordID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
+					record["positionList"] = sequenceToSend as NSArray
+					if _payloadsToPush.count > 0 {
+						_payloadsToPush[0].insert(record, at: 0)
+					} else {
+						_payloadsToPush.append([record])
+					}
 				}
 			}
+			recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
+		} else {
+			deletionIdsSnapshot = []
+			recordsToDelete = []
+			currentUUIDSequence = []
 		}
 
 		dataItemsToPush = _dataItemsToPush
 		dropsToPush = _dropsToPush
 		payloadsToPush = _payloadsToPush
-		recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 	}
 
 	static private func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
@@ -118,6 +128,7 @@ final class PushState {
 	var deletionOperations: [CKDatabaseOperation] {
 		return recordsToDelete.map { recordIdList in
 			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
+			operation.database = database
 			operation.savePolicy = .allKeys
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 				DispatchQueue.main.async {
@@ -141,8 +152,8 @@ final class PushState {
 	var pushOperations: [CKDatabaseOperation] {
 		return payloadsToPush.map { recordList in
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
+			operation.database = database
 			operation.savePolicy = .allKeys
-			operation.isAtomic = true
 			operation.perRecordProgressBlock = { record, progress in
 				DispatchQueue.main.async {
 					let recordProgress = self.uuid2progress[record.recordID.recordName]
@@ -160,16 +171,14 @@ final class PushState {
 						if itemUUID == CloudManager.RecordType.positionList {
 							CloudManager.uuidSequence = self.currentUUIDSequence
 							CloudManager.uuidSequenceRecord = record
-							log("Sent updated \(record.recordType) cloud record")
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
-							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
 							self.dropsToPush -= 1
 						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
-							log("Sent updated \(record.recordType) cloud record \(itemUUID)")
 							self.dataItemsToPush -= 1
 						}
+						log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
 					}
 					self.updateSyncMessage()
 				}

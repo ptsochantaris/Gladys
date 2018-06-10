@@ -86,6 +86,7 @@ extension CloudManager {
 		var finalError: Error?
 
 		let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
+		ss.database = container.sharedCloudDatabase
 		ss.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
 				finalError = error
@@ -93,6 +94,7 @@ extension CloudManager {
 		}
 
 		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
+		ms.database = container.privateCloudDatabase
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
 			if let error = error {
 				finalError = error
@@ -131,10 +133,10 @@ extension CloudManager {
 		}
 
 		doneOperation.addDependency(ss)
-		goShared(ss)
+		perform(ss)
 
 		doneOperation.addDependency(ms)
-		go(ms)
+		perform(ms)
 
 		OperationQueue.main.addOperation(doneOperation)
 	}
@@ -148,7 +150,8 @@ extension CloudManager {
 					migratedSharing = true
 				}
 			}
-			goShared(subscribe)
+			subscribe.database = container.sharedCloudDatabase
+			perform(subscribe)
 		}
 	}
 
@@ -172,16 +175,19 @@ extension CloudManager {
 
 		let zone = CKRecordZone(zoneName: "archivedDropItems")
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
+		createZone.database = container.privateCloudDatabase
 		createZone.modifyRecordZonesCompletionBlock = { _, _, error in
 			if let error = error {
 				abortActivation(error, completion: completion)
 			} else {
 				let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
+				subscribeToPrivateDatabase.database = container.privateCloudDatabase
 				subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
 					if let error = error {
 						abortActivation(error, completion: completion)
 					} else {
 						let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+						subscribeToSharedDatabase.database = container.sharedCloudDatabase
 						subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
 							if let error = error {
 								abortActivation(error, completion: completion)
@@ -189,13 +195,13 @@ extension CloudManager {
 								fetchInitialUUIDSequence(zone: zone, completion: completion)
 							}
 						}
-						goShared(subscribeToSharedDatabase)
+						perform(subscribeToSharedDatabase)
 					}
 				}
-				go(subscribeToPrivateDatabase)
+				perform(subscribeToPrivateDatabase)
 			}
 		}
-		go(createZone)
+		perform(createZone)
 	}
 
 	static private func abortActivation(_ error: Error, completion: @escaping (Error?)->Void) {
@@ -208,6 +214,7 @@ extension CloudManager {
 	static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?)->Void) {
 		let positionListId = CKRecordID(recordName: RecordType.positionList, zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
+		fetchInitialUUIDSequence.database = container.privateCloudDatabase
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
 			DispatchQueue.main.async {
 				if let error = error, (error as? CKError)?.code != CKError.partialFailure {
@@ -230,12 +237,13 @@ extension CloudManager {
 			}
 		}
 
-		go(fetchInitialUUIDSequence)
+		perform(fetchInitialUUIDSequence)
 	}
 
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
 		showNetwork = true
 		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [ArchivedDropItem.privateZoneId])
+		deleteZone.database = container.privateCloudDatabase
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
 				log("Error while deleting zone: \(error.finalDescription)")
@@ -245,7 +253,7 @@ extension CloudManager {
 				completion(error)
 			}
 		}
-		go(deleteZone)
+		perform(deleteZone)
 	}
 
 	static private func recordDeleted(recordId: CKRecordID, recordType: String, stats: PullState) {
@@ -406,7 +414,7 @@ extension CloudManager {
 			}
 
 			if changedZoneIds.isEmpty {
-				log("No database changes detected")
+				log("No database changes detected in \(database.databaseScope.rawValue)")
 				DispatchQueue.main.async {
 					stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 					completion(nil)
@@ -417,7 +425,7 @@ extension CloudManager {
 			fetchZoneChanges(database: database, zoneIDs: changedZoneIds, stats: stats) { error in
 				DispatchQueue.main.async {
 					if let error = error {
-						log("Error fetching zone changes for \(database): \(error.finalDescription)")
+						log("Error fetching zone changes for \(database.databaseScope.rawValue): \(error.finalDescription)")
 					} else {
 						stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
 					}
@@ -551,10 +559,11 @@ extension CloudManager {
 		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
 		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
+		operation.database = container.privateCloudDatabase
 		operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
 			completion(shareRecord, container, error)
 		}
-		go(operation)
+		perform(operation)
 	}
 
 	static func acceptShare(_ metadata: CKShareMetadata) {

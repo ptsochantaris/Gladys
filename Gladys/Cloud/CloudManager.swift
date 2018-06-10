@@ -61,14 +61,9 @@ final class CloudManager {
 
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
-	static func go(_ operation: CKDatabaseOperation) {
+	static func perform(_ operation: CKDatabaseOperation) {
 		operation.qualityOfService = .userInitiated
-		container.privateCloudDatabase.add(operation)
-	}
-
-	static func goShared(_ operation: CKDatabaseOperation) {
-		operation.qualityOfService = .userInitiated
-		container.sharedCloudDatabase.add(operation)
+		operation.database!.add(operation)
 	}
 
 	static var syncDirty = false
@@ -107,27 +102,44 @@ final class CloudManager {
 			return nil
 		}
 
-		let pushState = PushState(zoneId: ArchivedDropItem.privateZoneId)
+		var sharedZonesToPush = Set<CKRecordZoneID>()
+		for item in Model.drops where item.needsCloudPush {
+			if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != ArchivedDropItem.privateZoneId {
+				sharedZonesToPush.insert(zoneID)
+			}
+		}
+
+		let privatePushState = PushState(zoneId: ArchivedDropItem.privateZoneId, database: container.privateCloudDatabase)
+		let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
 
 		let doneOperation = BlockOperation {
 			#if MAINAPP
 			CloudManager.shareActionIsActioningIds = []
 			#endif
-			completion(pushState.latestError)
+			let firstError = privatePushState.latestError ?? sharedPushStates.first(where: { $0.latestError != nil })?.latestError
+			completion(firstError)
 		}
 
-		let operations = pushState.operations
+		let operations = sharedPushStates.reduce(privatePushState.operations) { (existingOperations, pushState) -> [CKDatabaseOperation] in
+			return existingOperations + pushState.operations
+		}
 		if operations.isEmpty {
 			log("No changes to push up")
 		} else {
 			operations.forEach {
 				doneOperation.addDependency($0)
-				go($0)
+				perform($0)
 			}
 		}
 		OperationQueue.main.addOperation(doneOperation)
 
-		return pushState.progress
+		let overallProgress = Progress(totalUnitCount: Int64(1+sharedPushStates.count) * 10)
+		overallProgress.addChild(privatePushState.progress, withPendingUnitCount: 10)
+		for pushState in sharedPushStates {
+			overallProgress.addChild(pushState.progress, withPendingUnitCount: 10)
+		}
+
+		return overallProgress
 	}
 
 	static var syncTransitioning = false {
