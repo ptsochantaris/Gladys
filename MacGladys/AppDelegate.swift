@@ -134,6 +134,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return false
 	}
 
+	func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+		log("APNS ready: \(deviceToken.base64EncodedString())")
+	}
+
+	func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+		log("Warning: APNS registration failed: \(error.finalDescription)")
+	}
+
 	@IBAction func aboutSelected(_ sender: NSMenuItem) {
 		let p = NSMutableParagraphStyle()
 		p.alignment = .center
