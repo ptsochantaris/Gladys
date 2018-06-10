@@ -22,4 +22,6 @@ extension Notification.Name {
 	static let DarkModeChanged = Notification.Name("DarkModeChanged")
 	static let IAPModeChanged = Notification.Name("IAPModeChanged")
 	static let IngestComplete = Notification.Name("IngestComplete")
+	static let AcceptStarting = Notification.Name("AcceptStarting")
+	static let AcceptEnding = Notification.Name("AcceptEnding")
 }

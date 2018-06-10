@@ -568,7 +568,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: NSButton) {
-		if item.cloudKitShareRecord == nil {
+		if item.shareMode == .none {
 			addInvites(sender)
 		} else {
 			editInvites(sender)
@@ -609,9 +609,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func sharingService(_ sharingService: NSSharingService, didStopSharing share: CKShare) {
+		let wasImported = item.isImportedShare
 		item.cloudKitShareRecord = nil
-		updateInfo()
-		Model.save()
+		if wasImported {
+			ViewController.shared.deleteRequested(for: [item])
+		} else {
+			updateInfo()
+		}
 	}
 
 	func anchoringView(for sharingService: NSSharingService, showRelativeTo positioningRect: UnsafeMutablePointer<NSRect>, preferredEdge: UnsafeMutablePointer<NSRectEdge>) -> NSView? {

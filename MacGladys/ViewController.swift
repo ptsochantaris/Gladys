@@ -200,31 +200,36 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.reloadData()
 			self?.postSave()
 		}
-		observers.append(a1)
 
 		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
 			self?.reloadData()
 			self?.postSave()
 		}
-		observers.append(a2)
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
 			self?.reloadData()
 		}
-		observers.append(a3)
 
 		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
 		}
-		observers.append(a4)
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			Model.forceUpdateFilter(signalUpdate: true)
 			self?.updateTitle()
 		}
-		observers.append(a5)
+
+		let a6 = n.addObserver(forName: .AcceptStarting, object: nil, queue: .main) { [weak self] _ in
+			self?.startProgress(for: nil, titleOverride: "Accepting Share...")
+		}
+
+		let a7 = n.addObserver(forName: .AcceptEnding, object: nil, queue: .main) { [weak self] _ in
+			self?.endProgress()
+		}
+
+		observers = [a1, a2, a3, a4, a5, a6, a7]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -944,12 +949,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private var progressController: ProgressViewController?
 
-	func startProgress(for progress: Progress) {
+	func startProgress(for progress: Progress?, titleOverride: String? = nil) {
 		if isDisplayingProgress {
 			endProgress()
 		}
 		performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "showProgress"), sender: self)
-		progressController?.startMonitoring(progress: progress)
+		progressController?.startMonitoring(progress: progress, titleOverride: titleOverride)
 	}
 
 	var isDisplayingProgress: Bool {

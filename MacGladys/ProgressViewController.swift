@@ -14,10 +14,17 @@ final class ProgressViewController: NSViewController {
 
 	private var monitoredProgress: Progress?
 
-	func startMonitoring(progress: Progress) {
+	func startMonitoring(progress: Progress?, titleOverride: String?) {
 		monitoredProgress = progress
-		monitoredProgress!.addObserver(self, forKeyPath: "completedUnitCount", options: .new, context: nil)
-		update(from: monitoredProgress!)
+		if let monitoredProgress = monitoredProgress {
+			monitoredProgress.addObserver(self, forKeyPath: "completedUnitCount", options: .new, context: nil)
+			update(from: monitoredProgress)
+		} else {
+			progressIndicator.isIndeterminate = true
+		}
+		if let titleOverride = titleOverride {
+			titleLabel.stringValue = titleOverride
+		}
 	}
 
 	func endMonitoring() {

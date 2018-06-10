@@ -336,6 +336,9 @@ extension Model {
 
 	static func removeItemsFromZone(_ zoneID: CKRecordZoneID) {
 		let itemsRelatedToZone = drops.filter { $0.cloudKitRecord?.recordID.zoneID == zoneID }
+		for item in itemsRelatedToZone {
+			item.removeFromCloudkit()
+		}
 		_ = delete(items: itemsRelatedToZone)
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}

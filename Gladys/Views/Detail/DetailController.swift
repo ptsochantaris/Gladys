@@ -110,7 +110,7 @@ final class DetailController: GladysViewController,
 	}
 
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
-		if item.cloudKitShareRecord == nil {
+		if item.shareMode == .none {
 			addInvites(sender)
 		} else {
 			editInvites(sender)
@@ -159,6 +159,12 @@ final class DetailController: GladysViewController,
 
 	@objc private func updateUI() {
 		view.endEditing(true)
+		if item == nil {
+			done()
+			return
+		}
+
+		// second pass, ensure item is fresh
 		item = Model.item(uuid: item.uuid)
 		if item == nil {
 			done()
@@ -846,9 +852,18 @@ final class DetailController: GladysViewController,
 	}
 
 	func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
-		item.cloudKitShareRecord = nil
+		guard let i = item else { return }
+		let wasImported = i.isImportedShare
+		i.cloudKitShareRecord = nil
 		updateInviteButton()
-		Model.save()
+		if wasImported {
+			DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
+				self?.done()
+				ViewController.shared.deleteRequested(for: [i])
+			}
+		} else {
+			updateInviteButton()
+		}
 	}
 
 	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {

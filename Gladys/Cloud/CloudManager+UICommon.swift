@@ -570,12 +570,18 @@ extension CloudManager {
 	static func acceptShare(_ metadata: CKShareMetadata) {
 		if !syncSwitchedOn { return }
 		showNetwork = true
+		NotificationCenter.default.post(name: .AcceptStarting, object: nil)
 		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
 		acceptShareOperation.acceptSharesCompletionBlock = { error in
 			DispatchQueue.main.async {
 				showNetwork = false
 				if let error = error {
+					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
 					genericAlert(title: "Could not accept share", message: error.finalDescription, on: ViewController.shared)
+				} else {
+					sync { _ in
+						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+					}
 				}
 			}
 		}

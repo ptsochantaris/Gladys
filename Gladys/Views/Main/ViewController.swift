@@ -7,7 +7,8 @@ enum PasteResult {
 	case success, noData, tooManyItems
 }
 
-func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true, completion: (()->Void)? = nil) {
+@discardableResult
+func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true, autoDismiss: Bool = true, completion: (()->Void)? = nil) -> UIAlertController {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if showOK {
 		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
@@ -22,11 +23,13 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 
 	finalVC.present(a, animated: true)
 
-	if !showOK {
+	if !showOK && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 			a.dismiss(animated: true, completion: completion)
 		}
 	}
+
+	return a
 }
 
 func getInput(from: UIViewController, title: String, action: String, previousValue: String?, completion: @escaping (String?)->Void) {
@@ -641,6 +644,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 		n.addObserver(self, selector: #selector(backgrounded), name: .UIApplicationDidEnterBackground, object: nil)
+		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
+		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -649,6 +654,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		checkForUpgrade()
 		cloudStatusChanged()
+	}
+
+	private var acceptAlert: UIAlertController?
+
+	@objc private func acceptStarted() {
+		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, on: self, showOK: false, autoDismiss: false, completion: nil)
+	}
+
+	@objc private func acceptEnded() {
+		acceptAlert?.dismiss(animated: true)
+		acceptAlert = nil
 	}
 
 	@objc private func backgrounded() {
