@@ -195,11 +195,11 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 		if CloudManager.syncSwitchedOn {
 			title = "Remove from all devices?"
-			subtitle = "Sync is switched on, so this action will remove your entire collection from all synced devices. This cannot be undone."
+			subtitle = "Sync is switched on, so this action will remove all your own items from all synced devices. This cannot be undone."
 			actionName = "Delete From All Devices"
 		} else {
 			title = "Are you sure?"
-			subtitle = "This will remove all items from your collection. This cannot be undone."
+			subtitle = "This will remove all your own items. This cannot be undone."
 			actionName = "Delete All"
 		}
 

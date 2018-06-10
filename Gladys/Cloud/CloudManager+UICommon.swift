@@ -112,6 +112,7 @@ extension CloudManager {
 				uuidSequenceRecord = nil
 				PullState.wipeDatabaseTokens()
 				PullState.wipeZoneTokens()
+				Model.removeImportedShares()
 				#if MAINAPP
 				shareActionIsActioningIds = []
 				#endif
@@ -334,7 +335,7 @@ extension CloudManager {
 						associatedItem.cloudKitShareRecord = share
 						stats.updateCount += 1
 					} else {
-						log("Will create new share record for \(itemUUID)")
+						log("Received new share record \(itemUUID)")
 						stats.newShareItemsToSetForDrops.append(share)
 					}
 				}

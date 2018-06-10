@@ -35,7 +35,7 @@ final class PullState {
 		}
 	}
 
-	private func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord], drawSharesFrom: [CKShare]) {
+	private func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
 		let childrenOfThisItem = drawChildrenFrom.filter {
 			if let ref = $0["parent"] as? CKReference {
 				if ref.recordID == record.recordID {
@@ -45,9 +45,6 @@ final class PullState {
 			return false
 		}
 		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
-		if let shareRecordId = record.share?.recordID {
-			item.cloudKitShareRecord = drawSharesFrom.first { $0.recordID == shareRecordId }
-		}
 		Model.drops.insert(item, at: 0)
 	}
 	
@@ -64,7 +61,13 @@ final class PullState {
 			}
 		}
 		for dropRecord in newDrops {
-			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops, drawSharesFrom: newShareItemsToSetForDrops)
+			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
+		}
+
+		for shareRecord in newShareItemsToSetForDrops {
+			if let relevantItem = Model.item(shareId: shareRecord.recordID.recordName) {
+				relevantItem.cloudKitShareRecord = shareRecord
+			}
 		}
 		
 		if updatedSequence || newDrops.count > 0 {

@@ -40,7 +40,7 @@ extension Model {
 	}
 
 	static func item(shareId: String) -> ArchivedDropItem? {
-		return drops.first { $0.cloudKitShareRecord?.recordID.recordName == shareId }
+		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
 	static func typeItem(uuid: String) -> ArchivedDropItemType? {
