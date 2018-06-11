@@ -166,14 +166,8 @@ final class Preferences: NSViewController {
 			actionName = "Delete All"
 		}
 
-		let a = NSAlert()
-		a.messageText = title
-		a.informativeText = subtitle
-		a.addButton(withTitle: actionName)
-		a.addButton(withTitle: "Cancel")
-
-		a.beginSheetModal(for: view.window!) { response in
-			if response == .alertFirstButtonReturn {
+		confirm(title: title, message: subtitle, action: actionName, cancel: "Cancel") { confirmed in
+			if confirmed {
 				Model.resetEverything()
 			}
 		}
@@ -218,39 +212,77 @@ final class Preferences: NSViewController {
 		syncSwitch.isEnabled = false
 
 		if CloudManager.syncSwitchedOn {
-			CloudManager.deactivate(force: false) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
-					}
-				}
+			let sharingOwn = Model.sharingMyItems
+			let importing = Model.containsImportedShares
+			if sharingOwn && importing {
+				confirm(title: "You have shared items",
+						message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
+						action: "Turn Off Sync",
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+			} else if sharingOwn {
+				confirm(title: "You are sharing items",
+						message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
+						action: "Turn Off Sync",
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+			} else if importing {
+				confirm(title: "You have shared items imported from others",
+						message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
+						action: "Turn Off Sync",
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+			} else {
+				CloudManager.proceedWithDeactivation(self)
 			}
 		} else {
-			CloudManager.activate { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						genericAlert(title: "Could not change state", message: error.finalDescription, on: self)
+			if Model.drops.count > 0 {
+				let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
+				confirm(title: "Upload Existing Items?",
+						message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+				action: "Proceed", cancel: "Cancel") { confirmed in
+					if confirmed {
+						CloudManager.proceedWithActivation(self)
+					} else {
+						self.abortActivate()
 					}
 				}
+			} else {
+				CloudManager.proceedWithActivation(self)
 			}
 		}
+	}
+
+	private func abortDeactivate() {
+		syncSwitch.integerValue = 1
+		syncSwitch.isEnabled = true
+	}
+
+	private func abortActivate() {
+		syncSwitch.integerValue = 0
+		syncSwitch.isEnabled = true
 	}
 
 	@IBAction func eraseiCloudDataSelected(_ sender: NSButton) {
 		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
 			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
 		} else {
-			let a = NSAlert()
-			a.messageText = "Are you sure?"
-			a.informativeText = "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled."
-			a.addButton(withTitle: "Delete iCloud Data")
-			a.addButton(withTitle: "Cancel")
-
-			a.beginSheetModal(for: view.window!) { [weak self] response in
-				if response == .alertFirstButtonReturn {
-					self?.eraseiCloudData()
-				}
+			confirm(title: "Are you sure?",
+					message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
+					action: "Delete iCloud Data",
+					cancel: "Cancel") { [weak self] confirmed in
+						if confirmed {
+							self?.eraseiCloudData()
+						}
 			}
+		}
+	}
+
+	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
+		let a = NSAlert()
+		a.messageText = title
+		a.informativeText = message
+		a.addButton(withTitle: action)
+		a.addButton(withTitle: cancel)
+		a.beginSheetModal(for: view.window!) { response in
+			completion(response == .alertFirstButtonReturn)
 		}
 	}
 

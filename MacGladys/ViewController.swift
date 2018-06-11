@@ -37,6 +37,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	func windowDidResize(_ notification: Notification) {
 		if let w = window, w.isVisible {
 			lastWindowPosition = w.frame
+			ViewController.shared.hideLabels()
 		}
 	}
 
@@ -217,6 +218,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
+			self?.collection.deselectAll(nil)
 			Model.forceUpdateFilter(signalUpdate: true)
 			self?.updateTitle()
 		}
@@ -479,14 +481,23 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			if let firstDip = dip.first, firstDip == indexPath {
 				return false
 			}
-			
-			let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+
+			var destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			if destinationIndex >= Model.drops.count {
+				destinationIndex = Model.drops.count - 1
+			}
+
+			var indexPath = indexPath
+			if indexPath.item >= Model.filteredDrops.count {
+				indexPath.item = Model.filteredDrops.count - 1
+			}
+
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
 				let sourceIndex = Model.drops.index(of: sourceItem)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
-				collection.animator().moveItem(at: IndexPath(item: sourceIndex, section: 0), to: IndexPath(item: destinationIndex, section: 0))
+				collection.animator().moveItem(at: draggingIndexPath, to: indexPath)
 				collection.deselectAll(nil)
 			}
 			Model.forceUpdateFilter(signalUpdate: false)
@@ -720,6 +731,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			l.dismiss(nil)
 		} else {
 			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showLabels"), sender: nil)
+		}
+	}
+	func hideLabels() {
+		if labelController != nil {
+			showLabels(nil)
 		}
 	}
 

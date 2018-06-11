@@ -343,6 +343,18 @@ extension Model {
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
+	static var sharingMyItems: Bool {
+		return drops.contains { $0.shareMode == .sharing }
+	}
+
+	static var containsImportedShares: Bool {
+		return drops.contains { $0.isImportedShare }
+	}
+
+	static var itemsIAmSharing: [ArchivedDropItem] {
+		return drops.filter { $0.shareMode == .sharing }
+	}
+
 	static func delete(items: [ArchivedDropItem]) -> [IndexPath] {
 		var ipsToRemove = [IndexPath]()
 		var uuidsToRemove = [UUID]()

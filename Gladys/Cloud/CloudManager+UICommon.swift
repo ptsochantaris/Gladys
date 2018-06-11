@@ -10,8 +10,10 @@ import Foundation
 import CloudKit
 #if os(iOS)
 import UIKit
+typealias VC = UIViewController
 #else
 import Cocoa
+typealias VC = NSViewController
 #endif
 
 extension CloudManager {
@@ -80,8 +82,40 @@ extension CloudManager {
 		}
 	}
 
-	static func deactivate(force: Bool, completion: @escaping (Error?)->Void) {
+	static private func shutdownShares(ids: [CKRecordID], force: Bool, completion: @escaping (Error?)->Void) {
+		let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
+		modifyOperation.database = container.privateCloudDatabase
+		modifyOperation.perRecordCompletionBlock = { record, error in
+			let recordUUID = record.recordID.recordName
+			DispatchQueue.main.async {
+				if let item = Model.item(shareId: recordUUID) {
+					item.cloudKitShareRecord = nil
+					log("Shut down sharing for item \(item.uuid) before deactivation")
+				}
+			}
+		}
+		modifyOperation.modifyRecordsCompletionBlock = { _, _, error in
+			DispatchQueue.main.async {
+				if !force, let error = error {
+					completion(error)
+				} else {
+					deactivate(force: force, deactivatingShares: false, completion: completion)
+				}
+			}
+		}
+		perform(modifyOperation)
+	}
+
+	static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?)->Void) {
 		syncTransitioning = true
+
+		if deactivatingShares {
+			let myOwnShareIds = Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
+			if myOwnShareIds.count > 0 {
+				shutdownShares(ids: myOwnShareIds, force: force, completion: completion)
+				return
+			}
+		}
 
 		var finalError: Error?
 
@@ -587,5 +621,25 @@ extension CloudManager {
 		}
 		acceptShareOperation.qualityOfService = .userInteractive
 		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
+	}
+
+	static func proceedWithDeactivation(_ vc: VC) {
+		CloudManager.deactivate(force: false) { error in
+			DispatchQueue.main.async {
+				if let error = error {
+					genericAlert(title: "Could not change state", message: error.finalDescription, on: vc)
+				}
+			}
+		}
+	}
+
+	static func proceedWithActivation(_ vc: VC) {
+		CloudManager.activate { error in
+			DispatchQueue.main.async {
+				if let error = error {
+					genericAlert(title: "Could not change state", message: error.finalDescription, on: vc)
+				}
+			}
+		}
 	}
 }

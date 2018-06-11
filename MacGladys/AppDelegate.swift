@@ -137,7 +137,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		log("APNS ready: \(deviceToken.base64EncodedString())")
 	}
-
+ 
 	func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
 		log("Warning: APNS registration failed: \(error.finalDescription)")
 	}

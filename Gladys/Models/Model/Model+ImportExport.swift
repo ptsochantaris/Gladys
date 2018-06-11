@@ -52,7 +52,7 @@ extension Model {
 
 		for item in itemsInPackage.reversed() {
 			if let i = drops.index(of: item) {
-				if drops[i].updatedAt >= item.updatedAt {
+				if drops[i].updatedAt >= item.updatedAt || drops[i].shareMode != .none {
 					continue
 				}
 				if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {

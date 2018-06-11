@@ -147,7 +147,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 					let img = UIImageView(frame: .zero)
 					img.translatesAutoresizingMaskIntoConstraints = false
 					img.contentMode = .center
-					img.tintColor = shareColor
 					img.image = #imageLiteral(resourceName: "iconUserChecked")
 
 					let holder = UIView(frame: .zero)
@@ -173,7 +172,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 					shareImage = img
 					shareHolder = holder
 				}
-				
 
 			} else if !shouldShow, let h = shareHolder {
 				topLabelLeft.constant = 0
@@ -181,6 +179,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				shareImage = nil
 				shareHolder = nil
 			}
+
+			shareImage?.tintColor = shareColor
 		}
 	}
 
