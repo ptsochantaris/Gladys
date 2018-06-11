@@ -266,6 +266,7 @@ extension CloudManager {
 					}
 					syncSwitchedOn = true
 					migratedSharing = true
+					migratedSharingRecords = true
 					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
@@ -398,18 +399,26 @@ extension CloudManager {
 
 		let group = DispatchGroup()
 		group.enter()
-		group.enter()
 		fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
 			if let error = error {
 				finalError = error
 			}
 			group.leave()
 		}
+
+		group.enter()
 		fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
 			if let error = error {
 				finalError = error
+			} else {
+				if migratedSharingRecords {
+					group.leave()
+				} else {
+					fetchMissingShareRecords {
+						group.leave()
+					}
+				}
 			}
-			group.leave()
 		}
 
 		group.notify(queue: DispatchQueue.main) {
@@ -418,6 +427,42 @@ extension CloudManager {
 			}
 			completion(finalError)
 		}
+	}
+
+	private static func fetchMissingShareRecords(completion: @escaping ()->Void) {
+		let itemsWithMissingShareRecords = Model.drops.compactMap { item -> CKRecordID? in
+			if let shareId = item.cloudKitRecord?.share?.recordID, shareId.zoneID == ArchivedDropItem.privateZoneId, item.cloudKitShareRecord == nil {
+				return shareId
+			} else {
+				return nil
+			}
+		}
+
+		if itemsWithMissingShareRecords.count == 0 {
+			migratedSharingRecords = true
+			completion()
+			return
+		}
+
+		let fetch = CKFetchRecordsOperation(recordIDs: itemsWithMissingShareRecords)
+		fetch.perRecordCompletionBlock = { record, _, error in
+			DispatchQueue.main.async {
+				if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
+					existingItem.cloudKitShareRecord = share
+				}
+			}
+		}
+		fetch.fetchRecordsCompletionBlock = { _, error in
+			DispatchQueue.main.async {
+				if error == nil {
+					migratedSharingRecords = true
+					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+				}
+				completion()
+			}
+		}
+		fetch.database = container.privateCloudDatabase
+		perform(fetch)
 	}
 
 	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?) -> Void) {
