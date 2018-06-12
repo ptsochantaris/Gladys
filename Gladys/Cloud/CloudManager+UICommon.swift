@@ -467,11 +467,11 @@ extension CloudManager {
 
 	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?) -> Void) {
 
-		log("Fetching changes from database \(database.databaseScope.rawValue)")
+		log("Fetching changes from \(database.databaseScope.logName) database")
 
 		var changedZoneIds = [CKRecordZoneID]()
 		var deletedZoneIds = [CKRecordZoneID]()
-		let databaseToken = PullState.databaseToken(for: database.databaseScope.rawValue)
+		let databaseToken = PullState.databaseToken(for: database.databaseScope)
 		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
 		operation.recordZoneWithIDChangedBlock = { changedZoneIds.append($0) }
 		operation.recordZoneWithIDWasPurgedBlock = { deletedZoneIds.append($0) }
@@ -494,9 +494,9 @@ extension CloudManager {
 			}
 
 			if changedZoneIds.isEmpty {
-				log("No database changes detected in \(database.databaseScope.rawValue)")
+				log("No database changes detected in \(database.databaseScope.logName) database")
 				DispatchQueue.main.async {
-					stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
+					stats.updatedDatabaseTokens[database.databaseScope] = newToken
 					completion(nil)
 				}
 				return
@@ -505,9 +505,9 @@ extension CloudManager {
 			fetchZoneChanges(database: database, zoneIDs: changedZoneIds, stats: stats) { error in
 				DispatchQueue.main.async {
 					if let error = error {
-						log("Error fetching zone changes for \(database.databaseScope.rawValue): \(error.finalDescription)")
+						log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
 					} else {
-						stats.updatedDatabaseTokens[database.databaseScope.rawValue] = newToken
+						stats.updatedDatabaseTokens[database.databaseScope] = newToken
 					}
 					completion(error)
 				}
@@ -519,7 +519,7 @@ extension CloudManager {
 
 	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: PullState, completion: @escaping (Error?) -> Void) {
 
-		log("Fetching changes to \(zoneIDs.count) zone(s) in database \(database.databaseScope.rawValue)")
+		log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
 		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
 		for zoneID in zoneIDs {

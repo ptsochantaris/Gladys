@@ -11,7 +11,7 @@ final class PullState {
 	var updateCount = 0 { didSet { updateProgress() } }
 	var newTypesAppended = 0
 	
-	var updatedDatabaseTokens = [Int : CKServerChangeToken]()
+	var updatedDatabaseTokens = [CKDatabaseScope : CKServerChangeToken]()
 	var updatedZoneTokens = [CKRecordZoneID : CKServerChangeToken]()
 
 	private func updateProgress() {
@@ -177,8 +177,8 @@ final class PullState {
 
 	///////////////////////////////////////
 
-	static func databaseToken(for database: Int) -> CKServerChangeToken? {
-		let key = String(database)
+	static func databaseToken(for database: CKDatabaseScope) -> CKServerChangeToken? {
+		let key = database.keyName
 		if let lookup = PersistedOptions.defaults.value(forKey: "databaseTokens") as? [String : Data],
 			let data = lookup[key],
 			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
@@ -187,8 +187,8 @@ final class PullState {
 		return nil
 	}
 
-	static func setDatabaseToken(_ token: CKServerChangeToken?, for database: Int) {
-		let key = String(database)
+	private static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabaseScope) {
+		let key = database.keyName
 		var lookup = PersistedOptions.defaults.value(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
 		if let n = token {
 			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
