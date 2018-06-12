@@ -647,7 +647,10 @@ extension CloudManager {
 	}
 
 	static func acceptShare(_ metadata: CKShareMetadata) {
-		if !syncSwitchedOn { return }
+		if !syncSwitchedOn {
+			genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud", on: ViewController.shared)
+			return
+		}
 		showNetwork = true
 		NotificationCenter.default.post(name: .AcceptStarting, object: nil)
 		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
@@ -656,7 +659,7 @@ extension CloudManager {
 				showNetwork = false
 				if let error = error {
 					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-					genericAlert(title: "Could not accept share", message: error.finalDescription, on: ViewController.shared)
+					genericAlert(title: "Could not accept shared item", message: error.finalDescription, on: ViewController.shared)
 				} else {
 					sync { _ in
 						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
