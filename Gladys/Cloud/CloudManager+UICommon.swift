@@ -563,70 +563,43 @@ extension CloudManager {
 			}
 		}
 
-		_sync(force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
-			guard let ckError = error as? CKError else {
-				completion(error)
-				return
-			}
-
-			switch ckError.code {
-
-			case .notAuthenticated,
-				 .assetNotAvailable,
-				 .managedAccountRestricted,
-				 .missingEntitlement,
-				 .zoneNotFound,
-				 .incompatibleVersion,
-				 .userDeletedZone,
-				 .badDatabase,
-				 .badContainer:
-
-				// shutdown
-				if let e = error {
-					genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(e.finalDescription)\"", on: ViewController.shared)
-				}
-				deactivate(force: true) { _ in
-					completion(nil)
-				}
-
-			case .assetFileModified,
-				 .changeTokenExpired,
-				 .requestRateLimited,
-				 .serverResponseLost,
-				 .serviceUnavailable,
-				 .zoneBusy:
-
-				let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 3.0
-				syncRateLimited = true
-				DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
-					syncRateLimited = false
-					_sync(force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
-				}
-
-			case .alreadyShared,
-				 .assetFileNotFound,
-				 .batchRequestFailed,
-				 .constraintViolation,
-				 .internalError,
-				 .invalidArguments,
-				 .limitExceeded,
-				 .permissionFailure,
-				 .participantMayNeedVerification,
-				 .quotaExceeded,
-				 .referenceViolation,
-				 .serverRejectedRequest,
-				 .tooManyParticipants,
-				 .operationCancelled,
-				 .resultsTruncated,
-				 .unknownItem,
-				 .serverRecordChanged,
-				 .networkFailure,
-				 .networkUnavailable,
-				 .partialFailure:
-
-				// regular failure
+		attemptSync(force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
+			if let ckError = error as? CKError {
+				reactToCkError(ckError, force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+			} else {
 				completion(error)
 			}
+		}
+	}
+
+	private static func reactToCkError(_ ckError: CKError, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
+		switch ckError.code {
+
+		case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
+			 .userDeletedZone, .badDatabase, .badContainer:
+
+			// shutdown-worthy failure
+			genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(ckError.finalDescription)\"", on: ViewController.shared)
+			deactivate(force: true) { _ in
+				completion(nil)
+			}
+
+		case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
+
+			// retry
+			let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 6.0
+			syncRateLimited = true
+			DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
+				syncRateLimited = false
+				attemptSync(force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+			}
+
+		case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .permissionFailure,
+			 .participantMayNeedVerification, .quotaExceeded, .referenceViolation, .serverRejectedRequest, .tooManyParticipants, .operationCancelled,
+			 .resultsTruncated, .unknownItem, .serverRecordChanged, .networkFailure, .networkUnavailable, .partialFailure:
+
+			// regular failure
+			completion(ckError)
 		}
 	}
 

@@ -33,8 +33,11 @@ extension CloudManager {
 		}
 	}
 
-	static func _sync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn { completion(nil); return }
+	static func attemptSync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
+		if !syncSwitchedOn {
+			completion(nil)
+			return
+		}
 
 		if syncing && !force {
 			syncDirty = true
@@ -63,7 +66,7 @@ extension CloudManager {
 				if let error = error {
 					done(error)
 				} else if syncDirty {
-					_sync(force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+					attemptSync(force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
 				} else {
 					lastSyncCompletion = Date()
 					done(nil)

@@ -44,8 +44,11 @@ extension CloudManager {
 		}
 	}
 
-	static func _sync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn { completion(nil); return }
+	static func attemptSync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
+		if !syncSwitchedOn {
+			completion(nil)
+			return
+		}
 
 		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
 			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
@@ -92,7 +95,7 @@ extension CloudManager {
 				if let error = error {
 					done(error)
 				} else if syncDirty {
-					_sync(force: true, overridingWiFiPreference:overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
+					attemptSync(force: true, overridingWiFiPreference:overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
 				} else {
 					lastSyncCompletion = Date()
 					done(nil)
