@@ -85,7 +85,7 @@ final class DetailController: GladysViewController,
 		case .elsewhereReadOnly, .elsewhereReadWrite:
 			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
 			invitesButton.accessibilityLabel = "People"
-			invitesButton.tintColor = .darkGray
+			invitesButton.tintColor = .gray
 		case .sharing:
 			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
 			invitesButton.accessibilityLabel = "People"

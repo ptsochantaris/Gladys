@@ -485,7 +485,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 					}
 				}
 
-				let wideMode = ViewController.shared.itemSize.height > 145
+				let H = ViewController.shared.itemSize.height
+				let wideMode = H > 145
+				let smallMode = H < 240
 
 				if wideMode && PersistedOptions.displayLabelsInMainView {
 					labels = item.labels
@@ -503,28 +505,26 @@ final class ArchivedItemCell: UICollectionViewCell {
 					secondaryLabel = bottomLabel
 				}
 
+				let baseLines = smallMode ? 2 : 6
 				switch item.displayMode {
 				case .center:
 					image.contentMode = .center
 					image.circle = false
-					primaryLabel.numberOfLines = wideMode ? 8 : 2
-					secondaryLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = wideMode ? baseLines+2 : 2
 				case .fill:
 					image.contentMode = .scaleAspectFill
 					image.circle = false
-					primaryLabel.numberOfLines = 6
-					secondaryLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = baseLines
 				case .fit:
 					image.contentMode = .scaleAspectFit
 					image.circle = false
-					primaryLabel.numberOfLines = 6
-					secondaryLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = baseLines
 				case .circle:
 					image.contentMode = .scaleAspectFill
 					image.circle = true
-					primaryLabel.numberOfLines = 6
-					secondaryLabel.numberOfLines = 2
+					primaryLabel.numberOfLines = baseLines
 				}
+				secondaryLabel.numberOfLines = 2
 
 				// if we're showing an icon, let's try to enhance things a bit
 				if image.contentMode == .center, let backgroundItem = item.backgroundInfoObject {

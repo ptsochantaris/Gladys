@@ -17,19 +17,32 @@ extension CloudManager {
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
 		switch notification.databaseScope {
-		case .private, .shared:
-			log("Received DB change push")
+		case .private:
+			log("Received private DB change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
 			}
-			sync { error in
+			sync(scope: .private) { error in
 				if error != nil {
 					completionHandler(.failed)
 				} else {
 					completionHandler(.newData)
 				}
 			}
-		case .public: break
+		case .public:
+			break
+		case .shared:
+			log("Received shared DB change push")
+			if UIApplication.shared.applicationState == .background {
+				Model.reloadDataIfNeeded()
+			}
+			sync(scope: .shared) { error in
+				if error != nil {
+					completionHandler(.failed)
+				} else {
+					completionHandler(.newData)
+				}
+			}
 		}
 	}
 
@@ -39,66 +52,6 @@ extension CloudManager {
 			sync { error in
 				if let error = error {
 					log("Error in foregrounding sync: \(error.finalDescription)")
-				}
-			}
-		}
-	}
-
-	static func attemptSync(force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn {
-			completion(nil)
-			return
-		}
-
-		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
-			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
-			completion(nil)
-			return
-		}
-
-		if syncing && !force {
-			syncDirty = true
-			completion(nil)
-			return
-		}
-
-		let bgTask: UIBackgroundTaskIdentifier
-		if let e = existingBgTask {
-			bgTask = e
-		} else {
-			log("Starting cloud sync background task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
-		}
-
-		syncing = true
-		syncDirty = false
-
-		func done(_ error: Error?) {
-			syncing = false
-			if let e = error {
-				log("Sync failure: \(e.finalDescription)")
-			}
-			completion(error)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-				log("Ending cloud sync background task")
-				UIApplication.shared.endBackgroundTask(bgTask)
-			}
-		}
-
-		sendUpdatesUp { error in
-			if let error = error {
-				done(error)
-				return
-			}
-
-			fetchDatabaseChanges { error in
-				if let error = error {
-					done(error)
-				} else if syncDirty {
-					attemptSync(force: true, overridingWiFiPreference:overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
-				} else {
-					lastSyncCompletion = Date()
-					done(nil)
 				}
 			}
 		}

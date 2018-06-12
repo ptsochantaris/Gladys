@@ -14,6 +14,7 @@ typealias VC = UIViewController
 #else
 import Cocoa
 typealias VC = NSViewController
+typealias UIBackgroundTaskIdentifier = Int
 #endif
 
 extension CloudManager {
@@ -392,30 +393,34 @@ extension CloudManager {
 		}
 	}
 
-	static func fetchDatabaseChanges(completion: @escaping (Error?) -> Void) {
+	static func fetchDatabaseChanges(scope: CKDatabaseScope?, completion: @escaping (Error?) -> Void) {
 		syncProgressString = "Fetching"
 		let stats = PullState()
 		var finalError: Error?
 
 		let group = DispatchGroup()
-		group.enter()
-		fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
-			if let error = error {
-				finalError = error
+		if scope == nil || scope == .shared {
+			group.enter()
+			fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
+				if let error = error {
+					finalError = error
+				}
+				group.leave()
 			}
-			group.leave()
 		}
 
-		group.enter()
-		fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
-			if let error = error {
-				finalError = error
-			} else {
-				if migratedSharingRecords {
-					group.leave()
+		if scope == nil || scope == .private {
+			group.enter()
+			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
+				if let error = error {
+					finalError = error
 				} else {
-					fetchMissingShareRecords {
+					if migratedSharingRecords {
 						group.leave()
+					} else {
+						fetchMissingShareRecords {
+							group.leave()
+						}
 					}
 				}
 			}
@@ -545,7 +550,7 @@ extension CloudManager {
 		database.add(operation)
 	}
 
-	static func sync(force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
+	static func sync(scope: CKDatabaseScope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
 
 		if let l = lastiCloudAccount {
 			let newToken = FileManager.default.ubiquityIdentityToken
@@ -563,7 +568,7 @@ extension CloudManager {
 			}
 		}
 
-		attemptSync(force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
+		attemptSync(scope: scope, force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
 			if let ckError = error as? CKError {
 				reactToCkError(ckError, force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
 			} else {
@@ -591,7 +596,7 @@ extension CloudManager {
 			syncRateLimited = true
 			DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
 				syncRateLimited = false
-				attemptSync(force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+				attemptSync(scope: nil, force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
 			}
 
 		case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .permissionFailure,
@@ -659,6 +664,75 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let error = error {
 					genericAlert(title: "Could not change state", message: error.finalDescription, on: vc)
+				}
+			}
+		}
+	}
+
+	private static func attemptSync(scope: CKDatabaseScope?, force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
+		if !syncSwitchedOn {
+			completion(nil)
+			return
+		}
+
+		#if os(iOS)
+		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
+			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
+			completion(nil)
+			return
+		}
+		#endif
+
+		if syncing && !force {
+			log("Sync already running, but need another one. Marked to retry at the end of this.")
+			syncDirty = true
+			completion(nil)
+			return
+		}
+
+		#if os(iOS)
+		let bgTask: UIBackgroundTaskIdentifier
+		if let e = existingBgTask {
+			bgTask = e
+		} else {
+			log("Starting cloud sync background task")
+			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
+		}
+		#else
+		let bgTask: UIBackgroundTaskIdentifier? = nil
+		#endif
+
+		syncing = true
+		syncDirty = false
+
+		func done(_ error: Error?) {
+			syncing = false
+			if let e = error {
+				log("Sync failure: \(e.finalDescription)")
+			}
+			completion(error)
+			#if os(iOS)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+				log("Ending cloud sync background task")
+				UIApplication.shared.endBackgroundTask(bgTask)
+			}
+			#endif
+		}
+
+		sendUpdatesUp { error in
+			if let error = error {
+				done(error)
+				return
+			}
+
+			fetchDatabaseChanges(scope: scope) { error in
+				if let error = error {
+					done(error)
+				} else if syncDirty {
+					attemptSync(scope: nil, force: true, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
+				} else {
+					lastSyncCompletion = Date()
+					done(nil)
 				}
 			}
 		}

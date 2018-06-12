@@ -22,54 +22,20 @@ extension CloudManager {
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
 		switch notification.databaseScope {
-		case .private, .shared:
-			log("Received DB change push")
-			sync { error in
+		case .private:
+			log("Received private DB change push")
+			sync(scope: .private) { error in
 				if let error = error {
 					log("Notification-triggered sync error: \(error.finalDescription)")
 				}
 			}
-		case .public: break
-		}
-	}
-
-	static func attemptSync(force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
-		if !syncSwitchedOn {
-			completion(nil)
-			return
-		}
-
-		if syncing && !force {
-			syncDirty = true
-			completion(nil)
-			return
-		}
-
-		syncing = true
-		syncDirty = false
-
-		func done(_ error: Error?) {
-			syncing = false
-			if let e = error {
-				log("Sync failure: \(e.finalDescription)")
-			}
-			completion(error)
-		}
-
-		sendUpdatesUp { error in
-			if let error = error {
-				done(error)
-				return
-			}
-
-			fetchDatabaseChanges { error in
+		case .public:
+			break
+		case .shared:
+			log("Received shared DB change push")
+			sync(scope: .shared) { error in
 				if let error = error {
-					done(error)
-				} else if syncDirty {
-					attemptSync(force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
-				} else {
-					lastSyncCompletion = Date()
-					done(nil)
+					log("Notification-triggered sync error: \(error.finalDescription)")
 				}
 			}
 		}
