@@ -110,7 +110,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				holder.backgroundColor = borderView.backgroundColor
 				holder.layer.cornerRadius = 10
 				holder.addSubview(img)
-				addSubview(holder)
+				contentView.addSubview(holder)
 
 				NSLayoutConstraint.activate([
 					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
@@ -142,19 +142,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 			let shouldShow = shareMode != .none
 			if shouldShow, shareHolder == nil {
 
-				topLabelLeft.constant = 42
+				topLabelLeft.constant = 38
 				if shareHolder == nil {
 					let img = UIImageView(frame: .zero)
 					img.translatesAutoresizingMaskIntoConstraints = false
 					img.contentMode = .center
-					img.image = #imageLiteral(resourceName: "iconUserChecked")
+					let image = #imageLiteral(resourceName: "iconUserChecked")
+					let imageSize = image.size
+					img.image = image
 
 					let holder = UIView(frame: .zero)
 					holder.translatesAutoresizingMaskIntoConstraints = false
 					holder.backgroundColor = borderView.backgroundColor
 					holder.layer.cornerRadius = 10
 					holder.addSubview(img)
-					addSubview(holder)
+					contentView.insertSubview(holder, belowSubview: topLabel)
 
 					NSLayoutConstraint.activate([
 						holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
@@ -165,9 +167,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 						img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
 						img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
-						img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
-						img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
-						])
+						img.widthAnchor.constraint(equalToConstant: imageSize.width),
+						img.heightAnchor.constraint(equalToConstant: imageSize.height),
+					])
 
 					shareImage = img
 					shareHolder = holder
