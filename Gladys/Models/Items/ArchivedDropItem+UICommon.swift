@@ -31,6 +31,12 @@ extension ArchivedDropItem {
 		}
 	}
 
+	var shareOwnerName: String? {
+		guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
+		let f = PersonNameComponentsFormatter()
+		return f.string(from: p)
+	}
+
 	func delete() {
 		isDeleting = true
 		if cloudKitRecord != nil {
