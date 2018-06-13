@@ -1133,7 +1133,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
-		let boundsSize = view.bounds.size
+		let insets = archivedItemCollectionView.safeAreaInsets
+		let w = insets.left + insets.right
+		let h = insets.top + insets.bottom
+		let b = archivedItemCollectionView.bounds.size
+		let boundsSize = CGSize(width: b.width - w, height: b.height - h)
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
 

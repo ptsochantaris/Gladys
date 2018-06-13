@@ -142,7 +142,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			let shouldShow = shareMode != .none
 			if shouldShow, shareHolder == nil {
 
-				topLabelLeft.constant = 38
+				topLabelLeft.constant = 35
 				if shareHolder == nil {
 					let img = UIImageView(frame: .zero)
 					img.translatesAutoresizingMaskIntoConstraints = false
@@ -162,7 +162,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 						holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
 						holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
 
-						holder.widthAnchor.constraint(equalToConstant: 50),
+						holder.widthAnchor.constraint(equalToConstant: 44),
 						holder.heightAnchor.constraint(equalToConstant: 50),
 
 						img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),

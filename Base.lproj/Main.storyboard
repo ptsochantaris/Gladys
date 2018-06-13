@@ -24,7 +24,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="O1B-Q3-jL2">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="O1B-Q3-jL2">
                                     <size key="itemSize" width="300" height="300"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -82,8 +82,7 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="0TK-62-FeR"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" priority="750" id="4l4-BC-JFB"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="g2k-cT-VHS" secondAttribute="trailing" id="4l4-BC-JFB"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="v3H-LC-FOH" secondAttribute="trailing" id="54Q-4S-UsC"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="5lP-ga-4TG"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="width" secondItem="x5M-NP-dlj" secondAttribute="width" multiplier="0.6" id="6Py-cb-5dZ"/>
@@ -99,7 +98,7 @@
                                             <constraint firstItem="2DN-HK-OAe" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="kPI-Kb-kTW"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="top" secondItem="x5M-NP-dlj" secondAttribute="topMargin" id="lX8-Z5-Y4P"/>
                                             <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="centerX" secondItem="g2k-cT-VHS" secondAttribute="centerX" id="rRb-4u-PDd"/>
-                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" priority="750" id="tCq-Kc-mNY"/>
+                                            <constraint firstItem="g2k-cT-VHS" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="tCq-Kc-mNY"/>
                                             <constraint firstItem="v3H-LC-FOH" firstAttribute="top" secondItem="Axq-ka-HoY" secondAttribute="bottom" constant="7" id="u8n-iU-nM6"/>
                                             <constraint firstItem="2DN-HK-OAe" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="uIz-TY-yqr"/>
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
