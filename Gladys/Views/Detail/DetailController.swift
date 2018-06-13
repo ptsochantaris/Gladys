@@ -848,6 +848,7 @@ final class DetailController: GladysViewController,
 
 	func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
 		item.cloudKitShareRecord = csc.share
+		item.postModified()
 		updateInviteButton()
 	}
 
@@ -862,6 +863,7 @@ final class DetailController: GladysViewController,
 				ViewController.shared.deleteRequested(for: [i])
 			}
 		} else {
+			item.postModified()
 			updateInviteButton()
 		}
 	}

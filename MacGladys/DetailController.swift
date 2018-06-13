@@ -605,7 +605,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	func sharingService(_ sharingService: NSSharingService, didSave share: CKShare) {
 		item.cloudKitShareRecord = share
-		updateInfo()
+		item.postModified()
 	}
 
 	func sharingService(_ sharingService: NSSharingService, didStopSharing share: CKShare) {
@@ -614,7 +614,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		if wasImported {
 			ViewController.shared.deleteRequested(for: [item])
 		} else {
-			updateInfo()
+			item.postModified()
 		}
 	}
 
