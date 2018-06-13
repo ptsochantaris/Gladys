@@ -618,6 +618,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
+	func options(for cloudKitSharingService: NSSharingService, share provider: NSItemProvider) -> NSSharingService.CloudKitOptions {
+		return [.allowPrivate, .allowReadOnly, .allowReadWrite]
+	}
+
 	func anchoringView(for sharingService: NSSharingService, showRelativeTo positioningRect: UnsafeMutablePointer<NSRect>, preferredEdge: UnsafeMutablePointer<NSRectEdge>) -> NSView? {
 		return inviteButton
 	}

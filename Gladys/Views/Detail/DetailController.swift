@@ -834,6 +834,7 @@ final class DetailController: GladysViewController,
 		if let popover = cloudSharingController.popoverPresentationController {
 			popover.barButtonItem = barButtonItem
 		}
+		cloudSharingController.availablePermissions = [.allowPrivate, .allowReadOnly, .allowReadWrite]
 		cloudSharingController.delegate = self
 		present(cloudSharingController, animated: true) {}
 	}
