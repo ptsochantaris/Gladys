@@ -586,8 +586,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
 		}
 		let sharingService = NSSharingService(named: .cloudSharing)!
-		sharingService.delegate = self
-		sharingService.perform(withItems: [itemProvider])
+		if sharingService.canPerform(withItems: [itemProvider]) {
+			sharingService.delegate = self
+			sharingService.perform(withItems: [itemProvider])
+		} else {
+			let a = NSAlert()
+			a.messageText = "iCloud Sharing Failed"
+			a.informativeText = "iCloud sharing was not possible on this device. Please check if it has been disabled due to a security policy, or if iCloud is misconfigured."
+			a.beginSheetModal(for: view.window!, completionHandler: nil)
+		}
 	}
 
 	private func editInvites(_ sender: Any) {
@@ -622,6 +629,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	func anchoringView(for sharingService: NSSharingService, showRelativeTo positioningRect: UnsafeMutablePointer<NSRect>, preferredEdge: UnsafeMutablePointer<NSRectEdge>) -> NSView? {
 		return inviteButton
+	}
+
+	func sharingService(_ sharingService: NSSharingService, sourceWindowForShareItems items: [Any], sharingContentScope: UnsafeMutablePointer<NSSharingService.SharingContentScope>) -> NSWindow? {
+		return view.window
 	}
 
 	private func shareOptions(_ sender: NSButton) {
