@@ -570,6 +570,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBAction func inviteButtonSelected(_ sender: NSButton) {
 		if item.shareMode == .none {
 			addInvites(sender)
+		} else if item.isPrivateShareWithOnlyOwner {
+			shareOptions(sender)
 		} else {
 			editInvites(sender)
 		}
@@ -618,11 +620,30 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	func options(for cloudKitSharingService: NSSharingService, share provider: NSItemProvider) -> NSSharingService.CloudKitOptions {
-		return [.allowPrivate, .allowReadOnly, .allowReadWrite]
-	}
-
 	func anchoringView(for sharingService: NSSharingService, showRelativeTo positioningRect: UnsafeMutablePointer<NSRect>, preferredEdge: UnsafeMutablePointer<NSRectEdge>) -> NSView? {
 		return inviteButton
+	}
+
+	private func shareOptions(_ sender: NSButton) {
+		let a = NSAlert()
+		a.messageText = "No Participants"
+		a.informativeText = "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it."
+		a.addButton(withTitle: "Cancel")
+		a.addButton(withTitle: "Stop Sharing")
+		a.addButton(withTitle: "Options")
+		a.beginSheetModal(for: view.window!) { [weak self] response in
+			if response.rawValue == 1002 {
+				self?.editInvites(sender)
+			} else if response.rawValue == 1001 {
+				self?.deleteShare(sender)
+			}
+		}
+	}
+
+	private func deleteShare(_ sender: NSButton) {
+		sender.isEnabled = false
+		CloudManager.deleteShare(item) { _ in
+			sender.isEnabled = true
+		}
 	}
 }

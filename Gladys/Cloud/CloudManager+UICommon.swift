@@ -649,6 +649,27 @@ extension CloudManager {
 		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
 	}
 
+	static func deleteShare(_ item: ArchivedDropItem, completion: @escaping (Error?)->Void) {
+		guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
+			completion(nil)
+			return
+		}
+		container.privateCloudDatabase.delete(withRecordID: shareId) { _, error in
+			DispatchQueue.main.async {
+				if let error = error {
+					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription, on: ViewController.shared)
+				} else {
+					item.cloudKitShareRecord = nil
+					item.needsCloudPush = true
+					sync(scope: .private) { error in
+						item.postModified()
+						completion(error)
+					}
+				}
+			}
+		}
+	}
+
 	static func proceedWithDeactivation(_ vc: VC) {
 		CloudManager.deactivate(force: false) { error in
 			DispatchQueue.main.async {

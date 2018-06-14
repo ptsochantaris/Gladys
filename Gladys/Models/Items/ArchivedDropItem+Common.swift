@@ -162,6 +162,15 @@ extension ArchivedDropItem: Hashable {
 		}
 	}
 
+	var isPrivateShareWithOnlyOwner: Bool {
+		if let shareRecord = cloudKitShareRecord {
+			return shareRecord.participants.count == 1
+				&& shareRecord.publicPermission == .none
+				&& shareRecord.participants[0].userIdentity.userRecordID?.recordName == CKCurrentUserDefaultName
+		}
+		return false
+	}
+
 	var isImportedShare: Bool {
 		switch shareMode {
 		case .elsewhereReadOnly, .elsewhereReadWrite:

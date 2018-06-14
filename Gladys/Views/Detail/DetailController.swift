@@ -115,6 +115,8 @@ final class DetailController: GladysViewController,
 	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
 		if item.shareMode == .none {
 			addInvites(sender)
+		} else if item.isPrivateShareWithOnlyOwner {
+			shareOptions(sender)
 		} else {
 			editInvites(sender)
 		}
@@ -837,7 +839,6 @@ final class DetailController: GladysViewController,
 		if let popover = cloudSharingController.popoverPresentationController {
 			popover.barButtonItem = barButtonItem
 		}
-		cloudSharingController.availablePermissions = [.allowPrivate, .allowReadOnly, .allowReadWrite]
 		cloudSharingController.delegate = self
 		present(cloudSharingController, animated: true) {}
 	}
@@ -877,5 +878,25 @@ final class DetailController: GladysViewController,
 			return try? Data(contentsOf: ip)
 		}
 		return nil
+	}
+
+	private func shareOptions(_ sender: UIBarButtonItem) {
+		let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Options", style: .default, handler: { [weak self] _ in
+			self?.editInvites(sender)
+		}))
+		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive, handler: { [weak self] _ in
+			self?.deleteShare(sender)
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
+		a.popoverPresentationController?.barButtonItem = sender
+	}
+
+	private func deleteShare(_ sender: UIBarButtonItem) {
+		sender.isEnabled = false
+		CloudManager.deleteShare(item) { _ in
+			sender.isEnabled = true
+		}
 	}
 }
