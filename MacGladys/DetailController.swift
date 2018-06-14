@@ -579,22 +579,24 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	private func addInvites(_ sender: Any) {
 		guard let rootRecord = item.cloudKitRecord else { return }
-
-		let itemProvider = NSItemProvider()
-		itemProvider.registerCloudKitShare { [weak self] (completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-			guard let s = self else { return }
-			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
-		}
-		let sharingService = NSSharingService(named: .cloudSharing)!
-		if sharingService.canPerform(withItems: [itemProvider]) {
+		if let sharingService = NSSharingService(named: .cloudSharing) {
+			let itemProvider = NSItemProvider()
+			itemProvider.registerCloudKitShare { [weak self] (completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+				guard let s = self else { return }
+				CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
+			}
 			sharingService.delegate = self
 			sharingService.perform(withItems: [itemProvider])
-		} else {
-			let a = NSAlert()
-			a.messageText = "iCloud Sharing Failed"
-			a.informativeText = "iCloud sharing was not possible on this device. Please check if it has been disabled due to a security policy, or if iCloud is misconfigured."
-			a.beginSheetModal(for: view.window!, completionHandler: nil)
+		} else if let w = view.window {
+			missingService(w)
 		}
+	}
+
+	private func missingService(_ w: NSWindow) {
+		let a = NSAlert()
+		a.messageText = "iCloud Sharing Failed"
+		a.informativeText = "iCloud sharing is not available. Please check if it has been disabled due to a security policy on this system, or if iCloud is misconfigured."
+		a.beginSheetModal(for: w, completionHandler: nil)
 	}
 
 	private func editInvites(_ sender: Any) {
@@ -602,10 +604,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		let itemProvider = NSItemProvider()
 		itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
-		let sharingService = NSSharingService(named: .cloudSharing)!
-		sharingService.delegate = self
-		sharingService.subject = item.cloudKitSharingTitle
-		sharingService.perform(withItems: [itemProvider])
+		if let sharingService = NSSharingService(named: .cloudSharing) {
+			sharingService.delegate = self
+			sharingService.subject = item.cloudKitSharingTitle
+			sharingService.perform(withItems: [itemProvider])
+		} else if let w = view.window {
+			missingService(w)
+		}
 	}
 
 	@IBAction func openButtonSelected(_ sender: NSButton) {
