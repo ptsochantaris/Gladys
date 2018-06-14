@@ -92,6 +92,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		AppDelegate.updateHotkey()
 		CloudManager.checkMigrations()
+
+		let wn = NSWorkspace.shared.notificationCenter
+		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
+	}
+
+	@objc private func systemDidWake() {
+		AppDelegate.updateHotkey()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
