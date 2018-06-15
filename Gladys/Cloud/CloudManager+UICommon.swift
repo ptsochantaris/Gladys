@@ -332,27 +332,27 @@ extension CloudManager {
 			case RecordType.item:
 				if let item = Model.item(uuid: itemUUID) {
 					if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item record \(itemUUID)")
+						log("Update but no changes to item record (\(itemUUID))")
 					} else {
 						log("Will update existing local item for cloud record \(itemUUID)")
 						item.cloudKitUpdate(from: record)
 						stats.updateCount += 1
 					}
 				} else {
-					log("Will create new local item for cloud record \(itemUUID)")
+					log("Will create new local item for cloud record (\(itemUUID))")
 					stats.newDrops.append(record)
 				}
 			case RecordType.component:
 				if let typeItem = Model.typeItem(uuid: itemUUID) {
 					if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item type data record \(itemUUID)")
+						log("Update but no changes to item type data record (\(itemUUID))")
 					} else {
-						log("Will update existing local type data: \(itemUUID)")
+						log("Will update existing local type data: (\(itemUUID))")
 						typeItem.cloudKitUpdate(from: record)
 						stats.typeUpdateCount += 1
 					}
 				} else {
-					log("Will create new local type data: \(itemUUID)")
+					log("Will create new local type data: (\(itemUUID))")
 					stats.newTypeItemsToHookOntoDrops.append(record)
 				}
 			case RecordType.positionList:
@@ -367,11 +367,11 @@ extension CloudManager {
 			case RecordType.share:
 				if let share = record as? CKShare {
 					if let associatedItem = Model.item(shareId: itemUUID) {
-						log("Share record updated for item \(associatedItem.uuid)")
+						log("Share record updated for item (share: \(itemUUID) - item: \(associatedItem.uuid))")
 						associatedItem.cloudKitShareRecord = share
 						stats.updateCount += 1
 					} else {
-						log("Received new share record \(itemUUID)")
+						log("Received new share record (\(itemUUID))")
 						stats.newShareItemsToSetForDrops.append(share)
 					}
 				}
