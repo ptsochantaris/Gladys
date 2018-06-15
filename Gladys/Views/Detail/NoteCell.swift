@@ -42,7 +42,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		dirty = false
+		previousText = nil
 		previousHeight = 0
 	}
 
@@ -54,17 +54,12 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	func textViewDidBeginEditing(_ textView: UITextView) {
-		dirty = false
+		previousText = item.note
 		placeholder.isHidden = true
 	}
 
-	func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-		textView.text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-		return true
-	}
-
 	private var previousHeight: CGFloat = 0
-	private var dirty = false
+	private var previousText: String?
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		if text == "\n" {
@@ -74,7 +69,6 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	func textViewDidChange(_ textView: UITextView) {
-		dirty = true
 		let newHeight = textView.sizeThatFits(CGSize(width: frame.size.width, height: 5000)).height
 		if previousHeight != newHeight {
 			if let r = textView.selectedTextRange, let s = superview {
@@ -91,12 +85,19 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 	func textViewDidEndEditing(_ textView: UITextView) {
 
-		placeholder.isHidden = textView.hasText
+		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+		textView.text = newText
 
-		if !dirty { return }
-		dirty = false
+		placeholder.isHidden = !newText.isEmpty
 
-		item.note = textView.text
+		if previousText == newText {
+			resizeCallback?(nil, true)
+			return
+		}
+
+		previousText = nil
+
+		item.note = newText
 		item.markUpdated()
 
 		item.postModified()

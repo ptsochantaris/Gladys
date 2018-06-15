@@ -14,7 +14,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
 	var item: ArchivedDropItem? {
 		didSet {
-			label.text = item?.displayText.0
+			setLabelText()
 		}
 	}
 
@@ -41,23 +41,28 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		}
 	}
 
+	private var previousText: String?
+	private var previousHeight: CGFloat = 0
+
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		dirty = false
+		previousText = nil
 		previousHeight = 0
 	}
 
-	func textViewDidBeginEditing(_ textView: UITextView) {
-		dirty = false
+	func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+		if textView.alpha < 1 {
+			textView.alpha = 1
+			textView.text = nil
+		}
+		previousText = item?.displayText.0 ?? ""
+		return true
 	}
 
 	func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
 		textView.text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
 		return true
 	}
-
-	private var previousHeight: CGFloat = 0
-	private var dirty = false
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		if text == "\n" {
@@ -67,7 +72,6 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	func textViewDidChange(_ textView: UITextView) {
-		dirty = true
 		let newHeight = textView.sizeThatFits(CGSize(width: frame.size.width, height: 5000)).height
 		if previousHeight != newHeight {
 			if let r = textView.selectedTextRange, let s = superview {
@@ -84,25 +88,40 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
 	func textViewDidEndEditing(_ textView: UITextView) {
 
-		if !dirty { return }
-		dirty = false
+		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+		if previousText == newText {
+			setLabelText()
+			resizeCallback?(nil, true)
+			return
+		}
+
+		previousText = nil
 
 		guard let item = item else { return }
 
-		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-		if newText.isEmpty || newText == item.displayText.0 {
+		if newText.isEmpty || newText == item.nonOverridenText.0 {
 			item.titleOverride = ""
 		} else {
 			item.titleOverride = newText
 		}
 		item.markUpdated()
-		label.text = item.displayText.0
+		setLabelText()
 
 		item.postModified()
 		resizeCallback?(nil, true)
 
 		item.reIndex()
 	    Model.save()
+	}
+
+	private func setLabelText() {
+		if let text = item?.displayText.0, !text.isEmpty {
+			label.text = text
+			label.alpha = 1
+		} else {
+			label.text = "Add Title"
+			label.alpha = 0.4
+		}
 	}
 
 	/////////////////////////////////////

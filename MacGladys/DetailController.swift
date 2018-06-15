@@ -21,10 +21,22 @@ final class ComponentCollectionView: NSCollectionView {
 	}
 }
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate {
+protocol FocusableTextFieldDelegate: class {
+	func fieldReceivedFocus(_ field: FocusableTextField)
+}
 
-	@IBOutlet weak var titleField: NSTextField!
-	@IBOutlet weak var notesField: NSTextField!
+final class FocusableTextField: NSTextField {
+	weak var focusDelegate: FocusableTextFieldDelegate?
+	override func becomeFirstResponder() -> Bool {
+		focusDelegate?.fieldReceivedFocus(self)
+		return super.becomeFirstResponder()
+	}
+}
+
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate {
+
+	@IBOutlet weak var titleField: FocusableTextField!
+	@IBOutlet weak var notesField: FocusableTextField!
 
 	@IBOutlet weak var labels: NSTableView!
 	@IBOutlet weak var labelAdd: NSButton!
@@ -53,6 +65,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
 		labels.setDraggingSourceOperationMask(.move, forLocal: true)
 		labels.setDraggingSourceOperationMask(.copy, forLocal: false)
+
+		titleField.focusDelegate = self
+		notesField.focusDelegate = self
 	}
 
 	private var lastUpdate = Date.distantPast
@@ -199,18 +214,18 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		removeButton.isEnabled = labels.selectedRowIndexes.count > 0
 	}
 
-	private var notesDirty = false, titleDirty = false
-	override func controlTextDidChange(_ obj: Notification) {
-		guard let o = obj.object as? NSTextField else { return }
-		if o == notesField {
-			notesDirty = true
-		} else if o == titleField {
-			titleDirty = true
-		}
+	private var previousText: String?
+	func fieldReceivedFocus(_ field: FocusableTextField) {
+		previousText = field.stringValue
 	}
 
 	override func controlTextDidEndEditing(_ obj: Notification) {
-		done()
+		guard let o = obj.object as? NSTextField else { return }
+		if o == notesField {
+			done(notesCheck: true)
+		} else if o == titleField {
+			done(titleCheck: true)
+		}
 	}
 
 	@IBOutlet weak var removeButton: NSButton!
@@ -232,15 +247,25 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		Model.save()
 	}
 
-	private func done() {
+	private func done(notesCheck: Bool = false, titleCheck: Bool = false) {
 		var dirty = false
-		if notesDirty {
-			item.note = notesField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-			dirty = true
+		if notesCheck{
+			let newText = notesField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+			if newText != previousText {
+				item.note = newText
+				dirty = true
+			} else {
+				notesField.stringValue = newText
+			}
 		}
-		if titleDirty {
-			item.titleOverride = titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-			dirty = true
+		if titleCheck {
+			let newText = titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+			if newText != previousText {
+				item.titleOverride = newText
+				dirty = true
+			} else {
+				titleField.stringValue = newText
+			}
 		}
 		if dirty {
 			saveItem()
