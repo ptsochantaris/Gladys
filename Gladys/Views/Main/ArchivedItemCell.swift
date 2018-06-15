@@ -11,19 +11,19 @@ struct ShortcutAction {
 }
 
 final class ArchivedItemCell: UICollectionViewCell {
-	@IBOutlet weak var image: GladysImageView!
-	@IBOutlet weak var bottomLabel: UILabel!
-	@IBOutlet weak var labelsLabel: HighlightLabel!
-	@IBOutlet weak var bottomLabelDistance: NSLayoutConstraint!
-	@IBOutlet weak var topLabel: UILabel!
-	@IBOutlet weak var topLabelDistance: NSLayoutConstraint!
-	@IBOutlet weak var progressView: UIProgressView!
-	@IBOutlet weak var cancelButton: UIButton!
-	@IBOutlet weak var lockImage: UIImageView!
-	@IBOutlet weak var mergeImage: UIImageView!
-	@IBOutlet weak var labelsDistance: NSLayoutConstraint!
+	@IBOutlet private weak var image: GladysImageView!
+	@IBOutlet private weak var bottomLabel: UILabel!
+	@IBOutlet private weak var labelsLabel: HighlightLabel!
+	@IBOutlet private weak var bottomLabelDistance: NSLayoutConstraint!
+	@IBOutlet private weak var topLabel: UILabel!
+	@IBOutlet private weak var topLabelDistance: NSLayoutConstraint!
+	@IBOutlet private weak var progressView: UIProgressView!
+	@IBOutlet private weak var cancelButton: UIButton!
+	@IBOutlet private weak var lockImage: UIImageView!
+	@IBOutlet private weak var mergeImage: UIImageView!
+	@IBOutlet private weak var labelsDistance: NSLayoutConstraint!
 
-	@IBOutlet weak var topLabelLeft: NSLayoutConstraint!
+	@IBOutlet private weak var topLabelLeft: NSLayoutConstraint!
 
 	private var tickImage: UIImageView?
 	private var tickHolder: UIView?
@@ -241,8 +241,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	private func clearAllOtherGestures() {
-		let A = ViewController.shared.archivedItemCollectionView!
-		for r in A.gestureRecognizers ?? [] {
+		for r in ViewController.shared.collection.gestureRecognizers ?? [] {
 			r.state = .failed
 		}
 	}

@@ -11,9 +11,9 @@ import WebKit
 
 final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	
-	@IBOutlet weak var web: WKWebView!
-	@IBOutlet weak var statusLabel: UILabel!
-	@IBOutlet weak var spinner: UIActivityIndicatorView!
+	@IBOutlet private weak var web: WKWebView!
+	@IBOutlet private weak var statusLabel: UILabel!
+	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	var address: URL?
 	var webArchive: ArchivedDropItemType.PreviewItem?

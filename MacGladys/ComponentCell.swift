@@ -18,11 +18,11 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		case open, copy, delete, archive, share, edit, focus, reveal
 	}
 
-	@IBOutlet weak var descriptionLabel: NSTextField!
-	@IBOutlet weak var previewLabel: NSTextField!
-	@IBOutlet weak var sizeLabel: NSTextField!
-	@IBOutlet weak var centreBlock: NSView!
-	@IBOutlet weak var spinner: NSProgressIndicator!
+	@IBOutlet private weak var descriptionLabel: NSTextField!
+	@IBOutlet private weak var previewLabel: NSTextField!
+	@IBOutlet private weak var sizeLabel: NSTextField!
+	@IBOutlet private weak var centreBlock: NSView!
+	@IBOutlet private weak var spinner: NSProgressIndicator!
 
 	weak var delegate: ComponentCellDelegate?
 

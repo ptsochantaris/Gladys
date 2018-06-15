@@ -10,16 +10,16 @@ import UIKit
 
 final class iCloudController: GladysViewController {
 
-	@IBOutlet weak var icloudLabel: UILabel!
-	@IBOutlet weak var icloudSwitch: UISwitch!
-	@IBOutlet weak var icloudSpinner: UIActivityIndicatorView!
-	@IBOutlet weak var limitToWiFiSwitch: UISwitch!
-	@IBOutlet weak var eraseAlliCloudData: UIButton!
-	@IBOutlet weak var actionUploadSwitch: UISwitch!
-	@IBOutlet weak var syncNowButton: UIBarButtonItem!
+	@IBOutlet private weak var icloudLabel: UILabel!
+	@IBOutlet private weak var icloudSwitch: UISwitch!
+	@IBOutlet private weak var icloudSpinner: UIActivityIndicatorView!
+	@IBOutlet private weak var limitToWiFiSwitch: UISwitch!
+	@IBOutlet private weak var eraseAlliCloudData: UIButton!
+	@IBOutlet private weak var actionUploadSwitch: UISwitch!
+	@IBOutlet private weak var syncNowButton: UIBarButtonItem!
 
-	@IBOutlet var headerLabels: [UILabel]!
-	@IBOutlet var subtitleLabels: [UILabel]!
+	@IBOutlet private var headerLabels: [UILabel]!
+	@IBOutlet private var subtitleLabels: [UILabel]!
 
 	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn

@@ -147,11 +147,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	static let labelColor = NSColor.labelColor
 	static let tintColor = #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
 
-	@IBOutlet weak var searchHolder: NSView!
-	@IBOutlet weak var searchBar: NSSearchField!
+	@IBOutlet private weak var searchHolder: NSView!
+	@IBOutlet private weak var searchBar: NSSearchField!
 
-	@IBOutlet weak var emptyView: NSImageView!
-	@IBOutlet weak var emptyLabel: NSTextField!
+	@IBOutlet private weak var emptyView: NSImageView!
+	@IBOutlet private weak var emptyLabel: NSTextField!
 
 	override func viewWillAppear() {
 		if let w = view.window {

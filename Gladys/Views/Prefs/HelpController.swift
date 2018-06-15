@@ -14,7 +14,7 @@ final class HelpControllerCell: UITableViewCell {
 
 final class HelpController: GladysViewController, UITableViewDataSource, UITableViewDelegate {
 
-	@IBOutlet weak var table: UITableView!
+	@IBOutlet private weak var table: UITableView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

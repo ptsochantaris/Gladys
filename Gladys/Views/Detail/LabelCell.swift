@@ -11,7 +11,7 @@ import UIKit
 final class LabelCell: UITableViewCell {
 	
 	@IBOutlet weak var labelHolder: UIView!
-	@IBOutlet weak var labelText: UILabel!
+	@IBOutlet private weak var labelText: UILabel!
 
 	override func tintColorDidChange() {
 		labelText.tintColor = tintColor

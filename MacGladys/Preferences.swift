@@ -10,26 +10,26 @@ import Foundation
 import Cocoa
 
 final class Preferences: NSViewController {
-	@IBOutlet weak var syncSwitch: NSButton!
-	@IBOutlet weak var syncSpinner: NSProgressIndicator!
-	@IBOutlet weak var syncNowButton: NSButton!
+	@IBOutlet private weak var syncSwitch: NSButton!
+	@IBOutlet private weak var syncSpinner: NSProgressIndicator!
+	@IBOutlet private weak var syncNowButton: NSButton!
 
-	@IBOutlet weak var deleteAllButton: NSButton!
-	@IBOutlet weak var doneButton: NSButton!
-	@IBOutlet weak var eraseAlliCloudDataButton: NSButton!
+	@IBOutlet private weak var deleteAllButton: NSButton!
+	@IBOutlet private weak var doneButton: NSButton!
+	@IBOutlet private weak var eraseAlliCloudDataButton: NSButton!
 
-	@IBOutlet weak var displayNotesSwitch: NSButton!
-	@IBOutlet weak var displayLabelsSwitch: NSButton!
-	@IBOutlet weak var separateItemsSwitch: NSButton!
-	@IBOutlet weak var autoLabelSwitch: NSButton!
-	@IBOutlet weak var launchAtLoginSwitch: NSButton!
-	@IBOutlet weak var hideMainWindowSwitch: NSButton!
+	@IBOutlet private weak var displayNotesSwitch: NSButton!
+	@IBOutlet private weak var displayLabelsSwitch: NSButton!
+	@IBOutlet private weak var separateItemsSwitch: NSButton!
+	@IBOutlet private weak var autoLabelSwitch: NSButton!
+	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
+	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
-	@IBOutlet weak var hotkeyCmd: NSButton!
-	@IBOutlet weak var hotkeyOption: NSButton!
-	@IBOutlet weak var hotkeyShift: NSButton!
-	@IBOutlet weak var hotkeyChar: NSPopUpButton!
-	@IBOutlet weak var hotkeyCtrl: NSButton!
+	@IBOutlet private weak var hotkeyCmd: NSButton!
+	@IBOutlet private weak var hotkeyOption: NSButton!
+	@IBOutlet private weak var hotkeyShift: NSButton!
+	@IBOutlet private weak var hotkeyChar: NSPopUpButton!
+	@IBOutlet private weak var hotkeyCtrl: NSButton!
 	private let keyMap = [0, 11, 8, 2, 14, 3, 5, 4, 34, 38, 40, 37, 46, 45, 31, 35, 12, 15, 1, 17, 32, 9, 13, 7, 16, 6]
 
 	@IBAction func doneSelected(_ sender: NSButton) {

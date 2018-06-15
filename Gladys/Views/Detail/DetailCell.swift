@@ -7,17 +7,17 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var desc: UILabel!
 
 	@IBOutlet weak var borderView: UIView!
-	@IBOutlet weak var nameHolder: UIView!
+	@IBOutlet private weak var nameHolder: UIView!
 
-	@IBOutlet weak var inspectButton: UIButton!
-	@IBOutlet weak var viewButton: UIButton!
-	@IBOutlet weak var archiveButton: UIButton!
-	@IBOutlet weak var editButton: UIButton!
+	@IBOutlet private weak var inspectButton: UIButton!
+	@IBOutlet private weak var viewButton: UIButton!
+	@IBOutlet private weak var archiveButton: UIButton!
+	@IBOutlet private weak var editButton: UIButton!
 
-	@IBOutlet weak var editHeight: NSLayoutConstraint!
-	@IBOutlet weak var inspectHeight: NSLayoutConstraint!
-	@IBOutlet weak var archiveHeight: NSLayoutConstraint!
-	@IBOutlet weak var viewHeight: NSLayoutConstraint!
+	@IBOutlet private weak var editHeight: NSLayoutConstraint!
+	@IBOutlet private weak var inspectHeight: NSLayoutConstraint!
+	@IBOutlet private weak var archiveHeight: NSLayoutConstraint!
+	@IBOutlet private weak var viewHeight: NSLayoutConstraint!
 
 	var inspectionCallback: (()->Void)? {
 		didSet {

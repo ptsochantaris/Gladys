@@ -54,21 +54,21 @@ final class DataInspector: GladysViewController {
 		}
 	}
 
-	@IBOutlet weak var bit16: UILabel!
-	@IBOutlet weak var bit32: UILabel!
-	@IBOutlet weak var bit64: UILabel!
+	@IBOutlet private weak var bit16: UILabel!
+	@IBOutlet private weak var bit32: UILabel!
+	@IBOutlet private weak var bit64: UILabel!
 
-	@IBOutlet weak var scrollView: UIScrollView!
+	@IBOutlet private weak var scrollView: UIScrollView!
 
-	@IBOutlet weak var signedSwitch: UISwitch!
-	@IBOutlet weak var littleEndianSwitch: UISwitch!
-	@IBOutlet weak var decimalSwitch: UISwitch!
-	@IBOutlet weak var decimalLabel: UILabel!
-	@IBOutlet weak var hexadecimalLabel: UILabel!
-	@IBOutlet weak var bigEndian: UILabel!
-	@IBOutlet weak var littleEndian: UILabel!
-	@IBOutlet weak var signedLabel: UILabel!
-	@IBOutlet weak var unsignedLabel: UILabel!
+	@IBOutlet private weak var signedSwitch: UISwitch!
+	@IBOutlet private weak var littleEndianSwitch: UISwitch!
+	@IBOutlet private weak var decimalSwitch: UISwitch!
+	@IBOutlet private weak var decimalLabel: UILabel!
+	@IBOutlet private weak var hexadecimalLabel: UILabel!
+	@IBOutlet private weak var bigEndian: UILabel!
+	@IBOutlet private weak var littleEndian: UILabel!
+	@IBOutlet private weak var signedLabel: UILabel!
+	@IBOutlet private weak var unsignedLabel: UILabel!
 
 	var signedAccessibility: UIAccessibilityElement!
 	var endianAccessibility: UIAccessibilityElement!

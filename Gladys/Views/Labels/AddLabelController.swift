@@ -14,15 +14,15 @@ protocol AddLabelControllerDelegate: class {
 
 final class AddLabelController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-	@IBOutlet weak var labelText: UITextField!
-	@IBOutlet weak var table: UITableView!
+	@IBOutlet private weak var labelText: UITextField!
+	@IBOutlet private weak var table: UITableView!
 
 	var label: String?
 
 	weak var delegate: AddLabelControllerDelegate?
 
-	@IBOutlet var headerView: UIView!
-	@IBOutlet weak var headerLabel: UILabel!
+	@IBOutlet private var headerView: UIView!
+	@IBOutlet private weak var headerLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

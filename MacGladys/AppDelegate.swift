@@ -161,7 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
 	}
 
-	@IBOutlet weak var infiniteModeMenuEntry: NSMenuItem!
+	@IBOutlet private weak var infiniteModeMenuEntry: NSMenuItem!
 	@objc private func iapChanged() {
 		infiniteModeMenuEntry.isHidden = infiniteMode
 	}

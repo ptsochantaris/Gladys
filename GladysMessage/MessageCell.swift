@@ -11,8 +11,8 @@ import MapKit
 
 final class MessageCell: UICollectionViewCell {
 
-	@IBOutlet weak var topLabel: UILabel!
-	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet private weak var topLabel: UILabel!
+	@IBOutlet private weak var imageView: UIImageView!
 
 	private var existingPreviewView: UIView?
 

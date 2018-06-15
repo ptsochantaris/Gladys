@@ -11,16 +11,16 @@ final class DetailController: GladysViewController,
 
 	private var showTypeDetails = false
 
-	@IBOutlet weak var table: UITableView!
-	@IBOutlet weak var openButton: UIBarButtonItem!
-	@IBOutlet weak var dateItem: UIBarButtonItem!
-	@IBOutlet weak var dateLabel: UILabel!
-	@IBOutlet weak var dateLabelHolder: UIView!
-	@IBOutlet weak var deleteButton: UIBarButtonItem!
-	@IBOutlet weak var copyButton: UIBarButtonItem!
-	@IBOutlet weak var shareButton: UIBarButtonItem!
-	@IBOutlet weak var lockButton: UIBarButtonItem!
-	@IBOutlet weak var invitesButton: UIBarButtonItem!
+	@IBOutlet private weak var table: UITableView!
+	@IBOutlet private weak var openButton: UIBarButtonItem!
+	@IBOutlet private weak var dateItem: UIBarButtonItem!
+	@IBOutlet private weak var dateLabel: UILabel!
+	@IBOutlet private weak var dateLabelHolder: UIView!
+	@IBOutlet private weak var deleteButton: UIBarButtonItem!
+	@IBOutlet private weak var copyButton: UIBarButtonItem!
+	@IBOutlet private weak var shareButton: UIBarButtonItem!
+	@IBOutlet private weak var lockButton: UIBarButtonItem!
+	@IBOutlet private weak var invitesButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

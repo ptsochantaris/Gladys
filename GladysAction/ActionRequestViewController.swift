@@ -13,14 +13,14 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	private var loadCount = 0
 
-	@IBOutlet weak var statusLabel: UILabel?
-	@IBOutlet weak var cancelButton: UIBarButtonItem?
-	@IBOutlet weak var imageHeight: NSLayoutConstraint!
-	@IBOutlet weak var imageCenter: NSLayoutConstraint!
-	@IBOutlet weak var imageDistance: NSLayoutConstraint!
-	@IBOutlet weak var expandButton: UIButton!
-	@IBOutlet weak var background: UIImageView!
-	@IBOutlet weak var image: UIImageView!
+	@IBOutlet private weak var statusLabel: UILabel?
+	@IBOutlet private weak var cancelButton: UIBarButtonItem?
+	@IBOutlet private weak var imageHeight: NSLayoutConstraint!
+	@IBOutlet private weak var imageCenter: NSLayoutConstraint!
+	@IBOutlet private weak var imageDistance: NSLayoutConstraint!
+	@IBOutlet private weak var expandButton: UIButton!
+	@IBOutlet private weak var background: UIImageView!
+	@IBOutlet private weak var image: UIImageView!
 
 	private var newItemIds = [String]()
 

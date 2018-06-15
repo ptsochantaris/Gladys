@@ -22,8 +22,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 	var hasChanges = false
 	var isAttributed = false
 
-	@IBOutlet weak var bottomDistance: NSLayoutConstraint!
-	@IBOutlet weak var textView: UITextView!
+	@IBOutlet private weak var bottomDistance: NSLayoutConstraint!
+	@IBOutlet private weak var textView: UITextView!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()

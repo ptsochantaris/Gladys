@@ -12,12 +12,12 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
 	var bytes: Data!
 
-	@IBOutlet weak var addressViewHolder: UIView!
-	@IBOutlet weak var addressButton: UIButton!
-	@IBOutlet weak var addressItem: UIBarButtonItem!
-	@IBOutlet weak var grid: UICollectionView!
-	@IBOutlet weak var inspectorButton: UIBarButtonItem!
-	@IBOutlet weak var asciiModeButton: UIBarButtonItem!
+	@IBOutlet private weak var addressViewHolder: UIView!
+	@IBOutlet private weak var addressButton: UIButton!
+	@IBOutlet private weak var addressItem: UIBarButtonItem!
+	@IBOutlet private weak var grid: UICollectionView!
+	@IBOutlet private weak var inspectorButton: UIBarButtonItem!
+	@IBOutlet private weak var asciiModeButton: UIBarButtonItem!
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return bytes.count
@@ -50,7 +50,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		inspectorButton.accessibilityLabel = "Inspect selection"
 		addressItem.accessibilityLabel = "Selected addresses"
 
-		grid.backgroundView = UIImageView(image: (ViewController.shared.archivedItemCollectionView.backgroundView as! UIImageView).image)
+		grid.backgroundView = UIImageView(image: (ViewController.shared.collection.backgroundView as! UIImageView).image)
 		grid.accessibilityTraits |= UIAccessibilityTraitAllowsDirectInteraction
 		grid.accessibilityLabel = "Data grid"
 
@@ -194,7 +194,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
-	@IBOutlet weak var ascii: UIBarButtonItem!
+	@IBOutlet private weak var ascii: UIBarButtonItem!
 
 	@IBAction func asciiSelected(_ sender: UIBarButtonItem) {
 		let selectedIndexes = grid.indexPathsForSelectedItems

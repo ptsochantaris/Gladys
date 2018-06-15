@@ -56,16 +56,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
-	@IBOutlet weak var archivedItemCollectionView: UICollectionView!
-	@IBOutlet weak var totalSizeLabel: UIBarButtonItem!
-	@IBOutlet weak var deleteButton: UIBarButtonItem!
-	@IBOutlet weak var editLabelsButton: UIBarButtonItem!
-	@IBOutlet weak var labelsButton: UIBarButtonItem!
-	@IBOutlet weak var settingsButton: UIBarButtonItem!
-	@IBOutlet weak var itemsCount: UIBarButtonItem!
-	@IBOutlet weak var dragModePanel: UIView!
-	@IBOutlet weak var dragModeButton: UIButton!
-	@IBOutlet weak var dragModeTitle: UILabel!
+	@IBOutlet private weak var archivedItemCollectionView: UICollectionView!
+	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
+	@IBOutlet private weak var deleteButton: UIBarButtonItem!
+	@IBOutlet private weak var editLabelsButton: UIBarButtonItem!
+	@IBOutlet private weak var labelsButton: UIBarButtonItem!
+	@IBOutlet private weak var settingsButton: UIBarButtonItem!
+	@IBOutlet private weak var itemsCount: UIBarButtonItem!
+	@IBOutlet private weak var dragModePanel: UIView!
+	@IBOutlet private weak var dragModeButton: UIButton!
+	@IBOutlet private weak var dragModeTitle: UILabel!
 
 	static var shared: ViewController!
 
@@ -81,6 +81,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	static var top: UIViewController {
 		return ViewController.shared.presentedViewController ?? ViewController.shared
+	}
+
+	var collection: UICollectionView {
+		return archivedItemCollectionView!
 	}
 
 	///////////////////////
@@ -724,7 +728,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		lastSyncUpdate()
 	}
 
-	@IBOutlet weak var pasteButton: UIBarButtonItem!
+	@IBOutlet private weak var pasteButton: UIBarButtonItem!
 
 	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
 		addItems(from: UIPasteboard.general.itemProviders)

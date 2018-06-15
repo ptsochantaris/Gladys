@@ -14,8 +14,8 @@ protocol NewLabelControllerDelegate: class {
 
 final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSTextFieldDelegate {
 
-	@IBOutlet weak var labels: NSTableView!
-	@IBOutlet weak var labelField: NSTextField!
+	@IBOutlet private weak var labels: NSTableView!
+	@IBOutlet private weak var labelField: NSTextField!
 
 	weak var delegate: NewLabelControllerDelegate?
 

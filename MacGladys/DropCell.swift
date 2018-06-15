@@ -208,14 +208,14 @@ extension NSMenu {
 
 final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
-	@IBOutlet weak var topLabel: NSTextField!
-	@IBOutlet weak var bottomLabel: NSTextField!
-	@IBOutlet weak var image: FirstMouseView!
-	@IBOutlet weak var progressView: NSProgressIndicator!
-	@IBOutlet weak var cancelHolder: FirstMouseView!
-	@IBOutlet weak var lockImage: NSImageView!
-	@IBOutlet weak var labelTokenField: TokenTextField!
-	@IBOutlet weak var sharedIcon: NSImageView!
+	@IBOutlet private weak var topLabel: NSTextField!
+	@IBOutlet private weak var bottomLabel: NSTextField!
+	@IBOutlet private weak var image: FirstMouseView!
+	@IBOutlet private weak var progressView: NSProgressIndicator!
+	@IBOutlet private weak var cancelHolder: FirstMouseView!
+	@IBOutlet private weak var lockImage: NSImageView!
+	@IBOutlet private weak var labelTokenField: TokenTextField!
+	@IBOutlet private weak var sharedIcon: NSImageView!
 	
 	private var existingPreviewView: FirstMouseView?
 

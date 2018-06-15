@@ -10,19 +10,19 @@ import UIKit
 
 final class OptionsController: GladysViewController {
 
-	@IBOutlet weak var separateItemsSwitch: UISwitch!
-	@IBOutlet weak var twoColumnsSwitch: UISwitch!
-	@IBOutlet weak var removeItemsWhenDraggedOutSwitch: UISwitch!
-	@IBOutlet weak var dontAutoLabelNewItemsSwitch: UISwitch!
-	@IBOutlet weak var displayNotesInMainViewSwitch: UISwitch!
-	@IBOutlet weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
-	@IBOutlet weak var darkModeSwitch: UISwitch!
-	@IBOutlet weak var fullScreenSwitch: UISwitch!
-	@IBOutlet weak var mergeSwitch: UISwitch!
-	@IBOutlet weak var displayLabelsInMainViewSwitch: UISwitch!
+	@IBOutlet private weak var separateItemsSwitch: UISwitch!
+	@IBOutlet private weak var twoColumnsSwitch: UISwitch!
+	@IBOutlet private weak var removeItemsWhenDraggedOutSwitch: UISwitch!
+	@IBOutlet private weak var dontAutoLabelNewItemsSwitch: UISwitch!
+	@IBOutlet private weak var displayNotesInMainViewSwitch: UISwitch!
+	@IBOutlet private weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
+	@IBOutlet private weak var darkModeSwitch: UISwitch!
+	@IBOutlet private weak var fullScreenSwitch: UISwitch!
+	@IBOutlet private weak var mergeSwitch: UISwitch!
+	@IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
 
-	@IBOutlet var headerLabels: [UILabel]!
-	@IBOutlet var subtitleLabels: [UILabel]!
+	@IBOutlet private var headerLabels: [UILabel]!
+	@IBOutlet private var subtitleLabels: [UILabel]!
 
 	@IBAction func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.displayLabelsInMainView = sender.isOn

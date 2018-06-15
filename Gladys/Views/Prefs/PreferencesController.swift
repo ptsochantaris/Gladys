@@ -4,10 +4,10 @@ import MobileCoreServices
 
 final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
-	@IBOutlet weak var exportOnlyVisibleSwitch: UISwitch!
+	@IBOutlet private weak var exportOnlyVisibleSwitch: UISwitch!
 
-	@IBOutlet var headerLabels: [UILabel]!
-	@IBOutlet var subtitleLabels: [UILabel]!
+	@IBOutlet private var headerLabels: [UILabel]!
+	@IBOutlet private var subtitleLabels: [UILabel]!
 
 	@objc override func darkModeChanged() {
 		super.darkModeChanged()
@@ -170,19 +170,19 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	//////////////////////////////////
 
-	@IBOutlet weak var topLabel: UILabel!
-	@IBOutlet weak var bottomLabel: UILabel!
-	@IBOutlet weak var zipLabel: UILabel!
+	@IBOutlet private weak var topLabel: UILabel!
+	@IBOutlet private weak var bottomLabel: UILabel!
+	@IBOutlet private weak var zipLabel: UILabel!
 
-	@IBOutlet weak var infoLabel: UILabel!
-	@IBOutlet weak var container: UIView!
-	@IBOutlet weak var innerFrame: UIView!
-	@IBOutlet weak var spinner: UIActivityIndicatorView!
+	@IBOutlet private weak var infoLabel: UILabel!
+	@IBOutlet private weak var container: UIView!
+	@IBOutlet private weak var innerFrame: UIView!
+	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
-	@IBOutlet weak var zipContainer: UIView!
-	@IBOutlet weak var zipInnerFrame: UIView!
-	@IBOutlet weak var zipSpinner: UIActivityIndicatorView!
-	@IBOutlet weak var zipImage: UIImageView!
+	@IBOutlet private weak var zipContainer: UIView!
+	@IBOutlet private weak var zipInnerFrame: UIView!
+	@IBOutlet private weak var zipSpinner: UIActivityIndicatorView!
+	@IBOutlet private weak var zipImage: UIImageView!
 
 	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		if spinner.isAnimating || zipSpinner.isAnimating {
@@ -211,7 +211,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		present(a, animated: true)
 	}
 
-	@IBOutlet weak var deleteAll: UIBarButtonItem!
+	@IBOutlet private weak var deleteAll: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

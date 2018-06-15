@@ -12,9 +12,9 @@ import NotificationCenter
 class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
 UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
 
-	@IBOutlet weak var emptyLabel: UILabel!
-	@IBOutlet weak var itemsView: UICollectionView!
-	@IBOutlet weak var copiedLabel: UILabel!
+	@IBOutlet private weak var emptyLabel: UILabel!
+	@IBOutlet private weak var itemsView: UICollectionView!
+	@IBOutlet private weak var copiedLabel: UILabel!
 
 	private var itemsPerRow: Int {
 		let s = itemsView.bounds.size

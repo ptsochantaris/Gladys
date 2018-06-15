@@ -10,11 +10,11 @@ import UIKit
 
 final class LabelEditorController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-	@IBOutlet weak var labelText: UITextField!
-	@IBOutlet weak var table: UITableView!
+	@IBOutlet private weak var labelText: UITextField!
+	@IBOutlet private weak var table: UITableView!
 
-	@IBOutlet var headerView: UIView!
-	@IBOutlet weak var headerLabel: UILabel!
+	@IBOutlet private var headerView: UIView!
+	@IBOutlet private weak var headerLabel: UILabel!
 
 	var selectedItems: [UUID]?
 	var editedUUIDs = Set<UUID>()

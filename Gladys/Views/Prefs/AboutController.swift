@@ -11,13 +11,13 @@ import StoreKit
 
 final class AboutController: GladysViewController {
 
-	@IBOutlet weak var unlimitedButton: UIButton!
-	@IBOutlet weak var unlimitedSpacing: NSLayoutConstraint!
-	@IBOutlet weak var webSiteSpacing: NSLayoutConstraint!
-	@IBOutlet weak var versionLabel: UIBarButtonItem!
-	@IBOutlet weak var logo: UIImageView!
+	@IBOutlet private weak var unlimitedButton: UIButton!
+	@IBOutlet private weak var unlimitedSpacing: NSLayoutConstraint!
+	@IBOutlet private weak var webSiteSpacing: NSLayoutConstraint!
+	@IBOutlet private weak var versionLabel: UIBarButtonItem!
+	@IBOutlet private weak var logo: UIImageView!
 
-	@IBOutlet var subtitleLabels: [UILabel]!
+	@IBOutlet private var subtitleLabels: [UILabel]!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

@@ -22,12 +22,12 @@ extension Notification.Name {
 }
 
 class ItemController: WKInterfaceController {
-	@IBOutlet var label: WKInterfaceLabel!
-	@IBOutlet var date: WKInterfaceLabel!
-	@IBOutlet var image: WKInterfaceImage!
-	@IBOutlet var copyLabel: WKInterfaceLabel!
-	@IBOutlet var topGroup: WKInterfaceGroup!
-	@IBOutlet var bottomGroup: WKInterfaceGroup!
+	@IBOutlet private var label: WKInterfaceLabel!
+	@IBOutlet private var date: WKInterfaceLabel!
+	@IBOutlet private var image: WKInterfaceImage!
+	@IBOutlet private var copyLabel: WKInterfaceLabel!
+	@IBOutlet private var topGroup: WKInterfaceGroup!
+	@IBOutlet private var bottomGroup: WKInterfaceGroup!
 
 	private var fetchingImage = false
 	private var gotImage = false

@@ -19,9 +19,9 @@ let todayCellFormatter: DateFormatter = {
 
 final class TodayCell: UICollectionViewCell {
 
-	@IBOutlet weak var topLabel: UILabel!
-	@IBOutlet weak var bottomLabel: UILabel!
-	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet private weak var topLabel: UILabel!
+	@IBOutlet private weak var bottomLabel: UILabel!
+	@IBOutlet private weak var imageView: UIImageView!
 
 	private var existingPreviewView: UIView?
 

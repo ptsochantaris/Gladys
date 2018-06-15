@@ -10,9 +10,9 @@ import UIKit
 
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
 
-	@IBOutlet weak var table: UITableView!
-	@IBOutlet var clearAllButton: UIBarButtonItem!
-	@IBOutlet weak var emptyLabel: UILabel!
+	@IBOutlet private weak var table: UITableView!
+	@IBOutlet private var clearAllButton: UIBarButtonItem!
+	@IBOutlet private weak var emptyLabel: UILabel!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

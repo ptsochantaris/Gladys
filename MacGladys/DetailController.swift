@@ -35,18 +35,18 @@ final class FocusableTextField: NSTextField {
 
 final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate {
 
-	@IBOutlet weak var titleField: FocusableTextField!
-	@IBOutlet weak var notesField: FocusableTextField!
+	@IBOutlet private weak var titleField: FocusableTextField!
+	@IBOutlet private weak var notesField: FocusableTextField!
 
-	@IBOutlet weak var labels: NSTableView!
-	@IBOutlet weak var labelAdd: NSButton!
-	@IBOutlet weak var labelRemove: NSButton!
+	@IBOutlet private weak var labels: NSTableView!
+	@IBOutlet private weak var labelAdd: NSButton!
+	@IBOutlet private weak var labelRemove: NSButton!
 
-	@IBOutlet weak var inviteButton: NSButton!
-	@IBOutlet weak var openButton: NSButton!
-	@IBOutlet weak var infoLabel: NSTextField!
+	@IBOutlet private weak var inviteButton: NSButton!
+	@IBOutlet private weak var openButton: NSButton!
+	@IBOutlet private weak var infoLabel: NSTextField!
 
-	@IBOutlet weak var components: ComponentCollectionView!
+	@IBOutlet private weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
 
 	override func viewDidLoad() {
@@ -228,7 +228,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	@IBOutlet weak var removeButton: NSButton!
+	@IBOutlet private weak var removeButton: NSButton!
 	@IBAction func removeSelected(_ sender: NSButton) {
 		if let selected = labels.selectedRowIndexes.first {
 			item.labels.remove(at: selected)

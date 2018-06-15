@@ -10,7 +10,7 @@ import UIKit
 
 final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
-	@IBOutlet weak var label: UITextView!
+	@IBOutlet private weak var label: UITextView!
 
 	var item: ArchivedDropItem? {
 		didSet {
