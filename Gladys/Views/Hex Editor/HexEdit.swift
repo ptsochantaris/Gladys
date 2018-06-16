@@ -50,7 +50,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		inspectorButton.accessibilityLabel = "Inspect selection"
 		addressItem.accessibilityLabel = "Selected addresses"
 
-		grid.backgroundView = UIImageView(image: (ViewController.shared.collection.backgroundView as! UIImageView).image)
+		grid.backgroundView = UIImageView(image: (ViewController.shared.itemView.backgroundView as! UIImageView).image)
 		grid.accessibilityTraits |= UIAccessibilityTraitAllowsDirectInteraction
 		grid.accessibilityLabel = "Data grid"
 

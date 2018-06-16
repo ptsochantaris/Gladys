@@ -42,7 +42,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 
 	func windowDidEndLiveResize(_ notification: Notification) {
-		ViewController.shared.collection.reloadData()
+		ViewController.shared.itemView.reloadData()
 	}
 
 	var lastWindowPosition: NSRect? {
@@ -138,11 +138,12 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 }
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
-	@IBOutlet weak var collection: MainCollectionView!
+
+	@IBOutlet private weak var collection: MainCollectionView!
 
 	static var shared: ViewController! = nil
 
-	private let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
+	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
 	static let labelColor = NSColor.labelColor
 	static let tintColor = #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
@@ -159,6 +160,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		updateTitle()
 		super.viewWillAppear()
+	}
+
+	var itemView: MainCollectionView {
+		return collection
 	}
 
 	func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
@@ -343,7 +348,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-		let i = collectionView.makeItem(withIdentifier: dropCellId, for: indexPath)
+		let i = collectionView.makeItem(withIdentifier: ViewController.dropCellId, for: indexPath)
 		i.representedObject = Model.filteredDrops[indexPath.item]
 		return i
 	}

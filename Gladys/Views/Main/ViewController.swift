@@ -56,7 +56,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
-	@IBOutlet private weak var archivedItemCollectionView: UICollectionView!
+	@IBOutlet private weak var collection: UICollectionView!
 	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet private weak var deleteButton: UIBarButtonItem!
 	@IBOutlet private weak var editLabelsButton: UIBarButtonItem!
@@ -83,8 +83,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return ViewController.shared.presentedViewController ?? ViewController.shared
 	}
 
-	var collection: UICollectionView {
-		return archivedItemCollectionView!
+	var itemView: UICollectionView {
+		return collection!
 	}
 
 	///////////////////////
@@ -126,10 +126,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			}
 			updateDragModeOverlay()
 			view.addSubview(dragModePanel)
-			let top = dragModePanel.topAnchor.constraint(equalTo: archivedItemCollectionView.topAnchor)
+			let top = dragModePanel.topAnchor.constraint(equalTo: collection.topAnchor)
 			top.constant = -300
 			NSLayoutConstraint.activate([
-				dragModePanel.centerXAnchor.constraint(equalTo: archivedItemCollectionView.centerXAnchor),
+				dragModePanel.centerXAnchor.constraint(equalTo: collection.centerXAnchor),
 				top
 				])
 			view.layoutIfNeeded()
@@ -355,7 +355,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	private func endMergeMode() {
 		if let m = mergeCellIndexPath {
-			if let oldCell = archivedItemCollectionView.cellForItem(at: m) as? ArchivedItemCell {
+			if let oldCell = collection.cellForItem(at: m) as? ArchivedItemCell {
 				oldCell.mergeMode = false
 			}
 			mergeCellIndexPath = nil
@@ -376,7 +376,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if let destinationIndexPath = destinationIndexPath,
 			PersistedOptions.allowMergeOfTypeItems,
 			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
-			let cell = archivedItemCollectionView.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
+			let cell = collection.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
 			let cellItem = cell.archivedDropItem,
 			!cellItem.shouldDisplayLoading && !cellItem.needsUnlock,
 			!cellItem.typeItems.contains(where: { $0.uuid == draggedItem.uuid }) {
@@ -434,7 +434,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private var patternColor: UIColor {
-		return UIColor(patternImage: (archivedItemCollectionView.backgroundView as! UIImageView).image!)
+		return UIColor(patternImage: (collection.backgroundView as! UIImageView).image!)
 	}
 
 	var phoneMode: Bool {
@@ -470,7 +470,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				let n = segue.destination as? UINavigationController,
 				let d = n.topViewController as? DetailController,
 				let p = n.popoverPresentationController,
-				let cell = archivedItemCollectionView.cellForItem(at: indexPath)
+				let cell = collection.cellForItem(at: indexPath)
 				else { return }
 
 			d.item = item
@@ -572,14 +572,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		super.darkModeChanged()
 
 		if PersistedOptions.darkMode {
-			archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+			collection.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
 				DispatchQueue.main.async {
 					t.textColor = .lightGray
 				}
 			}
 		} else {
-			archivedItemCollectionView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
+			collection.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
 				DispatchQueue.main.async {
 					t.textColor = .darkText
@@ -604,13 +604,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
-		archivedItemCollectionView.dropDelegate = self
-		archivedItemCollectionView.dragDelegate = self
-		archivedItemCollectionView.reorderingCadence = .fast
-		archivedItemCollectionView.dataSource = self
-		archivedItemCollectionView.delegate = self
-		archivedItemCollectionView.accessibilityLabel = "Items"
-		archivedItemCollectionView.dragInteractionEnabled = true
+		collection.dropDelegate = self
+		collection.dragDelegate = self
+		collection.reorderingCadence = .fast
+		collection.dataSource = self
+		collection.delegate = self
+		collection.accessibilityLabel = "Items"
+		collection.dragInteractionEnabled = true
 
 		CSSearchableIndex.default().indexDelegate = Model.indexDelegate
 
@@ -686,7 +686,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
-		guard let r = archivedItemCollectionView.refreshControl else { return }
+		guard let r = collection.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
 			CloudManager.sync(overridingWiFiPreference: true) { error in
 				if let error = error {
@@ -698,19 +698,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	@objc private func cloudStatusChanged() {
-		if CloudManager.syncSwitchedOn && archivedItemCollectionView.refreshControl == nil {
+		if CloudManager.syncSwitchedOn && collection.refreshControl == nil {
 			let refresh = UIRefreshControl()
 			refresh.tintColor = view.tintColor
 			refresh.addTarget(self, action: #selector(refreshControlChanged(_:)), for: .valueChanged)
-			archivedItemCollectionView.refreshControl = refresh
+			collection.refreshControl = refresh
 
 			navigationController?.view.layoutIfNeeded()
 
-		} else if !CloudManager.syncSwitchedOn && archivedItemCollectionView.refreshControl != nil {
-			archivedItemCollectionView.refreshControl = nil
+		} else if !CloudManager.syncSwitchedOn && collection.refreshControl != nil {
+			collection.refreshControl = nil
 		}
 
-		if let r = archivedItemCollectionView.refreshControl {
+		if let r = collection.refreshControl {
 			if r.isRefreshing && !CloudManager.syncing {
 				r.endRefreshing()
 			}
@@ -719,7 +719,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func lastSyncUpdate() {
-		if let r = archivedItemCollectionView.refreshControl {
+		if let r = collection.refreshControl {
 			r.attributedTitle = NSAttributedString(string: CloudManager.syncString)
 		}
 	}
@@ -755,16 +755,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 			let destinationIndexPath = IndexPath(item: 0, section: 0)
 
-			archivedItemCollectionView.performBatchUpdates({
+			collection.performBatchUpdates({
 				Model.drops.insert(item, at: 0)
 				Model.forceUpdateFilter(signalUpdate: false)
 				let itemVisiblyInserted = Model.filteredDrops.contains(item)
 				if itemVisiblyInserted {
-					archivedItemCollectionView.insertItems(at: [destinationIndexPath])
-					archivedItemCollectionView.isAccessibilityElement = false
+					collection.insertItems(at: [destinationIndexPath])
+					collection.isAccessibilityElement = false
 				}
 			}, completion: { finished in
-				self.archivedItemCollectionView.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
+				self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
 				self.mostRecentIndexPathActioned = destinationIndexPath
 				self.focusInitialAccessibilityElement()
 			})
@@ -841,7 +841,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@objc private func foregrounded() {
 		if lowMemoryMode {
 			lowMemoryMode = false
-			for cell in archivedItemCollectionView.visibleCells as? [ArchivedItemCell] ?? [] {
+			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
 				cell.lowMemoryMode = false
 				cell.reDecorate()
 			}
@@ -926,7 +926,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
-		archivedItemCollectionView.isAccessibilityElement = Model.filteredDrops.count == 0
+		collection.isAccessibilityElement = Model.filteredDrops.count == 0
 	}
 
 	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
@@ -939,7 +939,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					_ = self.popoverPresentationControllerShouldDismissPopover(p)
 				}
 				self.selectedItems?.removeAll()
-				self.archivedItemCollectionView.reloadData()
+				self.collection.reloadData()
 				self.didUpdateItems()
 			}))
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -960,7 +960,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 					_ = self.popoverPresentationControllerShouldDismissPopover(p)
 				}
 				self.selectedItems = Model.filteredDrops.map { $0.uuid }
-				self.archivedItemCollectionView.reloadData()
+				self.collection.reloadData()
 				self.didUpdateItems()
 			}))
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -1067,7 +1067,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		UIView.performWithoutAnimation {
 			didUpdateItems()
-			for cell in archivedItemCollectionView.visibleCells as? [ArchivedItemCell] ?? [] {
+			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
 				cell.isEditing = editing
 			}
 		}
@@ -1077,7 +1077,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	private func calculateItemSize() {
 
 		func calculateSizes(for columnCount: CGFloat) {
-			let layout = (archivedItemCollectionView.collectionViewLayout as! UICollectionViewFlowLayout)
+			let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
 			let extras = (layout.minimumInteritemSpacing * (columnCount - 1.0)) + layout.sectionInset.left + layout.sectionInset.right
 			let side = ((lastSize.width - extras) / columnCount).rounded(.down)
 			itemSize = CGSize(width: side, height: side)
@@ -1099,7 +1099,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-		if let cell = archivedItemCollectionView.cellForItem(at: indexPath) as? ArchivedItemCell, let b = cell.backgroundView {
+		if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell, let b = cell.backgroundView {
 			let corner = b.layer.cornerRadius
 			let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
 			let params = UIDragPreviewParameters()
@@ -1124,7 +1124,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		super.viewDidAppear(animated)
 		if firstAppearance {
 			firstAppearance = false
-			archivedItemCollectionView.refreshControl?.tintColor = view.tintColor
+			collection.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
 			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 			DispatchQueue.main.async {
@@ -1142,17 +1142,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
-		let insets = archivedItemCollectionView.safeAreaInsets
+		let insets = collection.safeAreaInsets
 		let w = insets.left + insets.right
 		let h = insets.top + insets.bottom
-		let b = archivedItemCollectionView.bounds.size
+		let b = collection.bounds.size
 		let boundsSize = CGSize(width: b.width - w, height: b.height - h)
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
 
 		calculateItemSize()
 		DispatchQueue.main.async { [weak self] in
-			self?.archivedItemCollectionView.reloadData()
+			self?.collection.reloadData()
 		}
 	}
 
@@ -1242,8 +1242,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		let ipsToRemove = Model.delete(items: items)
 		if !ipsToRemove.isEmpty {
-			archivedItemCollectionView.performBatchUpdates({
-				self.archivedItemCollectionView.deleteItems(at: ipsToRemove)
+			collection.performBatchUpdates({
+				self.collection.deleteItems(at: ipsToRemove)
 			})
 		}
 
@@ -1289,7 +1289,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		if let i = Model.filteredDrops.index(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-			archivedItemCollectionView.reloadItems(at: [mostRecentIndexPathActioned!])
+			collection.reloadItems(at: [mostRecentIndexPathActioned!])
 			focusInitialAccessibilityElement()
 			item.reIndex()
 		} else {
@@ -1347,18 +1347,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	func highlightItem(with identifier: String, andOpen: Bool) {
 		resetSearch(andLabels: true)
 		dismissAnyPopOver()
-		archivedItemCollectionView.isUserInteractionEnabled = false
+		collection.isUserInteractionEnabled = false
 		if let i = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
 			let ip = IndexPath(item: i, section: 0)
-			archivedItemCollectionView.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
+			collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-				if let cell = self.archivedItemCollectionView.cellForItem(at: ip) as? ArchivedItemCell {
+				if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {
 					cell.flash()
 					if andOpen {
-						self.collectionView(self.archivedItemCollectionView, didSelectItemAt: ip)
+						self.collectionView(self.collection, didSelectItemAt: ip)
 					}
 				}
-				self.archivedItemCollectionView.isUserInteractionEnabled = true
+				self.collection.isUserInteractionEnabled = true
 			}
 		}
 	}
@@ -1375,8 +1375,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	@objc func reloadData() {
 		updateLabelIcon()
-		archivedItemCollectionView.performBatchUpdates({
-			self.archivedItemCollectionView.reloadSections(IndexSet(integer: 0))
+		collection.performBatchUpdates({
+			self.collection.reloadSections(IndexSet(integer: 0))
 		})
 	}
 
@@ -1428,10 +1428,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	override var initialAccessibilityElement: UIView {
-		if let ip = closestIndexPathSinceLast, let cell = archivedItemCollectionView.cellForItem(at: ip) {
+		if let ip = closestIndexPathSinceLast, let cell = collection.cellForItem(at: ip) {
 			return cell
 		} else {
-			return archivedItemCollectionView
+			return collection
 		}
 	}
 

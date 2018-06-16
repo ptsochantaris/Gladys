@@ -241,7 +241,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	private func clearAllOtherGestures() {
-		for r in ViewController.shared.collection.gestureRecognizers ?? [] {
+		for r in ViewController.shared.itemView.gestureRecognizers ?? [] {
 			r.state = .failed
 		}
 	}
