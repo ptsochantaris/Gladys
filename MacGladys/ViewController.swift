@@ -825,13 +825,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		case #selector(unlock(_:)):
-			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
+			return lockedSelectedItems.count == 1 && collection.selectionIndexPaths.count == 1
 		case #selector(removeLock(_:)):
-			if collection.actionableSelectedItems.contains(where: { $0.isImportedShare }) { return false }
-			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
+			let lockedItems = lockedSelectedItems
+			if lockedItems.contains(where: { $0.isImportedShare }) { return false }
+			return lockedItems.count == 1 && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
-			if collection.actionableSelectedItems.contains(where: { $0.isImportedShare }) { return false }
-			return lockedSelectedItems.count == 0 && collection.selectionIndexPaths.count == 1
+			let lockedItems = lockedSelectedItems
+			if lockedItems.contains(where: { $0.isImportedShare }) { return false }
+			return lockedItems.count == 0 && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
 			if selectedItems.count > 1 {
