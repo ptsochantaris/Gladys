@@ -273,7 +273,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		if item.needsUnlock {
 			let m = NSMenu()
 			m.addItem("Unlock", action: #selector(unlockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-			m.addItem("Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			if !item.isImportedShare {
+				m.addItem("Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+			}
 			m.delegate = self
 			return m
 		} else {
@@ -549,7 +551,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.title {
-		case "Lock", "Unlock", "Remove Lock":
+		case "Unlock":
+			return ViewController.shared.itemView.selectionIndexPaths.count == 1
+		case "Lock", "Remove Lock":
 			return ViewController.shared.itemView.selectionIndexPaths.count == 1 && !(archivedDropItem?.isImportedShare ?? false)
 		default:
 			return true

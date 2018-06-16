@@ -824,7 +824,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return collection.actionableSelectedItems.count > 0
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
-		case #selector(unlock(_:)), #selector(removeLock(_:)):
+		case #selector(unlock(_:)):
+			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
+		case #selector(removeLock(_:)):
+			if collection.actionableSelectedItems.contains(where: { $0.isImportedShare }) { return false }
 			return lockedSelectedItems.count == collection.selectionIndexPaths.count && collection.selectionIndexPaths.count == 1
 		case #selector(createLock(_:)):
 			if collection.actionableSelectedItems.contains(where: { $0.isImportedShare }) { return false }
