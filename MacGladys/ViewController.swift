@@ -166,7 +166,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		return collection
 	}
 
-	func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
+	private func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
 		if let inserting = inserting {
 			collection.deselectAll(nil)
 			collection.animator().insertItems(at: Set(inserting))
@@ -572,14 +572,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 
-		if Model.forceUpdateFilter(signalUpdate: false) {
-			reloadData(inserting: insertedIndexPaths)
-		} else if Model.isFiltering && count > 0 {
-			let a = NSAlert()
-			a.messageText = count > 1 ? "Items Added" : "Item Added"
-			a.beginSheetModal(for: view.window!, completionHandler: nil)
+		if count > 0 {
+			if !Model.forceUpdateFilter(signalUpdate: false), Model.isFiltering, let w = view.window {
+				let a = NSAlert()
+				a.messageText = count > 1 ? "Items Added" : "Item Added"
+				a.beginSheetModal(for: w, completionHandler: nil)
+			} else {
+				reloadData(inserting: insertedIndexPaths)
+			}
+			return true
+		} else {
+			return false
 		}
-		return true
 	}
 
 	func importFiles(paths: [String]) {
