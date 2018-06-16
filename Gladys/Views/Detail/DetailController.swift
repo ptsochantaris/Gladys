@@ -235,10 +235,10 @@ final class DetailController: GladysViewController,
 		if sharing {
 			preferredContentSize = CGSize(width: 320, height: max(preferredContentSize.height, 500))
 		} else {
-			table.layoutIfNeeded()
 			if initialWidth > 0 {
 				preferredContentSize = CGSize(width: initialWidth, height: table.contentSize.height)
 			} else {
+				table.layoutIfNeeded()
 				preferredContentSize = table.contentSize
 			}
 		}
