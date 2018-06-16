@@ -445,7 +445,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 					image.image = cachedImage
 				} else {
 					image.image = nil
-					ArchivedItemCell.imageProcessingQueue.async { [weak self] in
+					imageProcessingQueue.async { [weak self] in
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							let img = item.displayIcon
 							imageCache.setObject(img, forKey: cacheKey)
@@ -583,8 +583,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		mergeImage.isHidden = hideMerge
 		shareMode = shared
 	}
-
-	private static let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
 	func flash() {
 		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {

@@ -27,6 +27,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	}
 
 	func reIngest(delegate: LoadCompletionDelegate) {
+		imageCache.removeObject(forKey: imageCacheKey)
 		self.delegate = delegate
 		loadCount = typeItems.count
 		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock

@@ -10,8 +10,6 @@ import UIKit
 import MapKit
 import CoreLocation
 
-let imageCache = NSCache<NSString, UIImage>()
-
 final class GladysImageView: UIImageView {
 
 	var circle: Bool = false {

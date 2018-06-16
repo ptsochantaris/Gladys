@@ -833,11 +833,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		super.didReceiveMemoryWarning()
 	}
 
-	private func clearCaches() {
-		ArchivedDropItem.clearCaches()
-		imageCache.removeAllObjects()
-	}
-
 	@objc private func foregrounded() {
 		if lowMemoryMode {
 			lowMemoryMode = false
@@ -920,7 +915,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		for item in itemsToReIngest {
 			Model.loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()
-			imageCache.removeObject(forKey: item.imageCacheKey)
 			item.reIngest(delegate: self)
 		}
 

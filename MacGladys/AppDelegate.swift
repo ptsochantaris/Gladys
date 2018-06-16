@@ -149,6 +149,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		log("Warning: APNS registration failed: \(error.finalDescription)")
 	}
 
+	func applicationWillResignActive(_ notification: Notification) {
+		clearCaches()
+	}
+
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
 		let p = NSMutableParagraphStyle()
 		p.alignment = .center

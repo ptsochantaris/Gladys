@@ -121,7 +121,6 @@ final class TokenTextField: NSTextField {
 final class MiniMapView: FirstMouseView {
 
 	private var coordinate: CLLocationCoordinate2D?
-	private static let cache = NSCache<NSString, NSImage>()
 	private weak var snapshotter: MKMapSnapshotter?
 	private var snapshotOptions: MKMapSnapshotOptions?
 
@@ -148,7 +147,7 @@ final class MiniMapView: FirstMouseView {
 		guard let coordinate = coordinate else { return }
 
 		let cacheKey = NSString(format: "%f %f", coordinate.latitude, coordinate.longitude)
-		if let existingImage = MiniMapView.cache.object(forKey: cacheKey) {
+		if let existingImage = imageCache.object(forKey: cacheKey) {
 			layer?.contents = existingImage
 			return
 		}
@@ -176,7 +175,7 @@ final class MiniMapView: FirstMouseView {
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
 				let img = snapshot.image
-				MiniMapView.cache.setObject(img, forKey: cacheKey)
+				imageCache.setObject(img, forKey: cacheKey)
 				DispatchQueue.main.async { [weak self] in
 					self?.layer?.contents = img
 				}
@@ -189,10 +188,6 @@ final class MiniMapView: FirstMouseView {
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	static func clearCaches() {
-		cache.removeAllObjects()
 	}
 }
 
@@ -346,9 +341,26 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			} else {
 
 				hideImage = false
-
-				image.layer?.contents = item.displayIcon
 				share = item.shareMode
+
+				let cacheKey = item.imageCacheKey
+				if let cachedImage = imageCache.object(forKey: cacheKey) {
+					image.layer?.contents = cachedImage
+				} else {
+					image.layer?.contents = nil
+					imageProcessingQueue.async { [weak self] in
+						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+							let img = item.displayIcon
+							imageCache.setObject(img, forKey: cacheKey)
+							DispatchQueue.main.sync { [weak self] in
+								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
+									self?.image.layer?.contents = img
+								}
+							}
+						}
+					}
+				}
+
 
 				let primaryLabel: NSTextField
 				let secondaryLabel: NSTextField

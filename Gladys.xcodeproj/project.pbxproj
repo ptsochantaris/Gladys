@@ -92,6 +92,11 @@
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
+		162594D520D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		162594D620D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		162594D720D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		162594D820D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		162594D920D557D300A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -563,6 +568,7 @@
 		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
+		162594D420D5548F00A65E06 /* Caches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caches.swift; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -903,6 +909,7 @@
 				169E646920A0F04E003CB4C0 /* Network.swift */,
 				1695218820A23B5200FFE817 /* IAPManager.swift */,
 				16559C8920A4CC55006C281D /* Global.swift */,
+				162594D420D5548F00A65E06 /* Caches.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2033,6 +2040,7 @@
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
+				162594D820D5548F00A65E06 /* Caches.swift in Sources */,
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
@@ -2143,6 +2151,7 @@
 				161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */,
 				166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
+				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				167CDF9820B62DB400EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
 				1602F3282030E5F20036E2B0 /* Notifications.swift in Sources */,
@@ -2185,6 +2194,7 @@
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
 				16C3A2D320AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
+				162594D720D5548F00A65E06 /* Caches.swift in Sources */,
 				16CD7D9520A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16CD7D8C20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
@@ -2266,6 +2276,7 @@
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				161089951FA31D810095FE34 /* CloudManager+iOS.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
+				162594D520D5548F00A65E06 /* Caches.swift in Sources */,
 				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16101E8C1EF5A1EB00CCBD3C /* ArchivedDropItem.swift in Sources */,
 				16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */,
@@ -2334,6 +2345,7 @@
 				16969BB81FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F3292030E5FA0036E2B0 /* UIImage+Extensions.swift in Sources */,
+				162594D620D5548F00A65E06 /* Caches.swift in Sources */,
 				16CD7D8320A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				16CD7D9420A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				16969BAE1FB0E688007B2F77 /* Model.swift in Sources */,

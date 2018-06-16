@@ -82,6 +82,10 @@ extension ArchivedDropItem: Hashable {
 		return nil
 	}
 
+	var imageCacheKey: NSString {
+		return "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)" as NSString
+	}
+
 	var nonOverridenText: (String?, NSTextAlignment) {
 		if let a = typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
