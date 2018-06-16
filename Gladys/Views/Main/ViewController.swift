@@ -676,7 +676,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			item.needsUnlock = true
 			item.postModified()
 		}
-		ArchivedDropItem.clearCaches()
+		clearCaches()
 	}
 
 	@objc private func reachabilityChanged() {
@@ -829,8 +829,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
 			log("Placed UI in low-memory mode")
 		}
-		ArchivedItemCell.clearCaches()
+		clearCaches()
 		super.didReceiveMemoryWarning()
+	}
+
+	private func clearCaches() {
+		ArchivedDropItem.clearCaches()
+		imageCache.removeAllObjects()
 	}
 
 	@objc private func foregrounded() {
@@ -915,7 +920,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		for item in itemsToReIngest {
 			Model.loadingUUIDs.insert(item.uuid)
 			startBgTaskIfNeeded()
-			ArchivedItemCell.clearCachedImage(for: item)
+			imageCache.removeObject(forKey: item.imageCacheKey)
 			item.reIngest(delegate: self)
 		}
 

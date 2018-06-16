@@ -394,17 +394,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	private static let displayIconCache = NSCache<NSString, UIImage>()
-
-	static func clearCaches() {
-		displayIconCache.removeAllObjects()
-		MiniMapView.clearCaches()
-	}
-
-	static func clearCachedImage(for item: ArchivedDropItem) {
-		displayIconCache.removeObject(forKey: item.imageCacheKey)
-	}
-
 	private func decorate(with item: ArchivedDropItem?) {
 
 		var wantColourView = false
@@ -452,14 +441,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 				shared = item.shareMode
 
 				let cacheKey = item.imageCacheKey
-				if let cachedImage = ArchivedItemCell.displayIconCache.object(forKey: cacheKey) {
+				if let cachedImage = imageCache.object(forKey: cacheKey) {
 					image.image = cachedImage
 				} else {
 					image.image = nil
 					ArchivedItemCell.imageProcessingQueue.async { [weak self] in
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							let img = item.displayIcon
-							ArchivedItemCell.displayIconCache.setObject(img, forKey: cacheKey)
+							imageCache.setObject(img, forKey: cacheKey)
 							DispatchQueue.main.sync { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
 									self?.image.image = img

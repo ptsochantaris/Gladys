@@ -10,6 +10,8 @@ import UIKit
 import MapKit
 import CoreLocation
 
+let imageCache = NSCache<NSString, UIImage>()
+
 final class GladysImageView: UIImageView {
 
 	var circle: Bool = false {
@@ -50,7 +52,6 @@ final class ColourView: UIView {}
 final class MiniMapView: UIImageView {
 
 	private var coordinate: CLLocationCoordinate2D?
-	private static let cache = NSCache<NSString, UIImage>()
 	private weak var snapshotter: MKMapSnapshotter?
 	private var snapshotOptions: MKMapSnapshotOptions?
 
@@ -83,7 +84,7 @@ final class MiniMapView: UIImageView {
 		#endif
 
 		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
-		if let existingImage = MiniMapView.cache.object(forKey: cacheKey) {
+		if let existingImage = imageCache.object(forKey: cacheKey) {
 			image = existingImage
 			return
 		}
@@ -112,7 +113,7 @@ final class MiniMapView: UIImageView {
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
 				let img = snapshot.image
-				MiniMapView.cache.setObject(img, forKey: cacheKey)
+				imageCache.setObject(img, forKey: cacheKey)
 				DispatchQueue.main.async { [weak self] in
 					self?.image = img
 					UIView.animate(withDuration: 0.2) {
@@ -128,9 +129,5 @@ final class MiniMapView: UIImageView {
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	static func clearCaches() {
-		cache.removeAllObjects()
 	}
 }

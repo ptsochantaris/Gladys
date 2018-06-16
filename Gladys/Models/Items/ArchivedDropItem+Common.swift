@@ -107,6 +107,15 @@ extension ArchivedDropItem: Hashable {
 		needsCloudPush = true
 	}
 
+	var folderUrl: URL {
+		let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
+		let f = FileManager.default
+		if !f.fileExists(atPath: url.path) {
+			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		}
+		return url
+	}
+
 	private var cloudKitDataPath: URL {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
 	}

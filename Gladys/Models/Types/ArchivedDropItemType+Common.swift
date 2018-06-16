@@ -340,6 +340,23 @@ extension ArchivedDropItemType: Equatable {
 
 		return sizeItem(path: bytesPath)
 	}
+
+	var folderUrl: URL {
+		let url = Model.appStorageUrl.appendingPathComponent(parentUuid.uuidString).appendingPathComponent(uuid.uuidString)
+		let f = FileManager.default
+		if !f.fileExists(atPath: url.path) {
+			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		}
+		return url
+	}
+
+	var imagePath: URL {
+		return folderUrl.appendingPathComponent("thumbnail.png")
+	}
+
+	var bytesPath: URL {
+		return folderUrl.appendingPathComponent("blob", isDirectory: false)
+	}
 	
 	private var cloudKitDataPath: URL {
 		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
