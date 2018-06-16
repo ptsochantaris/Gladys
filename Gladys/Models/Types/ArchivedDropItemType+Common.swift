@@ -106,11 +106,15 @@ extension ArchivedDropItemType: Equatable {
 	}
 
 	var isURL: Bool {
-		return typeConforms(to: kUTTypeURL)
+		return isWebURL || isFileURL || typeConforms(to: kUTTypeURL)
 	}
 
 	var isWebURL: Bool {
 		return typeIdentifier == "public.url"
+	}
+
+	var isFileURL: Bool {
+		return typeIdentifier == "public.file-url"
 	}
 
 	var isWebArchive: Bool {
