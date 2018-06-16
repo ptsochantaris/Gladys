@@ -550,7 +550,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.title {
 		case "Lock", "Unlock", "Remove Lock":
-			return ViewController.shared.itemView.selectionIndexPaths.count == 1 && (archivedDropItem?.isImportedShare ?? false)
+			return ViewController.shared.itemView.selectionIndexPaths.count == 1 && !(archivedDropItem?.isImportedShare ?? false)
 		default:
 			return true
 		}

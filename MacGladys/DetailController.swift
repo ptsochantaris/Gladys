@@ -107,9 +107,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let readWrite = shareMode != .elsewhereReadOnly
 
 		view.window?.title = (item.displayText.0 ?? "Details") + (readWrite ? "" : " — Read Only")
-		titleField.placeholderString = item.nonOverridenText.0 ?? "Title"
+		titleField.placeholderString = item.nonOverridenText.0 ?? "Add Title"
 		titleField.stringValue = item.titleOverride
 		notesField.stringValue = item.note
+		notesField.placeholderString = "Add Note"
 		labels.reloadData()
 		updateLabelButtons()
 		components.animator().reloadData()

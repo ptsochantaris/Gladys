@@ -53,14 +53,14 @@
                             </textFieldCell>
                         </textField>
                         <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4i-OV-TYP">
-                            <rect key="frame" x="110" y="0.0" width="63" height="28"/>
+                            <rect key="frame" x="0.0" y="0.0" width="283" height="28"/>
                             <subviews>
                                 <imageView horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-K8-ebl">
                                     <rect key="frame" x="0.0" y="0.0" width="24" height="28"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
                                 </imageView>
                                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
-                                    <rect key="frame" x="30" y="8" width="35" height="13"/>
+                                    <rect key="frame" x="30" y="8" width="255" height="13"/>
                                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
                                         <font key="font" metaFont="label"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -78,6 +78,10 @@
                             </customSpacing>
                         </stackView>
                     </subviews>
+                    <constraints>
+                        <constraint firstItem="D4i-OV-TYP" firstAttribute="leading" secondItem="o2k-wL-hgZ" secondAttribute="leading" id="63a-YQ-vgA"/>
+                        <constraint firstAttribute="trailing" secondItem="D4i-OV-TYP" secondAttribute="trailing" id="aRZ-vP-WVe"/>
+                    </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
                         <integer value="1000"/>
