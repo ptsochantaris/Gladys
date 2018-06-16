@@ -207,7 +207,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var bottomLabel: NSTextField!
 	@IBOutlet private weak var image: FirstMouseView!
 	@IBOutlet private weak var progressView: NSProgressIndicator!
-	@IBOutlet private weak var cancelHolder: FirstMouseView!
+	@IBOutlet private weak var cancelButton: NSButton!
 	@IBOutlet private weak var lockImage: NSImageView!
 	@IBOutlet private weak var labelTokenField: TokenTextField!
 	@IBOutlet private weak var sharedIcon: NSImageView!
@@ -484,7 +484,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		bottomLabel.textColor = bottomLabelHighlight ? ViewController.tintColor : ViewController.labelColor
 
 		image.isHidden = hideImage
-		cancelHolder.isHidden = hideCancel
+		cancelButton.isHidden = hideCancel
+		progressView.isHidden = hideCancel
 		lockImage.isHidden = hideLock
 
 		switch share {

@@ -12,7 +12,7 @@
         <collectionViewItem nibName="DropCell" id="JIL-3y-Tt4" customClass="DropCell" customModule="Gladys" customModuleProvider="target">
             <connections>
                 <outlet property="bottomLabel" destination="cNg-lc-Fh3" id="LVr-aA-yFN"/>
-                <outlet property="cancelHolder" destination="duN-D4-5gc" id="T4h-ZG-jLF"/>
+                <outlet property="cancelButton" destination="t0u-49-eaV" id="G1c-68-Kdj"/>
                 <outlet property="image" destination="NZY-Vj-9PZ" id="zRO-Yi-3aJ"/>
                 <outlet property="labelTokenField" destination="a86-XO-bJA" id="pVf-3S-Nfe"/>
                 <outlet property="lockImage" destination="yh6-B4-WQQ" id="dpN-qb-qou"/>
@@ -22,136 +22,108 @@
                 <outlet property="view" destination="zta-tj-lHd" id="lVx-8r-5Oa"/>
             </connections>
         </collectionViewItem>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zta-tj-lHd" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="303" height="529"/>
+        <customView wantsLayer="YES" id="zta-tj-lHd" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="303" height="302"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
-                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UsM-5Y-85M" userLabel="View" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
-                    <rect key="frame" x="10" y="10" width="283" height="509"/>
+                <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
+                    <rect key="frame" x="10" y="10" width="283" height="282"/>
                     <subviews>
-                        <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
-                            <rect key="frame" x="0.0" y="0.0" width="283" height="509"/>
+                        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Man-El-psZ">
+                            <rect key="frame" x="124" y="269" width="35" height="13"/>
+                            <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="Gny-xC-pSm">
+                                <font key="font" metaFont="label"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="78" width="283" height="186"/>
+                        </customView>
+                        <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
+                            <rect key="frame" x="133" y="51" width="17" height="22"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
+                        </imageView>
+                        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
+                            <rect key="frame" x="124" y="33" width="35" height="13"/>
+                            <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="jch-fj-zkm">
+                                <font key="font" metaFont="label"/>
+                                <color key="textColor" red="0.54335528609999995" green="0.14673578740000001" blue="0.1104804799" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4i-OV-TYP">
+                            <rect key="frame" x="110" y="0.0" width="63" height="28"/>
                             <subviews>
-                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Man-El-psZ">
-                                    <rect key="frame" x="124" y="496" width="35" height="13"/>
-                                    <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="Gny-xC-pSm">
+                                <imageView horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-K8-ebl">
+                                    <rect key="frame" x="0.0" y="0.0" width="24" height="28"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
+                                </imageView>
+                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
+                                    <rect key="frame" x="30" y="8" width="35" height="13"/>
+                                    <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
                                         <font key="font" metaFont="label"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="173" width="283" height="318"/>
-                                </customView>
-                                <customView wantsLayer="YES" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="duN-D4-5gc" userLabel="Cancel Holder" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="78" width="283" height="90"/>
-                                    <subviews>
-                                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
-                                            <rect key="frame" x="134" y="58" width="16" height="16"/>
-                                        </progressIndicator>
-                                        <button wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
-                                            <rect key="frame" x="101" y="13" width="82" height="32"/>
-                                            <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Dm-0x-pAW">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                                <string key="keyEquivalent" base64-UTF8="YES">
-Gw
-</string>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="cancelSelected:" target="JIL-3y-Tt4" id="LFN-D1-0ei"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="t0u-49-eaV" firstAttribute="centerY" secondItem="duN-D4-5gc" secondAttribute="centerY" constant="15" id="29K-ug-0Aw"/>
-                                        <constraint firstItem="t0u-49-eaV" firstAttribute="top" secondItem="15T-lS-AOB" secondAttribute="bottom" constant="17" id="3Wp-gR-AEF"/>
-                                        <constraint firstItem="15T-lS-AOB" firstAttribute="centerX" secondItem="t0u-49-eaV" secondAttribute="centerX" id="F5i-8q-Yp0"/>
-                                        <constraint firstItem="t0u-49-eaV" firstAttribute="centerX" secondItem="duN-D4-5gc" secondAttribute="centerX" id="a6s-Sc-WIK"/>
-                                        <constraint firstAttribute="height" constant="90" id="vFJ-bE-ay9"/>
-                                    </constraints>
-                                </customView>
-                                <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
-                                    <rect key="frame" x="133" y="51" width="17" height="22"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
-                                </imageView>
-                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
-                                    <rect key="frame" x="124" y="33" width="35" height="13"/>
-                                    <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="jch-fj-zkm">
-                                        <font key="font" metaFont="label"/>
-                                        <color key="textColor" red="0.54335528609999995" green="0.14673578740000001" blue="0.1104804799" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4i-OV-TYP">
-                                    <rect key="frame" x="0.0" y="0.0" width="283" height="28"/>
-                                    <subviews>
-                                        <imageView horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-K8-ebl">
-                                            <rect key="frame" x="0.0" y="0.0" width="24" height="28"/>
-                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
-                                        </imageView>
-                                        <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
-                                            <rect key="frame" x="30" y="8" width="255" height="13"/>
-                                            <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
-                                                <font key="font" metaFont="label"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
-                                    </subviews>
-                                    <visibilityPriorities>
-                                        <integer value="1000"/>
-                                        <integer value="1000"/>
-                                    </visibilityPriorities>
-                                    <customSpacing>
-                                        <real value="3.4028234663852886e+38"/>
-                                        <real value="3.4028234663852886e+38"/>
-                                    </customSpacing>
-                                </stackView>
                             </subviews>
-                            <constraints>
-                                <constraint firstAttribute="trailing" secondItem="NZY-Vj-9PZ" secondAttribute="trailing" id="BeJ-XL-evl"/>
-                                <constraint firstItem="D4i-OV-TYP" firstAttribute="leading" secondItem="o2k-wL-hgZ" secondAttribute="leading" id="Mk9-dB-h6z"/>
-                                <constraint firstAttribute="trailing" secondItem="duN-D4-5gc" secondAttribute="trailing" id="Ryh-IE-awp"/>
-                                <constraint firstAttribute="trailing" secondItem="D4i-OV-TYP" secondAttribute="trailing" id="iyW-am-m6v"/>
-                                <constraint firstItem="duN-D4-5gc" firstAttribute="leading" secondItem="o2k-wL-hgZ" secondAttribute="leading" id="mxM-aG-NJ2"/>
-                                <constraint firstItem="NZY-Vj-9PZ" firstAttribute="leading" secondItem="o2k-wL-hgZ" secondAttribute="leading" id="tc4-Fw-Lk4"/>
-                            </constraints>
                             <visibilityPriorities>
-                                <integer value="1000"/>
-                                <integer value="1000"/>
-                                <integer value="1000"/>
-                                <integer value="1000"/>
                                 <integer value="1000"/>
                                 <integer value="1000"/>
                             </visibilityPriorities>
                             <customSpacing>
                                 <real value="3.4028234663852886e+38"/>
                                 <real value="3.4028234663852886e+38"/>
-                                <real value="3.4028234663852886e+38"/>
-                                <real value="3.4028234663852886e+38"/>
-                                <real value="3.4028234663852886e+38"/>
-                                <real value="3.4028234663852886e+38"/>
                             </customSpacing>
                         </stackView>
                     </subviews>
-                    <constraints>
-                        <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" id="6nb-uY-di4"/>
-                        <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="UsM-5Y-85M" secondAttribute="top" id="9Ti-MZ-Iol"/>
-                        <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="UsM-5Y-85M" secondAttribute="leading" id="MDo-na-fFH"/>
-                        <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" id="mE0-4y-jyd"/>
-                    </constraints>
-                </customView>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
+                <button wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
+                    <rect key="frame" x="110" y="115" width="82" height="32"/>
+                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Dm-0x-pAW">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                    </buttonCell>
+                    <connections>
+                        <action selector="cancelSelected:" target="JIL-3y-Tt4" id="LFN-D1-0ei"/>
+                    </connections>
+                </button>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
+                    <rect key="frame" x="143" y="159" width="16" height="16"/>
+                </progressIndicator>
             </subviews>
             <constraints>
-                <constraint firstItem="UsM-5Y-85M" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="10" id="BXa-SN-4qe"/>
-                <constraint firstAttribute="bottom" secondItem="UsM-5Y-85M" secondAttribute="bottom" constant="10" id="N56-Id-0Zg"/>
-                <constraint firstAttribute="trailing" secondItem="UsM-5Y-85M" secondAttribute="trailing" constant="10" id="WO5-Ti-7ni"/>
-                <constraint firstItem="UsM-5Y-85M" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="10" id="ecy-oM-29n"/>
+                <constraint firstItem="t0u-49-eaV" firstAttribute="centerX" secondItem="15T-lS-AOB" secondAttribute="centerX" id="5ms-Lr-c73"/>
+                <constraint firstItem="15T-lS-AOB" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" constant="-16" id="Nad-s7-rdc"/>
+                <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="10" id="dvh-qF-Qzh"/>
+                <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" constant="10" id="gvH-wC-pDa"/>
+                <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="10" id="iCR-Wi-2Nr"/>
+                <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="10" id="tDq-GB-o82"/>
+                <constraint firstItem="15T-lS-AOB" firstAttribute="bottom" secondItem="t0u-49-eaV" secondAttribute="top" constant="-16" id="u8W-p7-GNH"/>
+                <constraint firstItem="15T-lS-AOB" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="v6w-Hw-dAl"/>
             </constraints>
             <shadow key="shadow" blurRadius="2">
                 <color key="color" white="0.0" alpha="0.3006742294520548" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             </shadow>
-            <point key="canvasLocation" x="208.5" y="717.5"/>
+            <point key="canvasLocation" x="208.5" y="600"/>
         </customView>
     </objects>
     <resources>
