@@ -50,7 +50,7 @@ final class AboutController: GladysViewController {
 		}
 	}
 
-	@IBAction func aboutSelected(_ sender: UIButton) {
+	@IBAction private func aboutSelected(_ sender: UIButton) {
 		let u = URL(string: "https://bru.build/app/gladys")!
 		UIApplication.shared.open(u, options: [:]) { success in
 			if success {
@@ -59,7 +59,7 @@ final class AboutController: GladysViewController {
 		}
 	}
 
-	@IBAction func unlimitedSelected(_ sender: UIButton) {
+	@IBAction private func unlimitedSelected(_ sender: UIButton) {
 		done()
 		IAPManager.shared.displayRequest(newTotal: -1)
 	}

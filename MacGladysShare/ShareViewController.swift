@@ -22,7 +22,7 @@ class ShareViewController: NSViewController {
 	private let importGroup = DispatchGroup()
 	private let pasteboard = NSPasteboard(name: sharingPasteboard)
 
-	@IBAction func cancelButtonSelected(_ sender: NSButton) {
+	@IBAction private func cancelButtonSelected(_ sender: NSButton) {
 		cancelled = true
 		for p in progresses where !p.isFinished {
 			p.cancel()

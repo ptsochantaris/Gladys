@@ -24,49 +24,49 @@ final class OptionsController: GladysViewController {
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
 
-	@IBAction func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.displayLabelsInMainView = sender.isOn
 		ViewController.shared.reloadData()
 	}
 
-	@IBAction func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
+	@IBAction private func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
 		PersistedOptions.showCopyMoveSwitchSelector = sender.isOn
 	}
 
-	@IBAction func removeItemsWhenDraggedOutChanged(_ sender: UISwitch) {
+	@IBAction private func removeItemsWhenDraggedOutChanged(_ sender: UISwitch) {
 		PersistedOptions.removeItemsWhenDraggedOut = sender.isOn
 	}
 
-	@IBAction func dontAutoLabelNewItemsChanged(_ sender: UISwitch) {
+	@IBAction private func dontAutoLabelNewItemsChanged(_ sender: UISwitch) {
 		PersistedOptions.dontAutoLabelNewItems = sender.isOn
 	}
 
-	@IBAction func twoColumnsSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
 		if ViewController.shared.phoneMode {
 			ViewController.shared.forceLayout()
 		}
 	}
 
-	@IBAction func separateItemsSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func separateItemsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.separateItemPreference = sender.isOn
 	}
 
-	@IBAction func displayNotesInMainViewSelected(_ sender: UISwitch) {
+	@IBAction private func displayNotesInMainViewSelected(_ sender: UISwitch) {
 		PersistedOptions.displayNotesInMainView = sender.isOn
 		ViewController.shared.reloadData()
 	}
 
-	@IBAction func darkModeSelected(_ sender: UISwitch) {
+	@IBAction private func darkModeSelected(_ sender: UISwitch) {
 		PersistedOptions.darkMode = sender.isOn
 		NotificationCenter.default.post(name: .DarkModeChanged, object: nil)
 	}
 
-	@IBAction func fullScreenPreviewsSelected(_ sender: UISwitch) {
+	@IBAction private func fullScreenPreviewsSelected(_ sender: UISwitch) {
 		PersistedOptions.fullScreenPreviews = sender.isOn
 	}
 
-	@IBAction func mergeSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func mergeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.allowMergeOfTypeItems = sender.isOn
 	}
 

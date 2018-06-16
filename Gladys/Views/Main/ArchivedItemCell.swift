@@ -30,7 +30,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var shareImage: UIImageView?
 	private var shareHolder: UIView?
 
-	@IBAction func cancelSelected(_ sender: UIButton) {
+	@IBAction private func cancelSelected(_ sender: UIButton) {
 		progressView.observedProgress = nil
 		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])

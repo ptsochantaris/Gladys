@@ -524,7 +524,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		ViewController.shared.delete(self)
 	}
 
-	@IBAction func cancelSelected(_ sender: NSButton) {
+	@IBAction private func cancelSelected(_ sender: NSButton) {
 		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
 			ViewController.shared.deleteRequested(for: [archivedDropItem])
 		}

@@ -178,7 +178,7 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
-	@IBAction func viewOnDeviceSelected() {
+	@IBAction private func viewOnDeviceSelected() {
 		opening = true
 		if let uuid = uuid {
 			WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
@@ -189,7 +189,7 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
-	@IBAction func complicationSelected() {
+	@IBAction private func complicationSelected() {
 		complicating = true
 		PersistedOptions.watchComplicationText = labelText ?? ""
 		let server = CLKComplicationServer.sharedInstance()
@@ -201,7 +201,7 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
-	@IBAction func copySelected() {
+	@IBAction private func copySelected() {
 		copying = true
 		if let uuid = uuid {
 			WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
@@ -213,7 +213,7 @@ class ItemController: WKInterfaceController {
 	}
 
 	private static var hidden = false
-	@IBAction func tapped() {
+	@IBAction private func tapped() {
 		ItemController.hidden = !ItemController.hidden
 		NotificationCenter.default.post(name: .GroupsUpdated, object: nil)
 	}

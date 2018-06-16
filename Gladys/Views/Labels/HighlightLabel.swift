@@ -26,6 +26,12 @@ final class HighlightLabel: UILabel {
 	}
 
 	private func update() {
+
+		if labels.isEmpty {
+			attributedText = nil
+			return
+		}
+
 		let p = NSMutableParagraphStyle()
 		p.alignment = textAlignment
 		p.lineBreakMode = .byWordWrapping
@@ -51,56 +57,51 @@ final class HighlightLabel: UILabel {
 
 	override func draw(_ rect: CGRect) {
 
-		guard let attributedText = attributedText, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
-
-		let highlightColor = tintColor!
+		guard let attributedText = attributedText, let highlightColor = tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
 
 		let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
 
-		let path = CGMutablePath()
-		path.addRect(bounds)
-
-		let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, nil)
+		let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), CGPath(rect: rect, transform: nil), nil)
 
 		context.textMatrix = .identity
 		context.translateBy(x: 0, y: bounds.size.height)
 		context.scaleBy(x: 1, y: -1)
 
-		if labels.count > 0 {
+		CTFrameDraw(totalFrame, context)
 
-			let lines = CTFrameGetLines(totalFrame) as NSArray
-			let lineCount = lines.count
+		// frames
 
-			for index in 0 ..< lineCount {
-				let line = lines[index] as! CTLine
+		let lines = CTFrameGetLines(totalFrame) as NSArray
+		let lineCount = lines.count
 
-				var origins = [CGPoint](repeating: .zero, count: lineCount)
-				CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-				let lineFrame = CTLineGetBoundsWithOptions(line, [])
-				let offset: CGFloat = index < (lineCount-1) ? 2 : -6
-				let lineStart = (bounds.width - lineFrame.width + offset) * 0.5
+		for index in 0 ..< lineCount {
+			let line = lines[index] as! CTLine
 
-				for r in CTLineGetGlyphRuns(line) as NSArray {
+			var origins = [CGPoint](repeating: .zero, count: lineCount)
+			CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
+			let lineFrame = CTLineGetBoundsWithOptions(line, [])
+			let offset: CGFloat = index < (lineCount-1) ? 2 : -6
+			let lineStart = (bounds.width - lineFrame.width + offset) * 0.5
 
-					let run = r as! CTRun
-					let attributes = CTRunGetAttributes(run) as NSDictionary
+			for r in CTLineGetGlyphRuns(line) as NSArray {
 
-					if attributes["HighlightText"] != nil {
-						var runBounds = lineFrame
+				let run = r as! CTRun
+				let attributes = CTRunGetAttributes(run) as NSDictionary
 
-						runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
-						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
-						runBounds.origin.y = origins[index].y - 2
+				if attributes["HighlightText"] != nil {
+					var runBounds = lineFrame
 
-						context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
-						context.setLineWidth(0.5)
-						context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
-						context.strokePath()
-					}
+					runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
+					runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
+					runBounds.origin.y = origins[index].y - 2
+
+					context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
 				}
 			}
 		}
 
-		CTFrameDraw(totalFrame, context)
+		context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
+		context.setLineWidth(0.5)
+		context.strokePath()
 	}
 }

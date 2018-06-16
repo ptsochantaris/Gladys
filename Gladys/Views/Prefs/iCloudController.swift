@@ -21,11 +21,11 @@ final class iCloudController: GladysViewController {
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
 
-	@IBAction func limitToWiFiChanged(_ sender: UISwitch) {
+	@IBAction private func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
 	}
 
-	@IBAction func uploadItemsFromShareChanged(_ sender: UISwitch) {
+	@IBAction private func uploadItemsFromShareChanged(_ sender: UISwitch) {
 		CloudManager.shareActionShouldUpload = sender.isOn
 	}
 
@@ -73,7 +73,7 @@ final class iCloudController: GladysViewController {
 		}
 	}
 
-	@IBAction func eraseiCloudDataSelected(_ sender: UIButton) {
+	@IBAction private func eraseiCloudDataSelected(_ sender: UIButton) {
 		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
 			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
 		} else {
@@ -125,7 +125,7 @@ final class iCloudController: GladysViewController {
 		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn
 	}
 
-	@IBAction func syncNowSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func syncNowSelected(_ sender: UIBarButtonItem) {
 		CloudManager.sync { error in
 			DispatchQueue.main.async {
 				if let error = error {

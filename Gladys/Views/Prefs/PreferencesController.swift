@@ -184,7 +184,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@IBOutlet private weak var zipSpinner: UIActivityIndicatorView!
 	@IBOutlet private weak var zipImage: UIImageView!
 
-	@IBAction func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		if spinner.isAnimating || zipSpinner.isAnimating {
 			return
 		}
@@ -392,7 +392,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	/////////////////////////////
 
-	@IBAction func exportOnlyVisibleChanged(_ sender: UISwitch) {
+	@IBAction private func exportOnlyVisibleChanged(_ sender: UISwitch) {
 		PersistedOptions.exportOnlyVisibleItems = sender.isOn
 		updateUI()
 	}

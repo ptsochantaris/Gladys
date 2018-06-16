@@ -94,20 +94,20 @@ final class DetailCell: UITableViewCell {
 		viewCallback?()
 	}
 
-	@IBAction func editSelected(_ sender: UIButton) {
+	@IBAction private func editSelected(_ sender: UIButton) {
 		editCallback?()
 	}
 
-	@IBAction func inspectSelected(_ sender: UIButton) {
+	@IBAction private func inspectSelected(_ sender: UIButton) {
 		inspectionCallback?()
 	}
 
-	@IBAction func archiveSelected(_ sender: UIButton) {
+	@IBAction private func archiveSelected(_ sender: UIButton) {
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Archiving, please wait")
 		archiveCallback?()
 	}
 
-	@IBAction func viewSelected(_ sender: UIButton) {
+	@IBAction private func viewSelected(_ sender: UIButton) {
 		viewCallback?()
 	}
 

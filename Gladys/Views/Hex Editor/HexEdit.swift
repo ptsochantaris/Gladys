@@ -156,7 +156,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
-	@IBAction func inspectSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func inspectSelected(_ sender: UIBarButtonItem) {
 		performSegue(withIdentifier: "inspector", sender: nil)
 	}
 
@@ -196,7 +196,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
 	@IBOutlet private weak var ascii: UIBarButtonItem!
 
-	@IBAction func asciiSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func asciiSelected(_ sender: UIBarButtonItem) {
 		let selectedIndexes = grid.indexPathsForSelectedItems
 		asciiMode = !asciiMode
 		sender.title = asciiMode ? "HEX" : "ASCII"
@@ -206,7 +206,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
-	@IBAction func addressSelected(_ sender: Any) {
+	@IBAction private func addressSelected(_ sender: Any) {
 		let a = UIAlertController(title: "Jump To Address", message: nil, preferredStyle: .alert)
 		a.addTextField { field in
 			let ip = self.grid.indexPathsForSelectedItems ?? self.grid.indexPathsForVisibleItems

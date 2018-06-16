@@ -149,7 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		log("Warning: APNS registration failed: \(error.finalDescription)")
 	}
 
-	@IBAction func aboutSelected(_ sender: NSMenuItem) {
+	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
 		let p = NSMutableParagraphStyle()
 		p.alignment = .center
 		p.lineSpacing = 1
@@ -166,17 +166,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		infiniteModeMenuEntry.isHidden = infiniteMode
 	}
 
-	@IBAction func infiniteModeSelected(_ sender: NSMenuItem) {
+	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {
 		IAPManager.shared.displayRequest(newTotal: -1)
 	}
 
-	@IBAction func openWebSite(_ sender: NSMenuItem) {
+	@IBAction private func openWebSite(_ sender: NSMenuItem) {
 		NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
 	}
 
 	/////////////////////////////////////////////////////////////////
 
-	@IBAction func importSelected(_ sender: NSMenuItem) {
+	@IBAction private func importSelected(_ sender: NSMenuItem) {
 
 		let w = ViewController.shared.view.window!
 		if !w.isVisible {
@@ -212,7 +212,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	@IBAction func exportSelected(_ sender: NSMenuItem) {
+	@IBAction private func exportSelected(_ sender: NSMenuItem) {
 
 		let w = ViewController.shared.view.window!
 		if !w.isVisible {
@@ -240,7 +240,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		PersistedOptions.exportOnlyVisibleItems = sender.integerValue == 1
 	}
 
-	@IBAction func zipSelected(_ sender: NSMenuItem) {
+	@IBAction private func zipSelected(_ sender: NSMenuItem) {
 
 		let w = ViewController.shared.view.window!
 		if !w.isVisible {

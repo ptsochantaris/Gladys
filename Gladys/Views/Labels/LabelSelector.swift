@@ -108,7 +108,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		cell.setSelected(toggle.enabled, animated: false)
 	}
 
-	@IBAction func clearAllSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func clearAllSelected(_ sender: UIBarButtonItem) {
 	    Model.disableAllLabels()
 		updates()
 		done()

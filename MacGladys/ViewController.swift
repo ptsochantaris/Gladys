@@ -386,7 +386,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@IBAction func searchDoneSelected(_ sender: NSButton) {
+	@IBAction private func searchDoneSelected(_ sender: NSButton) {
 		resetSearch(andLabels: false)
 	}
 
@@ -406,7 +406,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@IBAction func findSelected(_ sender: NSMenuItem) {
+	@IBAction private func findSelected(_ sender: NSMenuItem) {
 		searchHolder.isHidden = !searchHolder.isHidden
 		if !searchHolder.isHidden {
 			view.window?.makeFirstResponder(searchBar)

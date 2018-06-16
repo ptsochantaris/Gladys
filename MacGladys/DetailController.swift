@@ -229,7 +229,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	@IBOutlet private weak var removeButton: NSButton!
-	@IBAction func removeSelected(_ sender: NSButton) {
+	@IBAction private func removeSelected(_ sender: NSButton) {
 		if let selected = labels.selectedRowIndexes.first {
 			item.labels.remove(at: selected)
 			saveItem()
@@ -592,7 +592,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	@IBAction func inviteButtonSelected(_ sender: NSButton) {
+	@IBAction private func inviteButtonSelected(_ sender: NSButton) {
 		if item.shareMode == .none {
 			addInvites(sender)
 		} else if item.isPrivateShareWithOnlyOwner {
@@ -638,7 +638,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	@IBAction func openButtonSelected(_ sender: NSButton) {
+	@IBAction private func openButtonSelected(_ sender: NSButton) {
 		item.tryOpen(from: self)
 	}
 

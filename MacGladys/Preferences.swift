@@ -32,7 +32,7 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var hotkeyCtrl: NSButton!
 	private let keyMap = [0, 11, 8, 2, 14, 3, 5, 4, 34, 38, 40, 37, 46, 45, 31, 35, 12, 15, 1, 17, 32, 9, 13, 7, 16, 6]
 
-	@IBAction func doneSelected(_ sender: NSButton) {
+	@IBAction private func doneSelected(_ sender: NSButton) {
 		dismiss(nil)
 	}
 
@@ -80,11 +80,11 @@ final class Preferences: NSViewController {
 		view.window!.initialFirstResponder = doneButton
 	}
 
-	@IBAction func launchAtLoginSwitchChanged(_ sender: NSButton) {
+	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.launchAtLogin = sender.integerValue == 1
 	}
 
-	@IBAction func hideMainWindowAtLaunchSwitchChanged(_ sender: NSButton) {
+	@IBAction private func hideMainWindowAtLaunchSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.hideMainWindowAtStartup = sender.integerValue == 1
 	}
 
@@ -97,22 +97,22 @@ final class Preferences: NSViewController {
 		updateHotkeyState()
 	}
 
-	@IBAction func hotkeyCmdChanged(_ sender: NSButton) {
+	@IBAction private func hotkeyCmdChanged(_ sender: NSButton) {
 		PersistedOptions.hotkeyCmd = sender.integerValue == 1
 		updateHotkeyState()
 	}
 
-	@IBAction func hotkeyOptionChanged(_ sender: NSButton) {
+	@IBAction private func hotkeyOptionChanged(_ sender: NSButton) {
 		PersistedOptions.hotkeyOption = sender.integerValue == 1
 		updateHotkeyState()
 	}
 
-	@IBAction func hotkeyShiftChanged(_ sender: NSButton) {
+	@IBAction private func hotkeyShiftChanged(_ sender: NSButton) {
 		PersistedOptions.hotkeyShift = sender.integerValue == 1
 		updateHotkeyState()
 	}
 
-	@IBAction func hotkeyCtrlChaned(_ sender: NSButton) {
+	@IBAction private func hotkeyCtrlChaned(_ sender: NSButton) {
 		PersistedOptions.hotkeyCtrl = sender.integerValue == 1
 		updateHotkeyState()
 	}
@@ -150,7 +150,7 @@ final class Preferences: NSViewController {
 		}
 	}
 
-	@IBAction func deleteLocalItemsSelected(_ sender: NSButton) {
+	@IBAction private func deleteLocalItemsSelected(_ sender: NSButton) {
 
 		let title: String
 		let subtitle: String
@@ -173,7 +173,7 @@ final class Preferences: NSViewController {
 		}
 	}
 
-	@IBAction func syncNowSelected(_ sender: NSButton) {
+	@IBAction private func syncNowSelected(_ sender: NSButton) {
 		CloudManager.sync { [weak self] error in
 			if let error = error, let s = self {
 				let a = NSAlert()
@@ -185,30 +185,30 @@ final class Preferences: NSViewController {
 		}
 	}
 
-	@IBAction func displayNotesSwitchSelected(_ sender: NSButton) {
+	@IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
 		ViewController.shared.reloadData()
 	}
 
-	@IBAction func displayLabelsSwitchSelected(_ sender: NSButton) {
+	@IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
 		ViewController.shared.reloadData()
 	}
 
-	@IBAction func multipleSwitchChanged(_ sender: NSButton) {
+	@IBAction private func multipleSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.separateItemPreference = sender.integerValue == 1
 	}
 
-	@IBAction func autoLabelSwitchChanged(_ sender: NSButton) {
+	@IBAction private func autoLabelSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.dontAutoLabelNewItems = sender.integerValue == 1
 	}
 
-	@IBAction func resetWarningsSelected(_ sender: NSButton) {
+	@IBAction private func resetWarningsSelected(_ sender: NSButton) {
 		PersistedOptions.unconfirmedDeletes = false
 		sender.isEnabled = false
 	}
 
-	@IBAction func syncSwitchChanged(_ sender: NSButton) {
+	@IBAction private func syncSwitchChanged(_ sender: NSButton) {
 		syncSwitch.isEnabled = false
 
 		if CloudManager.syncSwitchedOn {
@@ -260,7 +260,7 @@ final class Preferences: NSViewController {
 		syncSwitch.isEnabled = true
 	}
 
-	@IBAction func eraseiCloudDataSelected(_ sender: NSButton) {
+	@IBAction private func eraseiCloudDataSelected(_ sender: NSButton) {
 		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
 			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
 		} else {

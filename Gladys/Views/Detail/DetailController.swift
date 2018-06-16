@@ -112,7 +112,7 @@ final class DetailController: GladysViewController,
 		navigationItem.titleView = titleView
 	}
 
-	@IBAction func inviteButtonSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func inviteButtonSelected(_ sender: UIBarButtonItem) {
 		if item.shareMode == .none {
 			addInvites(sender)
 		} else if item.isPrivateShareWithOnlyOwner {
@@ -122,7 +122,7 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	@IBAction func lockButtonSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func lockButtonSelected(_ sender: UIBarButtonItem) {
 		if item.isLocked {
 			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
 				if success, let s = self {
@@ -258,7 +258,7 @@ final class DetailController: GladysViewController,
 	}
 
 	var sharing = false
-	@IBAction func shareSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func shareSelected(_ sender: UIBarButtonItem) {
 		sharing = true
 		sizeWindow()
 		let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
@@ -269,12 +269,12 @@ final class DetailController: GladysViewController,
 		present(a, animated: true)
 	}
 
-	@IBAction func copySelected(_ sender: UIBarButtonItem) {
+	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
 		item.copyToPasteboard()
 		genericAlert(title: nil, message: "Copied to clipboard", on: self, showOK: false)
 	}
 
-	@IBAction func openSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
 		item.tryOpen(in: navigationController!) { shouldClose in
 			if shouldClose {
 				self.done()
@@ -282,7 +282,7 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	@IBAction func deleteSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func deleteSelected(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
 			self.done()

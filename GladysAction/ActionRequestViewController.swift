@@ -88,7 +88,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		}
     }
 
-	@IBAction func expandSelected(_ sender: UIButton) {
+	@IBAction private func expandSelected(_ sender: UIButton) {
 
 		cancelRequested(cancelButton!)
 
@@ -103,7 +103,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		_ = responder?.perform(selector, with: url)
 	}
 
-	@IBAction func cancelRequested(_ sender: UIBarButtonItem) {
+	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
 
 		let loadingItems = Model.drops.filter { $0.loadingProgress != nil }
 		for loadingItem in loadingItems {

@@ -142,7 +142,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
-	@IBAction func dragModeButtonSelected(_ sender: UIButton) {
+	@IBAction private func dragModeButtonSelected(_ sender: UIButton) {
 		dragModeReverse = !dragModeReverse
 		updateDragModeOverlay()
 	}
@@ -730,7 +730,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 	@IBOutlet private weak var pasteButton: UIBarButtonItem!
 
-	@IBAction func pasteSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
 		addItems(from: UIPasteboard.general.itemProviders)
 	}
 
@@ -929,7 +929,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		archivedItemCollectionView.isAccessibilityElement = Model.filteredDrops.count == 0
 	}
 
-	@IBAction func itemsCountSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
 		let selectedCount = (selectedItems?.count ?? 0)
 		if selectedCount > 0 {
 			let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
@@ -1159,7 +1159,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	/////////////////////////////////
 
 	private var selectedItems: [UUID]?
-	@IBAction func deleteButtonSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func deleteButtonSelected(_ sender: UIBarButtonItem) {
 		guard let candidates = selectedItems, candidates.count > 0 else { return }
 
 		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
