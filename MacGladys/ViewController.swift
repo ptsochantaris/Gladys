@@ -685,6 +685,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					item.needsUnlock = true
 					item.lockPassword = sha1(text)
 					item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
+					item.markUpdated()
 					Model.save()
 				} else {
 					self?.createLock(sender)

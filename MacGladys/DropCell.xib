@@ -40,7 +40,7 @@
                         <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="78" width="283" height="186"/>
                         </customView>
-                        <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
+                        <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="133" y="51" width="17" height="22"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
                         </imageView>
