@@ -32,7 +32,7 @@ class LauncherCommon {
 
 	static func launchMainApp() {
 		if isMainAppRunning { return }
-		let path = "/" + Bundle.main.bundlePath.split(separator: "/").dropLast(3).joined(separator: "/") + "/MacOS/MacGladys"
+		let path = "/" + Bundle.main.bundlePath.split(separator: "/").dropLast(3).joined(separator: "/") + "/MacOS/Gladys"
 		NSWorkspace.shared.launchApplication(path)
 	}
 }
