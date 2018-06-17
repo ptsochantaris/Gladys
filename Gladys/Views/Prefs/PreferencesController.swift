@@ -63,7 +63,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	private func alertOnMainThread(error: Error) {
 		DispatchQueue.main.async {
-			genericAlert(title: "Error", message: error.localizedDescription, on: ViewController.shared)
+			genericAlert(title: "Error", message: error.localizedDescription)
 		}
 	}
 
@@ -141,9 +141,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 				} else {
 					DispatchQueue.main.async {
 						if let e = error {
-							genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)", on: self)
+							genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)")
 						} else {
-							genericAlert(title: "Could not import data", message: "The data transfer failed", on: self)
+							genericAlert(title: "Could not import data", message: "The data transfer failed")
 						}
 						self.updateUI()
 					}

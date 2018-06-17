@@ -113,12 +113,10 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 	private func displaySuccess() {
 		if infiniteMode {
 			genericAlert(title: "You can now add unlimited items!",
-						 message: "Thank you for supporting Gladys.",
-						 on: ViewController.shared)
+						 message: "Thank you for supporting Gladys.")
 		} else {
 			genericAlert(title: "Something went wrong with the purchase on the App Store side",
-						 message: "Please try again in a moment. You will not be charged twice if your purchase has already gone through.",
-						 on: ViewController.shared)
+						 message: "Please try again in a moment. You will not be charged twice if your purchase has already gone through.")
 		}
 	}
 
@@ -126,8 +124,7 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 		DispatchQueue.main.async {
 			if !infiniteMode {
 				genericAlert(title: "Purchase could not be restored",
-							 message: "Are you sure you purchased this from the App Store account that you are currently using?",
-							 on: ViewController.shared)
+							 message: "Are you sure you purchased this from the App Store account that you are currently using?")
 			}
 		}
 	}
@@ -135,8 +132,7 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 	func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
 		DispatchQueue.main.async {
 			genericAlert(title: "There was an error restoring your purchase",
-						 message: error.finalDescription,
-						 on: ViewController.shared)
+						 message: error.finalDescription)
 		}
 	}
 
@@ -147,8 +143,7 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 				case .failed:
 					SKPaymentQueue.default().finishTransaction(t)
 					genericAlert(title: "There was an error completing this purchase",
-								 message: t.error?.finalDescription,
-								 on: ViewController.shared)
+								 message: t.error?.finalDescription)
 				case .purchased, .restored:
 					SKPaymentQueue.default().finishTransaction(t)
 					reVerifyInfiniteMode()

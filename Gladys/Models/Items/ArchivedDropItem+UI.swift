@@ -105,7 +105,7 @@ extension ArchivedDropItem {
 				self?.needsUnlock = false
 				completion(true)
 			} else {
-				genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.", on: ViewController.top)
+				genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
 				completion(false)
 			}
 		}
@@ -195,7 +195,7 @@ extension ArchivedDropItem {
 					} else {
 						message = "iOS does not recognise the type of this link"
 					}
-					genericAlert(title: "Can't Open", message: message, on: viewController)
+					genericAlert(title: "Can't Open", message: message)
 				}
 				completion(success)
 			}

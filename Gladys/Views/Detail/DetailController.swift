@@ -128,7 +128,7 @@ final class DetailController: GladysViewController,
 				if success, let s = self {
 					s.passwordUpdate(nil, hint: nil)
 					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						genericAlert(title: "Lock Removed", message: nil, on: s, showOK: false)
+						genericAlert(title: "Lock Removed", message: nil, showOK: false)
 					}
 				}
 			}
@@ -271,7 +271,7 @@ final class DetailController: GladysViewController,
 
 	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
 		item.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", on: self, showOK: false)
+		genericAlert(title: nil, message: "Copied to clipboard", showOK: false)
 	}
 
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
@@ -471,8 +471,8 @@ final class DetailController: GladysViewController,
 				s.makeIndexAndSaveItem()
 				s.table.reloadData()
 			} else if newValue != nil {
-				genericAlert(title: "This is not a valid URL", message: newValue, on: s) { [weak self] in
-					self?.editURL(typeItem)
+				genericAlert(title: "This is not a valid URL", message: newValue) {
+					s.editURL(typeItem)
 				}
 			}
 		}
@@ -516,7 +516,7 @@ final class DetailController: GladysViewController,
 	private func copyRowSelected(at indexPath: IndexPath) {
 		let typeItem = item.typeItems[indexPath.row]
 		typeItem.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", on: self, showOK: false)
+		genericAlert(title: nil, message: "Copied to clipboard", showOK: false)
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
@@ -791,7 +791,7 @@ final class DetailController: GladysViewController,
 		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
 			if let error = error {
 				DispatchQueue.main.async {
-					genericAlert(title: "Archiving failed", message: error.finalDescription, on: self)
+					genericAlert(title: "Archiving failed", message: error.finalDescription)
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
 				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
@@ -844,7 +844,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-		genericAlert(title: "Could not share this item", message: error.finalDescription, on: self)
+		genericAlert(title: "Could not share this item", message: error.finalDescription)
 	}
 
 	func itemTitle(for csc: UICloudSharingController) -> String? {

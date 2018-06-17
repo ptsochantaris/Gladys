@@ -218,19 +218,19 @@ final class Preferences: NSViewController {
 				confirm(title: "You have shared items",
 						message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
 			} else if sharingOwn {
 				confirm(title: "You are sharing items",
 						message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
 			} else if importing {
 				confirm(title: "You have shared items imported from others",
 						message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation(self) } else { self.abortDeactivate() } }
+						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
 			} else {
-				CloudManager.proceedWithDeactivation(self)
+				CloudManager.proceedWithDeactivation()
 			}
 		} else {
 			if Model.drops.count > 0 {
@@ -239,13 +239,13 @@ final class Preferences: NSViewController {
 						message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
 				action: "Proceed", cancel: "Cancel") { confirmed in
 					if confirmed {
-						CloudManager.proceedWithActivation(self)
+						CloudManager.proceedWithActivation()
 					} else {
 						self.abortActivate()
 					}
 				}
 			} else {
-				CloudManager.proceedWithActivation(self)
+				CloudManager.proceedWithActivation()
 			}
 		}
 	}
@@ -262,7 +262,7 @@ final class Preferences: NSViewController {
 
 	@IBAction private func eraseiCloudDataSelected(_ sender: NSButton) {
 		if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
-			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.", on: self)
+			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
 		} else {
 			confirm(title: "Are you sure?",
 					message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
@@ -297,9 +297,9 @@ final class Preferences: NSViewController {
 			s.syncSwitch.isEnabled = true
 			s.syncSwitch.isEnabled = true
 			if let error = error {
-				genericAlert(title: "Error", message: error.finalDescription, on: s)
+				genericAlert(title: "Error", message: error.finalDescription)
 			} else {
-				genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud", on: s)
+				genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
 			}
 		}
 	}

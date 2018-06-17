@@ -438,8 +438,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 					self?.item.needsReIngest = true
 					self?.saveItem()
 				} else if let s = self {
-					genericAlert(title: "This is not a valid URL", message: textField.stringValue, on: s)
-					self?.editCurrent(sender)
+					genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: s.view.window!)
+					s.editCurrent(sender)
 				}
 			}
 		}
@@ -459,8 +459,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
 			if let error = error {
-				DispatchQueue.main.async {
-					genericAlert(title: "Archiving failed", message: error.finalDescription, on: self)
+				DispatchQueue.main.async { [weak self] in
+					if let w = self?.view.window {
+						genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
+					}
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
 				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)

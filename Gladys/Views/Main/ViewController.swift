@@ -8,19 +8,13 @@ enum PasteResult {
 }
 
 @discardableResult
-func genericAlert(title: String?, message: String?, on viewController: UIViewController, showOK: Bool = true, autoDismiss: Bool = true, completion: (()->Void)? = nil) -> UIAlertController {
+func genericAlert(title: String?, message: String?, showOK: Bool = true, autoDismiss: Bool = true, completion: (()->Void)? = nil) -> UIAlertController {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if showOK {
 		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
 	}
 
-	var finalVC = viewController
-	while let newVC = finalVC.presentedViewController {
-		if newVC is UIAlertController { break }
-		finalVC = newVC
-	}
-
-	finalVC.present(a, animated: true)
+	ViewController.top.present(a, animated: true)
 
 	if !showOK && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -79,7 +73,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	static var top: UIViewController {
-		return ViewController.shared.presentedViewController ?? ViewController.shared
+		var finalVC: UIViewController = ViewController.shared
+		while let newVC = finalVC.presentedViewController {
+			if newVC is UIAlertController { break }
+			finalVC = newVC
+		}
+		return finalVC
 	}
 
 	var itemView: UICollectionView {
@@ -662,7 +661,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	private var acceptAlert: UIAlertController?
 
 	@objc private func acceptStarted() {
-		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, on: self, showOK: false, autoDismiss: false, completion: nil)
+		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, showOK: false, autoDismiss: false, completion: nil)
 	}
 
 	@objc private func acceptEnded() {
@@ -689,7 +688,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if r.isRefreshing && !CloudManager.syncing {
 			CloudManager.sync(overridingWiFiPreference: true) { error in
 				if let error = error {
-					genericAlert(title: "Sync Error", message: error.finalDescription, on: self)
+					genericAlert(title: "Sync Error", message: error.finalDescription)
 				}
 			}
 			lastSyncUpdate()
@@ -737,7 +736,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	func addItems(from providers: [NSItemProvider], overrides: ImportOverrides? = nil, skipVisibleErrors: Bool = false) -> PasteResult {
 		if providers.count == 0 {
 			if !skipVisibleErrors {
-				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.", on: self)
+				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")
 			}
 			return .noData
 		}
@@ -1273,9 +1272,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		guard let item = sender as? ArchivedDropItem else { return }
 
 		if let (errorPrefix, error) = item.loadingError {
-			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported",
-				message: errorPrefix + error.finalDescription,
-				on: self)
+			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
 		item.needsReIngest = false
@@ -1290,7 +1287,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) {
 						if item.createdAt == item.updatedAt {
-							genericAlert(title: "Item(s) Added", message: nil, on: self, showOK: false)
+							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
 						}
 					}
 				}

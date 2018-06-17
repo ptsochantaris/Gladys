@@ -496,7 +496,7 @@ extension CloudManager {
 			if deletedZoneIds.contains(ArchivedDropItem.privateZoneId) {
 				log("Private zone has been deleted, sync must be disabled.")
 				DispatchQueue.main.async {
-					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.", on: ViewController.shared)
+					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
 					deactivate(force: true) { _ in
 						completion(nil)
 					}
@@ -581,9 +581,9 @@ extension CloudManager {
 					completion(nil)
 				}
 				if newToken == nil {
-					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.", on: ViewController.shared)
+					genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
 				} else {
-					genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.", on: ViewController.shared)
+					genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
 				}
 				return
 			}
@@ -605,7 +605,7 @@ extension CloudManager {
 			 .userDeletedZone, .badDatabase, .badContainer:
 
 			// shutdown-worthy failure
-			genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"", on: ViewController.shared)
+			genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
 			deactivate(force: true) { _ in
 				completion(nil)
 			}
@@ -647,7 +647,7 @@ extension CloudManager {
 
 	static func acceptShare(_ metadata: CKShareMetadata) {
 		if !syncSwitchedOn {
-			genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud", on: ViewController.shared)
+			genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
 			return
 		}
 		showNetwork = true
@@ -658,7 +658,7 @@ extension CloudManager {
 				showNetwork = false
 				if let error = error {
 					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-					genericAlert(title: "Could not accept shared item", message: error.finalDescription, on: ViewController.shared)
+					genericAlert(title: "Could not accept shared item", message: error.finalDescription)
 				} else {
 					sync { _ in
 						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
@@ -678,7 +678,7 @@ extension CloudManager {
 		container.privateCloudDatabase.delete(withRecordID: shareId) { _, error in
 			DispatchQueue.main.async {
 				if let error = error {
-					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription, on: ViewController.shared)
+					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
 				} else {
 					item.cloudKitShareRecord = nil
 					item.needsCloudPush = true
@@ -691,21 +691,21 @@ extension CloudManager {
 		}
 	}
 
-	static func proceedWithDeactivation(_ vc: VC) {
+	static func proceedWithDeactivation() {
 		CloudManager.deactivate(force: false) { error in
 			DispatchQueue.main.async {
 				if let error = error {
-					genericAlert(title: "Could not change state", message: error.finalDescription, on: vc)
+					genericAlert(title: "Could not change state", message: error.finalDescription)
 				}
 			}
 		}
 	}
 
-	static func proceedWithActivation(_ vc: VC) {
+	static func proceedWithActivation() {
 		CloudManager.activate { error in
 			DispatchQueue.main.async {
 				if let error = error {
-					genericAlert(title: "Could not change state", message: error.finalDescription, on: vc)
+					genericAlert(title: "Could not change state", message: error.finalDescription)
 				}
 			}
 		}

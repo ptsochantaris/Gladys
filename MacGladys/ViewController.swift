@@ -10,19 +10,21 @@ import Cocoa
 import Quartz
 import MacGladysFramework
 
-func genericAlert(title: String, message: String?, on viewController: NSViewController) {
+func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil) {
 
-	var finalVC = viewController
+	var finalVC: NSViewController = ViewController.shared
 	while let newVC = finalVC.presentedViewControllers?.first(where: { $0.view.window != nil }) {
 		finalVC = newVC
 	}
+
+	let window = windowOverride ?? finalVC.view.window!
 
 	let a = NSAlert()
 	a.messageText = title
 	if let message = message {
 		a.informativeText = message
 	}
-	a.beginSheetModal(for: finalVC.view.window!, completionHandler: nil)
+	a.beginSheetModal(for: window, completionHandler: nil)
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
