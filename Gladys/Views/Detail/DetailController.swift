@@ -531,6 +531,7 @@ final class DetailController: GladysViewController,
 			table.deleteRows(at: [indexPath], with: .automatic)
 		}
 		item.renumberTypeItems()
+		item.markUpdated()
 		item.needsReIngest = true
 		Model.save()
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {

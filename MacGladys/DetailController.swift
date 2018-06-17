@@ -313,6 +313,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		item.typeItems.remove(at: index)
 		component.deleteFromStorage()
 		item.renumberTypeItems()
+		item.needsReIngest = true
 		components.animator().deleteItems(at: [IndexPath(item: index, section: 0)])
 		saveItem()
 	}

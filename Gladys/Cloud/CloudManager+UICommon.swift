@@ -325,7 +325,8 @@ extension CloudManager {
 	}
 
 	static private func recordChanged(record: CKRecord, stats: PullState) {
-		let recordUUID = record.recordID.recordName
+		let recordID = record.recordID
+		let recordUUID = recordID.recordName
 		let recordType = record.recordType
 		DispatchQueue.main.async {
 			switch recordType {
@@ -340,13 +341,20 @@ extension CloudManager {
 					}
 				} else {
 					log("Will create new local item for cloud record (\(recordUUID))")
-					let item = ArchivedDropItem(from: record)
-					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.newShareRecords.index(where: { $0.recordID == existingShareId }) {
-						item.cloudKitShareRecord = stats.newShareRecords[pendingShareIndex]
-						stats.newShareRecords.remove(at: pendingShareIndex)
+					let newItem = ArchivedDropItem(from: record)
+					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: { $0.recordID == existingShareId }) {
+						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
+						stats.pendingShareRecords.remove(at: pendingShareIndex)
 						log("  Hooked onto pending share \((existingShareId.recordName))")
 					}
-					Model.drops.insert(item, at: 0)
+					let newTypeItemRecords = stats.pendingTypeItemRecords.filter({ $0.parent?.recordID == recordID })
+					if !newTypeItemRecords.isEmpty {
+						let uuid = newItem.uuid
+						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { ArchivedDropItemType(from: $0, parentUuid: uuid) })
+						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
+						log("  Hooked \(newTypeItemRecords.count) pending type items")
+					}
+					Model.drops.insert(newItem, at: 0)
 					stats.newDropCount += 1
 				}
 
@@ -364,6 +372,9 @@ extension CloudManager {
 					existingParent.typeItems.append(ArchivedDropItemType(from: record, parentUuid: existingParent.uuid))
 					existingParent.needsReIngest = true
 					stats.newTypeItemCount += 1
+				} else {
+					stats.pendingTypeItemRecords.append(record)
+					log("Received new type item (\(recordUUID)) to link to upcoming new item")
 				}
 
 			case RecordType.positionList:
@@ -383,7 +394,7 @@ extension CloudManager {
 						associatedItem.cloudKitShareRecord = share
 						stats.updateCount += 1
 					} else {
-						stats.newShareRecords.append(share)
+						stats.pendingShareRecords.append(share)
 						log("Received new share record (\(recordUUID)) to link to upcoming new item")
 					}
 				}
