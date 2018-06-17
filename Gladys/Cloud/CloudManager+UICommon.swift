@@ -279,7 +279,7 @@ extension CloudManager {
 
 	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
 		showNetwork = true
-		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [ArchivedDropItem.privateZoneId])
+		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [privateZoneId])
 		deleteZone.database = container.privateCloudDatabase
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
@@ -446,7 +446,7 @@ extension CloudManager {
 
 	private static func fetchMissingShareRecords(completion: @escaping ()->Void) {
 		let itemsWithMissingShareRecords = Model.drops.compactMap { item -> CKRecordID? in
-			if let shareId = item.cloudKitRecord?.share?.recordID, shareId.zoneID == ArchivedDropItem.privateZoneId, item.cloudKitShareRecord == nil {
+			if let shareId = item.cloudKitRecord?.share?.recordID, shareId.zoneID == privateZoneId, item.cloudKitShareRecord == nil {
 				return shareId
 			} else {
 				return nil
@@ -500,7 +500,7 @@ extension CloudManager {
 				return
 			}
 
-			if deletedZoneIds.contains(ArchivedDropItem.privateZoneId) {
+			if deletedZoneIds.contains(privateZoneId) {
 				log("Private zone has been deleted, sync must be disabled.")
 				DispatchQueue.main.async {
 					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")

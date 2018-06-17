@@ -42,7 +42,7 @@ final class PushState {
 			return payload
 			}.flatBunch(minSize: 10)
 
-		if zoneId == ArchivedDropItem.privateZoneId {
+		if zoneId == privateZoneId {
 
 			var snapshot = CloudManager.deletionQueue
 			if idsToPush.count > 0 {

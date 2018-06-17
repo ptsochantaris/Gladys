@@ -24,9 +24,9 @@ struct ImportOverrides {
 	let labels: [String]?
 }
 
-extension ArchivedDropItem: Hashable {
+let privateZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
-	static let privateZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+extension ArchivedDropItem: Hashable {
 
 	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
 		return lhs.uuid == rhs.uuid
@@ -163,7 +163,7 @@ extension ArchivedDropItem: Hashable {
 
 	var shareMode: ShareMode {
 		if let shareRecord = cloudKitShareRecord {
-			if shareRecord.recordID.zoneID == ArchivedDropItem.privateZoneId {
+			if shareRecord.recordID.zoneID == privateZoneId {
 				return .sharing
 			} else if let permission = cloudKitShareRecord?.currentUserParticipant?.permission, permission == .readWrite {
 				return .elsewhereReadWrite

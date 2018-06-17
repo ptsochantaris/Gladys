@@ -38,7 +38,7 @@ extension ArchivedDropItem {
 
 		let record = cloudKitRecord ??
 			CKRecord(recordType: CloudManager.RecordType.item,
-			         recordID: CKRecordID(recordName: uuid.uuidString, zoneID: ArchivedDropItem.privateZoneId))
+			         recordID: CKRecordID(recordName: uuid.uuidString, zoneID: privateZoneId))
 
 		record["suggestedName"] = suggestedName as NSString?
 		record["createdAt"] = createdAt as NSDate

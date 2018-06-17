@@ -104,12 +104,12 @@ final class CloudManager {
 
 		var sharedZonesToPush = Set<CKRecordZoneID>()
 		for item in Model.drops where item.needsCloudPush {
-			if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != ArchivedDropItem.privateZoneId {
+			if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != privateZoneId {
 				sharedZonesToPush.insert(zoneID)
 			}
 		}
 
-		let privatePushState = PushState(zoneId: ArchivedDropItem.privateZoneId, database: container.privateCloudDatabase)
+		let privatePushState = PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 		let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
 
 		let doneOperation = BlockOperation {

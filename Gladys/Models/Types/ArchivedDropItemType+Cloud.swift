@@ -32,7 +32,7 @@ extension ArchivedDropItemType {
 
 		let record = cloudKitRecord
 			?? CKRecord(recordType: "ArchivedDropItemType",
-						recordID: CKRecordID(recordName: uuid.uuidString, zoneID: ArchivedDropItem.privateZoneId))
+						recordID: CKRecordID(recordName: uuid.uuidString, zoneID: privateZoneId))
 
 		let parentId = CKRecordID(recordName: parentUuid.uuidString, zoneID: record.recordID.zoneID)
 		record.parent = CKReference(recordID: parentId, action: .none)
