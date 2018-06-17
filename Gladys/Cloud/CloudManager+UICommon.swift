@@ -399,13 +399,17 @@ extension CloudManager {
 		syncProgressString = "Fetching"
 		let stats = PullState()
 		var finalError: Error?
+		var shouldCommit = true
 
 		let group = DispatchGroup()
 		if scope == nil || scope == .shared {
 			group.enter()
-			fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error in
+			fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error, skipCommit in
 				if let error = error {
 					finalError = error
+				}
+				if skipCommit {
+					shouldCommit = false
 				}
 				group.leave()
 			}
@@ -413,7 +417,10 @@ extension CloudManager {
 
 		if scope == nil || scope == .private {
 			group.enter()
-			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
+			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error, skipCommit in
+				if skipCommit {
+					shouldCommit = false
+				}
 				if let error = error {
 					finalError = error
 					group.leave()
@@ -430,7 +437,7 @@ extension CloudManager {
 		}
 
 		group.notify(queue: DispatchQueue.main) {
-			if finalError == nil {
+			if finalError == nil && shouldCommit {
 				stats.commitChanges()
 			}
 			completion(finalError)
@@ -473,7 +480,7 @@ extension CloudManager {
 		perform(fetch)
 	}
 
-	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?) -> Void) {
+	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?, Bool) -> Void) {
 
 		log("Fetching changes from \(database.databaseScope.logName) database")
 
@@ -488,7 +495,7 @@ extension CloudManager {
 			if let error = error {
 				log("Shared database fetch operation failed: \(error.finalDescription)")
 				DispatchQueue.main.async {
-					completion(error)
+					completion(error, false)
 				}
 				return
 			}
@@ -498,7 +505,7 @@ extension CloudManager {
 				DispatchQueue.main.async {
 					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
 					deactivate(force: true) { _ in
-						completion(nil)
+						completion(nil, true)
 					}
 				}
 				return
@@ -516,7 +523,7 @@ extension CloudManager {
 				log("No database changes detected in \(database.databaseScope.logName) database")
 				DispatchQueue.main.async {
 					stats.updatedDatabaseTokens[database.databaseScope] = newToken
-					completion(nil)
+					completion(nil, false)
 				}
 				return
 			}
@@ -528,7 +535,7 @@ extension CloudManager {
 					} else {
 						stats.updatedDatabaseTokens[database.databaseScope] = newToken
 					}
-					completion(error)
+					completion(error, false)
 				}
 			}
 		}
