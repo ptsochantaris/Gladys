@@ -40,7 +40,7 @@ extension ArchivedDropItem {
 	func delete() {
 		isDeleting = true
 		if cloudKitRecord != nil {
-			CloudManager.markAsDeleted(uuid: uuid)
+			CloudManager.markAsDeleted(uuid: uuid, cloudKitRecord: cloudKitRecord)
 		} else {
 			log("No cloud record for this item, skipping cloud delete")
 		}

@@ -310,9 +310,13 @@ final class CloudManager {
 		}
 	}
 
-	static func markAsDeleted(uuid: UUID) {
+	static func markAsDeleted(uuid: UUID, cloudKitRecord: CKRecord?) {
 		if syncSwitchedOn {
-			deletionQueue.insert(uuid.uuidString)
+			if let zoneId = cloudKitRecord?.recordID.zoneID {
+				deletionQueue.insert(zoneId.zoneName + ":" + zoneId.ownerName + ":" + uuid.uuidString)
+			} else {
+				deletionQueue.insert(uuid.uuidString)
+			}
 		}
 	}
 

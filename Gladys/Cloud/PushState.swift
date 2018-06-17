@@ -27,7 +27,7 @@ final class PushState {
 		var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
 			guard let itemRecord = item.populatedCloudKitRecord else { return nil }
 			if itemRecord.recordID.zoneID != zoneId {
-				return nil // don't push changes to items shared by another user in this pass, for now // TODO
+				return nil
 			}
 			_dataItemsToPush += item.typeItems.count
 			_dropsToPush += 1
@@ -36,24 +36,41 @@ final class PushState {
 
 			let itemId = item.uuid.uuidString
 			idsToPush.append(itemId)
+			idsToPush.append(contentsOf: item.typeItems.map { $0.uuid.uuidString } )
 			_uuid2progress[itemId] = Progress(totalUnitCount: 100)
 			item.typeItems.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
 
 			return payload
-			}.flatBunch(minSize: 10)
+		}.flatBunch(minSize: 10)
+
+		var newQueue = CloudManager.deletionQueue
+		if idsToPush.count > 0 {
+			let previousCount = newQueue.count
+			newQueue = newQueue.filter { !idsToPush.contains($0) }
+			if newQueue.count != previousCount {
+				CloudManager.deletionQueue = newQueue
+			}
+		}
+		var newSnapShot = Set<String>()
+		recordsToDelete = newQueue.compactMap {
+			let components = $0.components(separatedBy: ":")
+			if components.count > 2 {
+				if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
+					newSnapShot.insert(components[2])
+					return CKRecordID(recordName: components[2], zoneID: zoneId)
+				} else {
+					return nil
+				}
+			} else if zoneId == privateZoneId {
+				newSnapShot.insert(components[0])
+				return CKRecordID(recordName: components[0], zoneID: zoneId)
+			} else {
+				return nil
+			}
+		}.bunch(maxSize: 100)
+		deletionIdsSnapshot = newSnapShot
 
 		if zoneId == privateZoneId {
-
-			var snapshot = CloudManager.deletionQueue
-			if idsToPush.count > 0 {
-				let previousCount = snapshot.count
-				snapshot = snapshot.filter { !idsToPush.contains($0) }
-				if snapshot.count != previousCount {
-					CloudManager.deletionQueue = snapshot
-				}
-			}
-			deletionIdsSnapshot = snapshot
-
 			currentUUIDSequence = drops.map { $0.uuid.uuidString }
 			if PushState.sequenceNeedsUpload(currentUUIDSequence) {
 
@@ -83,10 +100,7 @@ final class PushState {
 					}
 				}
 			}
-			recordsToDelete = deletionIdsSnapshot.map { CKRecordID(recordName: $0, zoneID: zoneId) }.bunch(maxSize: 100)
 		} else {
-			deletionIdsSnapshot = []
-			recordsToDelete = []
 			currentUUIDSequence = []
 		}
 
@@ -110,7 +124,7 @@ final class PushState {
 		var components = [String]()
 		if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
 		if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
-		let deletionCount = CloudManager.deletionQueue.count
+		let deletionCount = recordsToDelete.count
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
 		CloudManager.syncProgressString = "Sending" + (components.count > 0 ? (" " + components.joined(separator: ", ")) : "")
 	}

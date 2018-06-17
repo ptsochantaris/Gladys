@@ -24,12 +24,12 @@ extension ArchivedDropItemType {
 	}
 
 	func deleteFromStorage() {
+		CloudManager.markAsDeleted(uuid: uuid, cloudKitRecord: cloudKitRecord)
 		let fm = FileManager.default
 		if fm.fileExists(atPath: folderUrl.path) {
 			log("Removing component storage at: \(folderUrl.path)")
 			try? fm.removeItem(at: folderUrl)
 		}
-		CloudManager.markAsDeleted(uuid: uuid)
 	}
 
 	var objectForShare: Any? {
