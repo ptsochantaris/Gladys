@@ -325,36 +325,47 @@ extension CloudManager {
 	}
 
 	static private func recordChanged(record: CKRecord, stats: PullState) {
-		let itemUUID = record.recordID.recordName
+		let recordUUID = record.recordID.recordName
 		let recordType = record.recordType
 		DispatchQueue.main.async {
 			switch recordType {
 			case RecordType.item:
-				if let item = Model.item(uuid: itemUUID) {
+				if let item = Model.item(uuid: recordUUID) {
 					if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item record (\(itemUUID))")
+						log("Update but no changes to item record (\(recordUUID))")
 					} else {
-						log("Will update existing local item for cloud record \(itemUUID)")
+						log("Will update existing local item for cloud record \(recordUUID)")
 						item.cloudKitUpdate(from: record)
 						stats.updateCount += 1
 					}
 				} else {
-					log("Will create new local item for cloud record (\(itemUUID))")
-					stats.newDrops.append(record)
+					log("Will create new local item for cloud record (\(recordUUID))")
+					let item = ArchivedDropItem(from: record)
+					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.newShareRecords.index(where: { $0.recordID == existingShareId }) {
+						item.cloudKitShareRecord = stats.newShareRecords[pendingShareIndex]
+						stats.newShareRecords.remove(at: pendingShareIndex)
+						log("  Hooked onto pending share \((existingShareId.recordName))")
+					}
+					Model.drops.insert(item, at: 0)
+					stats.newDropCount += 1
 				}
+
 			case RecordType.component:
-				if let typeItem = Model.typeItem(uuid: itemUUID) {
+				if let typeItem = Model.typeItem(uuid: recordUUID) {
 					if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item type data record (\(itemUUID))")
+						log("Update but no changes to item type data record (\(recordUUID))")
 					} else {
-						log("Will update existing local type data: (\(itemUUID))")
+						log("Will update existing local type data: (\(recordUUID))")
 						typeItem.cloudKitUpdate(from: record)
 						stats.typeUpdateCount += 1
 					}
-				} else {
-					log("Will create new local type data: (\(itemUUID))")
-					stats.newTypeItemsToHookOntoDrops.append(record)
+				} else if let parentId = (record["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
+					log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
+					existingParent.typeItems.append(ArchivedDropItemType(from: record, parentUuid: existingParent.uuid))
+					existingParent.needsReIngest = true
+					stats.newTypeItemCount += 1
 				}
+
 			case RecordType.positionList:
 				if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
 					log("Received an updated position list record")
@@ -364,17 +375,19 @@ extension CloudManager {
 				} else {
 					log("Received non-updated position list record")
 				}
+
 			case RecordType.share:
 				if let share = record as? CKShare {
-					if let associatedItem = Model.item(shareId: itemUUID) {
-						log("Share record updated for item (share: \(itemUUID) - item: \(associatedItem.uuid))")
+					if let associatedItem = Model.item(shareId: recordUUID) {
+						log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
 						associatedItem.cloudKitShareRecord = share
 						stats.updateCount += 1
 					} else {
-						log("Received new share record (\(itemUUID))")
-						stats.newShareItemsToSetForDrops.append(share)
+						stats.newShareRecords.append(share)
+						log("Received new share record (\(recordUUID)) to link to upcoming new item")
 					}
 				}
+				
 			default:
 				log("Warning: Received record update for unkown type: \(recordType)")
 			}
@@ -399,7 +412,7 @@ extension CloudManager {
 		syncProgressString = "Fetching"
 		let stats = PullState()
 		var finalError: Error?
-		var shouldCommit = true
+		var shouldCommitTokens = true
 
 		let group = DispatchGroup()
 		if scope == nil || scope == .shared {
@@ -409,7 +422,7 @@ extension CloudManager {
 					finalError = error
 				}
 				if skipCommit {
-					shouldCommit = false
+					shouldCommitTokens = false
 				}
 				group.leave()
 			}
@@ -419,7 +432,7 @@ extension CloudManager {
 			group.enter()
 			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error, skipCommit in
 				if skipCommit {
-					shouldCommit = false
+					shouldCommitTokens = false
 				}
 				if let error = error {
 					finalError = error
@@ -437,9 +450,7 @@ extension CloudManager {
 		}
 
 		group.notify(queue: DispatchQueue.main) {
-			if finalError == nil && shouldCommit {
-				stats.commitChanges()
-			}
+			stats.processChanges(commitTokens: shouldCommitTokens)
 			completion(finalError)
 		}
 	}

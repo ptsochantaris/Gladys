@@ -116,7 +116,9 @@ final class DetailController: GladysViewController,
 		if item.shareMode == .none {
 			addInvites(sender)
 		} else if item.isPrivateShareWithOnlyOwner {
-			shareOptions(sender)
+			shareOptionsPrivate(sender)
+		} else if item.isShareWithOnlyOwner {
+			shareOptionsPublic(sender)
 		} else {
 			editInvites(sender)
 		}
@@ -880,9 +882,22 @@ final class DetailController: GladysViewController,
 		return nil
 	}
 
-	private func shareOptions(_ sender: UIBarButtonItem) {
+	private func shareOptionsPrivate(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Options", style: .default, handler: { [weak self] _ in
+			self?.editInvites(sender)
+		}))
+		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive, handler: { [weak self] _ in
+			self?.deleteShare(sender)
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
+		a.popoverPresentationController?.barButtonItem = sender
+	}
+
+	private func shareOptionsPublic(_ sender: UIBarButtonItem) {
+		let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Make Private", style: .default, handler: { [weak self] _ in
 			self?.editInvites(sender)
 		}))
 		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive, handler: { [weak self] _ in

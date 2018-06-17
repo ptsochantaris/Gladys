@@ -153,7 +153,7 @@ final class ArchivedDropItem: Codable {
 
 	#endif
 
-	init(from record: CKRecord, children: [CKRecord]) {
+	init(from record: CKRecord) {
 		let myUUID = UUID(uuidString: record.recordID.recordName)!
 		uuid = myUUID
 		createdAt = record["createdAt"] as! Date
@@ -168,7 +168,7 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsDeletion = false
 		needsUnlock = lockPassword != nil
-		typeItems = children.map { ArchivedDropItemType(from: $0, parentUuid: myUUID) }.sorted { $0.order < $1.order }
+		typeItems = []
 		cloudKitRecord = record
 	}
 

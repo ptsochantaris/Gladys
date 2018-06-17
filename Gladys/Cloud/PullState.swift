@@ -2,10 +2,9 @@ import CloudKit
 
 final class PullState {
 	var updatedSequence = false
-	var newDrops = [CKRecord]() { didSet { updateProgress() } }
-	var newTypeItemsToHookOntoDrops = [CKRecord]() { didSet { updateProgress() } }
-	var newShareItemsToSetForDrops = [CKShare]()
-	
+	var newDropCount = 0 { didSet { updateProgress() } }
+	var newTypeItemCount = 0 { didSet { updateProgress() } }
+
 	var typeUpdateCount = 0 { didSet { updateProgress() } }
 	var deletionCount = 0 { didSet { updateProgress() } }
 	var updateCount = 0 { didSet { updateProgress() } }
@@ -13,16 +12,15 @@ final class PullState {
 	
 	var updatedDatabaseTokens = [CKDatabaseScope : CKServerChangeToken]()
 	var updatedZoneTokens = [CKRecordZoneID : CKServerChangeToken]()
+	var newShareRecords = [CKShare]()
 
 	private func updateProgress() {
 		var components = [String]()
 		
-		let newCount = newDrops.count
-		if newCount > 0 { components.append(newCount == 1 ? "1 Drop" : "\(newCount) Drops") }
+		if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
 		if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
 		
-		let newTypeCount = newTypeItemsToHookOntoDrops.count
-		if newTypeCount > 0 { components.append(newTypeCount == 1 ? "1 Component" : "\(newTypeCount) Components") }
+		if newTypeItemCount > 0 { components.append(newTypeItemCount == 1 ? "1 Component" : "\(newTypeItemCount) Components") }
 		
 		if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
 		
@@ -35,42 +33,11 @@ final class PullState {
 		}
 	}
 
-	private func createNewArchivedDrop(from record: CKRecord, drawChildrenFrom: [CKRecord]) {
-		let childrenOfThisItem = drawChildrenFrom.filter {
-			if let ref = $0["parent"] as? CKReference {
-				if ref.recordID == record.recordID {
-					return true
-				}
-			}
-			return false
-		}
-		let item = ArchivedDropItem(from: record, children: childrenOfThisItem)
-		Model.drops.insert(item, at: 0)
-	}
-	
-	func commitChanges() {
-		CloudManager.syncProgressString = "Applying updates"
+	func processChanges(commitTokens: Bool) {
+		CloudManager.syncProgressString = "Updating..."
 		log("Changes fetch complete, processing")
-		
-		for newTypeItemRecord in newTypeItemsToHookOntoDrops {
-			if let parentId = (newTypeItemRecord["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
-				let newTypeItem = ArchivedDropItemType(from: newTypeItemRecord, parentUuid: existingParent.uuid)
-				existingParent.typeItems.append(newTypeItem)
-				existingParent.needsReIngest = true
-				newTypesAppended += 1
-			}
-		}
-		for dropRecord in newDrops {
-			createNewArchivedDrop(from: dropRecord, drawChildrenFrom: newTypeItemsToHookOntoDrops)
-		}
 
-		for shareRecord in newShareItemsToSetForDrops {
-			if let relevantItem = Model.item(shareId: shareRecord.recordID.recordName) {
-				relevantItem.cloudKitShareRecord = shareRecord
-			}
-		}
-		
-		if updatedSequence || newDrops.count > 0 {
+		if updatedSequence || newDropCount > 0 {
 			let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
 			if sequence.count > 0 {
 				Model.drops.sort { i1, i2 in
@@ -81,7 +48,7 @@ final class PullState {
 			}
 		}
 		
-		let itemsModified = typeUpdateCount + newDrops.count + updateCount + deletionCount + newTypesAppended > 0
+		let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
 
 		if itemsModified || updatedSequence {
 			log("Posting external data update notification")
@@ -90,8 +57,10 @@ final class PullState {
 		
 		if itemsModified {
 			// need to save stuff that's been modified
-			Model.queueNextSaveCallback {
-				self.commitNewZoneTokens()
+			if commitTokens {
+				Model.queueNextSaveCallback {
+					self.commitNewTokens()
+				}
 			}
 			Model.saveIsDueToSyncFetch = true
 			Model.save()
@@ -100,14 +69,18 @@ final class PullState {
 			if updatedSequence {
 				Model.saveIndexOnly()
 			}
-			commitNewZoneTokens()
+			if commitTokens {
+				commitNewTokens()
+			}
 		} else {
 			log("No updates available")
-			commitNewZoneTokens()
+			if commitTokens {
+				commitNewTokens()
+			}
 		}
 	}
 
-	private func commitNewZoneTokens() {
+	private func commitNewTokens() {
 		if updatedZoneTokens.count > 0 || updatedDatabaseTokens.count > 0 {
 			log("Comitting change tokens")
 		}
