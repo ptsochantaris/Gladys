@@ -496,8 +496,9 @@ extension CloudManager {
 			if deletedZoneIds.contains(ArchivedDropItem.privateZoneId) {
 				log("Private zone has been deleted, sync must be disabled.")
 				DispatchQueue.main.async {
+					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.", on: ViewController.shared)
 					deactivate(force: true) { _ in
-						completion(NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Your Gladys iCloud zone was deleted from another device. Sync has been disabled to protect the data on this device."]))
+						completion(nil)
 					}
 				}
 				return
@@ -604,7 +605,7 @@ extension CloudManager {
 			 .userDeletedZone, .badDatabase, .badContainer:
 
 			// shutdown-worthy failure
-			genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it has been disabled:\n\n\"\(ckError.finalDescription)\"", on: ViewController.shared)
+			genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"", on: ViewController.shared)
 			deactivate(force: true) { _ in
 				completion(nil)
 			}
