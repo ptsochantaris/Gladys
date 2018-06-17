@@ -78,6 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 						  forEventClass: AEEventClass(kInternetEventClass),
 						  andEventID: AEEventID(kAEGetURL))
 
+		CloudManager.checkMigrations()
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [])
 		}
@@ -91,7 +92,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		AppDelegate.updateHotkey()
-		CloudManager.checkMigrations()
 
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)

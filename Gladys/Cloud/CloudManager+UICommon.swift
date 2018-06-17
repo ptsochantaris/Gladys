@@ -381,19 +381,21 @@ extension CloudManager {
 		}
 	}
 
-	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: PullState) {
+	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: PullState) -> Bool {
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
 				PullState.setZoneToken(nil, for: zoneId)
-				syncProgressString = "Retrying"
-				log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
+				syncProgressString = "Fetching Full Update..."
 			}
+			log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
+			return true
 		} else {
 			stats.updatedZoneTokens[zoneId] = token
+			return false
 		}
 	}
 
-	static func fetchDatabaseChanges(scope: CKDatabaseScope?, completion: @escaping (Error?) -> Void) {
+	static private func fetchDatabaseChanges(scope: CKDatabaseScope?, completion: @escaping (Error?) -> Void) {
 		syncProgressString = "Fetching"
 		let stats = PullState()
 		var finalError: Error?
@@ -414,6 +416,7 @@ extension CloudManager {
 			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error in
 				if let error = error {
 					finalError = error
+					group.leave()
 				} else {
 					if migratedSharingRecords {
 						group.leave()
@@ -526,6 +529,7 @@ extension CloudManager {
 
 		log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
+		var needsRetry = false
 		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
 		for zoneID in zoneIDs {
 			let options = CKFetchRecordZoneChangesOptions()
@@ -541,10 +545,16 @@ extension CloudManager {
 			recordChanged(record: record, stats: stats)
 		}
 		operation.recordZoneFetchCompletionBlock = { (zoneId, token, _, _, error) in
-			zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)
+			needsRetry = zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
-			completion(error)
+			if needsRetry {
+				DispatchQueue.main.async {
+					fetchZoneChanges(database: database, zoneIDs: zoneIDs, stats: stats, completion: completion)
+				}
+			} else {
+				completion(error)
+			}
 		}
 
 		database.add(operation)
