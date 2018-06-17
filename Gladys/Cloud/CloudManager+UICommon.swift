@@ -493,6 +493,16 @@ extension CloudManager {
 				return
 			}
 
+			if deletedZoneIds.contains(ArchivedDropItem.privateZoneId) {
+				log("Private zone has been deleted, sync must be disabled.")
+				DispatchQueue.main.async {
+					deactivate(force: true) { _ in
+						completion(NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Your Gladys iCloud zone was deleted from another device. Sync has been disabled to protect the data on this device."]))
+					}
+				}
+				return
+			}
+
 			DispatchQueue.main.async {
 				for deletedZoneId in deletedZoneIds {
 					log("Detected zone deletion: \(deletedZoneId)")
