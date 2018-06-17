@@ -14,9 +14,8 @@ func genericAlert(title: String?, message: String?, on viewController: UIViewCon
 		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
 	}
 
-	var finalVC: UIViewController! = viewController
-	while finalVC.presentedViewController != nil {
-		let newVC = finalVC.presentedViewController
+	var finalVC = viewController
+	while let newVC = finalVC.presentedViewController {
 		if newVC is UIAlertController { break }
 		finalVC = newVC
 	}
