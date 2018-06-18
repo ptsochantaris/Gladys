@@ -18,6 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	static private var hotKey: HotKey?
 
 	static func updateHotkey() {
+		hotKey = nil
+
 		let hotKeyCode = PersistedOptions.hotkeyChar
 		let enable = hotKeyCode >= 0 && (PersistedOptions.hotkeyCmd || PersistedOptions.hotkeyOption || PersistedOptions.hotkeyCtrl)
 		if enable {
@@ -26,8 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			if PersistedOptions.hotkeyShift { modifiers = modifiers.union(.shift) }
 			if PersistedOptions.hotkeyCtrl { modifiers = modifiers.union(.control) }
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
-			hotKey = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
-			hotKey?.keyDownHandler = {
+			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
+			h.keyDownHandler = {
 				if let w = ViewController.shared.view.window {
 					if w.isVisible {
 						w.orderOut(nil)
@@ -36,8 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 					}
 				}
 			}
-		} else {
-			hotKey = nil
+			hotKey = h
 		}
 	}
 
@@ -98,7 +99,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@objc private func systemDidWake() {
-		AppDelegate.updateHotkey()
+		DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+			AppDelegate.updateHotkey()
+		}
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
