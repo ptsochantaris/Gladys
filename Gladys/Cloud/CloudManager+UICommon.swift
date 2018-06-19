@@ -299,24 +299,36 @@ extension CloudManager {
 			switch recordType {
 			case RecordType.item:
 				if let item = Model.item(uuid: itemUUID) {
-					log("Drop \(recordType) deletion: \(itemUUID)")
-					item.needsDeletion = true
-					item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-					item.cloudKitShareRecord = nil // get rid of useless file
-					stats.deletionCount += 1
+					if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+						log("Ignoring delete for item \(itemUUID) from a different zone")
+					} else {
+						log("Drop \(recordType) deletion: \(itemUUID)")
+						item.needsDeletion = true
+						item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+						item.cloudKitShareRecord = nil // get rid of useless file
+						stats.deletionCount += 1
+					}
 				}
 			case RecordType.component:
 				if let component = Model.typeItem(uuid: itemUUID) {
-					log("Component \(recordType) deletion: \(itemUUID)")
-					component.needsDeletion = true
-					component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-					stats.deletionCount += 1
+					if let zoneID = component.cloudKitRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+						log("Ignoring delete for component \(itemUUID) from a different zone")
+					} else {
+						log("Component \(recordType) deletion: \(itemUUID)")
+						component.needsDeletion = true
+						component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+						stats.deletionCount += 1
+					}
 				}
 			case RecordType.share:
 				if let associatedItem = Model.item(shareId: itemUUID) {
-					log("Share record deleted for item \(associatedItem.uuid)")
-					associatedItem.cloudKitShareRecord = nil
-					stats.deletionCount += 1
+					if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+						log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
+					} else {
+						log("Share record deleted for item \(associatedItem.uuid)")
+						associatedItem.cloudKitShareRecord = nil
+						stats.deletionCount += 1
+					}
 				}
 			default:
 				log("Warning: Received deletion for unknown record type: \(recordType)")

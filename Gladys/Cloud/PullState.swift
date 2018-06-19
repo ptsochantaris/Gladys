@@ -106,7 +106,7 @@ final class PullState {
 				let data = NSKeyedArchiver.archivedData(withRootObject: n)
 				PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
 			} else {
-				PersistedOptions.defaults.set(nil, forKey: "zoneChangeToken")
+				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
 			}
 			PersistedOptions.defaults.synchronize()
 		}
@@ -122,17 +122,16 @@ final class PullState {
 	///////////////////////////////////////
 
 	static func zoneToken(for zoneId: CKRecordZoneID) -> CKServerChangeToken? {
-		if let lookup = PersistedOptions.defaults.value(forKey: "zoneTokens") as? [String : Data],
+		if let lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data],
 			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName],
 			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
 			return token
 		}
-
 		return nil
 	}
 
 	static func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZoneID) {
-		var lookup = PersistedOptions.defaults.value(forKey: "zoneTokens") as? [String : Data] ?? [String : Data]()
+		var lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data] ?? [String : Data]()
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
 			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
@@ -144,7 +143,7 @@ final class PullState {
 	}
 
 	static func wipeZoneTokens() {
-		PersistedOptions.defaults.set(nil, forKey: "zoneTokens")
+		PersistedOptions.defaults.set([String: Data](), forKey: "zoneTokens")
 		PersistedOptions.defaults.synchronize()
 		legacyZoneChangeToken = nil
 	}
@@ -153,7 +152,7 @@ final class PullState {
 
 	static func databaseToken(for database: CKDatabaseScope) -> CKServerChangeToken? {
 		let key = database.keyName
-		if let lookup = PersistedOptions.defaults.value(forKey: "databaseTokens") as? [String : Data],
+		if let lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data],
 			let data = lookup[key],
 			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
 			return token
@@ -163,7 +162,7 @@ final class PullState {
 
 	static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabaseScope) {
 		let key = database.keyName
-		var lookup = PersistedOptions.defaults.value(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
+		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
 		if let n = token {
 			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
 		} else {
@@ -174,7 +173,7 @@ final class PullState {
 	}
 
 	static func wipeDatabaseTokens() {
-		PersistedOptions.defaults.set(nil, forKey: "databaseTokens")
+		PersistedOptions.defaults.set([String: Data](), forKey: "databaseTokens")
 		PersistedOptions.defaults.synchronize()
 	}
 }
