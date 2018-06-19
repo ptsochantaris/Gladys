@@ -40,6 +40,13 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 	enum State {
 		case none, some, all
+		var accessibilityValue: String? {
+			switch self {
+			case .none: return nil
+			case .some: return "Applied to some selected items"
+			case .all: return "Applied to all selected items"
+			}
+		}
 	}
 
 	override func darkModeChanged() {
@@ -70,10 +77,12 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 		let toggle = availableToggles[indexPath.row]
 		cell.labelName.text = toggle
+		cell.accessibilityLabel = toggle
 
 		let state = toggleState(for: toggle)
 		cell.tick.isHidden = state == .none
 		cell.tick.isHighlighted = state == .all
+		cell.accessibilityValue = state.accessibilityValue
 		return cell
 	}
 

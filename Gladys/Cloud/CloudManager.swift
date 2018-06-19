@@ -310,14 +310,32 @@ final class CloudManager {
 		}
 	}
 
+	private static func deletionTag(for uuid: UUID, cloudKitRecord: CKRecord?) -> String {
+		if let zoneId = cloudKitRecord?.recordID.zoneID {
+			return zoneId.zoneName + ":" + zoneId.ownerName + ":" + uuid.uuidString
+		} else {
+			return uuid.uuidString
+		}
+	}
+
 	static func markAsDeleted(uuid: UUID, cloudKitRecord: CKRecord?) {
 		if syncSwitchedOn {
-			if let zoneId = cloudKitRecord?.recordID.zoneID {
-				deletionQueue.insert(zoneId.zoneName + ":" + zoneId.ownerName + ":" + uuid.uuidString)
-			} else {
-				deletionQueue.insert(uuid.uuidString)
-			}
+			deletionQueue.insert(deletionTag(for: uuid, cloudKitRecord: cloudKitRecord))
 		}
+	}
+
+	static func commitDeletion(for uuids: [String]) {
+		if uuids.isEmpty { return }
+
+		let tags = CloudManager.deletionQueue.filter {
+			for uuid in uuids {
+				if $0.hasSuffix(uuid) {
+					return false
+				}
+			}
+			return true
+		}
+		CloudManager.deletionQueue = tags
 	}
 
 }

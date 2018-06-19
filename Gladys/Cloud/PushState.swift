@@ -12,7 +12,6 @@ final class PushState {
 	private let recordsToDelete: [[CKRecordID]]
 	private let payloadsToPush: [[CKRecord]]
 	private let currentUUIDSequence: [String]
-	private let deletionIdsSnapshot: Set<String>
 
 	init(zoneId: CKRecordZoneID, database: CKDatabase) {
 		self.database = database
@@ -51,24 +50,20 @@ final class PushState {
 				CloudManager.deletionQueue = newQueue
 			}
 		}
-		var newSnapShot = Set<String>()
 		recordsToDelete = newQueue.compactMap {
 			let components = $0.components(separatedBy: ":")
 			if components.count > 2 {
 				if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
-					newSnapShot.insert(components[2])
 					return CKRecordID(recordName: components[2], zoneID: zoneId)
 				} else {
 					return nil
 				}
 			} else if zoneId == privateZoneId {
-				newSnapShot.insert(components[0])
 				return CKRecordID(recordName: components[0], zoneID: zoneId)
 			} else {
 				return nil
 			}
 		}.bunch(maxSize: 100)
-		deletionIdsSnapshot = newSnapShot
 
 		if zoneId == privateZoneId {
 			currentUUIDSequence = drops.map { $0.uuid.uuidString }
@@ -145,16 +140,24 @@ final class PushState {
 			operation.database = database
 			operation.savePolicy = .allKeys
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
+
+				let requestedDeletionUUIDs = recordIdList.map{ $0.recordName }
+				let deletedUUIDs = deletedRecordIds?.map { $0.recordName } ?? []
+				for uuid in requestedDeletionUUIDs {
+					if deletedUUIDs.contains(uuid) {
+						log("Confirmed deletion of item (\(uuid)")
+					} else {
+						log("Didn't need to delete item (\(uuid)")
+					}
+				}
+
 				DispatchQueue.main.async {
 					if let error = error {
 						self.latestError = error
 						log("Error deleting items: \(error.finalDescription)")
-					}
-					for uuid in (deletedRecordIds?.map({ $0.recordName })) ?? [] {
-						if self.deletionIdsSnapshot.contains(uuid) {
-							CloudManager.deletionQueue.remove(uuid)
-							log("Deleted cloud record \(uuid)")
-						}
+						CloudManager.commitDeletion(for: deletedUUIDs) // play it safe
+					} else {
+						CloudManager.commitDeletion(for: requestedDeletionUUIDs)
 					}
 					self.updateSyncMessage()
 				}
