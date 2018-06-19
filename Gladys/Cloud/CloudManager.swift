@@ -327,15 +327,15 @@ final class CloudManager {
 	static func commitDeletion(for uuids: [String]) {
 		if uuids.isEmpty { return }
 
-		let tags = CloudManager.deletionQueue.filter {
+		let newQueue = CloudManager.deletionQueue.filter { deletionTag in
 			for uuid in uuids {
-				if $0.hasSuffix(uuid) {
+				if deletionTag.components(separatedBy: ":").last == uuid {
 					return false
 				}
 			}
 			return true
 		}
-		CloudManager.deletionQueue = tags
+		CloudManager.deletionQueue = newQueue
 	}
 
 }
