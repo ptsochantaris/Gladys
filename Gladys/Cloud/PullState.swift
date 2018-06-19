@@ -106,7 +106,7 @@ final class PullState {
 				let data = NSKeyedArchiver.archivedData(withRootObject: n)
 				PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
 			} else {
-				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
+				PersistedOptions.defaults.set(nil, forKey: "zoneChangeToken")
 			}
 			PersistedOptions.defaults.synchronize()
 		}
@@ -144,7 +144,7 @@ final class PullState {
 	}
 
 	static func wipeZoneTokens() {
-		PersistedOptions.defaults.removeObject(forKey: "zoneTokens")
+		PersistedOptions.defaults.set(nil, forKey: "zoneTokens")
 		PersistedOptions.defaults.synchronize()
 		legacyZoneChangeToken = nil
 	}
@@ -174,7 +174,7 @@ final class PullState {
 	}
 
 	static func wipeDatabaseTokens() {
-		PersistedOptions.defaults.removeObject(forKey: "databaseTokens")
+		PersistedOptions.defaults.set(nil, forKey: "databaseTokens")
 		PersistedOptions.defaults.synchronize()
 	}
 }

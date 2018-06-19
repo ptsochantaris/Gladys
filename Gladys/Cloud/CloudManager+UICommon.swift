@@ -342,17 +342,17 @@ extension CloudManager {
 				} else {
 					log("Will create new local item for cloud record (\(recordUUID))")
 					let newItem = ArchivedDropItem(from: record)
-					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: { $0.recordID == existingShareId }) {
-						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
-						stats.pendingShareRecords.remove(at: pendingShareIndex)
-						log("  Hooked onto pending share \((existingShareId.recordName))")
-					}
 					let newTypeItemRecords = stats.pendingTypeItemRecords.filter({ $0.parent?.recordID == recordID })
 					if !newTypeItemRecords.isEmpty {
 						let uuid = newItem.uuid
 						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { ArchivedDropItemType(from: $0, parentUuid: uuid) })
 						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
 						log("  Hooked \(newTypeItemRecords.count) pending type items")
+					}
+					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: { $0.recordID == existingShareId }) {
+						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
+						stats.pendingShareRecords.remove(at: pendingShareIndex)
+						log("  Hooked onto pending share \((existingShareId.recordName))")
 					}
 					Model.drops.insert(newItem, at: 0)
 					stats.newDropCount += 1
