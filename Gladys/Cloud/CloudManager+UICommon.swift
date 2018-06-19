@@ -420,7 +420,7 @@ extension CloudManager {
 	}
 
 	static private func fetchDatabaseChanges(scope: CKDatabaseScope?, completion: @escaping (Error?) -> Void) {
-		syncProgressString = "Fetching"
+		syncProgressString = "Checking"
 		let stats = PullState()
 		var finalError: Error?
 		var shouldCommitTokens = true

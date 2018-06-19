@@ -32,6 +32,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 
 		} else if url.host == nil { // just opening
+			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
+				let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
+				a.addAction(UIAlertAction(title: "Import", style: .destructive, handler: { _ in
+					let inPlace = options[UIApplicationOpenURLOptionsKey.openInPlace] as? Bool ?? false
+					do {
+						try Model.importData(from: url, removingOriginal: !inPlace)
+					} catch {
+						genericAlert(title: "Could not import data", message: error.finalDescription)
+					}
+				}))
+				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+				ViewController.top.present(a, animated: true)
+			}
 			return true
 		}
 
