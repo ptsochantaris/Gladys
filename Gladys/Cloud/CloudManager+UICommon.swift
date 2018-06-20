@@ -267,7 +267,6 @@ extension CloudManager {
 					}
 					syncSwitchedOn = true
 					migratedSharing = true
-					migratedSharingRecords = true
 					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
@@ -476,59 +475,73 @@ extension CloudManager {
 				}
 				if let error = error {
 					finalError = error
-					group.leave()
-				} else {
-					if migratedSharingRecords {
-						group.leave()
-					} else {
-						fetchMissingShareRecords {
-							group.leave()
-						}
-					}
 				}
+				group.leave()
 			}
 		}
 
 		group.notify(queue: DispatchQueue.main) {
-			stats.processChanges(commitTokens: shouldCommitTokens)
-			completion(finalError)
+			if finalError == nil && shouldCommitTokens {
+				fetchMissingShareRecords { error in
+					stats.processChanges(commitTokens: shouldCommitTokens)
+					completion(error)
+				}
+			} else {
+				stats.processChanges(commitTokens: shouldCommitTokens)
+				completion(finalError)
+			}
 		}
 	}
 
-	private static func fetchMissingShareRecords(completion: @escaping ()->Void) {
-		let itemsWithMissingShareRecords = Model.drops.compactMap { item -> CKRecordID? in
-			if let shareId = item.cloudKitRecord?.share?.recordID, shareId.zoneID == privateZoneId, item.cloudKitShareRecord == nil {
-				return shareId
-			} else {
-				return nil
+	private static func fetchMissingShareRecords(completion: @escaping (Error?)->Void) {
+
+		var fetchGroups = [CKRecordZoneID: [CKRecordID]]()
+
+		for item in Model.drops {
+			if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
+				let zoneId = shareId.zoneID
+				if var existingFetchGroup = fetchGroups[zoneId] {
+					existingFetchGroup.append(shareId)
+					fetchGroups[zoneId] = existingFetchGroup
+				} else {
+					fetchGroups[zoneId] = [shareId]
+				}
 			}
 		}
 
-		if itemsWithMissingShareRecords.count == 0 {
-			migratedSharingRecords = true
-			completion()
+		if fetchGroups.count == 0 {
+			completion(nil)
 			return
 		}
 
-		let fetch = CKFetchRecordsOperation(recordIDs: itemsWithMissingShareRecords)
-		fetch.perRecordCompletionBlock = { record, _, error in
-			DispatchQueue.main.async {
-				if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
-					existingItem.cloudKitShareRecord = share
+		var finalError: Error?
+
+		let doneOperation = BlockOperation {
+			if let finalError = finalError {
+				log("Error fetching missing share records: \(finalError.finalDescription)")
+			}
+			completion(finalError)
+		}
+
+		for zoneId in fetchGroups.keys {
+			guard let fetchGroup = fetchGroups[zoneId] else { continue }
+			let fetch = CKFetchRecordsOperation(recordIDs: fetchGroup)
+			fetch.perRecordCompletionBlock = { record, _, error in
+				DispatchQueue.main.async {
+					if let error = error {
+						finalError = error
+					}
+					if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
+						existingItem.cloudKitShareRecord = share
+					}
 				}
 			}
+			fetch.database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+			doneOperation.addDependency(fetch)
+			perform(fetch)
 		}
-		fetch.fetchRecordsCompletionBlock = { _, error in
-			DispatchQueue.main.async {
-				if error == nil {
-					migratedSharingRecords = true
-					NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-				}
-				completion()
-			}
-		}
-		fetch.database = container.privateCloudDatabase
-		perform(fetch)
+
+		OperationQueue.main.addOperation(doneOperation)
 	}
 
 	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?, Bool) -> Void) {
