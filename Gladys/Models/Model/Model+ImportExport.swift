@@ -82,7 +82,7 @@ extension Model {
 
 	@discardableResult
 	static func createArchive(completion: @escaping (URL?, Error?) -> Void) -> Progress {
-		let eligibleItems = eligibleDropsForExport
+		let eligibleItems = eligibleDropsForExport.filter { !$0.isImportedShare }
 		let count = 2 + eligibleItems.count
 		let p = Progress(totalUnitCount: Int64(count))
 

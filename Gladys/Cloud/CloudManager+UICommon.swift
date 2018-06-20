@@ -691,6 +691,10 @@ extension CloudManager {
 			genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
 			return
 		}
+		if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
+			genericAlert(title: "Could not accept shared item", message: "An item called \"\(existingItem.displayTitleOrUuid)\" already exists in your collection which has the same unique ID.\n\nPlease delete this version of the item if you want to accept the shared version.")
+			return
+		}
 		showNetwork = true
 		NotificationCenter.default.post(name: .AcceptStarting, object: nil)
 		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])

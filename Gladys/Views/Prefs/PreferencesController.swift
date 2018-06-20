@@ -247,8 +247,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 		if !dragInteraction.isEnabled { // System cannot do drag and drop
 			topLabel.isHidden = true
-			bottomLabel.text = "Export or import all your items from/to an archive."
-			zipLabel.text = "Save a ZIP file with all your items."
+			bottomLabel.text = "Export or import your items from/to an archive."
+			zipLabel.text = "Save a ZIP file with your items."
 
 			let importExportButton = UIButton()
 			importExportButton.addTarget(self, action: #selector(importExportSelected), for: .touchUpInside)
