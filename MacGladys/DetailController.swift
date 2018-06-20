@@ -159,7 +159,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}()
 
 	override func viewWillDisappear() {
-		done()
+		done(notesCheck: notesField.currentEditor() != nil, titleCheck: titleField.currentEditor() != nil)
 		super.viewWillDisappear()
 	}
 

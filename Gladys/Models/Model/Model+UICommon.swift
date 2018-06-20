@@ -335,7 +335,7 @@ extension Model {
 	}
 
 	static func removeItemsFromZone(_ zoneID: CKRecordZoneID) {
-		let itemsRelatedToZone = drops.filter { $0.cloudKitRecord?.recordID.zoneID == zoneID }
+		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
 		for item in itemsRelatedToZone {
 			item.removeFromCloudkit()
 		}

@@ -104,7 +104,8 @@ final class CloudManager {
 
 		var sharedZonesToPush = Set<CKRecordZoneID>()
 		for item in Model.drops where item.needsCloudPush {
-			if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != privateZoneId {
+			let zoneID = item.parentZone
+			if zoneID != privateZoneId {
 				sharedZonesToPush.insert(zoneID)
 			}
 		}

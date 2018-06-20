@@ -299,7 +299,7 @@ extension CloudManager {
 			switch recordType {
 			case RecordType.item:
 				if let item = Model.item(uuid: itemUUID) {
-					if let zoneID = item.cloudKitRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+					if item.parentZone != recordId.zoneID {
 						log("Ignoring delete for item \(itemUUID) from a different zone")
 					} else {
 						log("Drop \(recordType) deletion: \(itemUUID)")
@@ -311,7 +311,7 @@ extension CloudManager {
 				}
 			case RecordType.component:
 				if let component = Model.typeItem(uuid: itemUUID) {
-					if let zoneID = component.cloudKitRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+					if component.parentZone != recordId.zoneID {
 						log("Ignoring delete for component \(itemUUID) from a different zone")
 					} else {
 						log("Component \(recordType) deletion: \(itemUUID)")
@@ -338,13 +338,16 @@ extension CloudManager {
 
 	static private func recordChanged(record: CKRecord, stats: PullState) {
 		let recordID = record.recordID
-		let recordUUID = recordID.recordName
+		let zoneID = recordID.zoneID
 		let recordType = record.recordType
+		let recordUUID = recordID.recordName
 		DispatchQueue.main.async {
 			switch recordType {
 			case RecordType.item:
 				if let item = Model.item(uuid: recordUUID) {
-					if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
+					if item.parentZone != zoneID {
+						log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
+					} else if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
 						log("Update but no changes to item record (\(recordUUID))")
 					} else {
 						log("Will update existing local item for cloud record \(recordUUID)")
@@ -354,14 +357,18 @@ extension CloudManager {
 				} else {
 					log("Will create new local item for cloud record (\(recordUUID))")
 					let newItem = ArchivedDropItem(from: record)
-					let newTypeItemRecords = stats.pendingTypeItemRecords.filter({ $0.parent?.recordID == recordID })
+					let newTypeItemRecords = stats.pendingTypeItemRecords.filter {
+						$0.parent?.recordID == recordID // takes zone into account
+					}
 					if !newTypeItemRecords.isEmpty {
 						let uuid = newItem.uuid
 						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { ArchivedDropItemType(from: $0, parentUuid: uuid) })
 						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
 						log("  Hooked \(newTypeItemRecords.count) pending type items")
 					}
-					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: { $0.recordID == existingShareId }) {
+					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: {
+						$0.recordID == existingShareId // takes zone into account
+					}) {
 						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
 						stats.pendingShareRecords.remove(at: pendingShareIndex)
 						log("  Hooked onto pending share \((existingShareId.recordName))")
@@ -372,7 +379,9 @@ extension CloudManager {
 
 			case RecordType.component:
 				if let typeItem = Model.typeItem(uuid: recordUUID) {
-					if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
+					if typeItem.parentZone != zoneID {
+						log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
+					} else if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
 						log("Update but no changes to item type data record (\(recordUUID))")
 					} else {
 						log("Will update existing local type data: (\(recordUUID))")
@@ -380,10 +389,14 @@ extension CloudManager {
 						stats.typeUpdateCount += 1
 					}
 				} else if let parentId = (record["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
-					log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
-					existingParent.typeItems.append(ArchivedDropItemType(from: record, parentUuid: existingParent.uuid))
-					existingParent.needsReIngest = true
-					stats.newTypeItemCount += 1
+					if existingParent.parentZone != zoneID {
+						log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
+					} else {
+						log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
+						existingParent.typeItems.append(ArchivedDropItemType(from: record, parentUuid: existingParent.uuid))
+						existingParent.needsReIngest = true
+						stats.newTypeItemCount += 1
+					}
 				} else {
 					stats.pendingTypeItemRecords.append(record)
 					log("Received new type item (\(recordUUID)) to link to upcoming new item")
@@ -402,12 +415,16 @@ extension CloudManager {
 			case RecordType.share:
 				if let share = record as? CKShare {
 					if let associatedItem = Model.item(shareId: recordUUID) {
-						log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
-						associatedItem.cloudKitShareRecord = share
-						stats.updateCount += 1
+						if associatedItem.parentZone != zoneID {
+							log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
+						} else {
+							log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
+							associatedItem.cloudKitShareRecord = share
+							stats.updateCount += 1
+						}
 					} else {
 						stats.pendingShareRecords.append(share)
-						log("Received new share record (\(recordUUID)) to link to upcoming new item")
+						log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
 					}
 				}
 				

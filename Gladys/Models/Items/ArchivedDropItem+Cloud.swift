@@ -25,6 +25,14 @@ extension ArchivedDropItem {
 		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
 	}
 
+	var parentZone: CKRecordZoneID {
+		return cloudKitRecord?.recordID.zoneID ?? privateZoneId
+	}
+
+	func sharedInZone(zoneId: CKRecordZoneID) -> Bool {
+		return cloudKitRecord?.share?.recordID.zoneID == zoneId
+	}
+
 	var populatedCloudKitRecord: CKRecord? {
 
 		#if MAINAPP
