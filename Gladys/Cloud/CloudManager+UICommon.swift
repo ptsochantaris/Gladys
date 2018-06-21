@@ -86,6 +86,7 @@ extension CloudManager {
 	static private func shutdownShares(ids: [CKRecordID], force: Bool, completion: @escaping (Error?)->Void) {
 		let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
 		modifyOperation.database = container.privateCloudDatabase
+		modifyOperation.savePolicy = .allKeys
 		modifyOperation.perRecordCompletionBlock = { record, error in
 			let recordUUID = record.recordID.recordName
 			DispatchQueue.main.async {
@@ -99,6 +100,8 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if !force, let error = error {
 					completion(error)
+					log("Cloud sync deactivation failed, could not deactivate current shares")
+					syncTransitioning = false
 				} else {
 					deactivate(force: force, deactivatingShares: false, completion: completion)
 				}
@@ -127,6 +130,7 @@ extension CloudManager {
 				finalError = error
 			}
 		}
+		perform(ss)
 
 		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
 		ms.database = container.privateCloudDatabase
@@ -135,6 +139,7 @@ extension CloudManager {
 				finalError = error
 			}
 		}
+		perform(ms)
 
 		let doneOperation = BlockOperation {
 			if let finalError = finalError, !force {
@@ -167,13 +172,8 @@ extension CloudManager {
 			}
 			syncTransitioning = false
 		}
-
 		doneOperation.addDependency(ss)
-		perform(ss)
-
 		doneOperation.addDependency(ms)
-		perform(ms)
-
 		OperationQueue.main.addOperation(doneOperation)
 	}
 
