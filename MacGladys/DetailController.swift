@@ -45,6 +45,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet private weak var inviteButton: NSButton!
 	@IBOutlet private weak var openButton: NSButton!
 	@IBOutlet private weak var infoLabel: NSTextField!
+	@IBOutlet private weak var readOnlyLabel: NSTextField!
 
 	@IBOutlet private weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
@@ -121,10 +122,16 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		switch shareMode {
 		case .none:
+			readOnlyLabel.isHidden = true
 			inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
-		case .elsewhereReadOnly, .elsewhereReadWrite:
+		case .elsewhereReadOnly:
+			readOnlyLabel.isHidden = false
+			inviteButton.image = DetailController.shareImage
+		case .elsewhereReadWrite:
+			readOnlyLabel.isHidden = true
 			inviteButton.image = DetailController.shareImage
 		case .sharing:
+			readOnlyLabel.isHidden = true
 			inviteButton.image = DetailController.shareImageTinted
 		}
 
@@ -138,7 +145,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let image = #imageLiteral(resourceName: "iconUserChecked").copy() as! NSImage
 		image.isTemplate = false
 		image.lockFocus()
-		NSColor.headerTextColor.set()
+		NSColor.secondaryLabelColor.set()
 
 		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
 		imageRect.fill(using: .sourceAtop)
@@ -212,7 +219,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private func updateLabelButtons() {
-		removeButton.isEnabled = labels.selectedRowIndexes.count > 0
+		removeButton.isEnabled = labels.selectedRowIndexes.count > 0 && readOnlyLabel.isHidden
 	}
 
 	private var previousText: String?
