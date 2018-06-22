@@ -532,9 +532,8 @@ extension CloudManager {
 						if let ckError = error as? CKError, ckError.code == CKError.Code.unknownItem, let recordID = recordID {
 							// this share record does not exist. Our local data is wrong
 							if let itemWithShare = Model.item(shareId: recordID.recordName) {
-								log("Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists.")
-								itemWithShare.cloudKitShareRecord = nil
-								itemWithShare.needsCloudPush = true // push it up at some point so it gets refreshed
+								log("Warning: Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
+								fetchCloudRecord(for: itemWithShare)
 							}
 						} else {
 							finalError = error
@@ -551,6 +550,21 @@ extension CloudManager {
 		}
 
 		OperationQueue.main.addOperation(doneOperation)
+	}
+
+	private static func fetchCloudRecord(for item: ArchivedDropItem?) {
+		guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
+		let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
+		fetch.database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+		fetch.perRecordCompletionBlock = { record, _, _ in
+			if let record = record {
+				DispatchQueue.main.async {
+					itemNeedingCloudPull.cloudKitRecord = record
+					itemNeedingCloudPull.postModified()
+				}
+			}
+		}
+		perform(fetch)
 	}
 
 	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?, Bool) -> Void) {
@@ -712,9 +726,9 @@ extension CloudManager {
 	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
 		let shareRecord = CKShare(rootRecord: rootRecord)
 		shareRecord[CKShareTitleKey] = item.cloudKitSharingTitle as NSString
-		if let ip = item.imagePath, let data = NSData(contentsOf: ip) {
-			shareRecord[CKShareThumbnailImageDataKey] = data
-		}
+		let icon = item.displayIcon
+		let scaledIcon = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 1, useScreenScale: false, singleScale: true)
+		shareRecord[CKShareThumbnailImageDataKey] = UIImageJPEGRepresentation(scaledIcon, 1) as NSData?
 		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
 		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
