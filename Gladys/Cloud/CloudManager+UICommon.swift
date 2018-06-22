@@ -526,10 +526,19 @@ extension CloudManager {
 		for zoneId in fetchGroups.keys {
 			guard let fetchGroup = fetchGroups[zoneId] else { continue }
 			let fetch = CKFetchRecordsOperation(recordIDs: fetchGroup)
-			fetch.perRecordCompletionBlock = { record, _, error in
+			fetch.perRecordCompletionBlock = { record, recordID, error in
 				DispatchQueue.main.async {
 					if let error = error {
-						finalError = error
+						if let ckError = error as? CKError, ckError.code == CKError.Code.unknownItem, let recordID = recordID {
+							// this share record does not exist. Our local data is wrong
+							if let itemWithShare = Model.item(shareId: recordID.recordName) {
+								log("Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists.")
+								itemWithShare.cloudKitShareRecord = nil
+								itemWithShare.needsCloudPush = true // push it up at some point so it gets refreshed
+							}
+						} else {
+							finalError = error
+						}
 					}
 					if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
 						existingItem.cloudKitShareRecord = share
@@ -710,6 +719,7 @@ extension CloudManager {
 		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
 		operation.database = container.privateCloudDatabase
+		operation.savePolicy = .allKeys
 		operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
 			completion(shareRecord, container, error)
 		}

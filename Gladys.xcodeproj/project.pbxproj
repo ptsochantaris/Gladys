@@ -2556,7 +2556,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 787EBF1A50EB25D2C0F7EB31 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -2584,7 +2583,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
