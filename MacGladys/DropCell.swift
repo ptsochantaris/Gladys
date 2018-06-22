@@ -339,6 +339,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				image.layer?.contents = nil
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint ?? ""
+				share = item.shareMode
 
 			} else {
 

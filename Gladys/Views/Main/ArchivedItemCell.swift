@@ -426,6 +426,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				image.image = nil
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint
+				shared = item.shareMode
 
 			} else if mergeMode {
 				hideMerge = false
