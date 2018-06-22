@@ -132,11 +132,20 @@ CA
                                                 <action selector="selectAll:" target="Ady-hI-5gd" id="Jg9-Cv-3CH"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="yEM-2d-M5d"/>
+                                        <menuItem isSeparatorItem="YES" id="cq3-xJ-b71"/>
                                         <menuItem title="Toggle Search" tag="1" keyEquivalent="f" id="Yul-0G-k3w">
                                             <connections>
                                                 <action selector="findSelected:" target="Ady-hI-5gd" id="uNe-2O-9bd"/>
                                             </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="yEM-2d-M5d"/>
+                                        <menuItem title="Sort Ascending" id="69R-KB-SF6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Sort Ascending" id="Jrt-kd-Ak8"/>
+                                        </menuItem>
+                                        <menuItem title="Sort Descending" id="vC7-QC-bTl">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Sort Descending" id="BEs-RJ-gLM"/>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -273,6 +282,8 @@ CA
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Gladys" customModuleProvider="target">
                     <connections>
                         <outlet property="infiniteModeMenuEntry" destination="AN3-Zt-BA7" id="K7A-T0-Hhy"/>
+                        <outlet property="sortAscendingMenu" destination="Jrt-kd-Ak8" id="DXy-PN-Ndg"/>
+                        <outlet property="sortDescendingMenu" destination="BEs-RJ-gLM" id="K29-I3-Kp6"/>
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

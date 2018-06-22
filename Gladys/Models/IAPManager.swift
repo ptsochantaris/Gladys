@@ -99,9 +99,14 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 
 		let cancelTitle = newTotal == -1 ? "Cancel" : "Never mind, I'll delete old stuff"
 
+		#if os(iOS)
+		let os = "iOS"
+		#else
+		let os = "Mac"
+		#endif
 		ViewController.shared.showIAPPrompt(title: title,
 											subtitle: message,
-											actionTitle: "Restore previous purchase",
+											actionTitle: "Restore previous \(os) purchase",
 											actionAction: {
 												SKPaymentQueue.default().restoreCompletedTransactions()
 		}, destructiveTitle: "Buy for \(infiniteModeItemPrice)", destructiveAction: {

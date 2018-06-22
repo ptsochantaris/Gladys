@@ -53,6 +53,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet private weak var deleteButton: UIBarButtonItem!
 	@IBOutlet private weak var editLabelsButton: UIBarButtonItem!
+	@IBOutlet private weak var sortAscendingButton: UIBarButtonItem!
+	@IBOutlet private weak var sortDescendingButton: UIBarButtonItem!
 	@IBOutlet private weak var labelsButton: UIBarButtonItem!
 	@IBOutlet private weak var settingsButton: UIBarButtonItem!
 	@IBOutlet private weak var itemsCount: UIBarButtonItem!
@@ -921,6 +923,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		collection.isAccessibilityElement = Model.filteredDrops.count == 0
 	}
 
+	@IBAction private func sortAscendingButtonSelected() {
+		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
+		for sortOption in Model.SortOption.options {
+			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default, handler: sortOption.handlerAscending))
+		}
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
+		a.popoverPresentationController?.barButtonItem = sortAscendingButton
+	}
+
+	@IBAction private func sortDescendingButtonSelected() {
+		let a = UIAlertController(title: "Sort", message: "Please select your preferred order. This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
+		for sortOption in Model.SortOption.options {
+			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default, handler: sortOption.handlerDescending))
+		}
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(a, animated: true)
+		a.popoverPresentationController?.barButtonItem = sortAscendingButton
+	}
+
 	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
 		let selectedCount = (selectedItems?.count ?? 0)
 		if selectedCount > 0 {
@@ -984,6 +1006,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			title = "Gladys"
 		}
 		labelsButton.isEnabled = Model.drops.count > 0
+		sortAscendingButton.isEnabled = Model.drops.count > 0
+		sortDescendingButton.isEnabled = Model.drops.count > 0
 	}
 
 	private func blurb(_ message: String) {

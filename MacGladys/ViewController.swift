@@ -829,7 +829,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
 		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
-			return collection.actionableSelectedItems.count > 0
+			return !collection.actionableSelectedItems.isEmpty
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 		case #selector(unlock(_:)):
@@ -841,7 +841,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(createLock(_:)):
 			let lockedItems = lockedSelectedItems
 			if lockedItems.contains(where: { $0.isImportedShare }) { return false }
-			return lockedItems.count == 0 && collection.selectionIndexPaths.count == 1
+			return lockedItems.isEmpty && collection.selectionIndexPaths.count == 1
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
 			if selectedItems.count > 1 {
@@ -855,7 +855,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return false
 			}
 		case #selector(info(_:)), #selector(open(_:)):
-			return collection.actionableSelectedItems.count > 0
+			return !collection.actionableSelectedItems.isEmpty
 		case #selector(delete(_:)):
 			return !collection.actionableSelectedItems.contains { $0.isImportedShare }
 		default:

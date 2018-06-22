@@ -167,7 +167,7 @@ final class iCloudController: GladysViewController {
 						action: "Turn Off Sync",
 						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.icloudSwitch.setOn(true, animated: true) } }
 			} else if importing {
-				confirm(title: "You have shared items imported from others",
+				confirm(title: "You have items that are shared from others",
 						message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
 						action: "Turn Off Sync",
 						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.icloudSwitch.setOn(true, animated: true) } }

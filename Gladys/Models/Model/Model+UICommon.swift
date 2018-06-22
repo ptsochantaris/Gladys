@@ -47,6 +47,77 @@ extension Model {
 		let emptyChecker: Bool
 	}
 
+	enum SortOption {
+		case dateAdded, dateModified, title, note, size
+		var ascendingTitle: String {
+			switch self {
+			case .dateAdded: return "Oldest First"
+			case .dateModified: return "Oldest Modified First"
+			case .title: return "Title (A-Z)"
+			case .note: return "Note (A-Z)"
+			case .size: return "Smallest First"
+			}
+		}
+		var descendingTitle: String {
+			switch self {
+			case .dateAdded: return "Newest First"
+			case .dateModified: return "Newest Modified First"
+			case .title: return "Title (Z-A)"
+			case .note: return "Note (Z-A)"
+			case .size: return "Largest First"
+			}
+		}
+		var handlerAscending: (Any?)->Void {
+			switch self {
+			case .dateAdded: return { _ in
+				Model.drops.sort { $0.createdAt < $1.createdAt }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .dateModified: return { _ in
+				Model.drops.sort { $0.updatedAt < $1.updatedAt }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .title: return { _ in
+				Model.drops.sort { $0.displayTitleOrUuid < $1.displayTitleOrUuid }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .note: return { _ in
+				Model.drops.sort { $0.note < $1.note }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .size: return { _ in
+				Model.drops.sort { $0.sizeInBytes < $1.sizeInBytes }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			}
+		}
+		var handlerDescending: (Any?)->Void {
+			switch self {
+			case .dateAdded: return { _ in
+				Model.drops.sort { $0.createdAt > $1.createdAt }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .dateModified: return { _ in
+				Model.drops.sort { $0.updatedAt > $1.updatedAt }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .title: return { _ in
+				Model.drops.sort { $0.displayTitleOrUuid > $1.displayTitleOrUuid }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .note: return { _ in
+				Model.drops.sort { $0.note > $1.note }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			case .size: return { _ in
+				Model.drops.sort { $0.sizeInBytes > $1.sizeInBytes }
+				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				}
+			}
+		}
+		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.size] }
+	}
+
 	static var labelToggles = [LabelToggle]()
 
 	static var isFilteringLabels: Bool {

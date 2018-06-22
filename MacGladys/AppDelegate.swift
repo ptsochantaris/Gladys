@@ -89,6 +89,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		infiniteModeMenuEntry.isHidden = infiniteMode
 
 		NSApplication.shared.servicesProvider = servicesProvider
+
+		setupSortMenu()
 	}
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
@@ -280,6 +282,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+
+		if (menuItem.parent?.title ?? "").hasPrefix("Sort ") {
+			return !Model.drops.isEmpty
+		}
+
 		switch menuItem.action {
 		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
 			return !ViewController.shared.isDisplayingProgress
@@ -328,5 +335,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func application(_ application: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShareMetadata) {
 		CloudManager.acceptShare(metadata)
+	}
+
+	////////////////////////////////////////////// Sorting
+
+	@IBOutlet weak var sortAscendingMenu: NSMenu!
+	@IBOutlet weak var sortDescendingMenu: NSMenu!
+
+	private func setupSortMenu() {
+		for sortOption in Model.SortOption.options {
+			sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
+			sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
+		}
+	}
+
+	@objc private func sortOptionSelected(_ sender: NSMenu) {
+		if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
+			sortOption.handlerAscending(nil)
+		} else if let sortOption = Model.SortOption.options.first(where: { $0.descendingTitle == sender.title }) {
+			sortOption.handlerDescending(nil)
+		}
 	}
 }
