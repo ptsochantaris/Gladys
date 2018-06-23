@@ -345,14 +345,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt {
-							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
+							genericAlert(title: "Item(s) Added", message: nil)
 						}
 					}
 				}
 			}
 		}
 
-		Model.loadingUUIDs.remove(o.uuid)
+		Model.loadingUUIDs.remove(item.uuid)
 		if Model.loadingUUIDs.count == 0 {
 			Model.save()
 		} else {
