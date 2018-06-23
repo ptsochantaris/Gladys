@@ -79,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 						  forEventClass: AEEventClass(kInternetEventClass),
 						  andEventID: AEEventID(kAEGetURL))
 
-		CloudManager.checkMigrations()
+		PullState.checkMigrations()
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [])
 		}

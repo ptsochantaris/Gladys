@@ -107,6 +107,7 @@
 		162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC51F9147E300410447 /* CommonEnumerator.swift */; };
 		162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */; };
 		162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC91F9147F900410447 /* RootEnumerator.swift */; };
+		162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */; };
 		163249A61F2C8DC500C58B27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0351F9371EB00421B8C /* AddLabelController.swift */; };
 		1633F0381F93757000421B8C /* LabelListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0371F93757000421B8C /* LabelListCell.swift */; };
@@ -575,6 +576,7 @@
 		162CCCC51F9147E300410447 /* CommonEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingSetEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC91F9147F900410447 /* RootEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootEnumerator.swift; sourceTree = "<group>"; };
+		162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistedOptions+Mac.swift"; sourceTree = "<group>"; };
 		1633F0351F9371EB00421B8C /* AddLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLabelController.swift; sourceTree = "<group>"; };
 		1633F0371F93757000421B8C /* LabelListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelListCell.swift; sourceTree = "<group>"; };
 		163845FB1EF8629700CB8D97 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -992,6 +994,7 @@
 				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
 				16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */,
 				16C8166A20CB4EF1001C12DF /* Application.swift */,
+				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -2060,6 +2063,7 @@
 				16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
+				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
 				161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */,
 				16CD7D9620A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,

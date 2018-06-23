@@ -79,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		PersistedOptions.migrateBrokenDefaults()
 		Model.reloadDataIfNeeded()
-		CloudManager.checkMigrations()
+		PullState.checkMigrations()
 		if CloudManager.syncSwitchedOn {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
@@ -94,7 +94,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.checkMigrations()
 		CloudManager.opportunisticSyncIfNeeded(isStartup: false)
 	}
 

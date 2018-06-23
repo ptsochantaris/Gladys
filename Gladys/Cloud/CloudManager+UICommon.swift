@@ -178,10 +178,6 @@ extension CloudManager {
 		OperationQueue.main.addOperation(doneOperation)
 	}
 
-	static func checkMigrations() {
-		PullState.checkMigrations()
-	}
-
 	private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.shouldSendContentAvailable = true

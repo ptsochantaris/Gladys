@@ -160,7 +160,7 @@ final class PullState {
 		return nil
 	}
 
-	static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabaseScope) {
+	private static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabaseScope) {
 		let key = database.keyName
 		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
 		if let n = token {
