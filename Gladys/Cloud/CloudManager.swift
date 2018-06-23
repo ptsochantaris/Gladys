@@ -47,6 +47,12 @@ extension Array where Element == [CKRecord] {
 	}
 }
 
+extension Error {
+	var itemDoesNotExistOnServer: Bool {
+		return (self as? CKError)?.code == CKError.Code.unknownItem
+	}
+}
+
 final class CloudManager {
 
 	struct RecordType {

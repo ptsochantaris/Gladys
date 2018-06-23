@@ -1295,7 +1295,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 
 		guard let item = sender as? ArchivedDropItem else { return }
 
+		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {
+			loadingError = true
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
@@ -1309,7 +1311,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		} else {
 			item.reIndex {
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
-					if !Model.forceUpdateFilter(signalUpdate: true) {
+					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt {
 							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
 						}

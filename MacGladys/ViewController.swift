@@ -326,16 +326,34 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func loadCompleted(sender: AnyObject) {
-		guard let o = sender as? ArchivedDropItem else { return }
-		o.needsReIngest = false
-		o.reIndex()
-		Model.loadingUUIDs.remove(o.uuid)
-		if let i = Model.filteredDrops.index(of: o) {
+		guard let item = sender as? ArchivedDropItem else { return }
+
+		var loadingError = false
+		if let (errorPrefix, error) = item.loadingError {
+			loadingError = true
+			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
+		}
+
+		item.needsReIngest = false
+
+		if let i = Model.filteredDrops.index(of: item) {
 			let ip = IndexPath(item: i, section: 0)
 			collection.reloadItems(at: [ip])
+			item.reIndex()
+		} else {
+			item.reIndex {
+				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
+					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
+						if item.createdAt == item.updatedAt {
+							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
+						}
+					}
+				}
+			}
 		}
+
+		Model.loadingUUIDs.remove(o.uuid)
 		if Model.loadingUUIDs.count == 0 {
-			log("Ingest complete")
 			Model.save()
 		}
 	}
@@ -581,11 +599,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		if count > 0 {
-			if !Model.forceUpdateFilter(signalUpdate: false), Model.isFiltering, let w = view.window {
-				let a = NSAlert()
-				a.messageText = count > 1 ? "Items Added" : "Item Added"
-				a.beginSheetModal(for: w, completionHandler: nil)
-			} else {
+			if Model.forceUpdateFilter(signalUpdate: false) {
 				reloadData(inserting: insertedIndexPaths)
 			}
 			return true
