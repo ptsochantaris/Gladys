@@ -728,7 +728,11 @@ extension CloudManager {
 		shareRecord[CKShareTitleKey] = item.cloudKitSharingTitle as NSString
 		let icon = item.displayIcon
 		let scaledIcon = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 1, useScreenScale: false, singleScale: true)
-		shareRecord[CKShareThumbnailImageDataKey] = UIImageJPEGRepresentation(scaledIcon, 1) as NSData?
+		#if os(iOS)
+		shareRecord[CKShareThumbnailImageDataKey] = UIImagePNGRepresentation(scaledIcon) as NSData?
+		#else
+		shareRecord[CKShareThumbnailImageDataKey] = scaledIcon.tiffRepresentation as NSData?
+		#endif
 		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
 		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
