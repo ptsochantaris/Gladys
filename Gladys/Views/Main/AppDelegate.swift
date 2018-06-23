@@ -99,11 +99,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-		log("Registered for remote notifications")
+		log("APNS ready: \(deviceToken.base64EncodedString())")
+		CloudManager.apnsUpdate(deviceToken)
 	}
 
 	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-		log("Failed to register for remote notifications")
+		log("Warning: APNS registration failed: \(error.finalDescription)")
+		CloudManager.apnsUpdate(nil)
 	}
 
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

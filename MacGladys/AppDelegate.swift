@@ -148,10 +148,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		log("APNS ready: \(deviceToken.base64EncodedString())")
+		CloudManager.apnsUpdate(deviceToken)
 	}
 
 	func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
 		log("Warning: APNS registration failed: \(error.finalDescription)")
+		CloudManager.apnsUpdate(nil)
 	}
 
 	func applicationWillResignActive(_ notification: Notification) {

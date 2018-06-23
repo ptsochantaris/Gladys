@@ -163,6 +163,7 @@ extension CloudManager {
 				#else
 				NSApplication.shared.unregisterForRemoteNotifications()
 				#endif
+				PersistedOptions.lastPushToken = nil
 				for item in Model.drops {
 					item.removeFromCloudkit()
 				}
@@ -179,16 +180,6 @@ extension CloudManager {
 
 	static func checkMigrations() {
 		PullState.checkMigrations()
-		if syncSwitchedOn && !migratedSharing && !syncTransitioning {
-			let subscribe = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
-			subscribe.modifySubscriptionsCompletionBlock = { _, _, error in
-				if error == nil {
-					migratedSharing = true
-				}
-			}
-			subscribe.database = container.sharedCloudDatabase
-			perform(subscribe)
-		}
 	}
 
 	private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
@@ -203,41 +194,40 @@ extension CloudManager {
 
 	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
 
-		#if os(iOS)
-		UIApplication.shared.registerForRemoteNotifications()
-		#else
-		NSApplication.shared.registerForRemoteNotifications(matching: [])
-		#endif
-
-		let zone = CKRecordZone(zoneName: "archivedDropItems")
+		let zone = CKRecordZone(zoneID: privateZoneId)
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
 		createZone.database = container.privateCloudDatabase
 		createZone.modifyRecordZonesCompletionBlock = { _, _, error in
 			if let error = error {
 				abortActivation(error, completion: completion)
 			} else {
-				let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
-				subscribeToPrivateDatabase.database = container.privateCloudDatabase
-				subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
-					if let error = error {
-						abortActivation(error, completion: completion)
-					} else {
-						let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
-						subscribeToSharedDatabase.database = container.sharedCloudDatabase
-						subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
-							if let error = error {
-								abortActivation(error, completion: completion)
-							} else {
-								fetchInitialUUIDSequence(zone: zone, completion: completion)
-							}
-						}
-						perform(subscribeToSharedDatabase)
-					}
-				}
-				perform(subscribeToPrivateDatabase)
+				#if os(iOS)
+					UIApplication.shared.registerForRemoteNotifications()
+				#else
+					NSApplication.shared.registerForRemoteNotifications(matching: [])
+				#endif
+				fetchInitialUUIDSequence(zone: zone, completion: completion)
 			}
 		}
 		perform(createZone)
+	}
+
+	private static func updateSubscriptions(completion: @escaping (Error?)->Void) {
+		let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
+		subscribeToPrivateDatabase.database = container.privateCloudDatabase
+		subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
+			if error != nil {
+				completion(error)
+			} else {
+				let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+				subscribeToSharedDatabase.database = container.sharedCloudDatabase
+				subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
+					completion(error)
+				}
+				perform(subscribeToSharedDatabase)
+			}
+		}
+		perform(subscribeToPrivateDatabase)
 	}
 
 	static private func abortActivation(_ error: Error, completion: @escaping (Error?)->Void) {
@@ -266,7 +256,6 @@ extension CloudManager {
 						uuidSequence = []
 					}
 					syncSwitchedOn = true
-					migratedSharing = true
 					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 					sync(force: true, overridingWiFiPreference: true, completion: completion)
 				}
@@ -879,6 +868,27 @@ extension CloudManager {
 					lastSyncCompletion = Date()
 					done(nil)
 				}
+			}
+		}
+	}
+
+	static func apnsUpdate(_ newToken: Data?) {
+		let previousToken = PersistedOptions.lastPushToken
+		if newToken != previousToken {
+			if let newToken = newToken {
+				log("New APNS token, will update subscriptions")
+				updateSubscriptions { error in
+					if let error = error {
+						log("Subscription update failed: \(error)")
+					} else {
+						log("Subscriptions updated successfully, storing new token")
+						DispatchQueue.main.async {
+							PersistedOptions.lastPushToken = newToken
+						}
+					}
+				}
+			} else {
+				PersistedOptions.lastPushToken = nil
 			}
 		}
 	}

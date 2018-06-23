@@ -210,17 +210,6 @@ final class CloudManager {
 		}
 	}
 
-	static var migratedSharing: Bool {
-		get {
-			return PersistedOptions.defaults.bool(forKey: "migratedSharing")
-		}
-
-		set {
-			PersistedOptions.defaults.set(newValue, forKey: "migratedSharing")
-			PersistedOptions.defaults.synchronize()
-		}
-	}
-
 	static var shareActionShouldUpload: Bool {
 		get {
 			return PersistedOptions.defaults.bool(forKey: "shareActionShouldUpload")

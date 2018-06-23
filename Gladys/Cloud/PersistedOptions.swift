@@ -255,5 +255,19 @@ class PersistedOptions {
 		}
 	}
 
+	static var lastPushToken: Data? {
+		get {
+			return defaults.data(forKey: "lastPushToken")
+		}
+		set {
+			if let n = newValue {
+				defaults.set(n, forKey: "lastPushToken")
+			} else {
+				defaults.set(Data(), forKey: "lastPushToken")
+			}
+			defaults.synchronize()
+		}
+	}
+
 	#endif
 }
