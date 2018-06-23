@@ -40,8 +40,6 @@ extension Model {
 
 	private static func performSave() {
 
-		let start = Date()
-
 		let itemsToSave = itemsEligibleForSaving
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
@@ -55,12 +53,8 @@ extension Model {
 		needsAnotherSave = false
 
 		saveQueue.async {
-
 			do {
-				log("\(itemsToSave.count) items to save, \(uuidsToEncode.count) items to encode")
 				try self.coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
-				log("Saved: \(-start.timeIntervalSinceNow) seconds")
-
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}

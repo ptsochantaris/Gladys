@@ -32,6 +32,8 @@ extension Model {
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
+			let start = Date()
+			log("Saving: \(allItems.count) uuids, \(dirtyUuids.count) updated data files")
 			do {
 				let fm = FileManager.default
 				if !fm.fileExists(atPath: url.path) {
@@ -73,6 +75,9 @@ extension Model {
 				if let dataModified = modificationDate(for: url) {
 					dataFileLastModified = dataModified
 				}
+
+				log("Saved: \(-start.timeIntervalSinceNow) seconds")
+
 			} catch {
 				closureError = error as NSError
 			}
