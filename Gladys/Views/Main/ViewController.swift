@@ -1324,6 +1324,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if Model.loadingUUIDs.count == 0 {
 			Model.save()
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
+		} else {
+			Model.commitItem(item: item)
 		}
 
 		endBgTaskIfNeeded()

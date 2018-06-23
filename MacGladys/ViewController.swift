@@ -355,6 +355,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.loadingUUIDs.remove(o.uuid)
 		if Model.loadingUUIDs.count == 0 {
 			Model.save()
+		} else {
+			Model.commitItem(item: item)
 		}
 	}
 

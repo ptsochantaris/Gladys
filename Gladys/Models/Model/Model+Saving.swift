@@ -3,39 +3,27 @@ import Foundation
 extension Model {
 
 	static func saveIndexOnly() {
-
-		let itemsToSave = drops.filter { $0.goodToSave }
-
+		let itemsToSave = itemsEligibleForSaving
 		saveQueue.async {
-			var closureError: NSError?
-			var coordinationError: NSError?
-			coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
-				do {
-					log("Storing updated item index")
-
-					var uuidData = Data()
-					uuidData.reserveCapacity(itemsToSave.count * 16)
-					for item in itemsToSave {
-						let u = item.uuid
-						let t = u.uuid
-						uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
-					}
-
-					let fm = FileManager.default
-					if !fm.fileExists(atPath: url.path) {
-						try fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-					}
-					try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
-
-					if let dataModified = modificationDate(for: url) {
-						dataFileLastModified = dataModified
-					}
-				} catch {
-					closureError = error as NSError
-				}
+			do {
+				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
+				log("Saved index only")
+			} catch {
+				log("Warning: Error while committing index to disk: (\(error.finalDescription))")
 			}
-			if let e = coordinationError ?? closureError {
-				log("Saving index coordination error: \(e.finalDescription)")
+		}
+	}
+
+	static func commitItem(item: ArchivedDropItem) {
+		let itemsToSave = itemsEligibleForSaving
+		item.needsSaving = false
+		let uuid = item.uuid
+		saveQueue.async {
+			do {
+				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [uuid])
+				log("Ingest completed for item (\(uuid)) and committed to disk")
+			} catch {
+				log("Warning: Error while committing item to disk: (\(error.finalDescription))")
 			}
 		}
 	}
@@ -71,7 +59,7 @@ extension Model {
 						let uuidStrings = allItems.map { $0.uuid.uuidString }
 						for file in filesInDir {
 							if !uuidStrings.contains(file) && file != "uuids" { // old file
-								log("Removing file for non-existent item: \(file)")
+								log("Removing save file for non-existent item: \(file)")
 								try? fm.removeItem(atPath: url.appendingPathComponent(file).path)
 							}
 						}

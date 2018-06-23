@@ -197,11 +197,13 @@ extension CloudManager {
 			if let error = error {
 				abortActivation(error, completion: completion)
 			} else {
-				#if os(iOS)
-					UIApplication.shared.registerForRemoteNotifications()
-				#else
-					NSApplication.shared.registerForRemoteNotifications(matching: [])
-				#endif
+				DispatchQueue.main.async {
+					#if os(iOS)
+						UIApplication.shared.registerForRemoteNotifications()
+					#else
+						NSApplication.shared.registerForRemoteNotifications(matching: [])
+					#endif
+				}
 				fetchInitialUUIDSequence(zone: zone, completion: completion)
 			}
 		}

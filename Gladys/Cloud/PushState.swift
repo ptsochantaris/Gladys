@@ -129,8 +129,12 @@ final class PushState {
 		for v in uuid2progress.values {
 			progress.addChild(v, withPendingUnitCount: 100)
 		}
-		log("Pushing up \(recordsToDelete.count) item deletion blocks, \(payloadsToPush.count) item blocks")
-		updateSyncMessage()
+		let deleteCount = recordsToDelete.count
+		let pushCount = payloadsToPush.count
+		if deleteCount + pushCount > 0 {
+			log("Pushing up \(deleteCount) item deletion blocks, \(pushCount) item blocks")
+			updateSyncMessage()
+		}
 		return progress
 	}
 

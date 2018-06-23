@@ -34,11 +34,15 @@ extension Model {
 		}
 	}
 
+	static var itemsEligibleForSaving: [ArchivedDropItem] {
+		return drops.filter { $0.goodToSave }
+	}
+
 	private static func performSave() {
 
 		let start = Date()
 
-		let itemsToSave = drops.filter { $0.goodToSave }
+		let itemsToSave = itemsEligibleForSaving
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
 				i.needsSaving = false
