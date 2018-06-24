@@ -118,7 +118,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		lastUpdate = item.updatedAt
 		infoLabel.stringValue = item.addedString
 
-		inviteButton.isEnabled = CloudManager.syncSwitchedOn
+		if CloudManager.syncSwitchedOn {
+			inviteButton.isHidden = false
+			inviteButton.isEnabled = true
+			infoLabel.alignment = .center
+		} else {
+			inviteButton.isHidden = true
+			inviteButton.isEnabled = false
+			infoLabel.alignment = .right
+		}
 
 		switch shareMode {
 		case .none:

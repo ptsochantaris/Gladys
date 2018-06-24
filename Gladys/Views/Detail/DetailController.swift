@@ -49,6 +49,10 @@ final class DetailController: GladysViewController,
 			navigationController?.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
 		}
 
+		if !CloudManager.syncSwitchedOn {
+			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
+		}
+
 		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 		activity.title = item.displayTitleOrUuid
 		activity.isEligibleForSearch = false
