@@ -317,9 +317,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func postSave() {
-		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !Model.loadingUUIDs.contains($0.uuid) }
-		for i in itemsToReIngest {
-			Model.loadingUUIDs.insert(i.uuid)
+		for i in Model.itemsToReIngest {
 			i.reIngest(delegate: self)
 		}
 		updateEmptyView()
@@ -352,8 +350,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 
-		Model.loadingUUIDs.remove(item.uuid)
-		if Model.loadingUUIDs.count == 0 {
+		if Model.doneIngesting {
 			Model.save()
 		} else {
 			Model.commitItem(item: item)
@@ -583,7 +580,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		var count = 0
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides, pasteboardName: name) {
-				Model.loadingUUIDs.insert(newItem.uuid)
 
 				var modelIndex = indexPath.item
 				if Model.isFiltering {

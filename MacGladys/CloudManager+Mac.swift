@@ -24,6 +24,10 @@ extension CloudManager {
 		switch notification.databaseScope {
 		case .private:
 			log("Received private DB change push")
+			if !Model.doneIngesting {
+				log("We'll be syncing in a moment anyway, ignoring the push")
+				return
+			}
 			sync(scope: .private) { error in
 				if let error = error {
 					log("Notification-triggered sync error: \(error.finalDescription)")
@@ -33,6 +37,10 @@ extension CloudManager {
 			break
 		case .shared:
 			log("Received shared DB change push")
+			if !Model.doneIngesting {
+				log("We'll be syncing in a moment anyway, ignoring the push")
+				return
+			}
 			sync(scope: .shared) { error in
 				if let error = error {
 					log("Notification-triggered sync error: \(error.finalDescription)")

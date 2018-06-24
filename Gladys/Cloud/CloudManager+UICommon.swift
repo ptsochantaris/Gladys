@@ -520,7 +520,7 @@ extension CloudManager {
 							// this share record does not exist. Our local data is wrong
 							if let itemWithShare = Model.item(shareId: recordID.recordName) {
 								log("Warning: Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
-								fetchCloudRecord(for: itemWithShare)
+								fetchCloudRecord(for: itemWithShare, completion: nil)
 							}
 						} else {
 							finalError = error
@@ -539,23 +539,26 @@ extension CloudManager {
 		OperationQueue.main.addOperation(doneOperation)
 	}
 
-	private static func fetchCloudRecord(for item: ArchivedDropItem?) {
+	private static func fetchCloudRecord(for item: ArchivedDropItem?, completion: ((Error?) -> Void)?) {
 		guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
 		let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
 		fetch.database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
 		fetch.perRecordCompletionBlock = { record, _, error in
 			if let record = record {
 				DispatchQueue.main.async {
-					log("Replaced local stale cloud record with fresh copy from server (\(itemNeedingCloudPull.uuid))")
+					log("Replaced local cloud record with latest copy from server (\(itemNeedingCloudPull.uuid))")
 					itemNeedingCloudPull.cloudKitRecord = record
 					itemNeedingCloudPull.postModified()
 				}
 			} else if let error = error, error.itemDoesNotExistOnServer {
 				DispatchQueue.main.async {
-					log("Determined no cloud record exists for item after all, clearing local related cloud records so next sync can re-create them (\(itemNeedingCloudPull.uuid))")
+					log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(itemNeedingCloudPull.uuid))")
 					itemNeedingCloudPull.removeFromCloudkit()
 					itemNeedingCloudPull.postModified()
 				}
+			}
+			DispatchQueue.main.async {
+				completion?(error)
 			}
 		}
 		perform(fetch)
@@ -774,13 +777,11 @@ extension CloudManager {
 		}
 		container.privateCloudDatabase.delete(withRecordID: shareId) { _, error in
 			DispatchQueue.main.async {
-				if let error = error {
+				if let error = error, !error.itemDoesNotExistOnServer {
 					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
 				} else {
 					item.cloudKitShareRecord = nil
-					item.needsCloudPush = true
-					sync(scope: .private) { error in
-						item.postModified()
+					fetchCloudRecord(for: item) { error in
 						completion(error)
 					}
 				}

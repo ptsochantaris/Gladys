@@ -21,6 +21,10 @@ extension CloudManager {
 			log("Received private DB change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
+			} else if !Model.doneIngesting {
+				log("We'll be syncing in a moment anyway, ignoring the push for now")
+				completionHandler(.newData)
+				return
 			}
 			sync(scope: .private) { error in
 				if error != nil {
@@ -35,6 +39,10 @@ extension CloudManager {
 			log("Received shared DB change push")
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
+			} else if !Model.doneIngesting {
+				log("We'll be syncing in a moment anyway, ignoring the push for now")
+				completionHandler(.newData)
+				return
 			}
 			sync(scope: .shared) { error in
 				if error != nil {

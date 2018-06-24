@@ -18,8 +18,6 @@ import Cocoa
 extension Model {
 	static var saveIsDueToSyncFetch = false
 
-	static var loadingUUIDs = Set<UUID>()
-
 	private static var modelFilter: String?
 	private static var currentFilterQuery: CSSearchQuery?
 	private static var cachedFilteredDrops: [ArchivedDropItem]?
@@ -437,7 +435,6 @@ extension Model {
 			}
 
 			let uuid = item.uuid
-			loadingUUIDs.remove(uuid)
 			uuidsToRemove.append(uuid)
 
 			if let i = filteredDrops.index(where: { $0.uuid == uuid }) {
@@ -457,5 +454,13 @@ extension Model {
 		}
 
 		return ipsToRemove
+	}
+
+	static var doneIngesting: Bool {
+		return !drops.contains { $0.needsReIngest && !$0.isDeleting }
+	}
+
+	static var itemsToReIngest: [ArchivedDropItem] {
+		return drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
 	}
 }

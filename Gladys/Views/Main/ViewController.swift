@@ -97,7 +97,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 	private func endBgTaskIfNeeded() {
-		if Model.loadingUUIDs.count == 0, let b = bgTask {
+		if Model.doneIngesting, let b = bgTask {
 			log("Ending background ingest task")
 			UIApplication.shared.endBackgroundTask(b)
 			bgTask = nil
@@ -311,7 +311,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 						self.focusInitialAccessibilityElement()
 					})
 
-					Model.loadingUUIDs.insert(item.uuid)
 					if itemVisiblyInserted {
 						firstDestinationPath = destinationIndexPath
 					}
@@ -770,8 +769,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			})
 
 			updateEmptyView(animated: true)
-
-			Model.loadingUUIDs.insert(item.uuid)
 		}
 		startBgTaskIfNeeded()
 		return .success
@@ -911,9 +908,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		deleteButton.isEnabled = count > 0
 		editLabelsButton.isEnabled = count > 0
 
-		let itemsToReIngest = Model.drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting && !Model.loadingUUIDs.contains($0.uuid) }
-		for item in itemsToReIngest {
-			Model.loadingUUIDs.insert(item.uuid)
+		for item in Model.itemsToReIngest {
 			startBgTaskIfNeeded()
 			item.reIngest(delegate: self)
 		}
@@ -1320,8 +1315,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			}
 		}
 
-		Model.loadingUUIDs.remove(item.uuid)
-		if Model.loadingUUIDs.count == 0 {
+		if Model.doneIngesting {
 			Model.save()
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
 		} else {
