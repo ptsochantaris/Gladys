@@ -779,11 +779,10 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let error = error, !error.itemDoesNotExistOnServer {
 					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
-				} else {
+					completion(error)
+				} else { // our local record must be stale, let's refresh it just in case
 					item.cloudKitShareRecord = nil
-					fetchCloudRecord(for: item) { error in
-						completion(error)
-					}
+					fetchCloudRecord(for: item, completion: completion)
 				}
 			}
 		}

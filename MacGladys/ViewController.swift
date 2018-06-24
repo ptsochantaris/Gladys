@@ -804,23 +804,27 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func delete(_ sender: Any?) {
-		let items = collection.actionableSelectedItems
-		if !items.isEmpty {
-			if PersistedOptions.unconfirmedDeletes {
-				ViewController.shared.deleteRequested(for: items)
+		let items = collection.actionableSelectedItems.filter { !$0.isImportedShare }
+		if items.isEmpty { return }
+		if PersistedOptions.unconfirmedDeletes {
+			ViewController.shared.deleteRequested(for: items)
+		} else {
+			let a = NSAlert()
+			if items.count == 1, let first = items.first, first.shareMode == .sharing {
+				a.messageText = "You are sharing this item"
+				a.informativeText = "Deleting it will remove it from others' collections too."
 			} else {
-				let a = NSAlert()
 				a.messageText = items.count > 1 ? "Are you sure you want to delete these \(items.count) items?" : "Are you sure you want to delete this item?"
-				a.addButton(withTitle: "Delete")
-				a.addButton(withTitle: "Cancel")
-				a.showsSuppressionButton = true
-				a.suppressionButton?.title = "Don't ask me again"
-				a.beginSheetModal(for: view.window!) { response in
-					if response.rawValue == 1000 {
-						ViewController.shared.deleteRequested(for: items)
-						if let s = a.suppressionButton, s.integerValue > 0 {
-							PersistedOptions.unconfirmedDeletes = true
-						}
+			}
+			a.addButton(withTitle: "Delete")
+			a.addButton(withTitle: "Cancel")
+			a.showsSuppressionButton = true
+			a.suppressionButton?.title = "Don't ask me again"
+			a.beginSheetModal(for: view.window!) { response in
+				if response.rawValue == 1000 {
+					ViewController.shared.deleteRequested(for: items)
+					if let s = a.suppressionButton, s.integerValue > 0 {
+						PersistedOptions.unconfirmedDeletes = true
 					}
 				}
 			}
@@ -869,7 +873,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(info(_:)), #selector(open(_:)):
 			return !collection.actionableSelectedItems.isEmpty
 		case #selector(delete(_:)):
-			return !collection.actionableSelectedItems.contains { $0.isImportedShare }
+			return !collection.actionableSelectedItems.filter { !$0.isImportedShare }.isEmpty
 		default:
 			return true
 		}
