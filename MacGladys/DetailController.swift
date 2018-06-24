@@ -651,6 +651,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	@IBAction private func openButtonSelected(_ sender: NSButton) {
 		item.tryOpen(from: self)
+		view.window?.close()
 	}
 
 	func sharingService(_ sharingService: NSSharingService, didSave share: CKShare) {

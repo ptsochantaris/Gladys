@@ -96,7 +96,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		log("Item changed: \(url.path)")
 
-		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.visibleDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
+		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.item(uuid: typeItem.parentUuid) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
 			let bytesPath = typeItem.bytesPath
 			if url != bytesPath {
