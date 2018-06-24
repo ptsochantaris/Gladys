@@ -98,12 +98,38 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.visibleDrops.first(where: { $0.uuid == typeItem.parentUuid }) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
+			let bytesPath = typeItem.bytesPath
+			if url != bytesPath {
+				do {
+					typeItem.bytes = try Data(contentsOf: url, options: .mappedIfSafe)
+				} catch {
+					log("Warning: Cannot mirror changes back to item bytes: \(error.finalDescription)")
+				}
+			}
 			typeItem.markUpdated()
 			parent.markUpdated()
 			parent.needsReIngest = true
 			saveModel()
 		}
     }
+
+	override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
+		log("Providing placeholder: \(url.path)")
+
+		guard let identifier = persistentIdentifierForItem(at: url) else {
+			completionHandler(NSFileProviderError(.noSuchItem))
+			return
+		}
+
+		do {
+			let fileProviderItem = try item(for: identifier)
+			let placeholderURL = NSFileProviderManager.placeholderURL(for: url)
+			try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
+			completionHandler(nil)
+		} catch  {
+			completionHandler(error)
+		}
+	}
 
     override func stopProvidingItem(at url: URL) {
 		//log("Stopping provision: \(url.path)")

@@ -47,11 +47,15 @@ extension ArchivedDropItemType {
 
 		log("Updating shared link at \(linkURL.path)")
 
-		if f.fileExists(atPath: sharedPath.path) {
-			try! f.removeItem(at: sharedPath)
+		do {
+			if f.fileExists(atPath: sharedPath.path) {
+				try f.removeItem(at: sharedPath)
+			}
+			try f.createDirectory(atPath: sharedPath.path, withIntermediateDirectories: true, attributes: nil)
+			try f.linkItem(at: originalURL, to: linkURL)
+		} catch {
+			log("Warning: Error while creating a shared link: \(error.finalDescription)")
 		}
-		try! f.createDirectory(atPath: sharedPath.path, withIntermediateDirectories: true, attributes: nil)
-		try! f.linkItem(at: originalURL, to: linkURL)
 
 		return linkURL
 	}
