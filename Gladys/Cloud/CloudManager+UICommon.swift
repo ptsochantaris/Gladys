@@ -760,42 +760,14 @@ extension CloudManager {
 					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
 					genericAlert(title: "Could not accept shared item", message: error.finalDescription)
 				} else {
-					createLocalItemFromAccepted(share: metadata.share, rootRecordId: metadata.rootRecordID) { error in
+					sync { _ in
 						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-						if let error = error {
-							genericAlert(title: "Error while accepting", message: "There was an error while fetching the accepted item (\(error.finalDescription)). Please try a manual sync in a moment to update your collection with the accepted item.")
-						}
 					}
 				}
 			}
 		}
 		acceptShareOperation.qualityOfService = .userInteractive
 		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
-	}
-
-	static private func createLocalItemFromAccepted(share: CKShare, rootRecordId: CKRecordID, completion: @escaping (Error?)->Void) {
-		let predicate = NSPredicate(format: "parent == %@", rootRecordId)
-		let query = CKQuery(recordType: "ArchivedDropItemType", predicate: predicate)
-
-		container.sharedCloudDatabase.fetch(withRecordID: rootRecordId) { rootRecord, error in
-			DispatchQueue.main.async {
-				if let rootRecord = rootRecord {
-					container.sharedCloudDatabase.perform(query, inZoneWith: rootRecord.recordID.zoneID) { records, error in
-						DispatchQueue.main.async {
-							if let records = records {
-								let parent = ArchivedDropItem(from: rootRecord)
-								parent.typeItems = records.map { ArchivedDropItemType(from: $0, parentUuid: parent.uuid) }
-								Model.drops.insert(parent, at: 0)
-								NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-							}
-							completion(error)
-						}
-					}
-				} else {
-					completion(error)
-				}
-			}
-		}
 	}
 
 	static func deleteShare(_ item: ArchivedDropItem, completion: @escaping (Error?)->Void) {
