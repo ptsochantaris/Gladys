@@ -72,11 +72,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private var lastUpdate = Date.distantPast
+	private var lastShareMode = ArchivedDropItem.ShareMode.none
 
 	@objc func checkForChanges() {
 		if Model.item(uuid: item.uuid) == nil {
 			view.window?.close()
-		} else if lastUpdate != item.updatedAt {
+		} else if lastUpdate != item.updatedAt || lastShareMode != item.shareMode {
 			updateInfo()
 		}
 	}
@@ -116,6 +117,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		updateLabelButtons()
 		components.animator().reloadData()
 		lastUpdate = item.updatedAt
+		lastShareMode = item.shareMode
 		infoLabel.stringValue = item.addedString
 
 		if CloudManager.syncSwitchedOn {
@@ -199,10 +201,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+		if item.shareMode == .elsewhereReadOnly { return [] }
 		return (item.shareMode != .elsewhereReadOnly && dropOperation == .above) ? .move : []
 	}
 
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+		if item.shareMode == .elsewhereReadOnly { return false }
+
 		let p = info.draggingPasteboard()
 		guard let label = p.string(forType: NSPasteboard.PasteboardType(kUTTypeText as String)) ??
 			p.string(forType: NSPasteboard.PasteboardType(kUTTypePlainText as String)) ??
@@ -513,10 +518,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return item.shareMode != .elsewhereReadOnly
+		return true
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
+		if item.shareMode == .elsewhereReadOnly { return [] }
+
 		if draggingInfo.draggingSource() is ComponentCollectionView {
 			proposedDropOperation.pointee = .on
 			return collectionView == components ? .move : .copy
@@ -536,6 +543,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
+		if item.shareMode == .elsewhereReadOnly { return false }
+
 		if let s = draggingInfo.draggingSource() as? ComponentCollectionView {
 
 			let destinationIndex = indexPath.item

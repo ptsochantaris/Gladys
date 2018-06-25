@@ -377,6 +377,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
 			let cell = collection.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
 			let cellItem = cell.archivedDropItem,
+			cellItem.shareMode != .elsewhereReadOnly,
 			!cellItem.shouldDisplayLoading && !cellItem.needsUnlock,
 			!cellItem.typeItems.contains(where: { $0.uuid == draggedItem.uuid }) {
 
