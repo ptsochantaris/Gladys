@@ -804,7 +804,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func delete(_ sender: Any?) {
-		let items = collection.actionableSelectedItems.filter { !$0.isImportedShare }
+		let items = collection.actionableSelectedItems
 		if items.isEmpty { return }
 		if PersistedOptions.unconfirmedDeletes {
 			ViewController.shared.deleteRequested(for: items)
@@ -870,10 +870,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				menuItem.title = "Quick Look"
 				return false
 			}
-		case #selector(info(_:)), #selector(open(_:)):
+		case #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)):
 			return !collection.actionableSelectedItems.isEmpty
-		case #selector(delete(_:)):
-			return !collection.actionableSelectedItems.filter { !$0.isImportedShare }.isEmpty
 		default:
 			return true
 		}

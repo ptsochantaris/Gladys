@@ -308,13 +308,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 				p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
 			}
 		}, style: .default, push: push))
-		if !item.isImportedShare {
-			actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
-				guard let s = self else { return }
-				s.egress()
-				s.confirmDelete(for: item, push: push)
-			}, style: .destructive, push: push))
-		}
+		actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
+			guard let s = self else { return }
+			s.egress()
+			s.confirmDelete(for: item, push: push)
+		}, style: .destructive, push: push))
 		return actions
 	}
 

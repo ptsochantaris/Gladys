@@ -120,11 +120,7 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 				return [.allowsReading, .allowsWriting, .allowsDeleting]
 			}
 		} else if let d = dropItem {
-			if d.isImportedShare {
-				return [.allowsReading]
-			} else {
-				return [.allowsReading, .allowsDeleting]
-			}
+			return [.allowsReading, .allowsDeleting]
 		} else {
 			return [.allowsReading]
 		}

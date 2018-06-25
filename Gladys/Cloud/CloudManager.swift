@@ -115,6 +115,15 @@ final class CloudManager {
 				sharedZonesToPush.insert(zoneID)
 			}
 		}
+		for deletionEntry in deletionQueue {
+			let components = deletionEntry.components(separatedBy: ":")
+			if components.count > 2 {
+				let zoneID = CKRecordZoneID(zoneName: components[0], ownerName: components[1])
+				if zoneID != privateZoneId {
+					sharedZonesToPush.insert(zoneID)
+				}
+			}
+		}
 
 		let privatePushState = PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 		let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
@@ -295,26 +304,26 @@ final class CloudManager {
 		}
 	}
 
-	private static func deletionTag(for uuid: UUID, cloudKitRecord: CKRecord?) -> String {
+	private static func deletionTag(for recordName: String, cloudKitRecord: CKRecord?) -> String {
 		if let zoneId = cloudKitRecord?.recordID.zoneID {
-			return zoneId.zoneName + ":" + zoneId.ownerName + ":" + uuid.uuidString
+			return zoneId.zoneName + ":" + zoneId.ownerName + ":" + recordName
 		} else {
-			return uuid.uuidString
+			return recordName
 		}
 	}
 
-	static func markAsDeleted(uuid: UUID, cloudKitRecord: CKRecord?) {
+	static func markAsDeleted(recordName: String, cloudKitRecord: CKRecord?) {
 		if syncSwitchedOn {
-			deletionQueue.insert(deletionTag(for: uuid, cloudKitRecord: cloudKitRecord))
+			deletionQueue.insert(deletionTag(for: recordName, cloudKitRecord: cloudKitRecord))
 		}
 	}
 
-	static func commitDeletion(for uuids: [String]) {
-		if uuids.isEmpty { return }
+	static func commitDeletion(for recordNames: [String]) {
+		if recordNames.isEmpty { return }
 
 		let newQueue = CloudManager.deletionQueue.filter { deletionTag in
-			for uuid in uuids {
-				if deletionTag.components(separatedBy: ":").last == uuid {
+			for recordName in recordNames {
+				if deletionTag.components(separatedBy: ":").last == recordName {
 					return false
 				}
 			}

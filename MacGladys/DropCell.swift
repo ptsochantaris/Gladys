@@ -288,9 +288,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			if !item.isImportedShare {
 				m.addItem(NSMenuItem.separator())
 				m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-				m.addItem(NSMenuItem.separator())
-				m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 			}
+			m.addItem(NSMenuItem.separator())
+			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 			m.delegate = self
 			return m
 		}

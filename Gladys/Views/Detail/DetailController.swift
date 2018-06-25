@@ -96,7 +96,6 @@ final class DetailController: GladysViewController,
 			invitesButton.tintColor = ViewController.tintColor
 		}
 
-		deleteButton.isEnabled = !item.isImportedShare
 		let readWrite = item.shareMode != .elsewhereReadOnly
 		table.allowsSelection = readWrite
 		table.dragInteractionEnabled = readWrite
