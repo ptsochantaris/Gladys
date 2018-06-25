@@ -750,7 +750,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let g = NSPasteboard.general
 		g.clearContents()
 		for item in collection.actionableSelectedItems {
-			performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
+			let uuid = item.uuid
+			if DetailController.showingUUIDs.contains(uuid) {
+				NotificationCenter.default.post(name: .ForegroundDisplayedItem, object: uuid)
+			} else {
+				performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
+			}
 		}
 	}
 

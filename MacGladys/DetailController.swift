@@ -27,6 +27,11 @@ protocol FocusableTextFieldDelegate: class {
 
 final class FocusableTextField: NSTextField {
 	weak var focusDelegate: FocusableTextFieldDelegate?
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		wantsLayer = true
+		layer?.cornerRadius = 2.5
+	}
 	override func becomeFirstResponder() -> Bool {
 		focusDelegate?.fieldReceivedFocus(self)
 		return super.becomeFirstResponder()
@@ -34,6 +39,8 @@ final class FocusableTextField: NSTextField {
 }
 
 final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate {
+
+	static var showingUUIDs = Set<UUID>()
 
 	@IBOutlet private weak var titleField: FocusableTextField!
 	@IBOutlet private weak var notesField: FocusableTextField!
@@ -57,6 +64,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		n.addObserver(self, selector: #selector(updateInfo), name: .IngestComplete, object: representedObject)
 		n.addObserver(self, selector: #selector(checkForChanges), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(checkForChanges), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(foreground(_:)), name: .ForegroundDisplayedItem, object: nil)
 
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
@@ -74,6 +82,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	private var lastUpdate = Date.distantPast
 	private var lastShareMode = ArchivedDropItem.ShareMode.none
 
+	@objc private func foreground(_ notification: Notification) {
+		if let uuid = notification.object as? UUID, item.uuid == uuid {
+			view.window?.makeKeyAndOrderFront(self)
+		}
+	}
+
 	@objc func checkForChanges() {
 		if Model.item(uuid: item.uuid) == nil {
 			view.window?.close()
@@ -83,6 +97,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	deinit {
+		DetailController.showingUUIDs.remove(item.uuid)
 		NotificationCenter.default.removeObserver(self)
 	}
 
@@ -102,6 +117,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
 		userActivity = activity
+
+		DetailController.showingUUIDs.insert(item.uuid)
 	}
 
 	@objc private func updateInfo() {
@@ -144,6 +161,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			readOnlyLabel.isHidden = true
 			inviteButton.image = DetailController.shareImageTinted
 		}
+
+		titleField.layer?.backgroundColor = readWrite ? NSColor.textBackgroundColor.cgColor : NSColor.clear.cgColor
+		notesField.layer?.backgroundColor = titleField.layer?.backgroundColor
 
 		titleField.isEditable = readWrite
 		notesField.isEditable = readWrite

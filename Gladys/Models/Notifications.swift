@@ -24,4 +24,5 @@ extension Notification.Name {
 	static let IngestComplete = Notification.Name("IngestComplete")
 	static let AcceptStarting = Notification.Name("AcceptStarting")
 	static let AcceptEnding = Notification.Name("AcceptEnding")
+	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
 }
