@@ -775,7 +775,9 @@ extension CloudManager {
 			completion(nil)
 			return
 		}
-		container.privateCloudDatabase.delete(withRecordID: shareId) { _, error in
+		let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
+		deleteOperation.database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+		deleteOperation.perRecordCompletionBlock = { _, error in
 			DispatchQueue.main.async {
 				if let error = error, !error.itemDoesNotExistOnServer {
 					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
@@ -786,6 +788,7 @@ extension CloudManager {
 				}
 			}
 		}
+		perform(deleteOperation)
 	}
 
 	static func proceedWithDeactivation() {
