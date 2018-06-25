@@ -294,6 +294,8 @@ extension CloudManager {
 						item.cloudKitShareRecord = nil // get rid of useless file
 						stats.deletionCount += 1
 					}
+				} else {
+					log("Received delete for non-existent item record \(itemUUID), ignoring")
 				}
 			case RecordType.component:
 				if let component = Model.typeItem(uuid: itemUUID) {
@@ -305,6 +307,8 @@ extension CloudManager {
 						component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
 						stats.deletionCount += 1
 					}
+				} else {
+					log("Received delete for non-existent component record \(itemUUID), ignoring")
 				}
 			case RecordType.share:
 				if let associatedItem = Model.item(shareId: itemUUID) {
@@ -315,6 +319,8 @@ extension CloudManager {
 						associatedItem.cloudKitShareRecord = nil
 						stats.deletionCount += 1
 					}
+				} else {
+					log("Received delete for non-existent share record \(itemUUID), ignoring")
 				}
 			default:
 				log("Warning: Received deletion for unknown record type: \(recordType)")
@@ -750,24 +756,26 @@ extension CloudManager {
 			genericAlert(title: "Could not accept shared item", message: "An item called \"\(existingItem.displayTitleOrUuid)\" already exists in your collection which has the same unique ID.\n\nPlease delete this version of the item if you want to accept this other version.")
 			return
 		}
-		showNetwork = true
 		NotificationCenter.default.post(name: .AcceptStarting, object: nil)
-		let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
-		acceptShareOperation.acceptSharesCompletionBlock = { error in
-			DispatchQueue.main.async {
-				showNetwork = false
-				if let error = error {
-					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-					genericAlert(title: "Could not accept shared item", message: error.finalDescription)
-				} else {
-					sync { _ in
+		sync { _ in // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
+			showNetwork = true
+			let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
+			acceptShareOperation.acceptSharesCompletionBlock = { error in
+				DispatchQueue.main.async {
+					showNetwork = false
+					if let error = error {
 						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+						genericAlert(title: "Could not accept shared item", message: error.finalDescription)
+					} else {
+						sync { _ in
+							NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+						}
 					}
 				}
 			}
+			acceptShareOperation.qualityOfService = .userInitiated
+			CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
 		}
-		acceptShareOperation.qualityOfService = .userInteractive
-		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
 	}
 
 	static func deleteShare(_ item: ArchivedDropItem, completion: @escaping (Error?)->Void) {
