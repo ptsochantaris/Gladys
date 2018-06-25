@@ -83,7 +83,7 @@ final class PullState {
 
 	private func commitNewTokens() {
 		if updatedZoneTokens.count > 0 || updatedDatabaseTokens.count > 0 {
-			log("Comitting change tokens")
+			log("Committing change tokens")
 		}
 		for (zoneId, zoneToken) in updatedZoneTokens {
 			PullState.setZoneToken(zoneToken, for: zoneId)
