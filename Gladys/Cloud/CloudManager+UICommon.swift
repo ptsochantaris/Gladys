@@ -747,7 +747,7 @@ extension CloudManager {
 			return
 		}
 		if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
-			genericAlert(title: "Could not accept shared item", message: "An item called \"\(existingItem.displayTitleOrUuid)\" already exists in your collection which has the same unique ID.\n\nPlease delete this version of the item if you want to accept the shared version.")
+			genericAlert(title: "Could not accept shared item", message: "An item called \"\(existingItem.displayTitleOrUuid)\" already exists in your collection which has the same unique ID.\n\nPlease delete this version of the item if you want to accept this other version.")
 			return
 		}
 		showNetwork = true
@@ -760,14 +760,42 @@ extension CloudManager {
 					NotificationCenter.default.post(name: .AcceptEnding, object: nil)
 					genericAlert(title: "Could not accept shared item", message: error.finalDescription)
 				} else {
-					sync { _ in
+					createLocalItemFromAccepted(share: metadata.share, rootRecordId: metadata.rootRecordID) { error in
 						NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+						if let error = error {
+							genericAlert(title: "Error while accepting", message: "There was an error while fetching the accepted item (\(error.finalDescription)). Please try a manual sync in a moment to update your collection with the accepted item.")
+						}
 					}
 				}
 			}
 		}
 		acceptShareOperation.qualityOfService = .userInteractive
 		CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
+	}
+
+	static private func createLocalItemFromAccepted(share: CKShare, rootRecordId: CKRecordID, completion: @escaping (Error?)->Void) {
+		let predicate = NSPredicate(format: "parent == %@", rootRecordId)
+		let query = CKQuery(recordType: "ArchivedDropItemType", predicate: predicate)
+
+		container.sharedCloudDatabase.fetch(withRecordID: rootRecordId) { rootRecord, error in
+			DispatchQueue.main.async {
+				if let rootRecord = rootRecord {
+					container.sharedCloudDatabase.perform(query, inZoneWith: rootRecord.recordID.zoneID) { records, error in
+						DispatchQueue.main.async {
+							if let records = records {
+								let parent = ArchivedDropItem(from: rootRecord)
+								parent.typeItems = records.map { ArchivedDropItemType(from: $0, parentUuid: parent.uuid) }
+								Model.drops.insert(parent, at: 0)
+								NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+							}
+							completion(error)
+						}
+					}
+				} else {
+					completion(error)
+				}
+			}
+		}
 	}
 
 	static func deleteShare(_ item: ArchivedDropItem, completion: @escaping (Error?)->Void) {
