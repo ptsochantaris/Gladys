@@ -30,6 +30,7 @@ final class Model {
 		legacyMode = false
 
 		var coordinationError: NSError?
+		var loadingError : NSError?
 		var didLoad = false
 
 		// withoutChanges because we only signal the provider after we have saved
@@ -77,15 +78,26 @@ final class Model {
 					}
 				} catch {
 					log("Loading Error: \(error)")
+					loadingError = error as NSError
 				}
 			} else {
 				drops = []
 				log("Starting fresh store")
 			}
 		}
-		if let e = coordinationError {
+
+		if let e = coordinationError ?? loadingError {
 			log("Error in loading coordination: \(e.finalDescription)")
+			#if MAINAPP || MAC
+			DispatchQueue.main.async {
+				genericAlert(title: "Loading Error (Code: \(e.code))", message: "This app's data store seems corrupt. The message received from the OS is:\n\n\"\(e.localizedDescription)\".\n\nPlease report this to the developer.") {
+					abort()
+				}
+			}
+			return
+			#else
 			abort()
+			#endif
 		}
 
 		DispatchQueue.main.async {

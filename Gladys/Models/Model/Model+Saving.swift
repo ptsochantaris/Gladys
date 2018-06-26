@@ -2,6 +2,70 @@ import Foundation
 
 extension Model {
 
+	private static let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private static var needsAnotherSave = false
+	private static var isSaving = false
+	private static var nextSaveCallbacks: [()->Void]?
+
+	static func queueNextSaveCallback(_ callback: @escaping ()->Void) {
+		if nextSaveCallbacks == nil {
+			nextSaveCallbacks = [()->Void]()
+		}
+		nextSaveCallbacks!.append(callback)
+	}
+
+	static func save() {
+		assert(Thread.isMainThread)
+
+		if isSaving {
+			needsAnotherSave = true
+		} else {
+			prepareToSave()
+			performSave()
+		}
+	}
+
+	private static var itemsEligibleForSaving: [ArchivedDropItem] {
+		return drops.filter { $0.goodToSave }
+	}
+
+	private static func performSave() {
+
+		let itemsToSave = itemsEligibleForSaving
+		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
+			if i.needsSaving {
+				i.needsSaving = false
+				return i.uuid
+			}
+			return nil
+		}
+
+		isSaving = true
+		needsAnotherSave = false
+
+		saveQueue.async {
+			do {
+				try self.coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+			} catch {
+				log("Saving Error: \(error.finalDescription)")
+			}
+			DispatchQueue.main.async {
+				if needsAnotherSave {
+					performSave()
+				} else {
+					isSaving = false
+					if let n = nextSaveCallbacks {
+						for callback in n {
+							callback()
+						}
+						nextSaveCallbacks = nil
+					}
+					saveComplete()
+				}
+			}
+		}
+	}
+	
 	static func saveIndexOnly() {
 		let itemsToSave = itemsEligibleForSaving
 		saveQueue.async {
@@ -28,7 +92,7 @@ extension Model {
 		}
 	}
 
-	static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
+	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
