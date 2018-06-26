@@ -96,7 +96,7 @@ extension ArchivedDropItemType: Equatable {
 				return t
 			}
 		}
-		if isWebURL {
+		if isURL {
 			return "url"
 		}
 		if typeIdentifier.hasSuffix("-plain-text") {
@@ -106,15 +106,21 @@ extension ArchivedDropItemType: Equatable {
 	}
 
 	var isURL: Bool {
-		return isWebURL || isFileURL || typeConforms(to: kUTTypeURL)
+		return typeConforms(to: kUTTypeURL)
 	}
 
 	var isWebURL: Bool {
-		return typeIdentifier == "public.url"
+		if let e = encodedUrl {
+			return e.scheme != "file"
+		}
+		return false
 	}
 
 	var isFileURL: Bool {
-		return typeIdentifier == "public.file-url"
+		if let e = encodedUrl {
+			return e.scheme == "file"
+		}
+		return false
 	}
 
 	var isWebArchive: Bool {
