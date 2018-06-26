@@ -51,19 +51,23 @@ extension ArchivedDropItemType {
 
 	var contentPriority: Int {
 
-		if typeIdentifier == "com.apple.mapkit.map-item" { return 140 }
+		if typeIdentifier == "com.apple.mapkit.map-item" { return 90 }
 
-		if typeConforms(to: kUTTypeVCard) { return 120 }
+		if typeConforms(to: kUTTypeVCard) { return 80 }
 
-		if isURL {
-			if representedClass == .url { return 100 }
-			if isWebURL { return 80 }
-			return 60
-		}
+		if isWebURL { return 70 }
 
-		if typeConforms(to: kUTTypeImage) { return 40 }
+		if typeConforms(to: kUTTypeVideo) { return 60 }
+
+		if typeConforms(to: kUTTypeAudio) { return 50 }
+
+		if typeConforms(to: kUTTypePDF) { return 40 }
+
+		if typeConforms(to: kUTTypeImage) { return 30 }
 
 		if typeConforms(to: kUTTypeText) { return 20 }
+
+		if isFileURL { return 10 }
 
 		return 0
 	}
