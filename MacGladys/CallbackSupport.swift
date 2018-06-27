@@ -54,21 +54,14 @@ struct CallbackSupport {
 		}
 
 		m["paste-share-pasteboard"] = { parameters, success, failure, cancel in
+			let importOverrides = createOverrides(from: parameters)
 			let pasteboard = NSPasteboard(name: sharingPasteboard)
-			ViewController.shared.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: nil)
+			ViewController.shared.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 				ViewController.shared.itemView.reloadData()
 				DistributedNotificationCenter.default().post(name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
 			}
 		}
-	}
-
-	static private func createOverrides(from parameters: [String : String]) -> ImportOverrides {
-		let title = parameters["title"]
-		let labels = parameters["labels"]
-		let note = parameters["note"]
-		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
-		return ImportOverrides(title: title, note: note, labels: labelsList)
 	}
 
 	@discardableResult
@@ -82,10 +75,5 @@ struct CallbackSupport {
 	static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Bool {
 		let p = NSItemProvider(object: object)
 		return ViewController.shared.addItems(itemProviders: [p], name: object.description, indexPath: IndexPath(item: 0, section: 0), overrides: overrides)
-	}
-
-	@discardableResult
-	static func handlePossibleCallbackURL(url: URL) -> Bool {
-		return Manager.shared.handleOpen(url: url)
 	}
 }

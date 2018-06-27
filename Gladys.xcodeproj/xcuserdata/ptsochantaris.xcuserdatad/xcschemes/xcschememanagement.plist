@@ -27,7 +27,7 @@
 		<key>GladysMessage.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>7</integer>
 		</dict>
 		<key>GladysToday.xcscheme</key>
 		<dict>
@@ -37,22 +37,22 @@
 		<key>GladysWatch (Complication).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>6</integer>
 		</dict>
 		<key>GladysWatch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>5</integer>
 		</dict>
 		<key>MacGladys.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>8</integer>
 		</dict>
 		<key>MacGladysHelper.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>22</integer>
+			<integer>10</integer>
 		</dict>
 		<key>MacGladysShare.xcscheme</key>
 		<dict>
@@ -103,6 +103,11 @@
 			<true/>
 		</dict>
 		<key>1678F9CC1EF475FE005697CB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>168DFAFD20B85F3D002C603D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

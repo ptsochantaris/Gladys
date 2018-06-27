@@ -55,15 +55,7 @@ struct CallbackSupport {
 			}
 		}
 	}
-
-	static private func createOverrides(from parameters: [String : String]) -> ImportOverrides {
-		let title = parameters["title"]
-		let labels = parameters["labels"]
-		let note = parameters["note"]
-		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
-		return ImportOverrides(title: title, note: note, labels: labelsList)
-	}
-
+	
 	@discardableResult
 	static func handlePasteRequest(title: String?, note: String?, labels: String?, skipVisibleErrors: Bool) -> PasteResult {
 		ViewController.shared.dismissAnyPopOver()
@@ -76,9 +68,5 @@ struct CallbackSupport {
 	static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
 		let p = NSItemProvider(object: object)
 		return ViewController.shared.addItems(from: [p], overrides: overrides, skipVisibleErrors: true)
-	}
-
-	static func handlePossibleCallbackURL(url: URL) -> Bool {
-		return Manager.shared.handleOpen(url: url)
 	}
 }
