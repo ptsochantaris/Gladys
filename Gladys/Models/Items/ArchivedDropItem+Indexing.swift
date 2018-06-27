@@ -5,11 +5,15 @@ extension ArchivedDropItem {
 	var searchableItem: CSSearchableItem {
 
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
-		attributes.title = displayText.0
-		if note.isEmpty {
-			attributes.contentDescription = associatedWebURL?.absoluteString
+		if isLocked {
+			attributes.title = lockHint
 		} else {
-			attributes.contentDescription = note
+			attributes.title = displayText.0
+			if note.isEmpty {
+				attributes.contentDescription = associatedWebURL?.absoluteString
+			} else {
+				attributes.contentDescription = note
+			}
 		}
 		if labels.count > 0 { attributes.keywords = labels }
 		attributes.thumbnailURL = imagePath

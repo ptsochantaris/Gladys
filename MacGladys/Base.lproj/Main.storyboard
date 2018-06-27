@@ -281,9 +281,15 @@ CA
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Gladys" customModuleProvider="target">
                     <connections>
+                        <outlet property="editMenuItem" destination="RWT-e8-86E" id="gZf-qx-O6f"/>
+                        <outlet property="fileMenuItem" destination="P1e-EG-AfR" id="n7p-bV-0ri"/>
+                        <outlet property="gladysMenuItem" destination="1Xt-HY-uBw" id="t75-hQ-3en"/>
+                        <outlet property="helpMenuItem" destination="rvU-z6-TUv" id="2Wb-06-hOV"/>
                         <outlet property="infiniteModeMenuEntry" destination="AN3-Zt-BA7" id="K7A-T0-Hhy"/>
+                        <outlet property="itemMenuItem" destination="TlP-eF-ggR" id="aiC-AV-Lbb"/>
                         <outlet property="sortAscendingMenu" destination="Jrt-kd-Ak8" id="DXy-PN-Ndg"/>
                         <outlet property="sortDescendingMenu" destination="BEs-RJ-gLM" id="K29-I3-Kp6"/>
+                        <outlet property="windowMenuItem" destination="rmA-vu-vKJ" id="doW-X7-7Kk"/>
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -356,11 +362,11 @@ CA
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="514" height="552"/>
+                        <rect key="frame" x="0.0" y="0.0" width="514" height="578"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
-                                <rect key="frame" x="363" y="146" width="143" height="32"/>
+                                <rect key="frame" x="363" y="172" width="143" height="32"/>
                                 <buttonCell key="cell" type="push" title="Delete All Items" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Nwx-h9-SAd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -380,7 +386,7 @@ CA
                                 </connections>
                             </button>
                             <box title="iCloud Sync" translatesAutoresizingMaskIntoConstraints="NO" id="I7j-E4-XFn">
-                                <rect key="frame" x="13" y="354" width="488" height="182"/>
+                                <rect key="frame" x="13" y="380" width="488" height="182"/>
                                 <view key="contentView" id="QIW-HV-EGK">
                                     <rect key="frame" x="2" y="2" width="484" height="165"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -458,7 +464,7 @@ CA
                                 </view>
                             </box>
                             <box title="Hotkey" translatesAutoresizingMaskIntoConstraints="NO" id="m7a-4X-bGl">
-                                <rect key="frame" x="367" y="188" width="135" height="160"/>
+                                <rect key="frame" x="367" y="214" width="135" height="160"/>
                                 <view key="contentView" id="sd6-hw-ax3">
                                     <rect key="frame" x="2" y="2" width="131" height="143"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -539,7 +545,7 @@ CA
                                 </view>
                             </box>
                             <box title="Display Options" translatesAutoresizingMaskIntoConstraints="NO" id="4by-e2-vOi">
-                                <rect key="frame" x="13" y="111" width="344" height="237"/>
+                                <rect key="frame" x="13" y="137" width="344" height="237"/>
                                 <view key="contentView" id="Tqb-Ex-FJh">
                                     <rect key="frame" x="2" y="2" width="340" height="220"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -647,13 +653,13 @@ CA
                                 </view>
                             </box>
                             <box title="Launch Options" translatesAutoresizingMaskIntoConstraints="NO" id="ihY-lg-LbY">
-                                <rect key="frame" x="12" y="14" width="346" height="91"/>
+                                <rect key="frame" x="12" y="14" width="346" height="117"/>
                                 <view key="contentView" id="4XA-BB-dE8">
-                                    <rect key="frame" x="2" y="2" width="342" height="74"/>
+                                    <rect key="frame" x="2" y="2" width="342" height="100"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mzM-QJ-G1z">
-                                            <rect key="frame" x="14" y="42" width="314" height="18"/>
+                                            <rect key="frame" x="14" y="68" width="314" height="18"/>
                                             <buttonCell key="cell" type="check" title="Launch at login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eer-E7-bZ8">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -663,7 +669,7 @@ CA
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tcw-Ry-BkI">
-                                            <rect key="frame" x="14" y="16" width="314" height="18"/>
+                                            <rect key="frame" x="14" y="42" width="314" height="18"/>
                                             <buttonCell key="cell" type="check" title="Hide window on launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="X81-G7-T5I">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -672,20 +678,33 @@ CA
                                                 <action selector="hideMainWindowAtLaunchSwitchChanged:" target="FB0-Ob-ymN" id="2Pu-RC-kx4"/>
                                             </connections>
                                         </button>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Saf-Oc-Ewk">
+                                            <rect key="frame" x="14" y="16" width="314" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Menubar icon mode" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="pp1-ol-Rgu">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="menuBarModeSwitchChanged:" target="FB0-Ob-ymN" id="64Z-OQ-mWx"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="mzM-QJ-G1z" secondAttribute="trailing" constant="16" id="0uI-jb-omr"/>
                                         <constraint firstItem="mzM-QJ-G1z" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="16" id="GeI-ii-xNh"/>
                                         <constraint firstItem="Tcw-Ry-BkI" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="16" id="L8p-FD-rXD"/>
-                                        <constraint firstAttribute="bottom" secondItem="Tcw-Ry-BkI" secondAttribute="bottom" constant="18" id="SDa-LC-dTa"/>
                                         <constraint firstItem="Tcw-Ry-BkI" firstAttribute="top" secondItem="mzM-QJ-G1z" secondAttribute="bottom" constant="12" id="VJX-S4-m8D"/>
+                                        <constraint firstItem="Saf-Oc-Ewk" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="16" id="WQj-95-ypw"/>
+                                        <constraint firstAttribute="bottom" secondItem="Saf-Oc-Ewk" secondAttribute="bottom" constant="18" id="d8Y-uf-3Mm"/>
+                                        <constraint firstAttribute="trailing" secondItem="Saf-Oc-Ewk" secondAttribute="trailing" constant="16" id="g5B-Cu-XBl"/>
                                         <constraint firstItem="mzM-QJ-G1z" firstAttribute="top" secondItem="4XA-BB-dE8" secondAttribute="top" constant="16" id="hcB-tW-PW0"/>
                                         <constraint firstAttribute="trailing" secondItem="Tcw-Ry-BkI" secondAttribute="trailing" constant="16" id="j0c-BP-HGA"/>
+                                        <constraint firstItem="Saf-Oc-Ewk" firstAttribute="top" secondItem="Tcw-Ry-BkI" secondAttribute="bottom" constant="12" id="ye9-qW-ybX"/>
                                     </constraints>
                                 </view>
                             </box>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kKD-eT-Au0">
-                                <rect key="frame" x="363" y="109" width="143" height="32"/>
+                                <rect key="frame" x="363" y="135" width="143" height="32"/>
                                 <buttonCell key="cell" type="push" title="Reset Warnings" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="J7t-Af-1uf">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -733,6 +752,7 @@ CA
                         <outlet property="hotkeyOption" destination="bvP-5m-ui6" id="AY4-7X-Ico"/>
                         <outlet property="hotkeyShift" destination="sC7-Co-Inp" id="OnE-6r-xxP"/>
                         <outlet property="launchAtLoginSwitch" destination="mzM-QJ-G1z" id="Prl-w8-68o"/>
+                        <outlet property="menuBarModeSwitch" destination="Saf-Oc-Ewk" id="Qfz-3w-Vdp"/>
                         <outlet property="separateItemsSwitch" destination="MFg-OO-DD8" id="raI-jc-nax"/>
                         <outlet property="syncNowButton" destination="llh-zy-rJm" id="rzy-eJ-Z6f"/>
                         <outlet property="syncSpinner" destination="i0H-2v-kpv" id="ltw-F6-LDm"/>
@@ -741,7 +761,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="666" y="819"/>
+            <point key="canvasLocation" x="666" y="837"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">

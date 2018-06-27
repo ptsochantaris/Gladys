@@ -15,9 +15,9 @@ import CloudKit
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-	static private var hotKey: HotKey?
+	private var hotKey: HotKey?
 
-	static func updateHotkey() {
+	func updateHotkey() {
 		hotKey = nil
 
 		let hotKeyCode = PersistedOptions.hotkeyChar
@@ -42,6 +42,53 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+	private var statusItem: NSStatusItem?
+
+	@IBOutlet private weak var infiniteModeMenuEntry: NSMenuItem!
+
+	@IBOutlet private weak var gladysMenuItem: NSMenuItem!
+	@IBOutlet private weak var fileMenuItem: NSMenuItem!
+	@IBOutlet private weak var editMenuItem: NSMenuItem!
+	@IBOutlet private weak var itemMenuItem: NSMenuItem!
+	@IBOutlet private weak var windowMenuItem: NSMenuItem!
+	@IBOutlet private weak var helpMenuItem: NSMenuItem!
+
+	func syncMenuItemsIfNeeded() {
+		guard let statusItem = statusItem else { return }
+
+		let m = NSMenu(title: "Gladys")
+		m.addItem(gladysMenuItem.copy() as! NSMenuItem)
+		m.addItem(fileMenuItem.copy() as! NSMenuItem)
+		m.addItem(editMenuItem.copy() as! NSMenuItem)
+		m.addItem(itemMenuItem.copy() as! NSMenuItem)
+		m.addItem(windowMenuItem.copy() as! NSMenuItem)
+		m.addItem(helpMenuItem.copy() as! NSMenuItem)
+		statusItem.menu = m
+	}
+
+	func updateMenubarIconMode() {
+		if PersistedOptions.menubarIconMode {
+			NSApp.setActivationPolicy(.accessory)
+			DispatchQueue.main.async {
+				NSApp.activate(ignoringOtherApps: true)
+			}
+			let s = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+			s.image = #imageLiteral(resourceName: "menubarIcon")
+			statusItem = s
+			syncMenuItemsIfNeeded()
+		} else {
+			NSApp.setActivationPolicy(.regular)
+			if let s = statusItem {
+				NSStatusBar.system.removeStatusItem(s)
+				statusItem?.menu?.removeAllItems()
+				statusItem = nil
+			}
+			DispatchQueue.main.async {
+				NSMenu.setMenuBarVisible(true)
+			}
+		}
+	}
+
 	func application(_ sender: NSApplication, openFiles filenames: [String]) {
 		ViewController.shared.importFiles(paths: filenames)
 	}
@@ -62,9 +109,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private let servicesProvider = ServicesProvider()
+	static var shared: AppDelegate!
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
+		AppDelegate.shared = self
+		
 		LauncherCommon.killHelper()
 
 		if !receiptExists {
@@ -91,10 +141,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApplication.shared.servicesProvider = servicesProvider
 
 		setupSortMenu()
+		updateMenubarIconMode()
 	}
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
-		AppDelegate.updateHotkey()
+		updateHotkey()
 
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
@@ -102,7 +153,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@objc private func systemDidWake() {
 		DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-			AppDelegate.updateHotkey()
+			self.updateHotkey()
 		}
 	}
 
@@ -172,9 +223,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
 	}
 
-	@IBOutlet private weak var infiniteModeMenuEntry: NSMenuItem!
 	@objc private func iapChanged() {
 		infiniteModeMenuEntry.isHidden = infiniteMode
+		syncMenuItemsIfNeeded()
 	}
 
 	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {

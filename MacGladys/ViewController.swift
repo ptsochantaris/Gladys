@@ -659,6 +659,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					item.lockHint = nil
 					item.needsUnlock = false
 					item.markUpdated()
+					item.reIndex()
 					Model.save()
 				} else {
 					self?.removeLock(sender)
@@ -708,6 +709,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					item.lockPassword = sha1(text)
 					item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
 					item.markUpdated()
+					item.reIndex()
 					Model.save()
 				} else {
 					self?.createLock(sender)

@@ -80,4 +80,14 @@ extension PersistedOptions {
 			SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
 		}
 	}
+
+	static var menubarIconMode: Bool {
+		get {
+			return defaults.bool(forKey: "menubarIconMode")
+		}
+		set {
+			defaults.set(newValue, forKey: "menubarIconMode")
+			defaults.synchronize()
+		}
+	}
 }

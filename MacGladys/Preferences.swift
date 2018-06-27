@@ -25,6 +25,8 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
+	@IBOutlet private weak var menuBarModeSwitch: NSButton!
+
 	@IBOutlet private weak var hotkeyCmd: NSButton!
 	@IBOutlet private weak var hotkeyOption: NSButton!
 	@IBOutlet private weak var hotkeyShift: NSButton!
@@ -45,6 +47,7 @@ final class Preferences: NSViewController {
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
 		launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
+		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -78,6 +81,11 @@ final class Preferences: NSViewController {
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		view.window!.initialFirstResponder = doneButton
+	}
+
+	@IBAction private func menuBarModeSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.menubarIconMode = sender.integerValue == 1
+		AppDelegate.shared.updateMenubarIconMode()
 	}
 
 	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {
@@ -127,7 +135,7 @@ final class Preferences: NSViewController {
 			PersistedOptions.hotkeyChar = 0
 			PersistedOptions.hotkeyShift = false
 		}
-		AppDelegate.updateHotkey()
+		AppDelegate.shared.updateHotkey()
 	}
 
 	@objc private func updateSyncSwitches() {
