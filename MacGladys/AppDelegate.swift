@@ -53,9 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBOutlet private weak var windowMenuItem: NSMenuItem!
 	@IBOutlet private weak var helpMenuItem: NSMenuItem!
 
-	func syncMenuItemsIfNeeded() {
-		guard let statusItem = statusItem else { return }
-
+	private var menu: NSMenu {
 		let m = NSMenu(title: "Gladys")
 		m.addItem(gladysMenuItem.copy() as! NSMenuItem)
 		m.addItem(fileMenuItem.copy() as! NSMenuItem)
@@ -63,24 +61,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		m.addItem(itemMenuItem.copy() as! NSMenuItem)
 		m.addItem(windowMenuItem.copy() as! NSMenuItem)
 		m.addItem(helpMenuItem.copy() as! NSMenuItem)
-		statusItem.menu = m
+		return m
 	}
 
-	func updateMenubarIconMode() {
+	@objc private func statusBarItemSelected() {
+		if ViewController.shared.view.window!.isVisible {
+			statusItem?.popUpMenu(menu)
+		} else {
+			ViewController.shared.view.window!.makeKeyAndOrderFront(self)
+		}
+	}
+
+	func updateMenubarIconMode(showing: Bool) {
 		if PersistedOptions.menubarIconMode {
 			NSApp.setActivationPolicy(.accessory)
-			DispatchQueue.main.async {
-				NSApp.activate(ignoringOtherApps: true)
+			if showing {
+				DispatchQueue.main.async {
+					NSApp.activate(ignoringOtherApps: true)
+				}
 			}
-			let s = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-			s.image = #imageLiteral(resourceName: "menubarIcon")
-			statusItem = s
-			syncMenuItemsIfNeeded()
+			let s: NSStatusItem
+			if let existingStatusItem = statusItem {
+				s = existingStatusItem
+			} else {
+				s = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+				s.image = #imageLiteral(resourceName: "menubarIcon")
+				statusItem = s
+			}
+			if showing && s.menu == nil {
+				s.action = nil
+				s.menu = menu
+			} else if !showing && s.action == nil {
+				s.menu = nil
+				s.action = #selector(statusBarItemSelected)
+			}
 		} else {
 			NSApp.setActivationPolicy(.regular)
 			if let s = statusItem {
 				NSStatusBar.system.removeStatusItem(s)
-				statusItem?.menu?.removeAllItems()
 				statusItem = nil
 			}
 			DispatchQueue.main.async {
@@ -141,7 +159,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApplication.shared.servicesProvider = servicesProvider
 
 		setupSortMenu()
-		updateMenubarIconMode()
+		updateMenubarIconMode(showing: !PersistedOptions.hideMainWindowAtStartup)
 	}
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
@@ -225,7 +243,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@objc private func iapChanged() {
 		infiniteModeMenuEntry.isHidden = infiniteMode
-		syncMenuItemsIfNeeded()
+		updateMenubarIconMode(showing: ViewController.shared.view.window?.isVisible ?? false)
 	}
 
 	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {

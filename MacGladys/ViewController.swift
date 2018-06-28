@@ -169,7 +169,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			updateCellSize(from: w.frame.size)
 		}
 		updateTitle()
+		AppDelegate.shared.updateMenubarIconMode(showing: true)
 		super.viewWillAppear()
+	}
+
+	override func viewDidDisappear() {
+		super.viewDidDisappear()
+		AppDelegate.shared.updateMenubarIconMode(showing: false)
 	}
 
 	var itemView: MainCollectionView {
