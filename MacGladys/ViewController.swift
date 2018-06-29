@@ -164,18 +164,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@IBOutlet private weak var emptyView: NSImageView!
 	@IBOutlet private weak var emptyLabel: NSTextField!
 
+	@IBOutlet private weak var translucentView: NSVisualEffectView!
+
 	override func viewWillAppear() {
 		if let w = view.window {
 			updateCellSize(from: w.frame.size)
 		}
 		updateTitle()
-		AppDelegate.shared.updateMenubarIconMode(showing: true)
+		AppDelegate.shared?.updateMenubarIconMode(showing: true)
 		super.viewWillAppear()
 	}
 
 	override func viewDidDisappear() {
 		super.viewDidDisappear()
-		AppDelegate.shared.updateMenubarIconMode(showing: false)
+		AppDelegate.shared?.updateMenubarIconMode(showing: false)
 	}
 
 	var itemView: MainCollectionView {
@@ -192,6 +194,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		} else {
 			collection.animator().reloadData()
 		}
+	}
+
+	func updateTranslucentMode() {
+		translucentView.isHidden = !PersistedOptions.translucentMode
 	}
 
 	private func updateDragOperationIndicators() {
@@ -258,6 +264,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			CloudManager.sync { _ in }
 		}
 
+		updateTranslucentMode()
 		updateTitle()
 		postSave()
 

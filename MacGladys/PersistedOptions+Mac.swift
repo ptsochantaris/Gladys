@@ -90,4 +90,14 @@ extension PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var translucentMode: Bool {
+		get {
+			return defaults.bool(forKey: "translucentMode")
+		}
+		set {
+			defaults.set(newValue, forKey: "translucentMode")
+			defaults.synchronize()
+		}
+	}
 }

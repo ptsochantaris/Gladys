@@ -65,21 +65,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@objc private func statusBarItemSelected() {
-		if ViewController.shared.view.window!.isVisible {
+		if NSApp.isActive && (ViewController.shared.view.window?.isVisible ?? false) {
 			statusItem?.popUpMenu(menu)
 		} else {
-			ViewController.shared.view.window!.makeKeyAndOrderFront(self)
+			NSApp.activate(ignoringOtherApps: true)
+			ViewController.shared.view.window?.makeKeyAndOrderFront(self)
 		}
 	}
 
 	func updateMenubarIconMode(showing: Bool) {
 		if PersistedOptions.menubarIconMode {
 			NSApp.setActivationPolicy(.accessory)
-			if showing {
-				DispatchQueue.main.async {
-					NSApp.activate(ignoringOtherApps: true)
-				}
-			}
 			let s: NSStatusItem
 			if let existingStatusItem = statusItem {
 				s = existingStatusItem
@@ -100,9 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			if let s = statusItem {
 				NSStatusBar.system.removeStatusItem(s)
 				statusItem = nil
-			}
-			DispatchQueue.main.async {
-				NSMenu.setMenuBarVisible(true)
 			}
 		}
 	}
@@ -127,7 +120,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private let servicesProvider = ServicesProvider()
-	static var shared: AppDelegate!
+	static var shared: AppDelegate?
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
@@ -167,6 +160,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
+	}
+
+	func applicationDidBecomeActive(_ notification: Notification) {
+		updateMenubarIconMode(showing: true)
+	}
+
+	func applicationDidResignActive(_ notification: Notification) {
+		updateMenubarIconMode(showing: false)
 	}
 
 	@objc private func systemDidWake() {
@@ -243,7 +244,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@objc private func iapChanged() {
 		infiniteModeMenuEntry.isHidden = infiniteMode
-		updateMenubarIconMode(showing: ViewController.shared.view.window?.isVisible ?? false)
+		updateMenubarIconMode(showing: true)
 	}
 
 	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {

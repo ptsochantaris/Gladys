@@ -26,6 +26,8 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
 	@IBOutlet private weak var menuBarModeSwitch: NSButton!
+	@IBOutlet private weak var translucencySwitch: NSButton!
+
 
 	@IBOutlet private weak var hotkeyCmd: NSButton!
 	@IBOutlet private weak var hotkeyOption: NSButton!
@@ -48,6 +50,7 @@ final class Preferences: NSViewController {
 		launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
+		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -83,9 +86,18 @@ final class Preferences: NSViewController {
 		view.window!.initialFirstResponder = doneButton
 	}
 
+	@IBAction private func translucencySwitchSelected(_ sender: NSButton) {
+		PersistedOptions.translucentMode = sender.integerValue == 1
+		ViewController.shared.updateTranslucentMode()
+	}
+
 	@IBAction private func menuBarModeSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.menubarIconMode = sender.integerValue == 1
-		AppDelegate.shared.updateMenubarIconMode(showing: true)
+		AppDelegate.shared?.updateMenubarIconMode(showing: true)
+		DispatchQueue.main.async {
+			NSApp.activate(ignoringOtherApps: true)
+			NSMenu.setMenuBarVisible(true)
+		}
 	}
 
 	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {
@@ -135,7 +147,7 @@ final class Preferences: NSViewController {
 			PersistedOptions.hotkeyChar = 0
 			PersistedOptions.hotkeyShift = false
 		}
-		AppDelegate.shared.updateHotkey()
+		AppDelegate.shared?.updateHotkey()
 	}
 
 	@objc private func updateSyncSwitches() {
