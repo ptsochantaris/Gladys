@@ -214,29 +214,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	
 	private var existingPreviewView: FirstMouseView?
 
-	private static let shareImage: NSImage = {
-		let image = #imageLiteral(resourceName: "iconUserCheckedSmall").copy() as! NSImage
-		image.isTemplate = false
-		image.lockFocus()
-		#colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1).set()
+	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)) }()
 
-		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
-		imageRect.fill(using: .sourceAtop)
-		image.unlockFocus()
-		return image
-	}()
-
-	private static let shareImageTinted: NSImage = {
-		let image = #imageLiteral(resourceName: "iconUserCheckedSmall").copy() as! NSImage
-		image.isTemplate = false
-		image.lockFocus()
-		#colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1).set()
-
-		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
-		imageRect.fill(using: .sourceAtop)
-		image.unlockFocus()
-		return image
-	}()
+	private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)) }()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

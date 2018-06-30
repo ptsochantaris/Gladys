@@ -171,29 +171,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labelRemove.isEnabled = readWrite
 	}
 
-	private static let shareImage: NSImage = {
-		let image = #imageLiteral(resourceName: "iconUserChecked").copy() as! NSImage
-		image.isTemplate = false
-		image.lockFocus()
-		NSColor.secondaryLabelColor.set()
+	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.secondaryLabelColor) }()
 
-		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
-		imageRect.fill(using: .sourceAtop)
-		image.unlockFocus()
-		return image
-	}()
-
-	private static let shareImageTinted: NSImage = {
-		let image = #imageLiteral(resourceName: "iconUserChecked").copy() as! NSImage
-		image.isTemplate = false
-		image.lockFocus()
-		#colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1).set()
-
-		let imageRect = NSRect(origin: NSZeroPoint, size: image.size)
-		imageRect.fill(using: .sourceAtop)
-		image.unlockFocus()
-		return image
-	}()
+	private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)) }()
 
 	override func viewWillDisappear() {
 		done(notesCheck: notesField.currentEditor() != nil, titleCheck: titleField.currentEditor() != nil)

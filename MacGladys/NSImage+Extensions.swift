@@ -49,4 +49,16 @@ extension NSImage {
 		let i = NSImage(cgImage: c.makeImage()!, size: NSSize(width: outputImagePixelWidth, height: outputImagePixelHeight))
 		return i
 	}
+
+	func template(with tint: NSColor) -> NSImage {
+		let image = copy() as! NSImage
+		image.isTemplate = false
+		image.lockFocus()
+		tint.set()
+
+		let imageRect = NSRect(origin: .zero, size: image.size)
+		imageRect.fill(using: .sourceAtop)
+		image.unlockFocus()
+		return image
+	}
 }
