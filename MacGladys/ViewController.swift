@@ -73,11 +73,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		if let f = lastWindowPosition {
 			window?.setFrame(f, display: false)
 		}
-		let v = window?.contentView
-		let i = #imageLiteral(resourceName: "paper")
-		i.resizingMode = .tile
-		v?.layer?.contents = i
-		v?.layer?.contentsGravity = kCAGravityResize
+		ViewController.shared.updateTranslucentMode()
 	}
 
 	private var firstShow = true
@@ -171,13 +167,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			updateCellSize(from: w.frame.size)
 		}
 		updateTitle()
-		AppDelegate.shared?.updateMenubarIconMode(showing: true)
+		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: false)
 		super.viewWillAppear()
 	}
 
 	override func viewDidDisappear() {
 		super.viewDidDisappear()
-		AppDelegate.shared?.updateMenubarIconMode(showing: false)
+		AppDelegate.shared?.updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 	}
 
 	var itemView: MainCollectionView {
@@ -197,7 +193,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func updateTranslucentMode() {
-		translucentView.isHidden = !PersistedOptions.translucentMode
+		guard let l = view.window?.contentView?.layer else { return }
+		if PersistedOptions.translucentMode {
+			translucentView.isHidden = false
+			l.contents = nil
+		} else {
+			translucentView.isHidden = true
+			let i = #imageLiteral(resourceName: "paper")
+			i.resizingMode = .tile
+			l.contents = i
+			l.contentsGravity = kCAGravityResize
+		}
 	}
 
 	private func updateDragOperationIndicators() {
@@ -264,7 +270,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			CloudManager.sync { _ in }
 		}
 
-		updateTranslucentMode()
 		updateTitle()
 		postSave()
 

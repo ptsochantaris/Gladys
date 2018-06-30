@@ -669,8 +669,8 @@ CA
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tcw-Ry-BkI">
-                                            <rect key="frame" x="14" y="16" width="162" height="18"/>
-                                            <buttonCell key="cell" type="check" title="Hide window on launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="X81-G7-T5I">
+                                            <rect key="frame" x="14" y="16" width="113" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Hide on launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="X81-G7-T5I">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -700,15 +700,19 @@ CA
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="Saf-Oc-Ewk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Tcw-Ry-BkI" secondAttribute="trailing" constant="20" id="46z-Aq-wIZ"/>
+                                        <constraint firstItem="dbF-tV-66m" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mzM-QJ-G1z" secondAttribute="trailing" constant="20" id="7jX-Ao-Ebu"/>
                                         <constraint firstItem="dbF-tV-66m" firstAttribute="baseline" secondItem="mzM-QJ-G1z" secondAttribute="baseline" id="ALK-K0-TRa"/>
                                         <constraint firstItem="Saf-Oc-Ewk" firstAttribute="baseline" secondItem="Tcw-Ry-BkI" secondAttribute="baseline" id="ANY-8S-Qgl"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="dbF-tV-66m" secondAttribute="trailing" constant="20" id="GNV-hx-g7E"/>
                                         <constraint firstItem="mzM-QJ-G1z" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="16" id="GeI-ii-xNh"/>
                                         <constraint firstItem="Tcw-Ry-BkI" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="16" id="L8p-FD-rXD"/>
-                                        <constraint firstItem="Saf-Oc-Ewk" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="237" id="LX4-Ir-cnA"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Saf-Oc-Ewk" secondAttribute="trailing" constant="20" id="OCs-Rb-hCb"/>
                                         <constraint firstItem="Tcw-Ry-BkI" firstAttribute="top" secondItem="mzM-QJ-G1z" secondAttribute="bottom" constant="12" id="VJX-S4-m8D"/>
                                         <constraint firstAttribute="bottom" secondItem="Tcw-Ry-BkI" secondAttribute="bottom" constant="18" id="VL7-sJ-rdP"/>
-                                        <constraint firstItem="dbF-tV-66m" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="237" id="ekw-M2-E14"/>
                                         <constraint firstItem="mzM-QJ-G1z" firstAttribute="top" secondItem="4XA-BB-dE8" secondAttribute="top" constant="16" id="hcB-tW-PW0"/>
+                                        <constraint firstItem="Saf-Oc-Ewk" firstAttribute="leading" secondItem="dbF-tV-66m" secondAttribute="leading" id="q70-zY-Cq1"/>
+                                        <constraint firstItem="dbF-tV-66m" firstAttribute="leading" secondItem="4XA-BB-dE8" secondAttribute="leading" constant="237" id="qUV-EU-vAa"/>
                                     </constraints>
                                 </view>
                             </box>
@@ -739,6 +743,7 @@ CA
                             <constraint firstItem="I7j-E4-XFn" firstAttribute="top" secondItem="voj-7Z-m9G" secondAttribute="top" constant="16" id="dOh-by-4Pr"/>
                             <constraint firstItem="ihY-lg-LbY" firstAttribute="leading" secondItem="Tqb-Ex-FJh" secondAttribute="leading" id="dQs-o2-6oV"/>
                             <constraint firstAttribute="bottom" secondItem="hg6-iA-08k" secondAttribute="bottom" constant="18" id="elg-mz-OLR"/>
+                            <constraint firstItem="hg6-iA-08k" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="voj-7Z-m9G" secondAttribute="leading" constant="20" id="mcE-sk-cmh"/>
                             <constraint firstItem="kKD-eT-Au0" firstAttribute="top" secondItem="3y4-gH-maW" secondAttribute="bottom" constant="16" id="pmK-AM-MII"/>
                             <constraint firstItem="3y4-gH-maW" firstAttribute="trailing" secondItem="sd6-hw-ax3" secondAttribute="trailing" id="qt2-fv-m0J"/>
                             <constraint firstItem="m7a-4X-bGl" firstAttribute="top" secondItem="QIW-HV-EGK" secondAttribute="bottom" constant="8" id="twQ-VF-sBD"/>

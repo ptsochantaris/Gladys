@@ -73,9 +73,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	func updateMenubarIconMode(showing: Bool) {
+	func updateMenubarIconMode(showing: Bool, forceUpdateMenu: Bool) {
 		if PersistedOptions.menubarIconMode {
-			NSApp.setActivationPolicy(.accessory)
+
+			if NSApp.activationPolicy() != .accessory {
+				log("Changing activation policy to accessory mode")
+				NSApp.setActivationPolicy(.accessory)
+				DispatchQueue.main.async {
+					NSApp.activate(ignoringOtherApps: true)
+					NSMenu.setMenuBarVisible(true)
+				}
+			}
+
 			let s: NSStatusItem
 			if let existingStatusItem = statusItem {
 				s = existingStatusItem
@@ -83,19 +92,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				s = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 				s.image = #imageLiteral(resourceName: "menubarIcon")
 				statusItem = s
+				log("Creating menubar status item")
 			}
-			if showing && s.menu == nil {
-				s.action = nil
-				s.menu = menu
-			} else if !showing && s.action == nil {
-				s.menu = nil
-				s.action = #selector(statusBarItemSelected)
+
+			if showing {
+				if s.menu == nil || forceUpdateMenu {
+					s.action = nil
+					s.menu = menu
+					log("Updating status item menu")
+				}
+			} else {
+				if s.action == nil {
+					s.menu = nil
+					s.action = #selector(statusBarItemSelected)
+					log("Status item watching for click")
+				}
 			}
-		} else {
+
+		} else if NSApp.activationPolicy() != .regular {
+			log("Changing activation policy to regular mode")
 			NSApp.setActivationPolicy(.regular)
 			if let s = statusItem {
+				log("Clearing status item")
 				NSStatusBar.system.removeStatusItem(s)
 				statusItem = nil
+			}
+			DispatchQueue.main.async {
+				NSMenu.setMenuBarVisible(true)
 			}
 		}
 	}
@@ -152,7 +175,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApplication.shared.servicesProvider = servicesProvider
 
 		setupSortMenu()
-		updateMenubarIconMode(showing: !PersistedOptions.hideMainWindowAtStartup)
 	}
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
@@ -163,11 +185,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationDidBecomeActive(_ notification: Notification) {
-		updateMenubarIconMode(showing: true)
+		let isShowing = ViewController.shared.view.window?.isVisible ?? false
+		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
 	}
 
 	func applicationDidResignActive(_ notification: Notification) {
-		updateMenubarIconMode(showing: false)
+		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 	}
 
 	@objc private func systemDidWake() {
@@ -244,7 +267,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@objc private func iapChanged() {
 		infiniteModeMenuEntry.isHidden = infiniteMode
-		updateMenubarIconMode(showing: true)
+		updateMenubarIconMode(showing: true, forceUpdateMenu: true)
 	}
 
 	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {
