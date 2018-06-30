@@ -73,7 +73,7 @@ class ShareViewController: NSViewController {
 				return
 			}
 
-			s.cancelButton.isEnabled = false
+			s.cancelButton.isHidden = true
 			s.pasteboard.clearContents()
 			s.pasteboard.writeObjects(pasteboardItems)
 			DistributedNotificationCenter.default().addObserver(s, selector: #selector(s.pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
