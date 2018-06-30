@@ -118,6 +118,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				statusItem = nil
 			}
 			DispatchQueue.main.async {
+				NSApp.activate(ignoringOtherApps: true)
 				NSMenu.setMenuBarVisible(true)
 			}
 		}
