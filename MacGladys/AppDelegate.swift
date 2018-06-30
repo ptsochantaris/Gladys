@@ -182,6 +182,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
+
+		let isShowing = ViewController.shared.view.window?.isVisible ?? false
+		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
 	}
 
 	func applicationDidBecomeActive(_ notification: Notification) {
@@ -388,7 +391,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		case #selector(showMain(_:)):
 			if let w = ViewController.shared.view.window {
 				menuItem.title = w.title
-				menuItem.isHidden = w.isVisible
+				menuItem.isHidden = w.isVisible && statusItem == nil
 			}
 			return !menuItem.isHidden
 		default:

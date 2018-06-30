@@ -93,7 +93,7 @@ final class Preferences: NSViewController {
 
 	@IBAction private func menuBarModeSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.menubarIconMode = sender.integerValue == 1
-		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: false)
+		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: true)
 	}
 
 	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {
