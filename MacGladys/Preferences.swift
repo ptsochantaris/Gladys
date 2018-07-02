@@ -27,7 +27,7 @@ final class Preferences: NSViewController {
 
 	@IBOutlet private weak var menuBarModeSwitch: NSButton!
 	@IBOutlet private weak var translucencySwitch: NSButton!
-
+	@IBOutlet private weak var alwaysOnTopSwitch: NSButton!
 
 	@IBOutlet private weak var hotkeyCmd: NSButton!
 	@IBOutlet private weak var hotkeyOption: NSButton!
@@ -51,6 +51,7 @@ final class Preferences: NSViewController {
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
 		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
+		alwaysOnTopSwitch.integerValue = PersistedOptions.alwaysOnTop ? 1 : 0
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -102,6 +103,11 @@ final class Preferences: NSViewController {
 
 	@IBAction private func hideMainWindowAtLaunchSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.hideMainWindowAtStartup = sender.integerValue == 1
+	}
+
+	@IBAction private func alawysOnTopSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.alwaysOnTop = sender.integerValue == 1
+		ViewController.shared.updateAlwaysOnTop()
 	}
 
 	@objc private func hotkeyCharChanged() {

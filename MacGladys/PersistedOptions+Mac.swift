@@ -100,4 +100,14 @@ extension PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var alwaysOnTop: Bool {
+		get {
+			return defaults.bool(forKey: "alwaysOnTop")
+		}
+		set {
+			defaults.set(newValue, forKey: "alwaysOnTop")
+			defaults.synchronize()
+		}
+	}
 }

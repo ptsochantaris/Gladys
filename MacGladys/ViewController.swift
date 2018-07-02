@@ -171,6 +171,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		super.viewWillAppear()
 	}
 
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateAlwaysOnTop()
+	}
+
+	func updateAlwaysOnTop() {
+		guard let w = view.window else { return }
+		if PersistedOptions.alwaysOnTop {
+			w.level = .modalPanel
+		} else {
+			w.level = .normal
+		}
+	}
+
 	override func viewDidDisappear() {
 		super.viewDidDisappear()
 		AppDelegate.shared?.updateMenubarIconMode(showing: false, forceUpdateMenu: false)
