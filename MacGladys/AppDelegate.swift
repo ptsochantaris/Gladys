@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 					if w.isVisible {
 						w.orderOut(nil)
 					} else {
+						NSApp.activate(ignoringOtherApps: true)
 						w.makeKeyAndOrderFront(nil)
 					}
 				}
