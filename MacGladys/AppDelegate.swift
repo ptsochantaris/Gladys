@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
 				if let w = ViewController.shared.view.window {
-					if w.isVisible {
+					if NSApp.isActive, w.isVisible {
 						w.orderOut(nil)
 					} else {
 						NSApp.activate(ignoringOtherApps: true)
