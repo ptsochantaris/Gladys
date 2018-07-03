@@ -70,16 +70,16 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>550</string>
-	<key>LSUIElement</key>
-	<true/>
-	<key>LSMultipleInstancesProhibited</key>
-	<true/>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSMultipleInstancesProhibited</key>
+	<true/>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

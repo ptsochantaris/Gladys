@@ -362,11 +362,11 @@ CA
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="538" height="629"/>
+                        <rect key="frame" x="0.0" y="0.0" width="538" height="619"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3y4-gH-maW">
-                                <rect key="frame" x="395" y="223" width="135" height="32"/>
+                                <rect key="frame" x="395" y="213" width="135" height="32"/>
                                 <buttonCell key="cell" type="push" title="Delete All Items" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Nwx-h9-SAd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -386,7 +386,7 @@ CA
                                 </connections>
                             </button>
                             <box title="iCloud Sync" translatesAutoresizingMaskIntoConstraints="NO" id="I7j-E4-XFn">
-                                <rect key="frame" x="13" y="431" width="512" height="182"/>
+                                <rect key="frame" x="13" y="421" width="512" height="182"/>
                                 <view key="contentView" id="QIW-HV-EGK">
                                     <rect key="frame" x="2" y="2" width="508" height="165"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -464,7 +464,7 @@ CA
                                 </view>
                             </box>
                             <box horizontalHuggingPriority="251" title="Hotkey" translatesAutoresizingMaskIntoConstraints="NO" id="m7a-4X-bGl">
-                                <rect key="frame" x="399" y="265" width="127" height="160"/>
+                                <rect key="frame" x="399" y="255" width="127" height="160"/>
                                 <view key="contentView" id="sd6-hw-ax3">
                                     <rect key="frame" x="2" y="2" width="123" height="143"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -545,7 +545,7 @@ CA
                                 </view>
                             </box>
                             <box horizontalHuggingPriority="249" title="Display Options" translatesAutoresizingMaskIntoConstraints="NO" id="4by-e2-vOi">
-                                <rect key="frame" x="13" y="188" width="376" height="237"/>
+                                <rect key="frame" x="13" y="178" width="376" height="237"/>
                                 <view key="contentView" id="Tqb-Ex-FJh">
                                     <rect key="frame" x="2" y="2" width="372" height="220"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -704,7 +704,7 @@ CA
                                 </view>
                             </box>
                             <button horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kKD-eT-Au0">
-                                <rect key="frame" x="395" y="186" width="135" height="32"/>
+                                <rect key="frame" x="395" y="176" width="135" height="32"/>
                                 <buttonCell key="cell" type="push" title="Reset Warnings" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="J7t-Af-1uf">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -805,7 +805,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="666" y="864.5"/>
+            <point key="canvasLocation" x="666" y="855"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -1103,7 +1103,7 @@ Only</string>
                                 </customSpacing>
                             </stackView>
                             <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-qK-zPr">
-                                <rect key="frame" x="0.0" y="340" width="795" height="5"/>
+                                <rect key="frame" x="0.0" y="340" width="795" height="165"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </box>
                             <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
