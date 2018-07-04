@@ -77,9 +77,11 @@ class ShareViewController: NSViewController {
 			s.pasteboard.clearContents()
 			s.pasteboard.writeObjects(pasteboardItems)
 			DistributedNotificationCenter.default().addObserver(s, selector: #selector(s.pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
-			if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
-				let error = NSError(domain: "build.bru.Gladys.error", code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
-				extensionContext.cancelRequest(withError: error)
+			DispatchQueue.main.async {
+				if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
+					let error = NSError(domain: "build.bru.Gladys.error", code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
+					extensionContext.cancelRequest(withError: error)
+				}
 			}
 		}
 	}

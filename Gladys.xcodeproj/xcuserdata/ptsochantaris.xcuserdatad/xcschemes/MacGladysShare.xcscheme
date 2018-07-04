@@ -68,8 +68,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
-         BundleIdentifier = "com.apple.finder"
-         FilePath = "/System/Library/CoreServices/Finder.app">
+         FilePath = "/Applications/Safari.app">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference
