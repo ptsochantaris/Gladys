@@ -114,11 +114,6 @@ class GladysViewController: UIViewController {
 		checkDoneLocation()
 	}
 
-	var isHovering: Bool {
-		let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
-		return s == -1
-	}
-
 	private func checkDoneLocation() {
 		if doneLocation != .none {
 			if UIAccessibilityIsVoiceOverRunning() {
@@ -126,7 +121,8 @@ class GladysViewController: UIViewController {
 				return
 			}
 
-			if isHovering {
+			let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
+			if s == -1 { // hovering
 				if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
 					showDone(false)
 				} else {
