@@ -142,41 +142,37 @@ final class ArchivedItemCell: UICollectionViewCell {
 			let shouldShow = shareMode != .none
 			if shouldShow, shareHolder == nil {
 
-				topLabelLeft.constant = 35
-				if shareHolder == nil {
-					let img = UIImageView(frame: .zero)
-					img.translatesAutoresizingMaskIntoConstraints = false
-					img.contentMode = .center
-					let image = #imageLiteral(resourceName: "iconUserChecked")
-					let imageSize = image.size
-					img.image = image
+				let img = UIImageView(frame: .zero)
+				img.translatesAutoresizingMaskIntoConstraints = false
+				img.contentMode = .center
+				let image = #imageLiteral(resourceName: "iconUserChecked")
+				let imageSize = image.size
+				img.image = image
 
-					let holder = UIView(frame: .zero)
-					holder.translatesAutoresizingMaskIntoConstraints = false
-					holder.backgroundColor = borderView.backgroundColor
-					holder.layer.cornerRadius = 10
-					holder.addSubview(img)
-					contentView.insertSubview(holder, belowSubview: topLabel)
+				let holder = UIView(frame: .zero)
+				holder.translatesAutoresizingMaskIntoConstraints = false
+				holder.backgroundColor = borderView.backgroundColor
+				holder.layer.cornerRadius = 10
+				holder.addSubview(img)
+				contentView.insertSubview(holder, belowSubview: topLabel)
 
-					NSLayoutConstraint.activate([
-						holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-						holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+				NSLayoutConstraint.activate([
+					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+					holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
 
-						holder.widthAnchor.constraint(equalToConstant: 44),
-						holder.heightAnchor.constraint(equalToConstant: 50),
+					holder.widthAnchor.constraint(equalToConstant: 44),
+					holder.heightAnchor.constraint(equalToConstant: 50),
 
-						img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
-						img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
-						img.widthAnchor.constraint(equalToConstant: imageSize.width),
-						img.heightAnchor.constraint(equalToConstant: imageSize.height),
-					])
+					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
+					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+					img.widthAnchor.constraint(equalToConstant: imageSize.width),
+					img.heightAnchor.constraint(equalToConstant: imageSize.height),
+				])
 
-					shareImage = img
-					shareHolder = holder
-				}
+				shareImage = img
+				shareHolder = holder
 
 			} else if !shouldShow, let h = shareHolder {
-				topLabelLeft.constant = 0
 				h.removeFromSuperview()
 				shareImage = nil
 				shareHolder = nil
@@ -567,27 +563,29 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.isHidden = hideProgress
 
 		topLabel.text = topLabelText
-		topLabelDistance.constant = (topLabelText == nil) ? 0 : 7
 		topLabel.textAlignment = topLabelAlignment ?? .center
 
 		bottomLabel.text = bottomLabelText
-		bottomLabelDistance.constant = (bottomLabelText == nil) ? 0 : 7
 		bottomLabel.textAlignment = bottomLabelAlignment ?? .center
 		bottomLabel.isHighlighted = bottomLabelHighlight
 
-		if let labels = labels {
-			labelsDistance.constant = 3
-			labelsLabel.labels = labels
-		} else {
-			labelsDistance.constant = 0
-			labelsLabel.labels = []
-		}
+		labelsLabel.labels = labels ?? []
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
 		shareMode = shared
+
+		setNeedsUpdateConstraints()
+	}
+
+	override func updateConstraints() {
+		super.updateConstraints()
+		topLabelLeft.constant = shareHolder == nil ? 0 : 35
+		topLabelDistance.constant = topLabel.text == nil ? 0 : 7
+		bottomLabelDistance.constant = bottomLabel.text == nil ? 0 : 7
+		labelsDistance.constant = labelsLabel.labels.isEmpty ? 0 : 3
 	}
 
 	func flash() {

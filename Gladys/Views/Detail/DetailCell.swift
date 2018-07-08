@@ -21,34 +21,34 @@ final class DetailCell: UITableViewCell {
 
 	var inspectionCallback: (()->Void)? {
 		didSet {
-			if inspectButton != nil {
-				inspectHeight.constant = inspectionCallback == nil ? 0 : 44
-			}
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var viewCallback: (()->Void)? {
 		didSet {
-			if viewButton != nil {
-				viewHeight.constant = viewCallback == nil ? 0 : 44
-			}
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var archiveCallback: (()->Void)? {
 		didSet {
-			if archiveButton != nil {
-				archiveHeight.constant = archiveCallback == nil ? 0 : 44
-			}
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var editCallback: (()->Void)? {
 		didSet {
-			if editButton != nil {
-				editHeight.constant = editCallback == nil ? 0 : 44
-			}
+			setNeedsUpdateConstraints()
 		}
+	}
+
+	override func updateConstraints() {
+		super.updateConstraints()
+		editHeight.constant = editCallback == nil ? 0 : 44
+		archiveHeight.constant = archiveCallback == nil ? 0 : 44
+		viewHeight.constant = viewCallback == nil ? 0 : 44
+		inspectHeight.constant = inspectionCallback == nil ? 0 : 44
 	}
 
 	override func awakeFromNib() {

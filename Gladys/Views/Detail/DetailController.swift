@@ -231,6 +231,7 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+		//log("laid-out for \(view.bounds.size)")
 		sizeWindow()
 	}
 
@@ -249,6 +250,7 @@ final class DetailController: GladysViewController,
 			initialWidth = preferredSize.width
 		}
 		if previousSize != preferredSize {
+			//log("set preferred size to \(preferredSize)")
 			preferredContentSize = preferredSize
 		}
 	}
