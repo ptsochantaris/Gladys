@@ -260,6 +260,7 @@ final class DetailController: GladysViewController,
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		//log("view showing")
 		sizeWindow()
 	}
 
