@@ -125,6 +125,7 @@ final class ArchivedDropItemType: Codable {
 	var displayTitleAlignment: NSTextAlignment
 	var ingestCompletion: (()->Void)?
 	var isTransferring: Bool
+	var encodedURLCache: (Bool, NSURL?)?
 
 	var displayIcon: NSImage? {
 		set {

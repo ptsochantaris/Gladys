@@ -52,6 +52,7 @@ extension ArchivedDropItemType {
 	func ingest(data: Data, encodeAnyUIImage: Bool = false, completion: @escaping ()->Void) { // in thread!
 
 		ingestCompletion = completion
+		encodedURLCache = nil
 
 		let item: NSSecureCoding
 		if data.isPlist, let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
@@ -177,6 +178,7 @@ extension ArchivedDropItemType {
 		} else {
 			bytes = url.absoluteString?.data(using: .utf8)
 		}
+		encodedURLCache = (true, url)
 		setTitle(from: url as URL)
 		markUpdated()
 	}

@@ -287,5 +287,10 @@ extension ArchivedDropItem: Hashable {
 	static func clearCaches() {
 		cloudKitRecordCache.removeAllObjects()
 		cloudKitShareCache.removeAllObjects()
+		for drop in Model.drops {
+			for component in drop.typeItems {
+				component.encodedURLCache = nil
+			}
+		}
 	}
 }

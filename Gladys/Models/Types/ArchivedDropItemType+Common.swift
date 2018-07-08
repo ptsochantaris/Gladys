@@ -71,21 +71,30 @@ extension ArchivedDropItemType: Equatable {
 	}
 
 	var encodedUrl: NSURL? {
-		guard isURL else { return nil }
 
-		let decoded = decode()
-		if let u = decoded as? NSURL {
-			return u
-		} else if let array = decoded as? NSArray {
-			for item in array {
-				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
-					return url
-				}
-			}
-		} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = NSURL(string: s) {
-			return u
+		if let encodedURLCache = encodedURLCache {
+			return encodedURLCache.1
 		}
-		return nil
+
+		var ret: NSURL?
+		if isURL {
+			let decoded = decode()
+			if let u = decoded as? NSURL {
+				ret = u
+			} else if let array = decoded as? NSArray {
+				for item in array {
+					if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+						ret = url
+						break
+					}
+				}
+			} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = NSURL(string: s) {
+				ret = u
+			}
+		}
+
+		encodedURLCache = (true, ret)
+		return ret
 	}
 
 	var fileExtension: String? {
