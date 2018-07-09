@@ -289,7 +289,7 @@ extension ArchivedDropItem: Hashable {
 		cloudKitShareCache.removeAllObjects()
 		for drop in Model.drops {
 			for component in drop.typeItems {
-				component.encodedURLCache = nil
+				component.clearCachedFields()
 			}
 		}
 	}

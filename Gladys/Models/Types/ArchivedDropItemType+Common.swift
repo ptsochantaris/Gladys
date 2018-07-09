@@ -420,4 +420,9 @@ extension ArchivedDropItemType: Equatable {
 			}
 		}
 	}
+
+	func clearCachedFields() {
+		encodedURLCache = nil
+		canPreviewCache = nil
+	}
 }

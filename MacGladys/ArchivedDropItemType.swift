@@ -125,7 +125,10 @@ final class ArchivedDropItemType: Codable {
 	var displayTitleAlignment: NSTextAlignment
 	var ingestCompletion: (()->Void)?
 	var isTransferring: Bool
+
+	// Caches
 	var encodedURLCache: (Bool, NSURL?)?
+	var canPreviewCache: Bool?
 
 	var displayIcon: NSImage? {
 		set {
@@ -417,6 +420,11 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	var canPreview: Bool {
-		return fileExtension != nil && !(parent?.needsUnlock ?? true)
+		if let canPreviewCache = canPreviewCache {
+			return canPreviewCache
+		}
+		let res = fileExtension != nil && !(parent?.needsUnlock ?? true)
+		canPreviewCache = res
+		return res
 	}
 }
