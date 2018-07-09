@@ -48,4 +48,14 @@ extension CloudManager {
 			}
 		}
 	}
+
+	static func opportunisticSyncIfNeeded() {
+		if syncSwitchedOn && !syncing && lastSyncCompletion.timeIntervalSinceNow < -60 {
+			sync { error in
+				if let error = error {
+					log("Error in waking sync: \(error.finalDescription)")
+				}
+			}
+		}
+	}
 }

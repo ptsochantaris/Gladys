@@ -149,7 +149,7 @@ final class Preferences: NSViewController {
 			PersistedOptions.hotkeyChar = 0
 			PersistedOptions.hotkeyShift = false
 		}
-		AppDelegate.shared?.updateHotkey()
+		AppDelegate.updateHotkey()
 	}
 
 	@objc private func updateSyncSwitches() {

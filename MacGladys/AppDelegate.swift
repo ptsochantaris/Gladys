@@ -15,9 +15,9 @@ import CloudKit
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-	private var hotKey: HotKey?
+	static private var hotKey: HotKey?
 
-	func updateHotkey() {
+	static func updateHotkey() {
 		hotKey = nil
 
 		let hotKeyCode = PersistedOptions.hotkeyChar
@@ -180,7 +180,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
-		updateHotkey()
+		AppDelegate.updateHotkey()
 
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
@@ -199,8 +199,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@objc private func systemDidWake() {
-		DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-			self.updateHotkey()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+			AppDelegate.updateHotkey()
+			CloudManager.opportunisticSyncIfNeeded()
 		}
 	}
 
