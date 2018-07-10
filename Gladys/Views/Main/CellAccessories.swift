@@ -61,6 +61,7 @@ final class MiniMapView: UIImageView {
 			newCoordinate.longitude == coordinate.longitude { return }
 
 		image = nil
+		snapshotOptions = nil
 		coordinate = newCoordinate
 		setNeedsLayout()
 	}
@@ -75,11 +76,7 @@ final class MiniMapView: UIImageView {
 		super.layoutSubviews()
 
 		guard let coordinate = coordinate else { return }
-		if bounds.isEmpty { return }
-		if let image = image, image.size == bounds.size { return }
-		#if MAINAPP
-		if UIApplication.shared.applicationState == .background { return }
-		#endif
+		if bounds.isEmpty || image?.size == bounds.size { return }
 
 		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
 		if let existingImage = imageCache.object(forKey: cacheKey) {
@@ -87,16 +84,13 @@ final class MiniMapView: UIImageView {
 			return
 		}
 
-		if let o = snapshotOptions {
-			if !(o.region.center.latitude != coordinate.latitude || o.region.center.longitude != coordinate.longitude || o.size != bounds.size) {
-				return
-			}
+		if let o = snapshotOptions, o.region.center.latitude == coordinate.latitude && o.region.center.longitude == coordinate.longitude && o.size == bounds.size {
+			return
 		}
 
-		alpha = 0
 		snapshotter?.cancel()
 		snapshotter = nil
-		snapshotOptions = nil
+		alpha = 0
 
 		let O = MKMapSnapshotOptions()
 		O.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
@@ -114,13 +108,13 @@ final class MiniMapView: UIImageView {
 				imageCache.setObject(img, forKey: cacheKey)
 				DispatchQueue.main.async { [weak self] in
 					self?.image = img
-					UIView.animate(withDuration: 0.2) {
+					UIView.animate(withDuration: 0.15) {
 						self?.alpha = 1
 					}
 				}
 			}
 			if let error = error {
-				log("Error taking snapshot: \(error.finalDescription)")
+				log("Error taking map snapshot: \(error.finalDescription)")
 			}
 		}
 	}

@@ -152,10 +152,8 @@ final class MiniMapView: FirstMouseView {
 			return
 		}
 
-		if let o = snapshotOptions {
-			if !(o.region.center.latitude != coordinate.latitude || o.region.center.longitude != coordinate.longitude) {
-				return
-			}
+		if let o = snapshotOptions, o.region.center.latitude == coordinate.latitude && o.region.center.longitude == coordinate.longitude {
+			return
 		}
 
 		snapshotter?.cancel()
