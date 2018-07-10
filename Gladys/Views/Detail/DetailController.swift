@@ -467,7 +467,9 @@ final class DetailController: GladysViewController,
 
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
-				guard let s = self, let q = typeEntry.quickLook(extraRightButton: s.navigationItem.rightBarButtonItem) else { return }
+				guard let s = self else { return }
+				let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.image == nil }
+				guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
 				if PersistedOptions.fullScreenPreviews {
 					let n = UINavigationController(rootViewController: q)
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))

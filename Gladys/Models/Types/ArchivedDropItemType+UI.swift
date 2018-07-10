@@ -33,7 +33,14 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			d.navigationItem.rightBarButtonItem = extraRightButton
 			return d
 
-		} else if QLPreviewController.canPreview(previewTempPath as NSURL) {
+		} else if isWebArchive {
+			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			d.title = "Loading..."
+			d.webArchive = PreviewItem(typeItem: self)
+			d.navigationItem.rightBarButtonItem = extraRightButton
+			return d
+
+		} else if canPreview {
 			let q = QLPreviewController()
 			q.title = oneTitle
 			q.dataSource = self
@@ -41,15 +48,8 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			q.navigationItem.rightBarButtonItem = extraRightButton
 			q.preferredContentSize = mainWindow.bounds.size
 			return q
-
-		} else if isWebArchive {
-			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-			d.title = "Loading..."
-			d.webArchive = PreviewItem(typeItem: self)
-			d.navigationItem.rightBarButtonItem = extraRightButton
-			return d
 		}
-		
+
 		return nil
 	}
 
