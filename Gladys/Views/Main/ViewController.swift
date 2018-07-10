@@ -1485,16 +1485,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		return a
 	}
 
+	private var searchActive: Bool {
+		return navigationItem.searchController?.isActive ?? false
+	}
+
 	func showIAPPrompt(title: String, subtitle: String,
 					   actionTitle: String? = nil, actionAction: (()->Void)? = nil,
 					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
 					   cancelTitle: String? = nil) {
 
-		if Model.isFiltering {
+		ViewController.shared.dismissAnyPopOver()
+
+		if searchActive || Model.isFiltering {
 			ViewController.shared.resetSearch(andLabels: true)
 		}
-
-		ViewController.shared.dismissAnyPopOver()
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
 		if let destructiveTitle = destructiveTitle {
@@ -1506,6 +1510,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if let cancelTitle = cancelTitle {
 			a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
 		}
+
 		present(a, animated: true)
 	}
 }
