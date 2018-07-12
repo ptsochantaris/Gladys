@@ -814,6 +814,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		performSegue(withIdentifier: NSStoryboardSegue.Identifier("showPreferences"), sender: nil)
 	}
 
+	@objc func editLabels(_ sender: Any?) {
+		performSegue(withIdentifier: NSStoryboardSegue.Identifier("editLabels"), sender: nil)
+	}
+
 	@objc func open(_ sender: Any?) {
 		let g = NSPasteboard.general
 		g.clearContents()
@@ -911,7 +915,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				menuItem.title = "Quick Look"
 				return false
 			}
-		case #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)):
+		case #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)):
 			return !collection.actionableSelectedItems.isEmpty
 		default:
 			return true
@@ -938,6 +942,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		case "showLabels":
 			labelController = segue.destinationController as? LabelSelectionViewController
+
+		case "editLabels":
+			if let destination = segue.destinationController as? LabelEditorViewController {
+				destination.selectedItems = collection.actionableSelectedItems.map { $0.uuid }
+			}
 
 		case "showProgress":
 			progressController = segue.destinationController as? ProgressViewController

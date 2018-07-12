@@ -180,6 +180,12 @@ CA
                                                 <action selector="revealCurrent:" target="Ady-hI-5gd" id="sBc-Qf-Z40"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Labels..." keyEquivalent="l" id="dJv-KY-93J">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="editLabels:" target="Ady-hI-5gd" id="IUF-M0-waJ"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="URL" id="NJd-Fx-8sX">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="URL" id="vIS-rU-iVZ">
@@ -334,7 +340,7 @@ CA
                 </viewController>
                 <customObject id="URB-7s-OFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="218" y="585"/>
+            <point key="canvasLocation" x="1263" y="590"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -805,7 +811,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="666" y="855"/>
+            <point key="canvasLocation" x="311" y="858"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -900,7 +906,103 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1066" y="646"/>
+            <point key="canvasLocation" x="965" y="651"/>
+        </scene>
+        <!--Edit Labels-->
+        <scene sceneID="8Vg-jj-cJX">
+            <objects>
+                <viewController title="Edit Labels" showSeguePresentationStyle="single" id="Adk-lO-VOr" customClass="LabelEditorViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="HFO-HQ-o2b">
+                        <rect key="frame" x="0.0" y="0.0" width="220" height="386"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="40" horizontalPageScroll="10" verticalLineScroll="40" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pCx-1A-0dq">
+                                <rect key="frame" x="0.0" y="45" width="220" height="299"/>
+                                <clipView key="contentView" drawsBackground="NO" id="J6Z-Cc-0AC">
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="299"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="none" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="40" id="Fvm-72-vne">
+                                            <rect key="frame" x="0.0" y="0.0" width="220" height="299"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <size key="intercellSpacing" width="10" height="0.0"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="gridColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <tableColumns>
+                                                <tableColumn identifier="" editable="NO" width="210" minWidth="40" maxWidth="1000" id="tYn-wD-xdz">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                    </tableHeaderCell>
+                                                    <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" allowsMixedState="YES" inset="2" id="9nj-KR-25j">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
+                                                </tableColumn>
+                                            </tableColumns>
+                                            <connections>
+                                                <outlet property="dataSource" destination="Adk-lO-VOr" id="1mH-h2-LDB"/>
+                                                <outlet property="delegate" destination="Adk-lO-VOr" id="eXc-Dt-4SX"/>
+                                            </connections>
+                                        </tableView>
+                                    </subviews>
+                                    <nil key="backgroundColor"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Fr2-Ac-Fd2">
+                                    <rect key="frame" x="0.0" y="147" width="220" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="eWb-Hs-L7G">
+                                    <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="H4a-Hy-NAX">
+                                <rect key="frame" x="8" y="352" width="204" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Add A New Label" drawsBackground="YES" id="RXr-6p-f6d">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <outlet property="delegate" destination="Adk-lO-VOr" id="qFQ-26-O5T"/>
+                                </connections>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rU2-4F-nJX">
+                                <rect key="frame" x="139" y="5" width="75" height="32"/>
+                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aa3-rb-rjx">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="dismissController:" target="Sff-IY-fcm" id="luP-MQ-7XW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="H4a-Hy-NAX" secondAttribute="trailing" constant="8" id="6W2-is-h08"/>
+                            <constraint firstItem="pCx-1A-0dq" firstAttribute="leading" secondItem="HFO-HQ-o2b" secondAttribute="leading" id="DMq-pE-LdH"/>
+                            <constraint firstAttribute="trailing" secondItem="rU2-4F-nJX" secondAttribute="trailing" constant="12" id="FOq-11-lCs"/>
+                            <constraint firstItem="rU2-4F-nJX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="HFO-HQ-o2b" secondAttribute="leading" constant="12" id="bgv-1H-4T7"/>
+                            <constraint firstItem="rU2-4F-nJX" firstAttribute="top" secondItem="pCx-1A-0dq" secondAttribute="bottom" constant="12" id="dRb-0K-b47"/>
+                            <constraint firstAttribute="bottom" secondItem="rU2-4F-nJX" secondAttribute="bottom" constant="12" id="daZ-VH-grd"/>
+                            <constraint firstAttribute="trailing" secondItem="pCx-1A-0dq" secondAttribute="trailing" id="fCI-3P-fRl"/>
+                            <constraint firstItem="H4a-Hy-NAX" firstAttribute="top" secondItem="HFO-HQ-o2b" secondAttribute="top" constant="12" id="v3c-Bx-iuF"/>
+                            <constraint firstItem="pCx-1A-0dq" firstAttribute="top" secondItem="H4a-Hy-NAX" secondAttribute="bottom" constant="8" id="xlI-AB-ffB"/>
+                            <constraint firstItem="H4a-Hy-NAX" firstAttribute="leading" secondItem="HFO-HQ-o2b" secondAttribute="leading" constant="8" id="yVf-ln-PT9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="newLabelField" destination="H4a-Hy-NAX" id="r4V-Un-sWt"/>
+                        <outlet property="tableView" destination="Fvm-72-vne" id="Sld-pY-WJF"/>
+                        <outlet property="togglesColumn" destination="tYn-wD-xdz" id="cEY-uD-qhy"/>
+                    </connections>
+                </viewController>
+                <customObject id="Sff-IY-fcm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="720" y="741"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -1103,7 +1205,7 @@ Only</string>
                                 </customSpacing>
                             </stackView>
                             <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-qK-zPr">
-                                <rect key="frame" x="0.0" y="340" width="795" height="165"/>
+                                <rect key="frame" x="0.0" y="340" width="795" height="5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </box>
                             <box wantsLayer="YES" fixedFrame="YES" title="Data Components" translatesAutoresizingMaskIntoConstraints="NO" id="g4v-6z-hSu">
@@ -1390,6 +1492,7 @@ Only</string>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
                         <segue destination="FB0-Ob-ymN" kind="sheet" identifier="showPreferences" id="li5-My-Fv1"/>
                         <segue destination="rmF-nd-Zeh" kind="sheet" identifier="showProgress" id="wwQ-Kz-x6M"/>
+                        <segue destination="Adk-lO-VOr" kind="sheet" identifier="editLabels" id="sez-eE-yO6"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

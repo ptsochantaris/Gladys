@@ -263,6 +263,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			m.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
 			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
+			m.addItem("Labels...", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
 			if !item.isImportedShare {
 				m.addItem(NSMenuItem.separator())
 				m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
@@ -504,6 +505,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	@objc private func topSelected() {
 		ViewController.shared.moveToTop(self)
+	}
+
+	@objc private func labelsSelected() {
+		ViewController.shared.editLabels(self)
 	}
 
 	@objc private func unlockSelected() {

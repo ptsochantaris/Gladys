@@ -21,9 +21,16 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 	var endCallback: ((Bool)->Void)?
 
-	var availableToggles: [String] = {
-		return Model.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
+	private var allToggles: [Model.LabelToggle] = {
+		return Model.labelToggles.filter { !$0.emptyChecker }
 	}()
+
+	private var availableToggles = [Model.LabelToggle]()
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		updateFilter(nil)
+	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -38,17 +45,6 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		return availableToggles.count
 	}
 
-	enum State {
-		case none, some, all
-		var accessibilityValue: String? {
-			switch self {
-			case .none: return nil
-			case .some: return "Applied to some selected items"
-			case .all: return "Applied to all selected items"
-			}
-		}
-	}
-
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		if PersistedOptions.darkMode {
@@ -59,27 +55,14 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		}
 	}
 
-	private func toggleState(for toggle: String) -> State {
-		let n = selectedItems?.reduce(0) { total, uuid -> Int in
-			if let item = Model.item(uuid: uuid), item.labels.contains(toggle) {
-				return total + 1
-			}
-			return total
-			} ?? 0
-		if n == (selectedItems?.count ?? 0) {
-			return .all
-		}
-		return n > 0 ? .some : .none
-	}
-
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelEditorCell") as! LabelEditorCell
 
 		let toggle = availableToggles[indexPath.row]
-		cell.labelName.text = toggle
-		cell.accessibilityLabel = toggle
+		cell.labelName.text = toggle.name
+		cell.accessibilityLabel = toggle.name
 
-		let state = toggleState(for: toggle)
+		let state = toggle.toggleState(across: selectedItems)
 		cell.tick.isHidden = state == .none
 		cell.tick.isHighlighted = state == .all
 		cell.accessibilityValue = state.accessibilityValue
@@ -89,27 +72,27 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard let selectedItems = selectedItems else { return }
 		let toggle = availableToggles[indexPath.row]
-		let state = toggleState(for: toggle)
+		let state = toggle.toggleState(across: selectedItems)
 		switch state {
 		case .none:
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0) {
-					item.labels.append(toggle)
+					item.labels.append(toggle.name)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .some:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), !item.labels.contains(toggle) {
-					item.labels.append(toggle)
+				if let item = Model.item(uuid: $0), !item.labels.contains(toggle.name) {
+					item.labels.append(toggle.name)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .all:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle) {
+				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle.name) {
 					item.labels.remove(at: i)
 					item.postModified()
 					editedUUIDs.insert($0)
@@ -127,9 +110,25 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		return headerView
 	}
 
+	private func updateFilter(_ text: String?) {
+		let filter = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+		if filter.isEmpty {
+			availableToggles = allToggles
+		} else {
+			availableToggles = allToggles.filter { $0.name.localizedCaseInsensitiveContains(filter) }
+		}
+		table.reloadData()
+	}
+
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
 		if string != "\n" {
+			if let oldText = textField.text, !oldText.isEmpty, let r = Range(range, in: oldText) {
+				let newText = oldText.replacingCharacters(in: r, with: string)
+				updateFilter(newText)
+			} else {
+				updateFilter(nil)
+			}
 			return true
 		}
 
@@ -140,14 +139,16 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 		}
 
 		textField.text = nil
-		if !availableToggles.contains(newTag) {
-			availableToggles.append(newTag)
-			availableToggles.sort()
-			table.reloadData()
+		if !allToggles.contains(where: { $0.name == newTag }) {
+			let newToggle = Model.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
+			allToggles.append(newToggle)
+			allToggles.sort { $0.name < $1.name }
 		}
-		if let i = availableToggles.index(of: newTag) {
+		updateFilter(nil)
+		if let i = allToggles.index(where: { $0.name == newTag }) {
+			let existingToggle = allToggles[i]
 			let ip = IndexPath(row: i, section: 0)
-			if toggleState(for: newTag) != .all {
+			if existingToggle.toggleState(across: selectedItems) != .all {
 				tableView(table, didSelectRowAt: ip)
 			}
 			table.scrollToRow(at: ip, at: .middle, animated: true)

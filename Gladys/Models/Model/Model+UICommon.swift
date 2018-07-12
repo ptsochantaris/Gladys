@@ -43,6 +43,30 @@ extension Model {
 		let count: Int
 		var enabled: Bool
 		let emptyChecker: Bool
+
+		enum State {
+			case none, some, all
+			var accessibilityValue: String? {
+				switch self {
+				case .none: return nil
+				case .some: return "Applied to some selected items"
+				case .all: return "Applied to all selected items"
+				}
+			}
+		}
+
+		func toggleState(across uuids: [UUID]?) -> State {
+			let n = uuids?.reduce(0) { total, uuid -> Int in
+				if let item = Model.item(uuid: uuid), item.labels.contains(name) {
+					return total + 1
+				}
+				return total
+				} ?? 0
+			if n == (uuids?.count ?? -1) {
+				return .all
+			}
+			return n > 0 ? .some : .none
+		}
 	}
 
 	enum SortOption {

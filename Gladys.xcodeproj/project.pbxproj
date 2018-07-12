@@ -233,6 +233,7 @@
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; };
 		16A4E8091FBB963500D60596 /* ItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E8081FBB963500D60596 /* ItemController.swift */; };
 		16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */; };
+		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
@@ -679,6 +680,7 @@
 		16A4E8081FBB963500D60596 /* ItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemController.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
 		16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKDatabaseScope+Extensions.swift"; sourceTree = "<group>"; };
@@ -984,6 +986,7 @@
 				168FE0602095B3C900E740E9 /* DropCell.swift */,
 				168FE0622095D16800E740E9 /* Preferences.swift */,
 				167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */,
+				16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */,
 				168D2CAA209DADF3005041CF /* DetailController.swift */,
 				168D2CAC209DCC53005041CF /* NewLabelController.swift */,
 				168D2CB0209E0988005041CF /* ComponentCell.swift */,
@@ -2033,6 +2036,7 @@
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
+				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				16C8166820CB0354001C12DF /* PullState.swift in Sources */,
