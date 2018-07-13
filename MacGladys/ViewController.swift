@@ -1048,6 +1048,24 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		return false
 	}
 
+	func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
+		guard let qlItem = item as? ArchivedDropItemType.PreviewItem else { return .zero }
+		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.filteredDrops.index(of: drop) {
+			let frameRealativeToCollection = collection.frameForItem(at: index)
+			let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
+			let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
+			return frameRelativeToScreen
+		}
+		return .zero
+	}
+
+	func previewPanel(_ panel: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect: UnsafeMutablePointer<NSRect>!) -> Any! {
+		if let qlItem = item as? ArchivedDropItemType.PreviewItem, let typeItem = Model.typeItem(uuid: qlItem.uuid.uuidString) {
+			return typeItem.displayIcon
+		}
+		return nil
+	}
+
 	/////////////////////////////////////////// Progress reports
 
 	private var progressController: ProgressViewController?

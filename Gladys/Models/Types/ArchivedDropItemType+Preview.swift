@@ -30,8 +30,13 @@ extension ArchivedDropItemType {
 		let previewItemURL: URL?
 		let previewItemTitle: String?
 		let needsCleanup: Bool
+		let parentUuid: UUID
+		let uuid: UUID
 
 		init(typeItem: ArchivedDropItemType) {
+
+			parentUuid = typeItem.parentUuid
+			uuid = typeItem.uuid
 
 			let blobPath = typeItem.bytesPath
 			let tempPath = typeItem.previewTempPath
