@@ -26,7 +26,9 @@ final class iCloudController: GladysViewController {
 	}
 
 	@IBAction private func uploadItemsFromShareChanged(_ sender: UISwitch) {
-		CloudManager.shareActionShouldUpload = sender.isOn
+		if icloudSwitch.isOn {
+			CloudManager.shareActionShouldUpload = sender.isOn
+		}
 	}
 
 	override func viewDidLoad() {
@@ -123,6 +125,20 @@ final class iCloudController: GladysViewController {
 		}
 		eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
 		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn
+
+		if !icloudSwitch.isOn && actionUploadSwitch.isOn {
+			actionUploadSwitch.setOn(false, animated: true)
+		} else if icloudSwitch.isOn && !actionUploadSwitch.isOn && CloudManager.shareActionShouldUpload {
+			actionUploadSwitch.setOn(true, animated: true)
+		}
+		actionUploadSwitch.isEnabled = icloudSwitch.isOn
+
+		if !icloudSwitch.isOn && limitToWiFiSwitch.isOn {
+			limitToWiFiSwitch.setOn(false, animated: true)
+		} else if icloudSwitch.isOn && !limitToWiFiSwitch.isOn && CloudManager.onlySyncOverWiFi {
+			limitToWiFiSwitch.setOn(true, animated: true)
+		}
+		limitToWiFiSwitch.isEnabled = icloudSwitch.isOn
 	}
 
 	@IBAction private func syncNowSelected(_ sender: UIBarButtonItem) {
@@ -160,21 +176,26 @@ final class iCloudController: GladysViewController {
 				confirm(title: "You have shared items",
 						message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.icloudSwitch.setOn(true, animated: true) } }
+						cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
 			} else if sharingOwn {
 				confirm(title: "You are sharing items",
 						message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.icloudSwitch.setOn(true, animated: true) } }
+						cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
 			} else if importing {
 				confirm(title: "You have items that are shared from others",
 						message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
 						action: "Turn Off Sync",
-						cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.icloudSwitch.setOn(true, animated: true) } }
+						cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
 			} else {
 				CloudManager.proceedWithDeactivation()
 			}
 		}
+	}
+
+	private func deactivate() {
+		CloudManager.proceedWithDeactivation()
+		updateiCloudControls()
 	}
 
 	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
