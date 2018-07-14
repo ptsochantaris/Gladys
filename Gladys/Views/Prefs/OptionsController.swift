@@ -10,8 +10,8 @@ import UIKit
 
 final class OptionsController: GladysViewController {
 
-	@IBOutlet private weak var separateItemsSwitch: UISwitch!
 	@IBOutlet private weak var twoColumnsSwitch: UISwitch!
+	@IBOutlet private weak var separateItemsSwitch: UISwitch!
 	@IBOutlet private weak var removeItemsWhenDraggedOutSwitch: UISwitch!
 	@IBOutlet private weak var dontAutoLabelNewItemsSwitch: UISwitch!
 	@IBOutlet private weak var displayNotesInMainViewSwitch: UISwitch!
