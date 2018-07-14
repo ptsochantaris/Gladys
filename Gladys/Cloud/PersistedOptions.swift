@@ -61,6 +61,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var setLabelsWhenActioning: Bool {
+		get {
+			return defaults.bool(forKey: "setLabelsWhenActioning")
+		}
+		set {
+			defaults.set(newValue, forKey: "setLabelsWhenActioning")
+			defaults.synchronize()
+		}
+	}
+
 	static var fullScreenPreviews: Bool {
 		get {
 			return defaults.bool(forKey: "fullScreenPreviews")

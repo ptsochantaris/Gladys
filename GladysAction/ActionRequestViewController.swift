@@ -12,20 +12,31 @@ import CoreSpotlight
 class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	private var loadCount = 0
+	private var firstAppearance = true
 
 	@IBOutlet private weak var statusLabel: UILabel?
 	@IBOutlet private weak var cancelButton: UIBarButtonItem?
 	@IBOutlet private weak var imageHeight: NSLayoutConstraint!
-	@IBOutlet private weak var imageCenter: NSLayoutConstraint!
-	@IBOutlet private weak var imageDistance: NSLayoutConstraint!
 	@IBOutlet private weak var expandButton: UIButton!
 	@IBOutlet private weak var background: UIImageView!
 	@IBOutlet private weak var image: UIImageView!
+	@IBOutlet private weak var labelsButton: UIButton!
+	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
 	private var newItemIds = [String]()
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		expandButton.isHidden = true
+	}
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !firstAppearance {
+			return
+		}
+		firstAppearance = false
 
 		loadCount = extensionContext?.inputItems.count ?? 0
 
@@ -50,28 +61,22 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			imageHeight.constant = 60
-			imageCenter.constant = -110
-			imageDistance.constant = 40
+			imageOffset.constant = -140
+			labelsButton.isHidden = true
 			expandButton.isHidden = false
 			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
 			return
 		}
 
-		var itemCount = 0
+		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
+
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
 			if let providers = inputItem.attachments as? [NSItemProvider] {
-				itemCount += providers.count
 				for newItem in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: nil) {
 					Model.drops.insert(newItem, at: 0)
 					newItemIds.append(newItem.uuid.uuidString)
 				}
 			}
-		}
-
-		if itemCount > 1 {
-			statusLabel?.text = "Adding \(itemCount) items..."
-		} else {
-			statusLabel?.text = "Adding item..."
 		}
 
 		if PersistedOptions.darkMode {
@@ -85,6 +90,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			view.tintColor = .lightGray
 			view.backgroundColor = .black
 			expandButton.setTitleColor(.white, for: .normal)
+			labelsButton.setTitleColor(.white, for: .normal)
 		}
     }
 
@@ -125,46 +131,97 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		loadCount -= 1
 		if loadCount == 0 {
 			cancelButton?.isEnabled = false
+			commit()
+		}
+	}
 
-			statusLabel?.text = "Indexing..."
-			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
-				DispatchQueue.main.async {
-					self.statusLabel?.text = "Saving..."
-					CloudManager.shareActionIsActioningIds = CloudManager.shareActionShouldUpload ? self.newItemIds : []
-					Model.save()
-				}
+	private func commit() {
+		statusLabel?.text = "Indexing..."
+		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
+			DispatchQueue.main.async {
+				self.statusLabel?.text = "Saving..."
+				CloudManager.shareActionIsActioningIds = CloudManager.shareActionShouldUpload ? self.newItemIds : []
+				Model.save()
 			}
-			Model.queueNextSaveCallback {
-				if !CloudManager.shareActionShouldUpload {
-					self.sharingDone(error: nil)
-					return
-				}
-				self.uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
-					self.sharingDone(error: error)
-				}
-				if let p = self.uploadProgress {
-					self.statusLabel?.text = "Uploading..."
-					self.uploadObservation = p.observe(\Progress.completedUnitCount) { progress, change in
-						let complete = Int((progress.fractionCompleted * 100).rounded())
-						let line = "\(complete)% Uploaded"
-						self.statusLabel?.text = line
-					}
-				}
+		}
+		Model.queueNextSaveCallback { [weak self] in
+			self?.postSave()
+		}
+	}
+
+	private func postSave() {
+		if !CloudManager.shareActionShouldUpload {
+			sharingDone(error: nil)
+			return
+		}
+		uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
+			self.sharingDone(error: error)
+		}
+		if let p = uploadProgress {
+			statusLabel?.text = "Uploading..."
+			uploadObservation = p.observe(\Progress.completedUnitCount) { [weak self] progress, change in
+				let complete = Int((progress.fractionCompleted * 100).rounded())
+				self?.statusLabel?.text = "\(complete)% Uploaded"
 			}
 		}
 	}
 
 	private func sharingDone(error: Error?) {
-		self.uploadObservation = nil
-		self.uploadProgress = nil
-		self.statusLabel?.text = "Done"
+		uploadObservation = nil
+		uploadProgress = nil
 		if let error = error {
 			log("Error while sending up items from extension: \(error.finalDescription)")
 		}
 		log("Action done")
+		if PersistedOptions.setLabelsWhenActioning {
+			statusLabel?.isHidden = true
+			labelsButton.isHidden = false
+			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+		} else {
+			statusLabel?.text = "Done"
+			done()
+		}
+	}
+
+	@objc private func done() {
 		DispatchQueue.main.async {
 			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
 	}
-}
 
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if let destination = segue.destination as? LabelEditorController {
+			Model.reloadDataIfNeeded()
+			var labels = Set<String>()
+			for uuid in newItemIds {
+				if let item = Model.item(uuid: uuid) {
+					for l in item.labels {
+						labels.insert(l)
+					}
+				}
+			}
+			destination.selectedLabels = Array(labels)
+			destination.completion = { [weak self] newLabels in
+				self?.applyNewLabels(newLabels)
+			}
+		}
+	}
+
+	private func applyNewLabels(_ newLabels: [String]) {
+		Model.reloadDataIfNeeded()
+		var changes = false
+		for uuid in newItemIds {
+			if let item = Model.item(uuid: uuid), item.labels != newLabels {
+				item.labels = newLabels
+				item.markUpdated()
+				changes = true
+			}
+		}
+		if changes {
+			navigationItem.rightBarButtonItem = nil
+			labelsButton.isHidden = true
+			statusLabel?.isHidden = false
+			commit()
+		}
+	}
+}

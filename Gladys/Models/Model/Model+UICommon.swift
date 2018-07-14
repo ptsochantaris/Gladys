@@ -38,6 +38,8 @@ extension Model {
 		return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
+	static var labelToggles = [LabelToggle]()
+
 	struct LabelToggle {
 		let name: String
 		let count: Int
@@ -139,8 +141,6 @@ extension Model {
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.size] }
 	}
-
-	static var labelToggles = [LabelToggle]()
 
 	static var isFilteringLabels: Bool {
 		return labelToggles.contains { $0.enabled }

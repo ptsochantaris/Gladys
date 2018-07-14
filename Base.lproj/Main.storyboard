@@ -543,11 +543,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1250"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1350"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kch-Hm-YOV">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1093"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="1193"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbf-8Q-XQN" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="144.5" width="320" height="114.5"/>
@@ -838,7 +838,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <action selector="mergeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Az4-O9-14b"/>
                                                 </connections>
                                             </switch>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dragged-out data components will merge into other items, instead of making new items." textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ru-95-SRb">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dragged-out data components will merge into other items, instead of making new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ru-95-SRb">
                                                 <rect key="frame" x="30" y="52" width="194" height="46.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -891,6 +891,41 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="Qw0-ug-ryR" firstAttribute="centerY" secondItem="Hd0-jD-GSa" secondAttribute="centerY" id="wo8-H1-ZPs"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S4J-vQ-zY8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="1005" width="320" height="98"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Set labels during &quot;Keep In Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jus-nh-w00">
+                                                <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qqc-cJ-w0F">
+                                                <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="allowLabelsInExtensionSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="mSn-CY-ZTF"/>
+                                                    <action selector="mergeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="4wY-2r-Hqd"/>
+                                                </connections>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wait so you can apply labels to new items added via the extension" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="76E-5W-qq8">
+                                                <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="qqc-cJ-w0F" firstAttribute="leading" secondItem="Jus-nh-w00" secondAttribute="trailing" constant="18" id="1fs-Py-r61"/>
+                                            <constraint firstItem="qqc-cJ-w0F" firstAttribute="centerY" secondItem="Jus-nh-w00" secondAttribute="centerY" id="3So-c1-oqE"/>
+                                            <constraint firstAttribute="trailing" secondItem="qqc-cJ-w0F" secondAttribute="trailing" constant="30" id="A6u-zx-XBp"/>
+                                            <constraint firstItem="Jus-nh-w00" firstAttribute="top" secondItem="S4J-vQ-zY8" secondAttribute="top" constant="10" id="Adb-ZN-exv"/>
+                                            <constraint firstItem="76E-5W-qq8" firstAttribute="trailing" secondItem="Jus-nh-w00" secondAttribute="trailing" id="Dzh-Yi-OEy"/>
+                                            <constraint firstItem="76E-5W-qq8" firstAttribute="top" secondItem="Jus-nh-w00" secondAttribute="bottom" constant="4" id="fKX-wX-ppj"/>
+                                            <constraint firstAttribute="bottom" secondItem="76E-5W-qq8" secondAttribute="bottom" id="opF-hp-YZE"/>
+                                            <constraint firstItem="76E-5W-qq8" firstAttribute="leading" secondItem="Jus-nh-w00" secondAttribute="leading" id="peI-Fs-wVY"/>
+                                            <constraint firstItem="Jus-nh-w00" firstAttribute="leading" secondItem="S4J-vQ-zY8" secondAttribute="leading" constant="30" id="qyU-BS-mOd"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="HXO-Ao-eZ4" firstAttribute="top" secondItem="lH9-jQ-LyU" secondAttribute="bottom" constant="10" id="2Fc-FJ-rks"/>
@@ -902,6 +937,9 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="width" secondItem="Nbf-8Q-XQN" secondAttribute="width" id="9Na-Vf-nD8"/>
                                     <constraint firstAttribute="trailing" secondItem="lH9-jQ-LyU" secondAttribute="trailing" id="9fw-6j-19e"/>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="top" secondItem="Kch-Hm-YOV" secondAttribute="top" constant="20" id="APS-8E-MUH"/>
+                                    <constraint firstItem="S4J-vQ-zY8" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="Bq6-ro-h8X"/>
+                                    <constraint firstAttribute="trailing" secondItem="S4J-vQ-zY8" secondAttribute="trailing" id="D3m-MD-C8R"/>
+                                    <constraint firstAttribute="bottom" secondItem="S4J-vQ-zY8" secondAttribute="bottom" constant="20" id="EQ0-BU-mHh"/>
                                     <constraint firstAttribute="trailing" secondItem="HId-9S-GbC" secondAttribute="trailing" id="EyO-C3-gHE"/>
                                     <constraint firstItem="SAa-Ja-PNG" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="GWL-VV-ne3"/>
                                     <constraint firstAttribute="trailing" secondItem="0zL-R0-MOE" secondAttribute="trailing" id="Hmj-pX-Ow6"/>
@@ -916,7 +954,6 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="bB7-5e-4Zy" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fX0-qL-Qid"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="fic-zs-slc"/>
                                     <constraint firstAttribute="trailing" secondItem="SAa-Ja-PNG" secondAttribute="trailing" id="grL-d7-AqR"/>
-                                    <constraint firstAttribute="bottom" secondItem="HXO-Ao-eZ4" secondAttribute="bottom" constant="20" id="hO2-gQ-Z3V"/>
                                     <constraint firstItem="2Bf-gq-086" firstAttribute="top" secondItem="IUw-1k-Z1Z" secondAttribute="bottom" constant="10" id="haH-Qo-9KL"/>
                                     <constraint firstItem="HXO-Ao-eZ4" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="l6L-eI-6yE"/>
                                     <constraint firstItem="IUw-1k-Z1Z" firstAttribute="leading" secondItem="Kch-Hm-YOV" secondAttribute="leading" id="mjd-WK-VHR"/>
@@ -926,6 +963,7 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="HId-9S-GbC" firstAttribute="top" secondItem="0zL-R0-MOE" secondAttribute="bottom" constant="10" id="ssd-59-4ce"/>
                                     <constraint firstItem="lH9-jQ-LyU" firstAttribute="top" secondItem="SAa-Ja-PNG" secondAttribute="bottom" constant="10" id="t6A-1W-sLY"/>
                                     <constraint firstAttribute="trailing" secondItem="Nbf-8Q-XQN" secondAttribute="trailing" id="vcD-h2-L7A"/>
+                                    <constraint firstItem="S4J-vQ-zY8" firstAttribute="top" secondItem="HXO-Ao-eZ4" secondAttribute="bottom" constant="10" id="zeJ-vw-tO2"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
@@ -940,8 +978,9 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="1250"/>
+                    <size key="freeformSize" width="320" height="1350"/>
                     <connections>
+                        <outlet property="allowLabelsInExtensionSwitch" destination="qqc-cJ-w0F" id="7cC-Fw-KiI"/>
                         <outlet property="darkModeSwitch" destination="Xeg-W1-kiy" id="nUn-Xp-SbR"/>
                         <outlet property="displayLabelsInMainViewSwitch" destination="Qw0-ug-ryR" id="ccz-dc-0Hw"/>
                         <outlet property="displayNotesInMainViewSwitch" destination="qro-Jb-hVE" id="P56-Q3-X0o"/>
@@ -976,7 +1015,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7089" y="-2199"/>
+            <point key="canvasLocation" x="6978" y="-2200"/>
         </scene>
         <!--iCloud Controller-->
         <scene sceneID="9V7-zs-8tY">
@@ -1064,7 +1103,7 @@ Selecting them will show only items that contain these labels.</string>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2DE-Ie-MEF" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="144" width="320" height="58.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Upload during the share action" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="52a-oW-xMk">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Upload items during &quot;Keep in Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="52a-oW-xMk">
                                                 <rect key="frame" x="15.5" y="8" width="172" height="42.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1157,7 +1196,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6158" y="-1379"/>
+            <point key="canvasLocation" x="6157" y="-1363"/>
         </scene>
         <!--About Controller-->
         <scene sceneID="mHF-aQ-il8">

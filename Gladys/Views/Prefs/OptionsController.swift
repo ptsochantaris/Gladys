@@ -20,9 +20,14 @@ final class OptionsController: GladysViewController {
 	@IBOutlet private weak var fullScreenSwitch: UISwitch!
 	@IBOutlet private weak var mergeSwitch: UISwitch!
 	@IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
+	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
 
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
+
+	@IBAction func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.setLabelsWhenActioning = sender.isOn
+	}
 
 	@IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.displayLabelsInMainView = sender.isOn
@@ -82,6 +87,7 @@ final class OptionsController: GladysViewController {
 		darkModeSwitch.onTintColor = view.tintColor
 		fullScreenSwitch.onTintColor = view.tintColor
 		mergeSwitch.onTintColor = view.tintColor
+		allowLabelsInExtensionSwitch.onTintColor = view.tintColor
 		if PersistedOptions.darkMode {
 			for l in headerLabels {
 				l.textColor = UIColor.lightGray
@@ -124,6 +130,9 @@ final class OptionsController: GladysViewController {
 
 		showCopyMoveSwitchSelectorSwitch.tintColor = .lightGray
 		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
+
+		allowLabelsInExtensionSwitch.tintColor = .lightGray
+		allowLabelsInExtensionSwitch.isOn = PersistedOptions.setLabelsWhenActioning
 
 		darkModeSwitch.tintColor = .lightGray
 		darkModeSwitch.isOn = PersistedOptions.darkMode
