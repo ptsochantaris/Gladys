@@ -11,11 +11,8 @@ import CoreSpotlight
 
 class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
-	private var loadCount = 0
-	private var firstAppearance = true
-
-	@IBOutlet private weak var statusLabel: UILabel?
-	@IBOutlet private weak var cancelButton: UIBarButtonItem?
+	@IBOutlet private weak var statusLabel: UILabel!
+	@IBOutlet private weak var cancelButton: UIBarButtonItem!
 	@IBOutlet private weak var imageHeight: NSLayoutConstraint!
 	@IBOutlet private weak var expandButton: UIButton!
 	@IBOutlet private weak var background: UIImageView!
@@ -23,25 +20,27 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 	@IBOutlet private weak var labelsButton: UIButton!
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
+	private var loadCount = 0
+	private var firstAppearance = true
 	private var newItemIds = [String]()
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		expandButton.isHidden = true
-	}
+	private var uploadObservation: NSKeyValueObservation?
+	private var uploadProgress: Progress?
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if !firstAppearance {
+		if firstAppearance {
+			firstAppearance = false
+		} else {
 			return
 		}
-		firstAppearance = false
 
+		expandButton.isHidden = true
 		loadCount = extensionContext?.inputItems.count ?? 0
 
 		if loadCount == 0 {
-			statusLabel?.text = "There don't seem to be any items offered by this app."
+			statusLabel.text = "There don't seem to be any items offered by this app."
+			showDone()
 			return
 		}
 
@@ -49,7 +48,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		Model.reloadDataIfNeeded()
 
 		if Model.legacyMode {
-			statusLabel?.text = "Please run Gladys once after the update, the data store needs to be updated before adding new items through this extension."
+			statusLabel.text = "Please run Gladys once after the update, the data store needs to be updated before adding new items through this extension."
 			return
 		}
 		
@@ -64,7 +63,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			imageOffset.constant = -140
 			labelsButton.isHidden = true
 			expandButton.isHidden = false
-			statusLabel?.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
+			statusLabel.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
 			return
 		}
 
@@ -86,7 +85,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 				navigationBar.barTintColor = .darkGray
 				navigationBar.tintColor = .lightGray
 			}
-			statusLabel?.textColor = .lightGray
+			statusLabel.textColor = .lightGray
 			view.tintColor = .lightGray
 			view.backgroundColor = .black
 			expandButton.setTitleColor(.white, for: .normal)
@@ -96,7 +95,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 
 	@IBAction private func expandSelected(_ sender: UIButton) {
 
-		cancelRequested(cancelButton!)
+		cancelRequested(cancelButton)
 
 		let newTotal = Model.drops.count + loadCount
 		let url = URL(string: "gladys://in-app-purchase/\(newTotal)")!
@@ -116,52 +115,53 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
 		}
-		Model.drops = Model.drops.filter({ i -> Bool in
-			!loadingItems.contains { $0.uuid == i.uuid }
-		})
+		Model.drops = Model.drops.filter { !loadingItems.contains($0) }
 
-		let error = NSError(domain: "build.bru.Gladys.error", code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel?.text ?? "No further info" ])
+		firstAppearance = true
+
+		let error = NSError(domain: "build.bru.Gladys.error", code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
 		extensionContext?.cancelRequest(withError: error)
 	}
-
-	private var uploadObservation: NSKeyValueObservation?
-	private var uploadProgress: Progress?
 
 	func loadCompleted(sender: AnyObject) {
 		loadCount -= 1
 		if loadCount == 0 {
-			cancelButton?.isEnabled = false
-			commit()
+			cancelButton.isEnabled = false
+			commit(uploadAfterSave: CloudManager.shareActionShouldUpload)
 		}
 	}
 
-	private func commit() {
-		statusLabel?.text = "Indexing..."
+	private func commit(uploadAfterSave: Bool) {
+		statusLabel.text = "Indexing..."
 		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
-			DispatchQueue.main.async {
-				self.statusLabel?.text = "Saving..."
-				CloudManager.shareActionIsActioningIds = CloudManager.shareActionShouldUpload ? self.newItemIds : []
-				Model.save()
+			DispatchQueue.main.async { [weak self] in
+				self?.save(uploadAfterSave: uploadAfterSave)
 			}
 		}
-		Model.queueNextSaveCallback { [weak self] in
-			self?.postSave()
-		}
 	}
 
-	private func postSave() {
-		if !CloudManager.shareActionShouldUpload {
+	private func save(uploadAfterSave: Bool) {
+		statusLabel.text = "Saving..."
+		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
+		Model.queueNextSaveCallback { [weak self] in
+			self?.postSave(uploadAfterSave: uploadAfterSave)
+		}
+		Model.save()
+	}
+
+	private func postSave(uploadAfterSave: Bool) {
+		if !uploadAfterSave {
 			sharingDone(error: nil)
 			return
 		}
-		uploadProgress = CloudManager.sendUpdatesUp { error in // will call back immediately if sync is off
-			self.sharingDone(error: error)
+		uploadProgress = CloudManager.sendUpdatesUp { [weak self] error in // will callback immediately if sync is off
+			self?.sharingDone(error: error)
 		}
 		if let p = uploadProgress {
-			statusLabel?.text = "Uploading..."
+			statusLabel.text = "Uploading..."
 			uploadObservation = p.observe(\Progress.completedUnitCount) { [weak self] progress, change in
 				let complete = Int((progress.fractionCompleted * 100).rounded())
-				self?.statusLabel?.text = "\(complete)% Uploaded"
+				self?.statusLabel.text = "\(complete)% Uploaded"
 			}
 		}
 	}
@@ -174,20 +174,27 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		}
 		log("Action done")
 		if PersistedOptions.setLabelsWhenActioning {
-			statusLabel?.isHidden = true
+			statusLabel.isHidden = true
 			labelsButton.isHidden = false
-			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+			showDone()
 		} else {
-			statusLabel?.text = "Done"
+			statusLabel.text = "Done"
 			done()
 		}
 	}
 
+	private func showDone() {
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+	}
+
 	@objc private func done() {
-		DispatchQueue.main.async {
-			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+		firstAppearance = true
+		DispatchQueue.main.async { [weak self] in
+			self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
 	}
+
+	////////////////////// Labels
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let destination = segue.destination as? LabelEditorController {
@@ -220,8 +227,8 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		if changes {
 			navigationItem.rightBarButtonItem = nil
 			labelsButton.isHidden = true
-			statusLabel?.isHidden = false
-			commit()
+			statusLabel.isHidden = false
+			commit(uploadAfterSave: true)
 		}
 	}
 }
