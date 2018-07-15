@@ -24,6 +24,7 @@ final class OptionsController: GladysViewController {
 
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
+	@IBOutlet private var titleLabels: [UILabel]!
 
 	@IBAction func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.setLabelsWhenActioning = sender.isOn
@@ -88,20 +89,12 @@ final class OptionsController: GladysViewController {
 		fullScreenSwitch.onTintColor = view.tintColor
 		mergeSwitch.onTintColor = view.tintColor
 		allowLabelsInExtensionSwitch.onTintColor = view.tintColor
+		subtitleLabels.forEach { $0.textColor = UIColor.gray }
+		titleLabels.forEach { $0.textColor = ViewController.tintColor }
 		if PersistedOptions.darkMode {
-			for l in headerLabels {
-				l.textColor = UIColor.lightGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
+			headerLabels.forEach { $0.textColor = UIColor.lightGray }
 		} else {
-			for l in headerLabels {
-				l.textColor = UIColor.darkGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
+			headerLabels.forEach { $0.textColor = UIColor.darkGray }
 		}
 	}
 

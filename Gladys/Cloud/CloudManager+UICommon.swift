@@ -93,6 +93,7 @@ extension CloudManager {
 				if let item = Model.item(shareId: recordUUID) {
 					item.cloudKitShareRecord = nil
 					log("Shut down sharing for item \(item.uuid) before deactivation")
+					item.postModified()
 				}
 			}
 		}

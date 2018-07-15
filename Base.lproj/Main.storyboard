@@ -550,17 +550,34 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1350"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quQ-d6-kah">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1286"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="1536"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RSx-tB-L4n">
-                                        <rect key="frame" x="0.0" y="20" width="320" height="1083"/>
+                                        <rect key="frame" x="0.0" y="20" width="320" height="1365"/>
                                         <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wF6-Q4-Mvi">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="60.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QcS-l6-XaN">
+                                                        <rect key="frame" x="164.5" y="0.0" width="59" height="60.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="QcS-l6-XaN" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wF6-Q4-Mvi" secondAttribute="leading" constant="20" id="6Gj-eH-8Wv"/>
+                                                    <constraint firstItem="QcS-l6-XaN" firstAttribute="top" secondItem="wF6-Q4-Mvi" secondAttribute="top" id="Eub-SU-LTD"/>
+                                                    <constraint firstAttribute="bottom" secondItem="QcS-l6-XaN" secondAttribute="bottom" id="sKC-GB-zOv"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R88-zp-PJe" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="114.5"/>
+                                                <rect key="frame" x="0.0" y="70.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Force two-column mode even in narrow displays" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0PN-Dk-mlt">
                                                         <rect key="frame" x="30" y="10" width="193.5" height="38"/>
@@ -594,111 +611,8 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="VpB-kf-y3J" firstAttribute="centerY" secondItem="0PN-Dk-mlt" secondAttribute="centerY" id="xBM-QK-OsX"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aBc-JG-R1d" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="124.5" width="320" height="114.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create separate items for each data component" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Osl-Ls-obl">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Re0-bQ-XI7">
-                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="DcY-H3-N4W"/>
-                                                            <action selector="separateItemsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Azk-qN-ie7"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Import items with multiple data components as multiple items: One for each component of the original" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ErD-Lz-Lyv">
-                                                        <rect key="frame" x="30" y="52" width="194" height="62.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="Osl-Ls-obl" firstAttribute="leading" secondItem="aBc-JG-R1d" secondAttribute="leading" constant="30" id="0hI-Se-YmJ"/>
-                                                    <constraint firstItem="Osl-Ls-obl" firstAttribute="top" secondItem="aBc-JG-R1d" secondAttribute="top" constant="10" id="DS5-2w-9gt"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Re0-bQ-XI7" secondAttribute="trailing" constant="30" id="GAT-eB-odD"/>
-                                                    <constraint firstItem="Re0-bQ-XI7" firstAttribute="centerY" secondItem="Osl-Ls-obl" secondAttribute="centerY" id="NEo-Rz-73R"/>
-                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="top" secondItem="Osl-Ls-obl" secondAttribute="bottom" constant="4" id="P0S-FN-zZT"/>
-                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="leading" secondItem="Osl-Ls-obl" secondAttribute="leading" id="Q6N-6h-MZw"/>
-                                                    <constraint firstAttribute="bottom" secondItem="ErD-Lz-Lyv" secondAttribute="bottom" id="bab-qT-Znv"/>
-                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="trailing" secondItem="Osl-Ls-obl" secondAttribute="trailing" id="fOp-9L-dGW"/>
-                                                    <constraint firstItem="Re0-bQ-XI7" firstAttribute="leading" secondItem="Osl-Ls-obl" secondAttribute="trailing" constant="18" id="xKO-9R-6v1"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fye-fd-Bru" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="249" width="320" height="98.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove items that are dragged out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UAB-01-35Y">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="foO-r4-VVP">
-                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="removeItemsWhenDraggedOutChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Na3-qh-9gd"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove an item once it is dragged out, instead of just copying it out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksr-Ak-jKv">
-                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="top" secondItem="UAB-01-35Y" secondAttribute="bottom" constant="4" id="8Rh-AH-tzP"/>
-                                                    <constraint firstAttribute="bottom" secondItem="ksr-Ak-jKv" secondAttribute="bottom" id="Uos-cG-vhy"/>
-                                                    <constraint firstAttribute="trailing" secondItem="foO-r4-VVP" secondAttribute="trailing" constant="30" id="Vzr-7o-Pcj"/>
-                                                    <constraint firstItem="UAB-01-35Y" firstAttribute="leading" secondItem="Fye-fd-Bru" secondAttribute="leading" constant="30" id="b7R-wG-6be"/>
-                                                    <constraint firstItem="UAB-01-35Y" firstAttribute="top" secondItem="Fye-fd-Bru" secondAttribute="top" constant="10" id="bfD-Ol-g6A"/>
-                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="trailing" secondItem="UAB-01-35Y" secondAttribute="trailing" id="nHc-4Z-r2q"/>
-                                                    <constraint firstItem="foO-r4-VVP" firstAttribute="centerY" secondItem="UAB-01-35Y" secondAttribute="centerY" id="sWv-lS-gIe"/>
-                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="leading" secondItem="UAB-01-35Y" secondAttribute="leading" id="yuU-VB-sGc"/>
-                                                    <constraint firstItem="foO-r4-VVP" firstAttribute="leading" secondItem="UAB-01-35Y" secondAttribute="trailing" constant="18" id="z9x-Le-iiB"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpJ-qH-eLu" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="357.5" width="320" height="78.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Do not auto-label new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aea-Um-r1E">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="18"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-qp-Jk6">
-                                                        <rect key="frame" x="241" y="3.5" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="dontAutoLabelNewItemsChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="0ml-q8-Z6m"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Prevent new items from being automatically tagged by the currently active labels" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRo-mb-1fQ">
-                                                        <rect key="frame" x="30" y="32" width="194" height="46.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="aea-Um-r1E" firstAttribute="top" secondItem="dpJ-qH-eLu" secondAttribute="top" constant="10" id="3fF-sY-JEW"/>
-                                                    <constraint firstAttribute="bottom" secondItem="VRo-mb-1fQ" secondAttribute="bottom" id="BX7-lb-4Pt"/>
-                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="leading" secondItem="aea-Um-r1E" secondAttribute="leading" id="FwM-5B-Zlv"/>
-                                                    <constraint firstAttribute="trailing" secondItem="5wI-qp-Jk6" secondAttribute="trailing" constant="30" id="LGE-c7-U7t"/>
-                                                    <constraint firstItem="5wI-qp-Jk6" firstAttribute="centerY" secondItem="aea-Um-r1E" secondAttribute="centerY" id="MW4-TJ-YxQ"/>
-                                                    <constraint firstItem="aea-Um-r1E" firstAttribute="leading" secondItem="dpJ-qH-eLu" secondAttribute="leading" constant="30" id="MeR-KZ-QdW"/>
-                                                    <constraint firstItem="5wI-qp-Jk6" firstAttribute="leading" secondItem="aea-Um-r1E" secondAttribute="trailing" constant="18" id="PME-AU-Co0"/>
-                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="top" secondItem="aea-Um-r1E" secondAttribute="bottom" constant="4" id="feS-qe-Xie"/>
-                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="trailing" secondItem="aea-Um-r1E" secondAttribute="trailing" id="p17-Bz-GEg"/>
-                                                </constraints>
-                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="06N-WZ-EiG" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="446" width="320" height="62.5"/>
+                                                <rect key="frame" x="0.0" y="195" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display notes in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bb1-c4-GaQ">
                                                         <rect key="frame" x="30" y="10" width="193.5" height="18"/>
@@ -731,42 +645,42 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="i0F-Pk-jHK" firstAttribute="leading" secondItem="bb1-c4-GaQ" secondAttribute="trailing" constant="18" id="wav-5A-o2e"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="htf-ZB-EHW" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="518.5" width="320" height="98.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDR-4k-jjE" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="267.5" width="320" height="78.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Offer copy/move switch while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLg-q9-oEP">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jLY-Yd-XP1">
-                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JPg-Em-fla">
+                                                        <rect key="frame" x="241" y="3.5" width="51" height="31"/>
                                                         <connections>
-                                                            <action selector="showCopyMoveSwitchSelectorSwitchChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="lbc-Tc-gMm"/>
+                                                            <action selector="fullScreenPreviewsSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Gvz-zx-PMg"/>
                                                         </connections>
                                                     </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display an option to switch between copy and move while an export drag is taking place" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4K-b8-7vf">
-                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show previewed items full-screen even when they would normally appear in a popup" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5F-pD-D5I">
+                                                        <rect key="frame" x="30" y="32" width="194" height="46.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Full-screen Previews" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t25-a7-DGX">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="18"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="kLg-q9-oEP" firstAttribute="leading" secondItem="htf-ZB-EHW" secondAttribute="leading" constant="30" id="3dD-p2-wmc"/>
-                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="trailing" secondItem="kLg-q9-oEP" secondAttribute="trailing" id="BIk-Qu-8RG"/>
-                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="leading" secondItem="kLg-q9-oEP" secondAttribute="leading" id="TXT-yr-tJe"/>
-                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="top" secondItem="kLg-q9-oEP" secondAttribute="bottom" constant="4" id="gw2-15-awh"/>
-                                                    <constraint firstItem="kLg-q9-oEP" firstAttribute="top" secondItem="htf-ZB-EHW" secondAttribute="top" constant="10" id="h8Q-Na-AJh"/>
-                                                    <constraint firstItem="jLY-Yd-XP1" firstAttribute="centerY" secondItem="kLg-q9-oEP" secondAttribute="centerY" id="ofc-Bm-ra4"/>
-                                                    <constraint firstAttribute="bottom" secondItem="d4K-b8-7vf" secondAttribute="bottom" id="qYI-aN-ujI"/>
-                                                    <constraint firstItem="jLY-Yd-XP1" firstAttribute="leading" secondItem="kLg-q9-oEP" secondAttribute="trailing" constant="18" id="sN3-bv-vNO"/>
-                                                    <constraint firstAttribute="trailing" secondItem="jLY-Yd-XP1" secondAttribute="trailing" constant="30" id="zIy-xG-7Tp"/>
+                                                    <constraint firstItem="t25-a7-DGX" firstAttribute="leading" secondItem="UDR-4k-jjE" secondAttribute="leading" constant="30" id="3kS-TT-fO1"/>
+                                                    <constraint firstItem="JPg-Em-fla" firstAttribute="leading" secondItem="t25-a7-DGX" secondAttribute="trailing" constant="18" id="QeR-0z-1JF"/>
+                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="trailing" secondItem="t25-a7-DGX" secondAttribute="trailing" id="RZ4-9s-bjy"/>
+                                                    <constraint firstAttribute="trailing" secondItem="JPg-Em-fla" secondAttribute="trailing" constant="30" id="Xpm-Up-VkL"/>
+                                                    <constraint firstAttribute="bottom" secondItem="x5F-pD-D5I" secondAttribute="bottom" id="YwG-wO-afV"/>
+                                                    <constraint firstItem="t25-a7-DGX" firstAttribute="top" secondItem="UDR-4k-jjE" secondAttribute="top" constant="10" id="ZpM-oG-7gJ"/>
+                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="leading" secondItem="t25-a7-DGX" secondAttribute="leading" id="hj9-Am-0B4"/>
+                                                    <constraint firstItem="JPg-Em-fla" firstAttribute="centerY" secondItem="t25-a7-DGX" secondAttribute="centerY" id="nHu-Ha-UfC"/>
+                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="top" secondItem="t25-a7-DGX" secondAttribute="bottom" constant="4" id="qVz-a9-QbN"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IV3-hI-iJq" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="627" width="320" height="78.5"/>
+                                                <rect key="frame" x="0.0" y="356" width="320" height="78.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dark mode" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eft-3s-nuc">
                                                         <rect key="frame" x="30" y="10" width="193.5" height="18"/>
@@ -799,76 +713,25 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="UqN-1X-z0c" firstAttribute="leading" secondItem="Eft-3s-nuc" secondAttribute="leading" id="qtq-AM-93c"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDR-4k-jjE" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="715.5" width="320" height="78.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JpX-eq-vlq">
+                                                <rect key="frame" x="0.0" y="444.5" width="320" height="60.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Full-screen Previews" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t25-a7-DGX">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="18"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JPg-Em-fla">
-                                                        <rect key="frame" x="241" y="3.5" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="fullScreenPreviewsSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Gvz-zx-PMg"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show previewed items full-screen even when they would normally appear in a popup" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5F-pD-D5I">
-                                                        <rect key="frame" x="30" y="32" width="194" height="46.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labels" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9C4-5z-JUG">
+                                                        <rect key="frame" x="171" y="30" width="52.5" height="30.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="t25-a7-DGX" firstAttribute="leading" secondItem="UDR-4k-jjE" secondAttribute="leading" constant="30" id="3kS-TT-fO1"/>
-                                                    <constraint firstItem="JPg-Em-fla" firstAttribute="leading" secondItem="t25-a7-DGX" secondAttribute="trailing" constant="18" id="QeR-0z-1JF"/>
-                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="trailing" secondItem="t25-a7-DGX" secondAttribute="trailing" id="RZ4-9s-bjy"/>
-                                                    <constraint firstAttribute="trailing" secondItem="JPg-Em-fla" secondAttribute="trailing" constant="30" id="Xpm-Up-VkL"/>
-                                                    <constraint firstAttribute="bottom" secondItem="x5F-pD-D5I" secondAttribute="bottom" id="YwG-wO-afV"/>
-                                                    <constraint firstItem="t25-a7-DGX" firstAttribute="top" secondItem="UDR-4k-jjE" secondAttribute="top" constant="10" id="ZpM-oG-7gJ"/>
-                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="leading" secondItem="t25-a7-DGX" secondAttribute="leading" id="hj9-Am-0B4"/>
-                                                    <constraint firstItem="JPg-Em-fla" firstAttribute="centerY" secondItem="t25-a7-DGX" secondAttribute="centerY" id="nHu-Ha-UfC"/>
-                                                    <constraint firstItem="x5F-pD-D5I" firstAttribute="top" secondItem="t25-a7-DGX" secondAttribute="bottom" constant="4" id="qVz-a9-QbN"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jb7-Il-ie6" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="804" width="320" height="98.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Allow merging of data components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cR9-Og-yKJ">
-                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2QW-xQ-h29">
-                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="mergeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="yZd-QQ-LTQ"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dragged-out data components will merge into other items, instead of making new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPi-lt-Exe">
-                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="cR9-Og-yKJ" firstAttribute="leading" secondItem="jb7-Il-ie6" secondAttribute="leading" constant="30" id="Lm7-rc-80R"/>
-                                                    <constraint firstAttribute="bottom" secondItem="aPi-lt-Exe" secondAttribute="bottom" id="P3P-If-CGM"/>
-                                                    <constraint firstItem="cR9-Og-yKJ" firstAttribute="top" secondItem="jb7-Il-ie6" secondAttribute="top" constant="10" id="Ys3-8r-go5"/>
-                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="leading" secondItem="cR9-Og-yKJ" secondAttribute="leading" id="ZCl-Ci-evB"/>
-                                                    <constraint firstAttribute="trailing" secondItem="2QW-xQ-h29" secondAttribute="trailing" constant="30" id="ZLu-2X-gyM"/>
-                                                    <constraint firstItem="2QW-xQ-h29" firstAttribute="leading" secondItem="cR9-Og-yKJ" secondAttribute="trailing" constant="18" id="aja-TD-COI"/>
-                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="top" secondItem="cR9-Og-yKJ" secondAttribute="bottom" constant="4" id="h2m-g6-Cag"/>
-                                                    <constraint firstItem="2QW-xQ-h29" firstAttribute="centerY" secondItem="cR9-Og-yKJ" secondAttribute="centerY" id="lNU-QO-bro"/>
-                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="trailing" secondItem="cR9-Og-yKJ" secondAttribute="trailing" id="zWS-4T-D99"/>
+                                                    <constraint firstAttribute="bottom" secondItem="9C4-5z-JUG" secondAttribute="bottom" id="6SE-zF-BPa"/>
+                                                    <constraint firstItem="9C4-5z-JUG" firstAttribute="top" secondItem="JpX-eq-vlq" secondAttribute="top" constant="30" id="Lxd-iu-tPY"/>
+                                                    <constraint firstItem="9C4-5z-JUG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="JpX-eq-vlq" secondAttribute="leading" constant="20" id="fA7-aQ-eyg"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jzC-dY-oSN" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="912.5" width="320" height="62.5"/>
+                                                <rect key="frame" x="0.0" y="515" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display labels in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rne-ok-zIN">
                                                         <rect key="frame" x="30" y="10" width="193.5" height="18"/>
@@ -901,8 +764,42 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="NV4-Kh-f7a" firstAttribute="centerY" secondItem="Rne-ok-zIN" secondAttribute="centerY" id="x2b-so-xAz"/>
                                                 </constraints>
                                             </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpJ-qH-eLu" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="587.5" width="320" height="78.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Do not auto-label new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aea-Um-r1E">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="18"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-qp-Jk6">
+                                                        <rect key="frame" x="241" y="3.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="dontAutoLabelNewItemsChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="0ml-q8-Z6m"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Prevent new items from being automatically tagged by the currently active labels" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRo-mb-1fQ">
+                                                        <rect key="frame" x="30" y="32" width="194" height="46.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="aea-Um-r1E" firstAttribute="top" secondItem="dpJ-qH-eLu" secondAttribute="top" constant="10" id="3fF-sY-JEW"/>
+                                                    <constraint firstAttribute="bottom" secondItem="VRo-mb-1fQ" secondAttribute="bottom" id="BX7-lb-4Pt"/>
+                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="leading" secondItem="aea-Um-r1E" secondAttribute="leading" id="FwM-5B-Zlv"/>
+                                                    <constraint firstAttribute="trailing" secondItem="5wI-qp-Jk6" secondAttribute="trailing" constant="30" id="LGE-c7-U7t"/>
+                                                    <constraint firstItem="5wI-qp-Jk6" firstAttribute="centerY" secondItem="aea-Um-r1E" secondAttribute="centerY" id="MW4-TJ-YxQ"/>
+                                                    <constraint firstItem="aea-Um-r1E" firstAttribute="leading" secondItem="dpJ-qH-eLu" secondAttribute="leading" constant="30" id="MeR-KZ-QdW"/>
+                                                    <constraint firstItem="5wI-qp-Jk6" firstAttribute="leading" secondItem="aea-Um-r1E" secondAttribute="trailing" constant="18" id="PME-AU-Co0"/>
+                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="top" secondItem="aea-Um-r1E" secondAttribute="bottom" constant="4" id="feS-qe-Xie"/>
+                                                    <constraint firstItem="VRo-mb-1fQ" firstAttribute="trailing" secondItem="aea-Um-r1E" secondAttribute="trailing" id="p17-Bz-GEg"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YYt-tq-ZhV" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="985" width="320" height="98"/>
+                                                <rect key="frame" x="0.0" y="676" width="320" height="98"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Set labels during &quot;Keep In Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeI-MN-asw">
                                                         <rect key="frame" x="30" y="10" width="193.5" height="38"/>
@@ -936,7 +833,187 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="PkJ-LT-EPc" firstAttribute="top" secondItem="BeI-MN-asw" secondAttribute="bottom" constant="4" id="qjV-tm-iVY"/>
                                                 </constraints>
                                             </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dsu-gX-Dlc">
+                                                <rect key="frame" x="0.0" y="784" width="320" height="60.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dragging" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wd1-LM-Zfz">
+                                                        <rect key="frame" x="150" y="30" width="73.5" height="30.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="wd1-LM-Zfz" firstAttribute="top" secondItem="Dsu-gX-Dlc" secondAttribute="top" constant="30" id="lDw-nQ-7iB"/>
+                                                    <constraint firstItem="wd1-LM-Zfz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dsu-gX-Dlc" secondAttribute="leading" constant="20" id="tM9-t5-nl6"/>
+                                                    <constraint firstAttribute="bottom" secondItem="wd1-LM-Zfz" secondAttribute="bottom" id="zR9-70-aMt"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fye-fd-Bru" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="854.5" width="320" height="98.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove items after they are dragged out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UAB-01-35Y">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="foO-r4-VVP">
+                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="removeItemsWhenDraggedOutChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Na3-qh-9gd"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove an item once it is dragged out, instead of just copying it out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksr-Ak-jKv">
+                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="top" secondItem="UAB-01-35Y" secondAttribute="bottom" constant="4" id="8Rh-AH-tzP"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ksr-Ak-jKv" secondAttribute="bottom" id="Uos-cG-vhy"/>
+                                                    <constraint firstAttribute="trailing" secondItem="foO-r4-VVP" secondAttribute="trailing" constant="30" id="Vzr-7o-Pcj"/>
+                                                    <constraint firstItem="UAB-01-35Y" firstAttribute="leading" secondItem="Fye-fd-Bru" secondAttribute="leading" constant="30" id="b7R-wG-6be"/>
+                                                    <constraint firstItem="UAB-01-35Y" firstAttribute="top" secondItem="Fye-fd-Bru" secondAttribute="top" constant="10" id="bfD-Ol-g6A"/>
+                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="trailing" secondItem="UAB-01-35Y" secondAttribute="trailing" id="nHc-4Z-r2q"/>
+                                                    <constraint firstItem="foO-r4-VVP" firstAttribute="centerY" secondItem="UAB-01-35Y" secondAttribute="centerY" id="sWv-lS-gIe"/>
+                                                    <constraint firstItem="ksr-Ak-jKv" firstAttribute="leading" secondItem="UAB-01-35Y" secondAttribute="leading" id="yuU-VB-sGc"/>
+                                                    <constraint firstItem="foO-r4-VVP" firstAttribute="leading" secondItem="UAB-01-35Y" secondAttribute="trailing" constant="18" id="z9x-Le-iiB"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="htf-ZB-EHW" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="963" width="320" height="98.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Offer copy/move switch while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLg-q9-oEP">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jLY-Yd-XP1">
+                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="showCopyMoveSwitchSelectorSwitchChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="lbc-Tc-gMm"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display an option to switch between copy and move while an export drag is taking place" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4K-b8-7vf">
+                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="kLg-q9-oEP" firstAttribute="leading" secondItem="htf-ZB-EHW" secondAttribute="leading" constant="30" id="3dD-p2-wmc"/>
+                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="trailing" secondItem="kLg-q9-oEP" secondAttribute="trailing" id="BIk-Qu-8RG"/>
+                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="leading" secondItem="kLg-q9-oEP" secondAttribute="leading" id="TXT-yr-tJe"/>
+                                                    <constraint firstItem="d4K-b8-7vf" firstAttribute="top" secondItem="kLg-q9-oEP" secondAttribute="bottom" constant="4" id="gw2-15-awh"/>
+                                                    <constraint firstItem="kLg-q9-oEP" firstAttribute="top" secondItem="htf-ZB-EHW" secondAttribute="top" constant="10" id="h8Q-Na-AJh"/>
+                                                    <constraint firstItem="jLY-Yd-XP1" firstAttribute="centerY" secondItem="kLg-q9-oEP" secondAttribute="centerY" id="ofc-Bm-ra4"/>
+                                                    <constraint firstAttribute="bottom" secondItem="d4K-b8-7vf" secondAttribute="bottom" id="qYI-aN-ujI"/>
+                                                    <constraint firstItem="jLY-Yd-XP1" firstAttribute="leading" secondItem="kLg-q9-oEP" secondAttribute="trailing" constant="18" id="sN3-bv-vNO"/>
+                                                    <constraint firstAttribute="trailing" secondItem="jLY-Yd-XP1" secondAttribute="trailing" constant="30" id="zIy-xG-7Tp"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vaB-J0-jOE">
+                                                <rect key="frame" x="0.0" y="1071.5" width="320" height="60.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Components" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5t-2y-EqR">
+                                                        <rect key="frame" x="79.5" y="30" width="144" height="30.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="V5t-2y-EqR" firstAttribute="top" secondItem="vaB-J0-jOE" secondAttribute="top" constant="30" id="0Uu-bH-ZAa"/>
+                                                    <constraint firstItem="V5t-2y-EqR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vaB-J0-jOE" secondAttribute="leading" constant="20" id="h6c-5d-cTV"/>
+                                                    <constraint firstAttribute="bottom" secondItem="V5t-2y-EqR" secondAttribute="bottom" id="mZI-RP-0lU"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aBc-JG-R1d" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="1142" width="320" height="114.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create separate items for each data component" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Osl-Ls-obl">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Re0-bQ-XI7">
+                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="DcY-H3-N4W"/>
+                                                            <action selector="separateItemsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Azk-qN-ie7"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Import items with multiple data components as multiple items: One for each component of the original" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ErD-Lz-Lyv">
+                                                        <rect key="frame" x="30" y="52" width="194" height="62.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="Osl-Ls-obl" firstAttribute="leading" secondItem="aBc-JG-R1d" secondAttribute="leading" constant="30" id="0hI-Se-YmJ"/>
+                                                    <constraint firstItem="Osl-Ls-obl" firstAttribute="top" secondItem="aBc-JG-R1d" secondAttribute="top" constant="10" id="DS5-2w-9gt"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Re0-bQ-XI7" secondAttribute="trailing" constant="30" id="GAT-eB-odD"/>
+                                                    <constraint firstItem="Re0-bQ-XI7" firstAttribute="centerY" secondItem="Osl-Ls-obl" secondAttribute="centerY" id="NEo-Rz-73R"/>
+                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="top" secondItem="Osl-Ls-obl" secondAttribute="bottom" constant="4" id="P0S-FN-zZT"/>
+                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="leading" secondItem="Osl-Ls-obl" secondAttribute="leading" id="Q6N-6h-MZw"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ErD-Lz-Lyv" secondAttribute="bottom" id="bab-qT-Znv"/>
+                                                    <constraint firstItem="ErD-Lz-Lyv" firstAttribute="trailing" secondItem="Osl-Ls-obl" secondAttribute="trailing" id="fOp-9L-dGW"/>
+                                                    <constraint firstItem="Re0-bQ-XI7" firstAttribute="leading" secondItem="Osl-Ls-obl" secondAttribute="trailing" constant="18" id="xKO-9R-6v1"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jb7-Il-ie6" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="1266.5" width="320" height="98.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Allow merging of data components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cR9-Og-yKJ">
+                                                        <rect key="frame" x="30" y="10" width="193.5" height="38"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2QW-xQ-h29">
+                                                        <rect key="frame" x="241" y="13.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="mergeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="yZd-QQ-LTQ"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dragged-out data components will merge into other items, instead of making new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPi-lt-Exe">
+                                                        <rect key="frame" x="30" y="52" width="194" height="46.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="cR9-Og-yKJ" firstAttribute="leading" secondItem="jb7-Il-ie6" secondAttribute="leading" constant="30" id="Lm7-rc-80R"/>
+                                                    <constraint firstAttribute="bottom" secondItem="aPi-lt-Exe" secondAttribute="bottom" id="P3P-If-CGM"/>
+                                                    <constraint firstItem="cR9-Og-yKJ" firstAttribute="top" secondItem="jb7-Il-ie6" secondAttribute="top" constant="10" id="Ys3-8r-go5"/>
+                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="leading" secondItem="cR9-Og-yKJ" secondAttribute="leading" id="ZCl-Ci-evB"/>
+                                                    <constraint firstAttribute="trailing" secondItem="2QW-xQ-h29" secondAttribute="trailing" constant="30" id="ZLu-2X-gyM"/>
+                                                    <constraint firstItem="2QW-xQ-h29" firstAttribute="leading" secondItem="cR9-Og-yKJ" secondAttribute="trailing" constant="18" id="aja-TD-COI"/>
+                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="top" secondItem="cR9-Og-yKJ" secondAttribute="bottom" constant="4" id="h2m-g6-Cag"/>
+                                                    <constraint firstItem="2QW-xQ-h29" firstAttribute="centerY" secondItem="cR9-Og-yKJ" secondAttribute="centerY" id="lNU-QO-bro"/>
+                                                    <constraint firstItem="aPi-lt-Exe" firstAttribute="trailing" secondItem="cR9-Og-yKJ" secondAttribute="trailing" id="zWS-4T-D99"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="wF6-Q4-Mvi" secondAttribute="trailing" id="27z-cr-V5j"/>
+                                            <constraint firstItem="wF6-Q4-Mvi" firstAttribute="leading" secondItem="RSx-tB-L4n" secondAttribute="leading" id="AKk-q1-GNi"/>
+                                            <constraint firstItem="V5t-2y-EqR" firstAttribute="trailing" secondItem="Osl-Ls-obl" secondAttribute="trailing" id="Cbb-FK-24P"/>
+                                            <constraint firstItem="wF6-Q4-Mvi" firstAttribute="top" secondItem="RSx-tB-L4n" secondAttribute="top" id="Ktz-RI-5m5"/>
+                                            <constraint firstItem="wd1-LM-Zfz" firstAttribute="trailing" secondItem="UAB-01-35Y" secondAttribute="trailing" id="R2E-vs-HAC"/>
+                                            <constraint firstItem="9C4-5z-JUG" firstAttribute="trailing" secondItem="Rne-ok-zIN" secondAttribute="trailing" id="W3d-wy-wYW"/>
+                                            <constraint firstItem="QcS-l6-XaN" firstAttribute="trailing" secondItem="0PN-Dk-mlt" secondAttribute="trailing" id="c38-sK-rOn"/>
+                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -959,7 +1036,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="1350"/>
+                    <size key="freeformSize" width="320" height="1600"/>
                     <connections>
                         <outlet property="allowLabelsInExtensionSwitch" destination="xKP-Fg-evj" id="7h9-ce-HXO"/>
                         <outlet property="darkModeSwitch" destination="akV-j6-m9U" id="sDN-fG-kdg"/>
@@ -994,6 +1071,10 @@ Selecting them will show only items that contain these labels.</string>
                         <outletCollection property="subtitleLabels" destination="aPi-lt-Exe" collectionClass="NSMutableArray" id="HvK-IZ-Auh"/>
                         <outletCollection property="subtitleLabels" destination="CdL-dZ-yEL" collectionClass="NSMutableArray" id="wHP-9Z-j5t"/>
                         <outletCollection property="subtitleLabels" destination="PkJ-LT-EPc" collectionClass="NSMutableArray" id="dW0-vO-a5O"/>
+                        <outletCollection property="titleLabels" destination="QcS-l6-XaN" collectionClass="NSMutableArray" id="JbE-TU-ts4"/>
+                        <outletCollection property="titleLabels" destination="9C4-5z-JUG" collectionClass="NSMutableArray" id="kKk-gw-8mF"/>
+                        <outletCollection property="titleLabels" destination="wd1-LM-Zfz" collectionClass="NSMutableArray" id="7FM-FW-oni"/>
+                        <outletCollection property="titleLabels" destination="V5t-2y-EqR" collectionClass="NSMutableArray" id="oQ9-o1-rO7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1022,7 +1103,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </activityIndicatorView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                                        <rect key="frame" x="20" y="0.0" width="172" height="66"/>
+                                                        <rect key="frame" x="30" y="0.0" width="162" height="66"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="bfg-CL-PPA"/>
                                                         </constraints>
@@ -1041,7 +1122,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstAttribute="bottom" secondItem="bc6-6V-O7h" secondAttribute="bottom" id="4wI-eM-kXe"/>
                                                     <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
                                                     <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="21" id="Ex6-yc-wkY"/>
-                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="20" id="leg-YZ-isI"/>
+                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="30" id="leg-YZ-isI"/>
                                                     <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
                                                 </constraints>
                                             </view>
@@ -1049,7 +1130,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="76" width="320" height="66"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                                        <rect key="frame" x="20" y="0.0" width="172" height="66"/>
+                                                        <rect key="frame" x="30" y="0.0" width="162" height="66"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="1xg-yZ-9vH"/>
                                                         </constraints>
@@ -1066,7 +1147,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="i3g-cz-xkx" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="trailing" constant="18" id="1eI-rP-K87"/>
-                                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="ehw-1I-mk8" secondAttribute="leading" constant="20" id="Gt0-dv-UhM"/>
+                                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="ehw-1I-mk8" secondAttribute="leading" constant="30" id="Gt0-dv-UhM"/>
                                                     <constraint firstItem="guO-CQ-KTM" firstAttribute="top" secondItem="ehw-1I-mk8" secondAttribute="top" id="h5N-Ja-gzd"/>
                                                     <constraint firstAttribute="bottom" secondItem="guO-CQ-KTM" secondAttribute="bottom" id="nJ9-2s-K44"/>
                                                     <constraint firstItem="i3g-cz-xkx" firstAttribute="centerY" secondItem="ehw-1I-mk8" secondAttribute="centerY" id="ygt-mr-z3V"/>
@@ -1076,7 +1157,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="152" width="320" height="66"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Upload items during &quot;Keep in Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="52a-oW-xMk">
-                                                        <rect key="frame" x="20" y="0.0" width="172" height="66"/>
+                                                        <rect key="frame" x="30" y="0.0" width="162" height="66"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="yYW-7h-qHl"/>
                                                         </constraints>
@@ -1093,7 +1174,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="kbo-iY-5gJ" firstAttribute="leading" secondItem="52a-oW-xMk" secondAttribute="trailing" constant="18" id="T05-QI-Gdr"/>
-                                                    <constraint firstItem="52a-oW-xMk" firstAttribute="leading" secondItem="2DE-Ie-MEF" secondAttribute="leading" constant="20" id="Ta2-JM-cp9"/>
+                                                    <constraint firstItem="52a-oW-xMk" firstAttribute="leading" secondItem="2DE-Ie-MEF" secondAttribute="leading" constant="30" id="Ta2-JM-cp9"/>
                                                     <constraint firstAttribute="bottom" secondItem="52a-oW-xMk" secondAttribute="bottom" id="Wn3-SP-AZQ"/>
                                                     <constraint firstItem="kbo-iY-5gJ" firstAttribute="centerY" secondItem="2DE-Ie-MEF" secondAttribute="centerY" id="awh-U0-Fc1"/>
                                                     <constraint firstItem="52a-oW-xMk" firstAttribute="top" secondItem="2DE-Ie-MEF" secondAttribute="top" id="bhm-2J-64b"/>
