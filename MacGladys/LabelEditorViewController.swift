@@ -78,8 +78,8 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 			let newToggle = Model.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
-			tableView.reloadData()
 		}
+		tableView.reloadData()
 		if let i = allToggles.index(where: { $0.name == newTag }) {
 			let existingToggle = allToggles[i]
 			if existingToggle.toggleState(across: selectedItems) != .all {
