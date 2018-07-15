@@ -524,7 +524,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		if collectionView.hasActiveDrag { return }
 
 		let item = Model.filteredDrops[indexPath.item]
-		if item.loadingProgress != nil {
+		if item.shouldDisplayLoading {
 			return
 		}
 

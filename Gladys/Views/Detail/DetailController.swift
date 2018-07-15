@@ -520,6 +520,7 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		if indexPath.section < 2 { return UISwipeActionsConfiguration(actions: []) }
 		if indexPath.section == 2 && indexPath.row == item.labels.count { return UISwipeActionsConfiguration(actions: []) }
+		if item.shareMode == .elsewhereReadOnly { return UISwipeActionsConfiguration(actions: []) }
 		let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, handler in
 			self?.deleteRowSelected(at: indexPath)
 			handler(true)
