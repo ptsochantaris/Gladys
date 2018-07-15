@@ -26,6 +26,10 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		typeItems.forEach { $0.cancelIngest() }
 	}
 
+	var loadingAborted: Bool {
+		return typeItems.contains { $0.loadingAborted }
+	}
+
 	func reIngest(delegate: LoadCompletionDelegate) {
 		imageCache.removeObject(forKey: imageCacheKey)
 		self.delegate = delegate

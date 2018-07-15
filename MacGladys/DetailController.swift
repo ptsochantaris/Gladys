@@ -65,6 +65,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		n.addObserver(self, selector: #selector(checkForChanges), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(checkForChanges), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(foreground(_:)), name: .ForegroundDisplayedItem, object: nil)
+		n.addObserver(self, selector: #selector(updateAlwaysOnTop), name: .AlwaysOnTopChanged, object: nil)
 
 		components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		components.setDraggingSourceOperationMask(.move, forLocal: true)
@@ -85,6 +86,20 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@objc private func foreground(_ notification: Notification) {
 		if let uuid = notification.object as? UUID, item.uuid == uuid {
 			view.window?.makeKeyAndOrderFront(self)
+		}
+	}
+
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateAlwaysOnTop()
+	}
+
+	@objc private func updateAlwaysOnTop() {
+		guard let w = view.window else { return }
+		if PersistedOptions.alwaysOnTop {
+			w.level = .modalPanel
+		} else {
+			w.level = .normal
 		}
 	}
 

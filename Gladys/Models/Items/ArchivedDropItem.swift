@@ -139,7 +139,7 @@ final class ArchivedDropItem: Codable {
 			createdAt = Date()
 			updatedAt = createdAt
 			suggestedName = providers.first!.suggestedName
-			needsReIngest = true
+			needsReIngest = false // original ingest, not re-ingest, show "cancel"
 			needsDeletion = false
 			titleOverride = overrides?.title ?? ""
 			note = overrides?.note ?? ""

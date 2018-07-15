@@ -25,4 +25,5 @@ extension Notification.Name {
 	static let AcceptStarting = Notification.Name("AcceptStarting")
 	static let AcceptEnding = Notification.Name("AcceptEnding")
 	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
+	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
 }

@@ -22,6 +22,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet private weak var lockImage: UIImageView!
 	@IBOutlet private weak var mergeImage: UIImageView!
 	@IBOutlet private weak var labelsDistance: NSLayoutConstraint!
+	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	@IBOutlet private weak var topLabelLeft: NSLayoutConstraint!
 
@@ -402,6 +403,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideCancel = true
 		var hideImage = true
 		var hideProgress = true
+		var hideSpinner = true
 		var hideLock = true
 		var hideMerge = true
 		var shared = ArchivedDropItem.ShareMode.none
@@ -417,9 +419,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if let item = item {
 
 			if item.shouldDisplayLoading {
-				hideCancel = false
-				hideProgress = false
-				progressView.observedProgress = item.loadingProgress
+				if item.needsReIngest {
+					hideSpinner = false
+				} else {
+					hideCancel = false
+					hideProgress = false
+					progressView.observedProgress = item.loadingProgress
+				}
 				image.image = nil
 
 			} else if item.needsUnlock {
@@ -576,6 +582,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
 		shareMode = shared
+
+		let isSpinning = spinner.isAnimating
+		if isSpinning && hideSpinner {
+			spinner.stopAnimating()
+		} else if !isSpinning && !hideSpinner {
+			spinner.startAnimating()
+		}
 
 		setNeedsUpdateConstraints()
 	}

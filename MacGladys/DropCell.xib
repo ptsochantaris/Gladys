@@ -97,32 +97,43 @@
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
-                <button wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
-                    <rect key="frame" x="110" y="115" width="82" height="32"/>
-                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Dm-0x-pAW">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                        <string key="keyEquivalent" base64-UTF8="YES">
+                <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72j-vo-hKN">
+                    <rect key="frame" x="116" y="125" width="70" height="53"/>
+                    <subviews>
+                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
+                            <rect key="frame" x="27" y="37" width="16" height="16"/>
+                        </progressIndicator>
+                        <button wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
+                            <rect key="frame" x="-6" y="-7" width="82" height="32"/>
+                            <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Dm-0x-pAW">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
-                    </buttonCell>
-                    <connections>
-                        <action selector="cancelSelected:" target="JIL-3y-Tt4" id="LFN-D1-0ei"/>
-                    </connections>
-                </button>
-                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
-                    <rect key="frame" x="143" y="159" width="16" height="16"/>
-                </progressIndicator>
+                            </buttonCell>
+                            <connections>
+                                <action selector="cancelSelected:" target="JIL-3y-Tt4" id="LFN-D1-0ei"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="t0u-49-eaV" firstAttribute="centerX" secondItem="15T-lS-AOB" secondAttribute="centerX" id="5ms-Lr-c73"/>
-                <constraint firstItem="15T-lS-AOB" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" constant="-16" id="Nad-s7-rdc"/>
+                <constraint firstItem="72j-vo-hKN" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="Ldk-I1-SXj"/>
+                <constraint firstItem="72j-vo-hKN" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" id="QV8-zT-r1d"/>
                 <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="10" id="dvh-qF-Qzh"/>
                 <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" constant="10" id="gvH-wC-pDa"/>
                 <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="10" id="iCR-Wi-2Nr"/>
                 <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="10" id="tDq-GB-o82"/>
-                <constraint firstItem="15T-lS-AOB" firstAttribute="bottom" secondItem="t0u-49-eaV" secondAttribute="top" constant="-16" id="u8W-p7-GNH"/>
-                <constraint firstItem="15T-lS-AOB" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="v6w-Hw-dAl"/>
             </constraints>
             <shadow key="shadow" blurRadius="2">
                 <color key="color" white="0.0" alpha="0.3006742294520548" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

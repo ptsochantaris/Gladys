@@ -140,7 +140,7 @@ final class ArchivedDropItem: Codable {
 		createdAt = Date()
 		updatedAt = createdAt
 		suggestedName = pasteboardName
-		needsReIngest = true
+		needsReIngest = false // do not display cancel button, this is an original ingest
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""
 		note = overrides?.note ?? ""

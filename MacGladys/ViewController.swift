@@ -176,7 +176,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateAlwaysOnTop()
 	}
 
-	func updateAlwaysOnTop() {
+	private func updateAlwaysOnTop() {
 		guard let w = view.window else { return }
 		if PersistedOptions.alwaysOnTop {
 			w.level = .modalPanel
@@ -278,7 +278,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.endProgress()
 		}
 
-		observers = [a1, a2, a3, a4, a5, a6, a7]
+		let a8  = n.addObserver(forName: .AlwaysOnTopChanged, object: nil, queue: .main) { [weak self] _ in
+			self?.updateAlwaysOnTop()
+		}
+
+		observers = [a1, a2, a3, a4, a5, a6, a7, a8]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -376,7 +380,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			item.reIndex {
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
-						if item.createdAt == item.updatedAt {
+						if item.createdAt == item.updatedAt && !item.loadingAborted {
 							genericAlert(title: "Item(s) Added", message: nil)
 						}
 					}

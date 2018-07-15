@@ -70,6 +70,10 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconLock" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
                                                     <rect key="frame" x="139.5" y="136" width="21" height="28"/>
                                                 </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vTt-su-nuo">
+                                                    <rect key="frame" x="139.5" y="140" width="20" height="20"/>
+                                                    <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </activityIndicatorView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconPlusCircle" translatesAutoresizingMaskIntoConstraints="NO" id="7Cz-Ex-aln">
                                                     <rect key="frame" x="135.5" y="38" width="28" height="28"/>
                                                 </imageView>
@@ -89,6 +93,7 @@
                                             <constraint firstItem="Axq-ka-HoY" firstAttribute="trailing" secondItem="x5M-NP-dlj" secondAttribute="trailingMargin" id="I2g-w3-RF1"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" constant="-10" id="Lox-2y-iXm"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="Lnk-SW-KkP" secondAttribute="trailing" id="MLn-ck-mTO"/>
+                                            <constraint firstItem="vTt-su-nuo" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="TJ8-Oy-eEj"/>
                                             <constraint firstItem="7Cz-Ex-aln" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="WmQ-wo-Fei"/>
                                             <constraint firstItem="mEc-YZ-ZGZ" firstAttribute="top" secondItem="vTy-88-2LK" secondAttribute="bottom" constant="25" id="YCi-M1-v2Z"/>
                                             <constraint firstItem="vTy-88-2LK" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="YFJ-Zr-9jg"/>
@@ -104,6 +109,7 @@
                                             <constraint firstItem="Lnk-SW-KkP" firstAttribute="leading" secondItem="x5M-NP-dlj" secondAttribute="leadingMargin" id="vFh-bv-bO7"/>
                                             <constraint firstItem="7Cz-Ex-aln" firstAttribute="top" secondItem="g2k-cT-VHS" secondAttribute="top" constant="8" id="vcD-ge-jlS"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="v3H-LC-FOH" secondAttribute="bottom" id="wk3-kK-iEE"/>
+                                            <constraint firstItem="vTt-su-nuo" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" id="yHt-89-JY0"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="bottomLabel" destination="v3H-LC-FOH" id="JEa-0l-h1K"/>
@@ -115,6 +121,7 @@
                                             <outlet property="lockImage" destination="2DN-HK-OAe" id="thp-hn-MyS"/>
                                             <outlet property="mergeImage" destination="7Cz-Ex-aln" id="boM-VZ-ZMD"/>
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
+                                            <outlet property="spinner" destination="vTt-su-nuo" id="AoD-nT-zGq"/>
                                             <outlet property="topLabel" destination="Lnk-SW-KkP" id="s3J-sm-DGq"/>
                                             <outlet property="topLabelDistance" destination="fR2-e0-xPA" id="EgD-sE-pMe"/>
                                             <outlet property="topLabelLeft" destination="vFh-bv-bO7" id="2fA-XY-3t4"/>

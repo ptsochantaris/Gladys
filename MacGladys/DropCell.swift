@@ -286,6 +286,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		var wantColourView = false
 		var wantMapView = false
 		var hideCancel = true
+		var hideSpinner = true
 		var hideImage = true
 		var hideLock = true
 		var hideLabels = true
@@ -310,7 +311,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		if let item = item {
 
 			if showLoading {
-				hideCancel = false
+				hideCancel = item.needsReIngest
+				hideSpinner = false
 				image.layer?.contents = nil
 
 			} else if item.needsUnlock {
@@ -467,7 +469,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
-		progressView.isHidden = hideCancel
+		progressView.isHidden = hideSpinner
 		lockImage.isHidden = hideLock
 
 		switch share {

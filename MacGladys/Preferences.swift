@@ -107,7 +107,7 @@ final class Preferences: NSViewController {
 
 	@IBAction private func alawysOnTopSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.alwaysOnTop = sender.integerValue == 1
-		ViewController.shared.updateAlwaysOnTop()
+		NotificationCenter.default.post(name: .AlwaysOnTopChanged, object: nil)
 	}
 
 	@objc private func hotkeyCharChanged() {

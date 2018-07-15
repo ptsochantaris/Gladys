@@ -1308,7 +1308,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			item.reIndex {
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
-						if item.createdAt == item.updatedAt {
+						if item.createdAt == item.updatedAt && !item.loadingAborted {
 							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
 						}
 					}
