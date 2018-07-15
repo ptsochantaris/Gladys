@@ -19,15 +19,10 @@ extension Model {
 			return false
 		}
 
-		let localPath = item.folderUrl
-		if fm.fileExists(atPath: localPath.path) {
-			try fm.removeItem(at: localPath)
-		}
-
 		if moveItem {
-			try fm.moveItem(at: remotePath, to: localPath)
+			try fm.moveAndReplaceItem(at: remotePath, to: item.folderUrl)
 		} else {
-			try fm.copyItem(at: remotePath, to: localPath)
+			try fm.copyAndReplaceItem(at: remotePath, to: item.folderUrl)
 		}
 
 		item.needsReIngest = true
@@ -114,7 +109,7 @@ extension Model {
 			let uuidString = item.uuid.uuidString
 			let sourceForItem = Model.appStorageUrl.appendingPathComponent(uuidString)
 			let destinationForItem = tempPath.appendingPathComponent(uuidString)
-			try fm.copyItem(at: sourceForItem, to: destinationForItem)
+			try fm.copyAndReplaceItem(at: sourceForItem, to: destinationForItem)
 			p.completedUnitCount += 1
 		}
 

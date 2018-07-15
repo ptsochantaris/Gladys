@@ -423,10 +423,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		do {
 			let fm = FileManager.default
-			if fm.fileExists(atPath: selectedUrl.path) {
-				try fm.removeItem(at: selectedUrl)
-			}
-			try fm.moveItem(at: createdUrl, to: selectedUrl)
+			try fm.moveAndReplaceItem(at: createdUrl, to: selectedUrl)
 			try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
 			NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
 		} catch {

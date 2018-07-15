@@ -195,6 +195,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
+		let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
 		if let inserting = inserting {
 			collection.deselectAll(nil)
 			collection.animator().insertItems(at: Set(inserting))
@@ -203,6 +204,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			collection.animator().deleteItems(at: Set(deleting))
 		} else {
 			collection.animator().reloadData()
+		}
+		var index = 0
+		var indexSet = Set<IndexPath>()
+		for i in Model.filteredDrops {
+			if selectedUUIDS.contains(i.uuid) {
+				indexSet.insert(IndexPath(item: index, section: 0))
+			}
+			index += 1
+		}
+		if !indexSet.isEmpty {
+			collection.selectItems(at: indexSet, scrollPosition: .centeredHorizontally)
 		}
 	}
 

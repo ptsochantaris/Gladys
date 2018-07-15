@@ -21,4 +21,18 @@ extension FileManager {
 		}
 		return contentSize
 	}
+
+	func moveAndReplaceItem(at: URL, to: URL) throws {
+		if fileExists(atPath: to.path) {
+			try removeItem(at: to)
+		}
+		try moveItem(at: at, to: to)
+	}
+
+	func copyAndReplaceItem(at: URL, to: URL) throws {
+		if fileExists(atPath: to.path) {
+			try removeItem(at: to)
+		}
+		try copyItem(at: at, to: to)
+	}
 }

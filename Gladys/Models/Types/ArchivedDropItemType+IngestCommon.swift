@@ -206,12 +206,8 @@ extension ArchivedDropItemType {
 	func copyLocal(_ url: URL) -> URL {
 
 		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
-		let f = FileManager.default
 		do {
-			if f.fileExists(atPath: newUrl.path) {
-				try f.removeItem(at: newUrl)
-			}
-			try f.copyItem(at: url, to: newUrl)
+			try FileManager.default.copyAndReplaceItem(at: url, to: newUrl)
 		} catch {
 			log("Error while copying item: \(error.finalDescription)")
 			loadingError = error
@@ -443,7 +439,7 @@ extension ArchivedDropItemType {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-	func handleData(_ data: Data) {
+	private func handleData(_ data: Data) {
 		bytes = data
 
 		if (typeIdentifier == "public.folder" || typeIdentifier == "public.data") && data.isZip {

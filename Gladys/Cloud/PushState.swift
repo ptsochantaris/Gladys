@@ -149,9 +149,9 @@ final class PushState {
 				let deletedUUIDs = deletedRecordIds?.map { $0.recordName } ?? []
 				for uuid in requestedDeletionUUIDs {
 					if deletedUUIDs.contains(uuid) {
-						log("Confirmed deletion of item (\(uuid)")
+						log("Confirmed deletion of item (\(uuid))")
 					} else {
-						log("Didn't need to delete item (\(uuid)")
+						log("Didn't need to delete item (\(uuid))")
 					}
 				}
 

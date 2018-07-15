@@ -18,12 +18,7 @@ extension ArchivedDropItemType {
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
-			let path = bytesPath
-			let f = FileManager.default
-			if f.fileExists(atPath: path.path) {
-				try? f.removeItem(at: path)
-			}
-			try? f.copyItem(at: assetURL, to: path)
+			try? FileManager.default.copyAndReplaceItem(at: assetURL, to: bytesPath)
 		}
 		cloudKitRecord = record
 	}

@@ -220,12 +220,7 @@ final class ArchivedDropItemType: Codable {
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
-			let path = bytesPath
-			let f = FileManager.default
-			if f.fileExists(atPath: path.path) {
-				try? f.removeItem(at: path)
-			}
-			try? f.copyItem(at: assetURL, to: path)
+			try? FileManager.default.copyAndReplaceItem(at: assetURL, to: bytesPath)
 		}
 		cloudKitRecord = record
 	}
@@ -289,10 +284,7 @@ final class ArchivedDropItemType: Codable {
 			var directory: ObjCBool = false
 			if fm.fileExists(atPath: item.path, isDirectory: &directory) {
 				do {
-					let data: Data
 					if directory.boolValue {
-						typeIdentifier = kUTTypeZipArchive as String
-						setDisplayIcon(#imageLiteral(resourceName: "zip"), 5, .center)
 
 						let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
 						let a = Archive(url: tempURL, accessMode: .create)!
@@ -303,10 +295,11 @@ final class ArchivedDropItemType: Codable {
 							log("      Cancelled zip operation since ingest was aborted")
 							return
 						}
-						data = try Data(contentsOf: tempURL)
-						try? fm.removeItem(at: tempURL)
+						try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
+						typeIdentifier = kUTTypeZipArchive as String
+						setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
 					} else {
-						data = try Data(contentsOf: item)
+						try fm.copyAndReplaceItem(at: item, to: bytesPath)
 						let ext = item.pathExtension
 						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
 							typeIdentifier = uti as String
@@ -318,7 +311,7 @@ final class ArchivedDropItemType: Codable {
 					accessoryTitle = item.lastPathComponent
 					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-					handleData(data)
+					completeIngest()
 
 				} catch {
 					bytes = data
