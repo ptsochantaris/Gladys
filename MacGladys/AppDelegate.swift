@@ -268,7 +268,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			NSAttributedStringKey.font: font,
 			NSAttributedStringKey.paragraphStyle: p,
 			])
+
+		let windowsBefore = NSApplication.shared.windows
 		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
+
+		if PersistedOptions.alwaysOnTop {
+			var windowsAfter = NSApplication.shared.windows
+			for b in windowsBefore {
+				if let i = windowsAfter.index(of: b) {
+					windowsAfter.remove(at: i)
+				}
+			}
+			let aboutWindow = windowsAfter.first
+			aboutWindow?.level = .modalPanel
+		}
 	}
 
 	@objc private func iapChanged() {
