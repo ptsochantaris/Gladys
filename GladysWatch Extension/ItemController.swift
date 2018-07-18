@@ -33,27 +33,29 @@ class ItemController: WKInterfaceController {
 	private var gotImage = false
 	private var context: [String: Any]!
 	private var active = false
+	private var observer: NSObjectProtocol?
 
 	override func awake(withContext context: Any?) {
-		self.context = context as! [String: Any]
+		self.context = context as? [String: Any]
 
 		self.setTitle(self.context["it"] as? String)
 
-		fetchImage()
 		label.setText(labelText)
 		date.setText(formatter.string(from: itemDate))
 
 		topGroup.setBackgroundImage(ItemController.topShade)
 		bottomGroup.setBackgroundImage(ItemController.bottomShade)
 
-		NotificationCenter.default.addObserver(forName: .GroupsUpdated, object: nil, queue: OperationQueue.main) { [weak self] n in
+		observer = NotificationCenter.default.addObserver(forName: .GroupsUpdated, object: nil, queue: OperationQueue.main) { [weak self] _ in
 			self?.updateGroups()
 		}
 		updateGroups()
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self)
+		if let observer = observer {
+			NotificationCenter.default.removeObserver(observer)
+		}
 	}
 
 	private var labelText: String? {
@@ -130,11 +132,11 @@ class ItemController: WKInterfaceController {
 		size.height *= 2
 		WCSession.default.sendMessage(["image": uuid, "width": size.width, "height": size.height], replyHandler: { reply in
 			if let r = reply["image"] as? Data {
+				let i = UIImage(data: r)
+				if let i = i {
+					ItemController.imageCache.setObject(i, forKey: cacheKey as NSString)
+				}
 				DispatchQueue.main.async {
-					let i = UIImage(data: r)
-					if let i = i {
-						ItemController.imageCache.setObject(i, forKey: cacheKey as NSString)
-					}
 					self.image.setImage(i)
 					self.fetchingImage = false
 					self.gotImage = true
