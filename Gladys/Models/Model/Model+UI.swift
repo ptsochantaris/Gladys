@@ -30,15 +30,24 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
 		DispatchQueue.main.async {
 
-			if let uuidForView = message["view"] as? String {
-				ViewController.shared.highlightItem(with: uuidForView, andOpen: true)
+			if let uuid = message["view"] as? String {
+				ViewController.shared.highlightItem(with: uuid, andOpen: true)
 				DispatchQueue.global().async {
 					replyHandler([:])
 				}
 			}
 
-			if let uuidForCopy = message["copy"] as? String {
-				if let i = Model.item(uuid: uuidForCopy) {
+			if let uuid = message["moveToTop"] as? String {
+				if let item = Model.item(uuid: uuid) {
+					ViewController.shared.sendToTop(item: item)
+				}
+				DispatchQueue.global().async {
+					replyHandler([:])
+				}
+			}
+
+			if let uuid = message["copy"] as? String {
+				if let i = Model.item(uuid: uuid) {
 					i.copyToPasteboard()
 				}
 				DispatchQueue.global().async {
@@ -46,8 +55,8 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 				}
 			}
 
-			if let uuidForImage = message["image"] as? String {
-				if let i = Model.item(uuid: uuidForImage) {
+			if let uuid = message["image"] as? String {
+				if let i = Model.item(uuid: uuid) {
 					let mode = i.displayMode
 					let icon = i.displayIcon
 					DispatchQueue.global().async {

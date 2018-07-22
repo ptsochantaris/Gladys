@@ -38,7 +38,7 @@ class ItemController: WKInterfaceController {
 	override func awake(withContext context: Any?) {
 		self.context = context as? [String: Any]
 
-		self.setTitle(self.context["it"] as? String)
+		setTitle(self.context["it"] as? String)
 
 		label.setText(labelText)
 		date.setText(formatter.string(from: itemDate))
@@ -180,9 +180,19 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
+	private var topping: Bool = false {
+		didSet {
+			topGroup.setHidden(topping || ItemController.hidden)
+			bottomGroup.setHidden(topping || ItemController.hidden)
+			image.setHidden(topping)
+			copyLabel.setText("Moving to the top of the list")
+			copyLabel.setHidden(!topping)
+		}
+	}
+
 	@IBAction private func viewOnDeviceSelected() {
-		opening = true
 		if let uuid = uuid {
+			opening = true
 			WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
 				self.opening = false
 			}, errorHandler: { _ in
@@ -204,12 +214,23 @@ class ItemController: WKInterfaceController {
 	}
 
 	@IBAction private func copySelected() {
-		copying = true
 		if let uuid = uuid {
+			copying = true
 			WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
 				self.copying = false
 			}, errorHandler: { _ in
 				self.copying = false
+			})
+		}
+	}
+
+	@IBAction private func moveToTopSelected() {
+		if let uuid = uuid {
+			topping = true
+			WCSession.default.sendMessage(["moveToTop": uuid], replyHandler: { _ in
+				self.topping = false
+			}, errorHandler: { _ in
+				self.topping = false
 			})
 		}
 	}

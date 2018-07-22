@@ -47,22 +47,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
 	private func updatePages(_ dropList: [[String: Any]]) {
 		if dropList.count > 0 {
-			var names = [String]()
-			for _ in 0 ..< dropList.count {
-				names.append("ItemController")
-			}
-			let currentPage = dropList.index(where: { properties -> Bool in
-				properties["u"] as? String == ExtensionDelegate.currentUUID
-			}) ?? 0
-			WKInterfaceController.reloadRootPageControllers(withNames: names,
-															contexts: dropList,
-															orientation: .vertical,
-															pageIndex: min(currentPage, names.count-1))
+			let names = [String](repeating: "ItemController", count: dropList.count)
+			let currentPage = dropList.index { $0["u"] as? String == ExtensionDelegate.currentUUID } ?? 0
+			WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: min(currentPage, names.count-1))
 		} else {
-			WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"],
-															contexts: nil,
-															orientation: .vertical,
-															pageIndex: 0)
+			WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"], contexts: nil, orientation: .vertical, pageIndex: 0)
 		}
 	}
 
