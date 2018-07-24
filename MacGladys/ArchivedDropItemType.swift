@@ -280,12 +280,15 @@ final class ArchivedDropItemType: Codable {
 		setTitle(from: item)
 
 		if item.isFileURL {
+			accessoryTitle = item.lastPathComponent
 			let fm = FileManager.default
 			var directory: ObjCBool = false
 			if fm.fileExists(atPath: item.path, isDirectory: &directory) {
 				do {
 					if directory.boolValue {
-
+						typeIdentifier = kUTTypeZipArchive as String
+						setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+						representedClass = .data
 						let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
 						let a = Archive(url: tempURL, accessMode: .create)!
 						let dirName = item.lastPathComponent
@@ -296,22 +299,21 @@ final class ArchivedDropItemType: Codable {
 							return
 						}
 						try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
-						typeIdentifier = kUTTypeZipArchive as String
-						setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+						log("      zipped files at url: \(item.absoluteString)")
+						completeIngest()
+
 					} else {
-						try fm.copyAndReplaceItem(at: item, to: bytesPath)
 						let ext = item.pathExtension
 						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
 							typeIdentifier = uti as String
 						} else {
 							typeIdentifier = kUTTypeData as String
 						}
-						setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+						representedClass = .data
+						log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
+						let data = (try? Data(contentsOf: item, options: .mappedIfSafe)) ?? Data()
+						handleData(data, resolveUrls: false)
 					}
-					accessoryTitle = item.lastPathComponent
-					representedClass = .data
-					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-					completeIngest()
 
 				} catch {
 					bytes = data

@@ -148,7 +148,7 @@ extension ArchivedDropItemType {
 		} else {
 			log("      received data: \(data)")
 			representedClass = .data
-			handleData(data)
+			handleData(data, resolveUrls: true)
 		}
 	}
 
@@ -439,7 +439,7 @@ extension ArchivedDropItemType {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-	private func handleData(_ data: Data) {
+	func handleData(_ data: Data, resolveUrls: Bool) {
 		bytes = data
 
 		if (typeIdentifier == "public.folder" || typeIdentifier == "public.data") && data.isZip {
@@ -492,7 +492,7 @@ extension ArchivedDropItemType {
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
-		} else if let url = encodedUrl {
+		} else if resolveUrls, let url = encodedUrl {
 			handleUrl(url as URL, data)
 			return // important
 

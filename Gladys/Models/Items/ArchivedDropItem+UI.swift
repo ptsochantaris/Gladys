@@ -141,7 +141,7 @@ extension ArchivedDropItem {
 	}
 
 	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
-		guard let t = typeItems.first(where:{ $0.canPreview }), let q = t.quickLook(extraRightButton: nil) else { return }
+		guard let t = typeItems.sorted(by: { $0.contentPriority > $1.contentPriority }).first(where: { $0.canPreview }), let q = t.quickLook(extraRightButton: nil) else { return }
 		let n = QLHostingViewController(rootViewController: q)
 		n.preferredContentSize = mainWindow.bounds.size
 		n.view.tintColor = ViewController.shared.view.tintColor

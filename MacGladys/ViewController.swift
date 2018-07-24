@@ -1048,12 +1048,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
 		let index = collection.selectionIndexPaths.sorted()[index].item
-		for typeItem in Model.filteredDrops[index].typeItems {
-			if typeItem.canPreview {
-				return typeItem.quickLookItem
-			}
-		}
-		return nil
+		return Model.filteredDrops[index].typeItems.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }?.quickLookItem
 	}
 
 	func previewPanel(_ panel: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
