@@ -94,7 +94,7 @@ final class Model {
 			}
 			DispatchQueue.main.async {
 				genericAlert(title: "Loading Error (Code: \(e.code))",
-				message: "This app's data store is not accessible. The message from iOS is:\n\n\(e.localizedDescription) - \(itemsDirectoryUrl.path)\n\nIf you keep getting this error, please try restarting your device, as some data may be locked by iOS.\n\nIf this error persists, please report it to the developer.") {
+				message: "This app's data store is not accessible. The message from the OS is:\n\n\(e.localizedDescription) - \(itemsDirectoryUrl.path)\n\nIf you keep getting this error, please try restarting your device, as some data may be locked by iOS.\n\nIf this error persists, please report it to the developer.") {
 					abort()
 				}
 			}
@@ -111,7 +111,7 @@ final class Model {
 			}
 			DispatchQueue.main.async {
 				genericAlert(title: "Loading Error (Code: \(e.code))",
-				message: "Could not communicate with an extension. The message from iOS is:\n\n\(e.localizedDescription)\n\nIf you keep getting this error, please try restarting your device, as iOS may not have updated some Gladys extensions yet.\n\nIf this error persists, please report it to the developer.") {
+				message: "Could not communicate with an extension. The message from the OS is:\n\n\(e.localizedDescription)\n\nIf you keep getting this error, please try restarting your device, as iOS may not have finished updating some Gladys components yet.\n\nIf this error persists, please report it to the developer.") {
 					abort()
 				}
 			}
