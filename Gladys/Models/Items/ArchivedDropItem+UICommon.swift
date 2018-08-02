@@ -51,6 +51,10 @@ extension ArchivedDropItem {
 				log("Error while deleting an index \(error)")
 			}
 		}
+		clearCacheData(for: uuid)
+		for item in typeItems {
+			clearCacheData(for: item.uuid)
+		}
 		let f = FileManager.default
 		if f.fileExists(atPath: folderUrl.path) {
 			try! f.removeItem(at: folderUrl)

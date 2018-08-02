@@ -30,6 +30,7 @@ extension ArchivedDropItemType {
 			log("Removing component storage at: \(folderUrl.path)")
 			try? fm.removeItem(at: folderUrl)
 		}
+		clearCacheData(for: uuid)
 	}
 
 	var objectForShare: Any? {

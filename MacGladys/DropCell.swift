@@ -23,6 +23,9 @@ class FirstMouseImageView: NSImageView {
 }
 
 final class TokenTextField: NSTextField {
+
+	static let highlightTextKey = NSAttributedString.Key("HighlightText")
+
 	var labels: [String]? {
 		didSet {
 
@@ -48,7 +51,7 @@ final class TokenTextField: NSTextField {
 			var start = 0
 			for label in labels {
 				let len = label.count
-				string.addAttribute(NSAttributedString.Key("HighlightText"), value: 1, range: NSMakeRange(start, len))
+				string.addAttribute(TokenTextField.highlightTextKey, value: 1, range: NSMakeRange(start, len))
 				start += len + separator.count
 			}
 			attributedStringValue = string

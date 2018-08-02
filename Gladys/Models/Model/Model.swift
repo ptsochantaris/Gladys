@@ -12,6 +12,7 @@ final class Model {
 
 	static func reset() {
 		drops.removeAll(keepingCapacity: false)
+		clearCaches()
 		dataFileLastModified = .distantPast
 		legacyFileLastModified = .distantPast
 	}

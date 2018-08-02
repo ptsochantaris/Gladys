@@ -112,20 +112,38 @@ extension ArchivedDropItem: Hashable {
 	}
 
 	var folderUrl: URL {
+		let nsuuiud = uuid as NSUUID
+		if let url = folderUrlCache.object(forKey: nsuuiud) {
+			return url as URL
+		}
+
 		let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
 		let f = FileManager.default
 		if !f.fileExists(atPath: url.path) {
 			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		}
+		folderUrlCache.setObject(url as NSURL, forKey: nsuuiud)
 		return url
 	}
 
 	private var cloudKitDataPath: URL {
-		return folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+		let nsuuiud = uuid as NSUUID
+		if let url = cloudKitDataPathCache.object(forKey: nsuuiud) {
+			return url as URL
+		}
+		let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+		cloudKitDataPathCache.setObject(url as NSURL, forKey: nsuuiud)
+		return url
 	}
 
 	private var cloudKitShareDataPath: URL {
-		return folderUrl.appendingPathComponent("ck-share", isDirectory: false)
+		let nsuuiud = uuid as NSUUID
+		if let url = cloudKitShareDataPathCache.object(forKey: nsuuiud) {
+			return url as URL
+		}
+		let url = folderUrl.appendingPathComponent("ck-share", isDirectory: false)
+		cloudKitShareDataPathCache.setObject(url as NSURL, forKey: nsuuiud)
+		return url
 	}
 
 	var needsCloudPush: Bool {
@@ -201,32 +219,30 @@ extension ArchivedDropItem: Hashable {
 		}
 	}
 
-	static let cloudKitRecordCache = NSCache<NSUUID, CKRecord>()
 	var cloudKitRecord: CKRecord? {
 		get {
 			let nsuuid = uuid as NSUUID
-			if let cachedValue = ArchivedDropItem.cloudKitRecordCache.object(forKey: nsuuid) {
-				return cachedValue
+			if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
+				return cachedValue.record
 			}
 
 			let recordLocation = cloudKitDataPath
+			let record: CKRecord?
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
 				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				let record = CKRecord(coder: coder)
-				if let record = record {
-					ArchivedDropItem.cloudKitRecordCache.setObject(record, forKey: nsuuid)
-				}
-				return record
+				record = CKRecord(coder: coder)
 			} else {
-				return nil
+				record = nil
 			}
+			cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
+			return record
 		}
 		set {
 			let recordLocation = cloudKitDataPath
 			let nsuuid = uuid as NSUUID
 			if let newValue = newValue {
-				ArchivedDropItem.cloudKitRecordCache.setObject(newValue, forKey: nsuuid)
+				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
 
 				let data = NSMutableData()
 				let coder = NSKeyedArchiver(forWritingWith: data)
@@ -236,7 +252,7 @@ extension ArchivedDropItem: Hashable {
 
 				needsCloudPush = false
 			} else {
-				ArchivedDropItem.cloudKitRecordCache.removeObject(forKey: nsuuid)
+				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
 				let f = FileManager.default
 				if f.fileExists(atPath: recordLocation.path) {
 					try? f.removeItem(at: recordLocation)
@@ -245,29 +261,30 @@ extension ArchivedDropItem: Hashable {
 		}
 	}
 
-	private static let cloudKitShareCache = NSCache<NSUUID, CKShare>()
 	var cloudKitShareRecord: CKShare? {
 		get {
 			let nsuuid = uuid as NSUUID
-			if let cachedValue = ArchivedDropItem.cloudKitShareCache.object(forKey: nsuuid) {
-				return cachedValue
+			if let cachedValue = cloudKitShareCache.object(forKey: nsuuid) {
+				return cachedValue.share
 			}
 
 			let recordLocation = cloudKitShareDataPath
+			let share: CKShare?
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
 				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				let record = CKShare(coder: coder)
-				ArchivedDropItem.cloudKitShareCache.setObject(record, forKey: nsuuid)
-				return record
+				share = CKShare(coder: coder)
 			} else {
-				return nil
+				share = nil
 			}
+			cloudKitShareCache.setObject(CKShareCacheEntry(share: share), forKey: nsuuid)
+			return share
 		}
 		set {
 			let recordLocation = cloudKitShareDataPath
+			let nsuuid = uuid as NSUUID
 			if let newValue = newValue {
-				ArchivedDropItem.cloudKitShareCache.setObject(newValue, forKey: uuid as NSUUID)
+				cloudKitShareCache.setObject(CKShareCacheEntry(share: newValue), forKey: nsuuid)
 
 				let data = NSMutableData()
 				let coder = NSKeyedArchiver(forWritingWith: data)
@@ -275,21 +292,11 @@ extension ArchivedDropItem: Hashable {
 				coder.finishEncoding()
 				try? data.write(to: recordLocation, options: .atomic)
 			} else {
-				ArchivedDropItem.cloudKitShareCache.removeObject(forKey: uuid as NSUUID)
+				cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
 				let f = FileManager.default
 				if f.fileExists(atPath: recordLocation.path) {
 					try? f.removeItem(at: recordLocation)
 				}
-			}
-		}
-	}
-
-	static func clearCaches() {
-		cloudKitRecordCache.removeAllObjects()
-		cloudKitShareCache.removeAllObjects()
-		for drop in Model.drops {
-			for component in drop.typeItems {
-				component.clearCachedFields()
 			}
 		}
 	}
