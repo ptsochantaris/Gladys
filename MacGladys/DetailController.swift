@@ -223,7 +223,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
 		if item.shareMode == .elsewhereReadOnly { return false }
 
-		let p = info.draggingPasteboard()
+		let p = info.draggingPasteboard
 		guard let label = p.string(forType: NSPasteboard.PasteboardType(kUTTypeText as String)) ??
 			p.string(forType: NSPasteboard.PasteboardType(kUTTypePlainText as String)) ??
 			p.string(forType: NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)) else { return false }
@@ -539,7 +539,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
 		if item.shareMode == .elsewhereReadOnly { return [] }
 
-		if draggingInfo.draggingSource() is ComponentCollectionView {
+		if draggingInfo.draggingSource is ComponentCollectionView {
 			proposedDropOperation.pointee = .on
 			return collectionView == components ? .move : .copy
 		} else {
@@ -560,7 +560,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
 		if item.shareMode == .elsewhereReadOnly { return false }
 
-		if let s = draggingInfo.draggingSource() as? ComponentCollectionView {
+		if let s = draggingInfo.draggingSource as? ComponentCollectionView {
 
 			let destinationIndex = indexPath.item
 			if s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
@@ -574,7 +574,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 				saveItem()
 				return true
 
-			} else if let pasteboardItem = draggingInfo.draggingPasteboard().pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
+			} else if let pasteboardItem = draggingInfo.draggingPasteboard.pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
 				let typeItem = ArchivedDropItemType(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
 				item.typeItems.insert(typeItem, at: destinationIndex)
 				item.needsReIngest = true

@@ -50,8 +50,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 		}
 
 		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
-		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
+		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
 	}
 
 	deinit {
@@ -59,13 +59,13 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 	}
 
 	@objc private func keyboardHiding(_ notification: Notification) {
-		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
+		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			bottomDistance.constant = 0
 		}
 	}
 
 	@objc private func keyboardChanged(_ notification: Notification) {
-		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
 
 		let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
 		let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
@@ -120,7 +120,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 	override var keyCommands: [UIKeyCommand]? {
 		let a = super.keyCommands ?? []
 		return a.filter {
-			return !($0.input == UIKeyInputUpArrow || $0.input == UIKeyInputDownArrow)
+			return !($0.input == UIKeyCommand.inputUpArrow || $0.input == UIKeyCommand.inputDownArrow)
 		}
 	}
 

@@ -51,7 +51,7 @@ final class MiniMapView: UIImageView {
 
 	private var coordinate: CLLocationCoordinate2D?
 	private weak var snapshotter: MKMapSnapshotter?
-	private var snapshotOptions: MKMapSnapshotOptions?
+	private var snapshotOptions: MKMapSnapshotter.Options?
 
 	func show(location: MKMapItem) {
 
@@ -92,8 +92,8 @@ final class MiniMapView: UIImageView {
 		snapshotter = nil
 		alpha = 0
 
-		let O = MKMapSnapshotOptions()
-		O.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
+		let O = MKMapSnapshotter.Options()
+		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
 		O.showsBuildings = true
 		O.showsPointsOfInterest = true
 		O.size = bounds.size

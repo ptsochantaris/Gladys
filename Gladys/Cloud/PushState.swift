@@ -9,11 +9,11 @@ final class PushState {
 
 	private let database: CKDatabase
 	private let uuid2progress = [String: Progress]()
-	private let recordsToDelete: [[CKRecordID]]
+	private let recordsToDelete: [[CKRecord.ID]]
 	private let payloadsToPush: [[CKRecord]]
 	private let currentUUIDSequence: [String]
 
-	init(zoneId: CKRecordZoneID, database: CKDatabase) {
+	init(zoneId: CKRecordZone.ID, database: CKDatabase) {
 		self.database = database
 
 		let drops = Model.drops
@@ -54,12 +54,12 @@ final class PushState {
 			let components = $0.components(separatedBy: ":")
 			if components.count > 2 {
 				if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
-					return CKRecordID(recordName: components[2], zoneID: zoneId)
+					return CKRecord.ID(recordName: components[2], zoneID: zoneId)
 				} else {
 					return nil
 				}
 			} else if zoneId == privateZoneId {
-				return CKRecordID(recordName: components[0], zoneID: zoneId)
+				return CKRecord.ID(recordName: components[0], zoneID: zoneId)
 			} else {
 				return nil
 			}
@@ -86,7 +86,7 @@ final class PushState {
 				}
 
 				if let sequenceToSend = sequenceToSend {
-					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecordID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
+					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecord.ID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
 					record["positionList"] = sequenceToSend as NSArray
 					if _payloadsToPush.count > 0 {
 						_payloadsToPush[0].insert(record, at: 0)

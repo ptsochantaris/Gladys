@@ -28,7 +28,7 @@ final class DetailController: GladysViewController,
 		doneLocation = .right
 
 		table.estimatedRowHeight = 120
-        table.rowHeight = UITableViewAutomaticDimension
+        table.rowHeight = UITableView.automaticDimension
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
@@ -61,8 +61,8 @@ final class DetailController: GladysViewController,
 		userActivity = activity
 
 		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: .UIKeyboardWillHide, object: nil)
-		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
+		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
@@ -193,13 +193,13 @@ final class DetailController: GladysViewController,
 	}
 
 	@objc private func keyboardHiding(_ notification: Notification) {
-		if let u = notification.userInfo, let previousState = u[UIKeyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
+		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)
 		}
 	}
 
 	@objc private func keyboardChanged(_ notification: Notification) {
-		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+		guard let userInfo = notification.userInfo, let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
 
 		let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
 		let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
@@ -561,7 +561,7 @@ final class DetailController: GladysViewController,
 		Model.save()
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
 			self.sizeWindow()
-			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self.table)
+			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
 		}
 	}
 
@@ -782,7 +782,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if UIAccessibilityIsVoiceOverRunning() { // weird hack for word mode
+		if UIAccessibility.isVoiceOverRunning { // weird hack for word mode
 			let left = -scrollView.adjustedContentInset.left
 			if scrollView.contentOffset.x < left {
 				let top = -scrollView.adjustedContentInset.top
@@ -831,7 +831,7 @@ final class DetailController: GladysViewController,
 					self.item.needsReIngest = true
 					self.item.reIngest(delegate: ViewController.shared)
 					if let newCell = self.table.cellForRow(at: IndexPath(row: 0, section: self.table.numberOfSections-1)) {
-						UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, newCell)
+						UIAccessibility.post(notification: .layoutChanged, argument: newCell)
 					}
 				}
 			}

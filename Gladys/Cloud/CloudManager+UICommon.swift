@@ -83,7 +83,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func shutdownShares(ids: [CKRecordID], force: Bool, completion: @escaping (Error?)->Void) {
+	static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?)->Void) {
 		let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
 		modifyOperation.database = container.privateCloudDatabase
 		modifyOperation.savePolicy = .allKeys
@@ -180,7 +180,7 @@ extension CloudManager {
 	}
 
 	private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
-		let notificationInfo = CKNotificationInfo()
+		let notificationInfo = CKSubscription.NotificationInfo()
 		notificationInfo.shouldSendContentAvailable = true
 		notificationInfo.shouldBadge = true
 
@@ -237,7 +237,7 @@ extension CloudManager {
 	}
 
 	static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?)->Void) {
-		let positionListId = CKRecordID(recordName: RecordType.positionList, zoneID: zone.zoneID)
+		let positionListId = CKRecord.ID(recordName: RecordType.positionList, zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
 		fetchInitialUUIDSequence.database = container.privateCloudDatabase
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
@@ -280,7 +280,7 @@ extension CloudManager {
 		perform(deleteZone)
 	}
 
-	static private func recordDeleted(recordId: CKRecordID, recordType: String, stats: PullState) {
+	static private func recordDeleted(recordId: CKRecord.ID, recordType: String, stats: PullState) {
 		let itemUUID = recordId.recordName
 		DispatchQueue.main.async {
 			switch recordType {
@@ -381,7 +381,7 @@ extension CloudManager {
 						typeItem.cloudKitUpdate(from: record)
 						stats.typeUpdateCount += 1
 					}
-				} else if let parentId = (record["parent"] as? CKReference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
+				} else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
 					if existingParent.parentZone != zoneID {
 						log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
 					} else {
@@ -427,7 +427,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func zoneFetchDone(zoneId: CKRecordZoneID, token: CKServerChangeToken?, error: Error?, stats: PullState) -> Bool {
+	static private func zoneFetchDone(zoneId: CKRecordZone.ID, token: CKServerChangeToken?, error: Error?, stats: PullState) -> Bool {
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
 				PullState.setZoneToken(nil, for: zoneId)
@@ -441,7 +441,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func fetchDatabaseChanges(scope: CKDatabaseScope?, completion: @escaping (Error?) -> Void) {
+	static private func fetchDatabaseChanges(scope: CKDatabase.Scope?, completion: @escaping (Error?) -> Void) {
 		syncProgressString = "Checking"
 		let stats = PullState()
 		var finalError: Error?
@@ -489,7 +489,7 @@ extension CloudManager {
 
 	private static func fetchMissingShareRecords(completion: @escaping (Error?)->Void) {
 
-		var fetchGroups = [CKRecordZoneID: [CKRecordID]]()
+		var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
 		for item in Model.drops {
 			if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
@@ -575,8 +575,8 @@ extension CloudManager {
 
 		log("Fetching changes from \(database.databaseScope.logName) database")
 
-		var changedZoneIds = [CKRecordZoneID]()
-		var deletedZoneIds = [CKRecordZoneID]()
+		var changedZoneIds = [CKRecordZone.ID]()
+		var deletedZoneIds = [CKRecordZone.ID]()
 		let databaseToken = PullState.databaseToken(for: database.databaseScope)
 		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
 		operation.recordZoneWithIDChangedBlock = { changedZoneIds.append($0) }
@@ -634,14 +634,14 @@ extension CloudManager {
 		database.add(operation)
 	}
 
-	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZoneID], stats: PullState, completion: @escaping (Error?) -> Void) {
+	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID], stats: PullState, completion: @escaping (Error?) -> Void) {
 
 		log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
 		var needsRetry = false
-		var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
+		var optionsByRecordZoneID = [CKRecordZone.ID: CKFetchRecordZoneChangesOperation.ZoneOptions]()
 		for zoneID in zoneIDs {
-			let options = CKFetchRecordZoneChangesOptions()
+			let options = CKFetchRecordZoneChangesOperation.ZoneOptions()
 			options.previousServerChangeToken = PullState.zoneToken(for: zoneID)
 			optionsByRecordZoneID[zoneID] = options
 		}
@@ -669,7 +669,7 @@ extension CloudManager {
 		database.add(operation)
 	}
 
-	static func sync(scope: CKDatabaseScope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
+	static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
 
 		if let l = lastiCloudAccount {
 			let newToken = FileManager.default.ubiquityIdentityToken
@@ -729,13 +729,13 @@ extension CloudManager {
 
 	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
 		let shareRecord = CKShare(rootRecord: rootRecord)
-		shareRecord[CKShareTitleKey] = item.cloudKitSharingTitle as NSString
+		shareRecord[CKShare.SystemFieldKey.title] = item.cloudKitSharingTitle as NSString
 		let icon = item.displayIcon
 		let scaledIcon = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 1, useScreenScale: false, singleScale: true)
 		#if os(iOS)
-		shareRecord[CKShareThumbnailImageDataKey] = UIImagePNGRepresentation(scaledIcon) as NSData?
+		shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
 		#else
-		shareRecord[CKShareThumbnailImageDataKey] = scaledIcon.tiffRepresentation as NSData?
+		shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
 		#endif
 		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
 		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
@@ -748,7 +748,7 @@ extension CloudManager {
 		perform(operation)
 	}
 
-	static func acceptShare(_ metadata: CKShareMetadata) {
+	static func acceptShare(_ metadata: CKShare.Metadata) {
 		if !syncSwitchedOn {
 			genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
 			return
@@ -820,7 +820,7 @@ extension CloudManager {
 		}
 	}
 
-	private static func attemptSync(scope: CKDatabaseScope?, force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
+	private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn {
 			completion(nil)
 			return

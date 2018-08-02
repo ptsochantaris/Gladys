@@ -39,16 +39,16 @@ final class TokenTextField: NSTextField {
 			let separator = "   "
 
 			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
-				NSAttributedStringKey.font: font!,
-				NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1),
-				NSAttributedStringKey.paragraphStyle: p,
-				NSAttributedStringKey.baselineOffset: -2,
+				.font: font!,
+				.foregroundColor: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1),
+				.paragraphStyle: p,
+				.baselineOffset: -2,
 				])
 
 			var start = 0
 			for label in labels {
 				let len = label.count
-				string.addAttribute(NSAttributedStringKey("HighlightText"), value: 1, range: NSMakeRange(start, len))
+				string.addAttribute(NSAttributedString.Key("HighlightText"), value: 1, range: NSMakeRange(start, len))
 				start += len + separator.count
 			}
 			attributedStringValue = string
@@ -122,7 +122,7 @@ final class MiniMapView: FirstMouseView {
 
 	private var coordinate: CLLocationCoordinate2D?
 	private weak var snapshotter: MKMapSnapshotter?
-	private var snapshotOptions: MKMapSnapshotOptions?
+	private var snapshotOptions: MKMapSnapshotter.Options?
 
 	func show(location: MKMapItem) {
 
@@ -139,7 +139,7 @@ final class MiniMapView: FirstMouseView {
 	init(at location: MKMapItem) {
 		super.init(frame: .zero)
 		wantsLayer = true
-		layer?.contentsGravity = kCAGravityResizeAspectFill
+		layer?.contentsGravity = .resizeAspectFill
 		show(location: location)
 	}
 
@@ -160,8 +160,8 @@ final class MiniMapView: FirstMouseView {
 		snapshotter = nil
 		snapshotOptions = nil
 
-		let O = MKMapSnapshotOptions()
-		O.region = MKCoordinateRegionMakeWithDistance(coordinate, 200.0, 200.0)
+		let O = MKMapSnapshotter.Options()
+		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
 		O.showsBuildings = true
 		O.showsPointsOfInterest = true
 		O.size = NSSize(width: 512, height: 512)
@@ -381,25 +381,25 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 				switch item.displayMode {
 				case .center:
-					image.layer?.contentsGravity = kCAGravityCenter
+					image.layer?.contentsGravity = .center
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				case .fill:
-					image.layer?.contentsGravity = kCAGravityResizeAspectFill
+					image.layer?.contentsGravity = .resizeAspectFill
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				case .fit:
-					image.layer?.contentsGravity = kCAGravityResizeAspect
+					image.layer?.contentsGravity = .resizeAspect
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				case .circle:
-					image.layer?.contentsGravity = kCAGravityResizeAspectFill
+					image.layer?.contentsGravity = .resizeAspectFill
 					primaryLabel.maximumNumberOfLines = 6
 					secondaryLabel.maximumNumberOfLines = 2
 				}
 
 				// if we're showing an icon, let's try to enhance things a bit
-				if image.layer?.contentsGravity == kCAGravityCenter, let backgroundItem = item.backgroundInfoObject {
+				if image.layer?.contentsGravity == .center, let backgroundItem = item.backgroundInfoObject {
 					if let mapItem = backgroundItem as? MKMapItem {
 						wantMapView = true
 						if let m = existingPreviewView as? MiniMapView {

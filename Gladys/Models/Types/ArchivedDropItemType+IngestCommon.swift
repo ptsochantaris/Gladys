@@ -98,9 +98,7 @@ extension ArchivedDropItemType {
 				representedClass = .data
 				typeIdentifier = kUTTypeJPEG as String
 				classWasWrapped = false
-				DispatchQueue.main.sync {
-					bytes = UIImageJPEGRepresentation(item, 1)
-				}
+				bytes = item.jpegData(compressionQuality: 1)
 			} else {
 				representedClass = .image
 				bytes = data
@@ -296,7 +294,7 @@ extension ArchivedDropItemType {
 			let asset = AVURLAsset(url: tempPath , options: nil)
 			let imgGenerator = AVAssetImageGenerator(asset: asset)
 			imgGenerator.appliesPreferredTrackTransform = true
-			let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+			let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
 
 			#if os(iOS)
 			result = UIImage(cgImage: cgImage)

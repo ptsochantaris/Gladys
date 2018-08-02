@@ -8,7 +8,7 @@
 
 import CloudKit
 
-extension CKDatabaseScope {
+extension CKDatabase.Scope {
 	var keyName: String {
 		switch self {
 		case .public: return "1"

@@ -40,7 +40,7 @@ final class SwitchHolder: UIView {
 	override var accessibilityTraits: UIAccessibilityTraits {
 		set {}
 		get {
-			return switchControl?.accessibilityTraits ?? UIAccessibilityTraitNone
+			return switchControl?.accessibilityTraits ?? .none
 		}
 	}
 

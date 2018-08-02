@@ -138,7 +138,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
 		let limit: CGFloat = (contentMode == .center || contentMode == .circle) ? 0.5 : 0.9
 		let scaledImage = img.limited(to: size, limitTo: limit)
-		return UIImagePNGRepresentation(scaledImage)
+		return scaledImage.pngData()
 	}
 
 	override func setFavoriteRank(_ favoriteRank: NSNumber?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {

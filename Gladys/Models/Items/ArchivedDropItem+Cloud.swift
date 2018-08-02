@@ -25,11 +25,11 @@ extension ArchivedDropItem {
 		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
 	}
 
-	var parentZone: CKRecordZoneID {
+	var parentZone: CKRecordZone.ID {
 		return cloudKitRecord?.recordID.zoneID ?? privateZoneId
 	}
 
-	func sharedInZone(zoneId: CKRecordZoneID) -> Bool {
+	func sharedInZone(zoneId: CKRecordZone.ID) -> Bool {
 		return cloudKitRecord?.share?.recordID.zoneID == zoneId
 	}
 
@@ -46,7 +46,7 @@ extension ArchivedDropItem {
 
 		let record = cloudKitRecord ??
 			CKRecord(recordType: CloudManager.RecordType.item,
-			         recordID: CKRecordID(recordName: uuid.uuidString, zoneID: privateZoneId))
+			         recordID: CKRecord.ID(recordName: uuid.uuidString, zoneID: privateZoneId))
 
 		record["suggestedName"] = suggestedName as NSString?
 		record["createdAt"] = createdAt as NSDate

@@ -228,7 +228,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			let i = #imageLiteral(resourceName: "paper")
 			i.resizingMode = .tile
 			l.contents = i
-			l.contentsGravity = kCAGravityResize
+			l.contentsGravity = .resize
 		}
 	}
 
@@ -555,7 +555,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
-		if let s = draggingInfo.draggingSource() as? NSCollectionView, s == collectionView, let dip = draggingIndexPaths {
+		if let s = draggingInfo.draggingSource as? NSCollectionView, s == collectionView, let dip = draggingIndexPaths {
 
 			draggingIndexPaths = nil
 			if let firstDip = dip.first, firstDip == indexPath {
@@ -584,7 +584,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			Model.save()
 			return true
 		} else {
-			let p = draggingInfo.draggingPasteboard()
+			let p = draggingInfo.draggingPasteboard
 			return addItems(from: p, at: indexPath, overrides: nil)
 		}
 	}
@@ -948,7 +948,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: nil)
-		switch segue.identifier?.rawValue {
+		switch segue.identifier {
 		case "showDetail":
 			if let item = sender as? ArchivedDropItem,
 				let window = segue.destinationController as? NSWindowController,
@@ -1085,7 +1085,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if isDisplayingProgress {
 			endProgress()
 		}
-		performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "showProgress"), sender: self)
+		performSegue(withIdentifier: NSStoryboardSegue.Identifier("showProgress"), sender: self)
 		progressController?.startMonitoring(progress: progress, titleOverride: titleOverride)
 	}
 

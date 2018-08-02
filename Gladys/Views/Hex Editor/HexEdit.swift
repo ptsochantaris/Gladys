@@ -51,7 +51,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		addressItem.accessibilityLabel = "Selected addresses"
 
 		grid.backgroundView = UIImageView(image: (ViewController.shared.itemView.backgroundView as! UIImageView).image)
-		grid.accessibilityTraits |= UIAccessibilityTraitAllowsDirectInteraction
+		grid.accessibilityTraits = grid.accessibilityTraits.union(.allowsDirectInteraction)
 		grid.accessibilityLabel = "Data grid"
 
 		let selectionRecognizer = PanDirectionGestureRecognizer(direction: .horizontal, target: self, action: #selector(selectionPanned(_:)))
@@ -110,7 +110,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 			let newTitle = "0x\(start) - 0x\(end)"
 			addressButton.setTitle(newTitle, for: .normal)
 			addressButton.accessibilityLabel = "Locations \(start) until \(end)"
-			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, addressButton.accessibilityLabel)
+			UIAccessibility.post(notification: .announcement, argument: addressButton.accessibilityLabel)
 		}
 		if !animated {
 			addressButton.layoutIfNeeded()

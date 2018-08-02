@@ -24,7 +24,7 @@ struct ImportOverrides {
 	let labels: [String]?
 }
 
-let privateZoneId = CKRecordZoneID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 extension ArchivedDropItem: Hashable {
 

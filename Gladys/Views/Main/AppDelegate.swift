@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
 		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
 				let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
 				a.addAction(UIAlertAction(title: "Import", style: .destructive, handler: { _ in
-					let inPlace = options[UIApplicationOpenURLOptionsKey.openInPlace] as? Bool ?? false
+					let inPlace = options[.openInPlace] as? Bool ?? false
 					do {
 						try Model.importData(from: url, removingOriginal: !inPlace)
 					} catch {
@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return CallbackSupport.handlePossibleCallbackURL(url: url)
 	}
 
-	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
 
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
@@ -75,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return false
 	}
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		PersistedOptions.migrateBrokenDefaults()
 		Model.reloadDataIfNeeded()
@@ -122,7 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 
-	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
+	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
 		CloudManager.acceptShare(cloudKitShareMetadata)
 	}
 }

@@ -11,7 +11,7 @@ import UIKit
 extension UIImage {
 
 	func writeBitmap(to url: URL) {
-		try? UIImagePNGRepresentation(self)?.write(to: url, options: .atomic)
+		try? self.pngData()?.write(to: url, options: .atomic)
 	}
 
 	static func fromBitmap(at url: URL, scale: CGFloat) -> UIImage? {

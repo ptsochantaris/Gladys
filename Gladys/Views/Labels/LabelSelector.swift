@@ -130,12 +130,12 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		updates()
 	}
 
-	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		let toggle = filteredToggles[indexPath.row]
 		return toggle.emptyChecker ? .none : .delete
 	}
 
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		let toggle = filteredToggles[indexPath.row]
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
@@ -146,7 +146,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
 				s.navigationController?.setNavigationBarHidden(true, animated: false)
-				UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, s.emptyLabel)
+				UIAccessibility.post(notification: .layoutChanged, argument: s.emptyLabel)
 			} else {
 				tableView.deleteRows(at: [indexPath], with: .automatic)
 			}

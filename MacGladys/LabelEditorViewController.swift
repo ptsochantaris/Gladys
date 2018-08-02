@@ -32,8 +32,8 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		let cell = tableColumn?.dataCell as? NSButtonCell
 
 		let title = NSMutableAttributedString(string: item.name, attributes: [
-			NSAttributedStringKey.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
-			NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
+			.foregroundColor: NSColor.labelColor,
 			])
 		cell?.attributedTitle = title
 

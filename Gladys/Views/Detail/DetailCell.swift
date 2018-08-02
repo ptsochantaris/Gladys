@@ -82,7 +82,7 @@ final class DetailCell: UITableViewCell {
 		}
 	}
 
-	override func dragStateDidChange(_ dragState: UITableViewCellDragState) {
+	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
 		super.dragStateDidChange(dragState)
 		inspectButton.alpha = (inspectionCallback != nil && dragState == .none) ? 0.7 : 0
 		viewButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
@@ -103,7 +103,7 @@ final class DetailCell: UITableViewCell {
 	}
 
 	@IBAction private func archiveSelected(_ sender: UIButton) {
-		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Archiving, please wait")
+		UIAccessibility.post(notification: .announcement, argument: "Archiving, please wait")
 		archiveCallback?()
 	}
 
@@ -114,7 +114,7 @@ final class DetailCell: UITableViewCell {
 	func animateArchive(_ animate: Bool) {
 		let existingSpinner = contentView.viewWithTag(72634) as? UIActivityIndicatorView
 		if animate, existingSpinner == nil {
-			let a = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+			let a = UIActivityIndicatorView(style: .gray)
 			a.tag = 72634
 			a.color = tintColor
 			a.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +129,7 @@ final class DetailCell: UITableViewCell {
 			e.stopAnimating()
 			e.removeFromSuperview()
 			archiveButton.alpha = 1
-			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
+			UIAccessibility.post(notification: .layoutChanged, argument: nil)
 		}
 	}
 
@@ -180,9 +180,9 @@ final class DetailCell: UITableViewCell {
 	override var accessibilityTraits: UIAccessibilityTraits {
 		get {
 			if inspectButton.alpha == 0 {
-				return UIAccessibilityTraitStaticText
+				return .staticText
 			} else {
-				return UIAccessibilityTraitButton
+				return .button
 			}
 		}
 		set {}

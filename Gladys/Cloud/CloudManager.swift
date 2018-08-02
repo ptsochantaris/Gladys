@@ -108,7 +108,7 @@ final class CloudManager {
 			return nil
 		}
 
-		var sharedZonesToPush = Set<CKRecordZoneID>()
+		var sharedZonesToPush = Set<CKRecordZone.ID>()
 		for item in Model.drops where item.needsCloudPush {
 			let zoneID = item.parentZone
 			if zoneID != privateZoneId {
@@ -118,7 +118,7 @@ final class CloudManager {
 		for deletionEntry in deletionQueue {
 			let components = deletionEntry.components(separatedBy: ":")
 			if components.count > 2 {
-				let zoneID = CKRecordZoneID(zoneName: components[0], ownerName: components[1])
+				let zoneID = CKRecordZone.ID(zoneName: components[0], ownerName: components[1])
 				if zoneID != privateZoneId {
 					sharedZonesToPush.insert(zoneID)
 				}

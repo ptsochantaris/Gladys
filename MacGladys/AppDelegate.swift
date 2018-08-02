@@ -222,7 +222,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return false
 	}
 
-	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]) -> Void) -> Bool {
+	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
 				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
@@ -265,8 +265,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		p.lineSpacing = 1
 		let font = NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .small))
 		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
-			NSAttributedStringKey.font: font,
-			NSAttributedStringKey.paragraphStyle: p,
+			.font: font,
+			.paragraphStyle: p,
 			])
 
 		let windowsBefore = NSApplication.shared.windows
@@ -444,7 +444,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	func application(_ application: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShareMetadata) {
+	func application(_ application: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShare.Metadata) {
 		CloudManager.acceptShare(metadata)
 	}
 

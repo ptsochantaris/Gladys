@@ -173,7 +173,7 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 	}
 
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if UIAccessibilityIsVoiceOverRunning() && labelText.isFirstResponder { // weird hack for word mode
+		if UIAccessibility.isVoiceOverRunning && labelText.isFirstResponder { // weird hack for word mode
 			let left = -scrollView.adjustedContentInset.left
 			if scrollView.contentOffset.x < left {
 				let top = -scrollView.adjustedContentInset.top

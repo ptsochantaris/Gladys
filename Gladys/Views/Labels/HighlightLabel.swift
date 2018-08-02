@@ -40,16 +40,16 @@ final class HighlightLabel: UILabel {
 		let separator = "   "
 
 		let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
-			NSAttributedStringKey.font: font,
-			NSAttributedStringKey.foregroundColor: tintColor!,
-			NSAttributedStringKey.paragraphStyle: p,
-			NSAttributedStringKey.baselineOffset: 1,
+			.font: font,
+			.foregroundColor: tintColor!,
+			.paragraphStyle: p,
+			.baselineOffset: 1,
 			])
 
 		var start = 0
 		for label in labels {
 			let len = label.count
-			string.addAttribute(NSAttributedStringKey("HighlightText"), value: 1, range: NSMakeRange(start, len))
+			string.addAttribute(NSAttributedString.Key("HighlightText"), value: 1, range: NSMakeRange(start, len))
 			start += len + separator.count
 		}
 		attributedText = string

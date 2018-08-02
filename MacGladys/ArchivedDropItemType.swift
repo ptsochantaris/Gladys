@@ -364,7 +364,7 @@ final class ArchivedDropItemType: Codable {
 		} else if let contact = shareItem as? CNContact {
 			let c = CNContactViewController(nibName: nil, bundle: nil)
 			c.contact = contact
-			viewController.presentViewControllerAsModalWindow(c)
+			viewController.presentAsModalWindow(c)
 
 		} else if let item = shareItem as? URL {
 			if !NSWorkspace.shared.open(item) {

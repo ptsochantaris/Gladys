@@ -23,7 +23,7 @@ extension ArchivedDropItemType {
 		cloudKitRecord = record
 	}
 
-	var parentZone: CKRecordZoneID {
+	var parentZone: CKRecordZone.ID {
 		return Model.item(uuid: parentUuid)?.parentZone ?? privateZoneId
 	}
 
@@ -31,11 +31,11 @@ extension ArchivedDropItemType {
 
 		let record = cloudKitRecord
 			?? CKRecord(recordType: "ArchivedDropItemType",
-						recordID: CKRecordID(recordName: uuid.uuidString, zoneID: parentZone))
+						recordID: CKRecord.ID(recordName: uuid.uuidString, zoneID: parentZone))
 
-		let parentId = CKRecordID(recordName: parentUuid.uuidString, zoneID: record.recordID.zoneID)
-		record.parent = CKReference(recordID: parentId, action: .none)
-		record["parent"] = CKReference(recordID: parentId, action: .deleteSelf)
+		let parentId = CKRecord.ID(recordName: parentUuid.uuidString, zoneID: record.recordID.zoneID)
+		record.parent = CKRecord.Reference(recordID: parentId, action: .none)
+		record["parent"] = CKRecord.Reference(recordID: parentId, action: .deleteSelf)
 
 		if bytes != nil {
 			record["bytes"] = CKAsset(fileURL: bytesPath)

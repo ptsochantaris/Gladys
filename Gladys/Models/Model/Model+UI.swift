@@ -65,11 +65,11 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 						let size = CGSize(width: W, height: H)
 						if mode == .center || mode == .circle {
 							let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
-							let data = UIImagePNGRepresentation(scaledImage)!
+							let data = scaledImage.pngData()!
 							replyHandler(["image": data])
 						} else {
 							let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
-							let data = UIImageJPEGRepresentation(scaledImage, 0.6)!
+							let data = scaledImage.jpegData(compressionQuality: 0.6)!
 							replyHandler(["image": data])
 						}
 					}
@@ -171,10 +171,10 @@ extension Model {
 	
 	static func beginMonitoringChanges() {
 		let n = NotificationCenter.default
-		n.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { _ in
+		n.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { _ in
 			foregrounded()
 		}
-		n.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main) { _ in
+		n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { _ in
 			backgrounded()
 		}
 		foregrounded()

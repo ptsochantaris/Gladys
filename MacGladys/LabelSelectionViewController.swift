@@ -48,13 +48,13 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		let item = filteredLabels[row]
 		let cell = tableColumn?.dataCell as? NSButtonCell
 		let title = NSMutableAttributedString(string: item.name + "\n", attributes: [
-			NSAttributedStringKey.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
-			NSAttributedStringKey.foregroundColor: NSColor.labelColor,
+			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
+			.foregroundColor: NSColor.labelColor,
 			])
 		let itemCount = item.count == 1 ? "1 item" : "\(item.count) items"
 		let subtitle = NSAttributedString(string: itemCount, attributes: [
-			NSAttributedStringKey.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .mini)),
-			NSAttributedStringKey.foregroundColor: NSColor.secondaryLabelColor,
+			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .mini)),
+			.foregroundColor: NSColor.secondaryLabelColor,
 			])
 		title.append(subtitle)
 		cell?.attributedTitle = title

@@ -90,19 +90,19 @@ final class DataInspector: GladysViewController {
 		decimalSwitch.onTintColor = view.tintColor
 
 		signedAccessibility = UIAccessibilityElement(accessibilityContainer: view)
-		signedAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		signedAccessibility.accessibilityTraits = .button
 		signedAccessibility.accessibilityFrameInContainerSpace = [signedLabel, unsignedLabel].reduce(signedSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}
 
 		endianAccessibility = UIAccessibilityElement(accessibilityContainer: view)
-		endianAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		endianAccessibility.accessibilityTraits = .button
 		endianAccessibility.accessibilityFrameInContainerSpace = [littleEndian, bigEndian].reduce(littleEndianSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}
 
 		decimalAccessibility = UIAccessibilityElement(accessibilityContainer: view)
-		decimalAccessibility.accessibilityTraits = UIAccessibilityTraitButton
+		decimalAccessibility.accessibilityTraits = .button
 		decimalAccessibility.accessibilityFrameInContainerSpace = [decimalLabel, hexadecimalLabel].reduce(decimalSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}

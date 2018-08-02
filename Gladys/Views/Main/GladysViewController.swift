@@ -20,7 +20,7 @@ class GladysViewController: UIViewController {
 	}
 
 	func focusInitialAccessibilityElement() {
-		UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, initialAccessibilityElement)
+		UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 	}
 
 	override func viewDidLoad() {
@@ -65,7 +65,7 @@ class GladysViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if popoverPresenter != nil {
-			UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, initialAccessibilityElement)
+			UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 		}
 	}
 
@@ -90,9 +90,9 @@ class GladysViewController: UIViewController {
 		super.viewDidDisappear(animated)
 		if let v = vcToFocusAfterDismissal {
 			if let v = v as? GladysViewController {
-				UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, v.initialAccessibilityElement)
+				UIAccessibility.post(notification: .layoutChanged, argument: v.initialAccessibilityElement)
 			} else {
-				UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, v.view)
+				UIAccessibility.post(notification: .layoutChanged, argument: v.view)
 			}
 		}
 	}
@@ -116,7 +116,7 @@ class GladysViewController: UIViewController {
 
 	private func checkDoneLocation() {
 		if doneLocation != .none {
-			if UIAccessibilityIsVoiceOverRunning() {
+			if UIAccessibility.isVoiceOverRunning {
 				showDone(true)
 				return
 			}
@@ -140,8 +140,8 @@ class GladysViewController: UIViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
 		var a = [
-			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: [], action: #selector(scrollDown), discoverabilityTitle: "Scroll Down"),
-			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: [], action: #selector(scrollUp), discoverabilityTitle: "Scroll Up"),
+			UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(scrollDown), discoverabilityTitle: "Scroll Down"),
+			UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(scrollUp), discoverabilityTitle: "Scroll Up"),
 		]
 		if self.popoverPresenter != nil {
 			let w = UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(done), discoverabilityTitle: "Close This View")
@@ -163,7 +163,7 @@ class GladysViewController: UIViewController {
 		guard let scr = view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView else { return }
 		scrollView = scr
 		scrollLink = CADisplayLink(target: self, selector: selector)
-		scrollLink!.add(to: RunLoop.main, forMode: .commonModes)
+		scrollLink!.add(to: RunLoop.main, forMode: .common)
 		scrollTimer = GladysTimer(repeats: false, interval: 0.4) {
 			self.scrollLink?.invalidate()
 			self.scrollLink = nil

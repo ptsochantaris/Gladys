@@ -6,7 +6,7 @@ import WebKit
 struct ShortcutAction {
 	let title: String
 	let callback: ()->Void
-	let style: UIAlertActionStyle
+	let style: UIAlertAction.Style
 	let push: Bool
 }
 
@@ -215,7 +215,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		darkModeChanged()
 		borderView.layer.cornerRadius = 10
-		b.cover(with: borderView, insets: UIEdgeInsetsMake(0, 0, 0.5, 0))
+		b.cover(with: borderView, insets: UIEdgeInsets(top: 0, left: 0, bottom: 0.5, right: 0))
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
@@ -291,8 +291,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 			guard let s = self else { return }
 			s.egress()
 			item.copyToPasteboard()
-			if UIAccessibilityIsVoiceOverRunning() {
-				UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Copied.")
+			if UIAccessibility.isVoiceOverRunning {
+				UIAccessibility.post(notification: .announcement, argument: "Copied.")
 			}
 		}, style: .default, push: push))
 		actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
@@ -696,7 +696,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityTraits: UIAccessibilityTraits {
 		set {}
 		get {
-			return isSelectedForAction ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone
+			return isSelectedForAction ? .selected : .none
 		}
 	}
 

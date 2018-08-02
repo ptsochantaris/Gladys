@@ -409,7 +409,7 @@ extension Model {
 			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
 			#if os(iOS)
-			if filtering && UIAccessibilityIsVoiceOverRunning() {
+			if filtering && UIAccessibility.isVoiceOverRunning {
 				let resultString: String
 				let c = filteredDrops.count
 				if c == 0 {
@@ -419,7 +419,7 @@ extension Model {
 				} else  {
 					resultString = "\(filteredDrops.count) results"
 				}
-				UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, resultString)
+				UIAccessibility.post(notification: .announcement, argument: resultString)
 			}
 			#endif
 		}
@@ -427,7 +427,7 @@ extension Model {
 		return changesToVisibleItems
 	}
 
-	static func removeItemsFromZone(_ zoneID: CKRecordZoneID) {
+	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
 		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
 		for item in itemsRelatedToZone {
 			item.removeFromCloudkit()

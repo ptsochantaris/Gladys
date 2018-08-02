@@ -155,7 +155,7 @@ extension ArchivedDropItem {
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
-			if ViewController.shared.phoneMode || UIAccessibilityIsVoiceOverRunning() {
+			if ViewController.shared.phoneMode || UIAccessibility.isVoiceOverRunning {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
