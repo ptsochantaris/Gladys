@@ -115,7 +115,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
 		}
-		Model.drops = Model.drops.filter { !loadingItems.contains($0) }
+		Model.drops.removeAll { loadingItems.contains($0) }
 
 		firstAppearance = true
 

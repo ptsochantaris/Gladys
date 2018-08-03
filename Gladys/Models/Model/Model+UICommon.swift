@@ -295,19 +295,17 @@ extension Model {
 	}
 
 	static func resetEverything() {
-		let itemsToRemove = drops.filter { !$0.isImportedShare }
-		for item in itemsToRemove {
-			item.delete()
-		}
-		drops = drops.filter { $0.isImportedShare }
+		drops.filter { !$0.isImportedShare }.forEach { $0.delete() }
+		drops.removeAll { !$0.isImportedShare }
 		modelFilter = nil
 		cachedFilteredDrops = nil
+		clearCaches()
 		save()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	static func removeImportedShares() {
-		drops = drops.filter { !$0.isImportedShare }
+		drops.removeAll { $0.isImportedShare }
 		save()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
