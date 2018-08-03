@@ -219,7 +219,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
-		n.addObserver(self, selector: #selector(lowMemoryModeOn), name: .LowMemoryModeOn, object: nil)
 		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
@@ -358,11 +357,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
-	}
-
-	@objc private func lowMemoryModeOn() {
-		lowMemoryMode = true
-		reDecorate()
 	}
 
 	var archivedDropItem: ArchivedDropItem? {

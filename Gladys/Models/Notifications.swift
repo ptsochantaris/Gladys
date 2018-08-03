@@ -12,7 +12,6 @@ extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
 	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
-	static let LowMemoryModeOn = Notification.Name("LowMemoryModeOn")
 	static let ItemModified = Notification.Name("ItemModified")
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")
 	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")

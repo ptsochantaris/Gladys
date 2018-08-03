@@ -676,7 +676,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 			item.needsUnlock = true
 			item.postModified()
 		}
-		clearCaches()
 	}
 
 	@objc private func reachabilityChanged() {
@@ -820,12 +819,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		})
 	}
 
-	private var lowMemoryMode = false
+	private var lowMemoryMode = false {
+		didSet {
+			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
+				cell.lowMemoryMode = lowMemoryMode
+				cell.reDecorate()
+			}
+		}
+	}
+
 	override func didReceiveMemoryWarning() {
 		if UIApplication.shared.applicationState == .background {
+			log("Placing UI in low-memory mode")
 			lowMemoryMode = true
-			NotificationCenter.default.post(name: .LowMemoryModeOn, object: nil)
-			log("Placed UI in low-memory mode")
 		}
 		clearCaches()
 		super.didReceiveMemoryWarning()
@@ -834,10 +840,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	@objc private func foregrounded() {
 		if lowMemoryMode {
 			lowMemoryMode = false
-			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
-				cell.lowMemoryMode = false
-				cell.reDecorate()
-			}
 		}
 		if emptyView != nil {
 			blurb(Greetings.randomGreetLine)
