@@ -1,10 +1,18 @@
 
 import Foundation
+#if os(iOS)
+import FileProvider
+#endif
 
 final class Model {
 
-	static var legacyFileLastModified = Date.distantPast
+	private static var legacyFileLastModified = Date.distantPast
 	static var legacyMode = true
+
+	static var drops = [ArchivedDropItem]()
+	static var dataFileLastModified = Date.distantPast
+
+	private static var isStarted = false
 
 	static let legacyFileUrl: URL = {
 		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
@@ -185,5 +193,51 @@ final class Model {
 		}
 		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil }
 	}
+
+	static let itemsDirectoryUrl: URL = {
+		return appStorageUrl.appendingPathComponent("items", isDirectory: true)
+	}()
+
+	static let temporaryDirectoryUrl: URL = {
+		let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
+		let fm = FileManager.default
+		if fm.fileExists(atPath: url.path) {
+			try? fm.removeItem(at: url)
+		}
+		try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+		return url
+	}()
+
+	static func item(uuid: String) -> ArchivedDropItem? {
+		let uuidData = UUID(uuidString: uuid)
+		return drops.first { $0.uuid == uuidData }
+	}
+
+	static func item(uuid: UUID) -> ArchivedDropItem? {
+		return drops.first { $0.uuid == uuid }
+	}
+
+	static func item(shareId: String) -> ArchivedDropItem? {
+		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
+	}
+
+	static func typeItem(uuid: String) -> ArchivedDropItemType? {
+		let uuidData = UUID(uuidString: uuid)
+		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
+	}
+
+	static func modificationDate(for url: URL) -> Date? {
+		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
+	}
+
+	static let appStorageUrl: URL = {
+		#if MAC
+		return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
+		#elseif MAINAPP || FILEPROVIDER
+		return NSFileProviderManager.default.documentStorageURL
+		#else
+		return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("File Provider Storage")
+		#endif
+	}()
 }
 
