@@ -22,7 +22,7 @@ extension ArchivedDropItemType {
 
 	static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate, encodeAnyUIImage: Bool) -> Progress {
+	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 30)
 
@@ -190,7 +190,7 @@ extension ArchivedDropItemType {
 		let callback = ingestCompletion
 		ingestCompletion = nil
 		DispatchQueue.main.async {
-			self.delegate?.loadCompleted(sender: self)
+			self.delegate?.componentIngested(typeItem: self)
 			self.delegate = nil
 			callback?()
 		}
@@ -532,7 +532,7 @@ extension ArchivedDropItemType {
 		completeIngest()
 	}
 
-	func reIngest(delegate: LoadCompletionDelegate) -> Progress {
+	func reIngest(delegate: ComponentIngestionDelegate) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2

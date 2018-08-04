@@ -113,7 +113,7 @@ final class ArchivedDropItem: Codable {
 
 	#if MAINAPP || ACTIONEXTENSION
 
-		static func importData(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
+		static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
 			if PersistedOptions.separateItemPreference {
 				var res = [ArchivedDropItem]()
 				for p in providers {
@@ -131,9 +131,9 @@ final class ArchivedDropItem: Codable {
 		}
 
 		var loadCount = 0
-		weak var delegate: LoadCompletionDelegate?
+		weak var delegate: ItemIngestionDelegate?
 
-		private init(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
+		private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
 
 			uuid = UUID()
 			createdAt = Date()

@@ -112,7 +112,7 @@ final class ArchivedDropItemType: Codable {
 	var order: Int
 
 	// transient / ui
-	weak var delegate: LoadCompletionDelegate?
+	weak var delegate: ComponentIngestionDelegate?
 	var displayIconScale: CGFloat
 	var displayIconWidth: CGFloat
 	var displayIconHeight: CGFloat
@@ -172,7 +172,7 @@ final class ArchivedDropItemType: Codable {
 		bytes = data
 	}
 
-	init(typeIdentifier: String, parentUuid: UUID, delegate: LoadCompletionDelegate, order: Int) {
+	init(typeIdentifier: String, parentUuid: UUID, delegate: ComponentIngestionDelegate, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
 		self.delegate = delegate

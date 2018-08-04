@@ -1,7 +1,7 @@
 
 import Foundation
 
-extension ArchivedDropItem: LoadCompletionDelegate {
+extension ArchivedDropItem: ComponentIngestionDelegate {
 
 	static func sanitised(_ idenitfiers: [String]) -> [String] {
 		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", ".persisted"]
@@ -10,23 +10,20 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
-	func loadCompleted(sender: AnyObject) {
+	func componentIngested(typeItem: ArchivedDropItemType?) {
 		loadCount = loadCount - 1
-		if loadCount <= 0 {
-			if let typeItem = sender as? ArchivedDropItemType {
-				if let contributedLabels = typeItem.contributedLabels {
-					for candidate in contributedLabels where !labels.contains(candidate) {
-						labels.append(candidate)
-					}
-					typeItem.contributedLabels = nil
-				}
+		if loadCount > 0 { return }
+		if let contributedLabels = typeItem?.contributedLabels {
+			for candidate in contributedLabels where !labels.contains(candidate) {
+				labels.append(candidate)
 			}
-			loadingProgress = nil
-			if let d = delegate {
-				delegate = nil
-				d.loadCompleted(sender: self)
-				NotificationCenter.default.post(name: .IngestComplete, object: self)
-			}
+			typeItem?.contributedLabels = nil
+		}
+		loadingProgress = nil
+		if let d = delegate {
+			delegate = nil
+			d.itemIngested(item: self)
+			NotificationCenter.default.post(name: .IngestComplete, object: self)
 		}
 	}
 
@@ -38,7 +35,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		return typeItems.contains { $0.loadingAborted }
 	}
 
-	func reIngest(delegate: LoadCompletionDelegate) {
+	func reIngest(delegate: ItemIngestionDelegate) {
 		imageCache.removeObject(forKey: imageCacheKey)
 		self.delegate = delegate
 		loadCount = typeItems.count
@@ -48,7 +45,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		loadingProgress = p
 		if typeItems.count == 0 { // can happen for example when all components are removed
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-				self.loadCompleted(sender: self)
+				self.componentIngested(typeItem: nil)
 			}
 		} else {
 			if typeItems.count > 1 && typeItems.filter({ $0.order != 0 }).count > 0 { // some type items have an order set, enforce it
@@ -61,7 +58,7 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 		}
 	}
 
-	func startIngest(providers: [NSItemProvider], delegate: LoadCompletionDelegate?, limitToType: String?) -> Progress {
+	func startIngest(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
 		var progressChildren = [Progress]()
 

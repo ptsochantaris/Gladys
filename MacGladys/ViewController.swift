@@ -143,7 +143,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	}
 }
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, LoadCompletionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
 
 	@IBOutlet private weak var collection: MainCollectionView!
 
@@ -373,8 +373,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateEmptyView()
 	}
 
-	func loadCompleted(sender: AnyObject) {
-		guard let item = sender as? ArchivedDropItem else { return }
+	func itemIngested(item: ArchivedDropItem) {
 
 		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {

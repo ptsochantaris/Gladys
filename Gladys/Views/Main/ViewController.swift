@@ -45,7 +45,7 @@ let mainWindow: UIWindow = {
 	return UIApplication.shared.windows.first!
 }()
 
-final class ViewController: GladysViewController, UICollectionViewDelegate, LoadCompletionDelegate,
+final class ViewController: GladysViewController, UICollectionViewDelegate, ItemIngestionDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
 	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
@@ -1286,9 +1286,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 		}
 	}
 
-	func loadCompleted(sender: AnyObject) {
-
-		guard let item = sender as? ArchivedDropItem else { return }
+	func itemIngested(item: ArchivedDropItem) {
 
 		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {

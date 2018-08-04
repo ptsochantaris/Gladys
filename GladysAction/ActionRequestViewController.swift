@@ -9,7 +9,7 @@
 import UIKit
 import CoreSpotlight
 
-class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
+class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	@IBOutlet private weak var statusLabel: UILabel!
 	@IBOutlet private weak var cancelButton: UIBarButtonItem!
@@ -123,7 +123,7 @@ class ActionRequestViewController: UIViewController, LoadCompletionDelegate {
 		extensionContext?.cancelRequest(withError: error)
 	}
 
-	func loadCompleted(sender: AnyObject) {
+	func itemIngested(item: ArchivedDropItem) {
 		loadCount -= 1
 		if loadCount == 0 {
 			cancelButton.isEnabled = false

@@ -19,8 +19,12 @@ enum ArchivedDropItemDisplayType: Int {
 	case fit, fill, center, circle
 }
 
-protocol LoadCompletionDelegate: class {
-	func loadCompleted(sender: AnyObject)
+protocol ItemIngestionDelegate: class {
+	func itemIngested(item: ArchivedDropItem)
+}
+
+protocol ComponentIngestionDelegate: class {
+	func componentIngested(typeItem: ArchivedDropItemType?)
 }
 
 extension Error {

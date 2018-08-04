@@ -13,7 +13,7 @@ protocol TextEditControllerDelegate: class {
 	func textEditControllerMadeChanges(_ textEditController: TextEditController)
 }
 
-final class TextEditController: GladysViewController, UITextViewDelegate, LoadCompletionDelegate {
+final class TextEditController: GladysViewController, UITextViewDelegate, ComponentIngestionDelegate {
 
 	weak var delegate: TextEditControllerDelegate?
 
@@ -105,7 +105,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, LoadCo
 		}
 	}
 
-	func loadCompleted(sender: AnyObject) {
+	func componentIngested(typeItem: ArchivedDropItemType?) {
 		Model.save()
 		delegate?.textEditControllerMadeChanges(self)
 	}
