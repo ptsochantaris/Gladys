@@ -125,6 +125,7 @@ final class ArchivedDropItemType: Codable {
 	var displayTitleAlignment: NSTextAlignment
 	var ingestCompletion: (()->Void)?
 	var isTransferring: Bool
+	var contributedLabels: [String]?
 
 	// Caches
 	var encodedURLCache: (Bool, NSURL?)?
@@ -280,6 +281,10 @@ final class ArchivedDropItemType: Codable {
 		setTitle(from: item)
 
 		if item.isFileURL {
+
+			let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
+			contributedLabels = resourceValues?.tagNames
+
 			accessoryTitle = item.lastPathComponent
 			let fm = FileManager.default
 			var directory: ObjCBool = false
@@ -408,10 +413,6 @@ final class ArchivedDropItemType: Codable {
 
 	var quickLookItem: PreviewItem {
 		return PreviewItem(typeItem: self)
-	}
-
-	var parent: ArchivedDropItem? {
-		return Model.item(uuid: parentUuid)
 	}
 
 	var canPreview: Bool {

@@ -451,4 +451,8 @@ extension ArchivedDropItemType: Equatable {
 		encodedURLCache = nil
 		canPreviewCache = nil
 	}
+
+	var parent: ArchivedDropItem? {
+		return Model.item(uuid: parentUuid)
+	}
 }

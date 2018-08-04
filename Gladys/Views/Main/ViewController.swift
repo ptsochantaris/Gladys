@@ -672,10 +672,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Load
 	}
 
 	@objc private func backgrounded() {
-		for item in Model.drops where item.lockPassword != nil && !item.needsUnlock {
-			item.needsUnlock = true
-			item.postModified()
-		}
+		Model.lockUnlockedItems()
 	}
 
 	@objc private func reachabilityChanged() {

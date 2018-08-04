@@ -73,6 +73,10 @@ extension ArchivedDropItem: Hashable {
 		return lockPassword != nil
 	}
 
+	var isTemporarilyUnlocked: Bool {
+		return isLocked && !needsUnlock
+	}
+
 	var associatedWebURL: URL? {
 		for i in typeItems {
 			if let u = i.encodedUrl, !u.isFileURL {

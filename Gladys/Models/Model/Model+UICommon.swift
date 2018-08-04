@@ -485,4 +485,11 @@ extension Model {
 	static var itemsToReIngest: [ArchivedDropItem] {
 		return drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
 	}
+
+	static func lockUnlockedItems() {
+		for item in drops where item.isTemporarilyUnlocked {
+			item.needsUnlock = true
+			item.postModified()
+		}
+	}
 }

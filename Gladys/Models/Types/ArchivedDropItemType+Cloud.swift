@@ -24,7 +24,7 @@ extension ArchivedDropItemType {
 	}
 
 	var parentZone: CKRecordZone.ID {
-		return Model.item(uuid: parentUuid)?.parentZone ?? privateZoneId
+		return parent?.parentZone ?? privateZoneId
 	}
 
 	var populatedCloudKitRecord: CKRecord? {

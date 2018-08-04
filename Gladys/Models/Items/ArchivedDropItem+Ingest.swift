@@ -13,6 +13,14 @@ extension ArchivedDropItem: LoadCompletionDelegate {
 	func loadCompleted(sender: AnyObject) {
 		loadCount = loadCount - 1
 		if loadCount <= 0 {
+			if let typeItem = sender as? ArchivedDropItemType {
+				if let contributedLabels = typeItem.contributedLabels {
+					for candidate in contributedLabels where !labels.contains(candidate) {
+						labels.append(candidate)
+					}
+					typeItem.contributedLabels = nil
+				}
+			}
 			loadingProgress = nil
 			if let d = delegate {
 				delegate = nil

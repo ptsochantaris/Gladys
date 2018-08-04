@@ -31,7 +31,7 @@ func genericAlert(title: String, message: String?, windowOverride: NSWindow? = n
 
 final class WindowController: NSWindowController, NSWindowDelegate {
 	func windowWillClose(_ notification: Notification) {
-		ViewController.shared.lockUnlockedItems()
+		Model.lockUnlockedItems()
 	}
 
 	func windowDidBecomeKey(_ notification: Notification) {
@@ -788,13 +788,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					self?.unlock(sender)
 				}
 			}
-		}
-	}
-
-	func lockUnlockedItems() {
-		for i in Model.drops where i.isLocked && !i.needsUnlock {
-			i.needsUnlock = true
-			i.postModified()
 		}
 	}
 
