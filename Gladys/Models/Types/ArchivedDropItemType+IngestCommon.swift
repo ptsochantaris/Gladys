@@ -24,7 +24,7 @@ extension ArchivedDropItemType {
 
 	func startIngest(provider: NSItemProvider, delegate: LoadCompletionDelegate, encodeAnyUIImage: Bool) -> Progress {
 		self.delegate = delegate
-		let overallProgress = Progress(totalUnitCount: 3)
+		let overallProgress = Progress(totalUnitCount: 30)
 
 		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 			guard let s = self, s.loadingAborted == false else { return }
@@ -33,7 +33,7 @@ extension ArchivedDropItemType {
 				ArchivedDropItemType.ingestQueue.async {
 					log(">> Received type: [\(s.typeIdentifier)]")
 					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage) {
-						overallProgress.completedUnitCount += 1
+						overallProgress.completedUnitCount += 10
 					}
 				}
 			} else {
@@ -41,11 +41,11 @@ extension ArchivedDropItemType {
 				log(">> Error receiving item: \(error.finalDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+				overallProgress.completedUnitCount += 10
 				s.completeIngest()
-				overallProgress.completedUnitCount += 1
 			}
 		}
-		overallProgress.addChild(p, withPendingUnitCount: 2)
+		overallProgress.addChild(p, withPendingUnitCount: 20)
 		return overallProgress
 	}
 	
