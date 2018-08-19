@@ -75,7 +75,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 	}
 
 	static var top: UIViewController {
-		var finalVC: UIViewController = ViewController.shared
+		let searchController = ViewController.shared.navigationItem.searchController
+		let searching = searchController?.isActive ?? false
+		var finalVC: UIViewController = (searching ? searchController : nil) ?? ViewController.shared
 		while let newVC = finalVC.presentedViewController {
 			if newVC is UIAlertController { break }
 			finalVC = newVC

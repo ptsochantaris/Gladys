@@ -246,7 +246,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.needsUnlock {
 			pinchRecognizer.state = .ended
 			clearAllOtherGestures()
-			item.tryPreview(in: ViewController.shared.navigationController!, from: self)
+			item.tryPreview(in: ViewController.top, from: self)
 		}
 	}
 
@@ -278,7 +278,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			actions.append(ShortcutAction(title: "Quick Look", callback: { [weak self] in
 				guard let s = self else { return }
 				s.egress()
-				item.tryPreview(in: ViewController.shared.navigationController!, from: s)
+				item.tryPreview(in: ViewController.top, from: s)
 			}, style: .default, push: push))
 		}
 		actions.append(ShortcutAction(title: "Move to Top", callback: { [weak self] in

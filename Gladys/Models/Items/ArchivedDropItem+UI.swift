@@ -140,12 +140,13 @@ extension ArchivedDropItem {
 		}
 	}
 
-	func tryPreview(in: UIViewController, from: ArchivedItemCell) {
+	func tryPreview(in viewController: UIViewController, from: ArchivedItemCell) {
 		guard let t = typeItems.sorted(by: { $0.contentPriority > $1.contentPriority }).first(where: { $0.canPreview }), let q = t.quickLook(extraRightButton: nil) else { return }
 		let n = QLHostingViewController(rootViewController: q)
 		n.preferredContentSize = mainWindow.bounds.size
-		n.view.tintColor = ViewController.shared.view.tintColor
-		if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+		let rootController = ViewController.shared!
+		n.view.tintColor = rootController.view.tintColor
+		if let sourceBar = rootController.navigationController?.navigationBar {
 			n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
 			n.navigationBar.barTintColor = sourceBar.barTintColor
 			n.navigationBar.tintColor = sourceBar.tintColor
@@ -155,12 +156,12 @@ extension ArchivedDropItem {
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
-			if ViewController.shared.phoneMode || UIAccessibility.isVoiceOverRunning {
+			if rootController.phoneMode || UIAccessibility.isVoiceOverRunning {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
 		}
-		ViewController.shared.present(n, animated: true)
+		viewController.present(n, animated: true)
 		if let p = q.popoverPresentationController {
 			p.sourceView = from
 			p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
