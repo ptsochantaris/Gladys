@@ -45,9 +45,9 @@ let mainWindow: UIWindow = {
 	return UIApplication.shared.windows.first!
 }()
 
-final class ViewController: GladysViewController, UICollectionViewDelegate, ItemIngestionDelegate,
+final class ViewController: GladysViewController, UICollectionViewDelegate, ItemIngestionDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
-	UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
+UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet private weak var collection: UICollectionView!
 	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
@@ -222,6 +222,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 			cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
 		}
 		return cell
+	}
+
+	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+		for indexPath in indexPaths {
+			ArchivedItemCell.warmUp(for: Model.filteredDrops[indexPath.item])
+		}
+	}
+
+	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+
 	}
 
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -606,11 +616,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 
 		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
-		collection.dropDelegate = self
-		collection.dragDelegate = self
 		collection.reorderingCadence = .fast
-		collection.dataSource = self
-		collection.delegate = self
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
 

@@ -370,6 +370,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.observedProgress = nil
 		progressView.progress = 0
 		mergeMode = false
+		image.image = nil
 	}
 
 	private var existingPreviewView: UIView?
@@ -387,6 +388,15 @@ final class ArchivedItemCell: UICollectionViewCell {
 			decorate(with: nil)
 		} else {
 			decorate(with: archivedDropItem)
+		}
+	}
+
+	static func warmUp(for item: ArchivedDropItem) {
+		imageProcessingQueue.async {
+			let cacheKey = item.imageCacheKey
+			if imageCache.object(forKey: cacheKey) == nil {
+				imageCache.setObject(item.displayIcon, forKey: cacheKey)
+			}
 		}
 	}
 
@@ -420,11 +430,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 					hideProgress = false
 					progressView.observedProgress = item.loadingProgress
 				}
-				image.image = nil
 
 			} else if item.needsUnlock {
 				hideLock = false
-				image.image = nil
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint
 				shared = item.shareMode
@@ -432,7 +440,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 			} else if mergeMode {
 				hideMerge = false
 				hideImage = true
-				image.image = nil
 				topLabelAlignment = .center
 				topLabelText = "Add data component"
 
@@ -442,16 +449,19 @@ final class ArchivedItemCell: UICollectionViewCell {
 				progressView.observedProgress = nil
 				shared = item.shareMode
 
-				let cacheKey = item.imageCacheKey
-				if let cachedImage = imageCache.object(forKey: cacheKey) {
-					image.image = cachedImage
-				} else {
-					image.image = nil
-					imageProcessingQueue.async { [weak self] in
-						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+				imageProcessingQueue.async { [weak self] in
+					if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+						let cacheKey = item.imageCacheKey
+						if let cachedImage = imageCache.object(forKey: cacheKey) {
+							DispatchQueue.main.async { [weak self] in
+								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
+									self?.image.image = cachedImage
+								}
+							}
+						} else {
 							let img = item.displayIcon
 							imageCache.setObject(img, forKey: cacheKey)
-							DispatchQueue.main.sync { [weak self] in
+							DispatchQueue.main.async { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
 									self?.image.image = img
 								}
