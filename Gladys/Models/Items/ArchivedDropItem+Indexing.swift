@@ -2,8 +2,8 @@
 import CoreSpotlight
 
 extension ArchivedDropItem {
-	var searchableItem: CSSearchableItem {
 
+	var searchAttributes: CSSearchableItemAttributeSet {
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
 		if isLocked {
 			attributes.title = lockHint
@@ -21,8 +21,11 @@ extension ArchivedDropItem {
 		attributes.userCurated = true
 		attributes.addedDate = createdAt
 		attributes.contentModificationDate = updatedAt
+		return attributes
+	}
 
-		return CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: attributes)
+	var searchableItem: CSSearchableItem {
+		return CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: searchAttributes)
 	}
 
 	func reIndex(completion: (()->Void)? = nil) {

@@ -323,7 +323,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func updateUserActivityState(_ userActivity: NSUserActivity) {
 		super.updateUserActivityState(userActivity)
-		userActivity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
+		userActivity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid.uuidString]
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {

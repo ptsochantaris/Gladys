@@ -54,8 +54,6 @@ final class DetailController: GladysViewController,
 		}
 
 		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-		activity.title = item.displayTitleOrUuid
-		activity.isEligibleForSearch = false
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
 		userActivity = activity
@@ -164,7 +162,16 @@ final class DetailController: GladysViewController,
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
+		activity.title = item.displayTitleOrUuid
 		activity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
+		if #available(iOS 12.0, *) {
+			activity.isEligibleForPrediction = true
+			activity.contentAttributeSet = item.searchAttributes
+			activity.contentAttributeSet?.relatedUniqueIdentifier = item.uuid.uuidString
+			activity.isEligibleForSearch = true
+		} else {
+			activity.isEligibleForSearch = false
+		}
 	}
 
 	@objc private func updateUI() {
@@ -559,6 +566,7 @@ final class DetailController: GladysViewController,
 		item.markUpdated()
 		item.needsReIngest = true
 		Model.save()
+		userActivity?.needsSave = true
 		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
 			self.sizeWindow()
 			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
@@ -674,6 +682,7 @@ final class DetailController: GladysViewController,
 		item.markUpdated()
 		item.reIndex()
 		Model.save()
+		userActivity?.needsSave = true
 	}
 
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {

@@ -236,8 +236,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			return true
 
 		} else if userActivity.activityType == kGladysDetailViewingActivity {
-			if let itemIdentifier = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
-				ViewController.shared.highlightItem(with: itemIdentifier.uuidString, andOpen: true)
+			if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
+				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
+			} else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
+				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
 			}
 			return true
 		}
