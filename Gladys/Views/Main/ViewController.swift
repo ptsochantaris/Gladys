@@ -1363,21 +1363,32 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func highlightItem(with identifier: String, andOpen: Bool) {
-		resetSearch(andLabels: true)
-		dismissAnyPopOver()
-		collection.isUserInteractionEnabled = false
-		if let i = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
-			let ip = IndexPath(item: i, section: 0)
-			collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-				if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {
-					cell.flash()
-					if andOpen {
-						self.collectionView(self.collection, didSelectItemAt: ip)
-					}
-				}
-				self.collection.isUserInteractionEnabled = true
+		if let index = Model.filteredDrops.index(where: { $0.uuid.uuidString == identifier }) {
+			dismissAnyPopOver() {
+				self.highlightItem(at: index, andOpen: andOpen)
 			}
+		} else if let index = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
+			dismissAnyPopOver() {
+				self.resetSearch(andLabels: true)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+					self.highlightItem(at: index, andOpen: andOpen)
+				}
+			}
+		}
+	}
+
+	private func highlightItem(at index: Int, andOpen: Bool) {
+		collection.isUserInteractionEnabled = false
+		let ip = IndexPath(item: index, section: 0)
+		collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+			if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {
+				cell.flash()
+				if andOpen {
+					self.collectionView(self.collection, didSelectItemAt: ip)
+				}
+			}
+			self.collection.isUserInteractionEnabled = true
 		}
 	}
 

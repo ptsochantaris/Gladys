@@ -160,14 +160,16 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	// image loading is broken after first sync (new queue)
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
+		let uuidString = item.uuid.uuidString
 		activity.title = item.displayTitleOrUuid
-		activity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid]
+		activity.userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
 		if #available(iOS 12.0, *) {
 			activity.isEligibleForPrediction = true
 			activity.contentAttributeSet = item.searchAttributes
-			activity.contentAttributeSet?.relatedUniqueIdentifier = item.uuid.uuidString
+			activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
 			activity.isEligibleForSearch = true
 		} else {
 			activity.isEligibleForSearch = false

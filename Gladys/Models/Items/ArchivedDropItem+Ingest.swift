@@ -19,6 +19,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			}
 			typeItem?.contributedLabels = nil
 		}
+		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
 		if let d = delegate {
 			delegate = nil
@@ -36,7 +37,6 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 	}
 
 	func reIngest(delegate: ItemIngestionDelegate) {
-		imageCache.removeObject(forKey: imageCacheKey)
 		self.delegate = delegate
 		loadCount = typeItems.count
 		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
