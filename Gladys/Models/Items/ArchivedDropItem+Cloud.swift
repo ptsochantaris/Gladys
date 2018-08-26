@@ -10,15 +10,19 @@ import CloudKit
 
 extension ArchivedDropItem {
 	func cloudKitUpdate(from record: CKRecord) {
-		updatedAt = record["updatedAt"] as! Date
-		note = record["note"] as! String
-		titleOverride = record["titleOverride"] as! String
-		labels = (record["labels"] as? [String]) ?? []
+
+		updatedAt = record["updatedAt"] as? Date ?? .distantPast
+		titleOverride = record["titleOverride"] as? String ?? ""
+		note = record["note"] as? String ?? ""
+
 		lockPassword = record["lockPassword"] as? Data
 		lockHint = record["lockHint"] as? String
-		cloudKitRecord = record
-		needsUnlock = lockPassword != nil
+		labels = (record["labels"] as? [String]) ?? []
+
 		needsReIngest = true
+		needsUnlock = lockPassword != nil
+
+		cloudKitRecord = record
 	}
 
 	var cloudKitSharingTitle: String {

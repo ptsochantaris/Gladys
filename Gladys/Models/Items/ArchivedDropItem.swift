@@ -156,19 +156,24 @@ final class ArchivedDropItem: Codable {
 	init(from record: CKRecord) {
 		let myUUID = UUID(uuidString: record.recordID.recordName)!
 		uuid = myUUID
-		createdAt = record["createdAt"] as! Date
-		updatedAt = record["updatedAt"] as! Date
+
+		createdAt = record["createdAt"] as? Date ?? .distantPast
+		updatedAt = record["updatedAt"] as? Date ?? .distantPast
+		titleOverride = record["titleOverride"] as? String ?? ""
+		note = record["note"] as? String ?? ""
+
 		suggestedName = record["suggestedName"] as? String
-		titleOverride = record["titleOverride"] as! String
 		lockPassword = record["lockPassword"] as? Data
 		lockHint = record["lockHint"] as? String
-		note = record["note"] as! String
 		labels = (record["labels"] as? [String]) ?? []
+
 		needsReIngest = true
+		needsUnlock = lockPassword != nil
+
 		needsSaving = true
 		needsDeletion = false
-		needsUnlock = lockPassword != nil
 		typeItems = []
+
 		cloudKitRecord = record
 	}
 

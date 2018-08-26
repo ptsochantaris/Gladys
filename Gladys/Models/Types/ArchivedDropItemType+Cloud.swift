@@ -11,10 +11,11 @@ import CloudKit
 extension ArchivedDropItemType {
 
 	func cloudKitUpdate(from record: CKRecord) {
-		updatedAt = record["updatedAt"] as! Date
-		typeIdentifier = record["typeIdentifier"] as! String
-		representedClass = RepresentedClass(name: record["representedClass"] as! String)
-		classWasWrapped = (record["classWasWrapped"] as! Int != 0)
+		updatedAt = record["updatedAt"] as? Date ?? .distantPast
+		typeIdentifier = record["typeIdentifier"] as? String ?? "public.data"
+		representedClass = RepresentedClass(name: record["representedClass"] as? String ?? "")
+		classWasWrapped = ((record["classWasWrapped"] as? Int ?? 0) != 0)
+
 		accessoryTitle = record["accessoryTitle"] as? String
 		order = record["order"] as? Int ?? 0
 		if let assetURL = (record["bytes"] as? CKAsset)?.fileURL {
