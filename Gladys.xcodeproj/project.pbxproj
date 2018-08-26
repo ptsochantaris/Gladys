@@ -231,7 +231,6 @@
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */; };
-		16A4E7F61FBB844A00D60596 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F51FBB844A00D60596 /* ComplicationController.swift */; };
 		16A4E7F81FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7F71FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; };
 		16A4E8091FBB963500D60596 /* ItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E8081FBB963500D60596 /* ItemController.swift */; };
@@ -673,7 +672,6 @@
 		16A4E7E71FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "GladysWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		16A4E7F51FBB844A00D60596 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		16A4E7F71FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		16A4E7F91FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A4E8081FBB963500D60596 /* ItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemController.swift; sourceTree = "<group>"; };
@@ -1172,7 +1170,6 @@
 				168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */,
 				16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */,
 				16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */,
-				16A4E7F51FBB844A00D60596 /* ComplicationController.swift */,
 				16A4E8081FBB963500D60596 /* ItemController.swift */,
 				16A4E7F71FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7F91FBB844A00D60596 /* Info.plist */,
@@ -2371,7 +2368,6 @@
 				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
-				16A4E7F61FBB844A00D60596 /* ComplicationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

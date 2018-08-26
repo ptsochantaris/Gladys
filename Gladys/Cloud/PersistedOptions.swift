@@ -111,16 +111,6 @@ class PersistedOptions {
 		}
 	}
 
-	static var watchComplicationText: String {
-		get {
-			return defaults.string(forKey: "watchComplicationText") ?? ""
-		}
-		set {
-			defaults.set(newValue, forKey: "watchComplicationText")
-			defaults.synchronize()
-		}
-	}
-
 	static var removeItemsWhenDraggedOut: Bool {
 		get {
 			return defaults.bool(forKey: "removeItemsWhenDraggedOut")

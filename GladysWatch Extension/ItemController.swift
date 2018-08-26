@@ -160,6 +160,16 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
+	private var deleting: Bool = false {
+		didSet {
+			topGroup.setHidden(deleting || ItemController.hidden)
+			bottomGroup.setHidden(deleting || ItemController.hidden)
+			image.setHidden(deleting)
+			copyLabel.setText("Deleting")
+			copyLabel.setHidden(!deleting)
+		}
+	}
+
 	private var opening: Bool = false {
 		didSet {
 			topGroup.setHidden(opening || ItemController.hidden)
@@ -167,16 +177,6 @@ class ItemController: WKInterfaceController {
 			image.setHidden(opening)
 			copyLabel.setText("Viewing on Phone")
 			copyLabel.setHidden(!opening)
-		}
-	}
-
-	private var complicating: Bool = false {
-		didSet {
-			topGroup.setHidden(complicating || ItemController.hidden)
-			bottomGroup.setHidden(complicating || ItemController.hidden)
-			image.setHidden(complicating)
-			copyLabel.setText("Setting as Watch face complication text")
-			copyLabel.setHidden(!complicating)
 		}
 	}
 
@@ -201,18 +201,6 @@ class ItemController: WKInterfaceController {
 		}
 	}
 
-	@IBAction private func complicationSelected() {
-		complicating = true
-		PersistedOptions.watchComplicationText = labelText ?? ""
-		let server = CLKComplicationServer.sharedInstance()
-		for a in server.activeComplications ?? [] {
-			server.reloadTimeline(for: a)
-		}
-		DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-			self.complicating = false
-		}
-	}
-
 	@IBAction private func copySelected() {
 		if let uuid = uuid {
 			copying = true
@@ -231,6 +219,17 @@ class ItemController: WKInterfaceController {
 				self.topping = false
 			}, errorHandler: { _ in
 				self.topping = false
+			})
+		}
+	}
+
+	@IBAction private func deleteSelected() {
+		if let uuid = uuid {
+			deleting = true
+			WCSession.default.sendMessage(["delete": uuid], replyHandler: { _ in
+				self.deleting = false
+			}, errorHandler: { _ in
+				self.deleting = false
 			})
 		}
 	}

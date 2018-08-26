@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14113" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14313.13.2" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch38" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14033"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14238.4.1"/>
     </dependencies>
     <scenes>
         <!--StartupController-->
@@ -76,24 +76,24 @@ Label</string>
                     </items>
                     <menu key="menu" id="C7V-jZ-1AQ">
                         <items>
-                            <menuItem title="Complication" icon="add" id="5NN-sc-Lgu">
+                            <menuItem title="Delete" icon="trash" id="CrJ-Bd-Ra6">
                                 <connections>
-                                    <action selector="complicationSelected" destination="mJP-ds-eku" id="ORf-DU-sCD"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="View on Phone" image="View" id="CrJ-Bd-Ra6" userLabel="View on Phone">
-                                <connections>
-                                    <action selector="viewOnDeviceSelected" destination="mJP-ds-eku" id="cZO-vJ-Jm0"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Copy to Clipboard" image="Copy" id="lbC-Mg-EY7">
-                                <connections>
-                                    <action selector="copySelected" destination="mJP-ds-eku" id="HMt-QY-C3h"/>
+                                    <action selector="deleteSelected" destination="mJP-ds-eku" id="Z6u-so-32f"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Move to Top" image="List" id="Sd6-N8-wup">
                                 <connections>
                                     <action selector="moveToTopSelected" destination="mJP-ds-eku" id="C2C-PD-nEf"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View on Phone" image="View" id="VTy-Yq-BjD" userLabel="View on Phone">
+                                <connections>
+                                    <action selector="viewOnDeviceSelected" destination="mJP-ds-eku" id="rcu-PE-mvN"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy to Clipboard" image="Copy" id="ioU-vk-SBJ">
+                                <connections>
+                                    <action selector="copySelected" destination="mJP-ds-eku" id="I7A-QN-aqD"/>
                                 </connections>
                             </menuItem>
                         </items>

@@ -46,6 +46,15 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 				}
 			}
 
+			if let uuid = message["delete"] as? String {
+				if let item = Model.item(uuid: uuid) {
+					ViewController.shared.deleteRequested(for: [item])
+				}
+				DispatchQueue.global().async {
+					replyHandler([:])
+				}
+			}
+
 			if let uuid = message["copy"] as? String {
 				if let i = Model.item(uuid: uuid) {
 					i.copyToPasteboard()
