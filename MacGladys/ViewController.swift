@@ -160,6 +160,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@IBOutlet private weak var emptyView: NSImageView!
 	@IBOutlet private weak var emptyLabel: NSTextField!
 
+	@IBOutlet private weak var titleBat: NSVisualEffectView!
+
 	@IBOutlet private weak var translucentView: NSVisualEffectView!
 
 	override func viewWillAppear() {
@@ -243,7 +245,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		super.viewDidLoad()
 
 		ViewController.shared = self
-		searchHolder.isHidden = true
+		showSearch = false
 
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		updateDragOperationIndicators()
@@ -471,7 +473,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func resetSearch(andLabels: Bool) {
 		searchBar.stringValue = ""
-		searchHolder.isHidden = true
+		showSearch = false
 		updateSearch()
 
 		if andLabels {
@@ -486,8 +488,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@IBAction private func findSelected(_ sender: NSMenuItem) {
-		searchHolder.isHidden = !searchHolder.isHidden
-		if !searchHolder.isHidden {
+		if showSearch {
+			resetSearch(andLabels: false)
+		} else {
+			showSearch = true
 			view.window?.makeFirstResponder(searchBar)
 		}
 	}
@@ -521,8 +525,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	private var showSearch: Bool = false {
+		didSet {
+			searchHolder.isHidden = !showSearch
+			guard let scrollView = collection.enclosingScrollView else { return }
+			DispatchQueue.main.async {
+				scrollView.contentInsets = NSEdgeInsets(top: self.titleBat.frame.size.height, left: 0, bottom: 0, right: 0)
+			}
+		}
+	}
+
 	func startSearch(initialText: String) {
-		searchHolder.isHidden = false
+		showSearch = true
 		searchBar.stringValue = initialText
 		updateSearch()
 	}
