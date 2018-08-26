@@ -243,4 +243,3 @@ final class ArchivedDropItemType: Codable {
 		bytes = typeItem.bytes
 	}
 }
-

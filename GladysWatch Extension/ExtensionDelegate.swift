@@ -31,27 +31,34 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 		}
 	}
 
+	private let updateQueue = DispatchQueue.init(label: "build.bru.Gladys.watch.updates", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		let dropList = extractDropList(from: session.receivedApplicationContext)
-		DispatchQueue.main.async {
-			self.updatePages(dropList)
+		updateQueue.async {
+			self.updatePages(session.receivedApplicationContext)
 		}
 	}
 
 	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-		let dropList = extractDropList(from: applicationContext)
-		DispatchQueue.main.async {
-			self.updatePages(dropList)
+		updateQueue.async {
+			self.updatePages(applicationContext)
 		}
 	}
 
-	private func updatePages(_ dropList: [[String: Any]]) {
-		if dropList.count > 0 {
-			let names = [String](repeating: "ItemController", count: dropList.count)
-			let currentPage = dropList.index { $0["u"] as? String == ExtensionDelegate.currentUUID } ?? 0
-			WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: min(currentPage, names.count-1))
+	private func updatePages(_ compressedList: [String: Any]) {
+		let dropList = extractDropList(from: compressedList)
+		if dropList.isEmpty {
+			DispatchQueue.main.sync {
+				WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"], contexts: nil, orientation: .vertical, pageIndex: 0)
+			}
 		} else {
-			WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"], contexts: nil, orientation: .vertical, pageIndex: 0)
+			let names = [String](repeating: "ItemController", count: dropList.count)
+			let currentUUID = ExtensionDelegate.currentUUID
+			let currentPage = dropList.index { $0["u"] as? String == currentUUID } ?? 0
+			let index = min(currentPage, names.count-1)
+			DispatchQueue.main.sync {
+				WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
+			}
 		}
 	}
 

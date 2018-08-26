@@ -29,7 +29,6 @@ class ItemController: WKInterfaceController {
 	@IBOutlet private var topGroup: WKInterfaceGroup!
 	@IBOutlet private var bottomGroup: WKInterfaceGroup!
 
-	private var fetchingImage = false
 	private var gotImage = false
 	private var context: [String: Any]!
 	private var active = false
@@ -127,6 +126,7 @@ class ItemController: WKInterfaceController {
 		}
 
 		fetchingImage = true
+
 		var size = contentFrame.size
 		size.width *= 2
 		size.height *= 2
@@ -144,10 +144,21 @@ class ItemController: WKInterfaceController {
 			}
 		}, errorHandler: { error in
 			DispatchQueue.main.async {
+				self.image.setImage(nil)
 				self.fetchingImage = false
 				self.gotImage = false
 			}
 		})
+	}
+
+	private var fetchingImage: Bool = false {
+		didSet {
+			topGroup.setHidden(ItemController.hidden)
+			bottomGroup.setHidden(ItemController.hidden)
+			image.setHidden(false)
+			copyLabel.setText("...")
+			copyLabel.setHidden(!fetchingImage)
+		}
 	}
 
 	private var copying: Bool = false {

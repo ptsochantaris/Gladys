@@ -29,65 +29,55 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
 		DispatchQueue.main.async {
+			self.handle(message: message, replyHandler: replyHandler)
+		}
+	}
 
-			if let uuid = message["view"] as? String {
-				ViewController.shared.highlightItem(with: uuid, andOpen: true)
-				DispatchQueue.global().async {
-					replyHandler([:])
-				}
+	private func handle(message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+
+		if let uuid = message["view"] as? String {
+			ViewController.shared.highlightItem(with: uuid, andOpen: true)
+			replyHandler([:])
+
+		} else if let uuid = message["moveToTop"] as? String {
+			if let item = Model.item(uuid: uuid) {
+				ViewController.shared.sendToTop(item: item)
 			}
+			replyHandler([:])
 
-			if let uuid = message["moveToTop"] as? String {
-				if let item = Model.item(uuid: uuid) {
-					ViewController.shared.sendToTop(item: item)
-				}
-				DispatchQueue.global().async {
-					replyHandler([:])
-				}
+		} else if let uuid = message["delete"] as? String {
+			if let item = Model.item(uuid: uuid) {
+				ViewController.shared.deleteRequested(for: [item])
 			}
+			replyHandler([:])
 
-			if let uuid = message["delete"] as? String {
-				if let item = Model.item(uuid: uuid) {
-					ViewController.shared.deleteRequested(for: [item])
-				}
-				DispatchQueue.global().async {
-					replyHandler([:])
-				}
+		} else if let uuid = message["copy"] as? String {
+			if let item = Model.item(uuid: uuid) {
+				item.copyToPasteboard()
 			}
+			replyHandler([:])
 
-			if let uuid = message["copy"] as? String {
-				if let i = Model.item(uuid: uuid) {
-					i.copyToPasteboard()
-				}
-				DispatchQueue.global().async {
-					replyHandler([:])
-				}
-			}
+		} else if let uuid = message["image"] as? String, let item = Model.item(uuid: uuid) {
 
-			if let uuid = message["image"] as? String {
-				if let i = Model.item(uuid: uuid) {
-					let mode = i.displayMode
-					let icon = i.displayIcon
-					DispatchQueue.global().async {
-						let W = message["width"] as! CGFloat
-						let H = message["height"] as! CGFloat
-						let size = CGSize(width: W, height: H)
-						if mode == .center || mode == .circle {
-							let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
-							let data = scaledImage.pngData()!
-							replyHandler(["image": data])
-						} else {
-							let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
-							let data = scaledImage.jpegData(compressionQuality: 0.6)!
-							replyHandler(["image": data])
-						}
-					}
+			let mode = item.displayMode
+			let icon = item.displayIcon
+			DispatchQueue.global().async {
+				let W = message["width"] as! CGFloat
+				let H = message["height"] as! CGFloat
+				let size = CGSize(width: W, height: H)
+				let data: Data
+				if mode == .center || mode == .circle {
+					let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
+					data = scaledImage.pngData()!
 				} else {
-					DispatchQueue.global().async {
-						replyHandler([:])
-					}
+					let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
+					data = scaledImage.jpegData(compressionQuality: 0.6)!
 				}
+				replyHandler(["image": data])
 			}
+
+		} else {
+			replyHandler([:])
 		}
 	}
 
