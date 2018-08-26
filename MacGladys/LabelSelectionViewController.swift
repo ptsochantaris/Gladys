@@ -85,7 +85,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		clearAllButton.isEnabled = Model.isFilteringLabels
 	}
 
-	override func controlTextDidChange(_ obj: Notification) {
+	func controlTextDidChange(_ obj: Notification) {
 		tableView.reloadData()
 	}
 }

@@ -202,7 +202,7 @@ extension NSMenu {
 	}
 }
 
-final class DropCell: NSCollectionViewItem, NSMenuDelegate {
+final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation {
 
 	@IBOutlet private weak var topLabel: NSTextField!
 	@IBOutlet private weak var bottomLabel: NSTextField!
@@ -538,7 +538,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		ViewController.shared.addCellToSelection(self)
 	}
 
-	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.title {
 		case "Unlock":
 			return ViewController.shared.itemView.selectionIndexPaths.count == 1

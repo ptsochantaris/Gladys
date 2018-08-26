@@ -111,6 +111,9 @@ extension ArchivedDropItem {
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
 
+		#if MAC
+			activity.isEligibleForSearch = false
+		#else
 		if #available(iOS 12.0, *) {
 			activity.isEligibleForPrediction = true
 			activity.contentAttributeSet = item.searchAttributes
@@ -119,5 +122,6 @@ extension ArchivedDropItem {
 		} else {
 			activity.isEligibleForSearch = false
 		}
+		#endif
 	}
 }

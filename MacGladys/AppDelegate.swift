@@ -13,7 +13,7 @@ import HotKey
 import CloudKit
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	static private var hotKey: HotKey?
 
@@ -242,6 +242,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
 			}
 			return true
+			
+		} else if userActivity.activityType == kGladysQuicklookActivity {
+			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
+				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
+				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
+			}
+			return true
 		}
 
 		return false
@@ -397,7 +404,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 
 		if (menuItem.parent?.title ?? "").hasPrefix("Sort ") {
 			return !Model.drops.isEmpty

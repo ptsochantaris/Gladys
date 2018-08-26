@@ -143,7 +143,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	}
 }
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate {
 
 	@IBOutlet private weak var collection: MainCollectionView!
 
@@ -492,7 +492,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	override func controlTextDidChange(_ obj: Notification) {
+	func controlTextDidChange(_ obj: Notification) {
+		collection.selectionIndexes = []
 		updateSearch()
 	}
 
@@ -501,14 +502,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.filter = s.isEmpty ? nil : s
 	}
 
-	func highlightItem(with identifier: String, andOpen: Bool) {
+	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild: String?) {
+		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
 		if let item = Model.item(uuid: identifier) {
 			if let i = Model.drops.index(of: item) {
 				let ip = IndexPath(item: i, section: 0)
 				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
 				collection.selectionIndexes = IndexSet(integer: i)
-				info(nil)
+				if andOpen {
+					info(nil)
+				} else if andPreview {
+					if !(previewPanel?.isVisible ?? false) {
+						ViewController.shared.toggleQuickLookPreviewPanel(self)
+					}
+				}
 			}
 		}
 	}
@@ -895,7 +903,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
 		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
 			return !collection.actionableSelectedItems.isEmpty

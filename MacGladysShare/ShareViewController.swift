@@ -45,7 +45,7 @@ class ShareViewController: NSViewController {
 				pasteboardItems.append(text)
 			} else if let title = inputItem.attributedTitle {
 				pasteboardItems.append(title)
-			} else if let providers = inputItem.attachments as? [NSItemProvider] {
+			} else if let providers = inputItem.attachments {
 				for provider in providers {
 					let newItem = NSPasteboardItem()
 					pasteboardItems.append(newItem)

@@ -120,6 +120,7 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>build.bru.Gladys.item.view</string>
+		<string>build.bru.Gladys.item.quicklook</string>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>

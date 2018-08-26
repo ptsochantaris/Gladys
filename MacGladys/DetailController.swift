@@ -38,7 +38,7 @@ final class FocusableTextField: NSTextField {
 	}
 }
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate, NSMenuItemValidation {
 
 	static var showingUUIDs = Set<UUID>()
 
@@ -126,12 +126,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.delegate = self
 		labels.dataSource = self
 
-		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-		activity.title = item.cloudKitSharingTitle
-		activity.isEligibleForSearch = false
-		activity.isEligibleForHandoff = true
-		activity.isEligibleForPublicIndexing = false
-		userActivity = activity
+		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		DetailController.showingUUIDs.insert(item.uuid)
 	}
@@ -255,7 +250,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		previousText = field.stringValue
 	}
 
-	override func controlTextDidEndEditing(_ obj: Notification) {
+	func controlTextDidEndEditing(_ obj: Notification) {
 		guard let o = obj.object as? NSTextField else { return }
 		if o == notesField {
 			done(notesCheck: true)
@@ -323,7 +318,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func updateUserActivityState(_ userActivity: NSUserActivity) {
 		super.updateUserActivityState(userActivity)
-		userActivity.userInfo = [kGladysDetailViewingActivityItemUuid: item.uuid.uuidString]
+		ArchivedDropItem.updateUserActivity(userActivity, from: item, child: nil, titled: "Details")
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -386,7 +381,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		return nil
 	}
 
-	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 
 		let count = components.selectionIndexPaths.count
 		if count == 0 { return false }

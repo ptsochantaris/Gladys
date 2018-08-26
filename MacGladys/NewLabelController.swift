@@ -28,7 +28,7 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 		}
 	}
 
-	override func controlTextDidChange(_ obj: Notification) {
+	func controlTextDidChange(_ obj: Notification) {
 		labels.reloadData()
 	}
 

@@ -67,11 +67,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		} else if userActivity.activityType == kGladysDetailViewingActivity {
 			if let userInfo = userActivity.userInfo, let uuid = userInfo[kGladysDetailViewingActivityItemUuid] as? UUID { // legacy
-				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
-				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true, focusOnChild: childUuid)
+				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
 			} else if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
-				ViewController.shared.highlightItem(with: uuidString, andOpen: true, focusOnChild: childUuid)
+				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
 			}
 			return true
 

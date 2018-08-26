@@ -67,7 +67,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		return false
 	}
 
-	override func controlTextDidChange(_ obj: Notification) {
+	func controlTextDidChange(_ obj: Notification) {
 		tableView.reloadData()
 	}
 

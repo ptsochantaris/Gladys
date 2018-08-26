@@ -157,7 +157,6 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	// image loading is broken after first sync (new queue)
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
 		ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Details")
