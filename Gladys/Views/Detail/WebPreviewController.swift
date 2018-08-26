@@ -18,6 +18,9 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	var address: URL?
 	var webArchive: ArchivedDropItemType.PreviewItem?
 
+	var relatedItem: ArchivedDropItem?
+	var relatedChildItem: ArchivedDropItemType?
+
 	private var loadCheck1: NSKeyValueObservation!
 	private var loadCheck2: NSKeyValueObservation!
 
@@ -47,6 +50,17 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 			web.load(r)
 		} else if let previewURL = webArchive?.previewItemURL {
 			web.loadFileURL(previewURL, allowingReadAccessTo: previewURL)
+		}
+
+		if relatedItem != nil {
+			userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
+		}
+	}
+
+	override func updateUserActivityState(_ activity: NSUserActivity) {
+		super.updateUserActivityState(activity)
+		if let relatedItem = relatedItem {
+			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Web preview")
 		}
 	}
 

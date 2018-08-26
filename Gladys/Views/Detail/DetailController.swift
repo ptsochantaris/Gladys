@@ -53,10 +53,7 @@ final class DetailController: GladysViewController,
 			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
 		}
 
-		let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-		activity.isEligibleForHandoff = true
-		activity.isEligibleForPublicIndexing = false
-		userActivity = activity
+		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -163,17 +160,7 @@ final class DetailController: GladysViewController,
 	// image loading is broken after first sync (new queue)
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
-		let uuidString = item.uuid.uuidString
-		activity.title = item.displayTitleOrUuid
-		activity.userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
-		if #available(iOS 12.0, *) {
-			activity.isEligibleForPrediction = true
-			activity.contentAttributeSet = item.searchAttributes
-			activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
-			activity.isEligibleForSearch = true
-		} else {
-			activity.isEligibleForSearch = false
-		}
+		ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Details")
 	}
 
 	@objc private func updateUI() {
@@ -477,18 +464,16 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
 				guard let s = self else { return }
-				let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.image == nil }
-				guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
 				if PersistedOptions.fullScreenPreviews {
-					let n = UINavigationController(rootViewController: q)
+					guard let q = typeEntry.quickLook(extraRightButton: nil) else { return }
+					let n = QLHostingViewController(rootViewController: q)
+					n.relatedItem = s.item
+					n.relatedChildItem = typeEntry
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
-					if let sourceBar = s.navigationController?.navigationBar {
-						n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-						n.navigationBar.barTintColor = sourceBar.barTintColor
-						n.navigationBar.tintColor = sourceBar.tintColor
-					}
 					ViewController.top.present(n, animated: true)
 				} else {
+					let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.image == nil }
+					guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
 					s.navigationController?.pushViewController(q, animated: true)
 				}
 			}

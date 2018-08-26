@@ -225,7 +225,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
+				ViewController.shared.highlightItem(with: itemIdentifier)
 			}
 			return true
 

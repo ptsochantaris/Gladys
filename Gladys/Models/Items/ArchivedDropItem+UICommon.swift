@@ -95,4 +95,29 @@ extension ArchivedDropItem {
 		}
 		return nil
 	}
+
+	var previewableTypeItem: ArchivedDropItemType? {
+		return typeItems.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }
+	}
+
+	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedDropItem, child: ArchivedDropItemType?, titled: String) {
+		let uuidString = item.uuid.uuidString
+		activity.title = titled + ": " + item.displayTitleOrUuid
+
+		var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
+		userInfo[kGladysDetailViewingActivityItemTypeUuid] = child?.uuid.uuidString
+		activity.userInfo = userInfo
+
+		activity.isEligibleForHandoff = true
+		activity.isEligibleForPublicIndexing = false
+
+		if #available(iOS 12.0, *) {
+			activity.isEligibleForPrediction = true
+			activity.contentAttributeSet = item.searchAttributes
+			activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
+			activity.isEligibleForSearch = true
+		} else {
+			activity.isEligibleForSearch = false
+		}
+	}
 }

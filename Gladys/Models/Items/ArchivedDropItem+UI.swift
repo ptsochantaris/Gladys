@@ -9,6 +9,40 @@ import MobileCoreServices
 import LocalAuthentication
 import GladysFramework
 
+class QLHostingViewController: UINavigationController {
+	var relatedItem: ArchivedDropItem?
+	var relatedChildItem: ArchivedDropItemType?
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		preferredContentSize = mainWindow.bounds.size
+		let tint = ViewController.tintColor
+		view.tintColor = tint
+		navigationBar.tintColor = tint
+		if let sourceBar = ViewController.shared.navigationController?.navigationBar {
+			navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
+			navigationBar.barTintColor = sourceBar.barTintColor
+		}
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if relatedItem != nil {
+			userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
+		}
+	}
+	override func updateUserActivityState(_ activity: NSUserActivity) {
+		super.updateUserActivityState(activity)
+		if let relatedItem = relatedItem {
+			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Quick look")
+		}
+	}
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		viewControllers = []
+	}
+}
+
 extension ArchivedDropItem {
 
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
@@ -133,36 +167,28 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
-	private class QLHostingViewController: UINavigationController {
-		override func viewDidDisappear(_ animated: Bool) {
-			super.viewDidDisappear(animated)
-			viewControllers = []
+	func tryPreview(in viewController: UIViewController, from: ArchivedItemCell?, preferChild childUuid: String? = nil) {
+		var itemToPreview: ArchivedDropItemType?
+		if let childUuid = childUuid {
+			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
 		}
-	}
-
-	func tryPreview(in viewController: UIViewController, from: ArchivedItemCell) {
-		guard let t = typeItems.sorted(by: { $0.contentPriority > $1.contentPriority }).first(where: { $0.canPreview }), let q = t.quickLook(extraRightButton: nil) else { return }
+		itemToPreview = itemToPreview ?? previewableTypeItem
+		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return }
 		let n = QLHostingViewController(rootViewController: q)
-		n.preferredContentSize = mainWindow.bounds.size
-		let rootController = ViewController.shared!
-		n.view.tintColor = rootController.view.tintColor
-		if let sourceBar = rootController.navigationController?.navigationBar {
-			n.navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-			n.navigationBar.barTintColor = sourceBar.barTintColor
-			n.navigationBar.tintColor = sourceBar.tintColor
-		}
+		n.relatedItem = self
+
 		if PersistedOptions.fullScreenPreviews {
 			let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
-			if rootController.phoneMode || UIAccessibility.isVoiceOverRunning {
+			if ViewController.shared.phoneMode || UIAccessibility.isVoiceOverRunning {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
 		}
 		viewController.present(n, animated: true)
-		if let p = q.popoverPresentationController {
+		if let p = q.popoverPresentationController, let from = from {
 			p.sourceView = from
 			p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}

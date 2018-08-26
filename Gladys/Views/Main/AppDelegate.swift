@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: false)
+				ViewController.shared.highlightItem(with: itemIdentifier)
 			}
 			return true
 
@@ -66,10 +66,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 
 		} else if userActivity.activityType == kGladysDetailViewingActivity {
-			if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID { // legacy
-				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
-			} else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
-				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
+			if let userInfo = userActivity.userInfo, let uuid = userInfo[kGladysDetailViewingActivityItemUuid] as? UUID { // legacy
+				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
+				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true, focusOnChild: childUuid)
+			} else if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
+				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
+				ViewController.shared.highlightItem(with: uuidString, andOpen: true, focusOnChild: childUuid)
+			}
+			return true
+
+		} else if userActivity.activityType == kGladysQuicklookActivity {
+			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
+				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
+				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
 			}
 			return true
 		}

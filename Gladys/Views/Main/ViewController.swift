@@ -1257,6 +1257,18 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		completion?()
 	}
 
+	func dismissAnyPopOverOrModal(completion: (()->Void)? = nil) {
+		dismissAnyPopOver() {
+			if let p = self.navigationItem.searchController?.presentedViewController ?? self.navigationController?.presentedViewController {
+				p.dismiss(animated: true) {
+					completion?()
+				}
+			} else {
+				completion?()
+			}
+		}
+	}
+
 	func deleteRequested(for items: [ArchivedDropItem]) {
 
 		let ipsToRemove = Model.delete(items: items)
@@ -1362,22 +1374,22 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		s.delegate = self
 	}
 
-	func highlightItem(with identifier: String, andOpen: Bool) {
+	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild childUuid: String? = nil) {
 		if let index = Model.filteredDrops.index(where: { $0.uuid.uuidString == identifier }) {
-			dismissAnyPopOver() {
-				self.highlightItem(at: index, andOpen: andOpen)
+			dismissAnyPopOverOrModal() {
+				self.highlightItem(at: index, andOpen: andOpen, andPreview: andPreview, focusOnChild: childUuid)
 			}
 		} else if let index = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
-			dismissAnyPopOver() {
+			dismissAnyPopOverOrModal() {
 				self.resetSearch(andLabels: true)
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.highlightItem(at: index, andOpen: andOpen)
+					self.highlightItem(at: index, andOpen: andOpen, andPreview: andPreview, focusOnChild: childUuid)
 				}
 			}
 		}
 	}
 
-	private func highlightItem(at index: Int, andOpen: Bool) {
+	private func highlightItem(at index: Int, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
 		collection.isUserInteractionEnabled = false
 		let ip = IndexPath(item: index, section: 0)
 		collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
@@ -1386,6 +1398,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				cell.flash()
 				if andOpen {
 					self.collectionView(self.collection, didSelectItemAt: ip)
+				} else if andPreview {
+					let item = Model.filteredDrops[index]
+					item.tryPreview(in: ViewController.top, from: cell, preferChild: childUuid)
 				}
 			}
 			self.collection.isUserInteractionEnabled = true
