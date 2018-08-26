@@ -502,7 +502,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.filter = s.isEmpty ? nil : s
 	}
 
-	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild: String?) {
+	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild: String? = nil) {
 		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
 		if let item = Model.item(uuid: identifier) {
