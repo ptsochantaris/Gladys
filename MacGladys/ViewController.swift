@@ -718,15 +718,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func removeLock(_ sender: Any?) {
-		if let sender = sender as? DropCell, let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
-			collection.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
-		}
-		guard let item = lockedSelectedItems.first else { return }
+		let items = removableLockSelectedItems
+		let plural = items.count > 1
+		let actionName = "Remove Lock" + (plural ? "s" : "")
 
 		let a = NSAlert()
-		a.messageText = "Remove Lock"
-		a.informativeText = "Please enter the password you provided when locking this item."
-		a.addButton(withTitle: "Remove Lock")
+		a.messageText = actionName
+		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
+		a.addButton(withTitle: actionName)
 		a.addButton(withTitle: "Cancel")
 		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
 		input.placeholderString = "Password"
@@ -735,15 +734,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		a.beginSheetModal(for: view.window!) { [weak self] response in
 			if response.rawValue == 1000 {
 				let text = input.stringValue
-				if item.lockPassword == sha1(text) {
+				let hash = sha1(text)
+				var successCount = 0
+				for item in items where item.lockPassword == hash {
 					item.lockPassword = nil
 					item.lockHint = nil
 					item.needsUnlock = false
 					item.markUpdated()
 					item.reIndex()
-					Model.save()
-				} else {
+					successCount += 1
+				}
+				if successCount == 0 {
 					self?.removeLock(sender)
+				} else {
+					Model.save()
 				}
 			}
 		}
@@ -759,24 +763,34 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func createLock(_ sender: Any?) {
-		guard let item = collection.actionableSelectedItems.first else { return }
 
-		if item.isLocked && !item.needsUnlock {
+		let instaLock = lockableSelectedItems.filter { $0.isLocked && !$0.needsUnlock }
+		for item in instaLock {
 			item.needsUnlock = true
 			item.postModified()
+		}
+
+		let items = lockableSelectedItems
+		if items.isEmpty {
 			return
 		}
 
+		let message = items.count > 1
+		? "Please provide the password you will use to unlock these items. You can also provide an optional label to display while the items are locked."
+		: "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
+
+		let hintText = (items.count == 1) ? items.first?.displayText.0 : nil
+
 		let a = NSAlert()
-		a.messageText = "Lock Item"
-		a.informativeText = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
+		a.messageText = items.count > 1 ? "Lock Items" : "Lock Item"
+		a.informativeText = message
 		a.addButton(withTitle: "Lock")
 		a.addButton(withTitle: "Cancel")
 		let password = NSSecureTextField(frame: NSRect(x: 0, y: 32, width: 290, height: 24))
 		password.placeholderString = "Password"
 		let hint = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
 		hint.placeholderString = "Hint or description"
-		hint.stringValue = item.displayText.0 ?? ""
+		hint.stringValue = hintText ?? ""
 		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 290, height: 56))
 		input.addSubview(password)
 		input.addSubview(hint)
@@ -786,11 +800,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			if response.rawValue == 1000 {
 				let text = password.stringValue
 				if !text.isEmpty {
-					item.needsUnlock = true
-					item.lockPassword = sha1(text)
-					item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
-					item.markUpdated()
-					item.reIndex()
+					let hashed = sha1(text)
+					for item in items {
+						item.needsUnlock = true
+						item.lockPassword = hashed
+						item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
+						item.markUpdated()
+						item.reIndex()
+					}
 					Model.save()
 				} else {
 					self?.createLock(sender)
@@ -800,11 +817,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func unlock(_ sender: Any?) {
-		guard let item = lockedSelectedItems.first else { return }
+		let items = unlockableSelectedItems
+		let plural = items.count > 1
 
 		let a = NSAlert()
-		a.messageText = "Access Locked Item"
-		a.informativeText = "Please enter the password you provided when locking this item."
+		a.messageText = "Access Locked Item" + (plural ? "s" : "")
+		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
 		a.addButton(withTitle: "Unlock")
 		a.addButton(withTitle: "Cancel")
 		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
@@ -814,10 +832,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		a.beginSheetModal(for: view.window!) { [weak self] response in
 			if response.rawValue == 1000 {
 				let text = input.stringValue
-				if item.lockPassword == sha1(text) {
+				var successCount = 0
+				let hashed = sha1(text)
+				for item in items where item.lockPassword == hashed {
 					item.needsUnlock = false
 					item.postModified()
-				} else {
+					successCount += 1
+				}
+				if successCount == 0 {
 					self?.unlock(sender)
 				}
 			}
@@ -922,29 +944,46 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-	private var lockedSelectedItems: [ArchivedDropItem] {
+	var lockableSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.filteredDrops[$0.item]
-			return item.isLocked ? item : nil
+			let isLocked = item.isLocked
+			let canBeLocked = !isLocked || (isLocked && !item.needsUnlock)
+			return (!canBeLocked || item.isImportedShare) ? nil : item
+		}
+	}
+
+	var removableLockSelectedItems: [ArchivedDropItem] {
+		return collection.selectionIndexPaths.compactMap {
+			let item = Model.filteredDrops[$0.item]
+			return (!item.isLocked || item.isImportedShare) ? nil : item
+		}
+	}
+
+	var unlockableSelectedItems: [ArchivedDropItem] {
+		return collection.selectionIndexPaths.compactMap {
+			let item = Model.filteredDrops[$0.item]
+			return (!item.needsUnlock || item.isImportedShare) ? nil : item
 		}
 	}
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)):
+		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)), #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)):
 			return !collection.actionableSelectedItems.isEmpty
+
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
+
 		case #selector(unlock(_:)):
-			return lockedSelectedItems.count == 1 && collection.selectionIndexPaths.count == 1
+			return !unlockableSelectedItems.isEmpty
+
 		case #selector(removeLock(_:)):
-			let lockedItems = lockedSelectedItems
-			if lockedItems.contains(where: { $0.isImportedShare }) { return false }
-			return lockedItems.count == 1 && collection.selectionIndexPaths.count == 1
+			return !removableLockSelectedItems.isEmpty
+
 		case #selector(createLock(_:)):
-			let lockedItems = lockedSelectedItems
-			if lockedItems.contains(where: { $0.isImportedShare }) { return false }
-			return lockedItems.isEmpty && collection.selectionIndexPaths.count == 1
+			return !lockableSelectedItems.isEmpty
+
 		case #selector(toggleQuickLookPreviewPanel(_:)):
 			let selectedItems = collection.actionableSelectedItems
 			if selectedItems.count > 1 {
@@ -957,8 +996,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				menuItem.title = "Quick Look"
 				return false
 			}
-		case #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)):
-			return !collection.actionableSelectedItems.isEmpty
+
 		default:
 			return true
 		}

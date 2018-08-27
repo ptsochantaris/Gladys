@@ -231,7 +231,7 @@ final class CardView: FirstMouseView {
 	}
 }
 
-final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation {
+final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	@IBOutlet private weak var topLabel: NSTextField!
 	@IBOutlet private weak var bottomLabel: NSTextField!
@@ -250,9 +250,13 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
+
 		image.layer?.cornerRadius = 5
 
 		view.layer?.cornerRadius = 10
+
+		view.menu = NSMenu()
+		view.menu?.delegate = self
 	}
 
 	override func viewDidLoad() {
@@ -295,35 +299,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 		return img
 	}
 
-	private var shortcutMenu: NSMenu? {
-		guard let item = archivedDropItem else { return nil }
-		if item.needsUnlock {
-			let m = NSMenu()
-			m.addItem("Unlock", action: #selector(unlockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-			if !item.isImportedShare {
-				m.addItem("Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-			}
-			m.delegate = self
-			return m
-		} else {
-			let m = NSMenu(title: item.displayTitleOrUuid)
-			m.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
-			m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
-			m.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
-			m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
-			m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
-			m.addItem("Labels...", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
-			if !item.isImportedShare {
-				m.addItem(NSMenuItem.separator())
-				m.addItem("Lock", action: #selector(lockSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
-			}
-			m.addItem(NSMenuItem.separator())
-			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
-			m.delegate = self
-			return m
-		}
-	}
-
 	override func viewWillLayout() {
 		super.viewWillLayout()
 		reDecorate()
@@ -354,8 +329,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 		} else {
 			progressView.stopAnimation(nil)
 		}
-
-		view.menu = shortcutMenu
 
 		if let item = item {
 
@@ -388,6 +361,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 							DispatchQueue.main.sync { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
 									self?.image.layer?.contents = img
+									self?.image.updateLayer()
 								}
 							}
 						}
@@ -499,6 +473,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 			image.layer?.contents = nil
 		}
 
+		image.updateLayer()
+
 		if !(wantMapView || wantColourView), let e = existingPreviewView {
 			e.removeFromSuperview()
 			existingPreviewView = nil
@@ -582,16 +558,49 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 
 	func menuWillOpen(_ menu: NSMenu) {
 		ViewController.shared.addCellToSelection(self)
-	}
 
-	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-		switch menuItem.title {
-		case "Unlock":
-			return ViewController.shared.itemView.selectionIndexPaths.count == 1
-		case "Lock", "Remove Lock":
-			return ViewController.shared.itemView.selectionIndexPaths.count == 1 && !(archivedDropItem?.isImportedShare ?? false)
-		default:
-			return true
+		menu.removeAllItems()
+		menu.title = ""
+
+		guard let item = archivedDropItem else {
+			return
+		}
+
+		var lockItems = [NSMenuItem]()
+		if !ViewController.shared.lockableSelectedItems.isEmpty {
+			let m = NSMenuItem(title: "Lock", action: #selector(lockSelected), keyEquivalent: "")
+			lockItems.append(m)
+		}
+		if !ViewController.shared.unlockableSelectedItems.isEmpty {
+			let m = NSMenuItem(title: "Unlock", action: #selector(unlockSelected), keyEquivalent: "")
+			lockItems.append(m)
+		}
+		if !ViewController.shared.removableLockSelectedItems.isEmpty {
+			let m = NSMenuItem(title: "Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "")
+			lockItems.append(m)
+		}
+
+		if !item.needsUnlock {
+			menu.title =  item.displayTitleOrUuid
+			menu.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
+			menu.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
+			menu.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
+			menu.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
+			menu.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
+			menu.addItem("Labels...", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
+		}
+
+		if !lockItems.isEmpty {
+			menu.addItem(NSMenuItem.separator())
+			for item in lockItems {
+				item.isEnabled = true
+				menu.addItem(item)
+			}
+		}
+
+		if !item.needsUnlock {
+			menu.addItem(NSMenuItem.separator())
+			menu.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		}
 	}
 
