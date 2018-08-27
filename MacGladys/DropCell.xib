@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.13.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner"/>
@@ -22,7 +22,7 @@
                 <outlet property="view" destination="zta-tj-lHd" id="lVx-8r-5Oa"/>
             </connections>
         </collectionViewItem>
-        <customView wantsLayer="YES" id="zta-tj-lHd" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
+        <customView wantsLayer="YES" id="zta-tj-lHd" customClass="CardView" customModule="Gladys" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="303" height="302"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -37,8 +37,16 @@
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
-                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
+                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="CardView" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="78" width="283" height="186"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="color" keyPath="lightColor">
+                                    <color key="value" red="0.84313725490000002" green="0.83137254900000002" blue="0.80784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="darkColor">
+                                    <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </customView>
                         <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="133" y="51" width="17" height="22"/>
@@ -138,6 +146,14 @@ Gw
             <shadow key="shadow" blurRadius="2">
                 <color key="color" white="0.0" alpha="0.3006742294520548" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             </shadow>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="color" keyPath="lightColor">
+                    <color key="value" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="color" keyPath="darkColor">
+                    <color key="value" white="0.18115234371666666" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="208.5" y="600"/>
         </customView>
     </objects>

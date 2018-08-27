@@ -57,6 +57,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet private weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
 
+	private var appearanceChangeObservation: NSKeyValueObservation?
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let n = NotificationCenter.default
@@ -78,6 +80,37 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		titleField.focusDelegate = self
 		notesField.focusDelegate = self
+
+		appearanceChangeObservation = view.observe(\.effectiveAppearance) { [weak self] _, _  in
+			self?.updateAppearanceRelatedChanges()
+		}
+	}
+
+	private func updateAppearanceRelatedChanges() {
+		if representedObject == nil { return }
+		let shareMode = item.shareMode
+		let readWrite = shareMode != .elsewhereReadOnly
+		updateTextfields(readWrite)
+	}
+
+	private func updateTextfields(_ readWrite: Bool) {
+		let bgColor: CGColor
+		if readWrite {
+			if #available(OSX 10.14, *) {
+				switch view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
+				case NSAppearance.Name.darkAqua:
+					bgColor = NSColor.darkGray.cgColor
+				default:
+					bgColor = NSColor.white.cgColor
+				}
+			} else {
+				bgColor = NSColor.textBackgroundColor.cgColor
+			}
+		} else {
+			bgColor = NSColor.clear.cgColor
+		}
+		titleField.layer?.backgroundColor = bgColor
+		notesField.layer?.backgroundColor = bgColor
 	}
 
 	private var lastUpdate = Date.distantPast
@@ -172,8 +205,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			inviteButton.image = DetailController.shareImageTinted
 		}
 
-		titleField.layer?.backgroundColor = readWrite ? NSColor.textBackgroundColor.cgColor : NSColor.clear.cgColor
-		notesField.layer?.backgroundColor = titleField.layer?.backgroundColor
+		updateTextfields(readWrite)
 
 		titleField.isEditable = readWrite
 		notesField.isEditable = readWrite

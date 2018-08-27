@@ -21,7 +21,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var descriptionLabel: NSTextField!
 	@IBOutlet private weak var previewLabel: NSTextField!
 	@IBOutlet private weak var sizeLabel: NSTextField!
-	@IBOutlet private weak var centreBlock: NSView!
+	@IBOutlet private weak var centreBlock: CardView!
 	@IBOutlet private weak var spinner: NSProgressIndicator!
 
 	weak var delegate: ComponentCellDelegate?
@@ -29,9 +29,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.layer?.cornerRadius = 8
-		view.layer?.backgroundColor = NSColor.white.cgColor
 		centreBlock.layer?.cornerRadius = 4
-		centreBlock.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
 	}
 
 	override var representedObject: Any? {

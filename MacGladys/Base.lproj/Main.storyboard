@@ -1366,7 +1366,7 @@ Only</string>
                         <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <visualEffectView appearanceType="vibrantLight" blendingMode="behindWindow" material="sidebar" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="1b8-kc-m0N">
+                            <visualEffectView blendingMode="behindWindow" material="sidebar" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="1b8-kc-m0N">
                                 <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
                             </visualEffectView>
                             <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
@@ -1398,7 +1398,7 @@ Only</string>
                                                 <size key="itemSize" width="100" height="100"/>
                                                 <edgeInsets key="sectionInset" left="10" right="10" top="10" bottom="10"/>
                                             </collectionViewFlowLayout>
-                                            <color key="primaryBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="primaryBackgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
                                                 <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
                                                 <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
@@ -1417,7 +1417,7 @@ Only</string>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="sidebar" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="Loc-lN-MBo">
+                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="Loc-lN-MBo">
                                 <rect key="frame" x="0.0" y="185" width="670" height="60"/>
                             </visualEffectView>
                             <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
@@ -1508,8 +1508,7 @@ Only</string>
                         <outlet property="emptyView" destination="A2v-Sl-Y1f" id="GDB-mq-1QQ"/>
                         <outlet property="searchBar" destination="nZb-eu-7ee" id="4zc-tb-JLi"/>
                         <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
-                        <outlet property="titleBar" destination="Loc-lN-MBo" id="sac-HZ-EL5"/>
-                        <outlet property="titleBat" destination="Loc-lN-MBo" id="UU8-cn-52I"/>
+                        <outlet property="titleBar" destination="Loc-lN-MBo" id="0J0-Nl-0Ih"/>
                         <outlet property="translucentView" destination="1b8-kc-m0N" id="IRk-CO-FkJ"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>

@@ -43,7 +43,7 @@ final class TokenTextField: NSTextField {
 
 			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
 				.font: font!,
-				.foregroundColor: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1),
+				.foregroundColor: ViewController.tintColor,
 				.paragraphStyle: p,
 				.baselineOffset: -2,
 				])
@@ -69,7 +69,7 @@ final class TokenTextField: NSTextField {
 
 		guard !attributedStringValue.string.isEmpty, let labels = labels, let context = NSGraphicsContext.current?.cgContext else { return }
 
-		let highlightColor = #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)
+		let highlightColor = ViewController.tintColor
 
 		let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
 
@@ -202,34 +202,68 @@ extension NSMenu {
 	}
 }
 
+final class CardView: FirstMouseView {
+
+	@IBInspectable var lightColor: NSColor?
+	@IBInspectable var darkColor: NSColor?
+
+	@available(OSX 10.14, *)
+	override func viewDidChangeEffectiveAppearance() {
+		super.viewDidChangeEffectiveAppearance()
+		updateLayer()
+	}
+
+	override func updateLayer() {
+		super.updateLayer()
+
+		guard let l = layer else { return }
+
+		if #available(OSX 10.14, *) {
+			switch effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
+			case NSAppearance.Name.darkAqua:
+				l.backgroundColor = darkColor?.cgColor
+			default:
+				l.backgroundColor = lightColor?.cgColor
+			}
+		} else {
+			l.backgroundColor = lightColor?.cgColor
+		}
+	}
+}
+
 final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation {
 
 	@IBOutlet private weak var topLabel: NSTextField!
 	@IBOutlet private weak var bottomLabel: NSTextField!
-	@IBOutlet private weak var image: FirstMouseView!
+	@IBOutlet private weak var image: CardView!
 	@IBOutlet private weak var progressView: NSProgressIndicator!
 	@IBOutlet private weak var cancelButton: NSButton!
 	@IBOutlet private weak var lockImage: NSImageView!
 	@IBOutlet private weak var labelTokenField: TokenTextField!
 	@IBOutlet private weak var sharedIcon: NSImageView!
-	
+
 	private var existingPreviewView: FirstMouseView?
 
 	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)) }()
 
 	private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)) }()
 
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		image.layer?.cornerRadius = 5
+
+		view.layer?.cornerRadius = 10
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.layer?.cornerRadius = 10
-		view.layer?.backgroundColor = .white
-		topLabel.maximumNumberOfLines = 2
-		bottomLabel.maximumNumberOfLines = 2
-		image.layer?.cornerRadius = 5
-		image.layer?.backgroundColor = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	@objc private func itemModified(_ notification: Notification) {

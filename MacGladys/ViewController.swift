@@ -152,7 +152,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
 	static let labelColor = NSColor.labelColor
-	static let tintColor = #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
+
+	static var tintColor: NSColor {
+		if #available(OSX 10.14, *) {
+			switch ViewController.shared.view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
+			case NSAppearance.Name.darkAqua:
+				return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+			default:
+				return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
+			}
+		} else {
+			return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
+		}
+	}
 
 	@IBOutlet private weak var searchHolder: NSView!
 	@IBOutlet private weak var searchBar: NSSearchField!
@@ -160,7 +172,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@IBOutlet private weak var emptyView: NSImageView!
 	@IBOutlet private weak var emptyLabel: NSTextField!
 
-	@IBOutlet private weak var titleBat: NSVisualEffectView!
+	@IBOutlet private weak var titleBar: NSVisualEffectView!
 
 	@IBOutlet private weak var translucentView: NSVisualEffectView!
 
@@ -530,7 +542,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			searchHolder.isHidden = !showSearch
 			guard let scrollView = collection.enclosingScrollView else { return }
 			DispatchQueue.main.async {
-				scrollView.contentInsets = NSEdgeInsets(top: self.titleBat.frame.size.height, left: 0, bottom: 0, right: 0)
+				scrollView.contentInsets = NSEdgeInsets(top: self.titleBar.frame.size.height, left: 0, bottom: 0, right: 0)
 			}
 		}
 	}
@@ -1108,8 +1120,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func endProgress() {
-		progressController?.endMonitoring()
-		progressController?.dismiss(self)
-		progressController = nil
+		if let p = progressController {
+			p.endMonitoring()
+			p.dismiss(p)
+			progressController = nil
+		}
 	}
 }
