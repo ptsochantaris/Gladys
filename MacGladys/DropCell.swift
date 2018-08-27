@@ -283,6 +283,18 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate, NSMenuItemValidation
 		}
 	}
 
+	var previewImage: NSImage? {
+		let bounds = view.bounds
+		guard let rep = view.bitmapImageRepForCachingDisplay(in: bounds) else {
+			return nil
+		}
+
+		let img = NSImage(size: bounds.size)
+		view.cacheDisplay(in: bounds, to: rep)
+		img.addRepresentation(rep)
+		return img
+	}
+
 	private var shortcutMenu: NSMenu? {
 		guard let item = archivedDropItem else { return nil }
 		if item.needsUnlock {

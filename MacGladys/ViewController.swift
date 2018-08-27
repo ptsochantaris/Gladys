@@ -1097,8 +1097,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func previewPanel(_ panel: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect: UnsafeMutablePointer<NSRect>!) -> Any! {
-		if let qlItem = item as? ArchivedDropItemType.PreviewItem, let typeItem = Model.typeItem(uuid: qlItem.uuid.uuidString) {
-			return typeItem.displayIcon
+		let visibleCells = collection.visibleItems()
+		if let qlItem = item as? ArchivedDropItemType.PreviewItem,
+			let parentUuid = Model.typeItem(uuid: qlItem.uuid.uuidString)?.parentUuid,
+			let cellIndex = visibleCells.index(where: { ($0.representedObject as? ArchivedDropItem)?.uuid == parentUuid }) {
+			return (visibleCells[cellIndex] as? DropCell)?.previewImage
 		}
 		return nil
 	}
