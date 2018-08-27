@@ -213,6 +213,11 @@ final class CardView: FirstMouseView {
 		updateLayer()
 	}
 
+	func flatColor() {
+		layer?.contents = nil
+		updateLayer()
+	}
+
 	override func updateLayer() {
 		super.updateLayer()
 
@@ -335,11 +340,11 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			if showLoading {
 				hideCancel = item.needsReIngest
 				hideSpinner = false
-				image.layer?.contents = nil
+				image.flatColor()
 
 			} else if item.needsUnlock {
 				hideLock = false
-				image.layer?.contents = nil
+				image.flatColor()
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint ?? ""
 				share = item.shareMode
@@ -353,7 +358,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				if let cachedImage = imageCache.object(forKey: cacheKey) {
 					image.layer?.contents = cachedImage
 				} else {
-					image.layer?.contents = nil
+					image.flatColor()
 					imageProcessingQueue.async { [weak self] in
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							let img = item.displayIcon
@@ -470,10 +475,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			}
 
 		} else { // item is nil
-			image.layer?.contents = nil
+			image.flatColor()
 		}
-
-		image.updateLayer()
 
 		if !(wantMapView || wantColourView), let e = existingPreviewView {
 			e.removeFromSuperview()

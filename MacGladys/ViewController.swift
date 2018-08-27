@@ -794,6 +794,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 290, height: 56))
 		input.addSubview(password)
 		input.addSubview(hint)
+		password.nextKeyView = hint
+		hint.nextKeyView = password
 		a.accessoryView = input
 		a.window.initialFirstResponder = password
 		a.beginSheetModal(for: view.window!) { [weak self] response in
