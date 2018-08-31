@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-let todayCellFormatter: DateFormatter = {
+private let todayCellFormatter: DateFormatter = {
 	let d = DateFormatter()
 	d.doesRelativeDateFormatting = true
 	d.dateStyle = .short
@@ -28,12 +28,12 @@ final class TodayCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
 		backgroundEffect.layer.cornerRadius = 10
 		backgroundEffect.clipsToBounds = true
 		backgroundView = backgroundEffect
 
-		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
 		imageEffect.layer.cornerRadius = 5
 		imageEffect.clipsToBounds = true
 		imageView.coverUnder(with: imageEffect)
