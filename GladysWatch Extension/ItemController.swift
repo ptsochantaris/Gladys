@@ -21,7 +21,7 @@ extension Notification.Name {
 	static let GroupsUpdated = Notification.Name("GroupsUpdated")
 }
 
-class ItemController: WKInterfaceController {
+final class ItemController: WKInterfaceController {
 	@IBOutlet private var label: WKInterfaceLabel!
 	@IBOutlet private var date: WKInterfaceLabel!
 	@IBOutlet private var image: WKInterfaceImage!
@@ -88,8 +88,6 @@ class ItemController: WKInterfaceController {
 		ExtensionDelegate.currentUUID = ""
 	}
 
-	private static let imageCache = NSCache<NSString, UIImage>()
-
 	private static let topShade = makeGradient(up: false)
 
 	private static let bottomShade = makeGradient(up: true)
@@ -117,8 +115,8 @@ class ItemController: WKInterfaceController {
 
 		guard let uuid = uuid else { return }
 
-		let cacheKey = uuid + String(itemDate.timeIntervalSinceReferenceDate)
-		if let i = ItemController.imageCache.object(forKey: cacheKey as NSString) {
+		let cacheKey = uuid + String(itemDate.timeIntervalSinceReferenceDate) + ".dat"
+		if let data = ImageCache.imageData(for: cacheKey), let i = UIImage(data: data) {
 			image.setImage(i)
 			fetchingImage = false
 			gotImage = true
@@ -133,8 +131,8 @@ class ItemController: WKInterfaceController {
 		WCSession.default.sendMessage(["image": uuid, "width": size.width, "height": size.height], replyHandler: { reply in
 			if let r = reply["image"] as? Data {
 				let i = UIImage(data: r)
-				if let i = i {
-					ItemController.imageCache.setObject(i, forKey: cacheKey as NSString)
+				if i != nil {
+					ImageCache.setImageData(r, for: cacheKey)
 				}
 				DispatchQueue.main.async {
 					self.image.setImage(i)
@@ -205,9 +203,13 @@ class ItemController: WKInterfaceController {
 		if let uuid = uuid {
 			opening = true
 			WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
-				self.opening = false
+				DispatchQueue.main.async {
+					self.opening = false
+				}
 			}, errorHandler: { _ in
-				self.opening = false
+				DispatchQueue.main.async {
+					self.opening = false
+				}
 			})
 		}
 	}
@@ -216,9 +218,13 @@ class ItemController: WKInterfaceController {
 		if let uuid = uuid {
 			copying = true
 			WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
-				self.copying = false
+				DispatchQueue.main.async {
+					self.copying = false
+				}
 			}, errorHandler: { _ in
-				self.copying = false
+				DispatchQueue.main.async {
+					self.copying = false
+				}
 			})
 		}
 	}
@@ -227,9 +233,13 @@ class ItemController: WKInterfaceController {
 		if let uuid = uuid {
 			topping = true
 			WCSession.default.sendMessage(["moveToTop": uuid], replyHandler: { _ in
-				self.topping = false
+				DispatchQueue.main.async {
+					self.topping = false
+				}
 			}, errorHandler: { _ in
-				self.topping = false
+				DispatchQueue.main.async {
+					self.topping = false
+				}
 			})
 		}
 	}
@@ -238,9 +248,13 @@ class ItemController: WKInterfaceController {
 		if let uuid = uuid {
 			deleting = true
 			WCSession.default.sendMessage(["delete": uuid], replyHandler: { _ in
-				self.deleting = false
+				DispatchQueue.main.async {
+					self.deleting = false
+				}
 			}, errorHandler: { _ in
-				self.deleting = false
+				DispatchQueue.main.async {
+					self.deleting = false
+				}
 			})
 		}
 	}

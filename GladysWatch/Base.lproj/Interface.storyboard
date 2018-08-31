@@ -14,7 +14,7 @@
             <objects>
                 <controller identifier="StartupController" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
-                        <label alignment="center" verticalAlignment="center" text="Items in your collection will appear here." textAlignment="center" numberOfLines="0" id="mnL-YR-CrQ">
+                        <label alignment="center" verticalAlignment="center" text="Loading..." textAlignment="center" numberOfLines="0" id="mnL-YR-CrQ">
                             <fontDescription key="font" style="UICTFontTextStyleBody"/>
                         </label>
                     </items>
@@ -110,6 +110,19 @@ Label</string>
                 </controller>
             </objects>
             <point key="canvasLocation" x="292" y="184"/>
+        </scene>
+        <!--EmptyController-->
+        <scene sceneID="f0Z-LB-zjq">
+            <objects>
+                <controller identifier="EmptyController" id="Dhs-vz-ip5" customClass="InterfaceController" customModule="GladysWatch" customModuleProvider="target">
+                    <items>
+                        <label alignment="center" verticalAlignment="center" text="Items in your collection will appear here." textAlignment="center" numberOfLines="0" id="uoY-Cf-fbL">
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                        </label>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="-5" y="501"/>
         </scene>
     </scenes>
 </document>

@@ -73,7 +73,9 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 					let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
 					data = scaledImage.jpegData(compressionQuality: 0.6)!
 				}
-				replyHandler(["image": data])
+				DispatchQueue.main.async {
+					replyHandler(["image": data])
+				}
 			}
 
 		} else {

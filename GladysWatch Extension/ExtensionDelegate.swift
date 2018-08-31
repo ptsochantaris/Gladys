@@ -9,7 +9,50 @@
 import WatchKit
 import WatchConnectivity
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
+final class ImageCache {
+
+	private static let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+
+	private static let accessKeys = Set([URLResourceKey.contentAccessDateKey])
+
+	static func setImageData(_ data: Data, for key: String) {
+		let imageUrl = cacheDir.appendingPathComponent(key)
+		do {
+			try data.write(to: imageUrl)
+		} catch {
+			print("Error writing data to: \(error.localizedDescription)")
+		}
+	}
+
+	static func imageData(for key: String) -> Data? {
+		var imageUrl = cacheDir.appendingPathComponent(key)
+		if FileManager.default.fileExists(atPath: imageUrl.path) {
+			var v = URLResourceValues()
+			let now = Date()
+			v.contentModificationDate = now
+			v.contentAccessDate = now
+			try? imageUrl.setResourceValues(v)
+			return try? Data(contentsOf: imageUrl)
+		}
+		return nil
+	}
+
+	static func trimUnaccessedEntries() {
+		if let cachedFiles = try? FileManager.default.contentsOfDirectory(at: cacheDir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]) {
+			let now = Date()
+			let fm = FileManager.default
+			for file in cachedFiles {
+				if let accessDate = (try? file.resourceValues(forKeys: accessKeys))?.contentAccessDate {
+					if now.timeIntervalSince(accessDate) > (3600 * 24 * 7) {
+						try? fm.removeItem(at: file)
+					}
+				}
+			}
+		}
+	}
+}
+
+final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
 	static var currentUUID = ""
 
@@ -34,22 +77,18 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 	private let updateQueue = DispatchQueue.init(label: "build.bru.Gladys.watch.updates", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		updateQueue.async {
-			self.updatePages(session.receivedApplicationContext)
-		}
+		updatePages(session.receivedApplicationContext)
 	}
 
 	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-		updateQueue.async {
-			self.updatePages(applicationContext)
-		}
+		updatePages(applicationContext)
 	}
 
 	private func updatePages(_ compressedList: [String: Any]) {
 		let dropList = extractDropList(from: compressedList)
 		if dropList.isEmpty {
 			DispatchQueue.main.sync {
-				WKInterfaceController.reloadRootPageControllers(withNames: ["StartupController"], contexts: nil, orientation: .vertical, pageIndex: 0)
+				WKInterfaceController.reloadRootPageControllers(withNames: ["EmptyController"], contexts: nil, orientation: .vertical, pageIndex: 0)
 			}
 		} else {
 			let names = [String](repeating: "ItemController", count: dropList.count)
@@ -58,6 +97,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 			let index = min(currentPage, names.count-1)
 			DispatchQueue.main.sync {
 				WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
+			}
+			DispatchQueue.main.sync {
+				ImageCache.trimUnaccessedEntries()
 			}
 		}
 	}
