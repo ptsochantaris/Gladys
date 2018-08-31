@@ -10,6 +10,16 @@ import UIKit
 
 final class HelpControllerCell: UITableViewCell {
 	@IBOutlet weak var label: UILabel!
+
+	var darkMode: Bool = false {
+		didSet {
+			if darkMode {
+				label.textColor = UIColor.lightGray
+			} else {
+				label.textColor = UIColor.darkGray
+			}
+		}
+	}
 }
 
 final class HelpController: GladysViewController, UITableViewDataSource, UITableViewDelegate {
@@ -23,41 +33,39 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		table.backgroundColor = .clear
 	}
 
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		table.reloadData()
+	}
+
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return 8
+		return macOSRow + 1
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 
-	private let resizer: UILabel = {
-		let l = UILabel()
-		l.font = UIFont.preferredFont(forTextStyle: .caption1)
-		l.adjustsFontForContentSizeCategory = true
-		l.numberOfLines = 0
-		l.lineBreakMode = .byWordWrapping
-		return l
-	}()
-
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		let s = view.bounds.size
-		resizer.text = text(for: indexPath.section)
-		let h = resizer.systemLayoutSizeFitting(CGSize(width: s.width - 30, height: 5000),
-												withHorizontalFittingPriority: .required,
-												verticalFittingPriority: .fittingSizeLevel).height
-		return h.rounded(.up) + 30
+		let cell = tableView.dequeueReusableCell(withIdentifier: "HelpControllerCell") as! HelpControllerCell
+		cell.label.text = text(for: indexPath.section)
+		let s = tableView.bounds.size
+		let h = cell.contentView.systemLayoutSizeFitting(CGSize(width: s.width, height: 5000),
+														 withHorizontalFittingPriority: .required,
+														 verticalFittingPriority: .fittingSizeLevel).height
+		return h.rounded(.up)
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "HelpControllerCell", for: indexPath) as! HelpControllerCell
 		cell.label.text = text(for: indexPath.section)
-		cell.selectionStyle = indexPath.section == 7 ? .default : .none
+		cell.selectionStyle = indexPath.section == macOSRow ? .default : .none
+		cell.darkMode = PersistedOptions.darkMode
 		return cell
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath.section == 8 {
+		if indexPath.section == macOSRow {
 			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading..."
 			d.address = URL(string: "http://www.bru.build/gladys-for-macos")
@@ -80,6 +88,8 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		default: return nil
 		}
 	}
+
+	private let macOSRow = 8
 
 	private func text(for section: Int) -> String? {
 		switch section {
