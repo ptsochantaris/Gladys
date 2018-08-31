@@ -482,27 +482,27 @@ Selecting them will show only items that contain these labels.</string>
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="OxZ-BU-EoU" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" constant="40" id="2cG-NA-7JY"/>
                                     <constraint firstAttribute="trailing" secondItem="Mrn-8f-Vbe" secondAttribute="trailing" id="7Iz-hn-ChT"/>
+                                    <constraint firstItem="HiR-cx-G23" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="7y8-mV-p4J"/>
                                     <constraint firstItem="emb-Ou-BQ2" firstAttribute="height" secondItem="eHF-2i-yuv" secondAttribute="height" id="8iw-mn-OmU"/>
                                     <constraint firstItem="Mrn-8f-Vbe" firstAttribute="top" secondItem="ZOF-Yb-WSo" secondAttribute="bottom" constant="30" id="9Gy-x8-hBA"/>
                                     <constraint firstItem="OxZ-BU-EoU" firstAttribute="top" secondItem="d7y-8b-Uup" secondAttribute="top" constant="20" id="CBo-S9-9QQ"/>
-                                    <constraint firstItem="HiR-cx-G23" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" constant="40" id="D4X-Ys-vld"/>
                                     <constraint firstItem="ZOF-Yb-WSo" firstAttribute="top" secondItem="emb-Ou-BQ2" secondAttribute="bottom" constant="8" id="L3D-XU-ZlS"/>
+                                    <constraint firstItem="ZOF-Yb-WSo" firstAttribute="width" secondItem="emb-Ou-BQ2" secondAttribute="width" id="OjY-m4-Qzg"/>
                                     <constraint firstAttribute="trailing" secondItem="emb-Ou-BQ2" secondAttribute="trailing" constant="40" id="Uyd-rI-pzo"/>
                                     <constraint firstItem="ZOF-Yb-WSo" firstAttribute="centerX" secondItem="d7y-8b-Uup" secondAttribute="centerX" id="VmD-yb-9ZA"/>
                                     <constraint firstItem="Mrn-8f-Vbe" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" id="Xa3-KV-0Y5"/>
                                     <constraint firstItem="eHF-2i-yuv" firstAttribute="top" secondItem="OxZ-BU-EoU" secondAttribute="bottom" constant="8" id="Xue-DI-oBz"/>
+                                    <constraint firstItem="OxZ-BU-EoU" firstAttribute="width" secondItem="eHF-2i-yuv" secondAttribute="width" id="cQ0-Ko-Kmx"/>
                                     <constraint firstItem="emb-Ou-BQ2" firstAttribute="top" secondItem="HiR-cx-G23" secondAttribute="bottom" constant="30" id="fl7-8k-7ck"/>
-                                    <constraint firstAttribute="trailing" secondItem="HiR-cx-G23" secondAttribute="trailing" constant="40" id="fuj-md-POF"/>
-                                    <constraint firstItem="ZOF-Yb-WSo" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" constant="40" id="k7f-hh-Jti"/>
-                                    <constraint firstAttribute="trailing" secondItem="OxZ-BU-EoU" secondAttribute="trailing" constant="40" id="kVg-Ps-tOm"/>
+                                    <constraint firstItem="OxZ-BU-EoU" firstAttribute="centerX" secondItem="eHF-2i-yuv" secondAttribute="centerX" id="jMU-PA-7Gg"/>
+                                    <constraint firstItem="ZOF-Yb-WSo" firstAttribute="centerX" secondItem="emb-Ou-BQ2" secondAttribute="centerX" id="l4T-QT-PmL"/>
                                     <constraint firstItem="HiR-cx-G23" firstAttribute="top" secondItem="eHF-2i-yuv" secondAttribute="bottom" constant="8" id="oqV-fk-1XZ"/>
                                     <constraint firstItem="emb-Ou-BQ2" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" constant="40" id="qRr-9a-PLp"/>
-                                    <constraint firstAttribute="trailing" secondItem="ZOF-Yb-WSo" secondAttribute="trailing" constant="40" id="sxX-BP-vn7"/>
                                     <constraint firstAttribute="trailing" secondItem="eHF-2i-yuv" secondAttribute="trailing" constant="40" id="uBc-1V-51F"/>
                                     <constraint firstItem="eHF-2i-yuv" firstAttribute="leading" secondItem="d7y-8b-Uup" secondAttribute="leading" constant="40" id="wQo-b7-Hto"/>
                                     <constraint firstAttribute="bottom" secondItem="Mrn-8f-Vbe" secondAttribute="bottom" constant="30" id="xe4-o1-OCU"/>
+                                    <constraint firstItem="HiR-cx-G23" firstAttribute="width" secondItem="eHF-2i-yuv" secondAttribute="width" id="z8Q-ZA-8Mg"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
@@ -1196,10 +1196,8 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="leading" secondItem="Kwg-sM-eFN" secondAttribute="leading" constant="40" id="0kg-z7-tuS"/>
                                                     <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="Kwg-sM-eFN" secondAttribute="top" constant="4" id="Gb3-fW-yf5"/>
                                                     <constraint firstAttribute="bottom" secondItem="cSP-79-0Wg" secondAttribute="bottom" id="Nfu-Xm-WyI"/>
-                                                    <constraint firstAttribute="trailing" secondItem="cSP-79-0Wg" secondAttribute="trailing" constant="40" id="kB5-uk-lGp"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ezw-vL-hUU">
@@ -1217,8 +1215,6 @@ Selecting them will show only items that contain these labels.</string>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" id="P7c-zo-zRD"/>
                                                     <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="Ezw-vL-hUU" secondAttribute="top" id="Y94-Of-98g"/>
-                                                    <constraint firstAttribute="trailing" secondItem="RxQ-uD-Ykw" secondAttribute="trailing" constant="40" id="aKW-2A-Qok"/>
-                                                    <constraint firstItem="RxQ-uD-Ykw" firstAttribute="leading" secondItem="Ezw-vL-hUU" secondAttribute="leading" constant="40" id="lxh-K7-DZj"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-Ow-Ebk">
@@ -1252,16 +1248,18 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="BZ8-I2-EIj" firstAttribute="leading" secondItem="xO1-wX-AKe" secondAttribute="leading" constant="40" id="Lae-BT-Z11"/>
                                                     <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="xO1-wX-AKe" secondAttribute="top" id="Rtb-gM-HTM"/>
                                                     <constraint firstAttribute="bottom" secondItem="BZ8-I2-EIj" secondAttribute="bottom" id="avO-Cr-grW"/>
-                                                    <constraint firstAttribute="trailing" secondItem="BZ8-I2-EIj" secondAttribute="trailing" constant="40" id="hm3-Wu-00J"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="centerX" secondItem="RxQ-uD-Ykw" secondAttribute="centerX" id="NVb-pi-4gZ"/>
                                             <constraint firstItem="kbo-iY-5gJ" firstAttribute="centerX" secondItem="i3g-cz-xkx" secondAttribute="centerX" id="QVl-e3-jJA"/>
                                             <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="SUp-ZB-9DO"/>
+                                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="width" secondItem="RxQ-uD-Ykw" secondAttribute="width" id="kGy-ZR-17X"/>
+                                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="width" secondItem="cSP-79-0Wg" secondAttribute="width" id="ufT-Ao-Ma0"/>
+                                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="centerX" secondItem="cSP-79-0Wg" secondAttribute="centerX" id="uuy-wr-3jI"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -1269,7 +1267,9 @@ Selecting them will show only items that contain these labels.</string>
                                     <constraint firstItem="Ia5-kr-4dD" firstAttribute="width" secondItem="XAu-Zj-d4Q" secondAttribute="width" id="6gv-wg-iRM"/>
                                     <constraint firstAttribute="bottom" secondItem="Ia5-kr-4dD" secondAttribute="bottom" constant="20" id="7kQ-Qu-BVW"/>
                                     <constraint firstItem="Ia5-kr-4dD" firstAttribute="top" secondItem="XAu-Zj-d4Q" secondAttribute="top" constant="20" id="Nfp-Sk-Gch"/>
+                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="width" secondItem="XAu-Zj-d4Q" secondAttribute="width" constant="-80" id="UIb-Uq-19v"/>
                                     <constraint firstItem="Ia5-kr-4dD" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" id="UWR-pn-2iP"/>
+                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="XAu-Zj-d4Q" secondAttribute="centerX" id="fJK-LB-N61"/>
                                     <constraint firstAttribute="trailing" secondItem="Ia5-kr-4dD" secondAttribute="trailing" id="ybq-PI-nXN"/>
                                 </constraints>
                             </scrollView>
@@ -1321,13 +1321,6 @@ Selecting them will show only items that contain these labels.</string>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGD-oM-cWh">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
-                                        <rect key="frame" x="40" y="290" width="295" height="30"/>
-                                        <state key="normal" title="Gladys Web Site"/>
-                                        <connections>
-                                            <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
                                         <rect key="frame" x="40" y="240" width="295" height="30"/>
                                         <state key="normal" title="Unlimited Mode"/>
@@ -1336,10 +1329,9 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
-                                        <rect key="frame" x="47.5" y="20" width="280" height="200"/>
+                                        <rect key="frame" x="0.0" y="20" width="375" height="200"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="Xsy-cM-XaU"/>
-                                            <constraint firstAttribute="width" constant="280" id="vLP-Zo-j9w"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
@@ -1348,25 +1340,34 @@ Selecting them will show only items that contain these labels.</string>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
+                                        <rect key="frame" x="40" y="290" width="295" height="30"/>
+                                        <state key="normal" title="Gladys Web Site"/>
+                                        <connections>
+                                            <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="g9C-HZ-FTk" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leading" constant="40" id="0nI-3o-oEY"/>
+                                    <constraint firstItem="yXI-xr-evN" firstAttribute="centerX" secondItem="vGD-oM-cWh" secondAttribute="centerX" id="0AA-mT-eFV"/>
                                     <constraint firstItem="K7X-0r-S6t" firstAttribute="top" secondItem="g9C-HZ-FTk" secondAttribute="bottom" constant="20" id="49V-Gv-raD"/>
-                                    <constraint firstAttribute="trailing" secondItem="K7X-0r-S6t" secondAttribute="trailing" constant="40" id="8mV-3S-KSS"/>
-                                    <constraint firstAttribute="trailing" secondItem="BHy-ip-KBG" secondAttribute="trailing" constant="40" id="DDL-So-TdM"/>
-                                    <constraint firstItem="K7X-0r-S6t" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leading" constant="40" id="E32-qS-EFY"/>
+                                    <constraint firstItem="K7X-0r-S6t" firstAttribute="centerX" secondItem="vGD-oM-cWh" secondAttribute="centerX" id="HLy-PG-c8h"/>
+                                    <constraint firstItem="g9C-HZ-FTk" firstAttribute="centerX" secondItem="vGD-oM-cWh" secondAttribute="centerX" id="JYs-m4-4Bp"/>
                                     <constraint firstItem="BHy-ip-KBG" firstAttribute="top" secondItem="yXI-xr-evN" secondAttribute="bottom" constant="20" id="M3L-V6-9Bw"/>
                                     <constraint firstItem="g9C-HZ-FTk" firstAttribute="top" secondItem="BHy-ip-KBG" secondAttribute="bottom" constant="20" id="OnK-LC-Mra"/>
-                                    <constraint firstItem="BHy-ip-KBG" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leading" constant="40" id="PXZ-YF-9gA"/>
                                     <constraint firstItem="K7X-0r-S6t" firstAttribute="width" secondItem="vGD-oM-cWh" secondAttribute="width" constant="-80" id="PgX-fF-uux"/>
+                                    <constraint firstItem="BHy-ip-KBG" firstAttribute="centerX" secondItem="vGD-oM-cWh" secondAttribute="centerX" id="Rzn-0X-mnx"/>
                                     <constraint firstAttribute="bottom" secondItem="K7X-0r-S6t" secondAttribute="bottom" constant="40" id="Xcn-pg-4DE"/>
                                     <constraint firstItem="yXI-xr-evN" firstAttribute="top" secondItem="vGD-oM-cWh" secondAttribute="top" constant="20" id="Zdp-OM-y2f"/>
-                                    <constraint firstItem="yXI-xr-evN" firstAttribute="centerX" secondItem="BHy-ip-KBG" secondAttribute="centerX" id="b8h-tG-JA9"/>
-                                    <constraint firstAttribute="trailing" secondItem="g9C-HZ-FTk" secondAttribute="trailing" constant="40" id="rTB-oi-0tD"/>
+                                    <constraint firstItem="BHy-ip-KBG" firstAttribute="width" secondItem="vGD-oM-cWh" secondAttribute="width" constant="-80" id="bP3-fg-0Bc"/>
+                                    <constraint firstItem="g9C-HZ-FTk" firstAttribute="width" secondItem="vGD-oM-cWh" secondAttribute="width" constant="-80" id="cL8-Qg-UEc"/>
+                                    <constraint firstItem="yXI-xr-evN" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leading" id="fst-9E-nEL"/>
+                                    <constraint firstAttribute="trailing" secondItem="yXI-xr-evN" secondAttribute="trailing" id="mbT-GM-Y8v"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="yXI-xr-evN" firstAttribute="width" secondItem="6e9-dF-Uv9" secondAttribute="width" id="HfB-v5-ptO"/>
                             <constraint firstItem="vGD-oM-cWh" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" id="Jpj-9q-eeY"/>
                             <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" secondItem="vGD-oM-cWh" secondAttribute="bottom" id="W8E-q4-DHD"/>
                             <constraint firstItem="J9I-Dy-W9t" firstAttribute="trailing" secondItem="vGD-oM-cWh" secondAttribute="trailing" id="baC-dk-bB4"/>
