@@ -789,7 +789,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.drops.insert(item, at: 0)
 		Model.forceUpdateFilter(signalUpdate: false)
 		reloadData()
-		Model.save()
+		Model.saveIndexOnly()
 	}
 
 	private func checkForUpgrade() {

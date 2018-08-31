@@ -37,31 +37,33 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 
 		if let uuid = message["view"] as? String {
 			ViewController.shared.highlightItem(with: uuid, andOpen: true)
-			replyHandler([:])
-
-		} else if let uuid = message["moveToTop"] as? String {
-			if let item = Model.item(uuid: uuid) {
-				ViewController.shared.sendToTop(item: item)
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
 			}
-			replyHandler([:])
 
-		} else if let uuid = message["delete"] as? String {
-			if let item = Model.item(uuid: uuid) {
-				ViewController.shared.deleteRequested(for: [item])
+		} else if let uuid = message["moveToTop"] as? String, let item = Model.item(uuid: uuid) {
+			ViewController.shared.sendToTop(item: item)
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
 			}
-			replyHandler([:])
 
-		} else if let uuid = message["copy"] as? String {
-			if let item = Model.item(uuid: uuid) {
-				item.copyToPasteboard()
+		} else if let uuid = message["delete"] as? String, let item = Model.item(uuid: uuid) {
+			ViewController.shared.deleteRequested(for: [item])
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
 			}
-			replyHandler([:])
+
+		} else if let uuid = message["copy"] as? String, let item = Model.item(uuid: uuid) {
+			item.copyToPasteboard()
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
+			}
 
 		} else if let uuid = message["image"] as? String, let item = Model.item(uuid: uuid) {
 
 			let mode = item.displayMode
 			let icon = item.displayIcon
-			DispatchQueue.global().async {
+			imageProcessingQueue.async {
 				let W = message["width"] as! CGFloat
 				let H = message["height"] as! CGFloat
 				let size = CGSize(width: W, height: H)
@@ -73,13 +75,13 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 					let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
 					data = scaledImage.jpegData(compressionQuality: 0.6)!
 				}
-				DispatchQueue.main.async {
-					replyHandler(["image": data])
-				}
+				replyHandler(["image": data])
 			}
 
 		} else {
-			replyHandler([:])
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
+			}
 		}
 	}
 
@@ -88,8 +90,11 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
 		let bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
 		DispatchQueue.global(qos: .background).async {
+			var items = [[String:Any]]()
+			DispatchQueue.main.sync {
+				items = Model.drops.map { $0.watchItem }
+			}
 			do {
-				let items = Model.threadSafeDrops.map { $0.watchItem }
 				let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
 				try session.updateApplicationContext(["dropList": compressedData])
 				log("Updated watch context")
