@@ -121,7 +121,7 @@ final class iCloudController: GladysViewController {
 			icloudSwitch.isEnabled = true
 			icloudLabel.text = "iCloud Sync"
 			icloudSpinner.stopAnimating()
-			icloudSwitch.isOn = CloudManager.syncSwitchedOn
+			icloudSwitch.setOn(CloudManager.syncSwitchedOn, animated: true)
 		}
 		eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
 		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn

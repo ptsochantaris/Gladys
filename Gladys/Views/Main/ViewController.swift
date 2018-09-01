@@ -1173,6 +1173,19 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		DispatchQueue.main.async { [weak self] in
 			self?.collection.reloadData()
 		}
+
+		var extra: CGFloat = 0
+		if view.bounds.size.width > 320 {
+			if view.bounds.width >= 512 {
+				extra = 22
+			} else {
+				extra = 14
+			}
+		}
+		editLabelsButton.width = (extra > 0) ? (editLabelsButton.image!.size.width + extra) : 0
+		deleteButton.width = (extra > 0) ? (deleteButton.image!.size.width + extra) : 0
+		sortAscendingButton.width = (extra > 0) ? (sortAscendingButton.image!.size.width + extra) : 0
+		sortDescendingButton.width = (extra > 0) ? (sortDescendingButton.image!.size.width + extra) : 0
 	}
 
 	/////////////////////////////////

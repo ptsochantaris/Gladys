@@ -148,7 +148,6 @@
                                 <action selector="deleteButtonSelected:" destination="BYZ-38-t0r" id="AZn-Ox-DR8"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem width="6" style="plain" systemItem="fixedSpace" id="bqd-Kk-oDP"/>
                         <barButtonItem enabled="NO" title="Labels" image="iconListSmall" id="MZc-J5-Dyp">
                             <connections>
                                 <segue destination="xcJ-8p-bxv" kind="popoverPresentation" identifier="showLabelEditor" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="MZc-J5-Dyp" id="TqB-9J-NBk">
