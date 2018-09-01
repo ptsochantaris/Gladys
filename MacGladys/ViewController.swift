@@ -955,6 +955,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	var selectedItems: [ArchivedDropItem] {
+		return collection.selectionIndexPaths.map {
+			Model.filteredDrops[$0.item]
+		}
+	}
+
 	var removableLockSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.filteredDrops[$0.item]

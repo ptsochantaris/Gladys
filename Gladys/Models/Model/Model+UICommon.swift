@@ -91,52 +91,62 @@ extension Model {
 			case .size: return "Largest First"
 			}
 		}
-		var handlerAscending: (Any?)->Void {
-			switch self {
-			case .dateAdded: return { _ in
-				Model.drops.sort { $0.createdAt < $1.createdAt }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+		private func sortElements(itemsToSort: [ArchivedDropItem]) -> ([ArchivedDropItem], [Int]) {
+			var itemIndexes = [Int]()
+			let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
+			let actualItemsToSort = toCheck.compactMap { item -> ArchivedDropItem? in
+				if let index = Model.drops.index(of: item) {
+					itemIndexes.append(index)
+					return item
 				}
-			case .dateModified: return { _ in
-				Model.drops.sort { $0.updatedAt < $1.updatedAt }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
-			case .title: return { _ in
-				Model.drops.sort { $0.displayTitleOrUuid < $1.displayTitleOrUuid }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
-			case .note: return { _ in
-				Model.drops.sort { $0.note < $1.note }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
-			case .size: return { _ in
-				Model.drops.sort { $0.sizeInBytes < $1.sizeInBytes }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
+				return nil
 			}
+			assert(actualItemsToSort.count == itemIndexes.count)
+			return (actualItemsToSort, itemIndexes.sorted())
 		}
-		var handlerDescending: (Any?)->Void {
-			switch self {
-			case .dateAdded: return { _ in
-				Model.drops.sort { $0.createdAt > $1.createdAt }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+		func handlerForSort(itemsToSort: [ArchivedDropItem], ascending: Bool) -> (Any?)->Void {
+			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
+			let sortType = self
+			return { _ in
+				switch sortType {
+				case .dateAdded:
+					if ascending {
+						actualItemsToSort.sort { $0.createdAt < $1.createdAt }
+					} else {
+						actualItemsToSort.sort { $0.createdAt > $1.createdAt }
+					}
+				case .dateModified:
+					if ascending {
+						actualItemsToSort.sort { $0.updatedAt < $1.updatedAt }
+					} else {
+						actualItemsToSort.sort { $0.updatedAt > $1.updatedAt }
+					}
+				case .title:
+					if ascending {
+						actualItemsToSort.sort { $0.displayTitleOrUuid < $1.displayTitleOrUuid }
+					} else {
+						actualItemsToSort.sort { $0.displayTitleOrUuid > $1.displayTitleOrUuid }
+					}
+				case .note:
+					if ascending {
+						actualItemsToSort.sort { $0.note < $1.note }
+					} else {
+						actualItemsToSort.sort { $0.note > $1.note }
+					}
+				case .size:
+					if ascending {
+						actualItemsToSort.sort { $0.sizeInBytes < $1.sizeInBytes }
+					} else {
+						actualItemsToSort.sort { $0.sizeInBytes > $1.sizeInBytes }
+					}
 				}
-			case .dateModified: return { _ in
-				Model.drops.sort { $0.updatedAt > $1.updatedAt }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
+				for pos in 0 ..< itemIndexes.count {
+					let itemIndex = itemIndexes[pos]
+					let item = actualItemsToSort[pos]
+					Model.drops[itemIndex] = item
 				}
-			case .title: return { _ in
-				Model.drops.sort { $0.displayTitleOrUuid > $1.displayTitleOrUuid }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
-			case .note: return { _ in
-				Model.drops.sort { $0.note > $1.note }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
-			case .size: return { _ in
-				Model.drops.sort { $0.sizeInBytes > $1.sizeInBytes }
-				if Model.forceUpdateFilter(signalUpdate: true) { Model.save() }
-				}
+				Model.forceUpdateFilter(signalUpdate: false)
+				Model.save()
 			}
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.size] }
