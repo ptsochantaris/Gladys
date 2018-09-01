@@ -929,7 +929,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func sortAscendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default, handler: sortOption.handlerAscending))
+			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default, handler: { _ in
+				self.sortRequested(sortOption, ascending: true, button: self.sortDescendingButton)
+			}))
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
@@ -939,11 +941,35 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func sortDescendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order. This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default, handler: sortOption.handlerDescending))
+			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default, handler: { _ in
+				self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
+			}))
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 		a.popoverPresentationController?.barButtonItem = sortAscendingButton
+	}
+
+	private func sortRequested(_ option: Model.SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
+		let items = ignoreSelectedItems ? [] : (selectedItems?.compactMap { Model.item(uuid: $0) } ?? [])
+		if !items.isEmpty && verifyRange {
+			let a = UIAlertController(title: "Sort selected items?", message: "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?", preferredStyle: .actionSheet)
+			a.addAction(UIAlertAction(title: "Sort Selected", style: .default, handler: { _ in
+				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: false, button: button)
+			}))
+			a.addAction(UIAlertAction(title: "Sort All", style: .default, handler: { _ in
+				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: true, button: button)
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			present(a, animated: true)
+			a.popoverPresentationController?.barButtonItem = button
+		} else {
+			let sortMethod = option.handlerForSort(itemsToSort: items, ascending: ascending)
+			sortMethod()
+			Model.forceUpdateFilter(signalUpdate: false)
+			reloadData()
+			Model.save()
+		}
 	}
 
 	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {

@@ -104,10 +104,10 @@ extension Model {
 			assert(actualItemsToSort.count == itemIndexes.count)
 			return (actualItemsToSort, itemIndexes.sorted())
 		}
-		func handlerForSort(itemsToSort: [ArchivedDropItem], ascending: Bool) -> (Any?)->Void {
+		func handlerForSort(itemsToSort: [ArchivedDropItem], ascending: Bool) -> ()->Void {
 			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
 			let sortType = self
-			return { _ in
+			return {
 				switch sortType {
 				case .dateAdded:
 					if ascending {

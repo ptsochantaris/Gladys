@@ -477,7 +477,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			let a = NSAlert()
 			a.messageText = "Sort selected items?"
 			a.informativeText = "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?"
-			a.addButton(withTitle: "Sort Range")
+			a.addButton(withTitle: "Sort Selected")
 			a.addButton(withTitle: "Sort All")
 			a.addButton(withTitle: "Cancel")
 			a.beginSheetModal(for: ViewController.shared.view.window!) { response in
@@ -496,10 +496,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	private func proceedWithSort(sender: NSMenu, items: [ArchivedDropItem]) {
 		if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
 			let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)
-			sortMethod(sender)
+			sortMethod()
 		} else if let sortOption = Model.SortOption.options.first(where: { $0.descendingTitle == sender.title }) {
 			let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: false)
-			sortMethod(sender)
+			sortMethod()
 		}
 	}
 }
