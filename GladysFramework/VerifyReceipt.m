@@ -18,6 +18,7 @@ NSData *sha1(NSString *input) {
 	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
 }
 
+/*
 NSDateFormatter *makeFormatter() {
 	// Date formatter to handle RFC 3339 dates in GMT time zone
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -25,7 +26,7 @@ NSDateFormatter *makeFormatter() {
 	[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
 	[formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
 	return formatter;
-}
+}*/
 
 BOOL checkPayload(const unsigned char *ptr, long len) {
 	const unsigned char *end = ptr + len;
@@ -58,7 +59,7 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 
 		const unsigned char *seq_end = ptr + length;
 		long attr_type = 0;
-		long attr_version = 0;
+		//long attr_version = 0;
 
 		// Parse the attribute type (an INTEGER is expected)
 		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
@@ -75,7 +76,7 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 			return NO;
 		}
 		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
-		attr_version = ASN1_INTEGER_get(integer);
+		//attr_version = ASN1_INTEGER_get(integer);
 		ASN1_INTEGER_free(integer);
 
 		// Check the attribute value (an OCTET STRING is expected)
@@ -194,10 +195,10 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 	NSData *bundleIdData = nil;
 	NSData *hashData = nil;
 	NSData *opaqueData = nil;
-	NSDate *expirationDate = nil;
+	//NSDate *expirationDate = nil;
 	BOOL haveValidTransaction = NO;
 
-	NSDateFormatter *formatter = makeFormatter();
+	//NSDateFormatter *formatter = makeFormatter();
 
 	// Decode payload (a SET is expected)
 	ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
@@ -216,7 +217,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 
 		const unsigned char *seq_end = ptr + length;
 		long attr_type = 0;
-		long attr_version = 0;
+		//long attr_version = 0;
 
 		// Parse the attribute type (an INTEGER is expected)
 		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
@@ -233,7 +234,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 			return NO;
 		}
 		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
-		attr_version = ASN1_INTEGER_get(integer);
+		//attr_version = ASN1_INTEGER_get(integer);
 		ASN1_INTEGER_free(integer);
 
 		// Check the attribute value (an OCTET STRING is expected)
@@ -282,6 +283,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 				}
 				break;
 
+				/*
 			case 21:
 				// Expiration date
 				str_ptr = ptr;
@@ -292,9 +294,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 					expirationDate = [formatter dateFromString:dateString];
 				}
 				break;
-
-			default:
-				break;
+				 */
 		}
 
 		// Move past the value
