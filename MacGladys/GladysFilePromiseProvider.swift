@@ -9,37 +9,37 @@
 import Foundation
 import Cocoa
 
-class GladysFilePromiseProvider: NSFilePromiseProvider, NSFilePromiseProviderDelegate {
+final class GladysFilePromiseProvider: NSObject, NSPasteboardItemDataProvider {
 
-	let bytes: Data
-	let filename: String
+	func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: NSPasteboard.PasteboardType) {
+		if let pasteboard = pasteboard {
 
-	init(dropItemType: ArchivedDropItemType, title: String) {
+			var location: CFURL?
+			var pboardRef: Pasteboard?
+			PasteboardCreate(pasteboard.name as CFString, &pboardRef)
+			if let pboardRef = pboardRef {
+				PasteboardSynchronize(pboardRef)
+				PasteboardCopyPasteLocation(pboardRef, &location)
+			}
 
-		filename = dropItemType.prepareFilename(name: title.macFilenameSafe, directory: nil)
-
-		if dropItemType.isWebURL, let s = dropItemType.encodedUrl {
-			bytes = s.urlFileContent ?? Data()
-		} else {
-			bytes = dropItemType.dataForWrappedItem ?? dropItemType.bytes ?? Data()
-		}
-		super.init()
-		fileType = dropItemType.typeIdentifier
-		delegate = self
-	}
-
-	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
-		DispatchQueue.global(qos: .userInitiated).async {
-			do {
-				try self.bytes.write(to: url)
-				completionHandler(nil)
-			} catch {
-				completionHandler(error)
+			if var location = (location as URL?), let parent = Model.item(uuid: dropItemType.parentUuid) {
+				let name = dropItemType.prepareFilename(name: parent.displayTitleOrUuid.macFilenameSafe, directory: nil)
+				location.appendPathComponent(name)
+				if dropItemType.isWebURL, let s = dropItemType.encodedUrl {
+					let bytes = s.urlFileContent ?? Data()
+					try? bytes.write(to: location)
+				} else {
+					let bytes = dropItemType.dataForWrappedItem ?? dropItemType.bytes ?? Data()
+					try? bytes.write(to: location)
+				}
 			}
 		}
 	}
 
-	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
-		return filename
+	private let dropItemType: ArchivedDropItemType
+
+	init(dropItemType: ArchivedDropItemType) {
+		self.dropItemType = dropItemType
+		super.init()
 	}
 }

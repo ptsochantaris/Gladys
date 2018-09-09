@@ -190,15 +190,21 @@ final class ArchivedDropItem: Codable {
 		if typeItems.isEmpty { return nil }
 		let pi = NSPasteboardItem()
 		typeItems.forEach { $0.add(to: pi) }
+
+		if let t = typeItemForFileDrop {
+			let type = NSPasteboard.PasteboardType(rawValue: t.typeIdentifier)
+			pi.setString(kPasteboardTypeFilePromiseContent, forType: type)
+			pi.setString(kPasteboardTypeFileURLPromise, forType: type)
+
+			let fileProvider = GladysFilePromiseProvider(dropItemType: t)
+			pi.setDataProvider(fileProvider, forTypes: [NSPasteboard.PasteboardType(rawValue: kPasteboardTypeFileURLPromise)])
+		}
+
 		return pi
 	}
 
-	var filePromise: GladysFilePromiseProvider? {
-		if let t = mostRelevantTypeItem ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first {
-			return GladysFilePromiseProvider(dropItemType: t, title: displayTitleOrUuid)
-		} else {
-			return nil
-		}
+	var typeItemForFileDrop: ArchivedDropItemType? {
+		return mostRelevantTypeItem ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first
 	}
 
 	func tryOpen(from viewController: NSViewController) {

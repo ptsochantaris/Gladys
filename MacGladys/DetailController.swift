@@ -549,14 +549,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		(components.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: 89)
 	}
 
-	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-		let pasteboardItems = indexPaths.map { item.typeItems[$0.item].pasteboardItem }
-		pasteboard.writeObjects(pasteboardItems)
-		let filePromises = indexPaths.compactMap { item.typeItems[$0.item].filePromise }
-		if !filePromises.isEmpty {
-			pasteboard.writeObjects(filePromises)
-		}
-		return true
+	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+		return item.typeItems[indexPath.item].pasteboardItem
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {

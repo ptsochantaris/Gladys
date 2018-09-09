@@ -604,12 +604,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateSearch()
 	}
 
-	func collectionView(_ collectionView: NSCollectionView, writeItemsAt indexPaths: Set<IndexPath>, to pasteboard: NSPasteboard) -> Bool {
-		let pasteboardItems = indexPaths.compactMap { Model.filteredDrops[$0.item].pasteboardItem }
-		pasteboard.writeObjects(pasteboardItems)
-		let filePromises = indexPaths.compactMap { Model.filteredDrops[$0.item].filePromise }
-		pasteboard.writeObjects(filePromises)
-		return true
+	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+		return Model.filteredDrops[indexPath.item].pasteboardItem
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
