@@ -12,7 +12,6 @@ import MacGladysFramework
 import HotKey
 import CloudKit
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	static private var hotKey: HotKey?

@@ -1363,14 +1363,14 @@ Only</string>
             <objects>
                 <viewController title="Gladys" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
+                        <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <visualEffectView blendingMode="behindWindow" material="sidebar" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="1b8-kc-m0N">
-                                <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
+                                <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                             </visualEffectView>
                             <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
-                                <rect key="frame" x="253" y="35" width="164" height="14"/>
+                                <rect key="frame" x="253" y="132" width="164" height="14"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec..." id="KT6-PW-u6g">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -1378,7 +1378,7 @@ Only</string>
                                 </textFieldCell>
                             </textField>
                             <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="A2v-Sl-Y1f" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
-                                <rect key="frame" x="255" y="53" width="160" height="160"/>
+                                <rect key="frame" x="255" y="150" width="160" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="EiP-iW-5E6"/>
                                     <constraint firstAttribute="height" constant="160" id="mam-JU-oXS"/>
@@ -1386,13 +1386,13 @@ Only</string>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="a9k-6h-nKz"/>
                             </imageView>
                             <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
-                                <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
+                                <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                                 <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" id="cWg-5F-dYQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="Gladys" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="670" height="245"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="670" height="418"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
                                                 <size key="itemSize" width="100" height="100"/>
@@ -1412,16 +1412,16 @@ Only</string>
                                     <rect key="frame" x="-100" y="-100" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
-                                    <rect key="frame" x="654" y="22" width="16" height="223"/>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
+                                    <rect key="frame" x="654" y="22" width="16" height="378"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
                             <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="Loc-lN-MBo">
-                                <rect key="frame" x="0.0" y="185" width="670" height="60"/>
+                                <rect key="frame" x="0.0" y="380" width="670" height="60"/>
                             </visualEffectView>
                             <stackView wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
-                                <rect key="frame" x="0.0" y="185" width="670" height="60"/>
+                                <rect key="frame" x="0.0" y="380" width="670" height="60"/>
                                 <subviews>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="WdL-bw-uFk">
                                         <rect key="frame" x="0.0" y="38" width="670" height="22"/>
