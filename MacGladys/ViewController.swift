@@ -172,7 +172,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@IBOutlet private weak var emptyView: NSImageView!
 	@IBOutlet private weak var emptyLabel: NSTextField!
 
-	@IBOutlet private weak var titleBar: NSVisualEffectView!
+	@IBOutlet private weak var topBackground: NSVisualEffectView!
+	@IBOutlet private weak var titleBarBackground: NSView!
 
 	@IBOutlet private weak var translucentView: NSVisualEffectView!
 
@@ -182,7 +183,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		updateTitle()
 		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: false)
+
 		super.viewWillAppear()
+
+		if PersistedOptions.hideTitlebar {
+			hideTitlebar()
+		}
 	}
 
 	override func viewDidAppear() {
@@ -380,6 +386,40 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc private func toggleTitlebar(_ sender: Any?) {
+		guard let w = view.window else { return }
+		switch w.titleVisibility {
+		case .hidden:
+			showTitlebar()
+			PersistedOptions.hideTitlebar = false
+		case .visible:
+			hideTitlebar()
+			PersistedOptions.hideTitlebar = true
+		}
+	}
+
+	private func showTitlebar() {
+		if !titleBarBackground.isHidden { return }
+		guard let w = view.window else { return }
+		w.titleVisibility = .visible
+		titleBarBackground.isHidden = false
+		w.standardWindowButton(.closeButton)?.isHidden = false
+		w.standardWindowButton(.miniaturizeButton)?.isHidden = false
+		w.standardWindowButton(.zoomButton)?.isHidden = false
+		updateScrollviewInsets()
+	}
+
+	private func hideTitlebar() {
+		if titleBarBackground.isHidden { return }
+		guard let w = view.window else { return }
+		w.titleVisibility = .hidden
+		titleBarBackground.isHidden = true
+		w.standardWindowButton(.closeButton)?.isHidden = true
+		w.standardWindowButton(.miniaturizeButton)?.isHidden = true
+		w.standardWindowButton(.zoomButton)?.isHidden = true
+		updateScrollviewInsets()
+	}
+
 	private func postSave() {
 		for i in Model.itemsToReIngest {
 			i.reIngest(delegate: self)
@@ -540,9 +580,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	private var showSearch: Bool = false {
 		didSet {
 			searchHolder.isHidden = !showSearch
-			guard let scrollView = collection.enclosingScrollView else { return }
-			DispatchQueue.main.async {
-				scrollView.contentInsets = NSEdgeInsets(top: self.titleBar.frame.size.height, left: 0, bottom: 0, right: 0)
+			updateScrollviewInsets()
+		}
+	}
+
+	private func updateScrollviewInsets() {
+		DispatchQueue.main.async {
+			guard let scrollView = self.collection.enclosingScrollView else { return }
+			let offset = scrollView.contentView.bounds.origin.y
+			let topHeight = self.topBackground.frame.size.height
+			scrollView.contentInsets = NSEdgeInsets(top: topHeight, left: 0, bottom: 0, right: 0)
+			if offset <= 0 {
+				DispatchQueue.main.asyncAfter(deadline: .now()+0.01) {
+					scrollView.documentView?.scroll(CGPoint(x: 0, y: -topHeight))
+				}
 			}
 		}
 	}

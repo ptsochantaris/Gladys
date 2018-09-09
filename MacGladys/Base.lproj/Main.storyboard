@@ -243,6 +243,13 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="L2p-Cr-uyZ"/>
+                                        <menuItem title="Toggle Titlebar" keyEquivalent="t" id="ckj-Rv-mYh">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="toggleTitlebar:" target="Ady-hI-5gd" id="z30-wl-5XD"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="hR5-ZW-B2y"/>
                                         <menuItem title="Toggle Labels" keyEquivalent="l" id="fWc-2Z-SF2">
                                             <connections>
                                                 <action selector="showLabels:" target="Ady-hI-5gd" id="zfa-bJ-Kl7"/>
@@ -1508,7 +1515,8 @@ Only</string>
                         <outlet property="emptyView" destination="A2v-Sl-Y1f" id="GDB-mq-1QQ"/>
                         <outlet property="searchBar" destination="nZb-eu-7ee" id="4zc-tb-JLi"/>
                         <outlet property="searchHolder" destination="YpT-d8-ghf" id="lg5-zM-4K3"/>
-                        <outlet property="titleBar" destination="Loc-lN-MBo" id="0J0-Nl-0Ih"/>
+                        <outlet property="titleBarBackground" destination="WdL-bw-uFk" id="Ma2-OP-pNM"/>
+                        <outlet property="topBackground" destination="Loc-lN-MBo" id="0J0-Nl-0Ih"/>
                         <outlet property="translucentView" destination="1b8-kc-m0N" id="IRk-CO-FkJ"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>

@@ -110,4 +110,14 @@ extension PersistedOptions {
 			defaults.synchronize()
 		}
 	}
+
+	static var hideTitlebar: Bool {
+		get {
+			return defaults.bool(forKey: "hideTitlebar")
+		}
+		set {
+			defaults.set(newValue, forKey: "hideTitlebar")
+			defaults.synchronize()
+		}
+	}
 }
