@@ -309,6 +309,24 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		reDecorate()
 	}
 
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		image.flatColor()
+	}
+
+	private var themeKey: String {
+		if #available(OSX 10.14, *) {
+			switch view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
+			case NSAppearance.Name.darkAqua:
+				return "d"
+			default:
+				return "l"
+			}
+		} else {
+			return ""
+		}
+	}
+
 	private func reDecorate() {
 		let item = archivedDropItem
 
@@ -354,14 +372,21 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				hideImage = false
 				share = item.shareMode
 
+				image.flatColor()
 				let cacheKey = item.imageCacheKey
 				if let cachedImage = imageCache.object(forKey: cacheKey) {
 					image.layer?.contents = cachedImage
 				} else {
-					image.flatColor()
 					imageProcessingQueue.async { [weak self] in
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
-							let img = item.displayIcon
+							var img = item.displayIcon
+							if img.isTemplate {
+								if self?.themeKey == "d" {
+									img = img.template(with: self?.image.lightColor ?? NSColor.white)
+								} else {
+									img = img.template(with: self?.image.darkColor ?? NSColor.black)
+								}
+							}
 							imageCache.setObject(img, forKey: cacheKey)
 							DispatchQueue.main.sync { [weak self] in
 								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
@@ -372,7 +397,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 						}
 					}
 				}
-
 
 				let primaryLabel: NSTextField
 				let secondaryLabel: NSTextField

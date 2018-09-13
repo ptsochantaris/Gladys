@@ -314,6 +314,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.updateAlwaysOnTop()
 		}
 
+		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
+
 		observers = [a1, a2, a3, a4, a5, a6, a7, a8]
 
 		if CloudManager.syncSwitchedOn {
@@ -326,6 +328,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if Model.drops.count == 0 {
 			blurb("Ready! Drop me stuff.")
 		}
+	}
+
+	@objc private func interfaceModeChanged(sender: NSNotification) {
+		imageCache.removeAllObjects()
+		collection.reloadData()
 	}
 
 	private var optionPressed: Bool {
@@ -501,6 +508,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		for o in observers {
 			NotificationCenter.default.removeObserver(o)
 		}
+		DistributedNotificationCenter.default.removeObserver(self)
 	}
 
 	@objc func shareSelected(_ sender: Any?) {
