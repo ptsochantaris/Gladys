@@ -75,6 +75,9 @@ extension Model {
 			} catch {
 				log("Warning: Error while committing index to disk: (\(error.finalDescription))")
 			}
+			DispatchQueue.main.async {
+				saveIndexComplete()
+			}
 		}
 	}
 

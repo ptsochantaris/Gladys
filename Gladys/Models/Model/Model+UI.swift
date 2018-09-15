@@ -3,6 +3,7 @@ import CoreSpotlight
 import WatchConnectivity
 import CloudKit
 import UIKit
+import MapKit
 
 private class WatchDelegate: NSObject, WCSessionDelegate {
 
@@ -61,13 +62,59 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 
 		} else if let uuid = message["image"] as? String, let item = Model.item(uuid: uuid) {
 
+			let W = message["width"] as! CGFloat
+			let H = message["height"] as! CGFloat
+			let size = CGSize(width: W, height: H)
+
 			let mode = item.displayMode
-			let icon = item.displayIcon
-			imageProcessingQueue.async {
-				let W = message["width"] as! CGFloat
-				let H = message["height"] as! CGFloat
-				let size = CGSize(width: W, height: H)
-				let data: Data
+			if mode == .center, let backgroundInfoObject = item.backgroundInfoObject {
+				if let color = backgroundInfoObject as? UIColor {
+					let icon = UIGraphicsImageRenderer.init(size: size).image { context in
+						context.cgContext.setFillColor(color.cgColor)
+						context.fill(CGRect(origin: .zero, size: size))
+					}
+					proceedWithImage(icon, size: nil, mode: .center, replyHandler: replyHandler)
+
+				} else if let mapItem = backgroundInfoObject as? MKMapItem {
+					handleMapItemPreview(mapItem: mapItem, size: size, fallbackIcon: item.displayIcon, replyHandler: replyHandler)
+
+				} else {
+					proceedWithImage(item.displayIcon, size: size, mode: .center, replyHandler: replyHandler)
+				}
+			} else {
+				proceedWithImage(item.displayIcon, size: size, mode: mode, replyHandler: replyHandler)
+			}
+
+		} else {
+			DispatchQueue.global(qos: .userInitiated).async {
+				replyHandler([:])
+			}
+		}
+	}
+
+	private func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage, replyHandler: @escaping ([String : Any]) -> Void) {
+		let O = MKMapSnapshotter.Options()
+		O.region = MKCoordinateRegion(center: mapItem.placemark.coordinate, latitudinalMeters: 150.0, longitudinalMeters: 150.0)
+		O.size = size
+		O.showsBuildings = true
+		O.showsPointsOfInterest = true
+		let S = MKMapSnapshotter(options: O)
+		S.start { snapshot, error in
+			if let error = error {
+				log("Error taking map snapshot: \(error.finalDescription)")
+			}
+			if let snapshot = snapshot {
+				self.proceedWithImage(snapshot.image, size: size, mode: .fill, replyHandler: replyHandler)
+			} else {
+				self.proceedWithImage(fallbackIcon, size: size, mode: .center, replyHandler: replyHandler)
+			}
+		}
+	}
+
+	private func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType, replyHandler: @escaping ([String : Any]) -> Void) {
+		imageProcessingQueue.async {
+			let data: Data
+			if let size = size {
 				if mode == .center || mode == .circle {
 					let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
 					data = scaledImage.pngData()!
@@ -75,13 +122,10 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 					let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
 					data = scaledImage.jpegData(compressionQuality: 0.6)!
 				}
-				replyHandler(["image": data])
+			} else {
+				data = icon.pngData()!
 			}
-
-		} else {
-			DispatchQueue.global(qos: .userInitiated).async {
-				replyHandler([:])
-			}
+			replyHandler(["image": data])
 		}
 	}
 
@@ -173,6 +217,10 @@ extension Model {
 				saveBgTask = nil
 			}
 		}
+	}
+
+	static func saveIndexComplete() {
+		watchDelegate?.updateContext()
 	}
 	
 	static func beginMonitoringChanges() {

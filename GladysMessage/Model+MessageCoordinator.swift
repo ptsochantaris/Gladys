@@ -16,6 +16,7 @@ extension Model {
 
 	static func prepareToSave() {}
 	static func saveComplete() {}
+	static func saveIndexComplete() {}
 	static func startupComplete() {}
 	static func reloadCompleted() {
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)

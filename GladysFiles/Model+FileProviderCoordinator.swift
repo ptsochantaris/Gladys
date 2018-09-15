@@ -11,6 +11,7 @@ extension Model {
 
 	static func prepareToSave() {}
 	static func saveComplete() {}
+	static func saveIndexComplete() {}
 	static func startupComplete() {}
 
 	static func signalRootChange() {

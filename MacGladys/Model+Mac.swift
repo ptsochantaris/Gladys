@@ -43,4 +43,6 @@ extension Model {
 			}
 		}
 	}
+
+	static func saveIndexComplete() {}
 }
