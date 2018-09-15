@@ -186,21 +186,17 @@ final class ArchivedDropItem: Codable {
 		return !isDeleting && !isTransferring
 	}
 
-	var pasteboardItem: NSPasteboardItem? {
+	var pasteboardItem: NSPasteboardWriting? {
 		if typeItems.isEmpty { return nil }
-		let pi = NSPasteboardItem()
-		typeItems.forEach { $0.add(to: pi) }
 
 		if let t = typeItemForFileDrop {
-			let type = NSPasteboard.PasteboardType(rawValue: t.typeIdentifier)
-			pi.setString(kPasteboardTypeFilePromiseContent, forType: type)
-			pi.setString(kPasteboardTypeFileURLPromise, forType: type)
-
-			let fileProvider = GladysFilePromiseProvider(dropItemType: t)
-			pi.setDataProvider(fileProvider, forTypes: [NSPasteboard.PasteboardType(rawValue: kPasteboardTypeFileURLPromise)])
+			let title = t.prepareFilename(name: displayTitleOrUuid.dropFilenameSafe, directory: nil)
+			return GladysFilePromiseProvider.provider(for: t, with: title, extraItems: typeItems)
+		} else {
+			let pi = NSPasteboardItem()
+			typeItems.forEach { $0.add(to: pi) }
+			return pi
 		}
-
-		return pi
 	}
 
 	var typeItemForFileDrop: ArchivedDropItemType? {

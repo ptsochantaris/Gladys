@@ -9,37 +9,70 @@
 import Foundation
 import Cocoa
 
-final class GladysFilePromiseProvider: NSObject, NSPasteboardItemDataProvider {
+final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
-	func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: NSPasteboard.PasteboardType) {
-		if let pasteboard = pasteboard {
+	private static var currentDelegate: GladysFileProviderDelegate?
 
-			var location: CFURL?
-			var pboardRef: Pasteboard?
-			PasteboardCreate(pasteboard.name as CFString, &pboardRef)
-			if let pboardRef = pboardRef {
-				PasteboardSynchronize(pboardRef)
-				PasteboardCopyPasteLocation(pboardRef, &location)
-			}
-
-			if var location = (location as URL?), let parent = Model.item(uuid: dropItemType.parentUuid) {
-				let name = dropItemType.prepareFilename(name: parent.displayTitleOrUuid.macFilenameSafe, directory: nil)
-				location.appendPathComponent(name)
-				if dropItemType.isWebURL, let s = dropItemType.encodedUrl {
-					let bytes = s.urlFileContent ?? Data()
-					try? bytes.write(to: location)
-				} else {
-					let bytes = dropItemType.dataForWrappedItem ?? dropItemType.bytes ?? Data()
-					try? bytes.write(to: location)
-				}
-			}
-		}
+	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType]) -> GladysFilePromiseProvider {
+		GladysFilePromiseProvider.currentDelegate = GladysFileProviderDelegate(item: component, title: title)
+		let p = GladysFilePromiseProvider(fileType: component.typeIdentifier, delegate: GladysFilePromiseProvider.currentDelegate!)
+		p.extraItems = extraItems
+		return p
 	}
 
-	private let dropItemType: ArchivedDropItemType
+	var extraItems = [ArchivedDropItemType]()
 
-	init(dropItemType: ArchivedDropItemType) {
-		self.dropItemType = dropItemType
+	public override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
+		let types = super.writableTypes(for: pasteboard)
+		let newItems = extraItems.map { NSPasteboard.PasteboardType($0.typeIdentifier) }
+		return types + newItems
+	}
+
+	public override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
+		if type.rawValue == fileType {
+			return super.writingOptions(forType: type, pasteboard: pasteboard)
+		}
+		return []
+	}
+
+	public override func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
+		if type.rawValue == fileType {
+			return super.pasteboardPropertyList(forType: type)
+		} else {
+			let item = extraItems.first { $0.typeIdentifier == type.rawValue }
+			return item?.bytes
+		}
+	}
+}
+
+final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate {
+
+	private weak var typeItem: ArchivedDropItemType?
+	private let title: String
+
+	init(item: ArchivedDropItemType, title: String) {
+		typeItem = item
+		self.title = title
 		super.init()
+	}
+
+	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, fileNameForType fileType: String) -> String {
+		return title
+	}
+
+	func filePromiseProvider(_ filePromiseProvider: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
+		let bytes: Data
+		if typeItem?.isWebURL == true, let s = typeItem?.encodedUrl {
+			bytes = s.urlFileContent ?? Data()
+		} else {
+			bytes = typeItem?.dataForWrappedItem ?? typeItem?.bytes ?? Data()
+		}
+		do {
+			try bytes.write(to: url)
+			completionHandler(nil)
+		}
+		catch {
+			completionHandler(error)
+		}
 	}
 }

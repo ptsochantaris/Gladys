@@ -48,7 +48,7 @@ extension String {
 			return replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
 		}
 	}
-	var macFilenameSafe: String {
+	var dropFilenameSafe: String {
 		if let url = URL(string: self) {
 			if let host = url.host {
 				return host + "-" + url.path.split(separator: "/").joined(separator: "-")
@@ -56,7 +56,7 @@ extension String {
 				return url.path.split(separator: "/").joined(separator: "-")
 			}
 		} else {
-			return replacingOccurrences(of: "/", with: "-")
+			return replacingOccurrences(of: ":", with: "-").replacingOccurrences(of: "/", with: "-")
 		}
 	}
 }

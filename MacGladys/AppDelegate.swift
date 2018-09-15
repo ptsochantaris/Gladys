@@ -274,6 +274,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		let font = NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .small))
 		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
 			.font: font,
+			.foregroundColor: NSColor.controlTextColor,
 			.paragraphStyle: p,
 			])
 
