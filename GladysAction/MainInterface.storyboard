@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -60,11 +60,11 @@
                         <constraints>
                             <constraint firstItem="RFu-pz-evy" firstAttribute="bottom" secondItem="zMn-AG-sqS" secondAttribute="bottom" id="0lB-pB-HOQ"/>
                             <constraint firstItem="VVe-Uw-JpX" firstAttribute="trailing" secondItem="Jgp-rO-Atm" secondAttribute="trailing" constant="20" id="424-fi-hyc"/>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="trailing" secondItem="VVe-Uw-JpX" secondAttribute="trailing" id="QOb-OG-LDz"/>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="trailing" secondItem="zMn-AG-sqS" secondAttribute="trailing" id="QOb-OG-LDz"/>
                             <constraint firstItem="RFu-pz-evy" firstAttribute="top" secondItem="zMn-AG-sqS" secondAttribute="top" id="TES-2o-PaI"/>
                             <constraint firstItem="QQw-Qu-GXD" firstAttribute="centerY" secondItem="VVe-Uw-JpX" secondAttribute="centerY" constant="-60" id="gLQ-VJ-cOr"/>
                             <constraint firstItem="Jgp-rO-Atm" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" constant="20" id="khb-nu-x5i"/>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" id="wiH-mX-EYz"/>
+                            <constraint firstItem="RFu-pz-evy" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leading" id="wiH-mX-EYz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VVe-Uw-JpX"/>
                     </view>
@@ -158,13 +158,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ut-h9-8Vl">
-                                                    <rect key="frame" x="15" y="15" width="262" height="40"/>
+                                                    <rect key="frame" x="8" y="11.999999999999996" width="276" height="45.666666666666657"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark" highlightedImage="checkmarkSelected" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-qO-gUb">
-                                                    <rect key="frame" x="285" y="25" width="20" height="20"/>
+                                                    <rect key="frame" x="292" y="25" width="20" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="IlX-4s-iEv"/>
                                                         <constraint firstAttribute="width" constant="20" id="RIx-hM-3ld"/>
