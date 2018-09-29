@@ -319,7 +319,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 							collectionView.insertItems(at: [destinationIndexPath])
 						}
 					}, completion: { finished in
-						self.mostRecentIndexPathActioned = destinationIndexPath
+						if itemVisiblyInserted {
+							self.mostRecentIndexPathActioned = destinationIndexPath
+						}
 						self.focusInitialAccessibilityElement()
 					})
 
@@ -759,17 +761,20 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 			let destinationIndexPath = IndexPath(item: 0, section: 0)
 
+			var itemVisiblyInserted = false
 			collection.performBatchUpdates({
 				Model.drops.insert(item, at: 0)
 				Model.forceUpdateFilter(signalUpdate: false)
-				let itemVisiblyInserted = Model.filteredDrops.contains(item)
+				itemVisiblyInserted = Model.filteredDrops.contains(item)
 				if itemVisiblyInserted {
 					collection.insertItems(at: [destinationIndexPath])
 					collection.isAccessibilityElement = false
 				}
 			}, completion: { finished in
-				self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
-				self.mostRecentIndexPathActioned = destinationIndexPath
+				if itemVisiblyInserted {
+					self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
+					self.mostRecentIndexPathActioned = destinationIndexPath
+				}
 				self.focusInitialAccessibilityElement()
 			})
 

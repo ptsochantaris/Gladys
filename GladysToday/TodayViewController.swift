@@ -91,7 +91,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-		Model.reset()
+		clearCaches()
     }
 
 	private func updateUI() {
