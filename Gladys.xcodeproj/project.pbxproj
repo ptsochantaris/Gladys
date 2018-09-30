@@ -3496,7 +3496,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIntents;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) INTENTSEXTENSION";
@@ -3526,7 +3526,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIntents;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = INTENTSEXTENSION;
