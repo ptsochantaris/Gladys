@@ -16,17 +16,18 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 	private var loadCount = 0
 	private var newItemIds = [String]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
+	private var itemProviders = [NSItemProvider]()
 
-	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
-
-		let clipboard = UIPasteboard.general
-		loadCount = clipboard.itemProviders.count
+	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
+		itemProviders = UIPasteboard.general.itemProviders
+		loadCount = itemProviders.count
 
 		if loadCount == 0 {
 			completion(PasteClipboardIntentResponse(code: .noData, userActivity: nil))
 			return
 		}
 
+		newItemIds.removeAll()
 		Model.reset()
 		Model.reloadDataIfNeeded()
 
@@ -46,9 +47,13 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 			return
 		}
 
+		completion(PasteClipboardIntentResponse(code: .ready, userActivity: nil))
+	}
+
+	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
 
-		for newItem in ArchivedDropItem.importData(providers: clipboard.itemProviders, delegate: self, overrides: nil) {
+		for newItem in ArchivedDropItem.importData(providers: itemProviders, delegate: self, overrides: nil) {
 			Model.drops.insert(newItem, at: 0)
 			newItemIds.append(newItem.uuid.uuidString)
 		}
