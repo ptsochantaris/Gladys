@@ -10,7 +10,6 @@ import Intents
 import CoreSpotlight
 import UIKit
 
-@available(iOSApplicationExtension 12.0, *)
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngestionDelegate {
 
 	private var loadCount = 0

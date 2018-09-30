@@ -61,12 +61,11 @@ struct CallbackSupport {
 		ViewController.shared.dismissAnyPopOver()
 		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
-		return ViewController.shared.addItems(from: UIPasteboard.general.itemProviders, overrides: importOverrides, skipVisibleErrors: skipVisibleErrors)
+		return ViewController.shared.pasteItems(from: UIPasteboard.general.itemProviders, overrides: importOverrides, skipVisibleErrors: skipVisibleErrors)
 	}
 
 	@discardableResult
 	static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
-		let p = NSItemProvider(object: object)
-		return ViewController.shared.addItems(from: [p], overrides: overrides, skipVisibleErrors: true)
+		return ViewController.shared.pasteItems(from: [NSItemProvider(object: object)], overrides: overrides, skipVisibleErrors: true)
 	}
 }

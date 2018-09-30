@@ -260,25 +260,25 @@ final class CloudManager {
 			let recordLocation = uuidSequenceRecordPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = NSKeyedUnarchiver(forReadingWith: data)
-				return CKRecord(coder: coder)
+				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
+				let record = CKRecord(coder: coder)
+				coder.finishDecoding()
+				return record
 			} else {
 				return nil
 			}
 		}
 		set {
 			let recordLocation = uuidSequenceRecordPath
-			if newValue == nil {
+			if let newValue = newValue {
+				let coder = NSKeyedArchiver(requiringSecureCoding: true)
+				newValue.encodeSystemFields(with: coder)
+				try? coder.encodedData.write(to: recordLocation, options: .atomic)
+			} else {
 				let f = FileManager.default
 				if f.fileExists(atPath: recordLocation.path) {
 					try? f.removeItem(at: recordLocation)
 				}
-			} else {
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
-				newValue?.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
 			}
 		}
 	}

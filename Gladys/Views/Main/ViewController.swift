@@ -669,7 +669,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		checkForUpgrade()
 		cloudStatusChanged()
+		donatePasteIntent()
+	}
 
+	private func donatePasteIntent() {
 		if #available(iOS 12.0, *) {
 			let intent = PasteClipboardIntent()
 			intent.suggestedInvocationPhrase = "Paste in Gladys"
@@ -751,11 +754,13 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBOutlet private weak var pasteButton: UIBarButtonItem!
 
 	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
-		addItems(from: UIPasteboard.general.itemProviders)
+		donatePasteIntent()
+		pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil, skipVisibleErrors: false)
 	}
 
 	@discardableResult
-	func addItems(from providers: [NSItemProvider], overrides: ImportOverrides? = nil, skipVisibleErrors: Bool = false) -> PasteResult {
+	func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?, skipVisibleErrors: Bool) -> PasteResult {
+		
 		if providers.count == 0 {
 			if !skipVisibleErrors {
 				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")

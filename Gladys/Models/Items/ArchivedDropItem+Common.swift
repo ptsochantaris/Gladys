@@ -234,8 +234,9 @@ extension ArchivedDropItem: Hashable {
 			let record: CKRecord?
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
 				record = CKRecord(coder: coder)
+				coder.finishDecoding()
 			} else {
 				record = nil
 			}
@@ -248,11 +249,9 @@ extension ArchivedDropItem: Hashable {
 			if let newValue = newValue {
 				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
 
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
+				let coder = NSKeyedArchiver(requiringSecureCoding: true)
 				newValue.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
+				try? coder.encodedData.write(to: recordLocation, options: .atomic)
 
 				needsCloudPush = false
 			} else {
@@ -276,8 +275,9 @@ extension ArchivedDropItem: Hashable {
 			let share: CKShare?
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = NSKeyedUnarchiver(forReadingWith: data)
+				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
 				share = CKShare(coder: coder)
+				coder.finishDecoding()
 			} else {
 				share = nil
 			}
@@ -290,11 +290,9 @@ extension ArchivedDropItem: Hashable {
 			if let newValue = newValue {
 				cloudKitShareCache.setObject(CKShareCacheEntry(share: newValue), forKey: nsuuid)
 
-				let data = NSMutableData()
-				let coder = NSKeyedArchiver(forWritingWith: data)
+				let coder = NSKeyedArchiver(requiringSecureCoding: true)
 				newValue.encodeSystemFields(with: coder)
-				coder.finishEncoding()
-				try? data.write(to: recordLocation, options: .atomic)
+				try? coder.encodedData.write(to: recordLocation, options: .atomic)
 			} else {
 				cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
 				let f = FileManager.default
