@@ -1,5 +1,5 @@
 
-#if MAINAPP || ACTIONEXTENSION
+#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 import UIKit
 import GladysFramework
 
@@ -87,6 +87,8 @@ func reVerifyInfiniteMode() {}
 var infiniteMode = verifyIapReceipt(getDeviceId())
 func reVerifyInfiniteMode() {
 	infiniteMode = verifyIapReceipt(getDeviceId())
+	#if MAC
 	NotificationCenter.default.post(name: .IAPModeChanged, object: nil)
+	#endif
 }
 #endif

@@ -19,10 +19,15 @@ extension Notification.Name {
 	static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
 	static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
 	static let DarkModeChanged = Notification.Name("DarkModeChanged")
-	static let IAPModeChanged = Notification.Name("IAPModeChanged")
 	static let IngestComplete = Notification.Name("IngestComplete")
 	static let AcceptStarting = Notification.Name("AcceptStarting")
 	static let AcceptEnding = Notification.Name("AcceptEnding")
 	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
 	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
 }
+
+#if MAC
+extension Notification.Name {
+	static let IAPModeChanged = Notification.Name("IAPModeChanged")
+}
+#endif
