@@ -167,7 +167,7 @@ extension Model {
 		saveOverlap += 1
 		if saveBgTask == nil {
 			log("Starting save queue background task")
-			saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.saveTask", expirationHandler: nil)
+			saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.saveTask", expirationHandler: nil)
 		}
 		rebuildLabels()
 	}

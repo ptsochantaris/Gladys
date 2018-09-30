@@ -2,7 +2,7 @@ import Foundation
 
 extension Model {
 
-	private static let saveQueue = DispatchQueue(label: "build.bru.gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 	private static var needsAnotherSave = false
 	private static var isSaving = false
 	private static var nextSaveCallbacks: [()->Void]?

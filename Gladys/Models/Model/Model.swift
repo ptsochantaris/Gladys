@@ -231,12 +231,11 @@ final class Model {
 	}
 
 	static let appStorageUrl: URL = {
+		let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
 		#if MAC
-		return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
-		#elseif MAINAPP || FILEPROVIDER
-		return NSFileProviderManager.default.documentStorageURL
+		return url
 		#else
-		return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("File Provider Storage")
+		return url.appendingPathComponent("File Provider Storage")
 		#endif
 	}()
 }

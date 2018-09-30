@@ -68,7 +68,7 @@ class ShareViewController: NSViewController {
 			guard let s = self else { return }
 
 			if s.cancelled {
-				let error = NSError(domain: "build.bru.Gladys.error", code: 84, userInfo: [ NSLocalizedDescriptionKey: "User cancelled" ])
+				let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: "User cancelled" ])
 				extensionContext.cancelRequest(withError: error)
 				return
 			}
@@ -79,7 +79,7 @@ class ShareViewController: NSViewController {
 			DistributedNotificationCenter.default().addObserver(s, selector: #selector(s.pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
 			DispatchQueue.main.async {
 				if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
-					let error = NSError(domain: "build.bru.Gladys.error", code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
+					let error = NSError(domain: GladysErrorDomain, code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
 					extensionContext.cancelRequest(withError: error)
 				}
 			}

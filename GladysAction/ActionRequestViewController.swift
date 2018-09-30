@@ -119,7 +119,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 		firstAppearance = true
 
-		let error = NSError(domain: "build.bru.Gladys.error", code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
+		let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
 		extensionContext?.cancelRequest(withError: error)
 	}
 

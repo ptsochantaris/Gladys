@@ -304,6 +304,7 @@
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
+		16D984502160B25200D9D51C /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DD7F64208E637B005F37C9 /* TextEditController.swift */; };
 		16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */; };
 		16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */; };
@@ -2181,6 +2182,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16D984502160B25200D9D51C /* Global.swift in Sources */,
 				164947E020BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				166E72F920BEDCC600DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */,
@@ -2520,7 +2522,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2552,7 +2554,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2643,7 +2645,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysShare;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2672,7 +2674,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysShare;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2698,7 +2700,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysMessage;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Message;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2724,7 +2726,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysMessage;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Message;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2750,7 +2752,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladysHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2777,7 +2779,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladysHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2877,7 +2879,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2899,7 +2901,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Files;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2923,7 +2925,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -2952,7 +2954,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3055,7 +3057,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIndex;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3077,7 +3079,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFiles;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Files;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3101,7 +3103,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysAction;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3130,7 +3132,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysFramework;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3158,7 +3160,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysToday;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3183,7 +3185,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysToday;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3206,7 +3208,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3232,7 +3234,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3261,7 +3263,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3289,7 +3291,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;

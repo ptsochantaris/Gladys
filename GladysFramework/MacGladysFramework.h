@@ -20,6 +20,6 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier);
 
 NSData *sha1(NSString *input);
 
-NSString *bundleId = @"build.bru.MacGladys.MacGladysFramework";
+NSString *bundleId = @"build.bru.MacGladys.Framework";
 NSString *receiptId = @"build.bru.MacGladys";
 NSString *infiniteId = @"MACINFINITE";

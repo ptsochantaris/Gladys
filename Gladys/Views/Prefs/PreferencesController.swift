@@ -70,7 +70,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	private var archiveDragItems: [UIDragItem] {
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
-		i.registerFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive", fileOptions: [], visibility: .all) { completion -> Progress? in
+		i.registerFileRepresentation(forTypeIdentifier: GladysFileUTI, fileOptions: [], visibility: .all) { completion -> Progress? in
 			DispatchQueue.main.async {
 				self.showExportActivity(true)
 			}
@@ -127,7 +127,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			spinner.startAnimating()
 			exportOnlyVisibleSwitch.isEnabled = false
 			var cancelled = false
-			let progress = p.loadFileRepresentation(forTypeIdentifier: "build.bru.gladys.archive") { url, error in
+			let progress = p.loadFileRepresentation(forTypeIdentifier: GladysFileUTI) { url, error in
 				if cancelled {
 					DispatchQueue.main.async {
 						self.updateUI()
@@ -162,7 +162,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		if session.localDragSession != nil {
 			return UIDropProposal(operation: UIDropOperation.cancel)
 		}
-		if let item = session.items.first, item.itemProvider.hasItemConformingToTypeIdentifier("build.bru.gladys.archive") {
+		if let item = session.items.first, item.itemProvider.hasItemConformingToTypeIdentifier(GladysFileUTI) {
 			return UIDropProposal(operation: UIDropOperation.copy)
 		}
 		return UIDropProposal(operation: UIDropOperation.forbidden)
@@ -324,7 +324,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func importSelected() {
-		let p = UIDocumentPickerViewController(documentTypes: ["build.bru.gladys.archive"], in: .import)
+		let p = UIDocumentPickerViewController(documentTypes: [GladysFileUTI], in: .import)
 		p.delegate = self
 		present(p, animated: true)
 	}

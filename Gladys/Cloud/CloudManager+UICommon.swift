@@ -79,7 +79,7 @@ extension CloudManager {
 		if let error = error {
 			completion(error)
 		} else {
-			completion(NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: reason]))
+			completion(NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: reason]))
 		}
 	}
 
@@ -847,7 +847,7 @@ extension CloudManager {
 			bgTask = e
 		} else {
 			log("Starting cloud sync background task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.syncTask", expirationHandler: nil)
+			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.syncTask", expirationHandler: nil)
 		}
 		#else
 		let bgTask: UIBackgroundTaskIdentifier? = nil

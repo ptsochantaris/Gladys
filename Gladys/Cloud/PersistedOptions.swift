@@ -10,7 +10,7 @@ import Foundation
 
 class PersistedOptions {
 
-	static var defaults = UserDefaults(suiteName: groupName)!
+	static let defaults = UserDefaults(suiteName: groupName)!
 
 	static func migrateBrokenDefaults() { // keep this around for a while
 		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {

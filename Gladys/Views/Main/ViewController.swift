@@ -95,7 +95,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	private func startBgTaskIfNeeded() {
 		if bgTask == nil {
 			log("Starting background ingest task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.gladys.ingestTask", expirationHandler: nil)
+			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.ingestTask", expirationHandler: nil)
 		}
 	}
 	private func endBgTaskIfNeeded() {
@@ -376,7 +376,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func resetForDragEntry(session: UIDropSession) {
-		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: ["build.bru.gladys.archive", "public.zip-archive"]) {
+		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: [GladysFileUTI, "public.zip-archive"]) {
 			dismissAnyPopOver()
 		} else if currentDetailView != nil || currentLabelSelector != nil {
 			dismissAnyPopOver()

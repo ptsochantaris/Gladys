@@ -314,17 +314,13 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		image.flatColor()
 	}
 
-	private var themeKey: String {
+	private var isDark: Bool {
 		if #available(OSX 10.14, *) {
-			switch view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
-			case NSAppearance.Name.darkAqua:
-				return "d"
-			default:
-				return "l"
+			if view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua {
+				return true
 			}
-		} else {
-			return ""
 		}
+		return false
 	}
 
 	private func reDecorate() {
@@ -377,11 +373,12 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				if let cachedImage = imageCache.object(forKey: cacheKey) {
 					image.layer?.contents = cachedImage
 				} else {
+					let dark = isDark
 					imageProcessingQueue.async { [weak self] in
 						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
 							var img = item.displayIcon
 							if img.isTemplate {
-								if self?.themeKey == "d" {
+								if dark {
 									img = img.template(with: self?.image.lightColor ?? NSColor.white)
 								} else {
 									img = img.template(with: self?.image.darkColor ?? NSColor.black)

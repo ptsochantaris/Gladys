@@ -37,7 +37,7 @@ extension ArchivedDropItemType {
 					}
 				}
 			} else {
-				let error = error ?? NSError(domain: NSCocoaErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
+				let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
 				log(">> Error receiving item: \(error.finalDescription)")
 				s.loadingError = error
 				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
@@ -182,7 +182,7 @@ extension ArchivedDropItemType {
 	}
 
 	func setLoadingError(_ message: String) {
-		loadingError = NSError(domain: "build.build.Gladys.loadingError", code: 5, userInfo: [NSLocalizedDescriptionKey: message])
+		loadingError = NSError(domain: GladysErrorDomain, code: 5, userInfo: [NSLocalizedDescriptionKey: message])
 		log("Error: \(message)")
 	}
 
