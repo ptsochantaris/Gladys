@@ -20,7 +20,7 @@ final class DetailController: GladysViewController,
 	@IBOutlet private weak var copyButton: UIBarButtonItem!
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
 	@IBOutlet private weak var lockButton: UIBarButtonItem!
-	@IBOutlet private weak var invitesButton: UIBarButtonItem!
+	@IBOutlet private weak var invitesButton: UIBarButtonItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -74,21 +74,23 @@ final class DetailController: GladysViewController,
 	}
 
 	private func updateInviteButton() {
-		invitesButton.isEnabled = CloudManager.syncSwitchedOn
+		if let invitesButton = invitesButton {
+			invitesButton.isEnabled = CloudManager.syncSwitchedOn
 
-		switch item.shareMode {
-		case .none:
-			invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
-			invitesButton.accessibilityLabel = "Share With Others"
-			invitesButton.tintColor = ViewController.tintColor
-		case .elsewhereReadOnly, .elsewhereReadWrite:
-			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
-			invitesButton.accessibilityLabel = "Imported Share Options"
-			invitesButton.tintColor = .gray
-		case .sharing:
-			invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
-			invitesButton.accessibilityLabel = "Exported Share Options"
-			invitesButton.tintColor = ViewController.tintColor
+			switch item.shareMode {
+			case .none:
+				invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
+				invitesButton.accessibilityLabel = "Share With Others"
+				invitesButton.tintColor = ViewController.tintColor
+			case .elsewhereReadOnly, .elsewhereReadWrite:
+				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+				invitesButton.accessibilityLabel = "Imported Share Options"
+				invitesButton.tintColor = .gray
+			case .sharing:
+				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+				invitesButton.accessibilityLabel = "Exported Share Options"
+				invitesButton.tintColor = ViewController.tintColor
+			}
 		}
 
 		let readWrite = item.shareMode != .elsewhereReadOnly
@@ -438,7 +440,7 @@ final class DetailController: GladysViewController,
 		let readWrite = item.shareMode != .elsewhereReadOnly
 
 		let itemURL = typeEntry.encodedUrl
-		if readWrite, let i = itemURL, !i.isFileURL {
+		if readWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
 					s.archiveWebComponent(cell: c, url: i as URL)

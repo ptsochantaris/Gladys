@@ -14,41 +14,36 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet private weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
 
-	@IBOutlet private weak var editHeight: NSLayoutConstraint!
-	@IBOutlet private weak var inspectHeight: NSLayoutConstraint!
-	@IBOutlet private weak var archiveHeight: NSLayoutConstraint!
-	@IBOutlet private weak var viewHeight: NSLayoutConstraint!
-
 	var inspectionCallback: (()->Void)? {
 		didSet {
-			setNeedsUpdateConstraints()
+			inspectButton.isHidden = inspectionCallback == nil
 		}
 	}
 
 	var viewCallback: (()->Void)? {
 		didSet {
-			setNeedsUpdateConstraints()
+			viewButton.isHidden = viewCallback == nil
 		}
 	}
 
 	var archiveCallback: (()->Void)? {
 		didSet {
-			setNeedsUpdateConstraints()
+			archiveButton.isHidden = archiveCallback == nil
 		}
 	}
 
 	var editCallback: (()->Void)? {
 		didSet {
-			setNeedsUpdateConstraints()
+			editButton.isHidden = editCallback == nil
 		}
 	}
 
-	override func updateConstraints() {
-		super.updateConstraints()
-		editHeight.constant = editCallback == nil ? 0 : 44
-		archiveHeight.constant = archiveCallback == nil ? 0 : 44
-		viewHeight.constant = viewCallback == nil ? 0 : 44
-		inspectHeight.constant = inspectionCallback == nil ? 0 : 44
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		inspectButton.isHidden = true
+		viewButton.isHidden = true
+		archiveButton.isHidden = true
+		editButton.isHidden = true
 	}
 
 	override func awakeFromNib() {
@@ -57,9 +52,13 @@ final class DetailCell: UITableViewCell {
 		nameHolder.layer.cornerRadius = 5
 
 		inspectButton.accessibilityLabel = "Inspect raw data"
+		inspectButton.isHidden = true
 		viewButton.accessibilityLabel = "Visual item preview"
+		viewButton.isHidden = true
 		archiveButton.accessibilityLabel = "Archive target of link"
+		archiveButton.isHidden = true
 		editButton.accessibilityLabel = "Edit item"
+		editButton.isHidden = true
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
@@ -157,16 +156,16 @@ final class DetailCell: UITableViewCell {
 		set {}
 		get {
 			var actions = [UIAccessibilityCustomAction]()
-			if viewHeight.constant > 0 {
+			if !viewButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Show Preview", target: self, selector: #selector(previewSelected)))
 			}
-			if editHeight.constant > 0 {
+			if !editButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Edit Item", target: self, selector: #selector(editSelected(_:))))
 			}
-			if archiveHeight.constant > 0 {
+			if !archiveButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Archive Link Target", target: self, selector: #selector(archiveSelected(_:))))
 			}
-			if inspectHeight.constant > 0 {
+			if !inspectButton.isHidden {
 				actions.append(UIAccessibilityCustomAction(name: "Inspect Item", target: self, selector: #selector(inspectSelected(_:))))
 			}
 			return actions
