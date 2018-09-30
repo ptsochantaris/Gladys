@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.7</string>
 	<key>CFBundleVersion</key>
-	<string>566</string>
+	<string>567</string>
 	<key>CLKComplicationSupportedFamilies</key>
 	<array/>
 	<key>NSExtension</key>
@@ -27,7 +27,7 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>WKAppBundleIdentifier</key>
-			<string>build.bru.Gladys.Watch</string>
+			<string>build.bru.Gladys.watchkitapp</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.watchkit</string>

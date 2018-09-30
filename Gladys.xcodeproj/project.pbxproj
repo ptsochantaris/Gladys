@@ -3381,7 +3381,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3407,7 +3407,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3436,7 +3436,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch.Extension;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
@@ -3464,7 +3464,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Watch.Extension;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
