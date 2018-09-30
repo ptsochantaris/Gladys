@@ -23,6 +23,11 @@ target 'MacGladys' do
   pod 'CallbackURLKit'
 end
 
+target 'GladysIntents' do
+  platform :ios, '11.0'
+  pod 'Fuzi', '~> 2'
+end
+
 target 'GladysFramework' do
   platform :ios, '11.0'
   pod 'OpenSSL-Universal'

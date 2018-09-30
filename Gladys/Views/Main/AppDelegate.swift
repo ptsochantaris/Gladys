@@ -53,19 +53,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
 
-		if userActivity.activityType == CSSearchableItemActionType {
+		switch userActivity.activityType {
+		case CSSearchableItemActionType:
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
 				ViewController.shared.highlightItem(with: itemIdentifier)
 			}
 			return true
 
-		} else if userActivity.activityType == CSQueryContinuationActionType {
+		case CSQueryContinuationActionType:
 			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
 				ViewController.shared.startSearch(initialText: searchQuery)
 			}
 			return true
 
-		} else if userActivity.activityType == kGladysDetailViewingActivity {
+		case kGladysDetailViewingActivity:
 			if let userInfo = userActivity.userInfo, let uuid = userInfo[kGladysDetailViewingActivityItemUuid] as? UUID { // legacy
 				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
 			} else if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
@@ -73,15 +74,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 			return true
 
-		} else if userActivity.activityType == kGladysQuicklookActivity {
+		case kGladysQuicklookActivity:
 			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
 				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
 				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
 			}
 			return true
-		}
 
-		return false
+		case "PasteClipboardIntent":
+			return true
+
+		default:
+			return false
+		}
 	}
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -135,4 +140,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		CloudManager.acceptShare(cloudKitShareMetadata)
 	}
 }
-

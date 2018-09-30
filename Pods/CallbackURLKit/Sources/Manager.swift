@@ -32,7 +32,7 @@ import Foundation
 open class Manager {
 
     /// Singletong shared instance
-    open static let shared = Manager()
+    public static let shared = Manager()
 
     /// List of action/action closure
     var actions: [Action: ActionHandler] = [:]
@@ -40,6 +40,8 @@ open class Manager {
     var requests: [RequestID: Request] = [:]
 
     open var callbackURLScheme: String?
+
+    open var callbackQueue: DispatchQueue = .main
     
     #if APP_EXTENSIONS
     /// In case of application extension, put your extensionContext here
@@ -73,7 +75,7 @@ open class Manager {
         }
         let path = url.path
 
-        let action = String(path.characters.dropFirst()) // remove /
+        let action = String(path.dropFirst()) // remove /
 
         let parameters = url.query?.toQueryDictionary ?? [:]
         let actionParameters = Manager.action(parameters: parameters)
@@ -126,7 +128,9 @@ open class Manager {
                 var comp = URLComponents(url: url, resolvingAgainstBaseURL: false)!
                 comp &= error.XCUErrorQuery
                 if let newURL = comp.url {
-                    self.open(url: newURL)
+                    callbackQueue.async {
+                        self.open(url: newURL)
+                    }
                 }
                 return true
             }
@@ -139,13 +143,15 @@ open class Manager {
             var comp = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             handler?(&comp)
             if let newURL = comp.url {
-                self.open(url: newURL)
+                callbackQueue.async {
+                    self.open(url: newURL)
+                }
             }
         }
     }
 
     /// Handle url with manager shared instance
-    open static func handleOpen(url: URL) -> Bool {
+    public static func handleOpen(url: URL) -> Bool {
         return self.shared.handleOpen(url: url)
     }
     
@@ -167,13 +173,13 @@ open class Manager {
         try client.perform(action: action, parameters: parameters, onSuccess: onSuccess, onFailure: onFailure, onCancel: onCancel)
     }
 
-    open static func perform(action: Action, urlScheme: String, parameters: Parameters = [:],
+    public static func perform(action: Action, urlScheme: String, parameters: Parameters = [:],
         onSuccess: SuccessCallback? = nil, onFailure: FailureCallback? = nil, onCancel: CancelCallback? = nil) throws {
         try Manager.shared.perform(action: action, urlScheme: urlScheme, parameters: parameters, onSuccess: onSuccess, onFailure: onFailure, onCancel: onCancel)
     }
     
     /// Utility function to get URL schemes from Info.plist
-    open static var urlSchemes: [String]? {
+    public static var urlSchemes: [String]? {
         guard let urlTypes = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: AnyObject]] else {
             return nil
         }
@@ -240,7 +246,7 @@ open class Manager {
         return result
     }
 
-    open static func open(url: Foundation.URL) {
+    public static func open(url: Foundation.URL) {
         Manager.shared.open(url: url)
     }
 

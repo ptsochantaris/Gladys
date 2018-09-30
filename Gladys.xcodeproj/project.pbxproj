@@ -305,6 +305,35 @@
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
 		16D984502160B25200D9D51C /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
+		16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 16D984512160B8BC00D9D51C /* Intents.intentdefinition */; settings = {ATTRIBUTES = (codegen, ); }; };
+		16D984962160C5A000D9D51C /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D984952160C5A000D9D51C /* IntentHandler.swift */; };
+		16D9849A2160C5A000D9D51C /* GladysIntents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16D984932160C5A000D9D51C /* GladysIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 16D984512160B8BC00D9D51C /* Intents.intentdefinition */; };
+		16D9849F2160CBFE00D9D51C /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
+		16D984A02160CC0200D9D51C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		16D984A12160CC0600D9D51C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16D984A22160CC2400D9D51C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
+		16D984A32160CC3300D9D51C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
+		16D984A42160CC3900D9D51C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
+		16D984A52160CC4200D9D51C /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		16D984A62160CC4C00D9D51C /* ArchivedDropItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedDropItem+Common.swift */; };
+		16D984A72160CC5500D9D51C /* ArchivedDropItemType+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift */; };
+		16D984A82160CC5E00D9D51C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
+		16D984A92160CC6800D9D51C /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */; };
+		16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
+		16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
+		16D984AC2160D2E800D9D51C /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
+		16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
+		16D984AE2160D31C00D9D51C /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
+		16D984AF2160D32900D9D51C /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
+		16D984B02160D35B00D9D51C /* ArchivedDropItemType+IngestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */; };
+		16D984B12160D51B00D9D51C /* ArchivedDropItemType+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* ArchivedDropItemType+Ingest.swift */; };
+		16D984B22160D52800D9D51C /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E646920A0F04E003CB4C0 /* Network.swift */; };
+		16D984B32160D56500D9D51C /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
+		16D984B42160D57600D9D51C /* ArchivedDropItemType+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift */; };
+		16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
+		16D984B72160D5E900D9D51C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		16D984B82160D67E00D9D51C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DD7F64208E637B005F37C9 /* TextEditController.swift */; };
 		16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */; };
 		16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */; };
@@ -338,6 +367,7 @@
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		527CA18CF4A2617DFCFB09DE /* Pods_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501C0EF1E6D9591705C4ACD6 /* Pods_Gladys.framework */; };
+		725E5D63922247925211F351 /* Pods_GladysIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB6A666E68B4E8D3D8C01195 /* Pods_GladysIntents.framework */; };
 		C4B9676CDFC19C48F217E858 /* Pods_MacGladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FFBA1B07395D36B0F65C7F3 /* Pods_MacGladys.framework */; };
 		E237CB62FEAFF0EFE080C966 /* Pods_GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F292AEEC97FD64385620D56 /* Pods_GladysFramework.framework */; };
 		E3FED0C1BED64E9CD0DC88BD /* Pods_MacGladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EC5013B4B986127403268C /* Pods_MacGladysFramework.framework */; };
@@ -429,6 +459,13 @@
 			remoteGlobalIDString = 167573FE1F12C22500385079;
 			remoteInfo = GladysFramework;
 		};
+		16D984982160C5A000D9D51C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16D984922160C5A000D9D51C;
+			remoteInfo = GladysIntents;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -449,6 +486,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				16D9849A2160C5A000D9D51C /* GladysIntents.appex in Embed App Extensions */,
 				1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed App Extensions */,
 				1619E81E1EFF3745000087DD /* GladysFiles.appex in Embed App Extensions */,
 				164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */,
@@ -707,6 +745,11 @@
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		16D829121F86D3DD00CF06FF /* AboutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
+		16D984512160B8BC00D9D51C /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Intents.intentdefinition; path = Gladys/Intents.intentdefinition; sourceTree = "<group>"; };
+		16D984932160C5A000D9D51C /* GladysIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		16D984952160C5A000D9D51C /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		16D984972160C5A000D9D51C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16D984B62160D5C800D9D51C /* GladysIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIntents.entitlements; sourceTree = "<group>"; };
 		16DD7F64208E637B005F37C9 /* TextEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditController.swift; sourceTree = "<group>"; };
 		16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gladysIconLarge.icns; sourceTree = "<group>"; };
@@ -730,6 +773,8 @@
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
 		256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys.release.xcconfig"; sourceTree = "<group>"; };
 		2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
+		30CAE53B87C9134335DDEFEF /* Pods-GladysIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIntents/Pods-GladysIntents.release.xcconfig"; sourceTree = "<group>"; };
+		3D896B1CC8CEB7876385DD20 /* Pods-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIntents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIntents/Pods-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
 		501C0EF1E6D9591705C4ACD6 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52BBB6F95BA55BC5DD47A9E6 /* Pods-GladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysFramework/Pods-GladysFramework.release.xcconfig"; sourceTree = "<group>"; };
 		58EC5013B4B986127403268C /* Pods_MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -740,6 +785,7 @@
 		8F292AEEC97FD64385620D56 /* Pods_GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FFBA1B07395D36B0F65C7F3 /* Pods_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABF63B3AED370327DC866EC2 /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB6A666E68B4E8D3D8C01195 /* Pods_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBB19B9BFCB1F8D38406BA14 /* Pods-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
 		BCB1F62DCC7BDC22E0AE4831 /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
 		C087CC713A09341FAB8535B0 /* Pods-MacGladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.release.xcconfig"; sourceTree = "<group>"; };
@@ -841,6 +887,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16D984902160C5A000D9D51C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				725E5D63922247925211F351 /* Pods_GladysIntents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1089,6 +1143,7 @@
 				1641368E1F09195000B34574 /* GladysAction */,
 				167574001F12C22500385079 /* GladysFramework */,
 				16969B9E1FB0E41E007B2F77 /* GladysToday */,
+				16D984942160C5A000D9D51C /* GladysIntents */,
 				16A4E7E11FBB844A00D60596 /* GladysWatch */,
 				16A4E7F01FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AE1FD41C1C00EC480D /* GladysMessage */,
@@ -1117,6 +1172,7 @@
 				1611485B209FA1B6008BB332 /* MacGladysFramework.framework */,
 				168DFAFE20B85F3D002C603D /* MacGladysHelper.app */,
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
+				16D984932160C5A000D9D51C /* GladysIntents.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1253,6 +1309,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		16D984942160C5A000D9D51C /* GladysIntents */ = {
+			isa = PBXGroup;
+			children = (
+				16D984B62160D5C800D9D51C /* GladysIntents.entitlements */,
+				16D984952160C5A000D9D51C /* IntentHandler.swift */,
+				16D984972160C5A000D9D51C /* Info.plist */,
+			);
+			path = GladysIntents;
+			sourceTree = "<group>";
+		};
 		16E27BCC1EFC5F9D00FD0818 /* Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -1263,6 +1329,7 @@
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
 			);
 			name = Support;
 			path = ..;
@@ -1291,6 +1358,7 @@
 				8FFBA1B07395D36B0F65C7F3 /* Pods_MacGladys.framework */,
 				8F292AEEC97FD64385620D56 /* Pods_GladysFramework.framework */,
 				58EC5013B4B986127403268C /* Pods_MacGladysFramework.framework */,
+				BB6A666E68B4E8D3D8C01195 /* Pods_GladysIntents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1308,6 +1376,8 @@
 				52BBB6F95BA55BC5DD47A9E6 /* Pods-GladysFramework.release.xcconfig */,
 				2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */,
 				C087CC713A09341FAB8535B0 /* Pods-MacGladysFramework.release.xcconfig */,
+				3D896B1CC8CEB7876385DD20 /* Pods-GladysIntents.debug.xcconfig */,
+				30CAE53B87C9134335DDEFEF /* Pods-GladysIntents.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1507,6 +1577,7 @@
 				16969BA61FB0E41E007B2F77 /* PBXTargetDependency */,
 				16A4E7FB1FBB844A00D60596 /* PBXTargetDependency */,
 				1657B8B81FD41C1C00EC480D /* PBXTargetDependency */,
+				16D984992160C5A000D9D51C /* PBXTargetDependency */,
 			);
 			name = Gladys;
 			productName = Gladys;
@@ -1582,13 +1653,31 @@
 			productReference = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
+		16D984922160C5A000D9D51C /* GladysIntents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 16D9849B2160C5A000D9D51C /* Build configuration list for PBXNativeTarget "GladysIntents" */;
+			buildPhases = (
+				342B5AB228E9E5C15669DB0F /* [CP] Check Pods Manifest.lock */,
+				16D9848F2160C5A000D9D51C /* Sources */,
+				16D984902160C5A000D9D51C /* Frameworks */,
+				16D984912160C5A000D9D51C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GladysIntents;
+			productName = GladysIntents;
+			productReference = 16D984932160C5A000D9D51C /* GladysIntents.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		1678F9C51EF475FE005697CB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
@@ -1681,6 +1770,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.Siri = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -1719,6 +1811,14 @@
 							};
 						};
 					};
+					16D984922160C5A000D9D51C = {
+						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = 1678F9C81EF475FE005697CB /* Build configuration list for PBXProject "Gladys" */;
@@ -1739,6 +1839,7 @@
 				1641368C1F09195000B34574 /* GladysAction */,
 				1619E8111EFF3745000087DD /* GladysFiles */,
 				16969B9A1FB0E41E007B2F77 /* GladysToday */,
+				16D984922160C5A000D9D51C /* GladysIntents */,
 				167573FE1F12C22500385079 /* GladysFramework */,
 				16A4E7DF1FBB844A00D60596 /* GladysWatch */,
 				16A4E7EB1FBB844A00D60596 /* GladysWatch Extension */,
@@ -1867,9 +1968,39 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		16D984912160C5A000D9D51C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16D984B72160D5E900D9D51C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		342B5AB228E9E5C15669DB0F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GladysIntents-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		55126A92F371ED18466EEA6F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2316,6 +2447,7 @@
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
+				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
@@ -2374,6 +2506,39 @@
 				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16D9848F2160C5A000D9D51C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16D984A12160CC0600D9D51C /* Model.swift in Sources */,
+				16D984AC2160D2E800D9D51C /* Model+Indexing.swift in Sources */,
+				16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */,
+				16D984B82160D67E00D9D51C /* Model+Saving.swift in Sources */,
+				16D984A72160CC5500D9D51C /* ArchivedDropItemType+Common.swift in Sources */,
+				16D984A42160CC3900D9D51C /* ArchivedDropItemType.swift in Sources */,
+				16D984A62160CC4C00D9D51C /* ArchivedDropItem+Common.swift in Sources */,
+				16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */,
+				16D984A82160CC5E00D9D51C /* FileManager+Extensions.swift in Sources */,
+				16D984A32160CC3300D9D51C /* ArchivedDropItem.swift in Sources */,
+				16D984A22160CC2400D9D51C /* Model+SimpleCoordinator.swift in Sources */,
+				16D984962160C5A000D9D51C /* IntentHandler.swift in Sources */,
+				16D984A52160CC4200D9D51C /* Caches.swift in Sources */,
+				16D984A92160CC6800D9D51C /* UIImage+Extensions.swift in Sources */,
+				16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */,
+				16D984B32160D56500D9D51C /* ArchivedDropItemType+Preview.swift in Sources */,
+				16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */,
+				16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */,
+				16D984AF2160D32900D9D51C /* ArchivedDropItem+Indexing.swift in Sources */,
+				16D984B22160D52800D9D51C /* Network.swift in Sources */,
+				16D984B02160D35B00D9D51C /* ArchivedDropItemType+IngestCommon.swift in Sources */,
+				16D984B42160D57600D9D51C /* ArchivedDropItemType+CopyCommon.swift in Sources */,
+				16D984AE2160D31C00D9D51C /* ArchivedDropItem+Ingest.swift in Sources */,
+				16D984B12160D51B00D9D51C /* ArchivedDropItemType+Ingest.swift in Sources */,
+				16D9849F2160CBFE00D9D51C /* Global.swift in Sources */,
+				16D984A02160CC0200D9D51C /* Types.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2439,6 +2604,11 @@
 			isa = PBXTargetDependency;
 			target = 167573FE1F12C22500385079 /* GladysFramework */;
 			targetProxy = 16B552821F12E5C200641009 /* PBXContainerItemProxy */;
+		};
+		16D984992160C5A000D9D51C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16D984922160C5A000D9D51C /* GladysIntents */;
+			targetProxy = 16D984982160C5A000D9D51C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3012,6 +3182,7 @@
 				LLVM_LTO = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3301,6 +3472,65 @@
 			};
 			name = Release;
 		};
+		16D9849C2160C5A000D9D51C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D896B1CC8CEB7876385DD20 /* Pods-GladysIntents.debug.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				INFOPLIST_FILE = GladysIntents/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) INTENTSEXTENSION";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		16D9849D2160C5A000D9D51C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30CAE53B87C9134335DDEFEF /* Pods-GladysIntents.release.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = GladysIntents/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = INTENTSEXTENSION;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3426,6 +3656,15 @@
 			buildConfigurations = (
 				16A4E7FD1FBB844A00D60596 /* Debug */,
 				16A4E7FE1FBB844A00D60596 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		16D9849B2160C5A000D9D51C /* Build configuration list for PBXNativeTarget "GladysIntents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				16D9849C2160C5A000D9D51C /* Debug */,
+				16D9849D2160C5A000D9D51C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>INEnums</key>
+	<array/>
+	<key>INIntentDefinitionModelVersion</key>
+	<string>1.0</string>
+	<key>INIntentDefinitionSystemVersion</key>
+	<string>18A391</string>
+	<key>INIntentDefinitionToolsBuildVersion</key>
+	<string>10A255</string>
+	<key>INIntentDefinitionToolsVersion</key>
+	<string>10.0</string>
+	<key>INIntents</key>
+	<array>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentDefaultImageName</key>
+			<string>paste</string>
+			<key>INIntentDescription</key>
+			<string>Paste current clipboard into Gladys</string>
+			<key>INIntentDescriptionID</key>
+			<string>zUaQxu</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>0</integer>
+			<key>INIntentName</key>
+			<string>PasteClipboard</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationIsPrimary</key>
+					<true/>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>Pastes the current contents of your clipboard into Gladys.</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>rGaNK7</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Paste clipboard into Gladys</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>2wlkdj</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array/>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Sorry, the operation failed for a techincal reason.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>n2jXvD</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string></string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>qdWrJ5</string>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>There's nothing to paste, your clipboard is empty.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>EfBwsp</string>
+						<key>INIntentResponseCodeName</key>
+						<string>noData</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>There are too many items in Gladys at the moment.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>gUYEgt</string>
+						<key>INIntentResponseCodeName</key>
+						<string>tooManyItems</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>ijKrk2</string>
+						<key>INIntentResponseCodeName</key>
+						<string>legacyMode</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>0</integer>
+				<key>INIntentResponseParameters</key>
+				<array/>
+			</dict>
+			<key>INIntentRestrictions</key>
+			<integer>0</integer>
+			<key>INIntentTitle</key>
+			<string>PasteClipboard</string>
+			<key>INIntentTitleID</key>
+			<string>2GfbKE</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentUserConfirmationRequired</key>
+			<false/>
+			<key>INIntentVerb</key>
+			<string>Do</string>
+		</dict>
+	</array>
+</dict>
+</plist>

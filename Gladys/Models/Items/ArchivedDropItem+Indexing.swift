@@ -32,4 +32,3 @@ extension ArchivedDropItem {
 		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: [uuid.uuidString], acknowledgementHandler: completion ?? {})
 	}
 }
-

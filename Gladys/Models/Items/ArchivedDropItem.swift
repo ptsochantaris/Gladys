@@ -111,7 +111,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = lockPassword != nil
 	}
 
-	#if MAINAPP || ACTIONEXTENSION
+	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 
 		static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
 			if PersistedOptions.separateItemPreference {
@@ -177,7 +177,7 @@ final class ArchivedDropItem: Codable {
 		cloudKitRecord = record
 	}
 
-	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER
+	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER || INTENTSEXTENSION
 		var isDeleting = false
 
 		var isTransferring: Bool {

@@ -2,6 +2,7 @@
 import UIKit
 import CoreSpotlight
 import GladysFramework
+import Intents
 
 enum PasteResult {
 	case success, noData, tooManyItems
@@ -668,6 +669,19 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		checkForUpgrade()
 		cloudStatusChanged()
+
+		if #available(iOS 12.0, *) {
+			let intent = PasteClipboardIntent()
+			intent.suggestedInvocationPhrase = "Paste in Gladys"
+			let interaction = INInteraction(intent: intent, response: nil)
+			interaction.donate { error in
+				if let error = error {
+					log("Error donating paste shortcut: \(error.localizedDescription)")
+				} else {
+					log("Donated paste shortcut")
+				}
+			}
+		}
 	}
 
 	private var acceptAlert: UIAlertController?

@@ -159,7 +159,7 @@ final class ArchivedDropItemType: Codable {
 	}
 	#endif
 
-	#if MAINAPP || ACTIONEXTENSION
+	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 	init(typeIdentifier: String, parentUuid: UUID, delegate: ComponentIngestionDelegate, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
