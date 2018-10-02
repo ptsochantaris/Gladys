@@ -51,6 +51,7 @@ extension ArchivedDropItem {
 				log("Error while deleting an index \(error)")
 			}
 		}
+		removeIntents()
 		clearCacheData(for: uuid)
 		for item in typeItems {
 			clearCacheData(for: item.uuid)
@@ -102,7 +103,7 @@ extension ArchivedDropItem {
 
 	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedDropItem, child: ArchivedDropItemType?, titled: String) {
 		let uuidString = item.uuid.uuidString
-		activity.title = titled + ": " + item.displayTitleOrUuid
+		activity.title = titled + " \"" + item.displayTitleOrUuid + "\""
 
 		var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
 		userInfo[kGladysDetailViewingActivityItemTypeUuid] = child?.uuid.uuidString

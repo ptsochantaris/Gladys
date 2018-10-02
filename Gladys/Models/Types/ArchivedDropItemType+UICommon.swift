@@ -31,6 +31,7 @@ extension ArchivedDropItemType {
 			try? fm.removeItem(at: folderUrl)
 		}
 		clearCacheData(for: uuid)
+		removeIntents()
 	}
 
 	var objectForShare: Any? {

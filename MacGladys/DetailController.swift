@@ -350,7 +350,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func updateUserActivityState(_ userActivity: NSUserActivity) {
 		super.updateUserActivityState(userActivity)
-		ArchivedDropItem.updateUserActivity(userActivity, from: item, child: nil, titled: "Details")
+		ArchivedDropItem.updateUserActivity(userActivity, from: item, child: nil, titled: "Info of")
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {

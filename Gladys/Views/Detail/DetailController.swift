@@ -161,7 +161,7 @@ final class DetailController: GladysViewController,
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
-		ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Details")
+		ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
 	}
 
 	@objc private func updateUI() {

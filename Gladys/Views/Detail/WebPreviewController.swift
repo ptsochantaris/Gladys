@@ -60,7 +60,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
 		if let relatedItem = relatedItem {
-			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Web preview")
+			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Web preview of")
 		}
 	}
 

@@ -81,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 			return true
 
-		case "PasteClipboardIntent":
+		case "PasteClipboardIntent", "CopyItemIntent", "CopyComponentIntent":
 			return true
 
 		default:

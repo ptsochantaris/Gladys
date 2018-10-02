@@ -677,6 +677,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let intent = PasteClipboardIntent()
 			intent.suggestedInvocationPhrase = "Paste in Gladys"
 			let interaction = INInteraction(intent: intent, response: nil)
+			interaction.identifier = "paste-in-gladys"
 			interaction.donate { error in
 				if let error = error {
 					log("Error donating paste shortcut: \(error.localizedDescription)")

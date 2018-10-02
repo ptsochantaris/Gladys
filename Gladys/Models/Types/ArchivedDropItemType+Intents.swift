@@ -29,11 +29,24 @@ extension ArchivedDropItemType {
 			intent.suggestedInvocationPhrase = "Copy '\(trimmedName)' from Gladys"
 			intent.component = INObject(identifier: uuid.uuidString, display: trimmedName)
 			let interaction = INInteraction(intent: intent, response: nil)
+			interaction.identifier = "copy-\(uuid.uuidString)"
 			interaction.donate { error in
 				if let error = error {
-					log("Error donating copy shortcut: \(error.localizedDescription)")
+					log("Error donating component copy shortcut: \(error.localizedDescription)")
 				} else {
 					log("Donated copy shortcut")
+				}
+			}
+		}
+	}
+
+	func removeIntents() {
+		if #available(iOS 12.0, *) {
+			INInteraction.delete(with: ["copy-\(uuid.uuidString)"]) { error in
+				if let error = error {
+					log("Copy intent for component could not be removed: \(error.localizedDescription)")
+				} else {
+					log("Copy intent for component removed")
 				}
 			}
 		}

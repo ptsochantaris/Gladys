@@ -18,7 +18,7 @@
 			<key>INIntentCategory</key>
 			<string>generic</string>
 			<key>INIntentDefaultImageName</key>
-			<string>paste</string>
+			<string>siriPaste</string>
 			<key>INIntentDescription</key>
 			<string>Paste current clipboard into Gladys</string>
 			<key>INIntentDescriptionID</key>
@@ -124,7 +124,7 @@
 			<key>INIntentCategory</key>
 			<string>generic</string>
 			<key>INIntentDefaultImageName</key>
-			<string>pasteSmall</string>
+			<string>siriCopy</string>
 			<key>INIntentDescription</key>
 			<string>Copy a specific item into the clipboard</string>
 			<key>INIntentDescriptionID</key>
@@ -140,7 +140,7 @@
 					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSubtitle</key>
-					<string>Copy item "${item}" from Gladys to the clipboard.</string>
+					<string>Copy item "${item}" from Gladys to your clipboard.</string>
 					<key>INIntentParameterCombinationSubtitleID</key>
 					<string>UuhVHR</string>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
@@ -213,7 +213,7 @@
 			<key>INIntentCategory</key>
 			<string>generic</string>
 			<key>INIntentDefaultImageName</key>
-			<string>pasteSmall</string>
+			<string>siriCopy</string>
 			<key>INIntentDescription</key>
 			<string>Copy a specific data component into the clipboard</string>
 			<key>INIntentDescriptionID</key>
@@ -229,7 +229,7 @@
 					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSubtitle</key>
-					<string>Copy data component "${component}" from Gladys to the clipboard.</string>
+					<string>Copy data component "${component}" from Gladys to your clipboard.</string>
 					<key>INIntentParameterCombinationSubtitleID</key>
 					<string>21JFQB</string>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
