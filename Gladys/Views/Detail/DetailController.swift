@@ -454,7 +454,7 @@ final class DetailController: GladysViewController,
 			cell.editCallback = { [weak self] in
 				self?.editURL(typeEntry)
 			}
-		} else if readWrite, (typeEntry.isRichText || typeEntry.isText) {
+		} else if readWrite, typeEntry.isText {
 			cell.editCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
 			}

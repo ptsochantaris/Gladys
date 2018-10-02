@@ -13,37 +13,51 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet private weak var viewButton: UIButton!
 	@IBOutlet private weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
+	@IBOutlet private weak var buttonSpacer: UIView!
 
 	var inspectionCallback: (()->Void)? {
 		didSet {
-			inspectButton.isHidden = inspectionCallback == nil
+			updateHiding()
 		}
 	}
 
 	var viewCallback: (()->Void)? {
 		didSet {
-			viewButton.isHidden = viewCallback == nil
+			updateHiding()
 		}
 	}
 
 	var archiveCallback: (()->Void)? {
 		didSet {
-			archiveButton.isHidden = archiveCallback == nil
+			updateHiding()
 		}
 	}
 
 	var editCallback: (()->Void)? {
 		didSet {
-			editButton.isHidden = editCallback == nil
+			updateHiding()
 		}
 	}
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		inspectButton.isHidden = true
-		viewButton.isHidden = true
-		archiveButton.isHidden = true
-		editButton.isHidden = true
+		inspectionCallback = nil
+		viewCallback = nil
+		archiveCallback = nil
+		editCallback = nil
+		updateHiding()
+	}
+
+	private func updateHiding() {
+		let inspectHide = inspectionCallback == nil
+		let viewHide = viewCallback == nil
+		let archiveHide = archiveCallback == nil
+		let editHide = editCallback == nil
+		buttonSpacer.isHidden = !(inspectHide && viewHide && archiveHide && editHide)
+		inspectButton.isHidden = inspectHide
+		viewButton.isHidden = viewHide
+		archiveButton.isHidden = archiveHide
+		editButton.isHidden = editHide
 	}
 
 	override func awakeFromNib() {
@@ -52,13 +66,11 @@ final class DetailCell: UITableViewCell {
 		nameHolder.layer.cornerRadius = 5
 
 		inspectButton.accessibilityLabel = "Inspect raw data"
-		inspectButton.isHidden = true
 		viewButton.accessibilityLabel = "Visual item preview"
-		viewButton.isHidden = true
 		archiveButton.accessibilityLabel = "Archive target of link"
-		archiveButton.isHidden = true
 		editButton.accessibilityLabel = "Edit item"
-		editButton.isHidden = true
+
+		updateHiding()
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false

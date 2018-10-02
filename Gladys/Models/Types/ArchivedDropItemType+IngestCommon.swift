@@ -426,11 +426,11 @@ extension ArchivedDropItemType {
 	}
 
 	var isText: Bool {
-		return !(typeConforms(to: kUTTypeVCard) || typeConforms(to: kUTTypeRTF)) && (typeConforms(to: kUTTypeText as CFString) || typeIdentifier == "com.apple.uikit.attributedstring")
+		return !typeConforms(to: kUTTypeVCard) && (typeConforms(to: kUTTypeText) || isRichText)
 	}
 
 	var isRichText: Bool {
-		return typeConforms(to: kUTTypeRTFD) || typeConforms(to: kUTTypeFlatRTFD) || typeIdentifier == "com.apple.uikit.attributedstring"
+		return typeConforms(to: kUTTypeRTF) || typeConforms(to: kUTTypeRTFD) || typeConforms(to: kUTTypeFlatRTFD) || typeIdentifier == "com.apple.uikit.attributedstring"
 	}
 
 	var textEncoding: String.Encoding {
@@ -478,14 +478,8 @@ extension ArchivedDropItemType {
 		} else if typeIdentifier == "com.apple.mapkit.map-item" {
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
 
-		} else if typeIdentifier.hasSuffix(".rtf") {
-			if let s = (decode() as? NSAttributedString)?.string {
-				setTitleInfo(s, 4)
-			}
-			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-
-		} else if typeIdentifier.hasSuffix(".rtfd") {
-			if let s = (decode() as? NSAttributedString)?.string {
+		} else if typeIdentifier.hasSuffix(".rtf") || typeIdentifier.hasSuffix(".rtfd") || typeIdentifier.hasSuffix(".flat-rtfd") {
+			if let data = (decode() as? Data), let s = (try? NSAttributedString(data: data, options: [:], documentAttributes: nil))?.string {
 				setTitleInfo(s, 4)
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
