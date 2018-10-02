@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.7</string>
 	<key>CFBundleVersion</key>
-	<string>567</string>
+	<string>568</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -35,6 +35,8 @@
 			<array/>
 			<key>IntentsSupported</key>
 			<array>
+				<string>CopyComponentIntent</string>
+				<string>CopyItemIntent</string>
 				<string>PasteClipboardIntent</string>
 			</array>
 		</dict>

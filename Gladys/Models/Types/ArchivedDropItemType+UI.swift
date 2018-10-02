@@ -7,21 +7,10 @@ import QuickLook
 
 extension ArchivedDropItemType: QLPreviewControllerDataSource {
 
-	private var itemProvider: NSItemProvider {
-		let p = NSItemProvider()
-		p.suggestedName = oneTitle
-		register(with: p)
-		return p
-	}
-
 	var dragItem: UIDragItem {
 		let i = UIDragItem(itemProvider: itemProvider)
 		i.localObject = self
 		return i
-	}
-
-	func copyToPasteboard() {
-		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
 	}
 
 	func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {

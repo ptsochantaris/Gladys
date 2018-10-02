@@ -7,6 +7,9 @@
 //
 
 import UIKit
+#if MAINAPP
+import Intents
+#endif
 
 extension ArchivedDropItem {
 	private var itemProvider: NSItemProvider {
@@ -16,13 +19,35 @@ extension ArchivedDropItem {
 		return p
 	}
 
+	#if MAINAPP || TODAYEXTENSION
 	var dragItem: UIDragItem {
 		let i = UIDragItem(itemProvider: itemProvider)
 		i.localObject = self
 		return i
 	}
+	#endif
 
 	func copyToPasteboard() {
 		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
+		donateCopyIntent()
+	}
+
+	private func donateCopyIntent() {
+		#if MAINAPP
+		if #available(iOS 12.0, *) {
+			let intent = CopyItemIntent()
+			let trimmedName = displayTitleOrUuid.truncateWithEllipses(limit: 24)
+			intent.suggestedInvocationPhrase = "Copy '\(trimmedName)' from Gladys"
+			intent.item = INObject(identifier: uuid.uuidString, display: trimmedName)
+			let interaction = INInteraction(intent: intent, response: nil)
+			interaction.donate { error in
+				if let error = error {
+					log("Error donating copy shortcut: \(error.localizedDescription)")
+				} else {
+					log("Donated copy shortcut")
+				}
+			}
+		}
+		#endif
 	}
 }

@@ -127,6 +127,10 @@
 		164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947DE20BEAB5700BD1BEB /* ShareCommon.swift */; };
 		164947E020BEAB5700BD1BEB /* ShareCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947DE20BEAB5700BD1BEB /* ShareCommon.swift */; };
 		164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */; };
+		1651117B2163D71E00C5C874 /* ArchivedDropItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedDropItem+Copy.swift */; };
+		1651117C2163D73700C5C874 /* ArchivedDropItemType+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift */; };
+		1651117E2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift */; };
+		1651117F2163DEF700C5C874 /* ArchivedDropItemType+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift */; };
 		165173031F99483E006CAF0A /* GladysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165173021F99483E006CAF0A /* GladysViewController.swift */; };
 		16559C8A20A4CC55006C281D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		16559C8B20A4CC55006C281D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
@@ -631,6 +635,7 @@
 		164947D620BEAA6200BD1BEB /* MacGladysShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysShare.entitlements; sourceTree = "<group>"; };
 		164947DE20BEAB5700BD1BEB /* ShareCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCommon.swift; sourceTree = "<group>"; };
 		164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
+		1651117D2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Intents.swift"; sourceTree = "<group>"; };
 		165173021F99483E006CAF0A /* GladysViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysViewController.swift; sourceTree = "<group>"; };
 		16559C8920A4CC55006C281D /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysMessage.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1017,6 +1022,7 @@
 				167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */,
 				169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */,
 				16C3A2D520AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift */,
+				1651117D2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -2434,6 +2440,7 @@
 				1602F31D2030E53D0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				16F2990720CBEF30005DE3AD /* PushState.swift in Sources */,
+				1651117E2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
@@ -2537,7 +2544,10 @@
 				16D984B22160D52800D9D51C /* Network.swift in Sources */,
 				16D984B02160D35B00D9D51C /* ArchivedDropItemType+IngestCommon.swift in Sources */,
 				16D984B42160D57600D9D51C /* ArchivedDropItemType+CopyCommon.swift in Sources */,
+				1651117F2163DEF700C5C874 /* ArchivedDropItemType+Intents.swift in Sources */,
+				1651117B2163D71E00C5C874 /* ArchivedDropItem+Copy.swift in Sources */,
 				16D984AE2160D31C00D9D51C /* ArchivedDropItem+Ingest.swift in Sources */,
+				1651117C2163D73700C5C874 /* ArchivedDropItemType+Copy.swift in Sources */,
 				16D984B12160D51B00D9D51C /* ArchivedDropItemType+Ingest.swift in Sources */,
 				16D9849F2160CBFE00D9D51C /* Global.swift in Sources */,
 				16D984A02160CC0200D9D51C /* Types.swift in Sources */,
@@ -3337,6 +3347,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TODAYEXTENSION";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3362,6 +3373,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TODAYEXTENSION;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

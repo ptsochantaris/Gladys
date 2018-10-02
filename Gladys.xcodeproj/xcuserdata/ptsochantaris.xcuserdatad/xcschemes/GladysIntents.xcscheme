@@ -58,7 +58,7 @@
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      intentQueryString = "Paste"
+      intentQueryString = "Copy that name"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
@@ -93,7 +93,7 @@
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
-      intentQueryString = "Paste"
+      intentQueryString = "Copy that name"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"

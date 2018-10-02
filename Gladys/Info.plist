@@ -56,7 +56,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>567</string>
+	<string>568</string>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -76,6 +76,8 @@
 	<string>Gladys needs this permission in order to complete your action.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>CopyComponentIntent</string>
+		<string>CopyItemIntent</string>
 		<string>PasteClipboardIntent</string>
 		<string>build.bru.Gladys.item.quicklook</string>
 		<string>build.bru.Gladys.item.view</string>

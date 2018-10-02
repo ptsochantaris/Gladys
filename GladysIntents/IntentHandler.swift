@@ -10,15 +10,54 @@ import Intents
 import CoreSpotlight
 import UIKit
 
-final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngestionDelegate {
+final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngestionDelegate, CopyItemIntentHandling, CopyComponentIntentHandling {
 
 	private var loadCount = 0
 	private var newItemIds = [String]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
-	private var itemProviders = [NSItemProvider]()
 
-	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
-		itemProviders = UIPasteboard.general.itemProviders
+	func handle(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
+		guard let uuidString = intent.component?.identifier else {
+			completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
+
+		Model.reset()
+		Model.reloadDataIfNeeded()
+
+		guard let item = Model.typeItem(uuid: uuidString) else {
+			completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
+
+		item.copyToPasteboard()
+		completion(CopyComponentIntentResponse(code: .success, userActivity: nil))
+	}
+
+	/////////////////////////////
+
+	func handle(intent: CopyItemIntent, completion: @escaping (CopyItemIntentResponse) -> Void) {
+		guard let uuidString = intent.item?.identifier, let uuid = UUID(uuidString: uuidString) else {
+			completion(CopyItemIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
+
+		Model.reset()
+		Model.reloadDataIfNeeded()
+
+		guard let item = Model.item(uuid: uuid) else {
+			completion(CopyItemIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
+
+		item.copyToPasteboard()
+		completion(CopyItemIntentResponse(code: .success, userActivity: nil))
+	}
+
+	/////////////////////////////
+
+	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
+		let itemProviders = UIPasteboard.general.itemProviders
 		loadCount = itemProviders.count
 
 		if loadCount == 0 {
@@ -47,9 +86,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 		}
 
 		completion(PasteClipboardIntentResponse(code: .ready, userActivity: nil))
-	}
 
-	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
 
 		for newItem in ArchivedDropItem.importData(providers: itemProviders, delegate: self, overrides: nil) {

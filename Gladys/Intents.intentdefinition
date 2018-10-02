@@ -110,9 +110,187 @@
 			<key>INIntentRestrictions</key>
 			<integer>0</integer>
 			<key>INIntentTitle</key>
-			<string>PasteClipboard</string>
+			<string>Paste Clipboard</string>
 			<key>INIntentTitleID</key>
 			<string>2GfbKE</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentUserConfirmationRequired</key>
+			<false/>
+			<key>INIntentVerb</key>
+			<string>Do</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentDefaultImageName</key>
+			<string>pasteSmall</string>
+			<key>INIntentDescription</key>
+			<string>Copy a specific item into the clipboard</string>
+			<key>INIntentDescriptionID</key>
+			<string>DoNqGj</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>5</integer>
+			<key>INIntentName</key>
+			<string>CopyItem</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key>item</key>
+				<dict>
+					<key>INIntentParameterCombinationIsPrimary</key>
+					<true/>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>Copy item "${item}" from Gladys to the clipboard.</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>UuhVHR</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Copy "${item}" to the clipboard</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>f5k7jI</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterName</key>
+					<string>item</string>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<false/>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>This item doesn't seem to exist anymore.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>noXUS2</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string></string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>RxqOjy</string>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>0</integer>
+				<key>INIntentResponseParameters</key>
+				<array/>
+			</dict>
+			<key>INIntentRestrictions</key>
+			<integer>0</integer>
+			<key>INIntentTitle</key>
+			<string>Copy Item</string>
+			<key>INIntentTitleID</key>
+			<string>wRutLW</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentUserConfirmationRequired</key>
+			<false/>
+			<key>INIntentVerb</key>
+			<string>Do</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentDefaultImageName</key>
+			<string>pasteSmall</string>
+			<key>INIntentDescription</key>
+			<string>Copy a specific data component into the clipboard</string>
+			<key>INIntentDescriptionID</key>
+			<string>Lz7CwS</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>2</integer>
+			<key>INIntentName</key>
+			<string>CopyComponent</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key>component</key>
+				<dict>
+					<key>INIntentParameterCombinationIsPrimary</key>
+					<true/>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>Copy data component "${component}" from Gladys to the clipboard.</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>21JFQB</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Copy "${component}" to the clipboard</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>QVGaXg</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterName</key>
+					<string>component</string>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<false/>
+					<key>INIntentParameterTag</key>
+					<integer>2</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>This item doesn't seem to exist anymore.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>IVa6L1</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string></string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>wNsLTc</string>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>0</integer>
+				<key>INIntentResponseParameters</key>
+				<array/>
+			</dict>
+			<key>INIntentRestrictions</key>
+			<integer>0</integer>
+			<key>INIntentTitle</key>
+			<string>Copy Component</string>
+			<key>INIntentTitleID</key>
+			<string>rWhN01</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
 			<key>INIntentUserConfirmationRequired</key>
