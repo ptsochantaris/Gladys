@@ -18,18 +18,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
 		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			ViewController.executeOrQueue {
 				IAPManager.shared.displayRequest(newTotal: t)
 			}
-			return true
 
 		} else if let c = url.host, c == "paste-clipboard" { // this is legacy
 			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 			let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
 			let noteParameter = components?.queryItems?.first { $0.name == "note" }
 			let labelsList = components?.queryItems?.first { $0.name == "labels" }
-			CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
-			return true
+			ViewController.executeOrQueue {
+				CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
+			}
 
 		} else if url.host == nil { // just opening
 			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
@@ -43,12 +43,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 					}
 				}))
 				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-				ViewController.top.present(a, animated: true)
+				ViewController.executeOrQueue {
+					ViewController.top.present(a, animated: true)
+				}
 			}
-			return true
+
+		} else {
+			ViewController.executeOrQueue {
+				CallbackSupport.handlePossibleCallbackURL(url: url)
+			}
 		}
 
-		return CallbackSupport.handlePossibleCallbackURL(url: url)
+		return true
 	}
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
