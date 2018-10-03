@@ -22,12 +22,16 @@ extension ArchivedDropItemType {
 		return p
 	}
 
+	var trimmedName: String {
+		return oneTitle.truncateWithEllipses(limit: 32)
+	}
+
 	private func donateCopyIntent() {
 		if #available(iOS 12.0, *) {
 			let intent = CopyComponentIntent()
-			let trimmedName = oneTitle.truncateWithEllipses(limit: 24)
-			intent.suggestedInvocationPhrase = "Copy '\(trimmedName)' from Gladys"
-			intent.component = INObject(identifier: uuid.uuidString, display: trimmedName)
+			let trimmed = trimmedName
+			intent.suggestedInvocationPhrase = "Copy '\(trimmed)' from Gladys"
+			intent.component = INObject(identifier: uuid.uuidString, display: trimmed)
 			let interaction = INInteraction(intent: intent, response: nil)
 			interaction.identifier = "copy-\(uuid.uuidString)"
 			interaction.donate { error in

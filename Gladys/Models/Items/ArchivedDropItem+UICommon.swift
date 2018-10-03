@@ -103,7 +103,7 @@ extension ArchivedDropItem {
 
 	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedDropItem, child: ArchivedDropItemType?, titled: String) {
 		let uuidString = item.uuid.uuidString
-		activity.title = titled + " \"" + item.displayTitleOrUuid + "\""
+		activity.title = titled + " \"" + item.trimmedName + "\""
 
 		var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
 		userInfo[kGladysDetailViewingActivityItemTypeUuid] = child?.uuid.uuidString

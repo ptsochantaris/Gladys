@@ -14,6 +14,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 
 	private var loadCount = 0
 	private var newItemIds = [String]()
+	private var itemProviders = [NSItemProvider]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
 
 	func handle(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
@@ -56,8 +57,8 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 
 	/////////////////////////////
 
-	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
-		let itemProviders = UIPasteboard.general.itemProviders
+	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
+		itemProviders = UIPasteboard.general.itemProviders
 		loadCount = itemProviders.count
 
 		if loadCount == 0 {
@@ -67,6 +68,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 
 		newItemIds.removeAll()
 		Model.reset()
+		intentCompletion = nil
 		Model.reloadDataIfNeeded()
 
 		if Model.legacyMode {
@@ -86,9 +88,10 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 		}
 
 		completion(PasteClipboardIntentResponse(code: .ready, userActivity: nil))
+	}
 
+	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
-
 		for newItem in ArchivedDropItem.importData(providers: itemProviders, delegate: self, overrides: nil) {
 			Model.drops.insert(newItem, at: 0)
 			newItemIds.append(newItem.uuid.uuidString)
@@ -99,15 +102,24 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 		loadCount -= 1
 		if loadCount == 0 {
 			Model.save()
-			commit()
+			pasteCommit()
 		}
 	}
 
-	private func commit() {
+	private func pasteCommit() {
 		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
 			DispatchQueue.main.async { [weak self] in
-				self?.intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
+				self?.pasteDone()
 			}
 		}
+	}
+
+	private func pasteDone() {
+		intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
+		intentCompletion = nil
+		newItemIds.removeAll()
+		itemProviders.removeAll()
+		loadCount = 0
+		Model.reset()
 	}
 }
