@@ -36,7 +36,7 @@ extension ArchivedDropItem {
 		return displayTitleOrUuid.truncateWithEllipses(limit: 32)
 	}
 
-	private func donateCopyIntent() {
+	func donateCopyIntent() {
 		#if MAINAPP
 		if #available(iOS 12.0, *) {
 			let intent = CopyItemIntent()

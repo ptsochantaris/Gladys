@@ -181,15 +181,18 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		showDragModeOverlay(false)
-		if let droppedIds = ArchivedDropItemType.droppedIds {
+
+		guard let droppedIds = ArchivedDropItemType.droppedIds else { return }
+
+		let items = droppedIds.compactMap { Model.item(uuid: $0) }
+		if items.count > 0 {
 			if dragModeMove {
-				let items = droppedIds.compactMap { Model.item(uuid: $0) }
-				if items.count > 0 {
-					deleteRequested(for: items)
-				}
+				deleteRequested(for: items)
+			} else {
+				items.forEach { $0.donateCopyIntent() }
 			}
-			ArchivedDropItemType.droppedIds = nil
 		}
+		ArchivedDropItemType.droppedIds = nil
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
