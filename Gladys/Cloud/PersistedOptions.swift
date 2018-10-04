@@ -161,6 +161,16 @@ class PersistedOptions {
 		}
 	}
 
+	static var pasteShortcutAutoDonated: Bool {
+		get {
+			return defaults.bool(forKey: "pasteShortcutAutoDonated")
+		}
+		set {
+			defaults.set(newValue, forKey: "pasteShortcutAutoDonated")
+			defaults.synchronize()
+		}
+	}
+
 	static var lastSelectedPreferencesTab: Int {
 		get {
 			return defaults.integer(forKey: "lastSelectedPreferencesTab")

@@ -672,10 +672,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		checkForUpgrade()
 		cloudStatusChanged()
-		donatePasteIntent()
+		if !PersistedOptions.pasteShortcutAutoDonated {
+			donatePasteIntent()
+		}
 	}
 
-	private func donatePasteIntent() {
+	func donatePasteIntent() {
 		if #available(iOS 12.0, *) {
 			let intent = PasteClipboardIntent()
 			intent.suggestedInvocationPhrase = "Paste in Gladys"
@@ -686,6 +688,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 					log("Error donating paste shortcut: \(error.localizedDescription)")
 				} else {
 					log("Donated paste shortcut")
+					PersistedOptions.pasteShortcutAutoDonated = true
 				}
 			}
 		}
