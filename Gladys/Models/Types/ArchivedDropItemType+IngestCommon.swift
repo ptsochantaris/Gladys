@@ -158,26 +158,26 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	func replaceURL(_ url: NSURL) {
+	func replaceURL(_ newUrl: NSURL) {
 		guard isURL else { return }
 
 		let decoded = decode()
 		if decoded is NSURL {
-			bytes = try? PropertyListSerialization.data(fromPropertyList: url, format: .binary, options: 0)
+			bytes = try? PropertyListSerialization.data(fromPropertyList: newUrl, format: .binary, options: 0)
 		} else if let array = decoded as? NSArray {
 			let newArray = array.map { (item: Any) -> Any in
 				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
-					return url.absoluteString?.data(using: .utf8) ?? Data()
+					return newUrl.absoluteString ?? ""
 				} else {
 					return item
 				}
 			}
 			bytes = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
 		} else {
-			bytes = url.absoluteString?.data(using: .utf8)
+			bytes = newUrl.absoluteString?.data(using: .utf8)
 		}
-		encodedURLCache = (true, url)
-		setTitle(from: url as URL)
+		encodedURLCache = (true, newUrl)
+		setTitle(from: newUrl as URL)
 		markUpdated()
 	}
 

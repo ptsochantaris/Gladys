@@ -452,7 +452,7 @@ final class DetailController: GladysViewController,
 
 		if readWrite, itemURL != nil {
 			cell.editCallback = { [weak self] in
-				self?.editURL(typeEntry)
+				self?.editURL(typeEntry, existingEdit: nil)
 			}
 		} else if readWrite, typeEntry.isText {
 			cell.editCallback = { [weak self] in
@@ -483,17 +483,17 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private func editURL(_ typeItem: ArchivedDropItemType) {
-		getInput(from: self, title: "Edit URL", action: "Change", previousValue: typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
+	private func editURL(_ typeItem: ArchivedDropItemType, existingEdit: String?) {
+		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }
-			if let newValue = newValue, let newURL = NSURL(string: newValue) {
+			if let newValue = newValue, let newURL = NSURL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
 				typeItem.replaceURL(newURL)
 				s.item.needsReIngest = true
 				s.makeIndexAndSaveItem()
-				s.table.reloadData()
-			} else if newValue != nil {
+				s.refreshComponent(typeItem)
+			} else if let newValue = newValue {
 				genericAlert(title: "This is not a valid URL", message: newValue) {
-					s.editURL(typeItem)
+					s.editURL(typeItem, existingEdit: newValue)
 				}
 			}
 		}
@@ -524,21 +524,27 @@ final class DetailController: GladysViewController,
 	}
 
 	private func deleteRowSelected(at indexPath: IndexPath) {
-		if indexPath.section == 2 {
-			item.labels.remove(at: indexPath.row)
-			table.deleteRows(at: [indexPath], with: .automatic)
-			view.setNeedsLayout()
-			makeIndexAndSaveItem()
-			item.postModified()
-		} else {
-			removeTypeItem(at: indexPath)
-		}
+		table.performBatchUpdates({
+			if indexPath.section == 2 {
+				self.removeLabel(at: indexPath)
+			} else {
+				self.removeTypeItem(at: indexPath)
+			}
+		}, completion: nil)
 	}
 
 	private func copyRowSelected(at indexPath: IndexPath) {
 		let typeItem = item.typeItems[indexPath.row]
 		typeItem.copyToPasteboard()
 		genericAlert(title: nil, message: "Copied to clipboard", showOK: false)
+	}
+
+	private func removeLabel(at indexPath: IndexPath) {
+		item.labels.remove(at: indexPath.row)
+		table.deleteRows(at: [indexPath], with: .automatic)
+		makeIndexAndSaveItem()
+		item.postModified()
+		userActivity?.needsSave = true
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
@@ -838,8 +844,18 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	private func refreshComponent(_ component: ArchivedDropItemType) {
+		if let indexOfComponent = item.typeItems.index(of: component) {
+			let totalRows = tableView(table, numberOfRowsInSection: 3)
+			if indexOfComponent >= totalRows { return }
+			let ip = IndexPath(row: indexOfComponent, section: 3)
+			table.reloadRows(at: [ip], with: .none)
+		}
+	}
+
 	func textEditControllerMadeChanges(_ textEditController: TextEditController) {
-		table.reloadData()
+		guard let component = textEditController.typeEntry else { return }
+		refreshComponent(component)
 	}
 
 	//////////////////////////////// Sharing

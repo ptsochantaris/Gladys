@@ -1580,7 +1580,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" constant="44" id="IG5-PU-ycQ"/>
-                                                                                        <constraint firstAttribute="height" constant="40" id="yNQ-kK-pxU"/>
+                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="yNQ-kK-pxU"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="iconEye"/>
@@ -1591,7 +1591,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
                                                                                     <rect key="frame" x="0.0" y="40" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" constant="40" id="mPG-lj-hTC"/>
+                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="mPG-lj-hTC"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="nkU-Hz-ACs"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1603,7 +1603,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
                                                                                     <rect key="frame" x="0.0" y="80" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" constant="40" id="5VF-vK-wlh"/>
+                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="5VF-vK-wlh"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1615,7 +1615,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
                                                                                     <rect key="frame" x="0.0" y="120" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" constant="40" id="NAx-6u-ayg"/>
+                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="NAx-6u-ayg"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1624,7 +1624,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                         <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j42-ob-7SY">
+                                                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="j42-ob-7SY">
                                                                                     <rect key="frame" x="0.0" y="160" width="44" height="61.5"/>
                                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <constraints>
