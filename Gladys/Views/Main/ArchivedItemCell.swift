@@ -294,6 +294,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 				UIAccessibility.post(notification: .announcement, argument: "Copied.")
 			}
 		}, style: .default, push: push))
+		actions.append(ShortcutAction(title: "Duplicate", callback: { [weak self] in
+			guard let s = self else { return }
+			s.egress()
+			Model.duplicate(item: item)
+			if UIAccessibility.isVoiceOverRunning {
+				UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
+			}
+			}, style: .default, push: push))
 		actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
 			guard let s = self else { return }
 			s.egress()

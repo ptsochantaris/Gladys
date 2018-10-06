@@ -456,6 +456,14 @@ extension Model {
 		return drops.filter { $0.shareMode == .sharing }
 	}
 
+	static func duplicate(item: ArchivedDropItem) {
+		if let previousIndex = drops.index(of: item) {
+			let newItem = ArchivedDropItem(cloning: item)
+			drops.insert(newItem, at: previousIndex+1)
+			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+		}
+	}
+
 	static func delete(items: [ArchivedDropItem]) -> [IndexPath] {
 		var ipsToRemove = [IndexPath]()
 		var uuidsToRemove = [UUID]()

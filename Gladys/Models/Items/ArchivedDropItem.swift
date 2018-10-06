@@ -111,6 +111,31 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = lockPassword != nil
 	}
 
+	#if MAINAPP
+	init(cloning item: ArchivedDropItem) {
+		let myUUID = UUID()
+		uuid = myUUID
+
+		createdAt = Date()
+		updatedAt = createdAt
+		lockPassword = nil
+		lockHint = nil
+		needsReIngest = true
+		needsUnlock = false
+		needsSaving = true
+		needsDeletion = false
+
+		titleOverride = item.titleOverride
+		note = item.note
+		suggestedName = item.suggestedName
+		labels = item.labels
+
+		typeItems = item.typeItems.map {
+			ArchivedDropItemType(cloning: $0, newParentUUID: myUUID)
+		}
+	}
+	#endif
+
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 
 		static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {

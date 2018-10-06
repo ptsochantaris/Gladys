@@ -157,6 +157,30 @@ final class ArchivedDropItemType: Codable {
 		delegate = nil
 		bytes = data
 	}
+
+	init(cloning item: ArchivedDropItemType, newParentUUID: UUID) {
+		uuid = UUID()
+		isTransferring = false
+		needsDeletion = false
+		createdAt = Date()
+		updatedAt = createdAt
+		delegate = nil
+
+		typeIdentifier = item.typeIdentifier
+		parentUuid = newParentUUID
+		order = item.order
+		displayIconPriority = item.displayIconPriority
+		displayIconContentMode = item.displayIconContentMode
+		displayTitlePriority = item.displayTitlePriority
+		displayTitleAlignment = item.displayTitleAlignment
+		displayIconScale = item.displayIconScale
+		displayIconWidth = item.displayIconWidth
+		displayIconHeight = item.displayIconHeight
+		displayIconTemplate = item.displayIconTemplate
+		classWasWrapped = item.classWasWrapped
+		representedClass = item.representedClass
+		bytes = item.bytes
+	}
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
