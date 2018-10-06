@@ -166,7 +166,7 @@ extension Model {
 	static func prepareToSave() {
 		saveOverlap += 1
 		if saveBgTask == nil {
-			log("Starting save queue background task")
+			//log("Starting save queue background task")
 			saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.saveTask", expirationHandler: nil)
 		}
 		rebuildLabels()
@@ -212,7 +212,7 @@ extension Model {
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 			if saveOverlap == 0, let b = saveBgTask {
 				watchDelegate?.updateContext()
-				log("Ending save queue background task")
+				//log("Ending save queue background task")
 				UIApplication.shared.endBackgroundTask(b)
 				saveBgTask = nil
 			}

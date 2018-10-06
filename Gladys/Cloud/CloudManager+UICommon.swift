@@ -846,7 +846,7 @@ extension CloudManager {
 		if let e = existingBgTask {
 			bgTask = e
 		} else {
-			log("Starting cloud sync background task")
+			//log("Starting cloud sync background task")
 			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.syncTask", expirationHandler: nil)
 		}
 		#else
@@ -864,7 +864,7 @@ extension CloudManager {
 			completion(error)
 			#if os(iOS)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-				log("Ending cloud sync background task")
+				//log("Ending cloud sync background task")
 				UIApplication.shared.endBackgroundTask(bgTask)
 			}
 			#endif

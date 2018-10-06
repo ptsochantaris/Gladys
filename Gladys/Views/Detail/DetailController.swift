@@ -517,20 +517,28 @@ final class DetailController: GladysViewController,
 		if indexPath.section == 2 && indexPath.row == item.labels.count { return UISwipeActionsConfiguration(actions: []) }
 		if item.shareMode == .elsewhereReadOnly { return UISwipeActionsConfiguration(actions: []) }
 		let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, handler in
-			self?.deleteRowSelected(at: indexPath)
-			handler(true)
+			let ok = self?.deleteRowSelected(at: indexPath) ?? false
+			handler(ok)
 		}
 		return UISwipeActionsConfiguration(actions: [delete])
 	}
 
-	private func deleteRowSelected(at indexPath: IndexPath) {
+	private func deleteRowSelected(at indexPath: IndexPath) -> Bool {
+		if CloudManager.syncing || item.needsReIngest || item.isTransferring {
+			genericAlert(title: "Syncing", message: "Please try again in a moment.", showOK: false)
+			return false
+		}
 		table.performBatchUpdates({
 			if indexPath.section == 2 {
 				self.removeLabel(at: indexPath)
 			} else {
 				self.removeTypeItem(at: indexPath)
 			}
-		}, completion: nil)
+		}, completion: { _ in
+			self.sizeWindow()
+			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
+		})
+		return true
 	}
 
 	private func copyRowSelected(at indexPath: IndexPath) {
@@ -544,7 +552,6 @@ final class DetailController: GladysViewController,
 		table.deleteRows(at: [indexPath], with: .automatic)
 		makeIndexAndSaveItem()
 		item.postModified()
-		userActivity?.needsSave = true
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
@@ -557,14 +564,8 @@ final class DetailController: GladysViewController,
 			table.deleteRows(at: [indexPath], with: .automatic)
 		}
 		item.renumberTypeItems()
-		item.markUpdated()
 		item.needsReIngest = true
-		Model.save()
-		userActivity?.needsSave = true
-		DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
-			self.sizeWindow()
-			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
-		}
+		makeIndexAndSaveItem()
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
