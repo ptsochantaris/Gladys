@@ -13,29 +13,28 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet private weak var viewButton: UIButton!
 	@IBOutlet private weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
-	@IBOutlet private weak var buttonSpacer: UIView!
 
 	var inspectionCallback: (()->Void)? {
 		didSet {
-			updateHiding()
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var viewCallback: (()->Void)? {
 		didSet {
-			updateHiding()
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var archiveCallback: (()->Void)? {
 		didSet {
-			updateHiding()
+			setNeedsUpdateConstraints()
 		}
 	}
 
 	var editCallback: (()->Void)? {
 		didSet {
-			updateHiding()
+			setNeedsUpdateConstraints()
 		}
 	}
 
@@ -45,19 +44,14 @@ final class DetailCell: UITableViewCell {
 		viewCallback = nil
 		archiveCallback = nil
 		editCallback = nil
-		updateHiding()
 	}
 
-	private func updateHiding() {
-		let inspectHide = inspectionCallback == nil
-		let viewHide = viewCallback == nil
-		let archiveHide = archiveCallback == nil
-		let editHide = editCallback == nil
-		buttonSpacer.isHidden = !(inspectHide && viewHide && archiveHide && editHide)
-		inspectButton.isHidden = inspectHide
-		viewButton.isHidden = viewHide
-		archiveButton.isHidden = archiveHide
-		editButton.isHidden = editHide
+	override func updateConstraints() {
+		inspectButton.isHidden = inspectionCallback == nil
+		viewButton.isHidden = viewCallback == nil
+		archiveButton.isHidden = archiveCallback == nil
+		editButton.isHidden = editCallback == nil
+		super.updateConstraints()
 	}
 
 	override func awakeFromNib() {
@@ -69,8 +63,6 @@ final class DetailCell: UITableViewCell {
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
-
-		updateHiding()
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false

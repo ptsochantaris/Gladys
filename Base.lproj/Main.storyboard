@@ -1514,18 +1514,18 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="labelText" destination="FVY-cq-wvt" id="9Zh-kJ-Qiy"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="268" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="295.5" width="320" height="268"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="295.5" width="320" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="268"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="225"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SCX-mM-he8">
-                                                    <rect key="frame" x="15" y="3" width="290" height="255"/>
+                                                    <rect key="frame" x="15" y="3" width="290" height="193.5"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="3mR-0k-GUz">
-                                                            <rect key="frame" x="8" y="8" width="282" height="239"/>
+                                                            <rect key="frame" x="8" y="8" width="282" height="177.5"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="42l-OU-dwE" userLabel="Type And Size">
                                                                     <rect key="frame" x="0.0" y="0.0" width="282" height="13.5"/>
@@ -1552,13 +1552,13 @@ Selecting them will show only items that contain these labels.</string>
                                                                     </subviews>
                                                                 </stackView>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VbD-WF-VPn" userLabel="Description And Actions">
-                                                                    <rect key="frame" x="0.0" y="17.5" width="282" height="221.5"/>
+                                                                    <rect key="frame" x="0.0" y="17.5" width="282" height="160"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="238" height="221.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="238" height="160"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
-                                                                                    <rect key="frame" x="10" y="5" width="218" height="211.5"/>
+                                                                                    <rect key="frame" x="10" y="5" width="218" height="150"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <nil key="highlightedColor"/>
@@ -1574,13 +1574,13 @@ Selecting them will show only items that contain these labels.</string>
                                                                             <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                                                         </view>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iZN-UI-7yx">
-                                                                            <rect key="frame" x="238" y="0.0" width="44" height="221.5"/>
+                                                                            <rect key="frame" x="238" y="0.0" width="44" height="160"/>
                                                                             <subviews>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" constant="44" id="IG5-PU-ycQ"/>
-                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="yNQ-kK-pxU"/>
+                                                                                        <constraint firstAttribute="height" constant="40" id="yNQ-kK-pxU"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="iconEye"/>
@@ -1591,7 +1591,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inF-G0-kRj">
                                                                                     <rect key="frame" x="0.0" y="40" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="mPG-lj-hTC"/>
+                                                                                        <constraint firstAttribute="height" constant="40" id="mPG-lj-hTC"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="nkU-Hz-ACs"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1603,7 +1603,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95r-TU-tTc" userLabel="Edit Button">
                                                                                     <rect key="frame" x="0.0" y="80" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="5VF-vK-wlh"/>
+                                                                                        <constraint firstAttribute="height" constant="40" id="5VF-vK-wlh"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1615,7 +1615,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRm-i0-pKo">
                                                                                     <rect key="frame" x="0.0" y="120" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="height" priority="999" constant="40" id="NAx-6u-ayg"/>
+                                                                                        <constraint firstAttribute="height" constant="40" id="NAx-6u-ayg"/>
                                                                                         <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1624,13 +1624,6 @@ Selecting them will show only items that contain these labels.</string>
                                                                                         <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="j42-ob-7SY">
-                                                                                    <rect key="frame" x="0.0" y="160" width="44" height="61.5"/>
-                                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="width" constant="44" id="Zxh-ej-Kgl"/>
-                                                                                    </constraints>
-                                                                                </view>
                                                                             </subviews>
                                                                         </stackView>
                                                                     </subviews>
@@ -1651,7 +1644,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraints>
                                                 <constraint firstItem="SCX-mM-he8" firstAttribute="top" secondItem="tOl-ri-qII" secondAttribute="top" constant="3" id="0dW-BS-I96"/>
                                                 <constraint firstItem="SCX-mM-he8" firstAttribute="leading" secondItem="tOl-ri-qII" secondAttribute="leadingMargin" id="7nb-kH-dVS"/>
-                                                <constraint firstAttribute="bottom" secondItem="SCX-mM-he8" secondAttribute="bottom" constant="10" id="cQi-SB-4v2"/>
+                                                <constraint firstAttribute="bottom" secondItem="SCX-mM-he8" secondAttribute="bottom" priority="999" constant="10" id="cQi-SB-4v2"/>
                                                 <constraint firstItem="SCX-mM-he8" firstAttribute="trailing" secondItem="tOl-ri-qII" secondAttribute="trailingMargin" id="dg5-1d-wyf"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -1659,7 +1652,6 @@ Selecting them will show only items that contain these labels.</string>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
-                                            <outlet property="buttonSpacer" destination="j42-ob-7SY" id="VDi-yn-D6P"/>
                                             <outlet property="desc" destination="X2E-UF-eyf" id="UAI-bk-gWx"/>
                                             <outlet property="editButton" destination="95r-TU-tTc" id="t5R-Vc-po9"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
@@ -1765,7 +1757,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="00w-AT-PRi"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4207.5" y="936.97183098591552"/>
+            <point key="canvasLocation" x="4206.3999999999996" y="936.4317841079461"/>
         </scene>
         <!--Hex Edit-->
         <scene sceneID="8x6-3J-YB8">
