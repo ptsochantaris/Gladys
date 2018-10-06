@@ -1424,8 +1424,8 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="1hY-R9-9dr" secondAttribute="bottom" id="1DJ-gq-5oH"/>
                                                 <constraint firstItem="1hY-R9-9dr" firstAttribute="top" secondItem="2po-Br-7Vd" secondAttribute="top" id="aH9-bv-R2a"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="1hY-R9-9dr" secondAttribute="trailing" id="hTP-YF-VvG"/>
-                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leadingMargin" id="mAJ-2f-oGX"/>
+                                                <constraint firstAttribute="trailing" secondItem="1hY-R9-9dr" secondAttribute="trailing" constant="15" id="hTP-YF-VvG"/>
+                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leading" constant="15" id="mAJ-2f-oGX"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1459,10 +1459,10 @@ Selecting them will show only items that contain these labels.</string>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="ORD-vD-01W" firstAttribute="centerX" secondItem="lkd-RA-F4O" secondAttribute="centerX" id="EJc-5u-vls"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="crv-5h-2hZ" secondAttribute="trailing" id="LfU-nc-u10"/>
+                                                <constraint firstAttribute="trailing" secondItem="crv-5h-2hZ" secondAttribute="trailing" constant="15" id="LfU-nc-u10"/>
                                                 <constraint firstAttribute="bottom" secondItem="crv-5h-2hZ" secondAttribute="bottom" id="UF8-QU-ud3"/>
                                                 <constraint firstItem="ORD-vD-01W" firstAttribute="centerY" secondItem="lkd-RA-F4O" secondAttribute="centerY" id="W1N-Kh-epj"/>
-                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="leading" secondItem="lkd-RA-F4O" secondAttribute="leadingMargin" id="e8l-qL-odU"/>
+                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="leading" secondItem="lkd-RA-F4O" secondAttribute="leading" constant="15" id="e8l-qL-odU"/>
                                                 <constraint firstItem="crv-5h-2hZ" firstAttribute="top" secondItem="lkd-RA-F4O" secondAttribute="top" id="hoA-9d-Zzv"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -1472,18 +1472,18 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="textView" destination="crv-5h-2hZ" id="hgE-Ob-kH8"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="215.5" width="320" height="80"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" rowHeight="60" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="215.5" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ksg-vx-bYr" id="gmt-hK-Po0">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJ8-xe-pgl">
-                                                    <rect key="frame" x="24" y="11" width="272" height="58"/>
+                                                    <rect key="frame" x="24" y="4" width="272" height="52"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FVY-cq-wvt">
-                                                            <rect key="frame" x="14" y="8" width="244" height="42"/>
+                                                            <rect key="frame" x="14" y="9" width="244" height="34"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -1491,22 +1491,22 @@ Selecting them will show only items that contain these labels.</string>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="top" secondItem="dJ8-xe-pgl" secondAttribute="topMargin" id="2QD-kR-y09"/>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="FVY-cq-wvt" secondAttribute="bottom" id="3cp-Q8-rot"/>
-                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="leading" secondItem="dJ8-xe-pgl" secondAttribute="leadingMargin" constant="2" id="ChC-LF-vg0"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="FVY-cq-wvt" secondAttribute="trailing" constant="2" id="eOQ-jd-yj3"/>
+                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="top" secondItem="dJ8-xe-pgl" secondAttribute="top" constant="9" id="2QD-kR-y09"/>
+                                                        <constraint firstAttribute="bottom" secondItem="FVY-cq-wvt" secondAttribute="bottom" constant="9" id="3cp-Q8-rot"/>
+                                                        <constraint firstItem="FVY-cq-wvt" firstAttribute="leading" secondItem="dJ8-xe-pgl" secondAttribute="leading" constant="14" id="ChC-LF-vg0"/>
+                                                        <constraint firstAttribute="trailing" secondItem="FVY-cq-wvt" secondAttribute="trailing" constant="14" id="eOQ-jd-yj3"/>
                                                     </constraints>
                                                     <edgeInsets key="layoutMargins" top="8" left="12" bottom="8" right="12"/>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="dJ8-xe-pgl" firstAttribute="top" secondItem="gmt-hK-Po0" secondAttribute="topMargin" id="3MM-1u-LXU"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="dJ8-xe-pgl" secondAttribute="bottom" id="5dA-jx-khg"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="dJ8-xe-pgl" secondAttribute="trailing" id="Oo1-VT-VW3"/>
-                                                <constraint firstItem="dJ8-xe-pgl" firstAttribute="leading" secondItem="gmt-hK-Po0" secondAttribute="leadingMargin" id="U4w-wK-pQy"/>
+                                                <constraint firstItem="dJ8-xe-pgl" firstAttribute="top" secondItem="gmt-hK-Po0" secondAttribute="top" constant="4" id="3MM-1u-LXU"/>
+                                                <constraint firstAttribute="bottom" secondItem="dJ8-xe-pgl" secondAttribute="bottom" priority="999" constant="4" id="5dA-jx-khg"/>
+                                                <constraint firstAttribute="trailing" secondItem="dJ8-xe-pgl" secondAttribute="trailing" constant="24" id="Oo1-VT-VW3"/>
+                                                <constraint firstItem="dJ8-xe-pgl" firstAttribute="leading" secondItem="gmt-hK-Po0" secondAttribute="leading" constant="24" id="U4w-wK-pQy"/>
                                             </constraints>
-                                            <edgeInsets key="layoutMargins" top="4" left="24" bottom="4" right="24"/>
+                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
@@ -1515,7 +1515,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="295.5" width="320" height="225"/>
+                                        <rect key="frame" x="0.0" y="275.5" width="320" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="225"/>
@@ -1579,7 +1579,6 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="40"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" constant="44" id="IG5-PU-ycQ"/>
                                                                                         <constraint firstAttribute="height" constant="40" id="yNQ-kK-pxU"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -1592,7 +1591,6 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     <rect key="frame" x="0.0" y="40" width="44" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="40" id="mPG-lj-hTC"/>
-                                                                                        <constraint firstAttribute="width" constant="44" id="nkU-Hz-ACs"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="iconArchive2"/>
@@ -1604,7 +1602,6 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     <rect key="frame" x="0.0" y="80" width="44" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="40" id="5VF-vK-wlh"/>
-                                                                                        <constraint firstAttribute="width" constant="44" id="uQQ-n7-eWi"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="iconPencil"/>
@@ -1616,7 +1613,6 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     <rect key="frame" x="0.0" y="120" width="44" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="40" id="NAx-6u-ayg"/>
-                                                                                        <constraint firstAttribute="width" constant="44" id="SEu-Nx-qyD"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="info"/>
@@ -1625,6 +1621,9 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     </connections>
                                                                                 </button>
                                                                             </subviews>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="width" constant="44" id="cVx-rm-fNV"/>
+                                                                            </constraints>
                                                                         </stackView>
                                                                     </subviews>
                                                                 </stackView>
@@ -1643,12 +1642,13 @@ Selecting them will show only items that contain these labels.</string>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="SCX-mM-he8" firstAttribute="top" secondItem="tOl-ri-qII" secondAttribute="top" constant="3" id="0dW-BS-I96"/>
-                                                <constraint firstItem="SCX-mM-he8" firstAttribute="leading" secondItem="tOl-ri-qII" secondAttribute="leadingMargin" id="7nb-kH-dVS"/>
-                                                <constraint firstAttribute="bottom" secondItem="SCX-mM-he8" secondAttribute="bottom" priority="999" constant="10" id="cQi-SB-4v2"/>
-                                                <constraint firstItem="SCX-mM-he8" firstAttribute="trailing" secondItem="tOl-ri-qII" secondAttribute="trailingMargin" id="dg5-1d-wyf"/>
+                                                <constraint firstItem="SCX-mM-he8" firstAttribute="leading" secondItem="tOl-ri-qII" secondAttribute="leading" constant="15" id="7nb-kH-dVS"/>
+                                                <constraint firstAttribute="bottom" secondItem="SCX-mM-he8" secondAttribute="bottom" priority="250" constant="10" id="cQi-SB-4v2"/>
+                                                <constraint firstItem="SCX-mM-he8" firstAttribute="trailing" secondItem="tOl-ri-qII" secondAttribute="trailing" constant="-15" id="dg5-1d-wyf"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
