@@ -1487,8 +1487,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		searchTimer.push()
 	}
 
-	@objc func reloadData() {
+	@objc func reloadData(onlyIfPopulated: Bool = false) {
 		updateLabelIcon()
+		if onlyIfPopulated && Model.visibleDrops.count == 0 {
+			return
+		}
 		collection.performBatchUpdates({
 			self.collection.reloadSections(IndexSet(integer: 0))
 		})

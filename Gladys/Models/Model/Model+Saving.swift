@@ -86,6 +86,10 @@ extension Model {
 		item.needsSaving = false
 		let uuid = item.uuid
 		saveQueue.async {
+			if item.isDeleting {
+				log("Skipping save of item \(uuid) as it's marked for deletion")
+				return
+			}
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [uuid])
 				log("Ingest completed for item (\(uuid)) and committed to disk")

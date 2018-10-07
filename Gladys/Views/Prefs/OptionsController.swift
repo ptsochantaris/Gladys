@@ -32,7 +32,7 @@ final class OptionsController: GladysViewController {
 
 	@IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.displayLabelsInMainView = sender.isOn
-		ViewController.shared.reloadData()
+		ViewController.shared.reloadData(onlyIfPopulated: true)
 	}
 
 	@IBAction private func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
@@ -60,7 +60,7 @@ final class OptionsController: GladysViewController {
 
 	@IBAction private func displayNotesInMainViewSelected(_ sender: UISwitch) {
 		PersistedOptions.displayNotesInMainView = sender.isOn
-		ViewController.shared.reloadData()
+		ViewController.shared.reloadData(onlyIfPopulated: true)
 	}
 
 	@IBAction private func darkModeSelected(_ sender: UISwitch) {
