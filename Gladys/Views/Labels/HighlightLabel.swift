@@ -39,6 +39,11 @@ final class HighlightLabel: UILabel {
 		p.lineBreakMode = .byWordWrapping
 		p.lineHeightMultiple = 1.3
 
+		if textAlignment == .natural {
+			p.firstLineHeadIndent = 4
+			p.headIndent = 3
+		}
+
 		let separator = "   "
 
 		let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
@@ -75,6 +80,7 @@ final class HighlightLabel: UILabel {
 
 		let lines = CTFrameGetLines(totalFrame) as NSArray
 		let lineCount = lines.count
+		let leftAlign = textAlignment == .natural
 
 		for index in 0 ..< lineCount {
 			let line = lines[index] as! CTLine
@@ -83,7 +89,7 @@ final class HighlightLabel: UILabel {
 			CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
 			let lineFrame = CTLineGetBoundsWithOptions(line, [])
 			let offset: CGFloat = index < (lineCount-1) ? 2 : -6
-			let lineStart = (bounds.width - lineFrame.width + offset) * 0.5
+			let lineStart = leftAlign ? 1 : (bounds.width - lineFrame.width + offset) * 0.5
 
 			for r in CTLineGetGlyphRuns(line) as NSArray {
 

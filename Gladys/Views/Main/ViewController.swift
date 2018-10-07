@@ -217,7 +217,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchivedItemCell", for: indexPath) as! ArchivedItemCell
+		let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
 		if indexPath.item < Model.filteredDrops.count {
 			cell.lowMemoryMode = lowMemoryMode
 			let item = Model.filteredDrops[indexPath.item]
@@ -497,7 +498,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			n.view.backgroundColor = c
 
 			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
-			p.permittedArrowDirections = [.down, .left, .right]
+			if PersistedOptions.wideMode {
+				p.permittedArrowDirections = [.left, .right]
+			} else {
+				p.permittedArrowDirections = [.down, .left, .right]
+			}
 			p.sourceView =  navigationController!.view
 			p.sourceRect = cellRect
 			p.delegate = self
@@ -1159,14 +1164,29 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			itemSize = CGSize(width: side, height: side)
 		}
 
-		if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
-			itemSize = CGSize(width: 300, height: 200)
-		} else if lastSize.width >= 1024 {
-			calculateSizes(for: 4)
-		} else if lastSize.width >= 694 {
-			calculateSizes(for: 3)
+		func calculateWideSizes(for columnCount: CGFloat) {
+			let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
+			let extras = (layout.minimumInteritemSpacing * (columnCount - 1.0)) + layout.sectionInset.left + layout.sectionInset.right
+			let side = ((lastSize.width - extras) / columnCount).rounded(.down)
+			itemSize = CGSize(width: side, height: 80)
+		}
+
+		if PersistedOptions.wideMode {
+			if lastSize.width >= 768 {
+				calculateWideSizes(for: 2)
+			} else {
+				itemSize = CGSize(width: lastSize.width - 20, height: 80)
+			}
 		} else {
-			calculateSizes(for: 2)
+			if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
+				itemSize = CGSize(width: 300, height: 200)
+			} else if lastSize.width >= 1024 {
+				calculateSizes(for: 4)
+			} else if lastSize.width >= 694 {
+				calculateSizes(for: 3)
+			} else {
+				calculateSizes(for: 2)
+			}
 		}
 	}
 

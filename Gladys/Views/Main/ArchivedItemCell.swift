@@ -14,17 +14,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet private weak var image: GladysImageView!
 	@IBOutlet private weak var bottomLabel: UILabel!
 	@IBOutlet private weak var labelsLabel: HighlightLabel!
-	@IBOutlet private weak var bottomLabelDistance: NSLayoutConstraint!
+
 	@IBOutlet private weak var topLabel: UILabel!
-	@IBOutlet private weak var topLabelDistance: NSLayoutConstraint!
+	@IBOutlet private weak var topLabelHolder: UIView!
+
 	@IBOutlet private weak var progressView: UIProgressView!
+	@IBOutlet private weak var progressViewHolder: UIView!
+
 	@IBOutlet private weak var cancelButton: UIButton!
 	@IBOutlet private weak var lockImage: UIImageView!
 	@IBOutlet private weak var mergeImage: UIImageView!
-	@IBOutlet private weak var labelsDistance: NSLayoutConstraint!
 	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	@IBOutlet private weak var topLabelLeft: NSLayoutConstraint!
+	@IBOutlet private weak var labelStack: UIStackView!
 
 	private var tickImage: UIImageView?
 	private var tickHolder: UIView?
@@ -97,7 +100,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	var isEditing: Bool = false {
 		didSet {
-			if isEditing && tickHolder == nil && cancelButton.isHidden {
+			if isEditing && tickHolder == nil && progressViewHolder.isHidden {
 
 				let img = UIImageView(frame: .zero)
 				img.translatesAutoresizingMaskIntoConstraints = false
@@ -198,20 +201,25 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	private static let darkTextColor = #colorLiteral(red: 0.2980392157, green: 0.2980392157, blue: 0.2980392157, alpha: 1)
-
 	private static let lightTextColor = #colorLiteral(red: 0.7843137255, green: 0.7843137255, blue: 0.7843137255, alpha: 1)
+
+	private lazy var wideCell = { return reuseIdentifier == "WideArchivedItemCell" }()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = true
+		layer.cornerRadius = 10
+
 		image.clipsToBounds = true
-		image.layer.cornerRadius = 5
+		image.squircle = !wideCell
 		image.accessibilityIgnoresInvertColors = true
 		contentView.tintColor = .darkGray
 
 		let b = UIView()
 		b.layer.cornerRadius = 10
 		backgroundView = b
+
+		labelStack.setCustomSpacing(3, after: labelsLabel)
 
 		darkModeChanged()
 		borderView.layer.cornerRadius = 10
@@ -412,7 +420,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		var wantColourView = false
 		var wantMapView = false
-		var hideCancel = true
 		var hideImage = true
 		var hideProgress = true
 		var hideSpinner = true
@@ -434,7 +441,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 				if item.needsReIngest {
 					hideSpinner = false
 				} else {
-					hideCancel = false
 					hideProgress = false
 					progressView.observedProgress = item.loadingProgress
 				}
@@ -499,7 +505,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				let wideMode = H > 145
 				let smallMode = H < 240
 
-				if wideMode && PersistedOptions.displayLabelsInMainView {
+				if PersistedOptions.displayLabelsInMainView {
 					labels = item.labels
 				}
 
@@ -515,24 +521,40 @@ final class ArchivedItemCell: UICollectionViewCell {
 					secondaryLabel = bottomLabel
 				}
 
-				let baseLines = smallMode ? 2 : 6
-				switch item.displayMode {
-				case .center:
-					image.contentMode = .center
+				if wideCell {
+					primaryLabel.numberOfLines = 3
 					image.circle = false
-					primaryLabel.numberOfLines = wideMode ? baseLines+2 : 2
-				case .fill:
-					image.contentMode = .scaleAspectFill
-					image.circle = false
-					primaryLabel.numberOfLines = baseLines
-				case .fit:
-					image.contentMode = .scaleAspectFit
-					image.circle = false
-					primaryLabel.numberOfLines = baseLines
-				case .circle:
-					image.contentMode = .scaleAspectFill
-					image.circle = true
-					primaryLabel.numberOfLines = baseLines
+					switch item.displayMode {
+					case .center:
+						image.contentMode = .center
+					case .fill:
+						image.contentMode = .scaleAspectFill
+					case .fit:
+						image.contentMode = .scaleAspectFit
+					case .circle:
+						image.contentMode = .scaleAspectFill
+					}
+
+				} else {
+					let baseLines = smallMode ? 2 : 6
+					switch item.displayMode {
+					case .center:
+						image.contentMode = .center
+						image.circle = false
+						primaryLabel.numberOfLines = wideMode ? baseLines+2 : 2
+					case .fill:
+						image.contentMode = .scaleAspectFill
+						image.circle = false
+						primaryLabel.numberOfLines = baseLines
+					case .fit:
+						image.contentMode = .scaleAspectFit
+						image.circle = false
+						primaryLabel.numberOfLines = baseLines
+					case .circle:
+						image.contentMode = .scaleAspectFill
+						image.circle = true
+						primaryLabel.numberOfLines = baseLines
+					}
 				}
 				secondaryLabel.numberOfLines = 2
 
@@ -578,19 +600,32 @@ final class ArchivedItemCell: UICollectionViewCell {
 			existingPreviewView = nil
 		}
 
-		progressView.isHidden = hideProgress
+		progressViewHolder.isHidden = hideProgress
 
 		topLabel.text = topLabelText
-		topLabel.textAlignment = topLabelAlignment ?? .center
+		topLabelHolder.isHidden = topLabelText?.isEmpty ?? true
 
 		bottomLabel.text = bottomLabelText
-		bottomLabel.textAlignment = bottomLabelAlignment ?? .center
 		bottomLabel.isHighlighted = bottomLabelHighlight
+		bottomLabel.isHidden = bottomLabelText?.isEmpty ?? true
 
-		labelsLabel.labels = labels ?? []
+		if wideCell {
+			topLabel.textAlignment = .natural
+			bottomLabel.textAlignment = .natural
+		} else {
+			topLabel.textAlignment = topLabelAlignment ?? .center
+			bottomLabel.textAlignment = bottomLabelAlignment ?? .center
+		}
 
-		image.isHidden = hideImage
-		cancelButton.isHidden = hideCancel
+		let newLabels = labels ?? []
+		labelsLabel.labels = newLabels
+		labelsLabel.isHidden = newLabels.isEmpty
+
+		if wideCell {
+			image.alpha = hideImage ? 0 : 1
+		} else {
+			image.isHidden = hideImage
+		}
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
 		shareMode = shared
@@ -602,15 +637,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			spinner.startAnimating()
 		}
 
-		setNeedsUpdateConstraints()
-	}
-
-	override func updateConstraints() {
-		super.updateConstraints()
-		topLabelLeft.constant = shareHolder == nil ? 0 : 35
-		topLabelDistance.constant = topLabel.text == nil ? 0 : 7
-		bottomLabelDistance.constant = bottomLabel.text == nil ? 0 : 7
-		labelsDistance.constant = labelsLabel.labels.isEmpty ? 0 : 3
+		topLabelLeft.constant = (shareHolder == nil || wideCell) ? 0 : 35
 	}
 
 	func flash() {

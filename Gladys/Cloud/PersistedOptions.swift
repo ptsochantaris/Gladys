@@ -61,6 +61,22 @@ class PersistedOptions {
 		}
 	}
 
+	private static var wideModeCache: Bool?
+	static var wideMode: Bool {
+		get {
+			if let c = wideModeCache {
+				return c
+			}
+			wideModeCache = defaults.bool(forKey: "wideMode")
+			return wideModeCache!
+		}
+		set {
+			wideModeCache = newValue
+			defaults.set(newValue, forKey: "wideMode")
+			defaults.synchronize()
+		}
+	}
+
 	static var setLabelsWhenActioning: Bool {
 		get {
 			return defaults.bool(forKey: "setLabelsWhenActioning")

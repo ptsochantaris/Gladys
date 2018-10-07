@@ -20,6 +20,7 @@ final class GladysImageView: UIImageView {
 		}
 	}
 
+	var squircle = false
 	private var aspectLock: NSLayoutConstraint?
 
 	override func layoutSubviews() {
@@ -36,7 +37,7 @@ final class GladysImageView: UIImageView {
 			}
 
 		} else {
-			layer.cornerRadius = 5
+			layer.cornerRadius = squircle ? 5 : 0
 			if let a = aspectLock {
 				removeConstraint(a)
 				aspectLock = nil
