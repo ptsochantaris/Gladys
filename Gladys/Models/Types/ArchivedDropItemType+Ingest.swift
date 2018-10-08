@@ -30,17 +30,17 @@ extension ArchivedDropItemType {
 			log("      received remote url: \(url.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 			if let s = url.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: url) { [weak self] title, image in
-					if self?.loadingAborted ?? true { return }
-					self?.accessoryTitle = title ?? self?.accessoryTitle
+				fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
+					guard let s = self, !s.loadingAborted else { return }
+					s.accessoryTitle = title ?? s.accessoryTitle
 					if let image = image {
 						if image.size.height > 100 || image.size.width > 200 {
-							self?.setDisplayIcon(image, 30, .fit)
+							s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
 						} else {
-							self?.setDisplayIcon(image, 30, .center)
+							s.setDisplayIcon(image, 30, .center)
 						}
 					}
-					self?.completeIngest()
+					s.completeIngest()
 				}
 			} else {
 				completeIngest()

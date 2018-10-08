@@ -312,7 +312,7 @@ extension ArchivedDropItemType {
 		return result
 	}
 
-	func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, IMAGE?)->Void) {
+	func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, String?, IMAGE?, Bool)->Void) {
 
 		// in thread!!
 
@@ -329,12 +329,12 @@ extension ArchivedDropItemType {
 						self.fetchWebPreview(for: url, testing: false, completion: completion)
 					} else {
 						log("\(U): Content for this isn't HTML, never mind")
-						completion(nil, nil)
+						completion(nil, nil, nil, false)
 					}
 				}
 				if let error = error {
 					log("\(U): Error while investigating URL: \(error.finalDescription)")
-					completion(nil, nil)
+					completion(nil, nil, nil, false)
 				}
 			}
 
@@ -347,17 +347,66 @@ extension ArchivedDropItemType {
 					let text = (String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii)),
 					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
 
-					let title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
+					var title: String?
+					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:title\"]") {
+						for node in metaTags {
+							if let content = node.attr("content") {
+								log("Found og title: \(content)")
+								title = content.trimmingCharacters(in: .whitespacesAndNewlines)
+								break
+							}
+						}
+					}
+
+					if title == nil {
+						log("Falling back to HTML title")
+						title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
+					}
+
 					if let title = title {
 						log("\(U): Title located at URL: \(title)")
 					} else {
 						log("\(U): No title located at URL")
 					}
 
-					var largestImagePath = "/favicon.ico"
-					var imageRank = 0
+					var description: String?
+					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
+						for node in metaTags {
+							if let content = node.attr("content") {
+								log("Found og summary: \(content)")
+								description = content.trimmingCharacters(in: .whitespacesAndNewlines)
+								break
+							}
+						}
+					}
 
-					if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+					var largestImagePath = "/favicon.ico"
+					var isThumbnail = false
+
+					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
+						for node in metaTags {
+							if let content = node.attr("content") {
+								log("Found og image: \(content)")
+								largestImagePath = content
+								isThumbnail = true
+								break
+							}
+						}
+					}
+
+					if !isThumbnail, let metaTags = htmlDoc.head?.xpath("//meta[@name=\"thumbnail\" or @name=\"image\"]") {
+						for node in metaTags {
+							if let content = node.attr("content") {
+								log("Found thumbnail image: \(content)")
+								largestImagePath = content
+								isThumbnail = true
+								break
+							}
+						}
+					}
+
+					if !isThumbnail, let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+						var imageRank = 0
 						for node in touchIcons {
 							let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
 							var rank = isTouch ? 10 : 1
@@ -395,18 +444,18 @@ extension ArchivedDropItemType {
 					if let iconUrl = iconUrl {
 						log("\(U): Fetching image for site icon: \(iconUrl)")
 						ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
-							completion(title, newImage)
+							completion(title, description, newImage, isThumbnail)
 						}
 					} else {
-						completion(title, nil)
+						completion(title, description, nil, false)
 					}
 
 				} else if let error = error {
 					log("\(U): Error while fetching title URL: \(error.finalDescription)")
-					completion(nil, nil)
+					completion(nil, nil, nil, false)
 				} else {
 					log("\(U): Bad HTML data while fetching title URL")
-					completion(nil, nil)
+					completion(nil, nil, nil, false)
 				}
 			}
 		}
