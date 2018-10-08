@@ -621,11 +621,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		labelsLabel.labels = newLabels
 		labelsLabel.isHidden = newLabels.isEmpty
 
-		if wideCell {
-			image.alpha = hideImage ? 0 : 1
-		} else {
-			image.isHidden = hideImage
-		}
+		image.alpha = hideImage ? 0 : 1
 		lockImage.isHidden = hideLock
 		mergeImage.isHidden = hideMerge
 		shareMode = shared
