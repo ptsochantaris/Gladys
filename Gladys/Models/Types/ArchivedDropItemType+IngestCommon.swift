@@ -369,8 +369,8 @@ extension ArchivedDropItemType {
 						log("\(U): No title located at URL")
 					}
 
-					var description: String?
-					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
+					let description: String? = nil
+					/*if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
 						for node in metaTags {
 							if let content = node.attr("content") {
 								log("Found og summary: \(content)")
@@ -378,87 +378,114 @@ extension ArchivedDropItemType {
 								break
 							}
 						}
-					}
+					}*/
 
-					var largestImagePath = "/favicon.ico"
-					var isThumbnail = false
-
-					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
-						for node in metaTags {
-							if let content = node.attr("content") {
-								log("Found og image: \(content)")
-								largestImagePath = content
-								isThumbnail = true
-								break
+					func fetchFavIcon() {
+						let favIconUrl = self.repair(path: self.getFavIconPath(from: htmlDoc), using: url)
+						if let iconUrl = favIconUrl {
+							log("\(U): Fetching favicon image for site icon: \(iconUrl)")
+							ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
+								completion(title, description, newImage, false)
 							}
+						} else {
+							completion(title, description, nil, false)
 						}
 					}
 
-					if !isThumbnail, let metaTags = htmlDoc.head?.xpath("//meta[@name=\"thumbnail\" or @name=\"image\"]") {
-						for node in metaTags {
-							if let content = node.attr("content") {
-								log("Found thumbnail image: \(content)")
-								largestImagePath = content
-								isThumbnail = true
-								break
-							}
-						}
-					}
-
-					if !isThumbnail, let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
-						var imageRank = 0
-						for node in touchIcons {
-							let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
-							var rank = isTouch ? 10 : 1
-							if let sizes = node.attr("sizes") {
-								let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-								if numbers.count > 1 {
-									rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
-								}
-							}
-							if let href = node.attr("href") {
-								if rank > imageRank {
-									imageRank = rank
-									largestImagePath = href
-								}
-							}
-						}
-					}
-
-					var iconUrl: URL?
-					if let i = URL(string: largestImagePath), i.scheme != nil {
-						iconUrl = i
-					} else {
-						if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-							c.path = largestImagePath
-							var url = c.url
-							if url == nil && (!(largestImagePath.hasPrefix("/") || largestImagePath.hasPrefix("."))) {
-								largestImagePath = "/" + largestImagePath
-								c.path = largestImagePath
-								url = c.url
-							}
-							iconUrl = url
-						}
-					}
-
-					if let iconUrl = iconUrl {
-						log("\(U): Fetching image for site icon: \(iconUrl)")
+					let thumbnailUrl = self.repair(path: self.getThumbnailPath(from: htmlDoc), using: url)
+					if let iconUrl = thumbnailUrl {
+						log("\(U): Fetching thumbnail image for site icon: \(iconUrl)")
 						ArchivedDropItemType.fetchImage(url: iconUrl) { newImage in
-							completion(title, description, newImage, isThumbnail)
+							if let newImage = newImage {
+								completion(title, description, newImage, true)
+							} else {
+								log("\(U): Thumbnail fetch failed, falling back to favicon")
+								fetchFavIcon()
+							}
 						}
 					} else {
-						completion(title, description, nil, false)
+						fetchFavIcon()
 					}
 
 				} else if let error = error {
 					log("\(U): Error while fetching title URL: \(error.finalDescription)")
 					completion(nil, nil, nil, false)
+
 				} else {
 					log("\(U): Bad HTML data while fetching title URL")
 					completion(nil, nil, nil, false)
 				}
 			}
 		}
+	}
+
+	private func getThumbnailPath(from htmlDoc: HTMLDocument) -> String? {
+		var thumbnailPath: String?
+
+		if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
+			for node in metaTags {
+				if let content = node.attr("content") {
+					log("Found og image: \(content)")
+					thumbnailPath = content
+					break
+				}
+			}
+		}
+
+		if thumbnailPath == nil, let metaTags = htmlDoc.head?.xpath("//meta[@name=\"thumbnail\" or @name=\"image\"]") {
+			for node in metaTags {
+				if let content = node.attr("content") {
+					log("Found thumbnail image: \(content)")
+					thumbnailPath = content
+					break
+				}
+			}
+		}
+		return thumbnailPath
+	}
+
+	private func getFavIconPath(from htmlDoc: HTMLDocument) -> String? {
+		var favIconPath = "/favicon.ico"
+		if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+			var imageRank = 0
+			for node in touchIcons {
+				let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
+				var rank = isTouch ? 10 : 1
+				if let sizes = node.attr("sizes") {
+					let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+					if numbers.count > 1 {
+						rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
+					}
+				}
+				if let href = node.attr("href") {
+					if rank > imageRank {
+						imageRank = rank
+						favIconPath = href
+					}
+				}
+			}
+		}
+		return favIconPath
+	}
+
+	private func repair(path: String?, using url: URL) -> URL? {
+		guard var path = path else { return nil }
+		var iconUrl: URL?
+		if let i = URL(string: path), i.scheme != nil {
+			iconUrl = i
+		} else {
+			if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+				c.path = path
+				var url = c.url
+				if url == nil && (!(path.hasPrefix("/") || path.hasPrefix("."))) {
+					path = "/" + path
+					c.path = path
+					url = c.url
+				}
+				iconUrl = url
+			}
+		}
+		return iconUrl
 	}
 
 	static func fetchImage(url: URL?, completion: @escaping (IMAGE?)->Void) {

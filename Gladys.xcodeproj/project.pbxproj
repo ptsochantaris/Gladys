@@ -222,6 +222,8 @@
 		169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763201F156CBE00537776 /* ArchivedDropItem+UI.swift */; };
 		169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
+		169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
+		169763A2216BEB47002AC228 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		169A52DD2163FCE5006A0234 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		169C07DB2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		169C07DC2003835C00D34E47 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
@@ -2228,6 +2230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1602F3252030E5CF0036E2B0 /* Data+Extensions.swift in Sources */,
+				169763A2216BEB47002AC228 /* NSAttributedString+Extensions.swift in Sources */,
 				162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */,
 				1619E8151EFF3745000087DD /* FileProviderExtension.swift in Sources */,
 				162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */,
@@ -2264,6 +2267,7 @@
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
+				169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F3262030E5E10036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				16287AF71EFB05E9007188AE /* Types.swift in Sources */,
