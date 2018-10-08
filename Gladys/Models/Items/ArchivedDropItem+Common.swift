@@ -36,6 +36,10 @@ extension ArchivedDropItem: Hashable {
 		return uuid.hashValue
 	}
 
+	var trimmedName: String {
+		return displayTitleOrUuid.truncateWithEllipses(limit: 32)
+	}
+	
 	var sizeInBytes: Int64 {
 		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
 	}

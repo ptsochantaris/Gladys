@@ -114,6 +114,29 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = lockPassword != nil
 	}
 
+	init(cloning item: ArchivedDropItem) {
+		let myUUID = UUID()
+		uuid = myUUID
+
+		createdAt = Date()
+		updatedAt = createdAt
+		lockPassword = nil
+		lockHint = nil
+		needsReIngest = true
+		needsUnlock = false
+		needsSaving = true
+		needsDeletion = false
+
+		titleOverride = item.titleOverride
+		note = item.note
+		suggestedName = item.suggestedName
+		labels = item.labels
+
+		typeItems = item.typeItems.map {
+			ArchivedDropItemType(cloning: $0, newParentUUID: myUUID)
+		}
+	}
+
 	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?, pasteboardName: String? = nil) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
@@ -185,6 +208,8 @@ final class ArchivedDropItem: Codable {
 	var goodToSave: Bool {
 		return !isDeleting && !isTransferring
 	}
+
+	func removeIntents() {}
 
 	var pasteboardItem: NSPasteboardWriting? {
 		if typeItems.isEmpty { return nil }

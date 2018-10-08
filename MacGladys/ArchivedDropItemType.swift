@@ -254,6 +254,31 @@ final class ArchivedDropItemType: Codable {
 		bytes = typeItem.bytes
 	}
 
+
+	init(cloning item: ArchivedDropItemType, newParentUUID: UUID) {
+		uuid = UUID()
+		isTransferring = false
+		needsDeletion = false
+		createdAt = Date()
+		updatedAt = createdAt
+		delegate = nil
+
+		typeIdentifier = item.typeIdentifier
+		parentUuid = newParentUUID
+		order = item.order
+		displayIconPriority = item.displayIconPriority
+		displayIconContentMode = item.displayIconContentMode
+		displayTitlePriority = item.displayTitlePriority
+		displayTitleAlignment = item.displayTitleAlignment
+		displayIconScale = item.displayIconScale
+		displayIconWidth = item.displayIconWidth
+		displayIconHeight = item.displayIconHeight
+		displayIconTemplate = item.displayIconTemplate
+		classWasWrapped = item.classWasWrapped
+		representedClass = item.representedClass
+		bytes = item.bytes
+	}
+	
 	private func appendDirectory(_ baseURL: URL, chain: [String], archive: Archive, fm: FileManager) throws {
 		let joinedChain = chain.joined(separator: "/")
 		let dirURL = baseURL.appendingPathComponent(joinedChain)
@@ -344,23 +369,25 @@ final class ArchivedDropItemType: Codable {
 			log("      received remote url: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 			if let s = item.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: item) { [weak self] title, image in
-					if self?.loadingAborted ?? true { return }
-					self?.accessoryTitle = title ?? self?.accessoryTitle
+				fetchWebPreview(for: item) { [weak self] title, description, image, isThumbnail in
+					guard let s = self, !s.loadingAborted else { return }
+					s.accessoryTitle = title ?? s.accessoryTitle
 					if let image = image {
 						if image.size.height > 100 || image.size.width > 200 {
-							self?.setDisplayIcon(image, 30, .fit)
+							s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
 						} else {
-							self?.setDisplayIcon(image, 30, .center)
+							s.setDisplayIcon(image, 30, .center)
 						}
 					}
-					self?.completeIngest()
+					s.completeIngest()
 				}
 			} else {
 				completeIngest()
 			}
 		}
 	}
+
+	func removeIntents() {}
 
 	func tryOpen(from viewController: NSViewController) {
 		let shareItem = objectForShare

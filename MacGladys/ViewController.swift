@@ -957,6 +957,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc func duplicateItem(_ sender: Any?) {
+		for item in collection.actionableSelectedItems {
+			if Model.drops.contains(item) { // sanity check
+				Model.duplicate(item: item)
+			}
+		}
+		Model.forceUpdateFilter(signalUpdate: false)
+		reloadData()
+		Model.save()
+	}
+
 	@objc func moveToTop(_ sender: Any?) {
 		for item in collection.actionableSelectedItems {
 			if let i = Model.drops.index(of: item) {
@@ -1032,7 +1043,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		switch menuItem.action {
-		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)), #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)):
+		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)), #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)), #selector(duplicateItem(_:)):
 			return !collection.actionableSelectedItems.isEmpty
 
 		case #selector(paste(_:)):
