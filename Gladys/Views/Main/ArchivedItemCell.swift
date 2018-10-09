@@ -112,6 +112,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
 				holder.backgroundColor = borderView.backgroundColor
+				holder.layer.maskedCorners = .layerMinXMaxYCorner
 				holder.layer.cornerRadius = 10
 				holder.addSubview(img)
 				contentView.addSubview(holder)
@@ -157,6 +158,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				holder.translatesAutoresizingMaskIntoConstraints = false
 				holder.backgroundColor = borderView.backgroundColor
 				holder.layer.cornerRadius = 10
+				holder.layer.maskedCorners = .layerMaxXMaxYCorner
 				holder.addSubview(img)
 				contentView.insertSubview(holder, belowSubview: topLabel)
 

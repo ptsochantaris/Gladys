@@ -916,10 +916,13 @@ final class DetailController: GladysViewController,
 	}
 
 	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
+		var data: Data?
 		if let ip = item.imagePath {
-			return try? Data(contentsOf: ip)
+			dataAccessQueue.sync {
+				data = try? Data(contentsOf: ip)
+			}
 		}
-		return nil
+		return data
 	}
 
 	private func shareOptionsPrivate(_ sender: UIBarButtonItem) {

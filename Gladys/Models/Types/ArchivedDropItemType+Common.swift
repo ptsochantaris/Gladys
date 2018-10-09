@@ -50,23 +50,27 @@ extension ArchivedDropItemType: Equatable {
 
 	var bytes: Data? {
 		set {
-			let byteLocation = bytesPath
-			if newValue == nil || loadingAborted {
-				let f = FileManager.default
-				if f.fileExists(atPath: byteLocation.path) {
-					try? f.removeItem(at: byteLocation)
+			dataAccessQueue.sync {
+				let byteLocation = bytesPath
+				if newValue == nil || loadingAborted {
+					let f = FileManager.default
+					if f.fileExists(atPath: byteLocation.path) {
+						try? f.removeItem(at: byteLocation)
+					}
+				} else {
+					try? newValue?.write(to: byteLocation)
 				}
-			} else {
-				try? newValue?.write(to: byteLocation, options: .atomic)
 			}
 		}
 		get {
-			let byteLocation = bytesPath
-			if FileManager.default.fileExists(atPath: byteLocation.path) {
-				return try! Data(contentsOf: byteLocation, options: [.alwaysMapped])
-			} else {
-				return nil
+			var data: Data?
+			dataAccessQueue.sync {
+				let byteLocation = bytesPath
+				if FileManager.default.fileExists(atPath: byteLocation.path) {
+					data = try? Data(contentsOf: byteLocation, options: [.alwaysMapped])
+				}
 			}
+			return data
 		}
 	}
 

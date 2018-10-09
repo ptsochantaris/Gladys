@@ -10,33 +10,6 @@ import UIKit
 
 extension UIImage {
 
-	func writeBitmap(to url: URL) {
-		try? self.pngData()?.write(to: url, options: .atomic)
-	}
-
-	static func fromBitmap(at url: URL, scale: CGFloat) -> UIImage? {
-
-		guard
-			let provider = CGDataProvider(url: url as CFURL),
-			let cgImage = CGImage(pngDataProviderSource: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
-			else { return nil }
-
-		let W = Int(cgImage.width)
-		let H = Int(cgImage.height)
-
-		let c = CGContext(data: nil,
-						  width: W,
-						  height: H,
-						  bitsPerComponent: 8,
-						  bytesPerRow: W * 4,
-						  space: CGColorSpaceCreateDeviceRGB(),
-						  bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
-
-		c.draw(cgImage, in: CGRect(origin: .zero, size: CGSize(width: W, height: H)))
-
-		return UIImage(cgImage: c.makeImage()!, scale: scale, orientation: .up)
-	}
-
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
 
 		let targetScale = singleScale ? 1 : scale

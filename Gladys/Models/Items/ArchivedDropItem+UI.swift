@@ -161,8 +161,10 @@ extension ArchivedDropItem {
 
 	var watchItem: [String: Any] {
 		var imageDate = updatedAt
-		if let imagePath = imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
-			imageDate = max(imageDate, id)
+		dataAccessQueue.sync {
+			if let imagePath = imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
+				imageDate = max(imageDate, id)
+			}
 		}
 		return ["u": uuid.uuidString, "t": displayTitleOrUuid, "d": imageDate]
 	}
