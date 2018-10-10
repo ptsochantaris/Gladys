@@ -25,16 +25,16 @@ final class Model {
 		legacyFileLastModified = .distantPast
 	}
 
-	static func reloadDataIfNeeded() {
+	static func reloadDataIfNeeded(maximumItems: Int? = nil) {
 		let fm = FileManager.default
 		if fm.fileExists(atPath: itemsDirectoryUrl.path) {
-			load()
+			load(maximumItems: maximumItems)
 		} else {
 			legacyLoad()
 		}
 	}
 
-	static private func load() {
+	static private func load(maximumItems: Int? = nil) {
 
 		legacyMode = false
 
@@ -67,17 +67,21 @@ final class Model {
 					let start = Date()
 
 					let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
-					let itemCount = d.count / 16
+					let totalItemsInStore = d.count / 16
+					let itemCount: Int
+					if let maximumItems = maximumItems {
+						itemCount = min(maximumItems, totalItemsInStore)
+					} else {
+						itemCount = totalItemsInStore
+					}
 					var newDrops = [ArchivedDropItem]()
 					newDrops.reserveCapacity(itemCount)
 					var c = 0
 					let decoder = JSONDecoder()
 					while c < d.count {
-						let d0 = d[c]; let d1 = d[c+1]; let d2 = d[c+2]; let d3 = d[c+3]
-						let d4 = d[c+4]; let d5 = d[c+5]; let d6 = d[c+6]; let d7 = d[c+7]
-						let d8 = d[c+8]; let d9 = d[c+9]; let d10 = d[c+10]; let d11 = d[c+11]
-						let d12 = d[c+12]; let d13 = d[c+13]; let d14 = d[c+14]; let d15 = d[c+15]
-						let u = UUID(uuid: (d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15))
+						let u = UUID(uuid: (d[c], d[c+1], d[c+2], d[c+3], d[c+4], d[c+5],
+											d[c+6], d[c+7], d[c+8], d[c+9], d[c+10], d[c+11],
+											d[c+12], d[c+13], d[c+14], d[c+15]))
 						c += 16
 						let dataPath = url.appendingPathComponent(u.uuidString)
 						if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedDropItem.self, from: data) {

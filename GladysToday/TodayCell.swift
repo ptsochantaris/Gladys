@@ -48,15 +48,17 @@ final class TodayCell: UICollectionViewCell {
 			guard let dropItem = dropItem else { return }
 			topLabel.text = dropItem.displayText.0
 			bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
-			imageView.image = dropItem.displayIcon
 			switch dropItem.displayMode {
-			case .center:
-				imageView.contentMode = .center
-			case .circle:
+			case .center, .circle:
+				imageView.image = dropItem.displayIcon
 				imageView.contentMode = .center
 			case .fill:
+				let b = imageView.bounds
+				imageView.image = dropItem.displayIcon.limited(to: CGSize(width: b.width, height: b.width), limitTo: 1, useScreenScale: true, singleScale: true)
 				imageView.contentMode = .scaleAspectFill
 			case .fit:
+				let b = imageView.bounds
+				imageView.image = dropItem.displayIcon.limited(to: CGSize(width: b.height, height: b.height), limitTo: 1, useScreenScale: true, singleScale: true)
 				imageView.contentMode = .scaleAspectFit
 			}
 			accessibilityLabel = "Added " + (bottomLabel.text ?? "")

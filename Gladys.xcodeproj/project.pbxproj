@@ -348,6 +348,7 @@
 		16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E034F920A0D8E200B9EE1A /* Greetings.swift */; };
 		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
+		16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
@@ -1957,6 +1958,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */,
 				16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
