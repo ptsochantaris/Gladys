@@ -36,10 +36,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
 				a.addAction(UIAlertAction(title: "Import", style: .destructive, handler: { _ in
 					let inPlace = options[.openInPlace] as? Bool ?? false
+					if inPlace {
+						_ = url.startAccessingSecurityScopedResource()
+					}
 					do {
 						try Model.importData(from: url, removingOriginal: !inPlace)
 					} catch {
 						genericAlert(title: "Could not import data", message: error.finalDescription)
+					}
+					if inPlace {
+						url.stopAccessingSecurityScopedResource()
 					}
 				}))
 				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
