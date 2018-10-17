@@ -729,7 +729,7 @@ extension CloudManager {
 
 	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
 		let shareRecord = CKShare(rootRecord: rootRecord)
-		shareRecord[CKShare.SystemFieldKey.title] = item.cloudKitSharingTitle as NSString
+		shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
 		let icon = item.displayIcon
 		let scaledIcon = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 1, useScreenScale: false, singleScale: true)
 		#if os(iOS)

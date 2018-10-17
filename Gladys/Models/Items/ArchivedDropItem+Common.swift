@@ -41,7 +41,7 @@ extension ArchivedDropItem: Hashable {
 	}
 
 	var trimmedSuggestedName: String {
-		return displayTitleOrUuid.truncateWithEllipses(limit: 201)
+		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
 	}
 	
 	var sizeInBytes: Int64 {

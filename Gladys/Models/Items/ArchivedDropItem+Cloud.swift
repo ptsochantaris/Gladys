@@ -25,10 +25,6 @@ extension ArchivedDropItem {
 		cloudKitRecord = record
 	}
 
-	var cloudKitSharingTitle: String {
-		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
-	}
-
 	var parentZone: CKRecordZone.ID {
 		return cloudKitRecord?.recordID.zoneID ?? privateZoneId
 	}

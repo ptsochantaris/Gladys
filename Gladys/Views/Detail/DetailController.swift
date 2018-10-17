@@ -890,7 +890,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func itemTitle(for csc: UICloudSharingController) -> String? {
-		return item.cloudKitSharingTitle
+		return item.trimmedSuggestedName
 	}
 
 	func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
