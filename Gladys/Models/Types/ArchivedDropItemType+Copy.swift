@@ -13,11 +13,12 @@ extension ArchivedDropItemType {
 	static var droppedIds: Set<UUID>?
 
 	func register(with provider: NSItemProvider) {
-		provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
+		let t = typeIdentifier
+		provider.registerDataRepresentation(forTypeIdentifier: t, visibility: .all) { completion -> Progress? in
 			let p = Progress(totalUnitCount: 1)
 			p.completedUnitCount = 1
 			DispatchQueue.global(qos: .userInitiated).async {
-				log("Responding with data block")
+				log("Responding with data block for type: \(t)")
 				DispatchQueue.main.async {
 					ArchivedDropItemType.droppedIds?.insert(self.parentUuid)
 				}
@@ -26,5 +27,4 @@ extension ArchivedDropItemType {
 			return p
 		}
 	}
-
 }

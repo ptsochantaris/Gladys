@@ -14,7 +14,7 @@ import Intents
 extension ArchivedDropItem {
 	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
-		p.suggestedName = displayText.0
+		p.suggestedName = trimmedSuggestedName
 		typeItems.forEach { $0.register(with: p) }
 		return p
 	}

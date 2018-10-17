@@ -107,7 +107,7 @@ extension ArchivedDropItemType {
 	var itemProviderForSharing: NSItemProvider {
 		let p = NSItemProvider()
 		#if os(iOS)
-		p.suggestedName = oneTitle
+		p.suggestedName = trimmedSuggestedName
 		#endif
 		registerForSharing(with: p)
 		return p

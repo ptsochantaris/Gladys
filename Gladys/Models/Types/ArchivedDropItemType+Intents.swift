@@ -17,13 +17,17 @@ extension ArchivedDropItemType {
 
 	var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
-		p.suggestedName = oneTitle
+		p.suggestedName = trimmedSuggestedName
 		register(with: p)
 		return p
 	}
 
 	var trimmedName: String {
 		return oneTitle.truncateWithEllipses(limit: 32)
+	}
+
+	var trimmedSuggestedName: String {
+		return oneTitle.truncateWithEllipses(limit: 128)
 	}
 
 	private func donateCopyIntent() {
