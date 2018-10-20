@@ -465,7 +465,7 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self] in
 				guard let s = self else { return }
-				if PersistedOptions.fullScreenPreviews {
+				if !ViewController.shared.phoneMode && PersistedOptions.fullScreenPreviews {
 					guard let q = typeEntry.quickLook(extraRightButton: nil) else { return }
 					let n = QLHostingViewController(rootViewController: q)
 					n.relatedItem = s.item
