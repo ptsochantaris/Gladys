@@ -9,40 +9,6 @@ import MobileCoreServices
 import LocalAuthentication
 import GladysFramework
 
-class QLHostingViewController: UINavigationController {
-	var relatedItem: ArchivedDropItem?
-	var relatedChildItem: ArchivedDropItemType?
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		preferredContentSize = mainWindow.bounds.size
-		let tint = ViewController.tintColor
-		view.tintColor = tint
-		navigationBar.tintColor = tint
-		if let sourceBar = ViewController.shared.navigationController?.navigationBar {
-			navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-			navigationBar.barTintColor = sourceBar.barTintColor
-		}
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		if relatedItem != nil {
-			userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-		}
-	}
-	override func updateUserActivityState(_ activity: NSUserActivity) {
-		super.updateUserActivityState(activity)
-		if let relatedItem = relatedItem {
-			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Quick look")
-		}
-	}
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		viewControllers = []
-	}
-}
-
 extension ArchivedDropItem {
 
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
@@ -173,7 +139,7 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
-	func tryPreview(in viewController: UIViewController, from: ArchivedItemCell?, preferChild childUuid: String? = nil) {
+	func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil) {
 		var itemToPreview: ArchivedDropItemType?
 		if let childUuid = childUuid {
 			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
@@ -182,6 +148,7 @@ extension ArchivedDropItem {
 		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return }
 		let n = QLHostingViewController(rootViewController: q)
 		n.relatedItem = self
+		n.sourceItemView = cell
 
 		if PersistedOptions.fullScreenPreviews {
 			let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
@@ -194,9 +161,9 @@ extension ArchivedDropItem {
 			}
 		}
 		viewController.present(n, animated: true)
-		if let p = q.popoverPresentationController, let from = from {
-			p.sourceView = from
-			p.sourceRect = from.contentView.bounds.insetBy(dx: 6, dy: 6)
+		if let p = q.popoverPresentationController, let cell = cell {
+			p.sourceView = cell
+			p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}
 	}
 

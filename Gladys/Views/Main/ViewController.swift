@@ -552,20 +552,23 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 
 		if isEditing {
-			if selectedItems?.index(where: { $0 == item.uuid }) == nil {
+			let selected = selectedItems?.index(where: { $0 == item.uuid }) == nil
+			if selected {
 				selectedItems?.append(item.uuid)
 			} else {
-				selectedItems = selectedItems?.filter { $0 != item.uuid }
+                selectedItems?.removeAll { $0 == item.uuid }
 			}
 			didUpdateItems()
-			collectionView.reloadItems(at: [indexPath])
+			if let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell {
+				cell.isSelectedForAction = selected
+			}
 
 		} else if item.needsUnlock {
 			mostRecentIndexPathActioned = indexPath
 			item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
 				if success {
 					item.needsUnlock = false
-					collectionView.reloadItems(at: [indexPath])
+                    item.postModified()
 				}
 			}
 
@@ -1408,7 +1411,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		if let i = Model.filteredDrops.index(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-			collection.reloadItems(at: [mostRecentIndexPathActioned!])
 			focusInitialAccessibilityElement()
 			item.reIndex()
 		} else {

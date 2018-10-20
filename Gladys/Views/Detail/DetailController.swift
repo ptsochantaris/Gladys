@@ -470,6 +470,7 @@ final class DetailController: GladysViewController,
 					let n = QLHostingViewController(rootViewController: q)
 					n.relatedItem = s.item
 					n.relatedChildItem = typeEntry
+                    n.sourceItemView = cell
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
 					ViewController.top.present(n, animated: true)
 				} else {

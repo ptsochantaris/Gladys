@@ -229,6 +229,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
+        n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
 		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
@@ -396,9 +397,19 @@ final class ArchivedItemCell: UICollectionViewCell {
 	var lowMemoryMode = false
 
 	@objc private func itemModified(_ notification: Notification) {
-		if (notification.object as? ArchivedDropItem) == archivedDropItem {
-			reDecorate()
-		}
+        guard (notification.object as? ArchivedDropItem) == archivedDropItem else { return }
+        if !lowMemoryMode, viewWithTag(82646) == nil, let snap = snapshotView(afterScreenUpdates: true) {
+			snap.tag = 82646
+            addSubview(snap)
+            reDecorate()
+            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
+                snap.alpha = 0
+            }) { _ in
+                snap.removeFromSuperview()
+            }
+        } else {
+            reDecorate()
+        }
 	}
 
 	func reDecorate() {

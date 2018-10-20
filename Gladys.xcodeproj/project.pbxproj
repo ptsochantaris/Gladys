@@ -253,6 +253,7 @@
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16C2A42F217B1EA1006CF0F4 /* QLHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -732,6 +733,7 @@
 		16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKDatabaseScope+Extensions.swift"; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
+		16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QLHostingViewController.swift; sourceTree = "<group>"; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
 		16C3A2D020AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
 		16C3A2D520AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
@@ -956,6 +958,7 @@
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
 				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
+				16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -2459,6 +2462,7 @@
 				166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
+				16C2A42F217B1EA1006CF0F4 /* QLHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
