@@ -148,14 +148,17 @@ extension ArchivedDropItem {
 		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return }
 		let n = QLHostingViewController(rootViewController: q)
 		n.relatedItem = self
-		n.sourceItemView = cell
 
-		if PersistedOptions.fullScreenPreviews {
+		if !PersistedOptions.wideMode {
+			n.sourceItemView = cell
+		}
+
+		if ViewController.shared.phoneMode || PersistedOptions.fullScreenPreviews {
 			let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
-			if ViewController.shared.phoneMode || UIAccessibility.isVoiceOverRunning {
+			if UIAccessibility.isVoiceOverRunning {
 				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
