@@ -695,7 +695,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
 		if let sharingService = NSSharingService(named: .cloudSharing) {
 			sharingService.delegate = self
-			sharingService.subject = item.cloudKitSharingTitle
+			sharingService.subject = item.trimmedSuggestedName
 			sharingService.perform(withItems: [itemProvider])
 		} else if let w = view.window {
 			missingService(w)

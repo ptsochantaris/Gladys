@@ -14,8 +14,9 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 	private static var currentDelegate: GladysFileProviderDelegate?
 
 	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType]) -> GladysFilePromiseProvider {
+		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
 		GladysFilePromiseProvider.currentDelegate = GladysFileProviderDelegate(item: component, title: title)
-		let p = GladysFilePromiseProvider(fileType: component.typeIdentifier, delegate: GladysFilePromiseProvider.currentDelegate!)
+		let p = GladysFilePromiseProvider(fileType: "public.data", delegate: GladysFilePromiseProvider.currentDelegate!)
 		p.extraItems = extraItems
 		return p
 	}
@@ -25,20 +26,21 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 	public override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
 		let types = super.writableTypes(for: pasteboard)
 		let newItems = extraItems.map { NSPasteboard.PasteboardType($0.typeIdentifier) }
-		return types + newItems
+		return newItems + types
 	}
 
 	public override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
-		if type.rawValue == fileType {
+		if type.rawValue == "public.data" {
 			return super.writingOptions(forType: type, pasteboard: pasteboard)
 		}
 		return []
 	}
 
 	public override func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
-		if type.rawValue == fileType {
+		switch type.rawValue {
+		case "public.data", "com.apple.NSFilePromiseItemMetaData", "com.apple.pasteboard.promised-file-name", "com.apple.pasteboard.promised-file-content-type", "com.apple.pasteboard.NSFilePromiseID":
 			return super.pasteboardPropertyList(forType: type)
-		} else {
+		default:
 			let item = extraItems.first { $0.typeIdentifier == type.rawValue }
 			return item?.bytes
 		}
