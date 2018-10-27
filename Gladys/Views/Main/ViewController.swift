@@ -172,7 +172,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
 		if PersistedOptions.showCopyMoveSwitchSelector {
 			if let context = session.localDragSession?.localContext as? String, context == "typeItem" {
-				endMergeMode()
+				clearMergeCellIndexPath()
 			} else {
 				showDragModeOverlay(true)
 			}
@@ -252,8 +252,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
-		endMergeMode()
-
 		if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
 			return
 		}
@@ -286,7 +284,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				needSave = true
 
 			} else if let d = coordinator.destinationIndexPath,
-				let cell = willBeMerge(at: d, from: coordinator.session),
+				let cell = canMerge(at: d, from: coordinator.session),
 				let typeItem = dragItem.localObject as? ArchivedDropItemType {
 
 				let item = Model.filteredDrops[d.item]
@@ -298,13 +296,13 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				needSave = true
 
 				let p = CGPoint(x: cell.bounds.midX-44, y: cell.bounds.midY-22)
-				coordinator.drop(dragItem, intoItemAt: d, rect: CGRect(origin: p, size: CGSize(width: 88, height: 44)))
+				coordinator.drop(dragItem, intoItemAt: d, rect: CGRect(origin: p, size: CGSize(width: 1, height: 1)))
 
 			} else {
 
 				var firstDestinationPath: IndexPath?
 				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self, overrides: nil) {
-					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
+					var dataIndex = mergeCellIndexPath?.item ?? coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
 					if Model.isFiltering {
@@ -341,6 +339,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			}
 		}
 
+		clearMergeCellIndexPath()
+
 		if needSave{
 		    Model.save()
 		} else {
@@ -368,10 +368,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
 		showDragModeOverlay(false)
-		endMergeMode()
+		clearMergeCellIndexPath()
 	}
 
-	private func endMergeMode() {
+	private func clearMergeCellIndexPath() {
 		if let m = mergeCellIndexPath {
 			if let oldCell = collection.cellForItem(at: m) as? ArchivedItemCell {
 				oldCell.mergeMode = false
@@ -390,9 +390,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private var mergeCellIndexPath: IndexPath?
 
-	private func willBeMerge(at destinationIndexPath: IndexPath?, from session: UIDropSession) -> ArchivedItemCell? {
-		if let destinationIndexPath = destinationIndexPath,
-			PersistedOptions.allowMergeOfTypeItems,
+	private func canMerge(at destinationIndexPath: IndexPath, from session: UIDropSession) -> ArchivedItemCell? {
+		if PersistedOptions.allowMergeOfTypeItems,
 			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
 			let cell = collection.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
 			let cellItem = cell.archivedDropItem,
@@ -408,24 +407,26 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 
+		clearMergeCellIndexPath()
+
 		if let context = session.localDragSession?.localContext as? String, context == "typeItem", PersistedOptions.allowMergeOfTypeItems {
 
-			if let cell = willBeMerge(at: destinationIndexPath, from: session) {
-				if let m = mergeCellIndexPath, let oldCell = collectionView.cellForItem(at: m) as? ArchivedItemCell {
-					oldCell.mergeMode = false
-				}
-				cell.mergeMode = true
-				mergeCellIndexPath = destinationIndexPath
-				return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
+			if let destinationIndexPath = destinationIndexPath {
+				if let cell = canMerge(at: destinationIndexPath, from: session) {
+					cell.mergeMode = true
+					mergeCellIndexPath = destinationIndexPath
+					return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
 
-			} else if destinationIndexPath != nil {
-				endMergeMode()
-				return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
+				} else {
+					return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
+				}
+			} else { // create standalone component
+				mergeCellIndexPath = IndexPath(item: Model.visibleDrops.count, section: 0)
+				return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 			}
 		}
 
 		// normal insert
-		endMergeMode()
 		return UICollectionViewDropProposal(operation: operation(for: session), intent: .insertAtDestinationIndexPath)
 	}
 
