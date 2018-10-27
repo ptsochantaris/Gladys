@@ -38,21 +38,6 @@ class PersistedOptions {
 		}
 	}
 
-	private static var allowMergeOfTypeItemsCache: Bool?
-	static var allowMergeOfTypeItems: Bool {
-		get {
-			if let c = allowMergeOfTypeItemsCache {
-				return c
-			}
-			allowMergeOfTypeItemsCache = defaults.bool(forKey: "allowMergeOfTypeItems")
-			return allowMergeOfTypeItemsCache!
-		}
-		set {
-			allowMergeOfTypeItemsCache = newValue
-			defaults.set(newValue, forKey: "allowMergeOfTypeItems")
-		}
-	}
-
 	private static var wideModeCache: Bool?
 	static var wideMode: Bool {
 		get {

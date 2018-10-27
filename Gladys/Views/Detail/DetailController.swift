@@ -640,6 +640,7 @@ final class DetailController: GladysViewController,
 				return []
 			}
 		} else {
+			ViewController.shared.componentDropActive = true
 			let typeItem = item.typeItems[indexPath.row]
 			session.localContext = "typeItem"
 			return [typeItem.dragItem]
@@ -656,6 +657,17 @@ final class DetailController: GladysViewController,
 			}
 		}
 		return UITableViewDropProposal(operation: .cancel)
+	}
+
+	private var cyclicReferenceWhileDragging: DetailController?
+
+	func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
+		cyclicReferenceWhileDragging = self
+	}
+
+	func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
+		ViewController.shared.componentDropActive = false
+		cyclicReferenceWhileDragging = nil
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
@@ -680,14 +692,14 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
 
 		for coordinatorItem in coordinator.items {
+
 			let dragItem = coordinatorItem.dragItem
-			if dragItem.localObject != nil {
-				guard
-					let destinationIndexPath = coordinator.destinationIndexPath,
-					let previousIndex = coordinatorItem.sourceIndexPath else { return }
+			guard let destinationIndexPath = coordinator.destinationIndexPath, let localObject = dragItem.localObject else { continue }
+
+			if let previousIndex = coordinatorItem.sourceIndexPath { // from this table
 
 				if destinationIndexPath.section == 2 {
-					let existingLabel = dragItem.localObject as? String
+					let existingLabel = localObject as? String
 					if previousIndex.section == 2 {
 						item.labels.remove(at: previousIndex.row)
 						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
@@ -704,7 +716,7 @@ final class DetailController: GladysViewController,
 					}
 
 					if existingLabel == nil {
-						_ = dragItem.itemProvider.loadObject(ofClass: String.self, completionHandler: { newLabel, error in
+						_ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, error in
 							if let newLabel = newLabel {
 								DispatchQueue.main.async {
 									self.item.labels[destinationIndexPath.row] = newLabel
@@ -714,7 +726,7 @@ final class DetailController: GladysViewController,
 									self.makeIndexAndSaveItem()
 								}
 							}
-						})
+						}
 					} else {
 						makeIndexAndSaveItem()
 					}
@@ -725,6 +737,7 @@ final class DetailController: GladysViewController,
 					let sourceItem = item.typeItems[previousIndex.row]
 					item.typeItems.remove(at: previousIndex.row)
 					item.typeItems.insert(sourceItem, at: destinationIndex)
+					item.needsReIngest = true
 					item.renumberTypeItems()
 					table.performBatchUpdates({
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
@@ -732,8 +745,20 @@ final class DetailController: GladysViewController,
 						self.makeIndexAndSaveItem()
 					})
 				}
-				coordinator.drop(dragItem, toRowAt: destinationIndexPath)
+
+			} else if let candidate = dragItem.localObject as? ArchivedDropItemType {
+				let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
+				item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
+				item.needsReIngest = true
+				item.renumberTypeItems()
+				tableView.performBatchUpdates({
+					tableView.insertRows(at: [destinationIndexPath], with: .automatic)
+				}, completion: { _ in
+					self.makeIndexAndSaveItem()
+				})
 			}
+
+			coordinator.drop(dragItem, toRowAt: destinationIndexPath)
 		}
 	}
 
@@ -754,6 +779,10 @@ final class DetailController: GladysViewController,
 		} else {
 			return nil
 		}
+	}
+
+	private func canMerge(_ candidate: ArchivedDropItemType) -> Bool {
+		return item.shareMode != .elsewhereReadOnly && !item.shouldDisplayLoading && !item.typeItems.contains(candidate)
 	}
 
 	func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {

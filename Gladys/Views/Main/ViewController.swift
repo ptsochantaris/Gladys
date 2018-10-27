@@ -171,9 +171,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
 		if PersistedOptions.showCopyMoveSwitchSelector {
-			if let context = session.localDragSession?.localContext as? String, context == "typeItem" {
-				clearMergeCellIndexPath()
-			} else {
+			if session.localDragSession?.localContext as? String != "typeItem" {
 				showDragModeOverlay(true)
 			}
 		}
@@ -281,26 +279,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				coordinator.drop(dragItem, toItemAt: filteredDestinationIndexPath)
 				needSave = true
 
-			} else if let d = coordinator.destinationIndexPath,
-				let cell = canMerge(at: d, from: coordinator.session),
-				let typeItem = dragItem.localObject as? ArchivedDropItemType {
-
-				let item = Model.filteredDrops[d.item]
-				let itemCopy = ArchivedDropItemType(from: typeItem, newParent: item)
-				item.typeItems.append(itemCopy)
-				item.needsReIngest = true
-				item.renumberTypeItems()
-				item.markUpdated()
-				needSave = true
-
-				let p = CGPoint(x: cell.bounds.midX-44, y: cell.bounds.midY-22)
-				coordinator.drop(dragItem, intoItemAt: d, rect: CGRect(origin: p, size: CGSize(width: 1, height: 1)))
-
 			} else {
 
+				startBgTaskIfNeeded()
 				var firstDestinationPath: IndexPath?
 				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self, overrides: nil) {
-					var dataIndex = mergeCellIndexPath?.item ?? coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
+					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
 					if Model.isFiltering {
@@ -330,14 +314,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 						firstDestinationPath = destinationIndexPath
 					}
 				}
-				startBgTaskIfNeeded()
 				if let firstDestinationPath = firstDestinationPath {
 					coordinator.drop(dragItem, toItemAt: firstDestinationPath)
 				}
 			}
 		}
-
-		clearMergeCellIndexPath()
 
 		if needSave{
 		    Model.save()
@@ -366,62 +347,20 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
 		showDragModeOverlay(false)
-		clearMergeCellIndexPath()
-	}
-
-	private func clearMergeCellIndexPath() {
-		if let m = mergeCellIndexPath {
-			if let oldCell = collection.cellForItem(at: m) as? ArchivedItemCell {
-				oldCell.mergeMode = false
-			}
-			mergeCellIndexPath = nil
-		}
 	}
 
 	func resetForDragEntry(session: UIDropSession) {
 		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: [GladysFileUTI, "public.zip-archive"]) {
 			dismissAnyPopOver()
-		} else if currentDetailView != nil || currentLabelSelector != nil {
+		} else if (currentDetailView != nil && !componentDropActive) || currentLabelSelector != nil {
 			dismissAnyPopOver()
 		}
 	}
 
-	private var mergeCellIndexPath: IndexPath?
-
-	private func canMerge(at destinationIndexPath: IndexPath, from session: UIDropSession) -> ArchivedItemCell? {
-		if PersistedOptions.allowMergeOfTypeItems,
-			let draggedItem = session.items.first?.localObject as? ArchivedDropItemType,
-			let cell = collection.cellForItem(at: destinationIndexPath) as? ArchivedItemCell,
-			let cellItem = cell.archivedDropItem,
-			cellItem.shareMode != .elsewhereReadOnly,
-			!cellItem.shouldDisplayLoading && !cellItem.needsUnlock,
-			!cellItem.typeItems.contains(where: { $0.uuid == draggedItem.uuid }) {
-
-			return cell
-		}
-
-		return nil
-	}
-
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 
-		clearMergeCellIndexPath()
-
-		if let context = session.localDragSession?.localContext as? String, context == "typeItem", PersistedOptions.allowMergeOfTypeItems {
-
-			if let destinationIndexPath = destinationIndexPath {
-				if let cell = canMerge(at: destinationIndexPath, from: session) {
-					cell.mergeMode = true
-					mergeCellIndexPath = destinationIndexPath
-					return UICollectionViewDropProposal(operation: .copy, intent: .insertIntoDestinationIndexPath)
-
-				} else {
-					return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
-				}
-			} else { // create standalone component
-				mergeCellIndexPath = IndexPath(item: Model.visibleDrops.count, section: 0)
-				return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
-			}
+		if let context = session.localDragSession?.localContext as? String, context == "typeItem", destinationIndexPath == nil { // create standalone data component
+			return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 		}
 
 		// normal insert
@@ -497,15 +436,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			n.view.backgroundColor = c
 
 			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
-			if PersistedOptions.wideMode {
-				p.permittedArrowDirections = [.left, .right]
-			} else {
-				p.permittedArrowDirections = [.down, .left, .right]
-			}
-			p.sourceView =  navigationController!.view
+			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.down, .left, .right]
+			p.sourceView = navigationController!.view
 			p.sourceRect = cellRect
-			p.delegate = self
 			p.backgroundColor = c
+			p.delegate = self
 
 		case "showLabels":
 			guard let n = segue.destination as? UINavigationController,
@@ -541,9 +476,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
 
+	var componentDropActive = false
+
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-		if collectionView.hasActiveDrag { return }
+		if collectionView.hasActiveDrop && !componentDropActive { return }
 
 		let item = Model.filteredDrops[indexPath.item]
 		if item.shouldDisplayLoading {
@@ -551,15 +488,15 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 
 		if isEditing {
-			let selected = selectedItems?.index(where: { $0 == item.uuid }) == nil
-			if selected {
-				selectedItems?.append(item.uuid)
+			let selectedIndex = selectedItems?.index { $0 == item.uuid }
+			if let selectedIndex = selectedIndex {
+				selectedItems?.remove(at: selectedIndex)
 			} else {
-                selectedItems?.removeAll { $0 == item.uuid }
+				selectedItems?.append(item.uuid)
 			}
 			didUpdateItems()
 			if let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell {
-				cell.isSelectedForAction = selected
+				cell.isSelectedForAction = (selectedIndex == nil)
 			}
 
 		} else if item.needsUnlock {
@@ -1405,7 +1342,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		if let i = Model.filteredDrops.index(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-			focusInitialAccessibilityElement()
+			if currentDetailView == nil {
+				focusInitialAccessibilityElement()
+			}
 			item.reIndex()
 		} else {
 			item.reIndex {
@@ -1505,7 +1444,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	@objc func reloadData(onlyIfPopulated: Bool = false) {
 		updateLabelIcon()
-		if onlyIfPopulated && Model.visibleDrops.count == 0 {
+		if onlyIfPopulated && Model.filteredDrops.isEmpty {
 			return
 		}
 		collection.performBatchUpdates({

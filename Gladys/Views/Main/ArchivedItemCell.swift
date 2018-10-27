@@ -55,7 +55,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		shareImage?.tintColor = shareColor
 		cancelButton?.tintColor = c
 		lockImage.tintColor = c
-		mergeImage.tintColor = c
 		labelsLabel.tintColor = c
 		topLabel.highlightedTextColor = c
 		bottomLabel.highlightedTextColor = c
@@ -384,7 +383,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		super.prepareForReuse()
 		progressView.observedProgress = nil
 		progressView.progress = 0
-		mergeMode = false
 		image.image = nil
 	}
 
@@ -433,7 +431,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var hideProgress = true
 		var hideSpinner = true
 		var hideLock = true
-		var hideMerge = true
 		var shared = ArchivedDropItem.ShareMode.none
 
 		var topLabelText: String?
@@ -459,12 +456,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint
 				shared = item.shareMode
-
-			} else if mergeMode {
-				hideMerge = false
-				hideImage = true
-				topLabelAlignment = .center
-				topLabelText = "Add data component"
 
 			} else {
 
@@ -632,7 +623,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		image.alpha = hideImage ? 0 : 1
 		lockImage.isHidden = hideLock
-		mergeImage.isHidden = hideMerge
 		shareMode = shared
 
 		let isSpinning = spinner.isAnimating
@@ -663,14 +653,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
 			self.transform = .identity
 		})
-	}
-
-	var mergeMode: Bool = false {
-		didSet {
-			if mergeMode != oldValue {
-				reDecorate()
-			}
-		}
 	}
 
 	@objc private func performShortcut(_ sender: UIAccessibilityCustomAction) -> Bool {
