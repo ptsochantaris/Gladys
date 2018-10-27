@@ -204,10 +204,6 @@ final class DetailController: GladysViewController,
 		additionalSafeAreaInsets.bottom = intersection.height
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
 		super.dismiss(animated: flag) { // workaround for quiclook dismissal issue
 			if let n = self.navigationController {

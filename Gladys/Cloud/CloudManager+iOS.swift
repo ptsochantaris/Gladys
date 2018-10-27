@@ -20,7 +20,6 @@ extension CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "shareActionIsActioningIds")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -31,7 +30,6 @@ extension CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "onlySyncOverWiFi")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 }

@@ -58,10 +58,6 @@ final class Preferences: NSViewController {
 		setupHotkeySection()
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	private func setupHotkeySection() {
 		if let m = hotkeyChar.menu {
 			m.removeAllItems()

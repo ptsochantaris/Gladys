@@ -271,10 +271,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	@objc private func itemModified(_ notification: Notification) {
 		if (notification.object as? ArchivedDropItem) == archivedDropItem {
 			representedObject = notification.object

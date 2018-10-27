@@ -58,10 +58,6 @@ class GladysViewController: UIViewController {
 		return nil
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if popoverPresenter != nil {

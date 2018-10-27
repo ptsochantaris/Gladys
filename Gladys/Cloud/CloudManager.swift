@@ -199,7 +199,6 @@ final class CloudManager {
 			} else {
 				PersistedOptions.defaults.set("", forKey: "lastiCloudAccount") // this will return nil when fetched
 			}
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -210,7 +209,6 @@ final class CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "lastSyncCompletion")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -221,7 +219,6 @@ final class CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "syncSwitchedOn")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -232,7 +229,6 @@ final class CloudManager {
 
 		set {
 			PersistedOptions.defaults.set(newValue, forKey: "shareActionShouldUpload")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -247,7 +243,6 @@ final class CloudManager {
 		set {
 			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
 			PersistedOptions.defaults.set(data, forKey: "uuidSequence")
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 

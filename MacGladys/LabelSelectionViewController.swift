@@ -19,10 +19,6 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		labelsUpdated()
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	override var preferredContentSize: NSSize {
 		set {}
 		get {

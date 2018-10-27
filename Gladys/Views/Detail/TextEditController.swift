@@ -54,10 +54,6 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			bottomDistance.constant = 0

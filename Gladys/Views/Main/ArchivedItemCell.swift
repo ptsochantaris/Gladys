@@ -374,10 +374,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	var archivedDropItem: ArchivedDropItem? {
 		didSet {
 			reDecorate()

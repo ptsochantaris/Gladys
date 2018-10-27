@@ -48,10 +48,6 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	@objc private func labelsUpdated() {
 		table.reloadData()
 		clearAllButton.isEnabled = Model.isFilteringLabels

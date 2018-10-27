@@ -12,7 +12,6 @@ final class DataInspector: GladysViewController {
 
 	static func setBool(_ name: String, _ value: Bool) {
 		UserDefaults.standard.set(value, forKey: name)
-		UserDefaults.standard.synchronize()
 	}
 
 	static func getBool(_ name: String) -> Bool {

@@ -9,7 +9,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hotkeyCmd")
-			defaults.synchronize()
 		}
 	}
 	static var hotkeyOption: Bool {
@@ -18,7 +17,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hotkeyOption")
-			defaults.synchronize()
 		}
 	}
 	static var hotkeyShift: Bool {
@@ -27,7 +25,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hotkeyShift")
-			defaults.synchronize()
 		}
 	}
 	static var hotkeyCtrl: Bool {
@@ -36,7 +33,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hotkeyCtrl")
-			defaults.synchronize()
 		}
 	}
 	static var hotkeyChar: Int {
@@ -46,7 +42,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hotkeyChar")
-			defaults.synchronize()
 		}
 	}
 
@@ -56,7 +51,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "unconfirmedDeletes")
-			defaults.synchronize()
 		}
 	}
 
@@ -66,7 +60,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hideMainWindowAtStartup")
-			defaults.synchronize()
 		}
 	}
 
@@ -76,7 +69,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "launchAtLogin")
-			defaults.synchronize()
 			SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
 		}
 	}
@@ -87,7 +79,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "menubarIconMode")
-			defaults.synchronize()
 		}
 	}
 
@@ -97,7 +88,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "translucentMode")
-			defaults.synchronize()
 		}
 	}
 
@@ -107,7 +97,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "alwaysOnTop")
-			defaults.synchronize()
 		}
 	}
 
@@ -117,7 +106,6 @@ extension PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "hideTitlebar")
-			defaults.synchronize()
 		}
 	}
 }

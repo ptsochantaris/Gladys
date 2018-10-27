@@ -260,10 +260,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 	}
 
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-
 	@objc private func updateUI() {
 		spinner.stopAnimating()
 		exportOnlyVisibleSwitch.isEnabled = true

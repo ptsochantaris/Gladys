@@ -14,17 +14,11 @@ class PersistedOptions {
 
 	static func migrateBrokenDefaults() { // keep this around for a while
 		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {
-			var changes = false
 			for key in ["separateItemPreference", "forceTwoColumnPreference", "lastiCloudAccount", "lastSyncCompletion", "zoneChangeMayNotReflectSavedChanges", "syncSwitchedOn", "onlySyncOverWiFi", "zoneChangeToken", "uuidSequence"] {
 				if let o = brokenDefaults.object(forKey: key) {
 					defaults.set(o, forKey: key)
 					brokenDefaults.removeObject(forKey: key)
-					changes = true
 				}
-			}
-			if changes {
-				brokenDefaults.synchronize()
-				defaults.synchronize()
 			}
 		}
 	}
@@ -41,7 +35,6 @@ class PersistedOptions {
 		set {
 			darkModeCache = newValue
 			defaults.set(newValue, forKey: "darkMode")
-			defaults.synchronize()
 		}
 	}
 
@@ -57,7 +50,6 @@ class PersistedOptions {
 		set {
 			allowMergeOfTypeItemsCache = newValue
 			defaults.set(newValue, forKey: "allowMergeOfTypeItems")
-			defaults.synchronize()
 		}
 	}
 
@@ -73,7 +65,6 @@ class PersistedOptions {
 		set {
 			wideModeCache = newValue
 			defaults.set(newValue, forKey: "wideMode")
-			defaults.synchronize()
 		}
 	}
 
@@ -83,7 +74,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "setLabelsWhenActioning")
-			defaults.synchronize()
 		}
 	}
 
@@ -93,7 +83,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "fullScreenPreviews")
-			defaults.synchronize()
 		}
 	}
 
@@ -103,7 +92,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "showCopyMoveSwitchSelector")
-			defaults.synchronize()
 		}
 	}
 
@@ -113,7 +101,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "displayNotesInMainView")
-			defaults.synchronize()
 		}
 	}
 
@@ -123,7 +110,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "displayLabelsInMainView")
-			defaults.synchronize()
 		}
 	}
 
@@ -133,7 +119,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "removeItemsWhenDraggedOut")
-			defaults.synchronize()
 		}
 	}
 
@@ -143,7 +128,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "dontAutoLabelNewItems")
-			defaults.synchronize()
 		}
 	}
 
@@ -153,7 +137,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "exportOnlyVisibleItems")
-			defaults.synchronize()
 		}
 	}
 
@@ -163,7 +146,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "separateItemPreference")
-			defaults.synchronize()
 		}
 	}
 
@@ -173,7 +155,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "forceTwoColumnPreference")
-			defaults.synchronize()
 		}
 	}
 
@@ -183,7 +164,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "pasteShortcutAutoDonated")
-			defaults.synchronize()
 		}
 	}
 
@@ -193,7 +173,6 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "lastSelectedPreferencesTab")
-			defaults.synchronize()
 		}
 	}
 
@@ -207,7 +186,6 @@ class PersistedOptions {
 			} else {
 				defaults.set(Data(), forKey: "lastPushToken")
 			}
-			defaults.synchronize()
 		}
 	}
 }

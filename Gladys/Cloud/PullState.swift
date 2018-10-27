@@ -108,7 +108,6 @@ final class PullState {
 			} else {
 				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
 			}
-			PersistedOptions.defaults.synchronize()
 		}
 	}
 
@@ -139,12 +138,10 @@ final class PullState {
 			lookup[key] = nil
 		}
 		PersistedOptions.defaults.set(lookup, forKey: "zoneTokens")
-		PersistedOptions.defaults.synchronize()
 	}
 
 	static func wipeZoneTokens() {
 		PersistedOptions.defaults.set([String: Data](), forKey: "zoneTokens")
-		PersistedOptions.defaults.synchronize()
 		legacyZoneChangeToken = nil
 	}
 
@@ -169,11 +166,9 @@ final class PullState {
 			lookup[key] = nil
 		}
 		PersistedOptions.defaults.set(lookup, forKey: "databaseTokens")
-		PersistedOptions.defaults.synchronize()
 	}
 
 	static func wipeDatabaseTokens() {
 		PersistedOptions.defaults.set([String: Data](), forKey: "databaseTokens")
-		PersistedOptions.defaults.synchronize()
 	}
 }

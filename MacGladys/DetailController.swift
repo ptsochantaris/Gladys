@@ -146,7 +146,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	deinit {
 		DetailController.showingUUIDs.remove(item.uuid)
-		NotificationCenter.default.removeObserver(self)
 	}
 
 	private var item: ArchivedDropItem {

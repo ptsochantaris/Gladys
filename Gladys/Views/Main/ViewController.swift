@@ -235,9 +235,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
 
-	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-
-	}
+	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {}
 
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		let center = cell.center
@@ -860,7 +858,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			let d = UserDefaults.standard
 			d.set(currentBuild, forKey: "LastRanVersion")
-			d.synchronize()
 		})
 	}
 
@@ -889,10 +886,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		if emptyView != nil {
 			blurb(Greetings.randomGreetLine)
 		}
-	}
-
-	deinit {
-		NotificationCenter.default.removeObserver(self)
 	}
 
 	private func detectExternalDeletions() {
