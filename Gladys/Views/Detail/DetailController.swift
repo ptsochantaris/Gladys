@@ -232,10 +232,10 @@ final class DetailController: GladysViewController,
 	private var initialWidth: CGFloat = 0
 
 	private func sizeWindow() {
-		let previousSize = preferredContentSize
 		let preferredSize: CGSize
 		if sharing {
 			//log("share layout")
+			let previousSize = preferredContentSize
 			preferredSize = CGSize(width: initialWidth, height: max(previousSize.height, 500))
 		} else if initialWidth > 0 {
 			//log("adapt to table height")
@@ -246,10 +246,8 @@ final class DetailController: GladysViewController,
 			preferredSize = table.contentSize
 			initialWidth = preferredSize.width
 		}
-		if previousSize != preferredSize {
-			//log("set preferred size to \(preferredSize)")
-			preferredContentSize = preferredSize
-		}
+		//log("set preferred size to \(preferredSize)")
+		preferredContentSize = preferredSize
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
