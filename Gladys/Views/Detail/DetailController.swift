@@ -1,6 +1,7 @@
 
 import UIKit
 import CloudKit
+import MobileCoreServices
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
@@ -439,7 +440,7 @@ final class DetailController: GladysViewController,
 		if readWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
-					s.archiveWebComponent(cell: c, url: i as URL)
+					s.archiveWebComponent(cell: c, url: i as URL, type: typeEntry)
 				}
 			}
 		} else {
@@ -742,7 +743,7 @@ final class DetailController: GladysViewController,
 					table.performBatchUpdates({
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
 					}, completion: { _ in
-						self.makeIndexAndSaveItem()
+						self.handleNewTypeItem()
 					})
 				}
 
@@ -754,7 +755,7 @@ final class DetailController: GladysViewController,
 				tableView.performBatchUpdates({
 					tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 				}, completion: { _ in
-					self.makeIndexAndSaveItem()
+					self.handleNewTypeItem()
 				})
 			}
 
@@ -843,26 +844,65 @@ final class DetailController: GladysViewController,
 		return .none
 	}
 
-	private func archiveWebComponent(cell: DetailCell, url: URL) {
+	private func archiveWebComponent(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
+		let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
+		a.addAction(UIAlertAction(title: "Archive Page", style: .default, handler: { _ in
+			self.proceedToArchiveWebComponent(cell: cell, url: url)
+		}))
+		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default, handler: { _ in
+			self.proceedToFetchLinkThumbnail(cell: cell, url: url, type: type)
+		}))
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		if let p = a.popoverPresentationController {
+			p.sourceView = cell.archiveButton
+			p.sourceRect = cell.archiveButton.bounds
+		}
+		present(a, animated: true)
+	}
+
+	private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
+		cell.animateArchive(true)
+		type.fetchWebPreview(for: url) { _, _, image, _ in
+			if let image = image, let data = image.jpegData(compressionQuality: 1) {
+				DispatchQueue.main.async {
+					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+					self.item.typeItems.append(newTypeItem)
+					self.handleNewTypeItem()
+				}
+			} else {
+				DispatchQueue.main.async {
+					genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
+				}
+			}
+			DispatchQueue.main.async {
+				cell.animateArchive(false)
+			}
+		}
+	}
+
+	private func handleNewTypeItem() {
+		item.needsReIngest = true
+		makeIndexAndSaveItem()
+		updateUI()
+		item.reIngest(delegate: ViewController.shared)
+		if let newCell = table.cellForRow(at: IndexPath(row: 0, section: table.numberOfSections-1)) {
+			UIAccessibility.post(notification: .layoutChanged, argument: newCell)
+		}
+	}
+
+	private func proceedToArchiveWebComponent(cell: DetailCell, url: URL) {
 		cell.animateArchive(true)
 		
 		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
 			if let error = error {
 				DispatchQueue.main.async {
-					genericAlert(title: "Archiving failed", message: error.finalDescription)
+					genericAlert(title: "Archiving Failed", message: error.finalDescription)
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
-				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 				DispatchQueue.main.async {
-					self.view.endEditing(true)
+					let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 					self.item.typeItems.append(newTypeItem)
-					self.item.markUpdated()
-					self.updateUI()
-					self.item.needsReIngest = true
-					self.item.reIngest(delegate: ViewController.shared)
-					if let newCell = self.table.cellForRow(at: IndexPath(row: 0, section: self.table.numberOfSections-1)) {
-						UIAccessibility.post(notification: .layoutChanged, argument: newCell)
-					}
+					self.handleNewTypeItem()
 				}
 			}
 			DispatchQueue.main.async {

@@ -11,7 +11,7 @@ final class DetailCell: UITableViewCell {
 
 	@IBOutlet private weak var inspectButton: UIButton!
 	@IBOutlet private weak var viewButton: UIButton!
-	@IBOutlet private weak var archiveButton: UIButton!
+	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
 
 	var inspectionCallback: (()->Void)? {
