@@ -884,6 +884,7 @@ final class DetailController: GladysViewController,
 		item.needsReIngest = true
 		makeIndexAndSaveItem()
 		updateUI()
+		item.postModified()
 		item.reIngest(delegate: ViewController.shared)
 		if let newCell = table.cellForRow(at: IndexPath(row: 0, section: table.numberOfSections-1)) {
 			UIAccessibility.post(notification: .layoutChanged, argument: newCell)

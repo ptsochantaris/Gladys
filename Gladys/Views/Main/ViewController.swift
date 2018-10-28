@@ -427,7 +427,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				let n = segue.destination as? UINavigationController,
 				let d = n.topViewController as? DetailController,
 				let p = n.popoverPresentationController,
-				let cell = collection.cellForItem(at: indexPath)
+				let cell = collection.cellForItem(at: indexPath),
+				let myNavView = navigationController?.view
 				else { return }
 
 			d.item = item
@@ -435,12 +436,16 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let c = patternColor
 			n.view.backgroundColor = c
 
-			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: navigationController!.view)
+			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: myNavView)
 			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.down, .left, .right]
 			p.sourceView = navigationController!.view
 			p.sourceRect = cellRect
 			p.backgroundColor = c
 			p.delegate = self
+
+			if componentDropActive {
+				trackCellForAWhile(cell, for: p, in: myNavView)
+			}
 
 		case "showLabels":
 			guard let n = segue.destination as? UINavigationController,
@@ -473,6 +478,24 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			}
 
 		default: break
+		}
+	}
+
+	private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
+		var observation: NSKeyValueObservation?
+		observation = cell.observe(\.center, options: NSKeyValueObservingOptions.new) { strongCell, change in
+			let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
+			popOver.sourceRect = cellRect
+			popOver.containerView?.setNeedsLayout()
+			UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+				popOver.containerView?.layoutIfNeeded()
+			}, completion: nil)
+			observation = nil
+		}
+		DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+			if observation != nil { // keep it around
+				observation = nil
+			}
 		}
 	}
 
