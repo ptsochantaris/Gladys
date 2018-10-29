@@ -35,6 +35,7 @@ extension Model {
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
 				i.needsSaving = false
+				i.isBeingCreatedBySync = false
 				return i.uuid
 			}
 			return nil
@@ -84,6 +85,7 @@ extension Model {
 	static func commitItem(item: ArchivedDropItem) {
 		let itemsToSave = itemsEligibleForSaving
 		item.needsSaving = false
+		item.isBeingCreatedBySync = false
 		let uuid = item.uuid
 		saveQueue.async {
 			if item.isDeleting {

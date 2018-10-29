@@ -1467,7 +1467,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	@objc func reloadData(onlyIfPopulated: Bool = false) {
 		updateLabelIcon()
-		if onlyIfPopulated && Model.filteredDrops.isEmpty {
+		if onlyIfPopulated && Model.filteredDrops.filter({ !$0.isBeingCreatedBySync }).isEmpty {
 			return
 		}
 		collection.performBatchUpdates({

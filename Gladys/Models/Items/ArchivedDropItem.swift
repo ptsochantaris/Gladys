@@ -203,6 +203,7 @@ final class ArchivedDropItem: Codable {
 	}
 
 	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER || INTENTSEXTENSION
+		var isBeingCreatedBySync = false
 		var isDeleting = false
 
 		var isTransferring: Bool {

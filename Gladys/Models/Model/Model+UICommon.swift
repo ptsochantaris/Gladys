@@ -241,10 +241,6 @@ extension Model {
 		}
 	}
 
-	private static var visibleUuids: [UUID] {
-		return (cachedFilteredDrops ?? drops).map { $0.uuid }
-	}
-
 	static private func terms(for f: String?) -> [String]? {
 		guard let f = f?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
 
@@ -371,7 +367,7 @@ extension Model {
 		currentFilterQuery = nil
 		modelFilter = newValue
 
-		let previouslyVisibleUuids = visibleUuids
+		let previouslyVisibleUuids = filteredDrops.map { $0.uuid }
 		var filtering = false
 
 		if let terms = terms(for: filter), !terms.isEmpty {
@@ -411,7 +407,7 @@ extension Model {
 			cachedFilteredDrops = postLabelDrops
 		}
 
-		let changesToVisibleItems = previouslyVisibleUuids != visibleUuids
+		let changesToVisibleItems = previouslyVisibleUuids != filteredDrops.map { $0.uuid }
 		if signalUpdate && changesToVisibleItems {
 
 			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
