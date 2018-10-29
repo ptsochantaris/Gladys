@@ -446,32 +446,27 @@ extension CloudManager {
 		let stats = PullState()
 		var finalError: Error?
 		var shouldCommitTokens = true
-
 		let group = DispatchGroup()
+
+		let changeCallback = { (error: Error?, skipCommit: Bool) in
+			if let error = error {
+				finalError = error
+				shouldCommitTokens = false
+
+			} else if skipCommit {
+				shouldCommitTokens = false
+			}
+			group.leave()
+		}
+
 		if scope == nil || scope == .shared {
 			group.enter()
-			fetchDBChanges(database: container.sharedCloudDatabase, stats: stats) { error, skipCommit in
-				if let error = error {
-					finalError = error
-				}
-				if skipCommit {
-					shouldCommitTokens = false
-				}
-				group.leave()
-			}
+			fetchDBChanges(database: container.sharedCloudDatabase, stats: stats, completion: changeCallback)
 		}
 
 		if scope == nil || scope == .private {
 			group.enter()
-			fetchDBChanges(database: container.privateCloudDatabase, stats: stats) { error, skipCommit in
-				if skipCommit {
-					shouldCommitTokens = false
-				}
-				if let error = error {
-					finalError = error
-				}
-				group.leave()
-			}
+			fetchDBChanges(database: container.privateCloudDatabase, stats: stats, completion: changeCallback)
 		}
 
 		group.notify(queue: DispatchQueue.main) {
