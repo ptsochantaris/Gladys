@@ -9,6 +9,7 @@ final class Model {
 	private static var legacyFileLastModified = Date.distantPast
 	static var legacyMode = true
 
+	static var brokenMode = false
 	static var drops = [ArchivedDropItem]()
 	static var dataFileLastModified = Date.distantPast
 
@@ -35,6 +36,11 @@ final class Model {
 	}
 
 	static private func load(maximumItems: Int? = nil) {
+
+		if brokenMode {
+			log("Ignoring load, model is broken, app needs restart.")
+			return
+		}
 
 		legacyMode = false
 
@@ -100,20 +106,25 @@ final class Model {
 		}
 
 		if var e = loadingError {
+			brokenMode = true
 			log("Error in loading: \(e)")
 			#if MAINAPP || MAC
 			if let underlyingError = e.userInfo[NSUnderlyingErrorKey] as? NSError {
 				e = underlyingError
 			}
 			DispatchQueue.main.async {
-				genericAlert(title: "Loading Error (Code: \(e.code))",
-				message: "This app's data store is not accessible. The message from the system is:\n\n\(e.localizedDescription) - \(itemsDirectoryUrl.path)\n\nIf you keep getting this error, please try restarting your device, as some data may be locked by the system after an upgrade.\n\nIf this error persists, please report it to the developer.") {
+				genericAlert(title: "Loading Error (code \(e.code))",
+					message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+				buttonTitle: "Quit") {
 					abort()
 				}
 			}
 			return
 			#else
-			abort()
+			// still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+				exit(0)
+			}
 			#endif
 			
 		} else if var e = coordinationError {
@@ -123,30 +134,39 @@ final class Model {
 				e = underlyingError
 			}
 			DispatchQueue.main.async {
-				genericAlert(title: "Loading Error (Code: \(e.code))",
-				message: "Could not communicate with an extension. The message from the system is:\n\n\(e.localizedDescription)\n\nIf you keep getting this error, please try restarting your device, as the system may not have finished updating some Gladys components yet.\n\nIf this error persists, please report it to the developer.") {
+				genericAlert(title: "Loading Error (code \(e.code))",
+					message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+				buttonTitle: "Quit") {
 					abort()
 				}
 			}
 			return
 			#else
-			abort()
+			exit(0)
 			#endif
 		}
 
-		DispatchQueue.main.async {
-			if isStarted {
-				if didLoad {
-					reloadCompleted()
+		if !brokenMode {
+			DispatchQueue.main.async {
+				if isStarted {
+					if didLoad {
+						reloadCompleted()
+					}
+				} else {
+					isStarted = true
+					startupComplete()
 				}
-			} else {
-				isStarted = true
-				startupComplete()
 			}
 		}
 	}
 
 	static private func legacyLoad() {
+
+		if brokenMode {
+			log("Ignoring legacy load, model is broken, app needs restart.")
+			return
+		}
+
 		var didLoad = false
 
 		if !FileManager.default.fileExists(atPath: legacyFileUrl.path) {
@@ -237,9 +257,12 @@ final class Model {
 	static let appStorageUrl: URL = {
 		let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
 		#if MAC
+		log("Model URL: \(url.path)")
 		return url
 		#else
-		return url.appendingPathComponent("File Provider Storage")
+		let fps = url.appendingPathComponent("File Provider Storage")
+		log("Model URL: \(fps.path)")
+		return fps
 		#endif
 	}()
 }

@@ -131,7 +131,7 @@ final class DetailController: GladysViewController,
 				if success, let s = self {
 					s.passwordUpdate(nil, hint: nil)
 					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						genericAlert(title: "Lock Removed", message: nil, showOK: false)
+						genericAlert(title: "Lock Removed", message: nil, buttonTitle: nil)
 					}
 				}
 			}
@@ -280,7 +280,7 @@ final class DetailController: GladysViewController,
 
 	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
 		item.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", showOK: false)
+		genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
 	}
 
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
@@ -521,7 +521,7 @@ final class DetailController: GladysViewController,
 
 	private func deleteRowSelected(at indexPath: IndexPath) -> Bool {
 		if CloudManager.syncing || item.needsReIngest || item.isTransferring {
-			genericAlert(title: "Syncing", message: "Please try again in a moment.", showOK: false)
+			genericAlert(title: "Syncing", message: "Please try again in a moment.", buttonTitle: nil)
 			return false
 		}
 		table.performBatchUpdates({
@@ -540,7 +540,7 @@ final class DetailController: GladysViewController,
 	private func copyRowSelected(at indexPath: IndexPath) {
 		let typeItem = item.typeItems[indexPath.row]
 		typeItem.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", showOK: false)
+		genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
 	}
 
 	private func removeLabel(at indexPath: IndexPath) {

@@ -102,6 +102,10 @@ extension Model {
 	}
 
 	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
+		if brokenMode {
+			log("Ignoring save, model is broken, app needs restart.")
+			return
+		}
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in

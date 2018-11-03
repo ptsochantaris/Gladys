@@ -9,15 +9,15 @@ enum PasteResult {
 }
 
 @discardableResult
-func genericAlert(title: String?, message: String?, showOK: Bool = true, autoDismiss: Bool = true, completion: (()->Void)? = nil) -> UIAlertController {
+func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-	if showOK {
-		a.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
+	if let buttonTitle = buttonTitle {
+		a.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: { _ in completion?() }))
 	}
 
 	ViewController.top.present(a, animated: true)
 
-	if !showOK && autoDismiss {
+	if buttonTitle == nil && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 			a.dismiss(animated: true, completion: completion)
 		}
@@ -664,7 +664,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	private var acceptAlert: UIAlertController?
 
 	@objc private func acceptStarted() {
-		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, showOK: false, autoDismiss: false, completion: nil)
+		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, autoDismiss: false, buttonTitle: nil, completion: nil)
 	}
 
 	@objc private func acceptEnded() {
@@ -1374,7 +1374,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt && !item.loadingAborted {
-							genericAlert(title: "Item(s) Added", message: nil, showOK: false)
+							genericAlert(title: "Item(s) Added", message: nil, buttonTitle: nil)
 						}
 					}
 				}
