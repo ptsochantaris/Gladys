@@ -950,7 +950,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			a.addAction(UIAlertAction(title: "Sort Selected", style: .default, handler: { _ in
 				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: false, button: button)
 			}))
-			a.addAction(UIAlertAction(title: "Sort All", style: .default, handler: { _ in
+			a.addAction(UIAlertAction(title: "Sort All", style: .destructive, handler: { _ in
 				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: true, button: button)
 			}))
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
