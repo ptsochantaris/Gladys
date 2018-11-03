@@ -63,6 +63,8 @@ final class ArchivedDropItem: Codable {
 	var loadingProgress: Progress?
 	var needsSaving: Bool
 	var needsUnlock: Bool
+	var isBeingCreatedBySync: Bool
+	var isDeleting = false
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -112,6 +114,7 @@ final class ArchivedDropItem: Codable {
 		lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
 		needsSaving = false
 		needsUnlock = lockPassword != nil
+		isBeingCreatedBySync = false
 	}
 
 	init(cloning item: ArchivedDropItem) {
@@ -126,6 +129,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = false
 		needsSaving = true
 		needsDeletion = false
+		isBeingCreatedBySync = false
 
 		titleOverride = item.titleOverride
 		note = item.note
@@ -171,6 +175,7 @@ final class ArchivedDropItem: Codable {
 		typeItems = [ArchivedDropItemType]()
 		needsSaving = true
 		needsUnlock = false
+		isBeingCreatedBySync = false
 
 		loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
@@ -195,11 +200,10 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsDeletion = false
 		typeItems = []
+		isBeingCreatedBySync = true
 
 		cloudKitRecord = record
 	}
-
-	var isDeleting = false
 
 	var isTransferring: Bool {
 		return typeItems.contains { $0.isTransferring }

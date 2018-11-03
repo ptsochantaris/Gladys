@@ -138,45 +138,57 @@ final class ArchivedDropItem: Codable {
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 
-		static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
-			if PersistedOptions.separateItemPreference {
-				var res = [ArchivedDropItem]()
-				for p in providers {
-					for t in sanitised(p.registeredTypeIdentifiers) {
-						let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
-						res.append(item)
-					}
+	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
+		if PersistedOptions.separateItemPreference {
+			var res = [ArchivedDropItem]()
+			for p in providers {
+				for t in sanitised(p.registeredTypeIdentifiers) {
+					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
+					res.append(item)
 				}
-				return res
-
-			} else {
-				let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
-				return [item]
 			}
+			return res
+
+		} else {
+			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
+			return [item]
 		}
+	}
 
-		var loadCount = 0
-		weak var delegate: ItemIngestionDelegate?
+	var loadCount = 0
+	weak var delegate: ItemIngestionDelegate?
 
-		private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
+	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
 
-			uuid = UUID()
-			createdAt = Date()
-			updatedAt = createdAt
-			suggestedName = providers.first!.suggestedName
-			needsReIngest = false // original ingest, not re-ingest, show "cancel"
-			needsDeletion = false
-			titleOverride = overrides?.title ?? ""
-			note = overrides?.note ?? ""
-			labels = overrides?.labels ?? []
-			typeItems = [ArchivedDropItemType]()
-			needsSaving = true
-			needsUnlock = false
-	
-			loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
-		}
+		uuid = UUID()
+		createdAt = Date()
+		updatedAt = createdAt
+		suggestedName = providers.first!.suggestedName
+		needsReIngest = false // original ingest, not re-ingest, show "cancel"
+		needsDeletion = false
+		titleOverride = overrides?.title ?? ""
+		note = overrides?.note ?? ""
+		labels = overrides?.labels ?? []
+		typeItems = [ArchivedDropItemType]()
+		needsSaving = true
+		needsUnlock = false
+
+		loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
+	}
 
 	#endif
+
+	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER || INTENTSEXTENSION
+	var isDeleting = false
+	var isBeingCreatedBySync = false
+
+	var isTransferring: Bool {
+		return typeItems.contains { $0.isTransferring }
+	}
+
+	var goodToSave: Bool {
+		return !isDeleting && !isTransferring
+	}
 
 	init(from record: CKRecord) {
 		let myUUID = UUID(uuidString: record.recordID.recordName)!
@@ -198,20 +210,9 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsDeletion = false
 		typeItems = []
+		isBeingCreatedBySync = true
 
 		cloudKitRecord = record
 	}
-
-	#if MAINAPP || ACTIONEXTENSION || FILEPROVIDER || INTENTSEXTENSION
-		var isBeingCreatedBySync = false
-		var isDeleting = false
-
-		var isTransferring: Bool {
-			return typeItems.contains { $0.isTransferring }
-		}
-
-		var goodToSave: Bool {
-			return !isDeleting && !isTransferring
-		}
 	#endif
 }

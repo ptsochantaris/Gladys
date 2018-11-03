@@ -350,7 +350,6 @@ extension CloudManager {
 				} else {
 					log("Will create new local item for cloud record (\(recordUUID))")
 					let newItem = ArchivedDropItem(from: record)
-					newItem.isBeingCreatedBySync = true
 					let newTypeItemRecords = stats.pendingTypeItemRecords.filter {
 						$0.parent?.recordID == recordID // takes zone into account
 					}
