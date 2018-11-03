@@ -25,13 +25,9 @@ extension Model {
 		}
 	}
 
-	private static var itemsEligibleForSaving: [ArchivedDropItem] {
-		return drops.filter { $0.goodToSave }
-	}
-
 	private static func performSave() {
 
-		let itemsToSave = itemsEligibleForSaving
+		let itemsToSave = drops.filter { $0.goodToSave }
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
 				i.needsSaving = false
@@ -68,7 +64,7 @@ extension Model {
 	}
 	
 	static func saveIndexOnly() {
-		let itemsToSave = itemsEligibleForSaving
+		let itemsToSave = drops.filter { $0.goodToSave }
 		saveQueue.async {
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
@@ -83,9 +79,9 @@ extension Model {
 	}
 
 	static func commitItem(item: ArchivedDropItem) {
-		let itemsToSave = itemsEligibleForSaving
-		item.needsSaving = false
+		let itemsToSave = drops.filter { $0.goodToSave }
 		item.isBeingCreatedBySync = false
+		item.needsSaving = false
 		let uuid = item.uuid
 		saveQueue.async {
 			if item.isDeleting {
