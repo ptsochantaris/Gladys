@@ -15,7 +15,7 @@ protocol ComponentCellDelegate: class {
 final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 
 	enum Action {
-		case open, copy, delete, archive, share, edit, focus, reveal
+		case open, copy, delete, archivePage, archiveThumbnail, share, edit, focus, reveal
 	}
 
 	@IBOutlet private weak var descriptionLabel: NSTextField!
@@ -60,7 +60,14 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		if let parent = Model.item(uuid: item.parentUuid), parent.shareMode != .elsewhereReadOnly {
 			if item.isArchivable {
 				m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
-				m.addItem("Archive", action: #selector(archiveSelected), keyEquivalent: "a", keyEquivalentModifierMask: [.command, .option])
+
+				let archiveSubMenu = NSMenu()
+				archiveSubMenu.addItem("Archive Page", action: #selector(archivePageSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+				archiveSubMenu.addItem("Image Thumbnail", action: #selector(archiveThumbnailSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+
+				let archiveMenu = NSMenuItem(title: "Download...", action: nil, keyEquivalent: "")
+				archiveMenu.submenu = archiveSubMenu
+				m.addItem(archiveMenu)
 			}
 			m.addItem(NSMenuItem.separator())
 			m.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
@@ -100,8 +107,12 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		delegate?.componentCell(self, wants: .delete)
 	}
 
-	@objc private func archiveSelected() {
-		delegate?.componentCell(self, wants: .archive)
+	@objc private func archivePageSelected() {
+		delegate?.componentCell(self, wants: .archivePage)
+	}
+
+	@objc private func archiveThumbnailSelected() {
+		delegate?.componentCell(self, wants: .archiveThumbnail)
 	}
 
 	@objc private func editSelected() {

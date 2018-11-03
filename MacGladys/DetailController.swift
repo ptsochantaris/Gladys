@@ -392,8 +392,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			copy(item: i)
 		case .delete:
 			delete(at: index)
-		case .archive:
-			archive(nil)
+		case .archivePage:
+			archivePage(nil)
+		case .archiveThumbnail:
+			archiveThumbnail(nil)
 		case .share:
 			shareSelected(i)
 		case .edit:
@@ -419,7 +421,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		switch menuItem.action {
 
-		case #selector(archive(_:)):
+		case #selector(archivePage(_:)), #selector(archiveThumbnail(_:)):
 			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
 
 		case #selector(editCurrent(_:)):
@@ -513,7 +515,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	@objc func archive(_ sender: Any?) {
+	@objc func archivePage(_ sender: Any?) {
 		guard let i = components.selectionIndexes.first else { return }
 		let component = item.typeItems[i]
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
@@ -531,6 +533,30 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 				DispatchQueue.main.async {
 					self.item.typeItems.append(newTypeItem)
 					self.saveItem()
+				}
+			}
+			DispatchQueue.main.async {
+				cell.animateArchiving = false
+			}
+		}
+	}
+
+	@objc func archiveThumbnail(_ sender: Any?) {
+		guard let i = components.selectionIndexes.first else { return }
+		let component = item.typeItems[i]
+		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
+		cell.animateArchiving = true
+
+		component.fetchWebPreview(for: url) { _, _, image, _ in
+			if let image = image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
+				DispatchQueue.main.async {
+					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.typeItems.count)
+					self.item.typeItems.append(newTypeItem)
+					self.saveItem()
+				}
+			} else {
+				DispatchQueue.main.async {
+					genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
 				}
 			}
 			DispatchQueue.main.async {
