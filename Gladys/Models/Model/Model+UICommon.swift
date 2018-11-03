@@ -72,13 +72,14 @@ extension Model {
 	}
 
 	enum SortOption {
-		case dateAdded, dateModified, title, note, size
+		case dateAdded, dateModified, title, note, size, label
 		var ascendingTitle: String {
 			switch self {
 			case .dateAdded: return "Oldest First"
 			case .dateModified: return "Oldest Modified First"
 			case .title: return "Title (A-Z)"
 			case .note: return "Note (A-Z)"
+			case .label: return "First Label (A-Z)"
 			case .size: return "Smallest First"
 			}
 		}
@@ -88,6 +89,7 @@ extension Model {
 			case .dateModified: return "Newest Modified First"
 			case .title: return "Title (Z-A)"
 			case .note: return "Note (Z-A)"
+			case .label: return "First Label (Z-A)"
 			case .size: return "Largest First"
 			}
 		}
@@ -133,6 +135,12 @@ extension Model {
 					} else {
 						actualItemsToSort.sort { $0.note > $1.note }
 					}
+				case .label:
+					if ascending {
+						actualItemsToSort.sort { $0.labels.first ?? "" < $1.labels.first ?? "" }
+					} else {
+						actualItemsToSort.sort { $0.labels.first ?? "" > $1.labels.first ?? "" }
+					}
 				case .size:
 					if ascending {
 						actualItemsToSort.sort { $0.sizeInBytes < $1.sizeInBytes }
@@ -149,7 +157,7 @@ extension Model {
 				Model.save()
 			}
 		}
-		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.size] }
+		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }
 	}
 
 	static var isFilteringLabels: Bool {
