@@ -244,6 +244,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 			D.minimumPressDuration = 0.01
 			contentView.addGestureRecognizer(D)
 		}
+
+		let S = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
+		S.direction = .left
+		S.require(toFail: p)
+		contentView.addGestureRecognizer(S)
 	}
 
 	private func clearAllOtherGestures() {
@@ -264,6 +269,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading, !item.needsUnlock {
 			clearAllOtherGestures()
 			showShortcutMenu(push: true)
+		}
+	}
+
+	@objc private func swiped(_ swipeRegognizer: UISwipeGestureRecognizer) {
+		if let item = archivedDropItem, swipeRegognizer.state == .recognized, !item.shouldDisplayLoading, !item.needsUnlock {
+			clearAllOtherGestures()
+			showShortcutMenu(push: false)
 		}
 	}
 
