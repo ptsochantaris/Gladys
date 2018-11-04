@@ -146,9 +146,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	private let servicesProvider = ServicesProvider()
 	static var shared: AppDelegate?
 
+	private func migrateDefaults() {
+		if PersistedOptions.defaultsVersion < 1 {
+			if PersistedOptions.launchAtLogin {
+				PersistedOptions.launchAtLogin = true
+			}
+			PersistedOptions.defaultsVersion = 1
+		}
+	}
+
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
 		AppDelegate.shared = self
+
+		migrateDefaults()
 		
 		LauncherCommon.killHelper()
 

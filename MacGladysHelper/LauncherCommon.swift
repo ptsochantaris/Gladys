@@ -14,7 +14,7 @@ extension Notification.Name {
 
 class LauncherCommon {
 
-	static let helperAppId = "build.bru.MacGladysHelper"
+	static let helperAppId = "build.bru.MacGladys.Helper"
 	static var isHelperRunning: Bool {
 		return NSWorkspace.shared.runningApplications.contains { $0.bundleIdentifier == helperAppId }
 	}

@@ -73,6 +73,15 @@ extension PersistedOptions {
 		}
 	}
 
+	static var defaultsVersion: Int {
+		get {
+			return defaults.integer(forKey: "defaultsVersion")
+		}
+		set {
+			defaults.set(newValue, forKey: "defaultsVersion")
+		}
+	}
+
 	static var menubarIconMode: Bool {
 		get {
 			return defaults.bool(forKey: "menubarIconMode")
