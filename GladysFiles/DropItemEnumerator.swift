@@ -1,5 +1,5 @@
 
-import FileProvider
+import Foundation
 
 final class DropItemEnumerator: CommonEnumerator {
 
@@ -7,7 +7,9 @@ final class DropItemEnumerator: CommonEnumerator {
 		super.init(uuid: dropItem.uuid.uuidString)
 	}
 
-	override var fileItems: [FileProviderItem] {
+	override func getFileItems() -> [FileProviderItem] {
+
+		Model.reloadDataIfNeeded()
 		let uuidData = UUID(uuidString: uuid)
 		guard let dropItem = Model.visibleDrops.first(where: { $0.uuid == uuidData }) else {
 			return []

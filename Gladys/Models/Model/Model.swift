@@ -1,8 +1,5 @@
 
 import Foundation
-#if os(iOS)
-import FileProvider
-#endif
 
 final class Model {
 
@@ -215,7 +212,7 @@ final class Model {
 		if Model.legacyMode {
 			return []
 		}
-		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil }
+		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil && !$0.needsReIngest }
 	}
 
 	static let itemsDirectoryUrl: URL = {

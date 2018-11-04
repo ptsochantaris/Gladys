@@ -6,20 +6,38 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override init() {
 		super.init()
-		Model.reloadDataIfNeeded()
+		log("File extension created")
+	}
+
+	deinit {
+		log("File extension terminated")
+	}
+
+	private var firstLoadNeeded = true
+	private func ensureLoaded() {
+		if firstLoadNeeded {
+			firstLoadNeeded = false
+			if Thread.isMainThread {
+				Model.reloadDataIfNeeded()
+			} else {
+				DispatchQueue.main.sync {
+					Model.reloadDataIfNeeded()
+				}
+			}
+		}
 	}
 
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
+		ensureLoaded()
+
 		let uuid = UUID(uuidString: identifier.rawValue)
 
 		let drops = Model.visibleDrops
 
-		for item in drops {
-			if item.uuid == uuid {
-				return FileProviderItem(item)
-			}
+		if let item = drops.first(where: { $0.uuid == uuid }) {
+			return FileProviderItem(item)
 		}
 
 		for item in drops {
@@ -86,13 +104,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 		return fileItem(at: url)?.itemIdentifier
 	}
     
-    override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {
-		//log("Starting provision: \(url.path)")
-		completionHandler?(nil)
-    }
-
     override func itemChanged(at url: URL) {
 		if isReservedName(url.lastPathComponent) { return }
+
+		ensureLoaded()
 
 		log("Item changed: \(url.path)")
 
@@ -113,6 +128,15 @@ final class FileProviderExtension: NSFileProviderExtension {
 		}
     }
 
+	override func startProvidingItem(at url: URL, completionHandler: ((_ error: Error?) -> Void)?) {
+		log("Starting provision: \(url.path)")
+		completionHandler?(nil)
+	}
+
+	override func stopProvidingItem(at url: URL) {
+		log("Stopping provision: \(url.path)")
+	}
+
 	override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
 		log("Providing placeholder: \(url.path)")
 
@@ -130,10 +154,6 @@ final class FileProviderExtension: NSFileProviderExtension {
 			completionHandler(error)
 		}
 	}
-
-    override func stopProvidingItem(at url: URL) {
-		//log("Stopping provision: \(url.path)")
-    }
 
 	private func imageData(img: UIImage, size: CGSize, contentMode: ArchivedDropItemDisplayType) -> Data? {
 		let limit: CGFloat = (contentMode == .center || contentMode == .circle) ? 0.5 : 0.9
@@ -157,12 +177,14 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func setTagData(_ tagData: Data?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
+
+		ensureLoaded()
+
 		do {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem {
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
 				saveModel {
-					Model.signalWorkingSetChange()
 					completionHandler(i, nil)
 				}
 			} else {
@@ -200,6 +222,9 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
+
+		ensureLoaded()
+
 		do {
 			guard let fpi = try item(for: itemIdentifier) as? FileProviderItem else {
 				completionHandler(NSFileProviderError(.noSuchItem))
@@ -227,10 +252,6 @@ final class FileProviderExtension: NSFileProviderExtension {
 		} catch {
 			completionHandler(error)
 		}
-	}
-
-	deinit {
-		log("File extension terminated")
 	}
 
     override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {

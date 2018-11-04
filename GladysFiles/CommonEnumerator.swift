@@ -11,58 +11,51 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 	private var oldItemIds2Dates: Dictionary<NSFileProviderItemIdentifier, Date>!
 
-	private func refreshCurrentDates() {
-		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0.gladysModificationDate ?? .distantPast) })
+	private func refreshCurrentDates(from items: [FileProviderItem]) {
+		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: items.map { ($0.itemIdentifier, $0.gladysModificationDate) })
 	}
-
-	private var filePresenter: ModelFilePresenter?
 
 	init(uuid: String) {
 		self.uuid = uuid
 		super.init()
-		if !Model.legacyMode {
-			filePresenter = ModelFilePresenter()
-			NSFileCoordinator.addFilePresenter(filePresenter!)
-		}
-		Model.reloadDataIfNeeded()
-		refreshCurrentDates()
 		log("Enumerator for \(uuid) started")
 	}
 
 	deinit {
-		if let m = filePresenter {
-			NSFileCoordinator.removeFilePresenter(m)
-			filePresenter = nil
-		}
 		log("Enumerator for \(uuid) shut down")
 	}
 
 	func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
-		OperationQueue.main.addOperation {
+		DispatchQueue.main.async {
 			self.sortByDate = page.rawValue == (NSFileProviderPage.initialPageSortedByDate as Data) // otherwise by name
 			log("Listing \(self.uuid)")
-			observer.didEnumerate(self.fileItems)
+			let items = self.getFileItems()
+			observer.didEnumerate(items)
+			self.refreshCurrentDates(from: items)
 			observer.finishEnumerating(upTo: nil)
 		}
 	}
 
 	func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-		OperationQueue.main.addOperation {
+		DispatchQueue.main.async {
 			log("Listing changes for \(self.uuid) from anchor: \(String(data: syncAnchor.rawValue, encoding: .utf8)!)")
 			self.currentAnchor = syncAnchor
-			self.enumerateChanges(for: observer)
+			let items = self.getFileItems()
+			self.enumerateChanges(for: observer, with: items)
+			self.refreshCurrentDates(from: items)
 			observer.finishEnumeratingChanges(upTo: self.currentAnchor, moreComing: false)
 		}
 	}
 
-	private func enumerateChanges(for observer: NSFileProviderChangeObserver) {
+	private func enumerateChanges(for observer: NSFileProviderChangeObserver, with items: [FileProviderItem]) {
 
-		let newItemIds2Items = Dictionary(uniqueKeysWithValues: fileItems.map { ($0.itemIdentifier, $0) })
+		let newItemIds2Items = Dictionary(uniqueKeysWithValues: items.map { ($0.itemIdentifier, $0) })
 
 		let updatedItemIds2Items = newItemIds2Items.filter { id, newItem -> Bool in
 			let oldDate = oldItemIds2Dates![id]
 			return oldDate == nil || oldDate != newItem.gladysModificationDate
 		}
+
 		if updatedItemIds2Items.count > 0 {
 			for id in updatedItemIds2Items.keys {
 				log("Reporting update of item \(id.rawValue)")
@@ -79,15 +72,15 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 			observer.didDeleteItems(withIdentifiers: deletedItemIds)
 			incrementAnchor()
 		}
-
-		refreshCurrentDates()
 	}
 
-	var fileItems: [FileProviderItem] {
+	func invalidate() {
+		oldItemIds2Dates.removeAll()
+		log("Enumerator for \(uuid) invalidated")
+	}
+
+	func getFileItems() -> [FileProviderItem] {
 		return []
-	}
-
-	@objc func invalidate() {
 	}
 
 	@objc func currentSyncAnchor(completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void) {

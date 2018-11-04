@@ -7,7 +7,9 @@ final class RootEnumerator: CommonEnumerator {
 		super.init(uuid: NSFileProviderItemIdentifier.rootContainer.rawValue)
 	}
 
-	override var fileItems: [FileProviderItem] {
+	override func getFileItems() -> [FileProviderItem] {
+
+		Model.reloadDataIfNeeded()
 		if sortByDate {
 			return Model.visibleDrops.sorted { $0.createdAt < $1.createdAt }.map { FileProviderItem($0) }
 		} else {

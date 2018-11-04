@@ -53,21 +53,33 @@ final class FileProviderItem: NSObject, NSFileProviderItem {
 		return dropItem?.updatedAt ?? typeItem?.updatedAt
 	}
 
-	var gladysModificationDate: Date? {
+	var gladysModificationDate: Date {
 		var date = contentModificationDate ?? .distantPast
+
+		// tags
 		if dropItem?.hasTagData ?? false, let path = dropItem?.tagDataPath, let d = Model.modificationDate(for: path) {
 			date = max(date, d)
 		} else if typeItem?.hasTagData ?? false, let path = typeItem?.tagDataPath, let d = Model.modificationDate(for: path) {
 			date = max(date, d)
 		}
+
+		// previews
+		if let dropItem = dropItem {
+			for typeItem in dropItem.typeItems {
+				date = max(date, typeItem.updatedAt) // if child is fresher, use that date
+				if let d = Model.modificationDate(for: typeItem.bytesPath) {
+					date = max(date, d)
+				}
+			}
+		} else if let typeItem = typeItem, let d = Model.modificationDate(for: typeItem.bytesPath) {
+			date = max(date, d)
+		}
+
 		return date
 	}
 
 	var versionIdentifier: Data? {
-		if let m = contentModificationDate {
-			return String(m.timeIntervalSinceReferenceDate).data(using: .utf8)
-		}
-		return nil
+		return String(gladysModificationDate.timeIntervalSinceReferenceDate).data(using: .utf8)
 	}
 
 	var isMostRecentVersionDownloaded: Bool {

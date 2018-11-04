@@ -1,5 +1,5 @@
 
-import Foundation
+import FileProvider
 
 extension ArchivedDropItem {
 	var tagDataPath: URL {
@@ -19,6 +19,11 @@ extension ArchivedDropItem {
 				let f = FileManager.default
 				if f.fileExists(atPath: location.path) {
 					try! f.removeItem(at: location)
+				}
+			}
+			NSFileProviderManager.default.signalEnumerator(for: .workingSet) { error in
+				if let e = error {
+					log("Error signalling: \(e.finalDescription)")
 				}
 			}
 		}

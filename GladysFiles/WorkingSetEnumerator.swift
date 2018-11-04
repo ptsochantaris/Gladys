@@ -7,20 +7,21 @@ final class WorkingSetEnumerator: CommonEnumerator {
 		super.init(uuid: NSFileProviderItemIdentifier.workingSet.rawValue)
 	}
 
-	override var fileItems: [FileProviderItem] {
+	override func getFileItems() -> [FileProviderItem] {
 
-		var taggedItems = [FileProviderItem]()
-		for drop in Model.visibleDrops {
+		Model.reloadDataIfNeeded()
+		let taggedItems = Model.visibleDrops.compactMap { drop -> FileProviderItem? in
 			if drop.hasTagData {
-				taggedItems.append(FileProviderItem(drop))
+				return FileProviderItem(drop)
 			}
 			if drop.typeItems.count > 1 {
 				for typeItem in drop.typeItems {
 					if typeItem.hasTagData {
-						taggedItems.append(FileProviderItem(typeItem))
+						return FileProviderItem(typeItem)
 					}
 				}
 			}
+			return nil
 		}
 
 		if sortByDate {

@@ -1,4 +1,4 @@
-import Foundation
+
 import FileProvider
 
 extension Model {
@@ -13,25 +13,5 @@ extension Model {
 	static func saveComplete() {}
 	static func saveIndexComplete() {}
 	static func startupComplete() {}
-
-	static func signalRootChange() {
-		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
-			if let e = error {
-				log("Error signalling: \(e.finalDescription)")
-			}
-		}
-	}
-
-	static func signalWorkingSetChange() {
-		NSFileProviderManager.default.signalEnumerator(for: .workingSet) { error in
-			if let e = error {
-				log("Error signalling: \(e.finalDescription)")
-			}
-		}
-	}
-
-	static func reloadCompleted() {
-		Model.signalRootChange()
-		Model.signalWorkingSetChange()
-	}
+	static func reloadCompleted() {}
 }

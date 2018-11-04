@@ -14,12 +14,13 @@ final class ModelFilePresenter: NSObject, NSFilePresenter {
 		return Model.itemsDirectoryUrl
 	}
 
+	private let _presentedItemOperationQueue = OperationQueue()
 	var presentedItemOperationQueue: OperationQueue {
-		return OperationQueue.main
+		return _presentedItemOperationQueue // requests will be dispatched to main below
 	}
 
 	func presentedItemDidChange() {
-		OperationQueue.main.addOperation {
+		DispatchQueue.main.async {
 			Model.reloadDataIfNeeded()
 		}
 	}

@@ -1,4 +1,7 @@
 import Foundation
+#if os(iOS)
+import FileProvider
+#endif
 
 extension Model {
 
@@ -30,8 +33,8 @@ extension Model {
 		let itemsToSave = drops.filter { $0.goodToSave }
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
-				i.needsSaving = false
 				i.isBeingCreatedBySync = false
+				i.needsSaving = false
 				return i.uuid
 			}
 			return nil
@@ -57,10 +60,21 @@ extension Model {
 						}
 						nextSaveCallbacks = nil
 					}
+					signalFileProvider()
 					saveComplete()
 				}
 			}
 		}
+	}
+
+	private static func signalFileProvider() { // can be in thread
+		#if os(iOS)
+		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
+			if let e = error {
+				log("Error signalling: \(e.finalDescription)")
+			}
+		}
+		#endif
 	}
 	
 	static func saveIndexOnly() {
@@ -91,6 +105,7 @@ extension Model {
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [uuid])
 				log("Ingest completed for item (\(uuid)) and committed to disk")
+				signalFileProvider()
 			} catch {
 				log("Warning: Error while committing item to disk: (\(error.finalDescription))")
 			}
