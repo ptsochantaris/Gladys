@@ -646,7 +646,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
-		if let d = destinationIndexPath, let s = session.localDragSession {
+		if let d = destinationIndexPath, let s = session.localDragSession, item.shareMode != .elsewhereReadOnly && !item.shouldDisplayLoading {
 			if d.section == 2, d.row < item.labels.count, s.canLoadObjects(ofClass: String.self) {
 				if let simpleString = s.items.first?.localObject as? String, item.labels.contains(simpleString) {
 					return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
@@ -796,10 +796,6 @@ final class DetailController: GladysViewController,
 		} else {
 			return nil
 		}
-	}
-
-	private func canMerge(_ candidate: ArchivedDropItemType) -> Bool {
-		return item.shareMode != .elsewhereReadOnly && !item.shouldDisplayLoading && !item.typeItems.contains(candidate)
 	}
 
 	func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
