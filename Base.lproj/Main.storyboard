@@ -2800,7 +2800,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G0I-PF-ZY6">
-                                                    <rect key="frame" x="15" y="21" width="345" height="25"/>
+                                                    <rect key="frame" x="15" y="21" width="345" height="29"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2824,7 +2824,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <constraint firstAttribute="trailingMargin" secondItem="xwC-1s-uX9" secondAttribute="trailing" id="vsW-9i-IyM"/>
                                                 <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" constant="10" id="xh6-eD-FRw"/>
                                             </constraints>
-                                            <edgeInsets key="layoutMargins" top="2" left="10" bottom="15" right="10"/>
+                                            <edgeInsets key="layoutMargins" top="2" left="10" bottom="8" right="10"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>

@@ -11,12 +11,12 @@ import UIKit
 final class HelpControllerCell: UITableViewCell {
 	@IBOutlet weak var label: UILabel!
 
-	var darkMode: Bool = false {
+	var darkMode = false {
 		didSet {
 			if darkMode {
-				label.textColor = UIColor.lightGray
+				label.textColor = .lightGray
 			} else {
-				label.textColor = UIColor.darkGray
+				label.textColor = .darkGray
 			}
 		}
 	}
