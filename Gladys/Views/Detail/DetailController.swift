@@ -639,7 +639,6 @@ final class DetailController: GladysViewController,
 				return []
 			}
 		} else {
-			ViewController.shared.componentDropActive = true
 			let typeItem = item.typeItems[indexPath.row]
 			session.localContext = "typeItem"
 			return [typeItem.dragItem]
@@ -648,29 +647,32 @@ final class DetailController: GladysViewController,
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 		if let d = destinationIndexPath, let s = session.localDragSession {
-			if d.section == 2, d.row < item.labels.count, session.canLoadObjects(ofClass: String.self) {
-				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			if d.section == 2, d.row < item.labels.count, s.canLoadObjects(ofClass: String.self) {
+				if let simpleString = s.items.first?.localObject as? String, item.labels.contains(simpleString) {
+					return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+				}
+				return UITableViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 			}
-			if d.section == 3, s.localContext as? String == "typeItem" {
-				return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+			if d.section == 3, let candidate = s.items.first?.localObject as? ArchivedDropItemType {
+				let operationType: UIDropOperation = item.typeItems.contains(candidate) ? .move : .copy
+				return UITableViewDropProposal(operation: operationType, intent: .insertAtDestinationIndexPath)
 			}
 		}
 		return UITableViewDropProposal(operation: .cancel)
 	}
 
-	private var cyclicReferenceWhileDragging: DetailController?
-
-	func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
-		cyclicReferenceWhileDragging = self
-	}
-
 	func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
-		ViewController.shared.componentDropActive = false
-		cyclicReferenceWhileDragging = nil
+		if session.localContext as? String == "typeItem" {
+			ViewController.shared.componentDropActiveFromDetailView = nil
+		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
-		if session.localDragSession != nil {
+		if let session = session.localDragSession {
+			if session.localContext as? String == "typeItem" {
+				ViewController.shared.componentDropActiveFromDetailView = self
+				NotificationCenter.default.removeObserver(self) // since we won't be deinited immediately, still no need for the UI to be active
+			}
 			done()
 		}
 	}
@@ -732,6 +734,7 @@ final class DetailController: GladysViewController,
 
 				} else if destinationIndexPath.section == 3, previousIndex.section == 3 {
 
+					// moving internal type item
 					let destinationIndex = destinationIndexPath.row
 					let sourceItem = item.typeItems[previousIndex.row]
 					item.typeItems.remove(at: previousIndex.row)
@@ -746,15 +749,30 @@ final class DetailController: GladysViewController,
 				}
 
 			} else if let candidate = dragItem.localObject as? ArchivedDropItemType {
-				let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
-				item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
-				item.needsReIngest = true
-				item.renumberTypeItems()
-				tableView.performBatchUpdates({
-					tableView.insertRows(at: [destinationIndexPath], with: .automatic)
-				}, completion: { _ in
-					self.handleNewTypeItem()
-				})
+				if destinationIndexPath.section == 2 {
+					// dropping external type item into labels
+					if let text = candidate.displayTitle {
+						item.labels.insert(text, at: destinationIndexPath.row)
+						item.postModified()
+						tableView.performBatchUpdates({
+							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
+						}, completion: { _ in
+							self.makeIndexAndSaveItem()
+						})
+					}
+
+				} else if destinationIndexPath.section == 3 {
+					// dropping external type item into type items
+					let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
+					item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
+					item.needsReIngest = true
+					item.renumberTypeItems()
+					tableView.performBatchUpdates({
+						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
+					}, completion: { _ in
+						self.handleNewTypeItem()
+					})
+				}
 			}
 
 			coordinator.drop(dragItem, toRowAt: destinationIndexPath)

@@ -352,7 +352,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	func resetForDragEntry(session: UIDropSession) {
 		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: [GladysFileUTI, "public.zip-archive"]) {
 			dismissAnyPopOver()
-		} else if (currentDetailView != nil && !componentDropActive) || currentLabelSelector != nil {
+		} else if (componentDropActiveFromDetailView == nil && currentDetailView != nil) || currentLabelSelector != nil {
 			dismissAnyPopOver()
 		}
 	}
@@ -443,7 +443,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			p.backgroundColor = c
 			p.delegate = self
 
-			if componentDropActive {
+			if componentDropActiveFromDetailView != nil {
 				trackCellForAWhile(cell, for: p, in: myNavView)
 			}
 
@@ -492,18 +492,18 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			}, completion: nil)
 			observation = nil
 		}
-		DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 			if observation != nil { // keep it around
 				observation = nil
 			}
 		}
 	}
 
-	var componentDropActive = false
+	var componentDropActiveFromDetailView: DetailController?
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-		if collectionView.hasActiveDrop && !componentDropActive { return }
+		if collectionView.hasActiveDrop && componentDropActiveFromDetailView == nil { return }
 
 		let item = Model.filteredDrops[indexPath.item]
 		if item.shouldDisplayLoading {
