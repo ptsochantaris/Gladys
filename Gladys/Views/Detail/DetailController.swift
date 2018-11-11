@@ -739,7 +739,6 @@ final class DetailController: GladysViewController,
 					let sourceItem = item.typeItems[previousIndex.row]
 					item.typeItems.remove(at: previousIndex.row)
 					item.typeItems.insert(sourceItem, at: destinationIndex)
-					item.needsReIngest = true
 					item.renumberTypeItems()
 					table.performBatchUpdates({
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
@@ -765,7 +764,6 @@ final class DetailController: GladysViewController,
 					// dropping external type item into type items
 					let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
 					item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
-					item.needsReIngest = true
 					item.renumberTypeItems()
 					tableView.performBatchUpdates({
 						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
