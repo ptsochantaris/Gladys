@@ -68,7 +68,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		switch section {
-		case 0: return "Shortcut Menu"
+		case 0: return "Action Menu"
 		case 1: return "Pinch-To-Preview"
 		case 2: return "Labels"
 		case 3: return "Data Components"
