@@ -18,8 +18,6 @@ extension Model {
 	}
 
 	static func save() {
-		assert(Thread.isMainThread)
-
 		if isSaving {
 			needsAnotherSave = true
 		} else {

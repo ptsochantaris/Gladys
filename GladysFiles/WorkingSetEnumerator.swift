@@ -9,7 +9,8 @@ final class WorkingSetEnumerator: CommonEnumerator {
 
 	override func getFileItems() -> [FileProviderItem] {
 
-		FileProviderExtension.ensureCurrent()
+		FileProviderExtension.ensureCurrent(checkAnyway: true)
+		
 		let taggedItems = Model.visibleDrops.compactMap { drop -> FileProviderItem? in
 			if drop.hasTagData {
 				return FileProviderItem(drop)

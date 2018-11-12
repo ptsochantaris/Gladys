@@ -9,9 +9,9 @@ final class DropItemEnumerator: CommonEnumerator {
 
 	override func getFileItems() -> [FileProviderItem] {
 
-		FileProviderExtension.ensureCurrent()
-		let uuidData = UUID(uuidString: uuid)
-		guard let dropItem = Model.visibleDrops.first(where: { $0.uuid == uuidData }) else {
+		FileProviderExtension.ensureCurrent(checkAnyway: true)
+		
+		guard let dropItem = Model.item(uuid: uuid) else {
 			return []
 		}
 		if sortByDate {

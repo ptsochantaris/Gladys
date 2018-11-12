@@ -13,17 +13,39 @@ final class FileProviderExtension: NSFileProviderExtension {
 		log("File extension terminated")
 	}
 
-	private static let loadQueue = DispatchQueue(label: "build.bru.fileprovider.loading")
-	static func ensureCurrent() {
+	private static let loadQueue = DispatchQueue(label: "build.bru.fileprovider.loading", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private static var shouldCheck = true
+	static func ensureCurrent(checkAnyway: Bool) {
 		loadQueue.sync {
-			Model.reloadDataIfNeeded()
+			if checkAnyway || shouldCheck {
+				Model.reloadDataIfNeeded()
+				shouldCheck = false
+			}
 		}
 	}
+
+	private static func saveModel(completion: (()->Void)? = nil) {
+		loadQueue.sync {
+			if let c = completion {
+				Model.queueNextSaveCallback(c)
+			}
+			Model.save()
+			shouldCheck = true
+		}
+	}
+
+	private static func shouldCheckModel() {
+		loadQueue.sync {
+			shouldCheck = true
+		}
+	}
+
+	////////////////////////
 
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
-		FileProviderExtension.ensureCurrent()
+		FileProviderExtension.ensureCurrent(checkAnyway: false)
 
 		let uuid = UUID(uuidString: identifier.rawValue)
 
@@ -46,15 +68,6 @@ final class FileProviderExtension: NSFileProviderExtension {
 		}
 
 		throw NSFileProviderError(.noSuchItem)
-	}
-
-	private func saveModel(completion: (()->Void)? = nil) {
-		DispatchQueue.main.async {
-			if let c = completion {
-				Model.queueNextSaveCallback(c)
-			}
-			Model.save()
-		}
 	}
 
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
@@ -98,11 +111,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
     
     override func itemChanged(at url: URL) {
-		if isReservedName(url.lastPathComponent) { return }
-
-		FileProviderExtension.ensureCurrent()
-
 		log("Item changed: \(url.path)")
+		FileProviderExtension.shouldCheckModel()
+
+		if isReservedName(url.lastPathComponent) { return }
 
 		if let fi = fileItem(at: url), let typeItem = fi.typeItem, let parent = Model.item(uuid: typeItem.parentUuid) {
 			log("Identified as child of local item \(typeItem.parentUuid)")
@@ -117,7 +129,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			typeItem.markUpdated()
 			parent.markUpdated()
 			parent.needsReIngest = true
-			saveModel()
+			FileProviderExtension.saveModel()
 		}
     }
 
@@ -158,7 +170,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		do {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.favoriteRank = favoriteRank
-				saveModel {
+				FileProviderExtension.saveModel {
 					completionHandler(i, nil)
 				}
 			} else {
@@ -174,7 +186,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
-				saveModel {
+				FileProviderExtension.saveModel {
 					completionHandler(i, nil)
 				}
 			} else {
@@ -222,15 +234,14 @@ final class FileProviderExtension: NSFileProviderExtension {
 				completionHandler(NSFileProviderError(.noSuchItem))
 				return
 			}
-			if let i = Model.drops.index(where: { $0.uuid == dropUuid }) {
-				let item = Model.drops[i]
+			if let item = Model.item(uuid: dropUuid) {
 				if let typeUuid = typeUuid, item.typeItems.count > 1, let typeItem = item.typeItems.first(where: { $0.uuid == typeUuid }) { // we picked a component to delete and it wasn't the last one
 					typeItem.needsDeletion = true
 					item.needsSaving = true
 				} else {
 					item.needsDeletion = true
 				}
-				saveModel {
+				FileProviderExtension.saveModel {
 					completionHandler(nil)
 				}
 			} else {

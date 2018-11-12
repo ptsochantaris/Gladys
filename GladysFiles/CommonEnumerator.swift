@@ -9,7 +9,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 
 	private var currentAnchor = NSFileProviderSyncAnchor("0".data(using: .utf8)!)
 
-	private var oldItemIds2Dates: Dictionary<NSFileProviderItemIdentifier, Date>!
+	private var oldItemIds2Dates: Dictionary<NSFileProviderItemIdentifier, Date>?
 
 	private func refreshCurrentDates(from items: [FileProviderItem]) {
 		oldItemIds2Dates = Dictionary(uniqueKeysWithValues: items.map { ($0.itemIdentifier, $0.gladysModificationDate) })
@@ -52,7 +52,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 		let newItemIds2Items = Dictionary(uniqueKeysWithValues: items.map { ($0.itemIdentifier, $0) })
 
 		let updatedItemIds2Items = newItemIds2Items.filter { id, newItem -> Bool in
-			let oldDate = oldItemIds2Dates![id]
+			let oldDate = oldItemIds2Dates?[id]
 			return oldDate == nil || oldDate != newItem.gladysModificationDate
 		}
 
@@ -64,8 +64,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 			incrementAnchor()
 		}
 
-		let deletedItemIds = oldItemIds2Dates!.keys.filter { !newItemIds2Items.keys.contains($0) }
-		if deletedItemIds.count > 0 {
+		if let deletedItemIds = oldItemIds2Dates?.keys.filter({ !newItemIds2Items.keys.contains($0) }), deletedItemIds.count > 0 {
 			for id in deletedItemIds {
 				log("Reporting deletion of item \(id.rawValue)")
 			}
@@ -75,7 +74,7 @@ class CommonEnumerator: NSObject, NSFileProviderEnumerator {
 	}
 
 	func invalidate() {
-		oldItemIds2Dates.removeAll()
+		oldItemIds2Dates?.removeAll()
 		log("Enumerator for \(uuid) invalidated")
 	}
 
