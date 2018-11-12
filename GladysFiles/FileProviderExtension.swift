@@ -13,24 +13,17 @@ final class FileProviderExtension: NSFileProviderExtension {
 		log("File extension terminated")
 	}
 
-	private var firstLoadNeeded = true
-	private func ensureLoaded() {
-		if firstLoadNeeded {
-			firstLoadNeeded = false
-			if Thread.isMainThread {
-				Model.reloadDataIfNeeded()
-			} else {
-				DispatchQueue.main.sync {
-					Model.reloadDataIfNeeded()
-				}
-			}
+	private static let loadQueue = DispatchQueue(label: "build.bru.fileprovider.loading")
+	static func ensureCurrent() {
+		loadQueue.sync {
+			Model.reloadDataIfNeeded()
 		}
 	}
 
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
-		ensureLoaded()
+		FileProviderExtension.ensureCurrent()
 
 		let uuid = UUID(uuidString: identifier.rawValue)
 
@@ -107,7 +100,7 @@ final class FileProviderExtension: NSFileProviderExtension {
     override func itemChanged(at url: URL) {
 		if isReservedName(url.lastPathComponent) { return }
 
-		ensureLoaded()
+		FileProviderExtension.ensureCurrent()
 
 		log("Item changed: \(url.path)")
 
@@ -163,7 +156,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	override func setFavoriteRank(_ favoriteRank: NSNumber?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
 		do {
-			if let i = try item(for: itemIdentifier) as? FileProviderItem {
+			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.favoriteRank = favoriteRank
 				saveModel {
 					completionHandler(i, nil)
@@ -177,11 +170,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func setTagData(_ tagData: Data?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-
-		ensureLoaded()
-
 		do {
-			if let i = try item(for: itemIdentifier) as? FileProviderItem {
+			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
 				saveModel {
@@ -204,7 +194,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				autoreleasepool {
 					log("Creating thumbnail for item \(itemID.rawValue)")
 					var data: Data?
-					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {
+					if let fpi = (try? self.item(for: itemID)) as? FileProviderItem {  // ensures model is loaded
 						if let dir = fpi.dropItem {
 							data = self.imageData(img: dir.displayIcon, size: mySize, contentMode: dir.displayMode)
 						} else if let file = fpi.typeItem, let img = file.displayIcon {
@@ -222,11 +212,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	override func deleteItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (Error?) -> Void) {
-
-		ensureLoaded()
-
 		do {
-			guard let fpi = try item(for: itemIdentifier) as? FileProviderItem else {
+			guard let fpi = try item(for: itemIdentifier) as? FileProviderItem else { // ensures model is loaded
 				completionHandler(NSFileProviderError(.noSuchItem))
 				return
 			}
@@ -262,7 +249,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		case .rootContainer:
 			return RootEnumerator()
 		default:
-			if let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem {
+			if let i = ((try? item(for: containerItemIdentifier)) as? FileProviderItem)?.dropItem { // ensures model is loaded
 				return DropItemEnumerator(dropItem: i)
 			} else {
 				throw NSFileProviderError(.noSuchItem)

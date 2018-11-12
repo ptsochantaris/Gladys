@@ -9,7 +9,7 @@ final class RootEnumerator: CommonEnumerator {
 
 	override func getFileItems() -> [FileProviderItem] {
 
-		Model.reloadDataIfNeeded()
+		FileProviderExtension.ensureCurrent()
 		if sortByDate {
 			return Model.visibleDrops.sorted { $0.createdAt < $1.createdAt }.map { FileProviderItem($0) }
 		} else {
