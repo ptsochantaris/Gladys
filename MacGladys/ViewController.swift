@@ -905,8 +905,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func info(_ sender: Any?) {
-		let g = NSPasteboard.general
-		g.clearContents()
 		for item in collection.actionableSelectedItems {
 			let uuid = item.uuid
 			if DetailController.showingUUIDs.contains(uuid) {
@@ -941,8 +939,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func open(_ sender: Any?) {
-		let g = NSPasteboard.general
-		g.clearContents()
 		for item in collection.actionableSelectedItems {
 			item.tryOpen(from: self)
 		}
