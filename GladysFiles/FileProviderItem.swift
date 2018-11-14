@@ -1,6 +1,29 @@
 
 import FileProvider
 
+final class RootItem: NSObject, NSFileProviderItem {
+
+	var itemIdentifier: NSFileProviderItemIdentifier {
+		return NSFileProviderItemIdentifier.rootContainer
+	}
+
+	var parentItemIdentifier: NSFileProviderItemIdentifier {
+		return NSFileProviderItemIdentifier.rootContainer
+	}
+
+	var filename: String {
+		return "Gladys Items"
+	}
+
+	var typeIdentifier: String {
+		return "public.folder"
+	}
+
+	var childItemCount: NSNumber? {
+		return NSNumber(value: Model.visibleDrops.count)
+	}
+}
+
 final class FileProviderItem: NSObject, NSFileProviderItem {
 
 	let dropItem: ArchivedDropItem?

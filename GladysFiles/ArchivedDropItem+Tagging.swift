@@ -41,6 +41,10 @@ extension ArchivedDropItem {
 		return folderUrl.appendingPathComponent("favouriteRank", isDirectory: false)
 	}
 
+	var hasFavouriteRankData: Bool {
+		return FileManager.default.fileExists(atPath: favoriteRankPath.path)
+	}
+
 	var favoriteRank: NSNumber? {
 		set {
 			let location = favoriteRankPath

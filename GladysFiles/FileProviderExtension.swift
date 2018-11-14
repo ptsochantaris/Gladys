@@ -24,13 +24,11 @@ final class FileProviderExtension: NSFileProviderExtension {
 		}
 	}
 
-	private static func saveModel(completion: (()->Void)? = nil) {
+	private static func save(item: ArchivedDropItem, completion: (()->Void)? = nil) {
 		loadQueue.sync {
-			if let c = completion {
-				Model.queueNextSaveCallback(c)
-			}
-			Model.save()
+			Model.coordinatedCommit(item: item)
 			shouldCheck = true
+			completion?()
 		}
 	}
 
@@ -42,10 +40,16 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	////////////////////////
 
+	private let root = RootItem()
+
 	@discardableResult
 	override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
 
 		FileProviderExtension.ensureCurrent(checkAnyway: false)
+
+		if identifier == NSFileProviderItemIdentifier.rootContainer {
+			return root
+		}
 
 		let uuid = UUID(uuidString: identifier.rawValue)
 
@@ -129,7 +133,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			typeItem.markUpdated()
 			parent.markUpdated()
 			parent.needsReIngest = true
-			FileProviderExtension.saveModel()
+			FileProviderExtension.save(item: parent)
 		}
     }
 
@@ -170,7 +174,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 		do {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.favoriteRank = favoriteRank
-				FileProviderExtension.saveModel {
+				signalWorkingSet() {
 					completionHandler(i, nil)
 				}
 			} else {
@@ -186,7 +190,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			if let i = try item(for: itemIdentifier) as? FileProviderItem { // ensures model is loaded
 				i.dropItem?.tagData = tagData
 				i.typeItem?.tagData = tagData
-				FileProviderExtension.saveModel {
+				signalWorkingSet() {
 					completionHandler(i, nil)
 				}
 			} else {
@@ -194,6 +198,15 @@ final class FileProviderExtension: NSFileProviderExtension {
 			}
 		} catch {
 			completionHandler(nil, error)
+		}
+	}
+
+	private func signalWorkingSet(completion: @escaping ()->Void) {
+		NSFileProviderManager.default.signalEnumerator(for: .workingSet) { error in
+			if let e = error {
+				log("Error signalling: \(e.finalDescription)")
+			}
+			completion()
 		}
 	}
 
@@ -241,7 +254,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 				} else {
 					item.needsDeletion = true
 				}
-				FileProviderExtension.saveModel {
+				FileProviderExtension.save(item: item) {
 					completionHandler(nil)
 				}
 			} else {

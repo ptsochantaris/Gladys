@@ -10,25 +10,27 @@ final class WorkingSetEnumerator: CommonEnumerator {
 	override func getFileItems() -> [FileProviderItem] {
 
 		FileProviderExtension.ensureCurrent(checkAnyway: true)
-		
-		let taggedItems = Model.visibleDrops.compactMap { drop -> FileProviderItem? in
-			if drop.hasTagData {
-				return FileProviderItem(drop)
+
+		var workingSetItems = [FileProviderItem]()
+
+		for drop in Model.visibleDrops {
+			if drop.hasTagData || drop.hasFavouriteRankData {
+				workingSetItems.append(FileProviderItem(drop))
 			}
-			if drop.typeItems.count > 1 {
-				for typeItem in drop.typeItems {
-					if typeItem.hasTagData {
-						return FileProviderItem(typeItem)
-					}
+			for typeItem in drop.typeItems where typeItem.hasTagData {
+				let fpi = FileProviderItem(typeItem)
+				let id = fpi.itemIdentifier.rawValue
+				if let index = workingSetItems.index(where: { $0.itemIdentifier.rawValue == id }) { // a type item is overriding the parent
+					workingSetItems.remove(at: index)
 				}
+				workingSetItems.append(fpi)
 			}
-			return nil
 		}
 
 		if sortByDate {
-			return taggedItems.sorted { $0.contentModificationDate ?? .distantPast < $1.contentModificationDate ?? .distantPast }
+			return workingSetItems.sorted { $0.contentModificationDate ?? .distantPast < $1.contentModificationDate ?? .distantPast }
 		} else {
-			return taggedItems.sorted { $0.filename < $1.filename }
+			return workingSetItems.sorted { $0.filename < $1.filename }
 		}
 	}
 }
