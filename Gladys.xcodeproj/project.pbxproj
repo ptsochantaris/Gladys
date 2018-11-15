@@ -353,7 +353,6 @@
 		16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
-		16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16ED386320C08FAA00B9BFDA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16ED386620C14F4500B9BFDA /* Model+ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */; };
 		16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */; };
@@ -362,7 +361,6 @@
 		16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+UI.swift */; };
 		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
-		16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
@@ -775,7 +773,6 @@
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
 		16EDB3761F2361EB001CC65C /* Model+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UI.swift"; sourceTree = "<group>"; };
 		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
-		16EDB37D1F23650A001CC65C /* Model+Saving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Saving.swift"; sourceTree = "<group>"; };
 		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -1305,7 +1302,6 @@
 				16EDB3761F2361EB001CC65C /* Model+UI.swift */,
 				16CD7DB720A124390039E6C2 /* Model+UICommon.swift */,
 				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
-				16EDB37D1F23650A001CC65C /* Model+Saving.swift */,
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 				16EC2934219D5F11004174C3 /* Model+Lite.swift */,
@@ -2216,7 +2212,6 @@
 				16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
-				16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
@@ -2459,7 +2454,6 @@
 				16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16CD7D8720A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
-				16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1602F31F2030E5550036E2B0 /* Notifications.swift in Sources */,
 				166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
