@@ -113,7 +113,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 	}
 
 	private func pasteCommit() {
-		Model.insertNewItemsWithoutLoading(items: newItems)
+		Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
 		Model.reIndexWithoutLoading(items: newItems) {
 			DispatchQueue.main.async { [weak self] in
 				self?.pasteDone()

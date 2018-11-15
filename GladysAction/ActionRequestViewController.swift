@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreSpotlight
 
 class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
@@ -22,7 +21,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	private var loadCount = 0
 	private var firstAppearance = true
-	private var newItemIds = [String]()
+	private var newItems = [ArchivedDropItem]()
 	private var uploadObservation: NSKeyValueObservation?
 	private var uploadProgress: Progress?
 
@@ -31,6 +30,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 		if firstAppearance {
 			firstAppearance = false
+			// and proceed with setup
 		} else {
 			return
 		}
@@ -44,6 +44,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			return
 		}
 
+		newItems.removeAll()
 		Model.reset()
 		Model.reloadDataIfNeeded()
 
@@ -72,8 +73,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
 			if let providers = inputItem.attachments {
 				for newItem in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: nil) {
-					Model.drops.insert(newItem, at: 0)
-					newItemIds.append(newItem.uuid.uuidString)
+					newItems.append(newItem)
 				}
 			}
 		}
@@ -95,10 +95,10 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	@IBAction private func expandSelected(_ sender: UIButton) {
 
-		cancelRequested(cancelButton)
-
 		let newTotal = Model.drops.count + loadCount
 		let url = URL(string: "gladys://in-app-purchase/\(newTotal)")!
+
+		cancelRequested(cancelButton) // warning: resets model counts from above!
 
 		let selector = sel_registerName("openURL:")
 		var responder = self as UIResponder?
@@ -110,14 +110,12 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
 
-		let loadingItems = Model.drops.filter { $0.loadingProgress != nil }
-		for loadingItem in loadingItems {
+		for loadingItem in newItems {
 			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
 		}
-		Model.drops.removeAll { loadingItems.contains($0) }
 
-		firstAppearance = true
+		resetExtension()
 
 		let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
 		extensionContext?.cancelRequest(withError: error)
@@ -126,14 +124,14 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	func itemIngested(item: ArchivedDropItem) {
 		loadCount -= 1
 		if loadCount == 0 {
-			cancelButton.isEnabled = false
 			commit(uploadAfterSave: CloudManager.shareActionShouldUpload)
 		}
 	}
 
 	private func commit(uploadAfterSave: Bool) {
+		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
-		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
+		Model.reIndexWithoutLoading(items: newItems) {
 			DispatchQueue.main.async { [weak self] in
 				self?.save(uploadAfterSave: uploadAfterSave)
 			}
@@ -142,21 +140,25 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	private func save(uploadAfterSave: Bool) {
 		statusLabel.text = "Saving..."
+		let newItemIds = newItems.map { $0.uuid.uuidString }
 		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
-		Model.queueNextSaveCallback { [weak self] in
-			self?.postSave(uploadAfterSave: uploadAfterSave)
+		for item in newItems {
+			if Model.drops.contains(item) {
+				Model.commitExistingItemWithoutLoading(item)
+			} else {
+				Model.insertNewItemsWithoutLoading(items: [item], addToDrops: true)
+			}
 		}
-		Model.save()
-	}
 
-	private func postSave(uploadAfterSave: Bool) {
 		if !uploadAfterSave {
 			sharingDone(error: nil)
 			return
 		}
+
 		uploadProgress = CloudManager.sendUpdatesUp { [weak self] error in // will callback immediately if sync is off
 			self?.sharingDone(error: error)
 		}
+
 		if let p = uploadProgress {
 			statusLabel.text = "Uploading..."
 			uploadObservation = p.observe(\Progress.completedUnitCount) { [weak self] progress, change in
@@ -187,8 +189,14 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
 	}
 
-	@objc private func done() {
+	private func resetExtension() {
 		firstAppearance = true
+		newItems.removeAll()
+		Model.reset()
+	}
+
+	@objc private func done() {
+		resetExtension()
 		DispatchQueue.main.async { [weak self] in
 			self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
@@ -200,11 +208,9 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		if let destination = segue.destination as? LabelEditorController {
 			Model.reloadDataIfNeeded()
 			var labels = Set<String>()
-			for uuid in newItemIds {
-				if let item = Model.item(uuid: uuid) {
-					for l in item.labels {
-						labels.insert(l)
-					}
+			for item in newItems {
+				for l in item.labels {
+					labels.insert(l)
 				}
 			}
 			destination.selectedLabels = Array(labels)
@@ -217,12 +223,10 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	private func applyNewLabels(_ newLabels: [String]) {
 		Model.reloadDataIfNeeded()
 		var changes = false
-		for uuid in newItemIds {
-			if let item = Model.item(uuid: uuid), item.labels != newLabels {
-				item.labels = newLabels
-				item.markUpdated()
-				changes = true
-			}
+		for item in newItems where item.labels != newLabels {
+			item.labels = newLabels
+			item.markUpdated()
+			changes = true
 		}
 		if changes {
 			navigationItem.rightBarButtonItem = nil

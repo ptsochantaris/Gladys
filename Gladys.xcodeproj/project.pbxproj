@@ -246,7 +246,6 @@
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
-		16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */; };
 		16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedDropItem+Indexing.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -350,6 +349,8 @@
 		16EC2935219D5F11004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
 		16EC2936219D5F11004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
 		16EC2938219D6341004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
+		16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
+		16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16ED385F20C08EEA00B9BFDA /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
@@ -362,7 +363,6 @@
 		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37E1F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
-		16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB37D1F23650A001CC65C /* Model+Saving.swift */; };
 		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
@@ -2296,7 +2296,9 @@
 				168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16F2990820CBEF30005DE3AD /* PushState.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
+				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
+				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
 				1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
@@ -2318,11 +2320,9 @@
 				16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16CD7D7420A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
-				16EDB3801F23650A001CC65C /* Model+Saving.swift in Sources */,
 				1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */,
 				16CD7D9320A112670039E6C2 /* ArchivedDropItemType+CopyCommon.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
-				16AECA601F94B80400981B29 /* Model+Indexing.swift in Sources */,
 				16CD7D8920A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				1604A3341F091D76005A477E /* Model.swift in Sources */,
 			);

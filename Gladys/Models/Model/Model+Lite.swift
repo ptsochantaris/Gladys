@@ -165,7 +165,7 @@ extension Model {
 		}
 	}
 
-	static func insertNewItemsWithoutLoading(items: [ArchivedDropItem]) {
+	static func insertNewItemsWithoutLoading(items: [ArchivedDropItem], addToDrops: Bool) {
 		if items.isEmpty { return }
 
 		if brokenMode {
@@ -191,7 +191,7 @@ extension Model {
 				}
 
 				let jsonEncoder = JSONEncoder()
-				for item in items.reversed() {
+				for item in items {
 					let u = item.uuid
 					let t = u.uuid
 					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
@@ -208,6 +208,8 @@ extension Model {
 		}
 		if let e = coordinationError ?? closureError {
 			log("Error inserting new item into saved data store: \(e.localizedDescription)")
+		} else if addToDrops {
+			drops.append(contentsOf: items)
 		}
 	}
 
