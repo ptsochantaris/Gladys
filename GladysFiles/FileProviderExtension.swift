@@ -26,7 +26,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 
 	private static func save(item: ArchivedDropItem, completion: (()->Void)? = nil) {
 		loadQueue.sync {
-			Model.coordinatedCommit(item: item)
+			Model.commitExistingItemWithoutLoading(item)
 			shouldCheck = true
 			completion?()
 		}

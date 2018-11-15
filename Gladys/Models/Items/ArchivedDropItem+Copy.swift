@@ -27,9 +27,11 @@ extension ArchivedDropItem {
 	}
 	#endif
 
-	func copyToPasteboard() {
+	func copyToPasteboard(donateShortcut: Bool = true) {
 		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
-		donateCopyIntent()
+		if donateShortcut {
+			donateCopyIntent()
+		}
 	}
 
 	func donateCopyIntent() {

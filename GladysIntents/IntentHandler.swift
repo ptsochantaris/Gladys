@@ -13,7 +13,7 @@ import UIKit
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngestionDelegate, CopyItemIntentHandling, CopyComponentIntentHandling {
 
 	private var loadCount = 0
-	private var newItemIds = [String]()
+	private var newItems = [ArchivedDropItem]()
 	private var itemProviders = [NSItemProvider]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
 
@@ -23,15 +23,12 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 			return
 		}
 
-		Model.reset()
-		Model.reloadDataIfNeeded()
-
-		guard let item = Model.typeItem(uuid: uuidString) else {
+		guard let (_, component) = Model.locateComponentWithoutLoading(uuid: uuidString) else {
 			completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
 
-		item.copyToPasteboard()
+		component.copyToPasteboard(donateShortcut: false)
 		completion(CopyComponentIntentResponse(code: .success, userActivity: nil))
 	}
 
@@ -43,19 +40,32 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 			return
 		}
 
-		Model.reset()
-		Model.reloadDataIfNeeded()
-
-		guard let item = Model.item(uuid: uuid) else {
+		guard let item = Model.locateItemWithoutLoading(uuid: uuid.uuidString) else {
 			completion(CopyItemIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
 
-		item.copyToPasteboard()
+		item.copyToPasteboard(donateShortcut: false)
 		completion(CopyItemIntentResponse(code: .success, userActivity: nil))
 	}
 
 	/////////////////////////////
+
+	func confirm(intent: CopyItemIntent, completion: @escaping (CopyItemIntentResponse) -> Void) {
+		if Model.legacyModeCheckWithoutLoading() {
+			completion(CopyItemIntentResponse(code: .legacyMode, userActivity: nil))
+		} else {
+			completion(CopyItemIntentResponse(code: .ready, userActivity: nil))
+		}
+	}
+
+	func confirm(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
+		if Model.legacyModeCheckWithoutLoading() {
+			completion(CopyComponentIntentResponse(code: .legacyMode, userActivity: nil))
+		} else {
+			completion(CopyComponentIntentResponse(code: .ready, userActivity: nil))
+		}
+	}
 
 	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		itemProviders = UIPasteboard.general.itemProviders
@@ -66,17 +76,15 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 			return
 		}
 
-		newItemIds.removeAll()
-		Model.reset()
+		newItems.removeAll()
 		intentCompletion = nil
-		Model.reloadDataIfNeeded()
 
-		if Model.legacyMode {
+		if Model.legacyModeCheckWithoutLoading() {
 			completion(PasteClipboardIntentResponse(code: .legacyMode, userActivity: nil))
 			return
 		}
 
-		let newTotal = Model.drops.count + loadCount
+		let newTotal = Model.countSavedItemsWithoutLoading() + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			// ensure the app wasn't just registered, just in case, before we warn the user
 			reVerifyInfiniteMode()
@@ -93,21 +101,20 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
 		for newItem in ArchivedDropItem.importData(providers: itemProviders, delegate: self, overrides: nil) {
-			Model.drops.insert(newItem, at: 0)
-			newItemIds.append(newItem.uuid.uuidString)
+			newItems.append(newItem)
 		}
 	}
 
 	func itemIngested(item: ArchivedDropItem) {
 		loadCount -= 1
 		if loadCount == 0 {
-			Model.save()
 			pasteCommit()
 		}
 	}
 
 	private func pasteCommit() {
-		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: newItemIds) {
+		Model.insertNewItemsWithoutLoading(items: newItems)
+		Model.reIndexWithoutLoading(items: newItems) {
 			DispatchQueue.main.async { [weak self] in
 				self?.pasteDone()
 			}
@@ -117,9 +124,8 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 	private func pasteDone() {
 		intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
 		intentCompletion = nil
-		newItemIds.removeAll()
+		newItems.removeAll()
 		itemProviders.removeAll()
 		loadCount = 0
-		Model.reset()
 	}
 }

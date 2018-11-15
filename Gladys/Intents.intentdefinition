@@ -7,11 +7,11 @@
 	<key>INIntentDefinitionModelVersion</key>
 	<string>1.0</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>18A391</string>
+	<string>18B75</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>10A255</string>
+	<string>10B61</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>10.0</string>
+	<string>10.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -190,6 +190,16 @@
 						<key>INIntentResponseCodeSuccess</key>
 						<true/>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6B9O0I</string>
+						<key>INIntentResponseCodeName</key>
+						<string>legacyMode</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>0</integer>
@@ -278,6 +288,16 @@
 						<string>success</string>
 						<key>INIntentResponseCodeSuccess</key>
 						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>K9Nokt</string>
+						<key>INIntentResponseCodeName</key>
+						<string>legacyMode</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<false/>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>

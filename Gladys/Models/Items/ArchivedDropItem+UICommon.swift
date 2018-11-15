@@ -31,6 +31,10 @@ extension ArchivedDropItem {
 		}
 	}
 
+	func reIndex(completion: (()->Void)? = nil) {
+		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: [uuid.uuidString], acknowledgementHandler: completion ?? {})
+	}
+
 	var shareOwnerName: String? {
 		guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
 		let f = PersonNameComponentsFormatter()

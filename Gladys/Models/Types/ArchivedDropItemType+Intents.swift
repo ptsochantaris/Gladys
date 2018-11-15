@@ -10,9 +10,11 @@ import UIKit
 import Intents
 
 extension ArchivedDropItemType {
-	func copyToPasteboard() {
+	func copyToPasteboard(donateShortcut: Bool = true) {
 		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
-		donateCopyIntent()
+		if donateShortcut {
+			donateCopyIntent()
+		}
 	}
 
 	var itemProvider: NSItemProvider {

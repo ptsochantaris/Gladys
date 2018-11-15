@@ -27,8 +27,4 @@ extension ArchivedDropItem {
 	var searchableItem: CSSearchableItem {
 		return CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: searchAttributes)
 	}
-
-	func reIndex(completion: (()->Void)? = nil) {
-		Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: [uuid.uuidString], acknowledgementHandler: completion ?? {})
-	}
 }
