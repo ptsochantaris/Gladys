@@ -59,6 +59,9 @@ extension ArchivedDropItemType: Equatable {
 					}
 				} else {
 					try? newValue?.write(to: byteLocation)
+					#if os(OSX)
+					lastGladysBlobUpdate = Date()
+					#endif
 				}
 			}
 		}

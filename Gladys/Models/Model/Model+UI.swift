@@ -173,20 +173,6 @@ extension Model {
 	}
 
 	static func startupComplete() {
-
-		// cleanup, in case of previous crashes, cancelled transfers, etc
-
-		let fm = FileManager.default
-		guard let items = try? fm.contentsOfDirectory(at: appStorageUrl, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants) else { return }
-		let uuids = items.compactMap { UUID(uuidString: $0.lastPathComponent) }
-		let nonExistingUUIDs = uuids.filter { uuid -> Bool in
-			return !drops.contains { $0.uuid == uuid }
-		}
-		for uuid in nonExistingUUIDs {
-			let url = appStorageUrl.appendingPathComponent(uuid.uuidString)
-			try? fm.removeItem(at: url)
-		}
-
 		rebuildLabels()
 
 		if WCSession.isSupported() {

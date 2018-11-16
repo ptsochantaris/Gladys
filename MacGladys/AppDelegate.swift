@@ -197,6 +197,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 		let isShowing = ViewController.shared.view.window?.isVisible ?? false
 		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
+
+		Model.startMonitoringForExternalChangesToBlobs()
 	}
 
 	func applicationDidBecomeActive(_ notification: Notification) {
