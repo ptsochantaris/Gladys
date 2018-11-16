@@ -70,8 +70,31 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
 
+		var providerList = [NSItemProvider]()
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
 			for provider in inputItem.attachments ?? [] {
+				providerList.append(provider)
+			}
+		}
+
+		var allDifferentTypes = true
+		var typeSet = Set<String>()
+		for p in providerList {
+			let currentTypes = Set(p.registeredTypeIdentifiers)
+			if typeSet.intersection(currentTypes).isEmpty {
+				typeSet.formUnion(currentTypes)
+			} else {
+				allDifferentTypes = false
+				break
+			}
+		}
+
+		if allDifferentTypes { // composite item, leave it up to the user's settings
+			for newItem in ArchivedDropItem.importData(providers: providerList, delegate: self, overrides: nil) {
+				newItems.append(newItem)
+			}
+		} else { // list of items of similar type, always import separately
+			for provider in providerList {
 				for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
 					newItems.append(newItem)
 				}
