@@ -146,12 +146,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CDEvents/CDEvents.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/HotKey/HotKey.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CDEvents/CDEvents.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/HotKey/HotKey.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

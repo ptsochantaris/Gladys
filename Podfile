@@ -21,6 +21,7 @@ target 'MacGladys' do
   pod 'HotKey'
   pod 'ZIPFoundation'
   pod 'CallbackURLKit'
+  pod 'CDEvents'
 end
 
 target 'GladysIntents' do

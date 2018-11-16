@@ -2065,6 +2065,7 @@
 				"${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework",
 				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/CDEvents/CDEvents.framework",
 				"${BUILT_PRODUCTS_DIR}/HotKey/HotKey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2072,6 +2073,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CallbackURLKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fuzi.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CDEvents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HotKey.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,6 @@
 
 import Foundation
+import CDEvents
 
 extension Model {
 
@@ -15,10 +16,19 @@ extension Model {
 		rebuildLabels()
 	}
 
+	private static var eventMonitor: CDEvents?
 	static func startMonitoringForExternalChangesToBlobs() {
 		syncWithExternalUpdates()
 
-		
+		eventMonitor = CDEvents(urls: [appStorageUrl], block: { _, event in
+			// TODO: optimise to only check UUID/UUID directories
+			if let url = event?.url, let component = typeItem(uuid: url.lastPathComponent), component.scanForBlobChanges(), let parent = component.parent {
+				parent.needsReIngest = true
+				parent.markUpdated()
+				log("Detected a modified component blob, uuid \(component)")
+				parent.reIngest(delegate: ViewController.shared)
+			}
+		}, on: RunLoop.current, sinceEventIdentifier: kCDEventsSinceEventNow, notificationLantency: 1, ignoreEventsFromSubDirs: false, excludeURLs: [], streamCreationFlags: kCDEventsDefaultEventStreamFlags)
 	}
 
 	private static func syncWithExternalUpdates() {
@@ -26,9 +36,8 @@ extension Model {
 		for item in changedDrops {
 			log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
 			item.needsReIngest = true
-		}
-		if !changedDrops.isEmpty {
-			Model.save()
+			item.markUpdated()
+			item.reIngest(delegate: ViewController.shared)
 		}
 	}
 

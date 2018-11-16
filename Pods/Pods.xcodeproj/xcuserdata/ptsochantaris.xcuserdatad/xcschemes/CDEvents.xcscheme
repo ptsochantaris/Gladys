@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "94B164A750447FF9C94394259E6D3587"
-               BuildableName = "Pods_MacGladys.framework"
-               BlueprintName = "Pods-MacGladys"
+               BlueprintIdentifier = "30612F6BE37818695212B3A0F5806B37"
+               BuildableName = "CDEvents.framework"
+               BlueprintName = "CDEvents"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "94B164A750447FF9C94394259E6D3587"
-            BuildableName = "Pods_MacGladys.framework"
-            BlueprintName = "Pods-MacGladys"
+            BlueprintIdentifier = "30612F6BE37818695212B3A0F5806B37"
+            BuildableName = "CDEvents.framework"
+            BlueprintName = "CDEvents"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

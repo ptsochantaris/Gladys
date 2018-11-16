@@ -1,0 +1,6 @@
+framework module CDEvents {
+  umbrella header "CDEvents-umbrella.h"
+
+  export *
+  module * { export * }
+}
