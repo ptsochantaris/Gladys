@@ -32,7 +32,7 @@ extension ArchivedDropItemType {
 			if let data = data {
 				ArchivedDropItemType.ingestQueue.async {
 					log(">> Received type: [\(s.typeIdentifier)]")
-					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage) {
+					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) {
 						overallProgress.completedUnitCount += 10
 					}
 				}
@@ -49,7 +49,7 @@ extension ArchivedDropItemType {
 		return overallProgress
 	}
 	
-	func ingest(data: Data, encodeAnyUIImage: Bool = false, completion: @escaping ()->Void) { // in thread!
+	private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) { // in thread!
 
 		ingestCompletion = completion
 		clearCachedFields()
@@ -70,7 +70,9 @@ extension ArchivedDropItemType {
 			setTitleInfo(item as String, 10)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = .string
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else if let item = item as? NSAttributedString {
@@ -78,7 +80,9 @@ extension ArchivedDropItemType {
 			setTitleInfo(item.string, 7)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 			representedClass = .attributedString
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else if let item = item as? COLOR {
@@ -86,7 +90,9 @@ extension ArchivedDropItemType {
 			setTitleInfo("Color \(item.hexValue)", 0)
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
 			representedClass = .color
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else if let item = item as? IMAGE {
@@ -98,14 +104,21 @@ extension ArchivedDropItemType {
 				representedClass = .data
 				typeIdentifier = kUTTypeJPEG as String
 				classWasWrapped = false
-				bytes = item.jpegData(compressionQuality: 1)
+				if storeBytes {
+					let b = item.jpegData(compressionQuality: 1)
+					setBytes(b)
+				}
 			} else {
 				representedClass = .image
-				bytes = data
+				if storeBytes {
+					setBytes(data)
+				}
 			}
 			#else
 			representedClass = .image
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			#endif
 			completeIngest()
 
@@ -113,11 +126,13 @@ extension ArchivedDropItemType {
 			log("      received map item: \(item)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
 			representedClass = .mapItem
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else if let item = item as? URL {
-			handleUrl(item, data)
+			handleUrl(item, data, storeBytes)
 
 		} else if let item = item as? NSArray {
 			log("      received array: \(item)")
@@ -128,7 +143,9 @@ extension ArchivedDropItemType {
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = .array
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else if let item = item as? NSDictionary {
@@ -140,13 +157,15 @@ extension ArchivedDropItemType {
 			}
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 			representedClass = .dictionary
-			bytes = data
+			if storeBytes {
+				setBytes(data)
+			}
 			completeIngest()
 
 		} else {
 			log("      received data: \(data)")
 			representedClass = .data
-			handleData(data, resolveUrls: true)
+			handleData(data, resolveUrls: true, storeBytes)
 		}
 	}
 
@@ -163,7 +182,8 @@ extension ArchivedDropItemType {
 
 		let decoded = decode()
 		if decoded is NSURL {
-			bytes = try? PropertyListSerialization.data(fromPropertyList: newUrl, format: .binary, options: 0)
+			let data = try? PropertyListSerialization.data(fromPropertyList: newUrl, format: .binary, options: 0)
+			setBytes(data)
 		} else if let array = decoded as? NSArray {
 			let newArray = array.map { (item: Any) -> Any in
 				if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
@@ -172,9 +192,11 @@ extension ArchivedDropItemType {
 					return item
 				}
 			}
-			bytes = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
+			let data = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
+			setBytes(data)
 		} else {
-			bytes = newUrl.absoluteString?.data(using: .utf8)
+			let data = newUrl.absoluteString?.data(using: .utf8)
+			setBytes(data)
 		}
 		encodedURLCache = (true, newUrl)
 		setTitle(from: newUrl as URL)
@@ -513,8 +535,31 @@ extension ArchivedDropItemType {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-	func handleData(_ data: Data, resolveUrls: Bool) {
-		bytes = data
+	func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
+		log("      received remote url: \(url.absoluteString)")
+		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+		if let s = url.scheme, s.hasPrefix("http") {
+			fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
+				guard let s = self, !s.loadingAborted else { return }
+				s.accessoryTitle = title ?? s.accessoryTitle
+				if let image = image {
+					if image.size.height > 100 || image.size.width > 200 {
+						s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
+					} else {
+						s.setDisplayIcon(image, 30, .center)
+					}
+				}
+				s.completeIngest()
+			}
+		} else {
+			completeIngest()
+		}
+	}
+
+	func handleData(_ data: Data, resolveUrls: Bool, _ storeBytes: Bool) {
+		if storeBytes {
+			setBytes(data)
+		}
 
 		if (typeIdentifier == "public.folder" || typeIdentifier == "public.data") && data.isZip {
 			typeIdentifier = "public.zip-archive"
@@ -561,7 +606,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if resolveUrls, let url = encodedUrl {
-			handleUrl(url as URL, data)
+			handleUrl(url as URL, data, storeBytes)
 			return // important
 
 		} else if typeConforms(to: kUTTypeText as CFString) {
@@ -608,7 +653,7 @@ extension ArchivedDropItemType {
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
 			ArchivedDropItemType.ingestQueue.async { [weak self] in
-				self?.ingest(data: bytesCopy) {
+				self?.ingest(data: bytesCopy, storeBytes: false) {
 					overallProgress.completedUnitCount += 1
 				}
 			}

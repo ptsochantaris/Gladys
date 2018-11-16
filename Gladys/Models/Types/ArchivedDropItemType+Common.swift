@@ -15,6 +15,23 @@ import MobileCoreServices
 
 extension ArchivedDropItemType: Equatable {
 
+	func setBytes(_ data: Data?) {
+		dataAccessQueue.sync {
+			let byteLocation = bytesPath
+			if data == nil || loadingAborted {
+				let f = FileManager.default
+				if f.fileExists(atPath: byteLocation.path) {
+					try? f.removeItem(at: byteLocation)
+				}
+			} else {
+				try? data?.write(to: byteLocation)
+				#if os(OSX)
+				lastGladysBlobUpdate = Date()
+				#endif
+			}
+		}
+	}
+
 	static func == (lhs: ArchivedDropItemType, rhs: ArchivedDropItemType) -> Bool {
 		return lhs.uuid == rhs.uuid
 	}
@@ -49,32 +66,14 @@ extension ArchivedDropItemType: Equatable {
 	}
 
 	var bytes: Data? {
-		set {
-			dataAccessQueue.sync {
-				let byteLocation = bytesPath
-				if newValue == nil || loadingAborted {
-					let f = FileManager.default
-					if f.fileExists(atPath: byteLocation.path) {
-						try? f.removeItem(at: byteLocation)
-					}
-				} else {
-					try? newValue?.write(to: byteLocation)
-					#if os(OSX)
-					lastGladysBlobUpdate = Date()
-					#endif
-				}
+		var data: Data?
+		dataAccessQueue.sync {
+			let byteLocation = bytesPath
+			if FileManager.default.fileExists(atPath: byteLocation.path) {
+				data = try? Data(contentsOf: byteLocation, options: [.alwaysMapped])
 			}
 		}
-		get {
-			var data: Data?
-			dataAccessQueue.sync {
-				let byteLocation = bytesPath
-				if FileManager.default.fileExists(atPath: byteLocation.path) {
-					data = try? Data(contentsOf: byteLocation, options: [.alwaysMapped])
-				}
-			}
-			return data
-		}
+		return data
 	}
 
 	var encodedUrl: NSURL? {

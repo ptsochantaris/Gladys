@@ -16,9 +16,11 @@ extension UIColor {
 
 extension ArchivedDropItemType {
 
-	func handleUrl(_ url: URL, _ data: Data) {
-		
-		bytes = data
+	func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
+
+		if storeBytes {
+			setBytes(data)
+		}
 		representedClass = .url
 		setTitle(from: url)
 		
@@ -27,24 +29,7 @@ extension ArchivedDropItemType {
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 			completeIngest()
 		} else {
-			log("      received remote url: \(url.absoluteString)")
-			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-			if let s = url.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
-					guard let s = self, !s.loadingAborted else { return }
-					s.accessoryTitle = title ?? s.accessoryTitle
-					if let image = image {
-						if image.size.height > 100 || image.size.width > 200 {
-							s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
-						} else {
-							s.setDisplayIcon(image, 30, .center)
-						}
-					}
-					s.completeIngest()
-				}
-			} else {
-				completeIngest()
-			}
+			handleRemoteUrl(url, data, storeBytes)
 		}
 	}
 }

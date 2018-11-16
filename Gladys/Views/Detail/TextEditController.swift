@@ -84,27 +84,31 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 
 		if typeEntry.classWasWrapped {
 			let d: Any = isAttributed ? textView.attributedText : textView.text
-			typeEntry.bytes = NSKeyedArchiver.archivedData(withRootObject: d)
+			let b = NSKeyedArchiver.archivedData(withRootObject: d)
+			typeEntry.setBytes(b)
 			saveDone()
 
 		} else if isAttributed, let a = textView.attributedText {
 			if typeEntry.typeIdentifier == (kUTTypeRTF as String) {
-				typeEntry.bytes = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
+				let b = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
+				typeEntry.setBytes(b)
 				saveDone()
 			} else if typeEntry.typeIdentifier == (kUTTypeRTFD as String) {
-				typeEntry.bytes = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
+				let b = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
+				typeEntry.setBytes(b)
 				saveDone()
 			} else {
 				a.loadData(withTypeIdentifier: typeEntry.typeIdentifier) { data, error in
 					DispatchQueue.main.async { [weak self] in
-						self?.typeEntry.bytes = data
+						self?.typeEntry.setBytes(data)
 						self?.saveDone()
 					}
 				}
 			}
 
 		} else if let t = textView.text {
-			typeEntry.bytes = t.data(using: typeEntry.textEncoding)
+			let b = t.data(using: typeEntry.textEncoding)
+			typeEntry.setBytes(b)
 			saveDone()
 		}
 	}

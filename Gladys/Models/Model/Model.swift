@@ -212,7 +212,7 @@ final class Model {
 		if Model.legacyMode {
 			return []
 		}
-		return drops.filter { !$0.needsDeletion && $0.lockPassword == nil && !$0.needsReIngest }
+		return drops.filter { $0.isVisible }
 	}
 
 	static let itemsDirectoryUrl: URL = {

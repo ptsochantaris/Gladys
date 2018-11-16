@@ -163,7 +163,7 @@ final class ArchivedDropItemType: Codable {
 		updatedAt = createdAt
 		representedClass = .data
 		delegate = nil
-		bytes = data
+		setBytes(data)
 	}
 
 	init(cloning item: ArchivedDropItemType, newParentUUID: UUID) {
@@ -187,7 +187,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconTemplate = item.displayIconTemplate
 		classWasWrapped = item.classWasWrapped
 		representedClass = item.representedClass
-		bytes = item.bytes
+		setBytes(item.bytes)
 	}
 	#endif
 
@@ -272,6 +272,6 @@ final class ArchivedDropItemType: Codable {
 		representedClass = typeItem.representedClass
 		classWasWrapped = typeItem.classWasWrapped
 		accessoryTitle = typeItem.accessoryTitle
-		bytes = typeItem.bytes
+		setBytes(typeItem.bytes)
 	}
 }

@@ -51,23 +51,15 @@ final class FileProviderExtension: NSFileProviderExtension {
 			return root
 		}
 
-		let uuid = UUID(uuidString: identifier.rawValue)
-
-		let drops = Model.visibleDrops
-
-		if let item = drops.first(where: { $0.uuid == uuid }) {
+		if let item = Model.item(uuid: identifier.rawValue) {
 			return FileProviderItem(item)
 		}
 
-		for item in drops {
-			for typeItem in item.typeItems {
-				if typeItem.uuid == uuid {
-					if item.typeItems.count == 1 {
-						return FileProviderItem(item)
-					} else {
-						return FileProviderItem(typeItem)
-					}
-				}
+		if let component = Model.typeItem(uuid: identifier.rawValue), let parent = component.parent {
+			if parent.typeItems.count == 1 {
+				return FileProviderItem(parent)
+			} else {
+				return FileProviderItem(component)
 			}
 		}
 
@@ -125,7 +117,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 			let bytesPath = typeItem.bytesPath
 			if url != bytesPath {
 				do {
-					typeItem.bytes = try Data(contentsOf: url, options: .mappedIfSafe)
+					try FileManager.default.copyAndReplaceItem(at: url, to: typeItem.bytesPath)
 				} catch {
 					log("Warning: Cannot mirror changes back to item bytes: \(error.finalDescription)")
 				}

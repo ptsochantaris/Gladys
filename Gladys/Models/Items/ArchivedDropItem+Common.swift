@@ -118,6 +118,10 @@ extension ArchivedDropItem: Hashable {
 		return typeItems.first { $0.typeIdentifier == type }?.encodedUrl
 	}
 
+	var isVisible: Bool {
+		return !needsDeletion && lockPassword == nil && !needsReIngest
+	}
+
 	func markUpdated() {
 		updatedAt = Date()
 		needsCloudPush = true

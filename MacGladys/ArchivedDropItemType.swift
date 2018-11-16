@@ -174,7 +174,7 @@ final class ArchivedDropItemType: Codable {
 		updatedAt = createdAt
 		representedClass = .data
 		delegate = nil
-		bytes = data
+		setBytes(data)
 	}
 
 	init(typeIdentifier: String, parentUuid: UUID, delegate: ComponentIngestionDelegate, order: Int) {
@@ -256,7 +256,7 @@ final class ArchivedDropItemType: Codable {
 		representedClass = typeItem.representedClass
 		classWasWrapped = typeItem.classWasWrapped
 		accessoryTitle = typeItem.accessoryTitle
-		bytes = typeItem.bytes
+		setBytes(typeItem.bytes)
 	}
 
 
@@ -281,7 +281,7 @@ final class ArchivedDropItemType: Codable {
 		displayIconTemplate = item.displayIconTemplate
 		classWasWrapped = item.classWasWrapped
 		representedClass = item.representedClass
-		bytes = item.bytes
+		setBytes(item.bytes)
 	}
 	
 	private func appendDirectory(_ baseURL: URL, chain: [String], archive: Archive, fm: FileManager) throws {
@@ -308,87 +308,78 @@ final class ArchivedDropItemType: Codable {
 		}
 	}
 
-	func handleUrl(_ item: URL, _ data: Data) {
+	private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) {
+		let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
+		contributedLabels = resourceValues?.tagNames
 
-		setTitle(from: item)
-
-		if item.isFileURL {
-
-			let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
-			contributedLabels = resourceValues?.tagNames
-
-			accessoryTitle = item.lastPathComponent
-			let fm = FileManager.default
-			var directory: ObjCBool = false
-			if fm.fileExists(atPath: item.path, isDirectory: &directory) {
-				do {
-					if directory.boolValue {
-						typeIdentifier = kUTTypeZipArchive as String
-						setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
-						representedClass = .data
-						let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
-						let a = Archive(url: tempURL, accessMode: .create)!
-						let dirName = item.lastPathComponent
-						let item = item.deletingLastPathComponent()
-						try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
-						if loadingAborted {
-							log("      Cancelled zip operation since ingest was aborted")
-							return
-						}
-						try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
-						log("      zipped files at url: \(item.absoluteString)")
-						completeIngest()
-
-					} else {
-						let ext = item.pathExtension
-						if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
-							typeIdentifier = uti as String
-						} else {
-							typeIdentifier = kUTTypeData as String
-						}
-						representedClass = .data
-						log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-						let data = (try? Data(contentsOf: item, options: .mappedIfSafe)) ?? Data()
-						handleData(data, resolveUrls: false)
+		accessoryTitle = item.lastPathComponent
+		let fm = FileManager.default
+		var directory: ObjCBool = false
+		if fm.fileExists(atPath: item.path, isDirectory: &directory) {
+			do {
+				if directory.boolValue {
+					typeIdentifier = kUTTypeZipArchive as String
+					setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+					representedClass = .data
+					let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
+					let a = Archive(url: tempURL, accessMode: .create)!
+					let dirName = item.lastPathComponent
+					let item = item.deletingLastPathComponent()
+					try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
+					if loadingAborted {
+						log("      Cancelled zip operation since ingest was aborted")
+						return
 					}
-
-				} catch {
-					bytes = data
-					representedClass = .url
-					log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
-					setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+					try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
+					log("      zipped files at url: \(item.absoluteString)")
 					completeIngest()
+
+				} else {
+					let ext = item.pathExtension
+					if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
+						typeIdentifier = uti as String
+					} else {
+						typeIdentifier = kUTTypeData as String
+					}
+					representedClass = .data
+					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
+					let data = (try? Data(contentsOf: item, options: .mappedIfSafe)) ?? Data()
+					handleData(data, resolveUrls: false, storeBytes)
 				}
-			} else {
-				bytes = data
+
+			} catch {
+				if storeBytes {
+					setBytes(data)
+				}
 				representedClass = .url
-				log("      received local file url for non-existent file: \(item.absoluteString)")
+				log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 				completeIngest()
 			}
+		} else {
+			if storeBytes {
+				setBytes(data)
+			}
+			representedClass = .url
+			log("      received local file url for non-existent file: \(item.absoluteString)")
+			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+			completeIngest()
+		}
+	}
+
+	func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
+
+		setTitle(from: url)
+
+		if url.isFileURL {
+			handleFileUrl(url, data, storeBytes)
 
 		} else {
-			bytes = data
-			representedClass = .url
-
-			log("      received remote url: \(item.absoluteString)")
-			setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-			if let s = item.scheme, s.hasPrefix("http") {
-				fetchWebPreview(for: item) { [weak self] title, description, image, isThumbnail in
-					guard let s = self, !s.loadingAborted else { return }
-					s.accessoryTitle = title ?? s.accessoryTitle
-					if let image = image {
-						if image.size.height > 100 || image.size.width > 200 {
-							s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
-						} else {
-							s.setDisplayIcon(image, 30, .center)
-						}
-					}
-					s.completeIngest()
-				}
-			} else {
-				completeIngest()
+			if storeBytes {
+				setBytes(data)
 			}
+			representedClass = .url
+			handleRemoteUrl(url, data, storeBytes)
 		}
 	}
 
