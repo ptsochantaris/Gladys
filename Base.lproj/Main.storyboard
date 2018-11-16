@@ -29,7 +29,7 @@
                                     <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="ArchivedItemCell" id="x5M-NP-dlj" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArchivedItemCell" id="x5M-NP-dlj" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="167" y="10" width="466" height="384"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -37,13 +37,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-e0-eeZ">
-                                                    <rect key="frame" x="8" y="28" width="875" height="481"/>
+                                                    <rect key="frame" x="8" y="28" width="450" height="348"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q51-pA-xfS" userLabel="Top Label Holder">
-                                                            <rect key="frame" x="0.0" y="0.0" width="875" height="13.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="450" height="13.5"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lnk-SW-KkP">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="875" height="13.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="450" height="13.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -57,17 +57,17 @@
                                                             </constraints>
                                                         </view>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="284" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="20.5" width="875" height="419.5"/>
+                                                            <rect key="frame" x="0.0" y="20.5" width="450" height="286.5"/>
                                                             <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Axq-ka-HoY" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="447" width="875" height="13.5"/>
+                                                            <rect key="frame" x="0.0" y="314" width="450" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3H-LC-FOH">
-                                                            <rect key="frame" x="0.0" y="467.5" width="875" height="13.5"/>
+                                                            <rect key="frame" x="0.0" y="334.5" width="450" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -75,22 +75,22 @@
                                                     </subviews>
                                                 </stackView>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" image="iconLock" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
-                                                    <rect key="frame" x="435" y="244.5" width="21" height="28"/>
+                                                    <rect key="frame" x="222.5" y="178" width="21" height="28"/>
                                                 </imageView>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vTt-su-nuo">
-                                                    <rect key="frame" x="435.5" y="248.5" width="20" height="20"/>
+                                                    <rect key="frame" x="223" y="182" width="20" height="20"/>
                                                     <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </activityIndicatorView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="wcA-QO-E6S">
-                                                    <rect key="frame" x="178" y="246" width="535" height="45"/>
+                                                    <rect key="frame" x="93" y="179.5" width="280" height="45"/>
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vTy-88-2LK">
-                                                            <rect key="frame" x="0.0" y="0.0" width="535" height="2"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="280" height="2"/>
                                                             <color key="progressTintColor" red="0.57073712350000005" green="0.0" blue="0.02017655782" alpha="1" colorSpace="calibratedRGB"/>
                                                             <color key="trackTintColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </progressView>
                                                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEc-YZ-ZGZ">
-                                                            <rect key="frame" x="0.0" y="12" width="535" height="33"/>
+                                                            <rect key="frame" x="0.0" y="12" width="280" height="33"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <state key="normal" title="Cancel"/>
                                                             <connections>
@@ -138,26 +138,26 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="f1S-fj-ABq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="891" height="213"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="133"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Gkt-dy-9AE" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="212.5" height="212.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="132.5" height="132.5"/>
                                                             <color key="backgroundColor" red="0.84313725490000002" green="0.83137254900000002" blue="0.80784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Gkt-dy-9AE" secondAttribute="height" multiplier="1:1" id="Yf6-Wu-flU"/>
                                                             </constraints>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Wm-U4-gKl">
-                                                            <rect key="frame" x="214.5" y="0.0" width="676.5" height="213"/>
+                                                            <rect key="frame" x="134.5" y="0.0" width="331.5" height="133"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="FSI-ng-CKW">
-                                                                    <rect key="frame" x="8" y="84.5" width="660.5" height="44.5"/>
+                                                                    <rect key="frame" x="8" y="44.5" width="315.5" height="44.5"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="660.5" height="13.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="315.5" height="13.5"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="660.5" height="13.5"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="315.5" height="13.5"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                                     <nil key="highlightedColor"/>
@@ -171,13 +171,13 @@
                                                                             </constraints>
                                                                         </view>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
-                                                                            <rect key="frame" x="0.0" y="15.5" width="660.5" height="13.5"/>
+                                                                            <rect key="frame" x="0.0" y="15.5" width="315.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
-                                                                            <rect key="frame" x="0.0" y="31" width="660.5" height="13.5"/>
+                                                                            <rect key="frame" x="0.0" y="31" width="315.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
@@ -200,7 +200,7 @@
                                                     </constraints>
                                                 </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kIl-Ti-m4W">
-                                                    <rect key="frame" x="249" y="91" width="393" height="43"/>
+                                                    <rect key="frame" x="36.5" y="51" width="393" height="43"/>
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8qU-wy-3p4">
                                                             <rect key="frame" x="32.5" y="0.0" width="328" height="2"/>
@@ -221,11 +221,11 @@
                                                     </constraints>
                                                 </stackView>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="hg2-Ru-0IH">
-                                                    <rect key="frame" x="29" y="96.5" width="20" height="20"/>
+                                                    <rect key="frame" x="29" y="56.5" width="20" height="20"/>
                                                     <color key="color" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </activityIndicatorView>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="iconLock" translatesAutoresizingMaskIntoConstraints="NO" id="PgL-nd-XcQ">
-                                                    <rect key="frame" x="28.5" y="92.5" width="21" height="28"/>
+                                                    <rect key="frame" x="28.5" y="52.5" width="21" height="28"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
@@ -273,6 +273,11 @@
                         <barButtonItem title="X Items" style="plain" id="2pe-qg-DFG" userLabel="Count Label">
                             <connections>
                                 <action selector="itemsCountSelected:" destination="BYZ-38-t0r" id="qAh-aC-P9P"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem enabled="NO" image="iconShare" style="plain" id="fec-eA-o3L">
+                            <connections>
+                                <action selector="shareButtonSelected:" destination="BYZ-38-t0r" id="B9v-3b-MZJ"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem enabled="NO" title="Delete" image="iconDeleteSmall" id="MyX-3U-Yhw">
@@ -338,6 +343,7 @@
                         <outlet property="labelsButton" destination="rde-vn-hL8" id="JRS-KK-Z2o"/>
                         <outlet property="pasteButton" destination="jsK-Yx-Re8" id="yO8-FE-HnX"/>
                         <outlet property="settingsButton" destination="8HU-04-Ir2" id="0ws-81-FdL"/>
+                        <outlet property="shareButton" destination="fec-eA-o3L" id="cYh-xg-QbD"/>
                         <outlet property="sortAscendingButton" destination="bEM-HJ-RRy" id="9gA-Bf-6pM"/>
                         <outlet property="sortDescendingButton" destination="cRy-CM-Yqa" id="mpJ-GZ-Ff5"/>
                         <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
@@ -1826,7 +1832,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="copySelected:" destination="Ftr-GB-y6U" id="jy0-Qq-38b"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="action" id="3fs-bH-AAg">
+                        <barButtonItem image="iconShare" id="3fs-bH-AAg">
                             <connections>
                                 <action selector="shareSelected:" destination="Ftr-GB-y6U" id="lDI-LE-5zE"/>
                             </connections>
@@ -2872,6 +2878,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="iconLock" width="21" height="28"/>
         <image name="iconPencil" width="24" height="24"/>
         <image name="iconSettings" width="28" height="28"/>
+        <image name="iconShare" width="16" height="22"/>
         <image name="iconSortAscendingSmall" width="22" height="22"/>
         <image name="iconSortDescendingSmall" width="22" height="22"/>
         <image name="iconUserAdd" width="24" height="28"/>

@@ -62,6 +62,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBOutlet private weak var dragModePanel: UIView!
 	@IBOutlet private weak var dragModeButton: UIButton!
 	@IBOutlet private weak var dragModeTitle: UILabel!
+	@IBOutlet private weak var shareButton: UIBarButtonItem!
 
 	static var shared: ViewController!
 
@@ -889,7 +890,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		let c = count == 0 ? itemCount : count
 		if c > 1 {
 			if count > 0 {
-				itemsCount.title = "\(c) Selected:"
+				if view.bounds.size.width <= 320 {
+					itemsCount.title = "\(c) Items"
+				} else {
+					itemsCount.title = "\(c) Selected:"
+				}
 			} else {
 				itemsCount.title = "\(c) Items"
 			}
@@ -908,6 +913,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
 		deleteButton.isEnabled = count > 0
 		editLabelsButton.isEnabled = count > 0
+		shareButton.isEnabled = count > 0
 
 		for item in Model.itemsToReIngest {
 			startBgTaskIfNeeded()
@@ -917,6 +923,19 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
 		collection.isAccessibilityElement = Model.filteredDrops.count == 0
+	}
+
+	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
+		guard let selectedItems = selectedItems else { return }
+		let providers = selectedItems.compactMap { Model.item(uuid: $0)?.itemProviderForSharing }
+		if providers.isEmpty { return }
+		let a = UIActivityViewController(activityItems: providers, applicationActivities: nil)
+		a.completionWithItemsHandler = { [weak self] _, done, _, _ in
+			if done {
+				self?.setEditing(false, animated: true)
+			}
+		}
+		present(a, animated: true)
 	}
 
 	@IBAction private func sortAscendingButtonSelected() {
@@ -968,7 +987,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
 		let selectedCount = (selectedItems?.count ?? 0)
 		if selectedCount > 0 {
-			let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
 			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
 				if let p = a.popoverPresentationController {
@@ -989,7 +1008,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		} else {
 			let itemCount = Model.filteredDrops.count
 			guard itemCount > 0 else { return }
-			let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
 			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
 				if let p = a.popoverPresentationController {
@@ -1216,6 +1235,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				extra = 14
 			}
 		}
+		shareButton.width = (extra > 0) ? (shareButton.image!.size.width + extra) : 0
 		editLabelsButton.width = (extra > 0) ? (editLabelsButton.image!.size.width + extra) : 0
 		deleteButton.width = (extra > 0) ? (deleteButton.image!.size.width + extra) : 0
 		sortAscendingButton.width = (extra > 0) ? (sortAscendingButton.image!.size.width + extra) : 0
@@ -1228,7 +1248,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func deleteButtonSelected(_ sender: UIBarButtonItem) {
 		guard let candidates = selectedItems, candidates.count > 0 else { return }
 
-		let a = UIAlertController(title: "Please Confirm", message: nil, preferredStyle: .actionSheet)
+		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
 		a.addAction(UIAlertAction(title: msg, style: .destructive, handler: { action in
 			if let p = a.popoverPresentationController {

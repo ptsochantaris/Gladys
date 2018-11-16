@@ -296,8 +296,6 @@ final class DetailController: GladysViewController,
 		if item.shareMode == .sharing {
 			title = "You are sharing this item"
 			message = "Deleting it will remove it from others' collections too."
-		} else {
-			title = "Please Confirm"
 		}
 		let a = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
