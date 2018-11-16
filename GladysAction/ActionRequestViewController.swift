@@ -71,8 +71,8 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
 
 		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
-			if let providers = inputItem.attachments {
-				for newItem in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: nil) {
+			for provider in inputItem.attachments ?? [] {
+				for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
 					newItems.append(newItem)
 				}
 			}
