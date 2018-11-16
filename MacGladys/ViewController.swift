@@ -641,12 +641,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 			draggingIndexPaths = nil
 		}
+		session.draggingPasteboard.clearContents() // release promise providers
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {
 		if let s = draggingInfo.draggingSource as? NSCollectionView, s == collectionView, let dip = draggingIndexPaths {
 
-			draggingIndexPaths = nil
+			draggingIndexPaths = nil // protect from internal alt-move
 			if let firstDip = dip.first, firstDip == indexPath {
 				return false
 			}
