@@ -1398,7 +1398,7 @@ Only</string>
                                 </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="a9k-6h-nKz"/>
                             </imageView>
-                            <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
+                            <scrollView wantsLayer="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-hq-TMY">
                                 <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                                 <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" id="cWg-5F-dYQ">
                                     <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
@@ -1425,8 +1425,8 @@ Only</string>
                                     <rect key="frame" x="-100" y="-100" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
-                                    <rect key="frame" x="654" y="22" width="16" height="378"/>
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="omR-nC-4xD">
+                                    <rect key="frame" x="654" y="22" width="16" height="418"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>

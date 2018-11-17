@@ -179,9 +179,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	@IBOutlet private weak var translucentView: NSVisualEffectView!
 
 	override func viewWillAppear() {
-		if let w = view.window {
-			updateCellSize(from: w.frame.size)
-		}
+		handleLayout()
 		updateTitle()
 		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: false)
 
@@ -315,9 +313,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.updateAlwaysOnTop()
 		}
 
+		let a9 = n.addObserver(forName: NSScroller.preferredScrollerStyleDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+			self?.handleLayout()
+		}
+
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a2, a3, a4, a5, a6, a7, a8]
+		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -489,20 +491,36 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	override func viewWillLayout() {
 		super.viewWillLayout()
-		if let f = view.window?.frame.size {
-			updateCellSize(from: f)
-		}
+		handleLayout()
 	}
 
-	private func updateCellSize(from frameSize: NSSize) {
+	private func handleLayout() {
+		guard let window = view.window else { return }
+		let width = window.frame.size.width
 		let baseSize: CGFloat = 180
-		let w = frameSize.width - 10
+		let scrollbarInset: CGFloat
+		if let v = collection.enclosingScrollView?.verticalScroller, v.scrollerStyle == .legacy {
+			scrollbarInset = v.frame.width
+			let minSize = NSSize(width: 190 + scrollbarInset, height: 190)
+			if width < minSize.width {
+				DispatchQueue.main.async {
+					window.setFrame(NSRect(origin: window.frame.origin, size: NSSize(width: minSize.width, height: window.frame.height)), display: false)
+				}
+				return
+			}
+			window.minSize = minSize
+
+		} else {
+			scrollbarInset = 0
+			view.window?.minSize = NSSize(width: 190, height: 190)
+		}
+		let w = width - 10 - scrollbarInset
 		let columns = (w / baseSize).rounded(.down)
 		let leftOver = w.truncatingRemainder(dividingBy: baseSize)
 		let s = ((baseSize - 10) + (leftOver / columns)).rounded(.down)
-		(collection.collectionViewLayout as! NSCollectionViewFlowLayout).itemSize = NSSize(width: s, height: s)
+		(collection.collectionViewLayout as? NSCollectionViewFlowLayout)?.itemSize = NSSize(width: s, height: s)
 	}
-
+	
 	deinit {
 		for o in observers {
 			NotificationCenter.default.removeObserver(o)
