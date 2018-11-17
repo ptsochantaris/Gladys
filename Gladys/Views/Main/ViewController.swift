@@ -543,7 +543,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.largeTitleDisplayMode = .automatic
 		pasteButton.accessibilityLabel = "Paste from clipboard"
-		settingsButton.accessibilityLabel = "Options"
+		settingsButton.accessibilityLabel = "Settings"
+		shareButton.accessibilityLabel = "Share"
 
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
 		dragModePanel.layer.shadowColor = UIColor.black.cgColor
@@ -878,42 +879,44 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		updateEmptyView(animated: true)
 	}
 
+	private func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
+		let colonText = colon && collection.bounds.width > 512 ? ":" : ""
+		itemsCount.title = "\(count) \(text)\(colonText)"
+	}
+
 	private var emptyView: UIImageView?
 	@objc private func didUpdateItems() {
 		editButtonItem.isEnabled = Model.drops.count > 0
 
 		selectedItems = selectedItems?.filter { uuid in Model.drops.contains(where: { $0.uuid == uuid }) }
 
-		let count = (selectedItems?.count ?? 0)
+		let selectedCount = selectedItems?.count ?? 0
+		let someSelected = selectedCount > 0
 
 		let itemCount = Model.filteredDrops.count
-		let c = count == 0 ? itemCount : count
+		let c = someSelected ? selectedCount : itemCount
 		if c > 1 {
-			if count > 0 {
-				if view.bounds.size.width <= 320 {
-					itemsCount.title = "\(c) Items"
-				} else {
-					itemsCount.title = "\(c) Selected:"
-				}
+			if someSelected {
+				setItemCountTitle(c, "Selected", colon: true)
 			} else {
-				itemsCount.title = "\(c) Items"
+				setItemCountTitle(c, "Items", colon: false)
 			}
 		} else if c == 1 {
-			if count > 0 {
-				itemsCount.title = "1 Selected:"
+			if someSelected {
+				setItemCountTitle(1, "Selected", colon: true)
 			} else {
-				itemsCount.title = "1 Item"
+				setItemCountTitle(1, "Item", colon: false)
 			}
 		} else {
 			itemsCount.title = "No Items"
 		}
 		itemsCount.isEnabled = itemCount > 0
 
-		let size = count == 0 ? Model.filteredSizeInBytes : Model.sizeForItems(uuids: selectedItems ?? [])
+		let size = someSelected ? Model.sizeForItems(uuids: selectedItems ?? []) : Model.filteredSizeInBytes
 		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
-		deleteButton.isEnabled = count > 0
-		editLabelsButton.isEnabled = count > 0
-		shareButton.isEnabled = count > 0
+		deleteButton.isEnabled = someSelected
+		editLabelsButton.isEnabled = someSelected
+		shareButton.isEnabled = someSelected
 
 		for item in Model.itemsToReIngest {
 			startBgTaskIfNeeded()
@@ -922,7 +925,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
-		collection.isAccessibilityElement = Model.filteredDrops.count == 0
+		collection.isAccessibilityElement = Model.filteredDrops.isEmpty
 	}
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
@@ -935,6 +938,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				self?.setEditing(false, animated: true)
 			}
 		}
+		a.popoverPresentationController?.barButtonItem = sender
 		present(a, animated: true)
 	}
 
@@ -1214,32 +1218,41 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
+		let font: UIFont
+		let b = collection.bounds.size
+		if b.width > 375 {
+			font = UIFont.preferredFont(forTextStyle: .body)
+		} else if b.width > 320 {
+			let bodyFont = UIFont.preferredFont(forTextStyle: .body)
+			font = bodyFont.withSize(bodyFont.pointSize - 2)
+		} else {
+			font = UIFont.preferredFont(forTextStyle: .caption1)
+		}
+		itemsCount.setTitleTextAttributes([.font: font], for: .normal)
+		totalSizeLabel.setTitleTextAttributes([.font: font], for: .normal)
+
 		let insets = collection.safeAreaInsets
 		let w = insets.left + insets.right
 		let h = insets.top + insets.bottom
-		let b = collection.bounds.size
 		let boundsSize = CGSize(width: b.width - w, height: b.height - h)
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
 
 		calculateItemSize()
-		DispatchQueue.main.async { [weak self] in
-			self?.collection.reloadData()
-		}
 
-		var extra: CGFloat = 0
-		if view.bounds.size.width > 320 {
-			if view.bounds.width >= 512 {
-				extra = 22
-			} else {
-				extra = 14
+		shareButton.width = shareButton.image!.size.width + 22
+		editLabelsButton.width = editLabelsButton.image!.size.width + 22
+		deleteButton.width = deleteButton.image!.size.width + 22
+		sortAscendingButton.width = sortAscendingButton.image!.size.width + 22
+		sortDescendingButton.width = sortDescendingButton.image!.size.width + 22
+
+		DispatchQueue.main.async { [weak self] in
+			guard let s = self else { return }
+			s.collection.reloadData()
+			if s.isEditing {
+				s.didUpdateItems()
 			}
 		}
-		shareButton.width = (extra > 0) ? (shareButton.image!.size.width + extra) : 0
-		editLabelsButton.width = (extra > 0) ? (editLabelsButton.image!.size.width + extra) : 0
-		deleteButton.width = (extra > 0) ? (deleteButton.image!.size.width + extra) : 0
-		sortAscendingButton.width = (extra > 0) ? (sortAscendingButton.image!.size.width + extra) : 0
-		sortDescendingButton.width = (extra > 0) ? (sortDescendingButton.image!.size.width + extra) : 0
 	}
 
 	/////////////////////////////////
