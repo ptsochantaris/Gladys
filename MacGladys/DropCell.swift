@@ -269,6 +269,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
+		n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
 	}
 
 	@objc private func itemModified(_ notification: Notification) {

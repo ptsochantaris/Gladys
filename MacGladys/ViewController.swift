@@ -445,13 +445,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		item.needsReIngest = false
 
-		if let i = Model.filteredDrops.index(of: item) {
-			let ip = IndexPath(item: i, section: 0)
-			collection.reloadItems(at: [ip])
+		if Model.filteredDrops.contains(item) {
 			item.reIndex()
 		} else {
 			item.reIndex {
-				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
+				DispatchQueue.main.async { // if item is invisible after re-indexing, let the user know
 					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt && !item.loadingAborted {
 							genericAlert(title: "Item(s) Added", message: nil)
@@ -731,15 +729,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					}
 				}
 				Model.drops.insert(newItem, at: modelIndex)
+				Model.forceUpdateFilter(signalUpdate: false)
 
-				let finalIndex = IndexPath(item: indexPath.item + count, section: 0)
-				insertedIndexPaths.append(finalIndex)
+				if let visibleIndex = Model.filteredDrops.index(of: newItem) {
+					let finalIndex = IndexPath(item: visibleIndex, section: 0)
+					insertedIndexPaths.append(finalIndex)
+				}
+
 				count += 1
 			}
 		}
 
 		if count > 0 {
-			if Model.forceUpdateFilter(signalUpdate: false) {
+			if insertedIndexPaths.count > 0 {
 				reloadData(inserting: insertedIndexPaths)
 			}
 			return true
