@@ -234,4 +234,18 @@ final class ArchivedDropItem: Codable {
 	func tryOpen(from viewController: NSViewController) {
 		mostRelevantTypeItem?.tryOpen(from: viewController)
 	}
+
+	var eligibleForExternalUpdateCheck: Bool {
+		return !(isDeleting || needsDeletion || needsReIngest || isBeingCreatedBySync || loadingProgress != nil || shareMode == .elsewhereReadOnly)
+	}
+
+	func scanForBlobChanges() -> Bool {
+		var someHaveChanged = false
+		for component in typeItems { // intended: iterate over all over them, not just until the first one
+			if component.scanForBlobChanges() {
+				someHaveChanged = true
+			}
+		}
+		return someHaveChanged
+	}
 }

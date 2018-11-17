@@ -21,8 +21,16 @@ extension Model {
 		syncWithExternalUpdates()
 
 		eventMonitor = CDEvents(urls: [appStorageUrl], block: { _, event in
-			// TODO: optimise to only check UUID/UUID directories
-			if let url = event?.url, let component = typeItem(uuid: url.lastPathComponent), component.scanForBlobChanges(), let parent = component.parent {
+			guard let components = event?.url.pathComponents else { return }
+			let count = components.count
+
+			guard count > 2, components[count-3].hasSuffix(".MacGladys"),
+				let potentialParentUUID = UUID(uuidString: components[count-2]),
+				let potentialComponentUUID = UUID(uuidString: components[count-1])
+				else { return }
+
+			log("Examining potential external update for component \(potentialComponentUUID)")
+			if let parent = item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.typeItems.first(where: { $0.uuid == potentialComponentUUID}), component.scanForBlobChanges() {
 				parent.needsReIngest = true
 				parent.markUpdated()
 				log("Detected a modified component blob, uuid \(component)")
@@ -57,67 +65,4 @@ extension Model {
 	}
 
 	static func saveIndexComplete() {}
-}
-
-extension ArchivedDropItem {
-	func scanForBlobChanges() -> Bool {
-		var someHaveChanged = false
-		for component in typeItems { // intended: iterate over all over them, not just until the first one
-			if component.scanForBlobChanges() {
-				someHaveChanged = true
-			}
-		}
-		return someHaveChanged
-	}
-}
-
-extension ArchivedDropItemType {
-	func scanForBlobChanges() -> Bool {
-		let recordLocation = bytesPath
-		if let blobModification = Model.modificationDate(for: recordLocation) { // blob exists?
-			if let recordedModification = lastGladysBlobUpdate { // we've stamped this
-				if recordedModification < blobModification { // is the file modified after we stamped it?
-					lastGladysBlobUpdate = Date()
-					return true
-				}
-			} else {
-				lastGladysBlobUpdate = Date() // no stamp, migrate, add current date
-			}
-		}
-		return false
-	}
-
-	var lastGladysBlobUpdate: Date? {
-		get {
-			let recordLocation = bytesPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					let length = getxattr(fileSystemPath, "build.bru.Gladys.lastGladysModification", nil, 0, 0, 0)
-					if length > 0 {
-						var data = Data(count: length)
-						let result = data.withUnsafeMutableBytes {
-							getxattr(fileSystemPath, "build.bru.Gladys.lastGladysModification", $0, length, 0, 0)
-						}
-						if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
-							return Date(timeIntervalSinceReferenceDate: time)
-						}
-					}
-					return nil
-				}
-			}
-			return nil
-		}
-		set {
-			let recordLocation = bytesPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					if let data = String(Date().timeIntervalSinceReferenceDate).data(using: .utf8) {
-						_ = data.withUnsafeBytes {
-							setxattr(fileSystemPath, "build.bru.Gladys.lastGladysModification", $0, data.count, 0, 0)
-						}
-					}
-				}
-			}
-		}
-	}
 }

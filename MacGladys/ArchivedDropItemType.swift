@@ -438,4 +438,70 @@ final class ArchivedDropItemType: Codable {
 		canPreviewCache = res
 		return res
 	}
+
+	func scanForBlobChanges() -> Bool {
+		var detectedChange = false
+		dataAccessQueue.sync {
+			let recordLocation = bytesPath
+			let fm = FileManager.default
+			guard fm.fileExists(atPath: recordLocation.path) else { return }
+
+			if let blobModification = Model.modificationDate(for: recordLocation) {
+				if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
+					if recordedModification < blobModification { // is the file modified after we stamped it?
+						lastGladysBlobUpdate = Date()
+						detectedChange = true
+					}
+				} else {
+					lastGladysBlobUpdate = Date() // have modification date but no stamp
+				}
+			} else {
+				let now = Date()
+				try? fm.setAttributes([FileAttributeKey.modificationDate: now], ofItemAtPath: recordLocation.path)
+				lastGladysBlobUpdate = now // no modification date, no stamp
+			}
+		}
+		return detectedChange
+	}
+
+	private static let lastModificationKey = "build.bru.Gladys.lastGladysModification"
+	var lastGladysBlobUpdate: Date? { // be sure to protect with dataAccessQueue
+		get {
+			let recordLocation = bytesPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					let length = getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, nil, 0, 0, 0)
+					if length > 0 {
+						var data = Data(count: length)
+						let result = data.withUnsafeMutableBytes {
+							getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, $0, length, 0, 0)
+						}
+						if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
+							return Date(timeIntervalSinceReferenceDate: time)
+						}
+					}
+					return nil
+				}
+			}
+			return nil
+		}
+		set {
+			let recordLocation = bytesPath
+			if FileManager.default.fileExists(atPath: recordLocation.path) {
+				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
+					if let newValue = newValue {
+						if let data = String(newValue.timeIntervalSinceReferenceDate).data(using: .utf8) {
+							log("Setting external update stamp for \(recordLocation.path) to \(newValue)")
+							_ = data.withUnsafeBytes {
+								setxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, $0, data.count, 0, 0)
+							}
+						}
+					} else {
+						log("Clearing external update stamp for \(recordLocation.path)")
+						removexattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, 0)
+					}
+				}
+			}
+		}
+	}
 }
