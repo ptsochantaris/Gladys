@@ -13,14 +13,14 @@ import Cocoa
 #endif
 import CloudKit
 
-class CKRecordCacheEntry {
+final class CKRecordCacheEntry {
 	let record: CKRecord?
 	init(record: CKRecord?) {
 		self.record = record
 	}
 }
 
-class CKShareCacheEntry {
+final class CKShareCacheEntry {
 	let share: CKShare?
 	init(share: CKShare?) {
 		self.share = share
