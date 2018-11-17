@@ -553,7 +553,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			resetSearch(andLabels: false)
 		} else {
 			showSearch = true
-			view.window?.makeFirstResponder(searchBar)
+			DispatchQueue.main.async {
+				self.view.window?.makeFirstResponder(self.searchBar)
+			}
 		}
 	}
 
