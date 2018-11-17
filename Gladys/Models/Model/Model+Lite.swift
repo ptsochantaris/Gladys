@@ -213,7 +213,9 @@ extension Model {
 		}
 	}
 
-	static func commitExistingItemWithoutLoading(_ item: ArchivedDropItem) {
+	static func commitExistingItemsWithoutLoading(_ items: [ArchivedDropItem]) {
+		if items.isEmpty { return }
+
 		if brokenMode {
 			log("Ignoring commit operation, model is broken, app needs restart.")
 			return
@@ -228,7 +230,9 @@ extension Model {
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 			let jsonEncoder = JSONEncoder()
 			do {
-				try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
+				for item in items {
+					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
+				}
 			} catch {
 				closureError = error as NSError
 			}

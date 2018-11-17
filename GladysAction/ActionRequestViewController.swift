@@ -20,6 +20,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
 	private var loadCount = 0
+	private var ingestCount = 0
 	private var firstAppearance = true
 	private var newItems = [ArchivedDropItem]()
 	private var uploadObservation: NSKeyValueObservation?
@@ -101,6 +102,8 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			}
 		}
 
+		ingestCount = newItems.count
+
 		if PersistedOptions.darkMode {
 			image.alpha = 0.7
 			background.image = nil
@@ -145,8 +148,8 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	}
 
 	func itemIngested(item: ArchivedDropItem) {
-		loadCount -= 1
-		if loadCount == 0 {
+		ingestCount -= 1
+		if ingestCount == 0 {
 			commit(uploadAfterSave: CloudManager.shareActionShouldUpload)
 		}
 	}
@@ -165,13 +168,17 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		statusLabel.text = "Saving..."
 		let newItemIds = newItems.map { $0.uuid.uuidString }
 		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
+		var itemsToCommit = [ArchivedDropItem]()
+		var itemsToInsert = [ArchivedDropItem]()
 		for item in newItems {
 			if Model.drops.contains(item) {
-				Model.commitExistingItemWithoutLoading(item)
+				itemsToCommit.append(item)
 			} else {
-				Model.insertNewItemsWithoutLoading(items: [item], addToDrops: true)
+				itemsToInsert.append(item)
 			}
 		}
+		Model.commitExistingItemsWithoutLoading(itemsToCommit)
+		Model.insertNewItemsWithoutLoading(items: itemsToInsert, addToDrops: true)
 
 		if !uploadAfterSave {
 			sharingDone(error: nil)
