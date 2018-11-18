@@ -64,7 +64,6 @@
 		1611486B209FBC79008BB332 /* MacGladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 1611486A209FBC79008BB332 /* MacGladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
-		161718CB2094D334005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161718CA2094D334005ABD6C /* Assets.xcassets */; };
 		161718CE2094D334005ABD6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161718CC2094D334005ABD6C /* Main.storyboard */; };
 		161718D52094D6AC005ABD6C /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D42094D6AC005ABD6C /* ArchivedDropItem.swift */; };
 		161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */; };
@@ -120,6 +119,7 @@
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
+		16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		164947CF20BEAA6200BD1BEB /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 164947CE20BEAA6200BD1BEB /* icon.icns */; };
 		164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947D020BEAA6200BD1BEB /* ShareViewController.swift */; };
 		164947D420BEAA6200BD1BEB /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 164947D220BEAA6200BD1BEB /* ShareViewController.xib */; };
@@ -143,7 +143,6 @@
 		1657B8AD1FD41C1C00EC480D /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1657B8AC1FD41C1C00EC480D /* Messages.framework */; };
 		1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */; };
 		1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */; };
-		1657B8B51FD41C1C00EC480D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1657B8B41FD41C1C00EC480D /* Assets.xcassets */; };
 		1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		1657B8BE1FD41E6700EC480D /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
@@ -237,7 +236,6 @@
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */; };
-		16A4E7F81FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7F71FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; };
 		16A4E8091FBB963500D60596 /* ItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E8081FBB963500D60596 /* ItemController.swift */; };
 		16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */; };
@@ -592,7 +590,6 @@
 		161718C42094D333005ABD6C /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161718C62094D333005ABD6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		161718C82094D333005ABD6C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		161718CA2094D334005ABD6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		161718CD2094D334005ABD6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		161718CF2094D334005ABD6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		161718D02094D334005ABD6C /* MacGladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladys.entitlements; sourceTree = "<group>"; };
@@ -643,7 +640,6 @@
 		1657B8AC1FD41C1C00EC480D /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
 		1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		1657B8B21FD41C1C00EC480D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		1657B8B41FD41C1C00EC480D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1657B8B61FD41C1C00EC480D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1657B8C21FD4248800EC480D /* GladysMessage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysMessage.entitlements; sourceTree = "<group>"; };
 		1657B8C31FD4329300EC480D /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
@@ -719,7 +715,6 @@
 		16A4E7E71FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "GladysWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		16A4E7F71FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		16A4E7F91FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A4E8081FBB963500D60596 /* ItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemController.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
@@ -1042,7 +1037,6 @@
 				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
 				16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */,
-				161718CA2094D334005ABD6C /* Assets.xcassets */,
 				161718CF2094D334005ABD6C /* Info.plist */,
 				161718D02094D334005ABD6C /* MacGladys.entitlements */,
 				161718CC2094D334005ABD6C /* Main.storyboard */,
@@ -1128,7 +1122,6 @@
 				1657B8C31FD4329300EC480D /* MessageCell.swift */,
 				1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */,
 				1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */,
-				1657B8B41FD41C1C00EC480D /* Assets.xcassets */,
 				1657B8B61FD41C1C00EC480D /* Info.plist */,
 			);
 			path = GladysMessage;
@@ -1243,7 +1236,6 @@
 				16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */,
 				16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */,
 				16A4E8081FBB963500D60596 /* ItemController.swift */,
-				16A4E7F71FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7F91FBB844A00D60596 /* Info.plist */,
 			);
 			path = "GladysWatch Extension";
@@ -1878,7 +1870,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				161718CB2094D334005ABD6C /* Assets.xcassets in Resources */,
 				168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */,
 				161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */,
 				168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */,
@@ -1924,7 +1915,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1657B8B51FD41C1C00EC480D /* Assets.xcassets in Resources */,
+				16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */,
 				1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1978,7 +1969,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A4E7F81FBB844A00D60596 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2759,7 +2749,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 787EBF1A50EB25D2C0F7EB31 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -2788,7 +2778,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -2875,7 +2865,7 @@
 		1657B8BA1FD41C1C00EC480D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Messages";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
@@ -2901,7 +2891,7 @@
 		1657B8BB1FD41C1C00EC480D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Messages";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
@@ -3037,7 +3027,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 830AF4B32245C358B4C1156F /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3216,7 +3206,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BCB1F62DCC7BDC22E0AE4831 /* Pods-Gladys.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
