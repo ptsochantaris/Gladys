@@ -496,31 +496,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func handleLayout() {
 		guard let window = view.window else { return }
-		let width = window.frame.size.width
-		let baseSize: CGFloat = 180
+
 		let scrollbarInset: CGFloat
 		if let v = collection.enclosingScrollView?.verticalScroller, v.scrollerStyle == .legacy {
 			scrollbarInset = v.frame.width
-			let minSize = NSSize(width: 190 + scrollbarInset, height: 190)
-			if width < minSize.width {
-				DispatchQueue.main.async {
-					window.setFrame(NSRect(origin: window.frame.origin, size: NSSize(width: minSize.width, height: window.frame.height)), display: false)
-				}
-				return
-			}
-			window.minSize = minSize
-
 		} else {
 			scrollbarInset = 0
-			view.window?.minSize = NSSize(width: 190, height: 190)
 		}
-		let w = width - 10 - scrollbarInset
+
+		var currentWidth = window.frame.size.width
+		let newMinSize = NSSize(width: 190 + scrollbarInset, height: 190)
+		let previousMinSize = window.minSize
+		if previousMinSize != newMinSize {
+			window.minSize = newMinSize
+			if currentWidth < newMinSize.width || currentWidth == previousMinSize.width { // conform to new minimum width as we're already at minimum size
+				currentWidth = newMinSize.width
+				window.setFrame(NSRect(origin: window.frame.origin, size: NSSize(width: currentWidth, height: window.frame.height)), display: false)
+			}
+		}
+
+		let baseSize: CGFloat = 180
+		let w = currentWidth - 10 - scrollbarInset
 		let columns = (w / baseSize).rounded(.down)
 		let leftOver = w.truncatingRemainder(dividingBy: baseSize)
 		let s = ((baseSize - 10) + (leftOver / columns)).rounded(.down)
 		(collection.collectionViewLayout as? NSCollectionViewFlowLayout)?.itemSize = NSSize(width: s, height: s)
 	}
-	
+
 	deinit {
 		for o in observers {
 			NotificationCenter.default.removeObserver(o)
