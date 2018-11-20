@@ -24,11 +24,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 		}
 	}
 
-	private static func save(item: ArchivedDropItem, completion: (()->Void)? = nil) {
+	private static func save(item: ArchivedDropItem) {
 		loadQueue.sync {
 			Model.commitExistingItemsWithoutLoading([item])
 			shouldCheck = true
-			completion?()
 		}
 	}
 
@@ -246,9 +245,8 @@ final class FileProviderExtension: NSFileProviderExtension {
 				} else {
 					item.needsDeletion = true
 				}
-				FileProviderExtension.save(item: item) {
-					completionHandler(nil)
-				}
+				FileProviderExtension.save(item: item)
+				completionHandler(nil)
 			} else {
 				completionHandler(NSFileProviderError(.noSuchItem))
 			}

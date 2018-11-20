@@ -141,7 +141,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			loadingItem.cancelIngest()
 		}
 
-		resetExtension()
+		shutdownExtension()
 
 		let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
 		extensionContext?.cancelRequest(withError: error)
@@ -150,22 +150,23 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	func itemIngested(item: ArchivedDropItem) {
 		ingestCount -= 1
 		if ingestCount == 0 {
-			commit(uploadAfterSave: CloudManager.shareActionShouldUpload)
+			commit()
 		}
 	}
 
-	private func commit(uploadAfterSave: Bool) {
+	private func commit() {
 		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
 		Model.reIndexWithoutLoading(items: newItems) {
 			DispatchQueue.main.async { [weak self] in
-				self?.save(uploadAfterSave: uploadAfterSave)
+				self?.save()
 			}
 		}
 	}
 
-	private func save(uploadAfterSave: Bool) {
+	private func save() {
 		statusLabel.text = "Saving..."
+		let uploadAfterSave = CloudManager.shareActionShouldUpload
 		let newItemIds = newItems.map { $0.uuid.uuidString }
 		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
 		var itemsToCommit = [ArchivedDropItem]()
@@ -204,7 +205,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		if let error = error {
 			log("Error while sending up items from extension: \(error.finalDescription)")
 		}
-		log("Action done")
+		log("Sharing done")
 		if PersistedOptions.setLabelsWhenActioning {
 			statusLabel.isHidden = true
 			labelsButton.isHidden = false
@@ -219,14 +220,14 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
 	}
 
-	private func resetExtension() {
+	private func shutdownExtension() {
 		firstAppearance = true
 		newItems.removeAll()
 		Model.reset()
 	}
 
 	@objc private func done() {
-		resetExtension()
+		shutdownExtension()
 		DispatchQueue.main.async { [weak self] in
 			self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
@@ -239,9 +240,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			Model.reloadDataIfNeeded()
 			var labels = Set<String>()
 			for item in newItems {
-				for l in item.labels {
-					labels.insert(l)
-				}
+				labels.formUnion(item.labels)
 			}
 			destination.selectedLabels = Array(labels)
 			destination.completion = { [weak self] newLabels in
@@ -262,7 +261,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			navigationItem.rightBarButtonItem = nil
 			labelsButton.isHidden = true
 			statusLabel.isHidden = false
-			commit(uploadAfterSave: true)
+			commit()
 		}
 	}
 }

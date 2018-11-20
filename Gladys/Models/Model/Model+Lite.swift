@@ -192,6 +192,8 @@ extension Model {
 
 				let jsonEncoder = JSONEncoder()
 				for item in items {
+					item.isBeingCreatedBySync = false
+					item.needsSaving = false
 					let u = item.uuid
 					let t = u.uuid
 					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
@@ -202,9 +204,7 @@ extension Model {
 			} catch {
 				closureError = error as NSError
 			}
-			if let dataModified = modificationDate(for: url) {
-				dataFileLastModified = dataModified
-			}
+			// do not update last modified date, as there may be external changes that need to be loaded additionally later as well
 		}
 		if let e = coordinationError ?? closureError {
 			log("Error inserting new item into saved data store: \(e.localizedDescription)")
@@ -231,14 +231,14 @@ extension Model {
 			let jsonEncoder = JSONEncoder()
 			do {
 				for item in items {
+					item.needsSaving = false
+					item.isBeingCreatedBySync = false
 					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
 				}
 			} catch {
 				closureError = error as NSError
 			}
-			if let dataModified = modificationDate(for: url) {
-				dataFileLastModified = dataModified
-			}
+			// do not update last modified date, as there may be external changes that need to be loaded additionally later as well
 		}
 		if let e = coordinationError ?? closureError {
 			log("Error updating item in saved data store: \(e.localizedDescription)")
