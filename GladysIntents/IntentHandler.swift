@@ -100,8 +100,10 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 
 	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
-		for newItem in ArchivedDropItem.importData(providers: itemProviders, delegate: self, overrides: nil) {
-			newItems.append(newItem)
+		for provider in itemProviders {
+			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
+				newItems.append(newItem)
+			}
 		}
 	}
 

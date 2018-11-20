@@ -748,33 +748,36 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			return .tooManyItems
 		}
 
-		for item in ArchivedDropItem.importData(providers: providers, delegate: self, overrides: overrides) {
+		for provider in providers { // separate item for each provider in the pasteboard
+			for item in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides) {
 
-			if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-				item.labels = Model.enabledLabelsForItems
+				if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+					item.labels = Model.enabledLabelsForItems
+				}
+
+				let destinationIndexPath = IndexPath(item: 0, section: 0)
+
+				var itemVisiblyInserted = false
+				collection.performBatchUpdates({
+					Model.drops.insert(item, at: 0)
+					Model.forceUpdateFilter(signalUpdate: false)
+					itemVisiblyInserted = Model.filteredDrops.contains(item)
+					if itemVisiblyInserted {
+						collection.insertItems(at: [destinationIndexPath])
+						collection.isAccessibilityElement = false
+					}
+				}, completion: { finished in
+					if itemVisiblyInserted {
+						self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
+						self.mostRecentIndexPathActioned = destinationIndexPath
+					}
+					self.focusInitialAccessibilityElement()
+				})
+
+				updateEmptyView(animated: true)
 			}
-
-			let destinationIndexPath = IndexPath(item: 0, section: 0)
-
-			var itemVisiblyInserted = false
-			collection.performBatchUpdates({
-				Model.drops.insert(item, at: 0)
-				Model.forceUpdateFilter(signalUpdate: false)
-				itemVisiblyInserted = Model.filteredDrops.contains(item)
-				if itemVisiblyInserted {
-					collection.insertItems(at: [destinationIndexPath])
-					collection.isAccessibilityElement = false
-				}
-			}, completion: { finished in
-				if itemVisiblyInserted {
-					self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
-					self.mostRecentIndexPathActioned = destinationIndexPath
-				}
-				self.focusInitialAccessibilityElement()
-			})
-
-			updateEmptyView(animated: true)
 		}
+
 		startBgTaskIfNeeded()
 		return .success
 	}
