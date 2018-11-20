@@ -90,11 +90,11 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			}
 		}
 
-		if allDifferentTypes { // composite item, leave it up to the user's settings
+		if allDifferentTypes { // posibly this is a composite item, leave it up to the user's settings
 			for newItem in ArchivedDropItem.importData(providers: providerList, delegate: self, overrides: nil) {
 				newItems.append(newItem)
 			}
-		} else { // list of items of similar type, always import separately
+		} else { // list of items shares common types, let's assume they are multiple items per provider
 			for provider in providerList {
 				for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
 					newItems.append(newItem)
