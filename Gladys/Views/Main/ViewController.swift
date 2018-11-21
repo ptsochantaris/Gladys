@@ -646,6 +646,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
 
+	deinit {
+		Model.doneMonitoringChanges()
+	}
+
 	func donatePasteIntent() {
 		if #available(iOS 12.0, *) {
 			let intent = PasteClipboardIntent()

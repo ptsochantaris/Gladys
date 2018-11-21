@@ -208,16 +208,29 @@ extension Model {
 	static func saveIndexComplete() {
 		watchDelegate?.updateContext()
 	}
-	
+
+	private static var foregroundObserver: NSObjectProtocol?
+	private static var backgroundObserver: NSObjectProtocol?
+
 	static func beginMonitoringChanges() {
 		let n = NotificationCenter.default
-		n.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { _ in
+		foregroundObserver = n.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { _ in
 			foregrounded()
 		}
-		n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { _ in
+		backgroundObserver = n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { _ in
 			backgrounded()
 		}
 		foregrounded()
+	}
+
+	static func doneMonitoringChanges() {
+		let n = NotificationCenter.default
+		if let foregroundObserver = foregroundObserver {
+			n.removeObserver(foregroundObserver)
+		}
+		if let backgroundObserver = backgroundObserver {
+			n.removeObserver(backgroundObserver)
+		}
 	}
 
 	private static let filePresenter = ModelFilePresenter()
