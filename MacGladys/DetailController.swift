@@ -366,7 +366,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	private func copy(item: ArchivedDropItemType) {
 		let p = NSPasteboard.general
 		p.clearContents()
-		p.writeObjects([item.pasteboardItem])
+		p.writeObjects([item.pasteboardItem(forDrag: false)])
 	}
 
 	private func delete(at index: Int) {
@@ -575,7 +575,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return item.typeItems[indexPath.item].pasteboardItem
+		return item.typeItems[indexPath.item].pasteboardItem(forDrag: true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {

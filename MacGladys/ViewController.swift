@@ -129,7 +129,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	}
 
 	func writeSelection(to pboard: NSPasteboard, types: [NSPasteboard.PasteboardType]) -> Bool {
-		let objectsToWrite = actionableSelectedItems.compactMap { $0.pasteboardItem }
+		let objectsToWrite = actionableSelectedItems.compactMap { $0.pasteboardItem(forDrag: false) }
 		if objectsToWrite.isEmpty {
 			return false
 		} else {
@@ -634,7 +634,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return Model.filteredDrops[indexPath.item].pasteboardItem
+		return Model.filteredDrops[indexPath.item].pasteboardItem(forDrag: true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
@@ -973,7 +973,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let g = NSPasteboard.general
 		g.clearContents()
 		for item in collection.actionableSelectedItems {
-			if let pi = item.pasteboardItem {
+			if let pi = item.pasteboardItem(forDrag: false) {
 				g.writeObjects([pi])
 			}
 		}
