@@ -75,6 +75,6 @@ struct CallbackSupport {
 	@discardableResult
 	static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Bool {
 		let p = NSItemProvider(object: object)
-		return ViewController.shared.addItems(itemProviders: [p], name: object.description, indexPath: IndexPath(item: 0, section: 0), overrides: overrides)
+		return ViewController.shared.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides)
 	}
 }

@@ -141,19 +141,19 @@ final class ArchivedDropItem: Codable {
 		}
 	}
 
-	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?, pasteboardName: String? = nil) -> [ArchivedDropItem] {
+	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides, pasteboardName: pasteboardName)
+					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
 					res.append(item)
 				}
 			}
 			return res
 
 		} else {
-			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides, pasteboardName: pasteboardName)
+			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
 			return [item]
 		}
 	}
@@ -161,12 +161,12 @@ final class ArchivedDropItem: Codable {
 	var loadCount = 0
 	weak var delegate: ItemIngestionDelegate?
 
-	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?, pasteboardName: String? = nil) {
+	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
 
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
-		suggestedName = pasteboardName
+		suggestedName = nil
 		needsReIngest = false // do not display cancel button, this is an original ingest
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""
