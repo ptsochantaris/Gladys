@@ -24,10 +24,10 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		if let d = delegate {
 			delegate = nil
 			d.itemIngested(item: self)
-			#if MAC || MAINAPP
-			NotificationCenter.default.post(name: .IngestComplete, object: self)
-			#endif
 		}
+		#if MAC || MAINAPP
+		NotificationCenter.default.post(name: .IngestComplete, object: self)
+		#endif
 	}
 
 	func cancelIngest() {

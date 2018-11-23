@@ -218,8 +218,8 @@ final class ArchivedDropItem: Codable {
 	func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting? {
 		if typeItems.isEmpty { return nil }
 
-		if let t = typeItemForFileDrop {
-			return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: typeItems, forDrag: forDrag)
+		if forDrag, let t = typeItemForFileDrop {
+			return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: typeItems)
 		} else {
 			let pi = NSPasteboardItem()
 			typeItems.forEach { $0.add(to: pi) }

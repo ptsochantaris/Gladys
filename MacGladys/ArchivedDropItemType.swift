@@ -423,7 +423,13 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting {
-		return GladysFilePromiseProvider.provider(for: self, with: oneTitle, extraItems: [self], forDrag: forDrag)
+		if forDrag {
+			return GladysFilePromiseProvider.provider(for: self, with: oneTitle, extraItems: [self])
+		} else {
+			let pi = NSPasteboardItem()
+			add(to: pi)
+			return pi
+		}
 	}
 
 	var quickLookItem: PreviewItem {

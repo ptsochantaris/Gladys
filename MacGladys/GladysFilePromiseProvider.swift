@@ -10,17 +10,15 @@ import Cocoa
 
 final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
-	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType], forDrag: Bool) -> GladysFilePromiseProvider {
+	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType]) -> GladysFilePromiseProvider {
 		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
 		let tempPath = component.bytesPath.deletingLastPathComponent().appendingPathComponent(title)
 
 		let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath)
 
 		let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate)
-		if forDrag {
-			p.component = component
-			p.tempPath = tempPath
-		}
+		p.component = component
+		p.tempPath = tempPath
 		p.strongDelegate = delegate
 		p.extraItems = extraItems
 		return p
