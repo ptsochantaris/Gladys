@@ -146,15 +146,13 @@ final class ArchivedDropItem: Codable {
 			var res = [ArchivedDropItem]()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
-					res.append(item)
+					res.append(ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides))
 				}
 			}
 			return res
 
 		} else {
-			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
-			return [item]
+			return [ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)]
 		}
 	}
 

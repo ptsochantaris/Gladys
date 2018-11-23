@@ -6,7 +6,11 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 	static func sanitised(_ idenitfiers: [String]) -> [String] {
 		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", ".persisted"]
 		return idenitfiers.filter { typeIdentifier in
-			!blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) })
+			#if os(OSX) // TODO: perhaps do this on iOS too?
+			let cfid = typeIdentifier as CFString
+			if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
+			#endif
+			return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
 		}
 	}
 
@@ -83,10 +87,6 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 
 			var order = 0
 			for typeIdentifier in identifiers {
-				#if os(OSX) // TODO: perhaps do this on iOS too?
-				let cfid = typeIdentifier as CFString
-				if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { continue }
-				#endif
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
 					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
 					order += 1
