@@ -190,4 +190,22 @@ extension Model {
 			}
 		}
 	}
+
+	static func trimTemporaryDirectory() {
+		do {
+			let fm = FileManager.default
+			let contents = try fm.contentsOfDirectory(atPath: temporaryDirectoryUrl.path)
+			let now = Date()
+			for name in contents {
+				let path = temporaryDirectoryUrl.appendingPathComponent(name).path
+				let attributes = try fm.attributesOfItem(atPath: path)
+				if let accessDate = (attributes[FileAttributeKey.modificationDate] ?? attributes[FileAttributeKey.creationDate]) as? Date, now.timeIntervalSince(accessDate) > 3600 {
+					log("Temporary directory entry is old, will trim: \(path)")
+					try? fm.removeItem(atPath: path)
+				}
+			}
+		} catch {
+			log("Error trimming temporary directory: \(error.localizedDescription)")
+		}
+	}
 }

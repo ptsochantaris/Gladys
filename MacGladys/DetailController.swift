@@ -601,6 +601,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
 		draggingIndexPaths = nil
+		session.draggingPasteboard.clearContents() // release promise providers
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, acceptDrop draggingInfo: NSDraggingInfo, indexPath: IndexPath, dropOperation: NSCollectionView.DropOperation) -> Bool {

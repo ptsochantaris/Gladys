@@ -12,7 +12,7 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
 	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType]) -> GladysFilePromiseProvider {
 		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
-		let tempPath = component.bytesPath.deletingLastPathComponent().appendingPathComponent(title)
+		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
 
 		let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath)
 
@@ -38,13 +38,6 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 			types.append(fileURLType)
 		}
 		return types
-	}
-
-	deinit {
-		let fm = FileManager.default
-		if let tempPath = tempPath, fm.fileExists(atPath: tempPath.path) {
-			try? fm.removeItem(at: tempPath)
-		}
 	}
 
 	public override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
@@ -113,6 +106,8 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 extension ArchivedDropItemType {
 	func writeBytes(to destinationUrl: URL) throws {
 
+		Model.trimTemporaryDirectory()
+
 		let bytesToWrite: Data?
 
 		if isWebURL, let s = encodedUrl {
@@ -121,8 +116,12 @@ extension ArchivedDropItemType {
 			bytesToWrite = dataForWrappedItem
 		}
 
+		let directory = destinationUrl.deletingLastPathComponent()
+
 		let fm = FileManager.default
-		if fm.fileExists(atPath: destinationUrl.path) {
+		if !fm.fileExists(atPath: directory.path) {
+			try fm.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+		} else if fm.fileExists(atPath: destinationUrl.path) {
 			try fm.removeItem(at: destinationUrl)
 		}
 

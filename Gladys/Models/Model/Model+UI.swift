@@ -174,6 +174,7 @@ extension Model {
 
 	static func startupComplete() {
 		rebuildLabels()
+		trimTemporaryDirectory()
 
 		if WCSession.isSupported() {
 			watchDelegate = WatchDelegate()

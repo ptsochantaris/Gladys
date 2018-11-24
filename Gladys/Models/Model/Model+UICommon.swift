@@ -570,6 +570,7 @@ extension Model {
 						}
 						nextSaveCallbacks = nil
 					}
+					trimTemporaryDirectory()
 					signalFileProvider()
 					saveComplete()
 				}

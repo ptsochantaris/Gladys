@@ -14,6 +14,7 @@ extension Model {
 
 	static func startupComplete() {
 		rebuildLabels()
+		trimTemporaryDirectory()
 	}
 
 	private static var eventMonitor: CDEvents?
