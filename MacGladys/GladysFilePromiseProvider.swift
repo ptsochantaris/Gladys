@@ -20,7 +20,7 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 		p.component = component
 		p.tempPath = tempPath
 		p.strongDelegate = delegate
-		p.extraItems = extraItems
+		p.extraItems = extraItems.filter { $0.typeIdentifier != "public.file-url" }
 		return p
 	}
 
@@ -33,9 +33,8 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 		var types = super.writableTypes(for: pasteboard)
 		let newItems = (extraItems ?? []).map { NSPasteboard.PasteboardType($0.typeIdentifier) }
 		types.insert(contentsOf: newItems, at: 0)
-		let fileURLType = NSPasteboard.PasteboardType(rawValue: "public.file-url")
-		if !types.contains(fileURLType), tempPath != nil {
-			types.append(fileURLType)
+		if tempPath != nil {
+			types.append(NSPasteboard.PasteboardType(rawValue: "public.file-url"))
 		}
 		return types
 	}
@@ -110,7 +109,7 @@ extension ArchivedDropItemType {
 
 		let bytesToWrite: Data?
 
-		if isWebURL, let s = encodedUrl {
+		if let s = encodedUrl {
 			bytesToWrite = s.urlFileContent
 		} else {
 			bytesToWrite = dataForWrappedItem
