@@ -20,7 +20,7 @@ class DimView: UIView, UIDropInteractionDelegate {
 			backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.09902076199)
 		}
 		alpha = 0
-		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
 			self.alpha = 1
 		}, completion: nil)
 	}
@@ -34,7 +34,7 @@ class DimView: UIView, UIDropInteractionDelegate {
 		ViewController.shared.resetForDragEntry(session: session)
 	}
 	func dismiss() {
-		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseIn, animations: {
 			self.alpha = 0
 		}, completion: { finished in
 			self.removeFromSuperview()

@@ -48,6 +48,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		super.viewDidLoad()
 		arrayMode = propertyList is [Any]
 		table.tableFooterView = UIView(frame: .zero)
+		doneLocation = .right
 	}
 
 	override func darkModeChanged() {

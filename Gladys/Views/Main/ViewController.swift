@@ -383,11 +383,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		if dimView == nil {
 			let d = DimView()
-			navigationController?.view.cover(with: d)
+			popoverPresentationController.presentingViewController.view.cover(with: d)
+			popoverPresentationController.passthroughViews = [d]
 			dimView = d
-			if !(navigationItem.searchController?.isActive ?? false) {
-				popoverPresentationController.passthroughViews = [d]
-			}
 		}
 	}
 
@@ -1300,7 +1298,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	private var firstPresentedNavigationController: UINavigationController? {
-		let v = presentedViewController?.presentedViewController?.presentedViewController ?? presentedViewController?.presentedViewController ?? presentedViewController
+		let v = navigationController?.presentedViewController ??  presentedViewController?.presentedViewController?.presentedViewController ?? presentedViewController?.presentedViewController ?? presentedViewController
 		if let v = v as? UINavigationController {
 			return v
 		} else if let v = v as? UITabBarController {
@@ -1326,7 +1324,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	private var firstPresentedAlertController: UIAlertController? {
-		return presentedViewController as? UIAlertController
+		return (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
 	}
 
 	func dismissAnyPopOver(completion: (()->Void)? = nil) {

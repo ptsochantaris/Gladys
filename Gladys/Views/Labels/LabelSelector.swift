@@ -41,6 +41,22 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			searchController.hidesNavigationBarDuringPresentation = false
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
+
+			if PersistedOptions.darkMode {
+				table.separatorColor = .gray
+				if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+					DispatchQueue.main.async {
+						t.textColor = .lightGray
+					}
+				}
+			} else {
+				if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+					DispatchQueue.main.async {
+						t.textColor = .darkText
+					}
+				}
+			}
+
 		}
 
 		table.tableFooterView = UIView()
