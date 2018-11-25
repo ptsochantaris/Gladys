@@ -156,6 +156,7 @@
 		1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */; };
 		165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		165A567F218EE52900E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
+		165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A8F0821AA92D300405701 /* PlistEditor.swift */; };
 		166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
@@ -645,6 +646,7 @@
 		1657B8C31FD4329300EC480D /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		1657B8C51FD4381700EC480D /* ArchivedDropItem+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Messages.swift"; sourceTree = "<group>"; };
 		1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepPressGestureRecognizer.swift; sourceTree = "<group>"; };
+		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
 		166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		167573FF1F12C22500385079 /* GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -952,6 +954,7 @@
 				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
 				16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */,
+				165A8F0821AA92D300405701 /* PlistEditor.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -2436,6 +2439,7 @@
 				16C8166720CB0354001C12DF /* PullState.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */,
 				1602F31D2030E53D0036E2B0 /* FileManager+Extensions.swift in Sources */,
+				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				16F2990720CBEF30005DE3AD /* PushState.swift in Sources */,
 				1651117E2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift in Sources */,

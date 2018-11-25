@@ -24,7 +24,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 
 	@IBOutlet private weak var bottomDistance: NSLayoutConstraint!
 	@IBOutlet private weak var textView: UITextView!
-	
+	@IBOutlet private weak var backgroundView: UIImageView!
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneLocation = .right
@@ -52,6 +53,12 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
+	}
+
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		backgroundView.image = (ViewController.shared.itemView.backgroundView as! UIImageView).image
+		textView.textColor = PersistedOptions.darkMode ? UIColor.lightGray : UIColor.darkText
 	}
 
 	@objc private func keyboardHiding(_ notification: Notification) {

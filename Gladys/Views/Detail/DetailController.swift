@@ -424,10 +424,32 @@ final class DetailController: GladysViewController,
 		}
 	}
 
+	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
+		if component.bytes?.isPlist == true {
+			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
+			a.addAction(UIAlertAction(title: "Property List View", style: .default, handler: { _ in
+				self.performSegue(withIdentifier: "plistEdit", sender: component)
+			}))
+			a.addAction(UIAlertAction(title: "Raw Data View", style: .default, handler: { _ in
+				self.performSegue(withIdentifier: "hexEdit", sender: component)
+			}))
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			if let p = a.popoverPresentationController {
+				p.sourceView = cell.inspectButton
+				p.sourceRect = cell.inspectButton.bounds
+			}
+			present(a, animated: true)
+		} else {
+			performSegue(withIdentifier: "hexEdit", sender: component)
+		}
+	}
+
 	private func setCallbacks(for cell: DetailCell, for typeEntry: ArchivedDropItemType) {
 
-		cell.inspectionCallback = { [weak self] in
-			self?.performSegue(withIdentifier: "hexEdit", sender: typeEntry)
+		cell.inspectionCallback = { [weak cell, weak self] in
+			if let s = self, let c = cell {
+				s.checkInspection(for: typeEntry, in: c)
+			}
 		}
 
 		let readWrite = item.shareMode != .elsewhereReadOnly
@@ -456,8 +478,8 @@ final class DetailController: GladysViewController,
 		}
 
 		if typeEntry.canPreview {
-			cell.viewCallback = { [weak self] in
-				guard let s = self else { return }
+			cell.viewCallback = { [weak self, weak cell] in
+				guard let s = self, let c = cell else { return }
 				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
 					let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.image == nil }
 					guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
@@ -467,7 +489,7 @@ final class DetailController: GladysViewController,
 					let n = QLHostingViewController(rootViewController: q)
 					n.relatedItem = s.item
 					n.relatedChildItem = typeEntry
-					n.sourceItemView = cell
+					n.sourceItemView = c
 					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
 					ViewController.top.present(n, animated: true)
 				}
@@ -579,6 +601,15 @@ final class DetailController: GladysViewController,
 			let f = ByteCountFormatter()
 			let size = f.string(fromByteCount: Int64(e.bytes.count))
 			e.title = typeEntry.typeDescription + " (\(size))"
+
+		} else if segue.identifier == "plistEdit",
+			let typeEntry = sender as? ArchivedDropItemType,
+			let e = segue.destination as? PlistEditor,
+			let b = typeEntry.bytes,
+			let propertyList = try? PropertyListSerialization.propertyList(from: b, options: [], format: nil) {
+
+			e.title = typeEntry.trimmedName
+			e.propertyList = propertyList
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,

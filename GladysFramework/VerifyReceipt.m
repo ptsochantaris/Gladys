@@ -18,6 +18,12 @@ NSData *sha1(NSString *input) {
 	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
 }
 
+uint32_t valueForKeyedArchiverUID(id keyedArchiverUID) {
+	void *uid = (__bridge void*)keyedArchiverUID;
+	uint32_t *valuePtr = uid+16;
+	return *valuePtr;
+}
+
 /*
 NSDateFormatter *makeFormatter() {
 	// Date formatter to handle RFC 3339 dates in GMT time zone

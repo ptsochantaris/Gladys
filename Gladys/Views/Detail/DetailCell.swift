@@ -9,7 +9,7 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet private weak var nameHolder: UIView!
 
-	@IBOutlet private weak var inspectButton: UIButton!
+	@IBOutlet weak var inspectButton: UIButton!
 	@IBOutlet private weak var viewButton: UIButton!
 	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!

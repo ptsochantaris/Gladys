@@ -23,3 +23,5 @@ NSData *sha1(NSString *input);
 NSString *bundleId = @"build.bru.Gladys.Framework";
 NSString *receiptId = @"build.bru.Gladys";
 NSString *infiniteId = @"INFINITE";
+
+uint32_t valueForKeyedArchiverUID(id keyedArchiverUID);

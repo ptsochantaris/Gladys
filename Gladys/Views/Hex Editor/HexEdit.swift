@@ -37,6 +37,11 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.setToolbarHidden(false, animated: animated)
+	}
+
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		addressButton.tintColor = ViewController.tintColor
