@@ -40,10 +40,14 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 	}
 
 	public override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
-		if type.rawValue == "public.data" {
-			return super.writingOptions(forType: type, pasteboard: pasteboard)
+		let t = type.rawValue
+		if t == "public.file-url" {
+			return []
 		}
-		return []
+		for e in extraItems ?? [] where t == e.typeIdentifier {
+			return []
+		}
+		return super.writingOptions(forType: type, pasteboard: pasteboard)
 	}
 
 	public override func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
@@ -59,7 +63,7 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 				} catch {
 					log("Could not create drop data: \(error.localizedDescription)")
 				}
-				return tempPath.absoluteString.data(using: .utf8)
+				return tempPath.dataRepresentation
 			} else {
 				return item?.bytes
 			}
