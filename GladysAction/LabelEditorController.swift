@@ -135,7 +135,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 			}
 		}
 
-		headerLabel.alpha = 2.0 - min(2, max(0, scrollView.contentOffset.y / 48.0))
+		headerLabel.alpha = 1.0 - min(1, max(0, scrollView.contentOffset.y / 8.0))
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
