@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jgp-rO-Atm">
-                                <rect key="frame" x="20" y="96.999999999999972" width="280" height="342.33333333333326"/>
+                                <rect key="frame" x="20" y="102" width="280" height="342.5"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="QQw-Qu-GXD">
                                         <rect key="frame" x="40" y="0.0" width="200" height="220"/>
@@ -40,13 +40,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HyJ-oj-52E">
-                                        <rect key="frame" x="106" y="277" width="68" height="20.333333333333314"/>
+                                        <rect key="frame" x="106" y="277" width="68" height="20.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <color key="textColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S0c-iC-66X">
-                                        <rect key="frame" x="83" y="309.33333333333331" width="114" height="33"/>
+                                        <rect key="frame" x="83" y="309.5" width="114" height="33"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <state key="normal" title="Expand Gladys"/>
                                         <connections>
@@ -92,7 +92,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="338" y="-14"/>
+            <point key="canvasLocation" x="319" y="-19"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="93d-Yd-kbb">
@@ -101,7 +101,7 @@
                     <toolbarItems/>
                     <size key="freeformSize" width="320" height="480"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hkK-D8-S1U">
-                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -111,7 +111,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QNZ-8P-1o7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-367" y="-14"/>
+            <point key="canvasLocation" x="-488" y="-18"/>
         </scene>
         <!--Labels-->
         <scene sceneID="5cy-6y-oyk">
@@ -132,7 +132,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-g5-P07">
-                                            <rect key="frame" x="20" y="17.666666666666671" width="280" height="30"/>
+                                            <rect key="frame" x="20" y="17.5" width="280" height="30"/>
                                             <color key="backgroundColor" red="0.97242742776870728" green="0.97271126508712769" blue="0.96834653615951538" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
@@ -154,17 +154,17 @@
                                         <rect key="frame" x="0.0" y="93" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cbO-74-l5f" id="1L1-eL-HNt">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="69.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="69.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ut-h9-8Vl">
-                                                    <rect key="frame" x="8" y="11.999999999999996" width="276" height="45.666666666666657"/>
+                                                    <rect key="frame" x="15" y="15" width="262" height="40"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark" highlightedImage="checkmarkSelected" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-qO-gUb">
-                                                    <rect key="frame" x="292" y="25" width="20" height="20"/>
+                                                    <rect key="frame" x="285" y="25" width="20" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="IlX-4s-iEv"/>
                                                         <constraint firstAttribute="width" constant="20" id="RIx-hM-3ld"/>
@@ -208,7 +208,13 @@
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa"/>
+                    <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa">
+                        <barButtonItem key="rightBarButtonItem" title="Note" id="dV0-3n-Tfu">
+                            <connections>
+                                <segue destination="btk-fG-BLI" kind="show" identifier="showNotes" id="PCa-ti-UK9"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
                         <outlet property="backgorundView" destination="Cu2-ky-cFp" id="jYa-te-xyD"/>
@@ -239,7 +245,43 @@
                     <viewLayoutGuide key="safeArea" id="UNU-Hk-soI"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="1025.5999999999999" y="-14.039408866995075"/>
+            <point key="canvasLocation" x="1133" y="-19"/>
+        </scene>
+        <!--Notes-->
+        <scene sceneID="lj1-on-QfM">
+            <objects>
+                <viewController id="btk-fG-BLI" customClass="NoteEditorController" customModule="GladysAction" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wQd-IV-eNx"/>
+                        <viewControllerLayoutGuide type="bottom" id="0h4-5b-FWS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="JXD-b1-Ysi">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7gS-75-Jgh">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="7gS-75-Jgh" firstAttribute="top" secondItem="JXD-b1-Ysi" secondAttribute="top" id="1Og-RC-7Rw"/>
+                            <constraint firstAttribute="trailing" secondItem="7gS-75-Jgh" secondAttribute="trailing" id="ExX-pN-HWJ"/>
+                            <constraint firstItem="7gS-75-Jgh" firstAttribute="leading" secondItem="JXD-b1-Ysi" secondAttribute="leading" id="oVd-Bb-opk"/>
+                            <constraint firstAttribute="bottom" secondItem="7gS-75-Jgh" secondAttribute="bottom" id="rep-TJ-nu6"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Notes" id="w3K-qi-Jga"/>
+                    <connections>
+                        <outlet property="textView" destination="7gS-75-Jgh" id="lIK-Qn-yeD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ybc-Cq-Mse" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1935" y="-19"/>
         </scene>
     </scenes>
     <resources>

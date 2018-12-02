@@ -10,7 +10,9 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 	@IBOutlet private weak var backgorundView: UIImageView!
 
 	var selectedLabels = [String]()
-	var completion: (([String])->Void)?
+	var completion: (([String], String)->Void)?
+
+	var note = ""
 
 	private lazy var allToggles: [String] = { // lazy is important here, keep
 		var labels  = Set<String>()
@@ -140,7 +142,17 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		completion?(selectedLabels)
+		completion?(selectedLabels, note)
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
+		if let d = segue.destination as? NoteEditorController {
+			d.initialNote = note
+			d.completion = { [weak self] newNote in
+				self?.note = newNote
+			}
+		}
 	}
 }
 

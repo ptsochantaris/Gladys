@@ -242,18 +242,29 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			for item in newItems {
 				labels.formUnion(item.labels)
 			}
+			destination.note = newItems.first?.note ?? ""
 			destination.selectedLabels = Array(labels)
 			destination.completion = applyNewLabels
 		}
 	}
 
-	private func applyNewLabels(_ newLabels: [String]) {
+	private func applyNewLabels(_ newLabels: [String], _ newNote: String) {
 		Model.reloadDataIfNeeded()
 		var changes = false
-		for item in newItems where item.labels != newLabels {
-			item.labels = newLabels
-			item.markUpdated()
-			changes = true
+		for item in newItems {
+			var itemChanged = false
+			if item.labels != newLabels {
+				item.labels = newLabels
+				itemChanged = true
+			}
+			if item.note != newNote {
+				item.note = newNote
+				itemChanged = true
+			}
+			if itemChanged {
+				item.markUpdated()
+				changes = true
+			}
 		}
 		if changes {
 			navigationItem.rightBarButtonItem = nil
