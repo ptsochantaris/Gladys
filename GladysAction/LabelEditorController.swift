@@ -7,11 +7,12 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private weak var headerLabel: UILabel!
+	@IBOutlet private weak var backgorundView: UIImageView!
 
 	var selectedLabels = [String]()
 	var completion: (([String])->Void)?
 
-	private var allToggles: [String] = {
+	private lazy var allToggles: [String] = { // lazy is important here, keep
 		var labels  = Set<String>()
 		for item in Model.drops {
 			for label in item.labels {
@@ -26,6 +27,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		if PersistedOptions.darkMode {
+			backgorundView.image = #imageLiteral(resourceName: "darkPaper")
 			labelText.backgroundColor = .gray
 			labelText.textColor = .black
 			headerLabel.textColor = .gray

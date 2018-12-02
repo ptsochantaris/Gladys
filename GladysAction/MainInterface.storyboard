@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,9 +32,9 @@
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-t2-fVq">
-                                        <rect key="frame" x="98" y="232" width="84" height="33"/>
+                                        <rect key="frame" x="86" y="232" width="108" height="33"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                        <state key="normal" title="Edit Labels"/>
+                                        <state key="normal" title="Note &amp; Labels"/>
                                         <connections>
                                             <segue destination="BYY-3D-u8m" kind="show" identifier="showLabels" id="4yJ-8o-FKO"/>
                                         </connections>
@@ -122,10 +122,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="Cu2-ky-cFp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="446"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5aI-Qq-s6Y">
-                                <rect key="frame" x="0.0" y="88" width="320" height="392"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="dUm-kQ-MJd">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
@@ -197,12 +197,12 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="F5v-aE-vAS" firstAttribute="trailing" secondItem="5aI-Qq-s6Y" secondAttribute="trailing" id="1LW-Ba-24I"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="trailing" secondItem="F5v-aE-vAS" secondAttribute="trailing" id="6lp-D3-IcL"/>
-                            <constraint firstAttribute="bottom" secondItem="5aI-Qq-s6Y" secondAttribute="bottom" id="Cv0-4S-bEY"/>
+                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="trailing" secondItem="gjt-sS-I4S" secondAttribute="trailing" id="6lp-D3-IcL"/>
+                            <constraint firstAttribute="bottom" secondItem="5aI-Qq-s6Y" secondAttribute="bottom" id="DVM-NA-HnK"/>
                             <constraint firstItem="5aI-Qq-s6Y" firstAttribute="leading" secondItem="F5v-aE-vAS" secondAttribute="leading" id="Hp8-0Y-kNV"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="leading" secondItem="F5v-aE-vAS" secondAttribute="leading" id="O2o-oq-8ZZ"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="bottom" secondItem="F5v-aE-vAS" secondAttribute="bottom" id="T2V-sM-JzJ"/>
-                            <constraint firstItem="5aI-Qq-s6Y" firstAttribute="top" secondItem="F5v-aE-vAS" secondAttribute="top" id="sXq-99-hiQ"/>
+                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="leading" secondItem="gjt-sS-I4S" secondAttribute="leading" id="O2o-oq-8ZZ"/>
+                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="bottom" secondItem="gjt-sS-I4S" secondAttribute="bottom" id="T2V-sM-JzJ"/>
+                            <constraint firstItem="5aI-Qq-s6Y" firstAttribute="top" secondItem="gjt-sS-I4S" secondAttribute="top" id="sXq-99-hiQ"/>
                             <constraint firstItem="Cu2-ky-cFp" firstAttribute="top" secondItem="gjt-sS-I4S" secondAttribute="top" id="sgh-OE-V7T"/>
                         </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
@@ -211,6 +211,7 @@
                     <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa"/>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
+                        <outlet property="backgorundView" destination="Cu2-ky-cFp" id="jYa-te-xyD"/>
                         <outlet property="headerLabel" destination="iEP-oB-gY3" id="cAF-Ky-fg6"/>
                         <outlet property="headerView" destination="1oI-9b-WQS" id="SAT-L7-vmh"/>
                         <outlet property="labelText" destination="gCw-g5-P07" id="Nqy-EP-3PQ"/>
@@ -238,14 +239,14 @@
                     <viewLayoutGuide key="safeArea" id="UNU-Hk-soI"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="1027" y="-14"/>
+            <point key="canvasLocation" x="1025.5999999999999" y="-14.039408866995075"/>
         </scene>
     </scenes>
     <resources>
         <image name="checkmark" width="28" height="26"/>
         <image name="checkmarkSelected" width="28" height="26"/>
         <image name="gladysImage" width="1024" height="1024"/>
-        <image name="paper" width="2100" height="1500"/>
+        <image name="paper" width="504" height="360"/>
     </resources>
     <color key="tintColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

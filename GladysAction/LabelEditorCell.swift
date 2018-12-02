@@ -8,6 +8,7 @@ final class LabelEditorCell: UITableViewCell {
 		super.awakeFromNib()
 		if PersistedOptions.darkMode {
 			labelName.textColor = .lightGray
+			tick.tintColor = UIColor.white
 		}
 	}
 }

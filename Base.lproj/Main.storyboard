@@ -2743,7 +2743,7 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="1614" y="1621"/>
         </scene>
-        <!--Label Items-->
+        <!--Label Editor Controller-->
         <scene sceneID="Kim-m7-1Mf">
             <objects>
                 <viewController id="QMf-pW-MMr" customClass="LabelEditorController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
@@ -2831,7 +2831,14 @@ Selecting them will show only items that contain these labels.</string>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="6G3-19-jL8"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Label Items" id="zLs-FH-wsJ"/>
+                    <navigationItem key="navigationItem" id="zLs-FH-wsJ">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="m93-ZG-dYu"/>
+                        <barButtonItem key="rightBarButtonItem" title="Set Notes..." id="jLn-Gm-2nx">
+                            <connections>
+                                <segue destination="7B8-TI-m45" kind="show" identifier="showNotes" id="0VP-tn-aul"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <value key="contentSizeForViewInPopover" type="size" width="240" height="380"/>
                     <size key="freeformSize" width="240" height="240"/>
                     <connections>
@@ -2863,6 +2870,46 @@ Selecting them will show only items that contain these labels.</string>
                 </view>
             </objects>
             <point key="canvasLocation" x="1613" y="2022"/>
+        </scene>
+        <!--New Note-->
+        <scene sceneID="vle-W6-jaJ">
+            <objects>
+                <viewController id="7B8-TI-m45" customClass="NotesEditorViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="a6B-br-fDc">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hec-cI-C3I">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Hec-cI-C3I" secondAttribute="bottom" id="WOl-LR-yFB"/>
+                            <constraint firstItem="Hec-cI-C3I" firstAttribute="top" secondItem="a6B-br-fDc" secondAttribute="top" id="cFN-Gq-z4p"/>
+                            <constraint firstItem="Hec-cI-C3I" firstAttribute="leading" secondItem="a6B-br-fDc" secondAttribute="leading" id="inS-Xj-bBX"/>
+                            <constraint firstItem="Hec-cI-C3I" firstAttribute="trailing" secondItem="a6B-br-fDc" secondAttribute="trailing" id="yPN-S5-ZxO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="fiD-4O-2G3"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="New Note" id="qZO-Fa-Nk2">
+                        <barButtonItem key="rightBarButtonItem" title="Save" style="done" id="84d-GI-swK">
+                            <connections>
+                                <action selector="saveSelected:" destination="7B8-TI-m45" id="RCe-bN-A7P"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <size key="freeformSize" width="240" height="240"/>
+                    <connections>
+                        <outlet property="textView" destination="Hec-cI-C3I" id="HbO-h2-0Nw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vd9-3o-eh8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1613" y="2395"/>
         </scene>
         <!--Tips-->
         <scene sceneID="hix-fp-OiX">

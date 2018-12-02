@@ -243,9 +243,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 				labels.formUnion(item.labels)
 			}
 			destination.selectedLabels = Array(labels)
-			destination.completion = { [weak self] newLabels in
-				self?.applyNewLabels(newLabels)
-			}
+			destination.completion = applyNewLabels
 		}
 	}
 

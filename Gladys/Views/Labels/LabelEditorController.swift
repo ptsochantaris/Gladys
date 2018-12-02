@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class LabelEditorController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+final class LabelEditorController: GladysViewController, NotesEditorViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
 	@IBOutlet private weak var labelText: UITextField!
 	@IBOutlet private weak var table: UITableView!
@@ -34,7 +34,13 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		navigationController?.setNavigationBarHidden(true, animated: false)
+		guard let r = navigationItem.rightBarButtonItem else { return }
+		if commonNote == nil {
+			r.title = "New Note"
+		} else {
+			let count = selectedItems?.count ?? 0
+			r.title = count > 1 ? "Edit Notes" : "Edit Note"
+		}
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
@@ -158,6 +164,10 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+		let count = navigationController?.viewControllers.count ?? 0
+		if count > 1 { // is pushing
+			return
+		}
 		var hadChanges = false
 		for uuid in editedUUIDs {
 			if let i = Model.item(uuid: uuid) {
@@ -183,5 +193,35 @@ final class LabelEditorController: GladysViewController, UITableViewDelegate, UI
 
 		headerLabel.alpha = 2.0 - min(2, max(0, scrollView.contentOffset.y / 48.0))
 	}
-}
 
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
+		if let d = segue.destination as? NotesEditorViewController {
+			d.delegate = self
+			d.startupNote = commonNote
+			d.title = navigationItem.rightBarButtonItem?.title
+		}
+	}
+
+	private var commonNote: String? {
+		if let firstItemUuid = selectedItems?.first {
+			let firstItem = Model.item(uuid: firstItemUuid)
+			let commonNote = firstItem?.note
+			for item in selectedItems ?? [] where Model.item(uuid: item)?.note != commonNote {
+				return nil
+			}
+			return commonNote
+		}
+		return nil
+	}
+
+	func newNoteSaved(note: String) {
+		selectedItems?.forEach {
+			if let item = Model.item(uuid: $0) {
+				item.note = note
+				item.postModified()
+				editedUUIDs.insert($0)
+			}
+		}
+	}
+}
