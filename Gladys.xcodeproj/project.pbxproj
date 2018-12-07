@@ -88,6 +88,7 @@
 		1619E8231EFF3A64000087DD /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1619E8241EFF3A66000087DD /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1619E8251EFF3B54000087DD /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
@@ -607,6 +608,7 @@
 		1619E8181EFF3745000087DD /* DropItemEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropItemEnumerator.swift; sourceTree = "<group>"; };
 		1619E81A1EFF3745000087DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1619E81B1EFF3745000087DD /* GladysFiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysFiles.entitlements; sourceTree = "<group>"; };
+		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
 		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
@@ -1063,6 +1065,7 @@
 				16C8166A20CB4EF1001C12DF /* Application.swift */,
 				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
 				16EC3D082145286F0015714A /* main.swift */,
+				161D357721BA6A4200CADA41 /* NotesEditor.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -2211,6 +2214,7 @@
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
 				16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
+				161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,

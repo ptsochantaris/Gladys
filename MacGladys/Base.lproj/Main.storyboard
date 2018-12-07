@@ -190,6 +190,12 @@ CA
                                                 <action selector="editLabels:" target="Ady-hI-5gd" id="IUF-M0-waJ"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Notes..." keyEquivalent="n" id="t4G-VB-KWD">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="editNotes:" target="Ady-hI-5gd" id="PZg-Iy-4f8"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="URL" id="NJd-Fx-8sX">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="URL" id="vIS-rU-iVZ">
@@ -351,7 +357,7 @@ CA
                 </viewController>
                 <customObject id="URB-7s-OFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1263" y="590"/>
+            <point key="canvasLocation" x="1146" y="566"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -847,7 +853,7 @@ CA
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="311" y="858"/>
+            <point key="canvasLocation" x="180" y="854"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -943,7 +949,7 @@ CA
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="965" y="651"/>
+            <point key="canvasLocation" x="844" y="627"/>
         </scene>
         <!--Edit Labels-->
         <scene sceneID="8Vg-jj-cJX">
@@ -1039,7 +1045,7 @@ CA
                 </viewController>
                 <customObject id="Sff-IY-fcm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="720" y="741"/>
+            <point key="canvasLocation" x="593" y="717"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -1554,11 +1560,88 @@ Only</string>
                         <segue destination="FB0-Ob-ymN" kind="sheet" identifier="showPreferences" id="li5-My-Fv1"/>
                         <segue destination="rmF-nd-Zeh" kind="sheet" identifier="showProgress" id="wwQ-Kz-x6M"/>
                         <segue destination="Adk-lO-VOr" kind="sheet" identifier="editLabels" id="sez-eE-yO6"/>
+                        <segue destination="yA3-OV-Q47" kind="sheet" identifier="editNotes" id="Oya-gR-tFF"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="720" y="60"/>
+        </scene>
+        <!--Notes Editor-->
+        <scene sceneID="AmV-RW-G15">
+            <objects>
+                <viewController id="yA3-OV-Q47" customClass="NotesEditor" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="dtz-mv-z4x">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="215"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="749" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="asj-X8-uWY">
+                                <rect key="frame" x="20" y="49" width="280" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="uzf-0M-cgA"/>
+                                </constraints>
+                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="LqT-Xo-0XH">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Hlc-yo-qdG">
+                                <rect key="frame" x="18" y="165" width="284" height="34"/>
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="The currently selected items have different notes, this will overwrite them." id="rAp-cP-h0l">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5mw-EC-Eef">
+                                <rect key="frame" x="236" y="13" width="70" height="32"/>
+                                <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Xkt-aK-yUH">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="saveSelected:" target="yA3-OV-Q47" id="85P-j7-FHr"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zg6-U1-JqM">
+                                <rect key="frame" x="14" y="13" width="82" height="32"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lh0-i8-n3A">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="cancelSelected:" target="yA3-OV-Q47" id="6AT-VB-PDg"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Hlc-yo-qdG" secondAttribute="trailing" constant="20" id="1fH-Ww-j7A"/>
+                            <constraint firstAttribute="bottom" secondItem="5mw-EC-Eef" secondAttribute="bottom" constant="20" id="8cA-n1-KAl"/>
+                            <constraint firstItem="Hlc-yo-qdG" firstAttribute="top" secondItem="dtz-mv-z4x" secondAttribute="top" constant="16" id="AQU-DS-ZD1"/>
+                            <constraint firstAttribute="trailing" secondItem="asj-X8-uWY" secondAttribute="trailing" constant="20" id="Aip-Z4-Fqg"/>
+                            <constraint firstItem="zg6-U1-JqM" firstAttribute="leading" secondItem="dtz-mv-z4x" secondAttribute="leading" constant="20" id="DVm-e6-U4O"/>
+                            <constraint firstItem="Hlc-yo-qdG" firstAttribute="leading" secondItem="dtz-mv-z4x" secondAttribute="leading" constant="20" id="cVx-hz-UZR"/>
+                            <constraint firstAttribute="trailing" secondItem="5mw-EC-Eef" secondAttribute="trailing" constant="20" id="jQp-WK-oRA"/>
+                            <constraint firstAttribute="bottom" secondItem="zg6-U1-JqM" secondAttribute="bottom" constant="20" id="lNJ-WI-PbY"/>
+                            <constraint firstItem="zg6-U1-JqM" firstAttribute="top" secondItem="asj-X8-uWY" secondAttribute="bottom" constant="8" id="uZl-eW-3Wo"/>
+                            <constraint firstItem="5mw-EC-Eef" firstAttribute="top" secondItem="asj-X8-uWY" secondAttribute="bottom" constant="8" id="x4F-sS-wqt"/>
+                            <constraint firstItem="asj-X8-uWY" firstAttribute="leading" secondItem="dtz-mv-z4x" secondAttribute="leading" constant="20" id="xZQ-G6-gBa"/>
+                            <constraint firstItem="asj-X8-uWY" firstAttribute="top" secondItem="Hlc-yo-qdG" secondAttribute="bottom" constant="16" id="yfd-xg-3nc"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="noteField" destination="asj-X8-uWY" id="881-Pd-JNv"/>
+                        <outlet property="saveButton" destination="5mw-EC-Eef" id="E3f-xy-hei"/>
+                        <outlet property="topLabel" destination="Hlc-yo-qdG" id="Jjz-Jh-x7s"/>
+                    </connections>
+                </viewController>
+                <customObject id="xu4-p6-ZHx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1496" y="655"/>
         </scene>
     </scenes>
     <resources>

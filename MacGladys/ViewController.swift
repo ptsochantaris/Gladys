@@ -1068,6 +1068,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case #selector(copy(_:)), #selector(shareSelected(_:)), #selector(moveToTop(_:)), #selector(info(_:)), #selector(open(_:)), #selector(delete(_:)), #selector(editLabels(_:)), #selector(duplicateItem(_:)):
 			return !collection.actionableSelectedItems.isEmpty
 
+		case #selector(editNotes(_:)):
+			return !collection.actionableSelectedItems.isEmpty
+
 		case #selector(paste(_:)):
 			return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 
@@ -1098,6 +1101,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+	@objc func editNotes(_ sender: Any?) {
+		performSegue(withIdentifier: "editNotes", sender: nil)
+	}
+
 	@objc func toggleQuickLookPreviewPanel(_ sender: Any?) {
 		if QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
 			QLPreviewPanel.shared().orderOut(nil)
@@ -1122,6 +1129,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case "editLabels":
 			if let destination = segue.destinationController as? LabelEditorViewController {
 				destination.selectedItems = collection.actionableSelectedItems.map { $0.uuid }
+			}
+
+		case "editNotes":
+			if let destination = segue.destinationController as? NotesEditor {
+				destination.uuids = collection.actionableSelectedItems.map { $0.uuid }
 			}
 
 		case "showProgress":
