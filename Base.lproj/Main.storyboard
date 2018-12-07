@@ -692,14 +692,14 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quQ-d6-kah">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1443"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="1643"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RSx-tB-L4n">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1345.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1540.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wF6-Q4-Mvi">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="60.5"/>
@@ -1143,11 +1143,63 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="Re0-bQ-XI7" firstAttribute="leading" secondItem="Osl-Ls-obl" secondAttribute="trailing" constant="18" id="xKO-9R-6v1"/>
                                                 </constraints>
                                             </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXe-jw-384">
+                                                <rect key="frame" x="0.0" y="1355.5" width="320" height="60.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jjh-s5-9EJ">
+                                                        <rect key="frame" x="167" y="30" width="56" height="30.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="Jjh-s5-9EJ" secondAttribute="bottom" id="ThQ-6O-c8a"/>
+                                                    <constraint firstItem="Jjh-s5-9EJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bXe-jw-384" secondAttribute="leading" constant="20" id="U0j-5Q-rjT"/>
+                                                    <constraint firstItem="Jjh-s5-9EJ" firstAttribute="top" secondItem="bXe-jw-384" secondAttribute="top" constant="30" id="fbd-SY-GkC"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCh-AP-kzS" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="1426" width="320" height="114.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Inclusive search terms" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xy7-kO-9Hx">
+                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jHl-BA-be6">
+                                                        <rect key="frame" x="241" y="3.5" width="51" height="31"/>
+                                                        <connections>
+                                                            <action selector="inclusiveSearchTermsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="0lo-3A-Wzl"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Search results must include all the provided search terms. This option makes it so that results can match any of the terms" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ove-52-IEo">
+                                                        <rect key="frame" x="30" y="32" width="193" height="82.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="jHl-BA-be6" firstAttribute="leading" secondItem="xy7-kO-9Hx" secondAttribute="trailing" constant="18" id="1zb-fN-ao6"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ove-52-IEo" secondAttribute="bottom" id="5m5-5o-ai3"/>
+                                                    <constraint firstItem="ove-52-IEo" firstAttribute="top" secondItem="xy7-kO-9Hx" secondAttribute="bottom" constant="4" id="BGr-pq-UPv"/>
+                                                    <constraint firstItem="ove-52-IEo" firstAttribute="leading" secondItem="xy7-kO-9Hx" secondAttribute="leading" id="BtL-kn-Heb"/>
+                                                    <constraint firstItem="xy7-kO-9Hx" firstAttribute="leading" secondItem="ZCh-AP-kzS" secondAttribute="leading" constant="30" id="DGQ-KM-w2h"/>
+                                                    <constraint firstItem="xy7-kO-9Hx" firstAttribute="top" secondItem="ZCh-AP-kzS" secondAttribute="top" constant="10" id="FIf-bf-23n"/>
+                                                    <constraint firstAttribute="trailing" secondItem="jHl-BA-be6" secondAttribute="trailing" constant="30" id="I7r-zU-FK4"/>
+                                                    <constraint firstItem="ove-52-IEo" firstAttribute="trailing" secondItem="xy7-kO-9Hx" secondAttribute="trailing" id="spW-dP-cMz"/>
+                                                    <constraint firstItem="jHl-BA-be6" firstAttribute="centerY" secondItem="xy7-kO-9Hx" secondAttribute="centerY" id="zkP-8r-RjU"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="wF6-Q4-Mvi" secondAttribute="trailing" id="27z-cr-V5j"/>
                                             <constraint firstItem="wF6-Q4-Mvi" firstAttribute="leading" secondItem="RSx-tB-L4n" secondAttribute="leading" id="AKk-q1-GNi"/>
                                             <constraint firstItem="V5t-2y-EqR" firstAttribute="trailing" secondItem="Osl-Ls-obl" secondAttribute="trailing" id="Cbb-FK-24P"/>
+                                            <constraint firstItem="Jjh-s5-9EJ" firstAttribute="trailing" secondItem="xy7-kO-9Hx" secondAttribute="trailing" id="Fgu-R7-Zaz"/>
                                             <constraint firstItem="wF6-Q4-Mvi" firstAttribute="top" secondItem="RSx-tB-L4n" secondAttribute="top" id="Ktz-RI-5m5"/>
                                             <constraint firstItem="wd1-LM-Zfz" firstAttribute="trailing" secondItem="UAB-01-35Y" secondAttribute="trailing" id="R2E-vs-HAC"/>
                                             <constraint firstItem="9C4-5z-JUG" firstAttribute="trailing" secondItem="Rne-ok-zIN" secondAttribute="trailing" id="W3d-wy-wYW"/>
@@ -1175,7 +1227,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="1600"/>
+                    <size key="freeformSize" width="320" height="1800"/>
                     <connections>
                         <outlet property="allowLabelsInExtensionSwitch" destination="xKP-Fg-evj" id="7h9-ce-HXO"/>
                         <outlet property="darkModeSwitch" destination="akV-j6-m9U" id="sDN-fG-kdg"/>
@@ -1183,6 +1235,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="displayNotesInMainViewSwitch" destination="i0F-Pk-jHK" id="MKk-6g-pc1"/>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="5wI-qp-Jk6" id="P61-9b-Sq8"/>
                         <outlet property="fullScreenSwitch" destination="JPg-Em-fla" id="9hI-GJ-FJe"/>
+                        <outlet property="inclusiveSearchTermsSwitch" destination="jHl-BA-be6" id="GI8-PE-Xca"/>
                         <outlet property="removeItemsWhenDraggedOutSwitch" destination="foO-r4-VVP" id="8cd-qD-PfN"/>
                         <outlet property="separateItemsSwitch" destination="Re0-bQ-XI7" id="vUX-eK-BtU"/>
                         <outlet property="showCopyMoveSwitchSelectorSwitch" destination="jLY-Yd-XP1" id="r1X-J0-oFv"/>
@@ -1214,6 +1267,9 @@ Selecting them will show only items that contain these labels.</string>
                         <outletCollection property="titleLabels" destination="V5t-2y-EqR" collectionClass="NSMutableArray" id="oQ9-o1-rO7"/>
                         <outletCollection property="headerLabels" destination="s1o-UY-Pov" collectionClass="NSMutableArray" id="S1y-Zy-bvn"/>
                         <outletCollection property="subtitleLabels" destination="sFB-bX-njT" collectionClass="NSMutableArray" id="fPe-RS-Nlv"/>
+                        <outletCollection property="subtitleLabels" destination="ove-52-IEo" collectionClass="NSMutableArray" id="IaW-RL-PLg"/>
+                        <outletCollection property="headerLabels" destination="xy7-kO-9Hx" collectionClass="NSMutableArray" id="fHS-cR-L3W"/>
+                        <outletCollection property="titleLabels" destination="Jjh-s5-9EJ" collectionClass="NSMutableArray" id="aAw-eD-Gda"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>

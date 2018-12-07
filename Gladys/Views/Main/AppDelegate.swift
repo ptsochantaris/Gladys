@@ -150,6 +150,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-		CloudManager.acceptShare(cloudKitShareMetadata)
+		DispatchQueue.main.async { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
+			CloudManager.acceptShare(cloudKitShareMetadata)
+		}
 	}
 }

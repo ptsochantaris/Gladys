@@ -113,7 +113,7 @@ extension ArchivedDropItemType {
 
 		let bytesToWrite: Data?
 
-		if let s = encodedUrl {
+		if let s = encodedUrl, !s.isFileURL {
 			bytesToWrite = s.urlFileContent
 		} else {
 			bytesToWrite = dataForWrappedItem

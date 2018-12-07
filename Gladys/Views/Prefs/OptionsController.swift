@@ -21,19 +21,25 @@ final class OptionsController: GladysViewController {
 	@IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
 	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
 	@IBOutlet private weak var wideModeSwitch: UISwitch!
+	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
 
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
 	@IBOutlet private var titleLabels: [UILabel]!
 
-	@IBAction func wideModeSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
 		clearCaches()
 		ViewController.shared.forceLayout()
 		ViewController.shared.reloadData(onlyIfPopulated: true)
 	}
 
-	@IBAction func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.inclusiveSearchTerms = sender.isOn
+		ViewController.shared.reloadData(onlyIfPopulated: true)
+	}
+
+	@IBAction private func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.setLabelsWhenActioning = sender.isOn
 	}
 
@@ -92,6 +98,7 @@ final class OptionsController: GladysViewController {
 		fullScreenSwitch.onTintColor = view.tintColor
 		allowLabelsInExtensionSwitch.onTintColor = view.tintColor
 		wideModeSwitch.onTintColor = view.tintColor
+		inclusiveSearchTermsSwitch.onTintColor = view.tintColor
 		subtitleLabels.forEach { $0.textColor = UIColor.gray }
 		titleLabels.forEach { $0.textColor = ViewController.tintColor }
 		if PersistedOptions.darkMode {
@@ -129,6 +136,9 @@ final class OptionsController: GladysViewController {
 
 		allowLabelsInExtensionSwitch.tintColor = .lightGray
 		allowLabelsInExtensionSwitch.isOn = PersistedOptions.setLabelsWhenActioning
+
+		inclusiveSearchTermsSwitch.tintColor = .lightGray
+		inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
 
 		darkModeSwitch.tintColor = .lightGray
 		darkModeSwitch.isOn = PersistedOptions.darkMode

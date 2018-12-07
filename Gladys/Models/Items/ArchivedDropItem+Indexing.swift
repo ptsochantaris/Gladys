@@ -8,7 +8,8 @@ extension ArchivedDropItem {
 		if isLocked {
 			attributes.title = lockHint
 		} else {
-			attributes.title = displayText.0
+			attributes.title = trimmedName
+			attributes.textContent = displayText.0
 			if note.isEmpty {
 				attributes.contentDescription = associatedWebURL?.absoluteString
 			} else {

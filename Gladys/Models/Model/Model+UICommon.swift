@@ -264,7 +264,7 @@ extension Model {
 				let s = f[Range($0.range, in: f)!]
 				let term = s.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
 				let criterion = "\"*\(term)*\"cd"
-				terms.append("title == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)")
+				terms.append("title == \(criterion) || textContent == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)")
 			}
 		} catch {
 			log("Warning regex error: \(error.localizedDescription)")
@@ -394,7 +394,11 @@ extension Model {
 
 			let queryString: String
 			if 	terms.count > 1 {
-				queryString = "(" + terms.joined(separator: ") && (") + ")"
+				if PersistedOptions.inclusiveSearchTerms {
+					queryString = "(" + terms.joined(separator: ") || (") + ")"
+				} else {
+					queryString = "(" + terms.joined(separator: ") && (") + ")"
+				}
 			} else {
 				queryString = terms.first ?? ""
 			}

@@ -173,4 +173,13 @@ class PersistedOptions {
 			}
 		}
 	}
+
+	static var inclusiveSearchTerms: Bool {
+		get {
+			return defaults.bool(forKey: "inclusiveSearchTerms")
+		}
+		set {
+			defaults.set(newValue, forKey: "inclusiveSearchTerms")
+		}
+	}
 }
