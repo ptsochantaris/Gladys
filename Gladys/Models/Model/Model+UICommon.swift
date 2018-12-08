@@ -510,7 +510,7 @@ extension Model {
 	}
 
 	static var doneIngesting: Bool {
-		return !drops.contains { $0.needsReIngest && !$0.isDeleting }
+		return !drops.contains { ($0.needsReIngest && !$0.isDeleting) || ($0.loadingProgress != nil && $0.loadingError == nil) }
 	}
 
 	static var itemsToReIngest: [ArchivedDropItem] {

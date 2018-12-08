@@ -14,7 +14,6 @@ final class NotesEditor: NSViewController {
 
 	@IBOutlet private weak var topLabel: NSTextField!
 	@IBOutlet private weak var noteField: NSTextField!
-
 	@IBOutlet private weak var saveButton: NSButton!
 
 	override func viewDidLoad() {
