@@ -24,6 +24,11 @@ final class NotesEditorViewController: GladysViewController {
 		textView.text = startupNote
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		textView.becomeFirstResponder()
+	}
+
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		if PersistedOptions.darkMode {
