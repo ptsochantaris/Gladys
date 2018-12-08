@@ -556,6 +556,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@objc override func darkModeChanged() {
 		super.darkModeChanged()
 
+		lastSyncUpdate()
+
 		if PersistedOptions.darkMode {
 			collection.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
@@ -721,7 +723,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private func lastSyncUpdate() {
 		if let r = collection.refreshControl {
-			r.attributedTitle = NSAttributedString(string: CloudManager.syncString)
+			if PersistedOptions.darkMode {
+				r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor.lightGray])
+			} else {
+				r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor.darkGray])
+			}
 		}
 	}
 
