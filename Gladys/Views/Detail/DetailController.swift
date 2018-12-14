@@ -162,7 +162,9 @@ final class DetailController: GladysViewController,
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
-		ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
+		if let item = item { // check for very weird corner case where item may be nil
+			ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
+		}
 	}
 
 	@objc private func updateUI() {
