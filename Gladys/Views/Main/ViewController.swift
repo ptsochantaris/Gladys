@@ -634,12 +634,13 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
 
+		Model.checkForUpgrade()
+
 		didUpdateItems()
 		updateEmptyView(animated: false)
 		emptyView?.alpha = PersistedOptions.darkMode ? 0.5 : 1
 		blurb("Ready! Drop me stuff.")
 
-		checkForUpgrade()
 		cloudStatusChanged()
 		if !PersistedOptions.pasteShortcutAutoDonated {
 			donatePasteIntent()
@@ -801,37 +802,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.forceUpdateFilter(signalUpdate: false)
 		reloadData()
 		Model.saveIndexOnly()
-	}
-
-	private func checkForUpgrade() {
-		let previousBuild = UserDefaults.standard.string(forKey: "LastRanVersion")
-		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-		#if DEBUG
-			migration(to: currentBuild)
-		#else
-			if previousBuild != currentBuild {
-				migration(to: currentBuild)
-			}
-		#endif
-	}
-
-	private func migration(to currentBuild: String) {
-		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
-			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-		}
-		if Model.legacyMode {
-			log("Migrating legacy data store")
-			for i in Model.drops {
-				i.needsSaving = true
-			}
-			Model.save()
-			Model.legacyMode = false
-			log("Migration done")
-		}
-		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
-			let d = UserDefaults.standard
-			d.set(currentBuild, forKey: "LastRanVersion")
-		})
 	}
 
 	private var lowMemoryMode = false {

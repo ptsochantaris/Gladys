@@ -325,6 +325,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			CloudManager.sync { _ in }
 		}
 
+		Model.checkForUpgrade()
+
 		updateTitle()
 		postSave()
 

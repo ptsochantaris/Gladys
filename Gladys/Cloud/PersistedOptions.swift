@@ -182,4 +182,18 @@ class PersistedOptions {
 			defaults.set(newValue, forKey: "inclusiveSearchTerms")
 		}
 	}
+
+	static var lastRanVersion: String? {
+		set {
+			let d = UserDefaults.standard
+			if let newValue = newValue {
+				d.set(newValue, forKey: "LastRanVersion")
+			} else {
+				d.removeObject(forKey: "LastRanVersion")
+			}
+		}
+		get {
+			return UserDefaults.standard.string(forKey: "LastRanVersion")
+		}
+	}
 }

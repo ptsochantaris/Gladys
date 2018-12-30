@@ -524,6 +524,37 @@ extension Model {
 		}
 	}
 
+	///////////////////////// Migrating
+
+	static func checkForUpgrade() {
+		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+		#if DEBUG
+		migration(to: currentBuild)
+		#else
+		if PersistedOptions.lastRanVersion != currentBuild {
+			migration(to: currentBuild)
+		}
+		#endif
+	}
+
+	private static func migration(to currentBuild: String) {
+		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
+			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+		}
+		if Model.legacyMode {
+			log("Migrating legacy data store")
+			for i in Model.drops {
+				i.needsSaving = true
+			}
+			Model.save()
+			Model.legacyMode = false
+			log("Migration done")
+		}
+		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
+			PersistedOptions.lastRanVersion = currentBuild
+		})
+	}
+
 	//////////////////////// Saving
 
 	static func queueNextSaveCallback(_ callback: @escaping ()->Void) {
