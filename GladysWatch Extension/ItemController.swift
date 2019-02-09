@@ -149,7 +149,7 @@ final class ItemController: WKInterfaceController {
 		})
 	}
 
-	private var fetchingImage: Bool = false {
+	private var fetchingImage = false {
 		didSet {
 			topGroup.setHidden(ItemController.hidden)
 			bottomGroup.setHidden(ItemController.hidden)
@@ -159,7 +159,7 @@ final class ItemController: WKInterfaceController {
 		}
 	}
 
-	private var copying: Bool = false {
+	private var copying = false {
 		didSet {
 			topGroup.setHidden(copying || ItemController.hidden)
 			bottomGroup.setHidden(copying || ItemController.hidden)
@@ -169,7 +169,7 @@ final class ItemController: WKInterfaceController {
 		}
 	}
 
-	private var deleting: Bool = false {
+	private var deleting = false {
 		didSet {
 			topGroup.setHidden(deleting || ItemController.hidden)
 			bottomGroup.setHidden(deleting || ItemController.hidden)
@@ -179,17 +179,17 @@ final class ItemController: WKInterfaceController {
 		}
 	}
 
-	private var opening: Bool = false {
+	private var opening = false {
 		didSet {
 			topGroup.setHidden(opening || ItemController.hidden)
 			bottomGroup.setHidden(opening || ItemController.hidden)
 			image.setHidden(opening)
-			copyLabel.setText("Viewing on Phone")
+			copyLabel.setText("Opening item in the phone app")
 			copyLabel.setHidden(!opening)
 		}
 	}
 
-	private var topping: Bool = false {
+	private var topping = false {
 		didSet {
 			topGroup.setHidden(topping || ItemController.hidden)
 			bottomGroup.setHidden(topping || ItemController.hidden)
