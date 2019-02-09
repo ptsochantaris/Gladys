@@ -55,6 +55,7 @@ final class ImageCache {
 final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
 	static var currentUUID = ""
+	static var totalCount = 0
 
 	private func extractDropList(from context: [String: Any]) -> [[String: Any]] {
 		if
@@ -88,7 +89,9 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 		let dropList = extractDropList(from: compressedList)
 		if dropList.isEmpty {
 			DispatchQueue.main.sync {
+				ExtensionDelegate.totalCount = 0
 				WKInterfaceController.reloadRootPageControllers(withNames: ["EmptyController"], contexts: nil, orientation: .vertical, pageIndex: 0)
+				reloadComplications()
 			}
 		} else {
 			let names = [String](repeating: "ItemController", count: dropList.count)
@@ -96,11 +99,20 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			let currentPage = dropList.index { $0["u"] as? String == currentUUID } ?? 0
 			let index = min(currentPage, names.count-1)
 			DispatchQueue.main.sync {
+				ExtensionDelegate.totalCount = names.count
 				WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
+				reloadComplications()
 			}
-			DispatchQueue.main.sync {
-				ImageCache.trimUnaccessedEntries()
-			}
+		}
+		DispatchQueue.main.sync {
+			ImageCache.trimUnaccessedEntries()
+		}
+	}
+
+	private func reloadComplications() {
+		let s = CLKComplicationServer.sharedInstance()
+		s.activeComplications?.forEach {
+			s.reloadTimeline(for: $0)
 		}
 	}
 
@@ -109,6 +121,10 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 		session.delegate = self
 		session.activate()
     }
+
+	func applicationDidEnterBackground() {
+		reloadComplications()
+	}
 
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
         for task in backgroundTasks {

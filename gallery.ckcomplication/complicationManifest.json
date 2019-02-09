@@ -1,0 +1,11 @@
+{
+  "supported complication families" : {
+    "3" : "63D304E5-53FD-457F-9A09-F2602DA45A8C.json",
+    "8" : "2463FCFB-27A3-46CC-83CA-C28B68AC5E02.json",
+    "6" : "19294319-88B4-49D2-B952-C2CC411CFD28.json",
+    "4" : "D98BB30B-825C-4FC4-9FCC-A2405C4EBC84.json",
+    "2" : "ECD10347-94E1-47D6-AE25-07900E9A1577.json",
+    "0" : "F79AC331-27DF-4E06-BD48-6F14D6C9E16E.json"
+  },
+  "client ID" : "build.bru.Gladys.watchkitapp.Extension"
+}

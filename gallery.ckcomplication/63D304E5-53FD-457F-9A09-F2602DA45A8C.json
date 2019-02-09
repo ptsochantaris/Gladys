@@ -1,0 +1,15 @@
+{
+  "class" : "CLKComplicationTemplateUtilitarianLargeFlat",
+  "textProvider" : {
+    "shortText" : "23",
+    "class" : "CLKSimpleTextProvider",
+    "text" : "23 ITEMS"
+  },
+  "version" : 30000,
+  "imageProvider" : {
+    "onePieceImage" : {
+      "file name" : "5E364FDF-4B06-4F3B-BF45-6BA1E978E836.png",
+      "scale" : 2
+    }
+  }
+}

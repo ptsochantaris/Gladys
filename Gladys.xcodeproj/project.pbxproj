@@ -116,6 +116,9 @@
 		162BDD7A220F020F00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
 		162BDD7B220F021000A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
 		162BDD7C220F023D00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */; };
+		162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = 162BDD90220F85AA00A3C17B /* gallery.ckcomplication */; };
+		162BDD92220F86C800A3C17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC51F9147E300410447 /* CommonEnumerator.swift */; };
 		162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */; };
 		162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC91F9147F900410447 /* RootEnumerator.swift */; };
@@ -628,6 +631,8 @@
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		162BDD73220F01FA00A3C17B /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationDataSource.swift; sourceTree = "<group>"; };
+		162BDD90220F85AA00A3C17B /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
 		162CCCC51F9147E300410447 /* CommonEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingSetEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC91F9147F900410447 /* RootEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootEnumerator.swift; sourceTree = "<group>"; };
@@ -1258,6 +1263,7 @@
 				16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */,
 				16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */,
 				16A4E8081FBB963500D60596 /* ItemController.swift */,
+				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
 				16A4E7F91FBB844A00D60596 /* Info.plist */,
 			);
 			path = "GladysWatch Extension";
@@ -1357,6 +1363,7 @@
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
 			);
 			name = Support;
@@ -1959,6 +1966,7 @@
 				1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */,
 				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
+				162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1992,6 +2000,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				162BDD92220F86C800A3C17B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2547,6 +2556,7 @@
 				16559C8F20A4CC55006C281D /* Global.swift in Sources */,
 				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
+				162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

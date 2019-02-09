@@ -1,0 +1,14 @@
+{
+  "class" : "CLKComplicationTemplateCircularSmallStackImage",
+  "line1ImageProvider" : {
+    "onePieceImage" : {
+      "file name" : "EA6689B7-A3D4-423E-9755-349722202516.png",
+      "scale" : 2
+    }
+  },
+  "line2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "23"
+  },
+  "version" : 30000
+}

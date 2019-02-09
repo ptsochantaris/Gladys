@@ -1,0 +1,16 @@
+{
+  "class" : "CLKComplicationTemplateGraphicCornerTextImage",
+  "textProvider" : {
+    "shortText" : "23",
+    "class" : "CLKSimpleTextProvider",
+    "text" : "23 ITEMS"
+  },
+  "imageProvider" : {
+    "applyScalingAndCircularMask" : true,
+    "fullColorImage" : {
+      "file name" : "A196E952-F63B-48E6-ADBE-D694E29D7833.png",
+      "scale" : 2
+    }
+  },
+  "version" : 30000
+}
