@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -12,6 +12,7 @@
         <collectionViewItem nibName="DropCell" id="JIL-3y-Tt4" customClass="DropCell" customModule="Gladys" customModuleProvider="target">
             <connections>
                 <outlet property="bottomLabel" destination="cNg-lc-Fh3" id="LVr-aA-yFN"/>
+                <outlet property="bottomStackView" destination="D4i-OV-TYP" id="nEs-b9-GcP"/>
                 <outlet property="cancelButton" destination="t0u-49-eaV" id="G1c-68-Kdj"/>
                 <outlet property="image" destination="NZY-Vj-9PZ" id="zRO-Yi-3aJ"/>
                 <outlet property="labelTokenField" destination="a86-XO-bJA" id="pVf-3S-Nfe"/>
@@ -106,7 +107,7 @@
                     </customSpacing>
                 </stackView>
                 <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72j-vo-hKN">
-                    <rect key="frame" x="116" y="125" width="70" height="53"/>
+                    <rect key="frame" x="117" y="125" width="70" height="53"/>
                     <subviews>
                         <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
                             <rect key="frame" x="27" y="37" width="16" height="16"/>

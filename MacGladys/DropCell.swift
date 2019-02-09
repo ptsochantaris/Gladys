@@ -246,6 +246,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var lockImage: NSImageView!
 	@IBOutlet private weak var labelTokenField: TokenTextField!
 	@IBOutlet private weak var sharedIcon: NSImageView!
+	@IBOutlet private weak var bottomStackView: NSStackView!
 
 	private var existingPreviewView: FirstMouseView?
 
@@ -508,8 +509,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		topLabel.isHidden = topLabelText.isEmpty
 		topLabel.alignment = topLabelAlignment
 
+		let hideBottomLabel = bottomLabelText.isEmpty
 		bottomLabel.stringValue = bottomLabelText
-		bottomLabel.isHidden = bottomLabelText.isEmpty
+		bottomLabel.isHidden = hideBottomLabel
 		bottomLabel.alignment = bottomLabelAlignment
 		bottomLabel.textColor = bottomLabelHighlight ? ViewController.tintColor : ViewController.labelColor
 
@@ -522,12 +524,15 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		case .none:
 			sharedIcon.image = nil
 			sharedIcon.isHidden = true
+			bottomStackView.isHidden = hideBottomLabel
 		case .elsewhereReadOnly, .elsewhereReadWrite:
 			sharedIcon.image = DropCell.shareImage
 			sharedIcon.isHidden = false
+			bottomStackView.isHidden = false
 		case .sharing:
 			sharedIcon.image = DropCell.shareImageTinted
 			sharedIcon.isHidden = false
+			bottomStackView.isHidden = false
 		}
 	}
 
