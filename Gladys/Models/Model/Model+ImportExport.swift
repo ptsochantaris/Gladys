@@ -32,7 +32,7 @@ extension Model {
 		return true
 	}
 
-	static func importData(from url: URL, removingOriginal: Bool) throws {
+	static func importArchive(from url: URL, removingOriginal: Bool) throws {
 		let fm = FileManager.default
 		defer {
 			if removingOriginal {

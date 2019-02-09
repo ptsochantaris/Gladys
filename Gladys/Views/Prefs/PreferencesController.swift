@@ -327,7 +327,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	private func importArchive(from url: URL) {
 		do {
-	    	try Model.importData(from: url, removingOriginal: true)
+	    	try Model.importArchive(from: url, removingOriginal: true)
 		} catch {
 			alertOnMainThread(error: error)
 		}

@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						securityScoped = url.startAccessingSecurityScopedResource()
 					}
 					do {
-						try Model.importData(from: url, removingOriginal: !inPlace)
+						try Model.importArchive(from: url, removingOriginal: !inPlace)
 					} catch {
 						genericAlert(title: "Could not import data", message: error.finalDescription)
 					}

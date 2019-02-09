@@ -335,15 +335,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		o.message = "Select an archive from which to\nmerge items into your existing collection."
 		o.isExtensionHidden = true
 		o.allowedFileTypes = ["gladysArchive"]
-		o.beginSheetModal(for: w) { response in
+		o.beginSheetModal(for: w) { [weak self] response in
 			if response == .OK, let url = o.url {
 				DispatchQueue.main.async {
-					do {
-						try Model.importData(from: url, removingOriginal: false)
-					} catch {
-						self.alertOnMainThread(error: error)
-					}
+					self?.proceedWithImport(from: url)
 				}
+			}
+		}
+	}
+
+	private func proceedWithImport(from url: URL) {
+		ViewController.shared.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment...")
+		DispatchQueue.main.async { // give UI a chance to update
+			do {
+				try Model.importArchive(from: url, removingOriginal: false)
+				ViewController.shared.endProgress()
+			} catch {
+				ViewController.shared.endProgress()
+				self.alertOnMainThread(error: error)
 			}
 		}
 	}
