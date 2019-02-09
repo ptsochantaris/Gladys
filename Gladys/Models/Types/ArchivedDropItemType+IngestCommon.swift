@@ -98,15 +98,19 @@ extension ArchivedDropItemType {
 		} else if let item = item as? IMAGE {
 			log("      received image: \(item)")
 			setDisplayIcon(item, 50, .fill)
-			#if os(iOS)
 			if encodeAnyUIImage {
 				log("      will encode it to JPEG, as it's the only image in this parent item")
 				representedClass = .data
 				typeIdentifier = kUTTypeJPEG as String
 				classWasWrapped = false
 				if storeBytes {
+					#if os(iOS)
 					let b = item.jpegData(compressionQuality: 1)
 					setBytes(b)
+					#else
+					let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
+					setBytes(b ?? Data())
+					#endif
 				}
 			} else {
 				representedClass = .image
@@ -114,12 +118,6 @@ extension ArchivedDropItemType {
 					setBytes(data)
 				}
 			}
-			#else
-			representedClass = .image
-			if storeBytes {
-				setBytes(data)
-			}
-			#endif
 			completeIngest()
 
 		} else if let item = item as? MKMapItem {

@@ -107,6 +107,15 @@
 		16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		16287AF71EFB05E9007188AE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
+		162BDD74220F01FA00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD75220F020700A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD76220F020800A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD77220F020900A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD78220F020900A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD79220F020A00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD7A220F020F00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD7B220F021000A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		162BDD7C220F023D00A3C17B /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
 		162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC51F9147E300410447 /* CommonEnumerator.swift */; };
 		162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */; };
 		162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC91F9147F900410447 /* RootEnumerator.swift */; };
@@ -618,6 +627,7 @@
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		162BDD73220F01FA00A3C17B /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		162CCCC51F9147E300410447 /* CommonEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingSetEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC91F9147F900410447 /* RootEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootEnumerator.swift; sourceTree = "<group>"; };
@@ -980,6 +990,7 @@
 				1695218820A23B5200FFE817 /* IAPManager.swift */,
 				16559C8920A4CC55006C281D /* Global.swift */,
 				162594D420D5548F00A65E06 /* Caches.swift */,
+				162BDD73220F01FA00A3C17B /* Logging.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2207,6 +2218,7 @@
 				16ED386320C08FAA00B9BFDA /* Model.swift in Sources */,
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
+				162BDD7B220F021000A3C17B /* Logging.swift in Sources */,
 				16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
@@ -2244,6 +2256,7 @@
 				16EC2935219D5F11004174C3 /* Model+Lite.swift in Sources */,
 				162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */,
 				160A54661F90B2C2001ADC9E /* Model+FileProviderCoordinator.swift in Sources */,
+				162BDD77220F020900A3C17B /* Logging.swift in Sources */,
 				16CD7D8A20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
 				16A80A0F2113AFDA004C72AB /* Caches.swift in Sources */,
 				16CD7D8220A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
@@ -2274,6 +2287,7 @@
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
+				162BDD75220F020700A3C17B /* Logging.swift in Sources */,
 				169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F3262030E5E10036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */,
@@ -2298,6 +2312,7 @@
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
+				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
 				1610899C1FA3224B0095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -2334,6 +2349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16D984502160B25200D9D51C /* Global.swift in Sources */,
+				162BDD7C220F023D00A3C17B /* Logging.swift in Sources */,
 				164947E020BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				166E72F920BEDCC600DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */,
@@ -2351,6 +2367,7 @@
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16C3A2D820AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift in Sources */,
+				162BDD7A220F020F00A3C17B /* Logging.swift in Sources */,
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
 				16C3A2D320AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift in Sources */,
 				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
@@ -2473,6 +2490,7 @@
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
+				162BDD74220F01FA00A3C17B /* Logging.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 				1610899B1FA322260095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				16CD7D7C20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */,
@@ -2495,6 +2513,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C3A2D720AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
+				162BDD78220F020900A3C17B /* Logging.swift in Sources */,
 				16969BAD1FB0E675007B2F77 /* ArchivedDropItemType.swift in Sources */,
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedDropItem+Common.swift in Sources */,
@@ -2537,6 +2556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16D984A12160CC0600D9D51C /* Model.swift in Sources */,
+				162BDD79220F020A00A3C17B /* Logging.swift in Sources */,
 				16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */,
 				16D984A72160CC5500D9D51C /* ArchivedDropItemType+Common.swift in Sources */,
 				16D984A42160CC3900D9D51C /* ArchivedDropItemType.swift in Sources */,

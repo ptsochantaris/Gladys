@@ -58,7 +58,6 @@ struct CallbackSupport {
 			let pasteboard = NSPasteboard(name: sharingPasteboard)
 			ViewController.shared.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-				ViewController.shared.itemView.reloadData()
 				DistributedNotificationCenter.default().post(name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
 				success(nil)
 			}

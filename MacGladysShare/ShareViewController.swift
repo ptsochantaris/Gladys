@@ -41,17 +41,29 @@ class ShareViewController: NSViewController {
 		var pasteboardItems = [NSPasteboardWriting]()
 
 		for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
+
 			if let text = inputItem.attributedContentText {
+				log("Ingesting inputItem with text: [\(text.string)]")
 				pasteboardItems.append(text)
+
 			} else if let title = inputItem.attributedTitle {
+				log("Ingesting inputItem with title: [\(title.string)]")
 				pasteboardItems.append(title)
-			} else if let providers = inputItem.attachments {
-				for provider in providers {
+
+			} else {
+				log("Ingesting inputItem with \(inputItem.attachments?.count ?? 0) attachment(s)...")
+				for attachment in inputItem.attachments ?? [] {
 					let newItem = NSPasteboardItem()
 					pasteboardItems.append(newItem)
-					for type in provider.registeredTypeIdentifiers {
+					var identifiers = attachment.registeredTypeIdentifiers
+					if identifiers.contains("public.file-url") && identifiers.contains("public.url") { // finder is sharing
+						log("> Removing Finder redundant URL data")
+						identifiers.removeAll { $0 == "public.file-url" || $0 == "public.url" }
+					}
+					log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
+					for type in identifiers {
 						importGroup.enter()
-						let p = provider.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, error in
+						let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, error in
 							guard let s = self else { return }
 							if let data = data {
 								newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
@@ -68,17 +80,20 @@ class ShareViewController: NSViewController {
 			guard let s = self else { return }
 
 			if s.cancelled {
+				log("Ingest cancelled")
 				let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: "User cancelled" ])
 				extensionContext.cancelRequest(withError: error)
 				return
 			}
 
+			log("Writing data to parent app...")
 			s.cancelButton.isHidden = true
 			s.pasteboard.clearContents()
 			s.pasteboard.writeObjects(pasteboardItems)
 			DistributedNotificationCenter.default().addObserver(s, selector: #selector(s.pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
 			DispatchQueue.main.async {
 				if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
+					log("Main app could not be opened")
 					let error = NSError(domain: GladysErrorDomain, code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
 					extensionContext.cancelRequest(withError: error)
 				}
@@ -91,6 +106,7 @@ class ShareViewController: NSViewController {
 	}
 
 	@objc private func pasteDone() {
+		log("Main app ingest done.")
 		pasteboard.clearContents()
 		extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 	}
