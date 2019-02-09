@@ -933,11 +933,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func info(_ sender: Any?) {
 		for item in collection.actionableSelectedItems {
-			let uuid = item.uuid
-			if DetailController.showingUUIDs.contains(uuid) {
-				NotificationCenter.default.post(name: .ForegroundDisplayedItem, object: uuid)
+			if NSApp.currentEvent?.modifierFlags.contains(.option) ?? false {
+				item.tryOpen(from: self)
 			} else {
-				performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
+				let uuid = item.uuid
+				if DetailController.showingUUIDs.contains(uuid) {
+					NotificationCenter.default.post(name: .ForegroundDisplayedItem, object: uuid)
+				} else {
+					performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
+				}
 			}
 		}
 	}
