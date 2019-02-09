@@ -17,6 +17,10 @@ private let todayCellFormatter: DateFormatter = {
 	return d
 }()
 
+extension Notification.Name {
+	static let OpenParentApp = Notification.Name("OpenParentApp")
+}
+
 final class TodayCell: UICollectionViewCell {
 
 	@IBOutlet private weak var topLabel: UILabel!
@@ -41,6 +45,16 @@ final class TodayCell: UICollectionViewCell {
 		imageView.layer.cornerRadius = 5
 		isAccessibilityElement = true
 		accessibilityHint = "Select to copy"
+
+		let lp = UILongPressGestureRecognizer(target: self, action: #selector(longPress(_:)))
+		addGestureRecognizer(lp)
+	}
+
+	@objc private func longPress(_ longPressRecognizer: UILongPressGestureRecognizer) {
+		if longPressRecognizer.state == .began, let uuid = dropItem?.uuid.uuidString, let url = URL(string: "gladys://inspect-item/\(uuid)") {
+			longPressRecognizer.state = .ended
+			NotificationCenter.default.post(name: .OpenParentApp, object: url)
+		}
 	}
 
 	var dropItem: ArchivedDropItem? {

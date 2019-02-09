@@ -17,7 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
-		if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
+		if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
+			ViewController.executeOrQueue {
+				ViewController.shared.highlightItem(with: itemId, andOpen: true)
+			}
+
+		} else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			ViewController.executeOrQueue {
 				IAPManager.shared.displayRequest(newTotal: t)
 			}

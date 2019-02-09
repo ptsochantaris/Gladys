@@ -9,7 +9,7 @@
 import UIKit
 import NotificationCenter
 
-class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
+final class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
 UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
 
 	@IBOutlet private weak var emptyLabel: UILabel!
@@ -81,6 +81,13 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		super.viewDidLoad()
 		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
 		itemsView.dragDelegate = self
+		NotificationCenter.default.addObserver(self, selector: #selector(openParentApp(_:)), name: .OpenParentApp, object: nil)
+	}
+
+	@objc private func openParentApp(_ notification: Notification) {
+		if let url = notification.object as? URL {
+			extensionContext?.open(url, completionHandler: nil)
+		}
 	}
 
 	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
