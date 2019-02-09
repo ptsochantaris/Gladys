@@ -204,9 +204,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: actionName, style: .destructive, handler: { action in
+		a.addAction(UIAlertAction(title: actionName, style: .destructive) { action in
 			Model.resetEverything()
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(a, animated: true)
 	}
@@ -297,12 +297,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@objc private func importExportSelected() {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default, handler: { action in
+		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { action in
 			self.importSelected()
-		}))
-		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default, handler: { action in
+		})
+		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { action in
 			self.exportSelected()
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 	}

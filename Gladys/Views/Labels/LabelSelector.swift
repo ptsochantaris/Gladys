@@ -150,7 +150,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		let toggle = filteredToggles[indexPath.row]
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: { [weak self] action in
+		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] action in
 			guard let s = self else { return }
 		    Model.removeLabel(toggle.name)
 			if Model.labelToggles.count == 0 {
@@ -165,7 +165,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 				s.sizeWindow()
 			}
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		if navigationItem.searchController?.isActive ?? false {
 			navigationItem.searchController?.present(a, animated: true)

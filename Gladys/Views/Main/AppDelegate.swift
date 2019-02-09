@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		} else if url.host == nil { // just opening
 			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
 				let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
-				a.addAction(UIAlertAction(title: "Import", style: .destructive, handler: { _ in
+				a.addAction(UIAlertAction(title: "Import", style: .destructive) { _ in
 					let inPlace = options[.openInPlace] as? Bool ?? false
 					var securityScoped = false
 					if inPlace {
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 					if securityScoped {
 						url.stopAccessingSecurityScopedResource()
 					}
-				}))
+				})
 				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 				ViewController.executeOrQueue {
 					ViewController.top.present(a, animated: true)

@@ -12,7 +12,7 @@ enum PasteResult {
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if let buttonTitle = buttonTitle {
-		a.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: { _ in completion?() }))
+		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
 	ViewController.top.present(a, animated: true)
@@ -32,13 +32,13 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 		textField.placeholder = title
 		textField.text = previousValue
 	}
-	a.addAction(UIAlertAction(title: action, style: .default, handler: { ac in
+	a.addAction(UIAlertAction(title: action, style: .default) { ac in
 		let result = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 		completion(result)
-	}))
-	a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { ac in
+	})
+	a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { ac in
 		completion(nil)
-	}))
+	})
 	from.present(a, animated: true)
 }
 
@@ -926,9 +926,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func sortAscendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default, handler: { _ in
+			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default) { _ in
 				self.sortRequested(sortOption, ascending: true, button: self.sortDescendingButton)
-			}))
+			})
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
@@ -938,9 +938,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBAction private func sortDescendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order. This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default, handler: { _ in
+			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
 				self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
-			}))
+			})
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
@@ -951,12 +951,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		let items = ignoreSelectedItems ? [] : (selectedItems?.compactMap { Model.item(uuid: $0) } ?? [])
 		if !items.isEmpty && verifyRange {
 			let a = UIAlertController(title: "Sort selected items?", message: "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?", preferredStyle: .actionSheet)
-			a.addAction(UIAlertAction(title: "Sort Selected", style: .default, handler: { _ in
+			a.addAction(UIAlertAction(title: "Sort Selected", style: .default) { _ in
 				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: false, button: button)
-			}))
-			a.addAction(UIAlertAction(title: "Sort All", style: .destructive, handler: { _ in
+			})
+			a.addAction(UIAlertAction(title: "Sort All", style: .destructive) { _ in
 				self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: true, button: button)
-			}))
+			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			present(a, animated: true)
 			a.popoverPresentationController?.barButtonItem = button
@@ -974,14 +974,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		if selectedCount > 0 {
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
-			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
+			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				if let p = a.popoverPresentationController {
 					_ = self.popoverPresentationControllerShouldDismissPopover(p)
 				}
 				self.selectedItems?.removeAll()
 				self.collection.reloadData()
 				self.didUpdateItems()
-			}))
+			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
 			navigationController?.visibleViewController?.present(a, animated: true)
@@ -995,14 +995,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			guard itemCount > 0 else { return }
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
-			a.addAction(UIAlertAction(title: msg, style: .default, handler: { action in
+			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				if let p = a.popoverPresentationController {
 					_ = self.popoverPresentationControllerShouldDismissPopover(p)
 				}
 				self.selectedItems = Model.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
 				self.didUpdateItems()
-			}))
+			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
 			navigationController?.visibleViewController?.present(a, animated: true)
@@ -1244,12 +1244,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
-		a.addAction(UIAlertAction(title: msg, style: .destructive, handler: { action in
+		a.addAction(UIAlertAction(title: msg, style: .destructive) { action in
 			if let p = a.popoverPresentationController {
 				_ = self.popoverPresentationControllerShouldDismissPopover(p)
 			}
 			self.proceedWithDelete()
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		a.modalPresentationStyle = .popover
 		navigationController?.visibleViewController?.present(a, animated: true)
@@ -1598,10 +1598,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
 		if let destructiveTitle = destructiveTitle {
-			a.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: { _ in destructiveAction?() }))
+			a.addAction(UIAlertAction(title: destructiveTitle, style: .destructive) { _ in destructiveAction?() })
 		}
 		if let actionTitle = actionTitle {
-			a.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { _ in actionAction?() }))
+			a.addAction(UIAlertAction(title: actionTitle, style: .default) { _ in actionAction?() })
 		}
 		if let cancelTitle = cancelTitle {
 			a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))

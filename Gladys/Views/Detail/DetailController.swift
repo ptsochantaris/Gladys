@@ -300,14 +300,14 @@ final class DetailController: GladysViewController,
 			message = "Deleting it will remove it from others' collections too."
 		}
 		let a = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { action in
+		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive) { action in
 			self.done()
 			if let item = self.item {
 				DispatchQueue.main.async {
 					ViewController.shared.deleteRequested(for: [item])
 				}
 			}
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 	}
@@ -429,12 +429,12 @@ final class DetailController: GladysViewController,
 	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
 		if component.bytes?.isPlist == true {
 			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
-			a.addAction(UIAlertAction(title: "Property List View", style: .default, handler: { _ in
+			a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
 				self.performSegue(withIdentifier: "plistEdit", sender: component)
-			}))
-			a.addAction(UIAlertAction(title: "Raw Data View", style: .default, handler: { _ in
+			})
+			a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { _ in
 				self.performSegue(withIdentifier: "hexEdit", sender: component)
-			}))
+			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			if let p = a.popoverPresentationController {
 				p.sourceView = cell.inspectButton
@@ -887,12 +887,12 @@ final class DetailController: GladysViewController,
 
 	private func archiveWebComponent(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
 		let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Archive Page", style: .default, handler: { _ in
+		a.addAction(UIAlertAction(title: "Archive Page", style: .default) { _ in
 			self.proceedToArchiveWebComponent(cell: cell, url: url)
-		}))
-		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default, handler: { _ in
+		})
+		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { _ in
 			self.proceedToFetchLinkThumbnail(cell: cell, url: url, type: type)
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		if let p = a.popoverPresentationController {
 			p.sourceView = cell.archiveButton
@@ -1035,12 +1035,12 @@ final class DetailController: GladysViewController,
 
 	private func shareOptionsPrivate(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Options", style: .default, handler: { [weak self] _ in
+		a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
 			self?.editInvites(sender)
-		}))
-		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive, handler: { [weak self] _ in
+		})
+		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
 			self?.deleteShare(sender)
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 		a.popoverPresentationController?.barButtonItem = sender
@@ -1048,12 +1048,12 @@ final class DetailController: GladysViewController,
 
 	private func shareOptionsPublic(_ sender: UIBarButtonItem) {
 		let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Make Private", style: .default, handler: { [weak self] _ in
+		a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
 			self?.editInvites(sender)
-		}))
-		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive, handler: { [weak self] _ in
+		})
+		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
 			self?.deleteShare(sender)
-		}))
+		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
 		a.popoverPresentationController?.barButtonItem = sender

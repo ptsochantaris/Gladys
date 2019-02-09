@@ -348,7 +348,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		let subtitle = item.note.isEmpty ? nil : item.note
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
 		for action in shortcutActions(push: push) {
-			a.addAction(UIAlertAction(title: action.title, style: action.style, handler: { _ in action.callback() }))
+			a.addAction(UIAlertAction(title: action.title, style: action.style) { _ in action.callback() })
 		}
 		presentAlert(a, push: push)
 	}
@@ -360,16 +360,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 			message = "Deleting it will remove it from others' collections too."
 		}
 		let a = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive, handler: { _ in
+		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive) { _ in
 			ViewController.shared.deleteRequested(for: [item])
-		}))
+		})
 		presentAlert(a, push: push)
 	}
 
 	private func presentAlert(_ a: UIAlertController, push: Bool) {
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 			self.egress()
-		}))
+		})
 		a.modalPresentationStyle = .popover
 		ViewController.top.present(a, animated: true)
 		if let p = a.popoverPresentationController {

@@ -37,7 +37,7 @@ extension ArchivedDropItem {
 				textField.text = self?.displayText.0
 			}
 		}
-		a.addAction(UIAlertAction(title: action, style: .default, handler: { [weak self] ac in
+		a.addAction(UIAlertAction(title: action, style: .default) { [weak self] ac in
 
 			var hint: String?
 			if a.textFields!.count > 1 {
@@ -50,10 +50,10 @@ extension ArchivedDropItem {
 			} else {
 				completion(password, hint)
 			}
-		}))
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { ac in
+		})
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { ac in
 			completion(nil, nil)
-		}))
+		})
 		from.present(a, animated: true)
 	}
 
