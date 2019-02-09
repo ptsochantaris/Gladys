@@ -125,7 +125,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	func application(_ sender: NSApplication, openFiles filenames: [String]) {
-		ViewController.shared.importFiles(paths: filenames)
+		if filenames.count == 1, let name = filenames.first, name.hasSuffix(".gladysArchive") == true {
+			let a = NSAlert()
+			a.messageText = "Import items from this archive?"
+			a.informativeText = "This is an archive of Gladys items that was previously exported. Would you like to import the items inside this archive to your current collection?"
+			a.addButton(withTitle: "Cancel")
+			a.addButton(withTitle: "Import Items")
+			a.beginSheetModal(for: ViewController.shared.view.window!) { response in
+				switch response.rawValue {
+				case 1000:
+					log("Cancelled")
+				default:
+					let url = URL(fileURLWithPath: name)
+					self.proceedWithImport(from: url)
+				}
+			}
+		} else {
+			ViewController.shared.importFiles(paths: filenames)
+		}
 	}
 
 	class ServicesProvider: NSObject {
