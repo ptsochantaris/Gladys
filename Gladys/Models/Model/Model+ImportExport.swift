@@ -68,8 +68,8 @@ extension Model {
 
 	private class FileManagerFilter: NSObject, FileManagerDelegate {
 		func fileManager(_ fileManager: FileManager, shouldCopyItemAt srcURL: URL, to dstURL: URL) -> Bool {
-			let components = srcURL.pathComponents
-			return !components.contains { $0 == "shared-blob" || $0 == "ck-record" || $0 == "ck-share" }
+			guard let lastComponent = srcURL.pathComponents.last else { return false }
+			return !(lastComponent == "shared-blob" || lastComponent == "ck-record" || lastComponent == "ck-share")
 		}
 	}
 
@@ -93,13 +93,13 @@ extension Model {
 	}
 
 	static private func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedDropItem], completion: @escaping (URL?, Error?) -> Void) throws {
-		let fm = FileManager.default
+		let fm = FileManager()
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
 		if fm.fileExists(atPath: tempPath.path) {
 			try fm.removeItem(at: tempPath)
 		}
 
-		var delegate: FileManagerFilter? = FileManagerFilter()
+		let delegate = FileManagerFilter()
 		fm.delegate = delegate
 
 		p.completedUnitCount += 1
@@ -112,9 +112,6 @@ extension Model {
 			try fm.copyAndReplaceItem(at: sourceForItem, to: destinationForItem)
 			p.completedUnitCount += 1
 		}
-
-		fm.delegate = nil
-		delegate = nil
 
 		let data = try JSONEncoder().encode(eligibleItems)
 		try data.write(to: tempPath.appendingPathComponent("items.json"))
