@@ -1,8 +1,8 @@
 //
-//  SiriShortcuts.swift
+//  SiriSettingsViewController.swift
 //  Gladys
 //
-//  Created by Paul Tsochantaris on 09/02/2019.
+//  Created by Paul Tsochantaris on 10/02/2019.
 //  Copyright © 2019 Paul Tsochantaris. All rights reserved.
 //
 
@@ -10,19 +10,32 @@ import UIKit
 import IntentsUI
 
 @available(iOS 12.0, *)
-final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
+extension INUIAddVoiceShortcutButton {
+	func place(in holder: UIView, buttonDelegate: INUIAddVoiceShortcutButtonDelegate, extraWidth: CGFloat = 0) {
+		delegate = buttonDelegate
+		translatesAutoresizingMaskIntoConstraints = false
+		holder.addSubview(self)
+		let i = intrinsicContentSize
+		NSLayoutConstraint.activate([
+			widthAnchor.constraint(equalToConstant: i.width + extraWidth),
+			heightAnchor.constraint(equalToConstant: i.height),
+			topAnchor.constraint(equalTo: holder.topAnchor),
+			bottomAnchor.constraint(equalTo: holder.bottomAnchor),
+			leadingAnchor.constraint(equalTo: holder.leadingAnchor),
+			trailingAnchor.constraint(equalTo: holder.trailingAnchor),
+			])
+	}
+}
 
-	@IBOutlet private weak var openItemDetailContainer: UIView!
-	@IBOutlet private weak var copyItemContainer: UIView!
-	@IBOutlet private weak var quickLookItemContainer: UIView!
+@available(iOS 12.0, *)
+final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
+
+	@IBOutlet private weak var pasteInGladysContainer: UIView!
 	@IBOutlet private weak var backgroundView: UIImageView!
 	@IBOutlet private weak var stackHolder: UIView!
 	@IBOutlet private weak var scrollView: UIScrollView!
 	@IBOutlet private var headers: [UILabel]!
 	@IBOutlet private var footers: [UILabel]!
-
-	var detailActivity: NSUserActivity?
-	var sourceItem: ArchivedDropItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,25 +45,9 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 		let darkMode = PersistedOptions.darkMode
 		let style: INUIAddVoiceShortcutButtonStyle = darkMode ? .blackOutline : .whiteOutline
 
-		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		if let detailActivity = detailActivity {
-			detailShortcutButton.shortcut = INShortcut(userActivity: detailActivity)
-		}
-		detailShortcutButton.place(in: openItemDetailContainer, buttonDelegate: self)
-
-		let copyItemShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		if let sourceItem = sourceItem {
-			copyItemShortcutButton.shortcut = INShortcut(intent: sourceItem.copyIntent)
-		}
-		copyItemShortcutButton.place(in: copyItemContainer, buttonDelegate: self)
-
-		let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		if let sourceItem = sourceItem {
-			let previewActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-			ArchivedDropItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
-			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
-		}
-		quickLookShortcutButton.place(in: quickLookItemContainer, buttonDelegate: self)
+		let pasteInGladysShortcutButton = INUIAddVoiceShortcutButton(style: style)
+		pasteInGladysShortcutButton.shortcut = INShortcut(intent: ViewController.shared.pasteIntent)
+		pasteInGladysShortcutButton.place(in: pasteInGladysContainer, buttonDelegate: self)
 
 		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .fittingSizeLevel)
 	}

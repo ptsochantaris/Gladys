@@ -100,6 +100,7 @@
 		162594D720D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		162594D820D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		162594D920D557D300A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626650A221056B800068136 /* SiriSettingsViewController.swift */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -628,6 +629,7 @@
 		162383F320F969650086E719 /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
 		162383F520F96C650086E719 /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		162594D420D5548F00A65E06 /* Caches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caches.swift; sourceTree = "<group>"; };
+		1626650A221056B800068136 /* SiriSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSettingsViewController.swift; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1282,6 +1284,7 @@
 				1688B82A1FAE60B80014FA1B /* OptionsController.swift */,
 				1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */,
 				162289C7207D0D6900DAC6A2 /* HelpController.swift */,
+				1626650A221056B800068136 /* SiriSettingsViewController.swift */,
 			);
 			path = Prefs;
 			sourceTree = "<group>";
@@ -2499,6 +2502,7 @@
 				16C2A42F217B1EA1006CF0F4 /* QLHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
+				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
 				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class OptionsController: GladysViewController {
+final class OptionsController: GladysViewController, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet private weak var twoColumnsSwitch: UISwitch!
 	@IBOutlet private weak var separateItemsSwitch: UISwitch!
@@ -22,6 +22,7 @@ final class OptionsController: GladysViewController {
 	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
 	@IBOutlet private weak var wideModeSwitch: UISwitch!
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
+	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
 
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
@@ -111,6 +112,12 @@ final class OptionsController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		if #available(iOS 12.0, *) {
+			siriSettingsButton.isEnabled = true
+		} else {
+			siriSettingsButton.isEnabled = false
+		}
+
 		doneLocation = .right
 
 		separateItemsSwitch.tintColor = .lightGray
@@ -150,5 +157,19 @@ final class OptionsController: GladysViewController {
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
 
 		darkModeChanged()
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
+		if #available(iOS 12.0, *) {
+			if segue.identifier == "toSiriOptions", let p = segue.destination.popoverPresentationController {
+				p.backgroundColor = ViewController.shared.patternColor
+				p.delegate = self
+			}
+		}
+	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+		return .none
 	}
 }

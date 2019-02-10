@@ -651,11 +651,16 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.doneMonitoringChanges()
 	}
 
+	@available(iOS 12.0, *)
+	var pasteIntent: PasteClipboardIntent {
+		let intent = PasteClipboardIntent()
+		intent.suggestedInvocationPhrase = "Paste in Gladys"
+		return intent
+	}
+
 	func donatePasteIntent() {
 		if #available(iOS 12.0, *) {
-			let intent = PasteClipboardIntent()
-			intent.suggestedInvocationPhrase = "Paste in Gladys"
-			let interaction = INInteraction(intent: intent, response: nil)
+			let interaction = INInteraction(intent: pasteIntent, response: nil)
 			interaction.identifier = "paste-in-gladys"
 			interaction.donate { error in
 				if let error = error {
