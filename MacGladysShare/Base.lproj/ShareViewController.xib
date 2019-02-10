@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -9,6 +10,7 @@
             <connections>
                 <outlet property="cancelButton" destination="aF4-FD-N2y" id="n4m-cS-J0g"/>
                 <outlet property="spinner" destination="x2b-TE-rf5" id="eyt-Sc-4SF"/>
+                <outlet property="status" destination="ihA-Ff-rwU" id="Aef-l3-PWx"/>
                 <outlet property="view" destination="1" id="2"/>
             </connections>
         </customObject>

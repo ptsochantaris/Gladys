@@ -16,11 +16,13 @@ class ShareViewController: NSViewController {
 
 	@IBOutlet private weak var spinner: NSProgressIndicator!
 	@IBOutlet private weak var cancelButton: NSButton!
+	@IBOutlet private weak var status: NSTextField!
 
 	private var cancelled = false
 	private var progresses = [Progress]()
 	private let importGroup = DispatchGroup()
 	private let pasteboard = NSPasteboard(name: sharingPasteboard)
+	private var pasteboardItems = [NSPasteboardWriting]()
 
 	@IBAction private func cancelButtonSelected(_ sender: NSButton) {
 		cancelled = true
@@ -31,14 +33,19 @@ class ShareViewController: NSViewController {
 		progresses.removeAll()
 	}
 
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		DistributedNotificationCenter.default().addObserver(self, selector: #selector(pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		status.stringValue = "Loading data..."
 		spinner.startAnimation(nil)
+		pasteboardItems.removeAll()
 
 		guard let extensionContext = extensionContext else { return }
-
-		var pasteboardItems = [NSPasteboardWriting]()
 
 		for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
 
@@ -75,6 +82,12 @@ class ShareViewController: NSViewController {
 				}
 			}
 		}
+	}
+
+	override func viewDidAppear() {
+		super.viewDidAppear()
+
+		guard let extensionContext = extensionContext else { return }
 
 		importGroup.notify(queue: DispatchQueue.main) { [weak self] in
 			guard let s = self else { return }
@@ -89,14 +102,12 @@ class ShareViewController: NSViewController {
 			log("Writing data to parent app...")
 			s.cancelButton.isHidden = true
 			s.pasteboard.clearContents()
-			s.pasteboard.writeObjects(pasteboardItems)
-			DistributedNotificationCenter.default().addObserver(s, selector: #selector(s.pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
-			DispatchQueue.main.async {
-				if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
-					log("Main app could not be opened")
-					let error = NSError(domain: GladysErrorDomain, code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
-					extensionContext.cancelRequest(withError: error)
-				}
+			s.pasteboard.writeObjects(s.pasteboardItems)
+			s.status.stringValue = "Saving..."
+			if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
+				log("Main app could not be opened")
+				let error = NSError(domain: GladysErrorDomain, code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])
+				extensionContext.cancelRequest(withError: error)
 			}
 		}
 	}
@@ -107,7 +118,9 @@ class ShareViewController: NSViewController {
 
 	@objc private func pasteDone() {
 		log("Main app ingest done.")
+		status.stringValue = "Done"
 		pasteboard.clearContents()
+		spinner.stopAnimation(nil)
 		extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 	}
 
