@@ -57,6 +57,7 @@ final class DetailController: GladysViewController,
 		}
 
 		if #available(iOS 12.0, *) {
+			siriButton.isEnabled = true
 		} else {
 			siriButton.isEnabled = false
 		}
@@ -642,7 +643,11 @@ final class DetailController: GladysViewController,
 					d.detailActivity = userActivity
 					d.sourceItem = item
 					if let p = d.popoverPresentationController {
-						p.backgroundColor = ViewController.shared.patternColor
+						if PersistedOptions.darkMode {
+							p.backgroundColor = .darkGray
+						} else {
+							p.backgroundColor = .white
+						}
 						p.delegate = self
 					}
 				}

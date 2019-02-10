@@ -27,10 +27,14 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		backgroundView.image = (ViewController.shared.itemView.backgroundView as! UIImageView).image
+		if PersistedOptions.darkMode {
+			backgroundView.backgroundColor = .darkGray
+		} else {
+			backgroundView.backgroundColor = .white
+		}
 
 		let darkMode = PersistedOptions.darkMode
-		let style: INUIAddVoiceShortcutButtonStyle = darkMode ? .blackOutline : .whiteOutline
+		let style: INUIAddVoiceShortcutButtonStyle = darkMode ? .white : .black
 
 		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
 		if let detailActivity = detailActivity {
@@ -59,11 +63,9 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 		super.darkModeChanged()
 		let d = PersistedOptions.darkMode
 
-		let headerColor = d ? ViewController.tintColor : UIColor.darkGray
-		headers.forEach { $0.textColor = headerColor }
-
-		let footerColor = d ? UIColor.lightText : UIColor.gray
-		footers.forEach { $0.textColor = footerColor }
+		let color: UIColor = d ? .lightText : .gray
+		headers.forEach { $0.textColor = color }
+		footers.forEach { $0.textColor = color }
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

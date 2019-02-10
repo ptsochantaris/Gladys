@@ -163,7 +163,11 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		super.prepare(for: segue, sender: sender)
 		if #available(iOS 12.0, *) {
 			if segue.identifier == "toSiriOptions", let p = segue.destination.popoverPresentationController {
-				p.backgroundColor = ViewController.shared.patternColor
+				if PersistedOptions.darkMode {
+					p.backgroundColor = .darkGray
+				} else {
+					p.backgroundColor = .white
+				}
 				p.delegate = self
 			}
 		}
