@@ -17,6 +17,9 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	@IBOutlet private weak var quickLookItemContainer: UIView!
 	@IBOutlet private weak var backgroundView: UIImageView!
 	@IBOutlet private weak var stackHolder: UIView!
+	@IBOutlet private weak var scrollView: UIScrollView!
+	@IBOutlet private var headers: [UILabel]!
+	@IBOutlet private var footers: [UILabel]!
 
 	var detailActivity: NSUserActivity?
 	var sourceItem: ArchivedDropItem?
@@ -26,59 +29,64 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 
 		backgroundView.image = (ViewController.shared.itemView.backgroundView as! UIImageView).image
 
-		let style: INUIAddVoiceShortcutButtonStyle = PersistedOptions.darkMode ? .black : .white
+		let darkMode = PersistedOptions.darkMode
+		let style: INUIAddVoiceShortcutButtonStyle = darkMode ? .blackOutline : .whiteOutline
 
 		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		detailShortcutButton.translatesAutoresizingMaskIntoConstraints = false
-		detailShortcutButton.delegate = self
 		if let detailActivity = detailActivity {
 			detailShortcutButton.shortcut = INShortcut(userActivity: detailActivity)
 		}
-		openItemDetailContainer.addSubview(detailShortcutButton)
 
 		let copyItemShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		copyItemShortcutButton.translatesAutoresizingMaskIntoConstraints = false
-		copyItemShortcutButton.delegate = self
 		if let sourceItem = sourceItem {
 			copyItemShortcutButton.shortcut = INShortcut(intent: sourceItem.copyIntent)
 		}
-		copyItemContainer.addSubview(copyItemShortcutButton)
 
 		let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		quickLookShortcutButton.translatesAutoresizingMaskIntoConstraints = false
-		quickLookShortcutButton.delegate = self
 		if let sourceItem = sourceItem {
 			let previewActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
 			ArchivedDropItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
 			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
 		}
-		quickLookItemContainer.addSubview(quickLookShortcutButton)
 
-		NSLayoutConstraint.activate([
-			detailShortcutButton.centerXAnchor.constraint(equalTo: openItemDetailContainer.centerXAnchor),
-			detailShortcutButton.topAnchor.constraint(equalTo: openItemDetailContainer.topAnchor),
-			detailShortcutButton.bottomAnchor.constraint(equalTo: openItemDetailContainer.bottomAnchor),
-			detailShortcutButton.leadingAnchor.constraint(greaterThanOrEqualTo: openItemDetailContainer.leadingAnchor),
-			detailShortcutButton.trailingAnchor.constraint(greaterThanOrEqualTo: openItemDetailContainer.trailingAnchor),
-
-			copyItemShortcutButton.centerXAnchor.constraint(equalTo: copyItemContainer.centerXAnchor),
-			copyItemShortcutButton.topAnchor.constraint(equalTo: copyItemContainer.topAnchor),
-			copyItemShortcutButton.bottomAnchor.constraint(equalTo: copyItemContainer.bottomAnchor),
-			copyItemShortcutButton.leadingAnchor.constraint(greaterThanOrEqualTo: copyItemContainer.leadingAnchor),
-			copyItemShortcutButton.trailingAnchor.constraint(greaterThanOrEqualTo: copyItemContainer.trailingAnchor),
-
-			quickLookShortcutButton.centerXAnchor.constraint(equalTo: quickLookItemContainer.centerXAnchor),
-			quickLookShortcutButton.topAnchor.constraint(equalTo: quickLookItemContainer.topAnchor),
-			quickLookShortcutButton.bottomAnchor.constraint(equalTo: quickLookItemContainer.bottomAnchor),
-			quickLookShortcutButton.leadingAnchor.constraint(greaterThanOrEqualTo: quickLookItemContainer.leadingAnchor),
-			quickLookShortcutButton.trailingAnchor.constraint(greaterThanOrEqualTo: quickLookItemContainer.trailingAnchor),
+		func place(button: INUIAddVoiceShortcutButton, in holder: UIView) {
+			button.delegate = self
+			button.translatesAutoresizingMaskIntoConstraints = false
+			holder.addSubview(button)
+			let i = button.intrinsicContentSize
+			NSLayoutConstraint.activate([
+				button.widthAnchor.constraint(equalToConstant: i.width),
+				button.heightAnchor.constraint(equalToConstant: i.height),
+				button.topAnchor.constraint(equalTo: holder.topAnchor),
+				button.bottomAnchor.constraint(equalTo: holder.bottomAnchor),
+				button.leadingAnchor.constraint(equalTo: holder.leadingAnchor),
+				button.trailingAnchor.constraint(equalTo: holder.trailingAnchor),
 			])
+		}
+
+		place(button: copyItemShortcutButton, in: copyItemContainer)
+		place(button: detailShortcutButton, in: openItemDetailContainer)
+		place(button: quickLookShortcutButton, in: quickLookItemContainer)
+
+		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .fittingSizeLevel)
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		guard let stackHolder = stackHolder else { return }
-		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .fittingSizeLevel)
+	override func darkModeChanged() {
+		super.darkModeChanged()
+		let d = PersistedOptions.darkMode
+
+		let headerColor = d ? ViewController.tintColor : UIColor.darkGray
+		headers.forEach { $0.textColor = headerColor }
+
+		let footerColor = d ? UIColor.lightText : UIColor.gray
+		footers.forEach { $0.textColor = footerColor }
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if stackHolder.frame.height > view.bounds.height {
+			scrollView.flashScrollIndicators()
+		}
 	}
 
 	func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {

@@ -602,6 +602,13 @@ final class DetailController: GladysViewController,
 		makeIndexAndSaveItem()
 	}
 
+	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+		if identifier == "toSiriShortcuts" {
+			return view.endEditing(false)
+		}
+		return true
+	}
+
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "textEdit",
 			let typeEntry = sender as? ArchivedDropItemType,
