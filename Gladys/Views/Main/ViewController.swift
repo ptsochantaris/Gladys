@@ -389,7 +389,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
 
-	private var patternColor: UIColor {
+	var patternColor: UIColor {
 		return UIColor(patternImage: (collection.backgroundView as! UIImageView).image!)
 	}
 

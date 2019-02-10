@@ -119,6 +119,7 @@
 		162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */; };
 		162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = 162BDD90220F85AA00A3C17B /* gallery.ckcomplication */; };
 		162BDD92220F86C800A3C17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
+		162BDD94220F8F0500A3C17B /* SiriShortcutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */; };
 		162CCCC61F9147E300410447 /* CommonEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC51F9147E300410447 /* CommonEnumerator.swift */; };
 		162CCCC81F9147ED00410447 /* WorkingSetEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */; };
 		162CCCCA1F9147F900410447 /* RootEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162CCCC91F9147F900410447 /* RootEnumerator.swift */; };
@@ -633,6 +634,7 @@
 		162BDD73220F01FA00A3C17B /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationDataSource.swift; sourceTree = "<group>"; };
 		162BDD90220F85AA00A3C17B /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
+		162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsViewController.swift; sourceTree = "<group>"; };
 		162CCCC51F9147E300410447 /* CommonEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC71F9147ED00410447 /* WorkingSetEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingSetEnumerator.swift; sourceTree = "<group>"; };
 		162CCCC91F9147F900410447 /* RootEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootEnumerator.swift; sourceTree = "<group>"; };
@@ -976,6 +978,7 @@
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
 				16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */,
 				165A8F0821AA92D300405701 /* PlistEditor.swift */,
+				162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -2475,6 +2478,7 @@
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				16C3A2D120AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift in Sources */,
 				16C8166720CB0354001C12DF /* PullState.swift in Sources */,
+				162BDD94220F8F0500A3C17B /* SiriShortcutsViewController.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */,
 				1602F31D2030E53D0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,

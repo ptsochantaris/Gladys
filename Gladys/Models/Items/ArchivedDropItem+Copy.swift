@@ -34,14 +34,21 @@ extension ArchivedDropItem {
 		}
 	}
 
+	#if MAINAPP
+	@available(iOS 12.0, *)
+	var copyIntent: CopyItemIntent {
+		let intent = CopyItemIntent()
+		let trimmed = displayTitleOrUuid.truncateWithEllipses(limit: 24)
+		intent.suggestedInvocationPhrase = "Copy '\(trimmed)' from Gladys"
+		intent.item = INObject(identifier: uuid.uuidString, display: trimmed)
+		return intent
+	}
+	#endif
+
 	func donateCopyIntent() {
 		#if MAINAPP
 		if #available(iOS 12.0, *) {
-			let intent = CopyItemIntent()
-			let trimmed = displayTitleOrUuid.truncateWithEllipses(limit: 24)
-			intent.suggestedInvocationPhrase = "Copy '\(trimmed)' from Gladys"
-			intent.item = INObject(identifier: uuid.uuidString, display: trimmed)
-			let interaction = INInteraction(intent: intent, response: nil)
+			let interaction = INInteraction(intent: copyIntent, response: nil)
 			interaction.identifier = "copy-\(uuid.uuidString)"
 			interaction.donate { error in
 				if let error = error {

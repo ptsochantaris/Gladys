@@ -22,6 +22,7 @@ final class DetailController: GladysViewController,
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
 	@IBOutlet private weak var lockButton: UIBarButtonItem!
 	@IBOutlet private weak var invitesButton: UIBarButtonItem?
+	@IBOutlet private weak var siriButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -38,6 +39,7 @@ final class DetailController: GladysViewController,
 		deleteButton.accessibilityLabel = "Delete item"
 		copyButton.accessibilityLabel = "Copy item to clipboard"
 		shareButton.accessibilityLabel = "Share"
+		siriButton.accessibilityLabel = "Siri shortcuts"
 		updateLockButton()
 		updateInviteButton()
 
@@ -54,6 +56,11 @@ final class DetailController: GladysViewController,
 			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
 		}
 
+		if #available(iOS 12.0, *) {
+		} else {
+			siriButton.isEnabled = false
+		}
+		
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
@@ -126,6 +133,9 @@ final class DetailController: GladysViewController,
 	}
 
 	@IBAction private func lockButtonSelected(_ sender: UIBarButtonItem) {
+		if let p = presentedViewController {
+			p.dismiss(animated: false, completion: nil)
+		}
 		if item.isLocked {
 			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
 				if success, let s = self {
@@ -270,6 +280,9 @@ final class DetailController: GladysViewController,
 
 	var sharing = false
 	@IBAction private func shareSelected(_ sender: UIBarButtonItem) {
+		if let p = presentedViewController {
+			p.dismiss(animated: false, completion: nil)
+		}
 		sharing = true
 		sizeWindow()
 		let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
@@ -294,6 +307,9 @@ final class DetailController: GladysViewController,
 	}
 
 	@IBAction private func deleteSelected(_ sender: UIBarButtonItem) {
+		if let p = presentedViewController {
+			p.dismiss(animated: false, completion: nil)
+		}
 		var title, message: String?
 		if item.shareMode == .sharing {
 			title = "You are sharing this item"
@@ -613,6 +629,18 @@ final class DetailController: GladysViewController,
 			e.title = typeEntry.trimmedName
 			e.propertyList = propertyList
 
+		} else if segue.identifier == "toSiriShortcuts" {
+			if #available(iOS 12.0, *) {
+				if let d = segue.destination as? SiriShortcutsViewController {
+					d.detailActivity = userActivity
+					d.sourceItem = item
+					if let p = d.popoverPresentationController {
+						p.backgroundColor = ViewController.shared.patternColor
+						p.delegate = self
+					}
+				}
+			}
+
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,
 			let n = segue.destination as? UINavigationController,
@@ -635,7 +663,6 @@ final class DetailController: GladysViewController,
 			} else {
 				d.title = "Add Label"
 			}
-
 		}
 	}
 
