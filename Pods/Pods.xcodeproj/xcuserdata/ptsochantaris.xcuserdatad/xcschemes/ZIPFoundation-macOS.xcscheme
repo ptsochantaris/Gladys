@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D4F5CF2A259CF9CED0ACBCBE532B69CE"
+               BlueprintIdentifier = "0F1F2F6B67DAEA7D1777DC967E0B2CCD"
                BuildableName = "ZIPFoundation.framework"
                BlueprintName = "ZIPFoundation-macOS"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D4F5CF2A259CF9CED0ACBCBE532B69CE"
+            BlueprintIdentifier = "0F1F2F6B67DAEA7D1777DC967E0B2CCD"
             BuildableName = "ZIPFoundation.framework"
             BlueprintName = "ZIPFoundation-macOS"
             ReferencedContainer = "container:Pods.xcodeproj">

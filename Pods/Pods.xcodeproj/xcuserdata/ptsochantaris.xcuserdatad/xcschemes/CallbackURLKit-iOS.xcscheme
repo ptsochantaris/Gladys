@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3DA4BD8F67B6F0B69426F4DC957BC65"
+               BlueprintIdentifier = "5E684852601E668C1601D1D3BFBE0F79"
                BuildableName = "CallbackURLKit.framework"
                BlueprintName = "CallbackURLKit-iOS"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3DA4BD8F67B6F0B69426F4DC957BC65"
+            BlueprintIdentifier = "5E684852601E668C1601D1D3BFBE0F79"
             BuildableName = "CallbackURLKit.framework"
             BlueprintName = "CallbackURLKit-iOS"
             ReferencedContainer = "container:Pods.xcodeproj">

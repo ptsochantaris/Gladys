@@ -2,12 +2,12 @@ ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 CODE_SIGN_IDENTITY =
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CDEvents" "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) $(SDKROOT)/usr/include/libxml2 "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CDEvents/CDEvents.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework/Headers" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" $(SDKROOT)/usr/include/libxml2
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/../Frameworks' '@loader_path/Frameworks'
 LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/OpenSSL-Universal/lib-macos"
-OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/CDEvents/CDEvents.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"crypto" -l"ssl" -framework "CDEvents" -framework "CallbackURLKit" -framework "Fuzi" -framework "HotKey" -framework "ZIPFoundation"
-OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/CDEvents/CDEvents.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/CDEvents" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/HotKey"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"crypto" -l"ssl" -l"xml2" -framework "Appkit" -framework "CDEvents" -framework "CallbackURLKit" -framework "Carbon" -framework "CoreServices" -framework "Fuzi" -framework "HotKey" -framework "ZIPFoundation"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.

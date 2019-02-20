@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A7C261990EDBC29BECF067FBADC6807C"
+               BlueprintIdentifier = "746468E1E470BA130504E3B643E35656"
                BuildableName = "Fuzi.framework"
                BlueprintName = "Fuzi-macOS"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A7C261990EDBC29BECF067FBADC6807C"
+            BlueprintIdentifier = "746468E1E470BA130504E3B643E35656"
             BuildableName = "Fuzi.framework"
             BlueprintName = "Fuzi-macOS"
             ReferencedContainer = "container:Pods.xcodeproj">
