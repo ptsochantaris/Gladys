@@ -47,18 +47,35 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 
 		case .graphicCorner:
 			if #available(watchOSApplicationExtension 5.0, *) {
-				let t = CLKComplicationTemplateGraphicCornerTextImage()
-				t.imageProvider = CLKFullColorImageProvider(fullColorImage: #imageLiteral(resourceName: "gladysCorner"))
-				let shortText = String(count)
-				let text = count == 0 ? "NO ITEMS" : "\(shortText) ITEMS"
-				t.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
-				return t
+				if watchModel >= 4 {
+					let t = CLKComplicationTemplateGraphicCornerTextImage()
+					t.imageProvider = CLKFullColorImageProvider(fullColorImage: #imageLiteral(resourceName: "gladysCorner"))
+					let shortText = String(count)
+					let text = count == 0 ? "NO ITEMS" : "\(shortText) ITEMS"
+					t.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+					return t
+				} else {
+					return nil
+				}
 			} else {
 				return nil
 			}
 
 		default:
 			return nil
+		}
+	}
+
+	private var watchModel: Int {
+		var size: size_t = 0
+		sysctlbyname("hw.machine", nil, &size, nil, 0)
+		var machine = CChar()
+		sysctlbyname("hw.machine", &machine, &size, nil, 0)
+		if let s = String(cString: &machine, encoding: String.Encoding.utf8)?.trimmingCharacters(in: .whitespacesAndNewlines), s.hasPrefix("Watch"), s.count > 5 {
+			let sub = s[s.index(s.startIndex, offsetBy: 5)]
+			return Int(String(sub)) ?? 0
+		} else {
+			return 0
 		}
 	}
 
