@@ -67,9 +67,10 @@ final class CloudManager {
 
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
-	static func perform(_ operation: CKDatabaseOperation) {
+	static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+		log("Adding CK operation \(operation.operationID): \(type)")
 		operation.qualityOfService = .userInitiated
-		operation.database!.add(operation)
+		database.add(operation)
 	}
 
 	static var syncDirty = false
@@ -144,7 +145,7 @@ final class CloudManager {
 		} else {
 			operations.forEach {
 				doneOperation.addDependency($0)
-				perform($0)
+				perform($0, on: $0.database!, type: "sync upload")
 			}
 		}
 		OperationQueue.main.addOperation(doneOperation)
