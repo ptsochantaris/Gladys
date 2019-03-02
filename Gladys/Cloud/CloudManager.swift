@@ -68,7 +68,7 @@ final class CloudManager {
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
 	static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
-		log("Adding CK operation \(operation.operationID): \(type)")
+		log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
 		operation.qualityOfService = .userInitiated
 		database.add(operation)
 	}

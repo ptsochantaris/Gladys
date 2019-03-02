@@ -129,7 +129,7 @@ extension CloudManager {
 				finalError = error
 			}
 		}
-		perform(ss, on: container.sharedCloudDatabase, type: "delete shared db subscription")
+		perform(ss, on: container.sharedCloudDatabase, type: "delete subscription")
 
 		let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
 		ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
@@ -137,7 +137,7 @@ extension CloudManager {
 				finalError = error
 			}
 		}
-		perform(ms, on: container.privateCloudDatabase, type: "delete private db subscription")
+		perform(ms, on: container.privateCloudDatabase, type: "delete subscription")
 
 		let doneOperation = BlockOperation {
 			if let finalError = finalError, !force {
@@ -204,7 +204,7 @@ extension CloudManager {
 				fetchInitialUUIDSequence(zone: zone, completion: completion)
 			}
 		}
-		perform(createZone, on: container.privateCloudDatabase, type: "create private zone")
+		perform(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
 	}
 
 	private static func updateSubscriptions(completion: @escaping (Error?)->Void) {
@@ -217,10 +217,10 @@ extension CloudManager {
 				subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
 					completion(error)
 				}
-				perform(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to shared db")
+				perform(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
 			}
 		}
-		perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to private db")
+		perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
 	}
 
 	static private func abortActivation(_ error: Error, completion: @escaping (Error?)->Void) {
@@ -527,7 +527,7 @@ extension CloudManager {
 			}
 			doneOperation.addDependency(fetch)
 			let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-			perform(fetch, on: database, type: "fetch missing share records for items on \(database.databaseScope.logName) db")
+			perform(fetch, on: database, type: "fetch missing share records for items")
 		}
 
 		OperationQueue.main.addOperation(doneOperation)
@@ -555,23 +555,27 @@ extension CloudManager {
 			}
 		}
 		let database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-		perform(fetch, on: database, type: "fetching individual cloud record from \(database.databaseScope.logName) db")
+		perform(fetch, on: database, type: "fetching individual cloud record")
 	}
 
 	private static func fetchDBChanges(database: CKDatabase, stats: PullState, completion: @escaping (Error?, Bool) -> Void) {
 
-		log("Fetching changes from \(database.databaseScope.logName) database")
-
-		var changedZoneIds = [CKRecordZone.ID]()
-		var deletedZoneIds = [CKRecordZone.ID]()
+		var changedZoneIds = Set<CKRecordZone.ID>()
+		var deletedZoneIds = Set<CKRecordZone.ID>()
 		let databaseToken = PullState.databaseToken(for: database.databaseScope)
 		let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
-		operation.recordZoneWithIDChangedBlock = { changedZoneIds.append($0) }
-		operation.recordZoneWithIDWasPurgedBlock = { deletedZoneIds.append($0) }
-		operation.recordZoneWithIDWasDeletedBlock = { deletedZoneIds.append($0) }
+		operation.recordZoneWithIDChangedBlock = { changedZoneIds.insert($0) }
+		operation.recordZoneWithIDWasPurgedBlock = {
+			deletedZoneIds.insert($0)
+			log("Detected zone purging in \(database.databaseScope.logName) database: \($0)")
+		}
+		operation.recordZoneWithIDWasDeletedBlock = {
+			deletedZoneIds.insert($0)
+			log("Detected zone deletion in \(database.databaseScope.logName) database: \($0)")
+		}
 		operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
 			if let error = error {
-				log("Shared database fetch operation failed: \(error.finalDescription)")
+				log("\(database.databaseScope.logName) database fetch operation failed: \(error.finalDescription)")
 				DispatchQueue.main.async {
 					completion(error, false)
 				}
@@ -579,19 +583,24 @@ extension CloudManager {
 			}
 
 			if deletedZoneIds.contains(privateZoneId) {
-				log("Private zone has been deleted, sync must be disabled.")
-				DispatchQueue.main.async {
-					genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
-					deactivate(force: true) { _ in
-						completion(nil, true)
+				if database.databaseScope == .private {
+					log("Private zone has been deleted, sync must be disabled.")
+					DispatchQueue.main.async {
+						genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
+						deactivate(force: true) { _ in
+							completion(nil, true)
+						}
 					}
+					return
+				} else {
+					log("Private zone has been signaled as deleted in \(database.databaseScope.logName) database, ignoring this")
+					deletedZoneIds.remove(privateZoneId)
 				}
-				return
 			}
 
 			DispatchQueue.main.async {
 				for deletedZoneId in deletedZoneIds {
-					log("Detected zone deletion: \(deletedZoneId)")
+					log("Handling zone deletion in \(database.databaseScope.logName) database: \(deletedZoneId)")
 					Model.removeItemsFromZone(deletedZoneId)
 					PullState.setZoneToken(nil, for: deletedZoneId)
 				}
@@ -606,7 +615,7 @@ extension CloudManager {
 				return
 			}
 
-			fetchZoneChanges(database: database, zoneIDs: changedZoneIds, stats: stats) { error in
+			fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds), stats: stats) { error in
 				DispatchQueue.main.async {
 					if let error = error {
 						log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
@@ -617,7 +626,7 @@ extension CloudManager {
 				}
 			}
 		}
-		perform(operation, on: database, type: "fetch \(database.databaseScope.logName) changes")
+		perform(operation, on: database, type: "fetch database changes")
 	}
 
 	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID], stats: PullState, completion: @escaping (Error?) -> Void) {
@@ -652,7 +661,7 @@ extension CloudManager {
 			}
 		}
 
-		perform(operation, on: database, type: "fetch zone changes from \(database.databaseScope.logName) db")
+		perform(operation, on: database, type: "fetch zone changes")
 	}
 
 	static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
@@ -782,7 +791,7 @@ extension CloudManager {
 			}
 		}
 		let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-		perform(deleteOperation, on: database, type: "delete share on \(database.databaseScope.logName) db")
+		perform(deleteOperation, on: database, type: "delete share")
 	}
 
 	static func proceedWithDeactivation() {
