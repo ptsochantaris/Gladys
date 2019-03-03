@@ -138,7 +138,7 @@ final class PushState {
 		return progress
 	}
 
-	var deletionOperations: [CKDatabaseOperation] {
+	private var deletionOperations: [CKDatabaseOperation] {
 		return recordsToDelete.map { recordIdList in
 			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
 			operation.database = database
@@ -170,7 +170,7 @@ final class PushState {
 		}
 	}
 
-	var pushOperations: [CKDatabaseOperation] {
+	private var pushOperations: [CKDatabaseOperation] {
 		return payloadsToPush.map { recordList in
 			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
 			operation.database = database
