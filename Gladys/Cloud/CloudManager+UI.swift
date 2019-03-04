@@ -16,9 +16,10 @@ extension CloudManager {
 		if !syncSwitchedOn { return }
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
-		switch notification.databaseScope {
-		case .private:
-			log("Received private DB change push")
+		let scope = notification.databaseScope
+		log("Received \(scope.logName) DB change push")
+		switch scope {
+		case .private, .shared:
 			if UIApplication.shared.applicationState == .background {
 				Model.reloadDataIfNeeded()
 			} else if !Model.doneIngesting {
@@ -26,7 +27,7 @@ extension CloudManager {
 				completionHandler(.newData)
 				return
 			}
-			sync(scope: .private) { error in
+			sync(scope: scope) { error in
 				if error != nil {
 					completionHandler(.failed)
 				} else {
@@ -35,22 +36,6 @@ extension CloudManager {
 			}
 		case .public:
 			break
-		case .shared:
-			log("Received shared DB change push")
-			if UIApplication.shared.applicationState == .background {
-				Model.reloadDataIfNeeded()
-			} else if !Model.doneIngesting {
-				log("We'll be syncing in a moment anyway, ignoring the push for now")
-				completionHandler(.newData)
-				return
-			}
-			sync(scope: .shared) { error in
-				if error != nil {
-					completionHandler(.failed)
-				} else {
-					completionHandler(.newData)
-				}
-			}
 		}
 	}
 
