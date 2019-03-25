@@ -62,7 +62,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 				m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
 
 				let archiveSubMenu = NSMenu()
-				archiveSubMenu.addItem("Archive Page", action: #selector(archivePageSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
+				archiveSubMenu.addItem("Archive Target", action: #selector(archivePageSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 				archiveSubMenu.addItem("Image Thumbnail", action: #selector(archiveThumbnailSelected), keyEquivalent: "", keyEquivalentModifierMask: [])
 
 				let archiveMenu = NSMenuItem(title: "Download...", action: nil, keyEquivalent: "")

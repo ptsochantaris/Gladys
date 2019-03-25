@@ -926,7 +926,7 @@ final class DetailController: GladysViewController,
 
 	private func archiveWebComponent(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
 		let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Archive Page", style: .default) { _ in
+		a.addAction(UIAlertAction(title: "Archive Target", style: .default) { _ in
 			self.proceedToArchiveWebComponent(cell: cell, url: url)
 		})
 		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { _ in
