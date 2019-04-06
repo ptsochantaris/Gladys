@@ -235,9 +235,15 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	////////////////////// Labels
 
+	private func updateNewItems() {
+		// update references to items that may have just been refreshed
+		newItems = newItems.map { $0.uuid }.compactMap { Model.item(uuid: $0) }
+	}
+
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let destination = segue.destination as? LabelEditorController {
 			Model.reloadDataIfNeeded()
+			updateNewItems()
 			var labels = Set<String>()
 			for item in newItems {
 				labels.formUnion(item.labels)
@@ -250,6 +256,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	private func applyNewLabels(_ newLabels: [String], _ newNote: String) {
 		Model.reloadDataIfNeeded()
+		updateNewItems()
 		var changes = false
 		for item in newItems {
 			var itemChanged = false
