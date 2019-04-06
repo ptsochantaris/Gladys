@@ -96,7 +96,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 		} else {
 			let names = [String](repeating: "ItemController", count: dropList.count)
 			let currentUUID = ExtensionDelegate.currentUUID
-			let currentPage = dropList.index { $0["u"] as? String == currentUUID } ?? 0
+			let currentPage = dropList.firstIndex { $0["u"] as? String == currentUUID } ?? 0
 			let index = min(currentPage, names.count-1)
 			DispatchQueue.main.sync {
 				ExtensionDelegate.totalCount = names.count

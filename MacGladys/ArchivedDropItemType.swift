@@ -479,8 +479,9 @@ final class ArchivedDropItemType: Codable {
 					let length = getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, nil, 0, 0, 0)
 					if length > 0 {
 						var data = Data(count: length)
-						let result = data.withUnsafeMutableBytes {
-							getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, $0, length, 0, 0)
+						let result = data.withUnsafeMutableBytes { ptr -> Int in
+							guard let base = ptr.baseAddress else { return 0 }
+							return getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, base, length, 0, 0)
 						}
 						if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
 							return Date(timeIntervalSinceReferenceDate: time)
@@ -498,8 +499,9 @@ final class ArchivedDropItemType: Codable {
 					if let newValue = newValue {
 						if let data = String(newValue.timeIntervalSinceReferenceDate).data(using: .utf8) {
 							log("Setting external update stamp for \(recordLocation.path) to \(newValue)")
-							_ = data.withUnsafeBytes {
-								setxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, $0, data.count, 0, 0)
+							_ = data.withUnsafeBytes { ptr in
+								guard let base = ptr.baseAddress else { return }
+								setxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, base, data.count, 0, 0)
 							}
 						}
 					} else {

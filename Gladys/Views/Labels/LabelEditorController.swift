@@ -98,7 +98,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 			}
 		case .all:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle.name) {
+				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.name) {
 					item.labels.remove(at: i)
 					item.postModified()
 					editedUUIDs.insert($0)
@@ -151,7 +151,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 			allToggles.sort { $0.name < $1.name }
 		}
 		updateFilter(nil)
-		if let i = allToggles.index(where: { $0.name == newTag }) {
+		if let i = allToggles.firstIndex(where: { $0.name == newTag }) {
 			let existingToggle = allToggles[i]
 			let ip = IndexPath(row: i, section: 0)
 			if existingToggle.toggleState(across: selectedItems) != .all {

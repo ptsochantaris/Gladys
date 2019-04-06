@@ -80,7 +80,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 			allToggles.sort { $0.name < $1.name }
 		}
 		tableView.reloadData()
-		if let i = allToggles.index(where: { $0.name == newTag }) {
+		if let i = allToggles.firstIndex(where: { $0.name == newTag }) {
 			let existingToggle = allToggles[i]
 			if existingToggle.toggleState(across: selectedItems) != .all {
 				tableView(tableView, setObjectValue: NSButton.StateValue.on, for: togglesColumn, row: i)
@@ -112,7 +112,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 			}
 		case .all:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), let i = item.labels.index(of: toggle.name) {
+				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.name) {
 					item.labels.remove(at: i)
 					item.postModified()
 					editedUUIDs.insert($0)

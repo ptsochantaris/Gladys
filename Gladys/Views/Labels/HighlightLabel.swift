@@ -34,6 +34,10 @@ final class HighlightLabel: UILabel {
 			return
 		}
 
+		guard let font = font, let tintColor = tintColor else {
+			return
+		}
+
 		let p = NSMutableParagraphStyle()
 		p.alignment = textAlignment
 		p.lineBreakMode = .byWordWrapping
@@ -48,7 +52,7 @@ final class HighlightLabel: UILabel {
 
 		let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
 			.font: font,
-			.foregroundColor: tintColor!,
+			.foregroundColor: tintColor,
 			.paragraphStyle: p,
 			.baselineOffset: 1,
 			])

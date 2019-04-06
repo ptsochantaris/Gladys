@@ -3,7 +3,7 @@ PODS:
     - CallbackURLKit/Core (= 2.2.0)
   - CallbackURLKit/Core (2.2.0)
   - CDEvents (1.2.2)
-  - Fuzi (2.1.0)
+  - Fuzi (3.0.0)
   - HotKey (0.1.1)
   - OpenSSL-Universal (1.0.2.13)
   - ZIPFoundation (0.9.8)
@@ -11,7 +11,7 @@ PODS:
 DEPENDENCIES:
   - CallbackURLKit
   - CDEvents
-  - Fuzi (~> 2)
+  - Fuzi
   - HotKey
   - OpenSSL-Universal
   - ZIPFoundation
@@ -28,11 +28,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   CallbackURLKit: 63d4ce4c79a0344179d7d5fd9c38175b732b8a6f
   CDEvents: f311f23de13414f4b3625f1a663b2e1d9a85d982
-  Fuzi: 8c57344debff6d3a0c76a9e0f549152defdaaa48
+  Fuzi: a758e57fab9fbec6fd218ea7f2e00aa79325a93a
   HotKey: 0be143fd015544a63c51be6dc2066dbf455ced72
   OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
   ZIPFoundation: b1f07e4409baf1641f3fe5948b2a1c3f5c500cb1
 
-PODFILE CHECKSUM: 6e85b466ad2b7b67dc086472afb1d0b3c570c494
+PODFILE CHECKSUM: 3e3a13b26d06ec8304abefd77d1f65f2bbb63a2d
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.6.1

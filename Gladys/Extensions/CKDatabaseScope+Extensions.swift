@@ -14,6 +14,7 @@ extension CKDatabase.Scope {
 		case .public: return "1"
 		case .private: return "2"
 		case .shared: return "3"
+		@unknown default: return "4"
 		}
 	}
 
@@ -22,6 +23,7 @@ extension CKDatabase.Scope {
 		case .private: return "private"
 		case .public: return "public"
 		case .shared: return "shared"
+		@unknown default: return "unknown"
 		}
 	}
 }

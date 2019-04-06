@@ -21,31 +21,23 @@ extension CloudManager {
 		}
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
-		switch notification.databaseScope {
-		case .private:
-			log("Received private DB change push")
+		let scope = notification.databaseScope
+		log("Received \(scope.logName) DB change push")
+		switch scope {
+		case .private, .shared:
 			if !Model.doneIngesting {
 				log("We'll be syncing in a moment anyway, ignoring the push")
 				return
 			}
-			sync(scope: .private) { error in
+			sync(scope: scope) { error in
 				if let error = error {
 					log("Notification-triggered sync error: \(error.finalDescription)")
 				}
 			}
 		case .public:
 			break
-		case .shared:
-			log("Received shared DB change push")
-			if !Model.doneIngesting {
-				log("We'll be syncing in a moment anyway, ignoring the push")
-				return
-			}
-			sync(scope: .shared) { error in
-				if let error = error {
-					log("Notification-triggered sync error: \(error.finalDescription)")
-				}
-			}
+		@unknown default:
+			break
 		}
 	}
 

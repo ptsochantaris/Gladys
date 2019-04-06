@@ -407,6 +407,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		case .visible:
 			hideTitlebar()
 			PersistedOptions.hideTitlebar = true
+		@unknown default:
+			showTitlebar()
+			PersistedOptions.hideTitlebar = false
 		}
 	}
 
@@ -534,7 +537,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func shareSelected(_ sender: Any?) {
 		guard let itemToShare = collection.actionableSelectedItems.first,
-			let i = Model.filteredDrops.index(of: itemToShare),
+			let i = Model.filteredDrops.firstIndex(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
 			else { return }
 
@@ -593,7 +596,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
 		if let item = Model.item(uuid: identifier) {
-			if let i = Model.drops.index(of: item) {
+			if let i = Model.drops.firstIndex(of: item) {
 				let ip = IndexPath(item: i, section: 0)
 				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
 				collection.selectionIndexes = IndexSet(integer: i)
@@ -686,7 +689,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
-				let sourceIndex = Model.drops.index(of: sourceItem)!
+				let sourceIndex = Model.drops.firstIndex(of: sourceItem)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
 				collection.animator().moveItem(at: draggingIndexPath, to: indexPath)
@@ -753,7 +756,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				Model.drops.insert(newItem, at: modelIndex)
 				Model.forceUpdateFilter(signalUpdate: false)
 
-				if let visibleIndex = Model.filteredDrops.index(of: newItem) {
+				if let visibleIndex = Model.filteredDrops.firstIndex(of: newItem) {
 					let finalIndex = IndexPath(item: visibleIndex, section: 0)
 					insertedIndexPaths.append(finalIndex)
 				}
@@ -837,7 +840,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func addCellToSelection(_ sender: DropCell) {
-		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.index(of: cellItem) {
+		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.firstIndex(of: cellItem) {
 			let newIp = IndexPath(item: index, section: 0)
 			if !collection.selectionIndexPaths.contains(newIp) {
 				collection.selectionIndexPaths = [newIp]
@@ -998,7 +1001,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func moveToTop(_ sender: Any?) {
 		for item in collection.actionableSelectedItems {
-			if let i = Model.drops.index(of: item) {
+			if let i = Model.drops.firstIndex(of: item) {
 				Model.drops.remove(at: i)
 				Model.drops.insert(item, at: 0)
 			}
@@ -1239,7 +1242,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
 		guard let qlItem = item as? ArchivedDropItemType.PreviewItem else { return .zero }
-		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.filteredDrops.index(of: drop) {
+		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.filteredDrops.firstIndex(of: drop) {
 			let frameRealativeToCollection = collection.frameForItem(at: index)
 			let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
 			let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
@@ -1252,7 +1255,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let visibleCells = collection.visibleItems()
 		if let qlItem = item as? ArchivedDropItemType.PreviewItem,
 			let parentUuid = Model.typeItem(uuid: qlItem.uuid.uuidString)?.parentUuid,
-			let cellIndex = visibleCells.index(where: { ($0.representedObject as? ArchivedDropItem)?.uuid == parentUuid }) {
+			let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedDropItem)?.uuid == parentUuid }) {
 			return (visibleCells[cellIndex] as? DropCell)?.previewImage
 		}
 		return nil

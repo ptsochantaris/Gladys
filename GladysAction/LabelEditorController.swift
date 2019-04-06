@@ -67,7 +67,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let toggle = availableToggles[indexPath.row]
-		if let i = selectedLabels.index(of: toggle) {
+		if let i = selectedLabels.firstIndex(of: toggle) {
 			selectedLabels.remove(at: i)
 		} else {
 			selectedLabels.append(toggle)
@@ -117,7 +117,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 			allToggles.sort()
 		}
 		updateFilter(nil)
-		if let i = allToggles.index(of: newTag) {
+		if let i = allToggles.firstIndex(of: newTag) {
 			let existingToggle = allToggles[i]
 			let ip = IndexPath(row: i, section: 0)
 			if !selectedLabels.contains(existingToggle) {

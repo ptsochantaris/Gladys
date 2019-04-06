@@ -88,25 +88,25 @@ final class DataInspector: GladysViewController {
 		decimalSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
 		decimalSwitch.onTintColor = view.tintColor
 
-		signedAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		signedAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		signedAccessibility.accessibilityTraits = .button
 		signedAccessibility.accessibilityFrameInContainerSpace = [signedLabel, unsignedLabel].reduce(signedSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}
 
-		endianAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		endianAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		endianAccessibility.accessibilityTraits = .button
 		endianAccessibility.accessibilityFrameInContainerSpace = [littleEndian, bigEndian].reduce(littleEndianSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}
 
-		decimalAccessibility = UIAccessibilityElement(accessibilityContainer: view)
+		decimalAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		decimalAccessibility.accessibilityTraits = .button
 		decimalAccessibility.accessibilityFrameInContainerSpace = [decimalLabel, hexadecimalLabel].reduce(decimalSwitch.frame) { frame, view -> CGRect in
 			return frame.union(view.frame)
 		}
 
-		view.accessibilityElements = [bit16, bit32, bit64, signedAccessibility, endianAccessibility, decimalAccessibility]
+		view.accessibilityElements = [bit16!, bit32!, bit64!, signedAccessibility!, endianAccessibility!, decimalAccessibility!]
 		switchesChanged()
 	}
 

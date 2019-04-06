@@ -36,6 +36,8 @@ extension CloudManager {
 			}
 		case .public:
 			break
+		@unknown default:
+			break
 		}
 	}
 

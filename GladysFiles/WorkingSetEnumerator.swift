@@ -20,7 +20,7 @@ final class WorkingSetEnumerator: CommonEnumerator {
 			for typeItem in drop.typeItems where typeItem.hasTagData {
 				let fpi = FileProviderItem(typeItem)
 				let id = fpi.itemIdentifier.rawValue
-				if let index = workingSetItems.index(where: { $0.itemIdentifier.rawValue == id }) { // a type item is overriding the parent
+				if let index = workingSetItems.firstIndex(where: { $0.itemIdentifier.rawValue == id }) { // a type item is overriding the parent
 					workingSetItems.remove(at: index)
 				}
 				workingSetItems.append(fpi)

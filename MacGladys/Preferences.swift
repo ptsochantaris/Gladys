@@ -73,7 +73,7 @@ final class Preferences: NSViewController {
 		hotkeyOption.integerValue = PersistedOptions.hotkeyOption ? 1 : 0
 		hotkeyShift.integerValue = PersistedOptions.hotkeyShift ? 1 : 0
 		hotkeyCtrl.integerValue = PersistedOptions.hotkeyCtrl ? 1 : 0
-		if PersistedOptions.hotkeyChar >= 0, let index = keyMap.index(of: PersistedOptions.hotkeyChar), let item = hotkeyChar.item(at: index + 1) {
+		if PersistedOptions.hotkeyChar >= 0, let index = keyMap.firstIndex(of: PersistedOptions.hotkeyChar), let item = hotkeyChar.item(at: index + 1) {
 			hotkeyChar.select(item)
 		} else {
 			hotkeyChar.select(hotkeyChar.menu?.items.first)

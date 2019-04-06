@@ -315,7 +315,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		if PersistedOptions.alwaysOnTop {
 			var windowsAfter = NSApplication.shared.windows
 			for b in windowsBefore {
-				if let i = windowsAfter.index(of: b) {
+				if let i = windowsAfter.firstIndex(of: b) {
 					windowsAfter.remove(at: i)
 				}
 			}

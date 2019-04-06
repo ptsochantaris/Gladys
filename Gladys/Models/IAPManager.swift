@@ -155,6 +155,8 @@ class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObser
 					self?.displaySuccess()
 				case .purchasing, .deferred:
 					break
+				@unknown default:
+					break
 				}
 			}
 		}

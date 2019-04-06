@@ -44,7 +44,7 @@ class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 
 	func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
 		sizeWindow(animate: true)
-		if let index = viewControllers?.index(of: viewController) {
+		if let index = viewControllers?.firstIndex(of: viewController) {
 			PersistedOptions.lastSelectedPreferencesTab = index
 		}
 	}

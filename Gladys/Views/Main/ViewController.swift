@@ -264,7 +264,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 				guard
 					let filteredDestinationIndexPath = coordinator.destinationIndexPath,
-					let sourceIndex = Model.drops.index(of: existingItem),
+					let sourceIndex = Model.drops.firstIndex(of: existingItem),
 					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { continue }
 
 				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
@@ -510,7 +510,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 
 		if isEditing {
-			let selectedIndex = selectedItems?.index { $0 == item.uuid }
+			let selectedIndex = selectedItems?.firstIndex { $0 == item.uuid }
 			if let selectedIndex = selectedIndex {
 				selectedItems?.remove(at: selectedIndex)
 			} else {
@@ -801,7 +801,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func sendToTop(item: ArchivedDropItem) {
-		guard let i = Model.drops.index(of: item) else { return }
+		guard let i = Model.drops.firstIndex(of: item) else { return }
 		Model.drops.remove(at: i)
 		Model.drops.insert(item, at: 0)
 		Model.forceUpdateFilter(signalUpdate: false)
@@ -1382,7 +1382,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		item.needsReIngest = false
 
-		if let i = Model.filteredDrops.index(of: item) {
+		if let i = Model.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 			if currentDetailView == nil {
 				focusInitialAccessibilityElement()
@@ -1442,11 +1442,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild childUuid: String? = nil) {
-		if let index = Model.filteredDrops.index(where: { $0.uuid.uuidString == identifier }) {
+		if let index = Model.filteredDrops.firstIndex(where: { $0.uuid.uuidString == identifier }) {
 			dismissAnyPopOverOrModal() {
 				self.highlightItem(at: index, andOpen: andOpen, andPreview: andPreview, focusOnChild: childUuid)
 			}
-		} else if let index = Model.drops.index(where: { $0.uuid.uuidString == identifier }) {
+		} else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == identifier }) {
 			dismissAnyPopOverOrModal() {
 				self.resetSearch(andLabels: true)
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -1524,7 +1524,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	private var mostRecentIndexPathActioned: IndexPath?
 
 	func noteLastActionedItem(_ item: ArchivedDropItem) {
-		if let i = Model.filteredDrops.index(of: item) {
+		if let i = Model.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 		}
 	}

@@ -68,6 +68,8 @@ extension CloudManager {
 					activationFailure(error: error, reason: "You are not logged into iCloud on this device.", completion: completion)
 				case .restricted:
 					activationFailure(error: error, reason: "iCloud access is restricted on this device due to policy or parental controls.", completion: completion)
+				@unknown default:
+					activationFailure(error: error, reason: "iCloud access is not available on this device.", completion: completion)
 				}
 			}
 		}
@@ -351,7 +353,7 @@ extension CloudManager {
 						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
 						log("  Hooked \(newTypeItemRecords.count) pending type items")
 					}
-					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.index(where: {
+					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.firstIndex(where: {
 						$0.recordID == existingShareId // takes zone into account
 					}) {
 						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
@@ -718,6 +720,10 @@ extension CloudManager {
 			 .resultsTruncated, .unknownItem, .serverRecordChanged, .networkFailure, .networkUnavailable, .partialFailure:
 
 			// regular failure
+			completion(ckError)
+
+		@unknown default:
+			// not handled, let's assume it's important
 			completion(ckError)
 		}
 	}

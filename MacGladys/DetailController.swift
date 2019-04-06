@@ -256,7 +256,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		var newIndex = row
 
-		if let oldIndex = item.labels.index(of: label) {
+		if let oldIndex = item.labels.firstIndex(of: label) {
 			if oldIndex < newIndex {
 				newIndex -= 1
 			}
@@ -380,7 +380,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action) {
-		guard let i = componentCell.representedObject as? ArchivedDropItemType, let index = item.typeItems.index(of: i) else { return }
+		guard let i = componentCell.representedObject as? ArchivedDropItemType, let index = item.typeItems.firstIndex(of: i) else { return }
 
 		components.deselectAll(nil)
 		components.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])

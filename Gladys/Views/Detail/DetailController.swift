@@ -993,7 +993,7 @@ final class DetailController: GladysViewController,
 	}
 
 	private func refreshComponent(_ component: ArchivedDropItemType) {
-		if let indexOfComponent = item.typeItems.index(of: component) {
+		if let indexOfComponent = item.typeItems.firstIndex(of: component) {
 			let totalRows = tableView(table, numberOfRowsInSection: 3)
 			if indexOfComponent >= totalRows { return }
 			let ip = IndexPath(row: indexOfComponent, section: 3)

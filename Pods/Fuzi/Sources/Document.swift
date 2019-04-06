@@ -91,12 +91,8 @@ open class XMLDocument {
   - returns: An `XMLDocument` with the contents of the specified XML string.
   */
   public convenience init(data: Data) throws {
-    let cChars = data.withUnsafeBytes { (bytes: UnsafePointer<Int8>) -> [CChar] in
-        let buffer = UnsafeBufferPointer(start: bytes, count: data.count)
-        return [CChar](buffer)
-    }
-    
-    try self.init(cChars: cChars)
+    let buffer = data.withUnsafeBytes { $0.bindMemory(to: Int8.self) }
+    try self.init(buffer: buffer)
   }
   
   /**
@@ -109,22 +105,34 @@ open class XMLDocument {
   - returns: An `XMLDocument` with the contents of the specified XML string.
   */
   public convenience init(cChars: [CChar]) throws {
+    try self.init(buffer: UnsafeBufferPointer(start: UnsafePointer(cChars), count: cChars.count))
+  }
+
+  /**
+   Creates and returns an instance of XMLDocument from C char buffer, throwing XMLError if an error occured while parsing the XML.
+   
+   - parameter buffer: The XML data as C char buffer
+   
+   - throws: `XMLError` instance if an error occurred
+   
+   - returns: An `XMLDocument` with the contents of the specified XML string.
+   */
+
+  public convenience init(buffer: UnsafeBufferPointer<Int8>) throws {
     let options = Int32(XML_PARSE_NOWARNING.rawValue | XML_PARSE_NOERROR.rawValue | XML_PARSE_RECOVER.rawValue)
-    try self.init(cChars: cChars, options: options)
+    try self.init(buffer: buffer, options: options)
   }
-  
-  fileprivate typealias ParseFunction = (UnsafePointer<Int8>?, Int32, UnsafePointer<Int8>?, UnsafePointer<Int8>?, Int32) -> xmlDocPtr?
-  
-  fileprivate convenience init(cChars: [CChar], options: Int32) throws {
-    try self.init(parseFunction: { xmlReadMemory($0, $1, $2, $3, $4) }, cChars: cChars, options: options)
-  }
-  
-  fileprivate convenience init(parseFunction: ParseFunction, cChars: [CChar], options: Int32) throws {
-    guard let document = parseFunction(UnsafePointer(cChars), Int32(cChars.count), "", nil, options) else {
+
+  fileprivate convenience init(buffer: UnsafeBufferPointer<Int8>, options: Int32) throws {
+    guard let document = type(of: self).parse(buffer: buffer, options: options) else {
       throw XMLError.lastError(defaultError: .parserFailure)
     }
     xmlResetLastError()
     self.init(cDocument: document)
+  }
+
+  fileprivate class func parse(buffer: UnsafeBufferPointer<Int8>, options: Int32) -> xmlDocPtr? {
+    return xmlReadMemory(buffer.baseAddress, Int32(buffer.count), "", nil, options)
   }
   
   fileprivate init(cDocument: xmlDocPtr) {
@@ -184,23 +192,8 @@ open class HTMLDocument: XMLDocument {
   open var body: XMLElement? {
     return root?.firstChild(tag: "body")
   }
-  
-  // MARK: - Creating HTML Documents
-  /**
-  Creates and returns an instance of HTMLDocument from C char array, throwing XMLError if an error occured while parsing the HTML.
-  
-  - parameter cChars: cChars The HTML data as C char array
-  
-  - throws: `XMLError` instance if an error occurred
-  
-  - returns: An `HTMLDocument` with the contents of the specified HTML string.
-  */
-  public convenience init(cChars: [CChar]) throws {
-    let options = Int32(HTML_PARSE_NOWARNING.rawValue | HTML_PARSE_NOERROR.rawValue | HTML_PARSE_RECOVER.rawValue)
-    try self.init(cChars: cChars, options: options)
-  }
-  
-  fileprivate convenience init(cChars: [CChar], options: Int32) throws {
-    try self.init(parseFunction: { htmlReadMemory($0, $1, $2, $3, $4) }, cChars: cChars, options: options)
+
+  fileprivate override class func parse(buffer: UnsafeBufferPointer<Int8>, options: Int32) -> xmlDocPtr? {
+    return htmlReadMemory(buffer.baseAddress, Int32(buffer.count), "", nil, options)
   }
 }

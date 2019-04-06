@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -15,7 +15,6 @@
 			dependencies = (
 			);
 			name = "OpenSSL-Universal-macOS";
-			productName = "OpenSSL-Universal-macOS";
 		};
 		638E7BA798665DBEF5E0ECD739456691 /* OpenSSL-Universal-iOS */ = {
 			isa = PBXAggregateTarget;
@@ -25,7 +24,6 @@
 			dependencies = (
 			);
 			name = "OpenSSL-Universal-iOS";
-			productName = "OpenSSL-Universal-iOS";
 		};
 /* End PBXAggregateTarget section */
 
@@ -233,7 +231,7 @@
 		04DAE907D053AA944A1779E07C16E6DC /* obj_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = obj_mac.h; path = "include-ios/openssl/obj_mac.h"; sourceTree = "<group>"; };
 		07A8B239C66971F6FAD18F400F10871A /* Pods-GladysAction-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysAction-acknowledgements.markdown"; sourceTree = "<group>"; };
 		08241960D5CCBD1DB4BD8EB4CD9F9F9C /* Error.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Error.swift; path = Sources/Error.swift; sourceTree = "<group>"; };
-		0951D4EB4FEA501C3ACFA1D4B5E04493 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0951D4EB4FEA501C3ACFA1D4B5E04493 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CallbackURLKit.framework; path = "CallbackURLKit-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		09E1A050185A0AA4174BE9373EBF11AD /* asn1t.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1t.h; path = "include-ios/openssl/asn1t.h"; sourceTree = "<group>"; };
 		0C1DBCABB691A40910695E266D2609D6 /* blowfish.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = blowfish.h; path = "include-macos/openssl/blowfish.h"; sourceTree = "<group>"; };
 		0D0F72B55BBB18CDED2CF5E146F78800 /* crypto.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = "include-macos/openssl/crypto.h"; sourceTree = "<group>"; };
@@ -318,14 +316,14 @@
 		4A791B6985EEE7CBF93E3EF1ED981843 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		4ADB64C9DDC0F6278552135A1370F77D /* ripemd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ripemd.h; path = "include-macos/openssl/ripemd.h"; sourceTree = "<group>"; };
 		4B1B96F08740979163ED3B573E3A6EFD /* asn1_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1_mac.h; path = "include-macos/openssl/asn1_mac.h"; sourceTree = "<group>"; };
-		4C164C2D42A5ADEFCB45D7CAEBCAD48B /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C164C2D42A5ADEFCB45D7CAEBCAD48B /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CACA0232D001A7CA8E905FC78CDDC9D /* libcrypto.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libcrypto.a; path = "lib-macos/libcrypto.a"; sourceTree = "<group>"; };
 		4D91B2577F76CA4AB78D33BCEC1422DB /* des_old.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = des_old.h; path = "include-macos/openssl/des_old.h"; sourceTree = "<group>"; };
 		4E269AB9A5E08EF49AC496138489EE7F /* Helpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Sources/Helpers.swift; sourceTree = "<group>"; };
 		4EF4AEF2342C23318E0EC68F0D80FF25 /* mdc2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mdc2.h; path = "include-macos/openssl/mdc2.h"; sourceTree = "<group>"; };
 		4F25BBD9AFDD8921D34A94E720676F77 /* Pods-Gladys-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Gladys-frameworks.sh"; sourceTree = "<group>"; };
 		4F2FFD0FDAB7C9B3320A7ECCE3EFE058 /* cms.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = cms.h; path = "include-ios/openssl/cms.h"; sourceTree = "<group>"; };
-		5042C58DAA7070A6B61042AAFA599CA7 /* Pods_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5042C58DAA7070A6B61042AAFA599CA7 /* Pods_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GladysIntents.framework; path = "Pods-GladysIntents.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B5C9A8DAD1D34A2C28CF0905937EC0 /* Pods-Gladys-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Gladys-acknowledgements.markdown"; sourceTree = "<group>"; };
 		5198913FB21BD29A9C0D5478544B397A /* opensslconf.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = opensslconf.h; path = "include-macos/openssl/opensslconf.h"; sourceTree = "<group>"; };
 		51C75CD4B4D1AC13D64BB83E1DD9768E /* ZIPFoundation-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "ZIPFoundation-iOS.modulemap"; sourceTree = "<group>"; };
@@ -346,7 +344,7 @@
 		5A88D3B13D01FC0FB994B58BFE0B535C /* ssl3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl3.h; path = "include-ios/openssl/ssl3.h"; sourceTree = "<group>"; };
 		5ABADE9508EC03090A95E86E62C55D02 /* HotKey.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HotKey.xcconfig; sourceTree = "<group>"; };
 		5BC163BBA98CA00C32BFA17515D107DC /* stack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = stack.h; path = "include-macos/openssl/stack.h"; sourceTree = "<group>"; };
-		5BC520E34C52ED992083EB14A59236A2 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BC520E34C52ED992083EB14A59236A2 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C3D3240870A62E2FA45ED50F776ABD6 /* aes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = aes.h; path = "include-ios/openssl/aes.h"; sourceTree = "<group>"; };
 		5D1F243F17F16D183BD2D49FB6EA69F8 /* ossl_typ.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ossl_typ.h; path = "include-macos/openssl/ossl_typ.h"; sourceTree = "<group>"; };
 		5DA15C8D96A99A991F9E59510AB91499 /* Pods-MacGladysFramework.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-MacGladysFramework.modulemap"; sourceTree = "<group>"; };
@@ -369,7 +367,7 @@
 		6D271CE69DD1DEFF41928630CA6BF505 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		6DC582A1CE761EFD31814C02CB803E5F /* ZIPFoundation-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZIPFoundation-iOS-prefix.pch"; sourceTree = "<group>"; };
 		6E6CAF5DC20BE98D80886F48B5CDE73F /* ecdh.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ecdh.h; path = "include-ios/openssl/ecdh.h"; sourceTree = "<group>"; };
-		6F70CE74406453D3A264307F3EE9FD70 /* Pods_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F70CE74406453D3A264307F3EE9FD70 /* Pods_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MacGladys.framework; path = "Pods-MacGladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FCABB5A3D9947AF1CB5EA2E151F3B5B /* seed.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = seed.h; path = "include-ios/openssl/seed.h"; sourceTree = "<group>"; };
 		723D67F7503495C04195DF0BEE25F63A /* md5.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = md5.h; path = "include-macos/openssl/md5.h"; sourceTree = "<group>"; };
 		7255928754153F8F0DC42AE8E3C44068 /* CDEvents.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CDEvents.xcconfig; sourceTree = "<group>"; };
@@ -388,7 +386,7 @@
 		7C543F81375703491A5EF77819F44205 /* ossl_typ.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ossl_typ.h; path = "include-ios/openssl/ossl_typ.h"; sourceTree = "<group>"; };
 		7C6CD8C81C6F9652E7731B5FCC6EE8FC /* rc4.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rc4.h; path = "include-macos/openssl/rc4.h"; sourceTree = "<group>"; };
 		7C9BBCFD40F9F2C25E1CD8385AF5846D /* Pods-GladysIntents-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GladysIntents-umbrella.h"; sourceTree = "<group>"; };
-		7E2D7F2AA424174FC395DE35217F4D76 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E2D7F2AA424174FC395DE35217F4D76 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CallbackURLKit.framework; path = "CallbackURLKit-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F2075307FB5416943AA3093D7BFCDFC /* dsa.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dsa.h; path = "include-ios/openssl/dsa.h"; sourceTree = "<group>"; };
 		852D6622DFC6315E8A8DB0B4CF44EC99 /* conf.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = conf.h; path = "include-macos/openssl/conf.h"; sourceTree = "<group>"; };
 		859F3F601C78247E47767F0AFE78846E /* evp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = evp.h; path = "include-macos/openssl/evp.h"; sourceTree = "<group>"; };
@@ -411,16 +409,16 @@
 		98A5FF9964F16591FF20042F63908E9F /* Fuzi-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Fuzi-iOS.modulemap"; sourceTree = "<group>"; };
 		98F25B74140170B71DF01A0FE6AA3EB4 /* HotKey-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HotKey-umbrella.h"; sourceTree = "<group>"; };
 		9B769D8B957280007C2C3BE9739D23CC /* OpenSSL-Universal-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "OpenSSL-Universal-iOS.xcconfig"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9F6D489F3B1E1A6DA0A5CFC2A5756FE9 /* pqueue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pqueue.h; path = "include-ios/openssl/pqueue.h"; sourceTree = "<group>"; };
 		A03E92EA94800F07F5869BAA1CB1B29C /* symhacks.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = symhacks.h; path = "include-macos/openssl/symhacks.h"; sourceTree = "<group>"; };
 		A2FACE0253E5D547C10A2110608EEA19 /* blowfish.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = blowfish.h; path = "include-ios/openssl/blowfish.h"; sourceTree = "<group>"; };
-		A361CDF41988C292238ED0AF7BF97D65 /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A361CDF41988C292238ED0AF7BF97D65 /* Pods_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GladysAction.framework; path = "Pods-GladysAction.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A382676B0AE1BB8CACFCF1FD7C0F51D2 /* Archive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Archive.swift; path = Sources/ZIPFoundation/Archive.swift; sourceTree = "<group>"; };
 		A45EBBE63342EE84432C32F6D68E0A54 /* libcrypto.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libcrypto.a; path = "lib-ios/libcrypto.a"; sourceTree = "<group>"; };
 		A4B7E616054F8CEC03F44C1AF9271BE2 /* sha.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = sha.h; path = "include-macos/openssl/sha.h"; sourceTree = "<group>"; };
 		A4CD6ECA45D030152D508C8EFAAEE0B6 /* asn1_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1_mac.h; path = "include-ios/openssl/asn1_mac.h"; sourceTree = "<group>"; };
-		A5787D3D46756EB45BD5B6DC26A4A4BC /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5787D3D46756EB45BD5B6DC26A4A4BC /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HotKey.framework; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5EACA9049657E2B514C8CFFC8B63AF0 /* HotKey-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HotKey-dummy.m"; sourceTree = "<group>"; };
 		A605AA2503690EEAF9FC115395B57B93 /* pkcs12.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pkcs12.h; path = "include-macos/openssl/pkcs12.h"; sourceTree = "<group>"; };
 		A6D1DBF4A5FF3A54730E1625A9153CE8 /* ssl2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl2.h; path = "include-macos/openssl/ssl2.h"; sourceTree = "<group>"; };
@@ -432,10 +430,10 @@
 		AD473B01A7A67BE3DD59C72554391AE8 /* bio.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bio.h; path = "include-macos/openssl/bio.h"; sourceTree = "<group>"; };
 		AD8469825A1F17FCA9E52890AD30DB4C /* OpenSSL-Universal-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "OpenSSL-Universal-macOS.xcconfig"; path = "../OpenSSL-Universal-macOS/OpenSSL-Universal-macOS.xcconfig"; sourceTree = "<group>"; };
 		ADFFCE630BDCE06C845C95B6172C25FB /* modes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = modes.h; path = "include-ios/openssl/modes.h"; sourceTree = "<group>"; };
-		B0058BAB9CF962A427043D36C7B77678 /* Pods_GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0058BAB9CF962A427043D36C7B77678 /* Pods_GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GladysFramework.framework; path = "Pods-GladysFramework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0352636B05833A7495B2D6D518C2FB0 /* rc2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rc2.h; path = "include-macos/openssl/rc2.h"; sourceTree = "<group>"; };
 		B0AD8D0BB22A15C72F0294007C354D3D /* CallbackURLKit-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CallbackURLKit-macOS-prefix.pch"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch"; sourceTree = "<group>"; };
-		B0D1558345EA9696D4907EBF8F580871 /* Pods_MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MacGladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0D1558345EA9696D4907EBF8F580871 /* Pods_MacGladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_MacGladysFramework.framework; path = "Pods-MacGladysFramework.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1036AD4F68ACB364672E72D04561071 /* CDEvent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = CDEvent.h; sourceTree = "<group>"; };
 		B22368D87BF89552ED25C7E93E23EB08 /* bio.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bio.h; path = "include-ios/openssl/bio.h"; sourceTree = "<group>"; };
 		B7D7F5230418BAAD62D75DFF4D7A1CF4 /* Pods-GladysFramework-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysFramework-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -452,7 +450,7 @@
 		BEBF05DCCD1BC0363B0CF5EFF03F12FF /* dso.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dso.h; path = "include-macos/openssl/dso.h"; sourceTree = "<group>"; };
 		BFA37D1508E3133FD44E7CD9EBCA37C7 /* Fuzi-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Fuzi-iOS-Info.plist"; sourceTree = "<group>"; };
 		C0459D8F880A2BA12D52C3515F1A3FC0 /* Pods-MacGladys-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MacGladys-acknowledgements.markdown"; sourceTree = "<group>"; };
-		C0E35EB1627351AB6DE0A85FFE127E41 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0E35EB1627351AB6DE0A85FFE127E41 /* Pods_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Gladys.framework; path = "Pods-Gladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11E8A3A65593EB74BC5A02524B53227 /* CallbackURLKit-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CallbackURLKit-iOS-dummy.m"; sourceTree = "<group>"; };
 		C1B3A52E60DA2EC8DF705D361A8851A7 /* ZIPFoundation-macOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "ZIPFoundation-macOS-Info.plist"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS-Info.plist"; sourceTree = "<group>"; };
 		C29D30B9CBDC8EB47EA6B424913F900E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -502,7 +500,7 @@
 		E35E204D51753B3007DC0936F49E9AF3 /* Pods-MacGladysFramework-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MacGladysFramework-Info.plist"; sourceTree = "<group>"; };
 		E375792D0F035C6C32855DA10E88C83B /* cmac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = cmac.h; path = "include-ios/openssl/cmac.h"; sourceTree = "<group>"; };
 		E5F052E4EE58DDDA2ABA839CA3814FC3 /* Pods-Gladys-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Gladys-dummy.m"; sourceTree = "<group>"; };
-		E60333D89369F7B7309C3BA6C3D9F59A /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E60333D89369F7B7309C3BA6C3D9F59A /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E616A9C60F7525170AC3BBFA42D121A0 /* Pods-MacGladys-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MacGladys-Info.plist"; sourceTree = "<group>"; };
 		E6A2DE62BDB09650A231A2BD2294B70D /* hmac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = hmac.h; path = "include-ios/openssl/hmac.h"; sourceTree = "<group>"; };
 		E6C35BBAB9676F70D1789B51D92FB370 /* seed.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = seed.h; path = "include-macos/openssl/seed.h"; sourceTree = "<group>"; };
@@ -528,10 +526,10 @@
 		FA0AA36E8EABB908B054D28278933041 /* safestack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = safestack.h; path = "include-ios/openssl/safestack.h"; sourceTree = "<group>"; };
 		FB904136D50BD70840D9221C7C225915 /* Pods-GladysIntents-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GladysIntents-dummy.m"; sourceTree = "<group>"; };
 		FBED9D2B9F727E24FF5C9DD143F6670C /* ui_compat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ui_compat.h; path = "include-macos/openssl/ui_compat.h"; sourceTree = "<group>"; };
-		FCDAB923AB9EDEFCF1B1CDE7062D5304 /* CDEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CDEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDAB923AB9EDEFCF1B1CDE7062D5304 /* CDEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CDEvents.framework; path = CDEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE48C018F7F8BF7BEF49C891E47CA87A /* Pods-Gladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Gladys-acknowledgements.plist"; sourceTree = "<group>"; };
 		FE70B4ED40396169F747356159577DA6 /* obj_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = obj_mac.h; path = "include-macos/openssl/obj_mac.h"; sourceTree = "<group>"; };
-		FFDBB22089CBB9D5A746E1359C3133B6 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFDBB22089CBB9D5A746E1359C3133B6 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -755,6 +753,7 @@
 				1E37E7288E57252591ECDA5EC99976F4 /* NSEventModifierFlags+HotKey.swift */,
 				FC3EEBEFB513CAF131E1AE049BEA0917 /* Support Files */,
 			);
+			name = HotKey;
 			path = HotKey;
 			sourceTree = "<group>";
 		};
@@ -870,6 +869,7 @@
 				3E18CE271A4451B2E5CF87A8C502E5F9 /* Core */,
 				649B776E977FC499ABDE22A9AA1ECC06 /* Support Files */,
 			);
+			name = CallbackURLKit;
 			path = CallbackURLKit;
 			sourceTree = "<group>";
 		};
@@ -885,6 +885,7 @@
 				5E82F8B8CDF21CF0CD4488039477534A /* Queryable.swift */,
 				E139F9D85B08EE2E25CDE05A3593E642 /* Support Files */,
 			);
+			name = Fuzi;
 			path = Fuzi;
 			sourceTree = "<group>";
 		};
@@ -900,6 +901,7 @@
 				13467F0A05A0A097D4C7C8E8F06DE64D /* FileManager+ZIP.swift */,
 				9606CF15E406A33C4935BED1D997C8A4 /* Support Files */,
 			);
+			name = ZIPFoundation;
 			path = ZIPFoundation;
 			sourceTree = "<group>";
 		};
@@ -942,6 +944,7 @@
 				57670F3061A8873C7037CCE92C271958 /* compat.h */,
 				3DC77F56C44B5BD4F27DAFB416EC7AB2 /* Support Files */,
 			);
+			name = CDEvents;
 			path = CDEvents;
 			sourceTree = "<group>";
 		};
@@ -1180,6 +1183,7 @@
 				0DF16C8408E98C2A3B38767AC2165598 /* Frameworks */,
 				2B291E2BC674807A706EE8A9C6CE0F02 /* Support Files */,
 			);
+			name = "OpenSSL-Universal";
 			path = "OpenSSL-Universal";
 			sourceTree = "<group>";
 		};
@@ -1578,7 +1582,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 0930;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1980,7 +1984,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
 				OTHER_LDFLAGS = "";
@@ -1997,39 +2005,7 @@
 			};
 			name = Release;
 		};
-		0879A41F3D634093018E8D0D15322ACD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E10AE252EA888E13D47147FE2658B50 /* CallbackURLKit-iOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS.modulemap";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = CallbackURLKit;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		094A6EBDA2D2CC3F4E0BAF2EC5B25FA0 /* Debug */ = {
+		04593D82A57DCE609EFA5B72AA9F4D8F /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A7ED23834CAFF9A870C87631014CBA6C /* ZIPFoundation-iOS.xcconfig */;
 			buildSettings = {
@@ -2046,66 +2022,194 @@
 				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS.modulemap";
 				PRODUCT_MODULE_NAME = ZIPFoundation;
 				PRODUCT_NAME = ZIPFoundation;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
-		};
-		0CB21DC9F6FDFBE897DA2B79C431D399 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD8469825A1F17FCA9E52890AD30DB4C /* OpenSSL-Universal-macOS.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx;
-			};
 			name = Release;
 		};
-		122790B05386E9347A0D8B66EC618E84 /* Debug */ = {
+		0A39D96FD2B0CAF2804B5484D348C6F4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 936191B93FE736468DFA73BE25801565 /* Fuzi-iOS.xcconfig */;
+			baseConfigurationReference = 7255928754153F8F0DC42AE8E3C44068 /* CDEvents.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-iOS/Fuzi-iOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS-Info.plist";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/CDEvents/CDEvents-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CDEvents/CDEvents-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS.modulemap";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = Fuzi;
-				SDKROOT = iphoneos;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MODULEMAP_FILE = "Target Support Files/CDEvents/CDEvents.modulemap";
+				PRODUCT_MODULE_NAME = CDEvents;
+				PRODUCT_NAME = CDEvents;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		0BA0FB0C1FEB2F94772A85D82998A11C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F95F1391DC0CBE9DEDAEB97353E3AAB5 /* CallbackURLKit-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS.modulemap";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = CallbackURLKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		0CB21DC9F6FDFBE897DA2B79C431D399 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AD8469825A1F17FCA9E52890AD30DB4C /* OpenSSL-Universal-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0CD4AE312CCB8DB53E4637B8BADE6B58 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F95F1391DC0CBE9DEDAEB97353E3AAB5 /* CallbackURLKit-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS.modulemap";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = CallbackURLKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		21B26A72FDCD52495FD1CE34D2D1D81F /* Release */ = {
+		137D596D81308B4A61D8D1E40AE71FCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 156CD2249CE5231C915480165867686B /* Fuzi-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS.modulemap";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = Fuzi;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2A9AD67CDA3CADEDB2A22C7A7CF03A8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2161,8 +2265,10 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = "debug-only";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -2187,7 +2293,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysFramework/Pods-GladysFramework-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysFramework/Pods-GladysFramework.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2223,7 +2333,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2240,10 +2354,11 @@
 			};
 			name = Release;
 		};
-		3F6AB2BEF0B2485B4DF48C76667D139B /* Release */ = {
+		4270980F172A7462483866B2C306D7E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7255928754153F8F0DC42AE8E3C44068 /* CDEvents.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2259,7 +2374,11 @@
 				GCC_PREFIX_HEADER = "Target Support Files/CDEvents/CDEvents-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/CDEvents/CDEvents-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				MODULEMAP_FILE = "Target Support Files/CDEvents/CDEvents.modulemap";
 				PRODUCT_MODULE_NAME = CDEvents;
@@ -2267,109 +2386,13 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		3FBB91976C9C36FAD92692B14D538420 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 156CD2249CE5231C915480165867686B /* Fuzi-macOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS.modulemap";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = Fuzi;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		52027D6507688CCB60554D8FA3B86F63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5ABADE9508EC03090A95E86E62C55D02 /* HotKey.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/HotKey/HotKey-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Target Support Files/HotKey/HotKey.modulemap";
-				PRODUCT_MODULE_NAME = HotKey;
-				PRODUCT_NAME = HotKey;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		691ACE2DFC75457CB5B2360A6617D5F4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A7ED23834CAFF9A870C87631014CBA6C /* ZIPFoundation-iOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS.modulemap";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = ZIPFoundation;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		698361FAB5E763D680B09C2FB134EF2C /* Release */ = {
+		5498DCB12087C443454C9548813E4841 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 936191B93FE736468DFA73BE25801565 /* Fuzi-iOS.xcconfig */;
 			buildSettings = {
@@ -2387,20 +2410,23 @@
 				INFOPLIST_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MODULEMAP_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS.modulemap";
 				PRODUCT_MODULE_NAME = Fuzi;
 				PRODUCT_NAME = Fuzi;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		6FE2CD77B5518C9E07A37A0DDDFDC2CE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2410,17 +2436,59 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		748E28979A74D65C4D858B779D01C227 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 75743C9D6E8FAEB66D2061854664D8F2 /* ZIPFoundation-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS.modulemap";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = ZIPFoundation;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		7538CE848547DAA1F717E30D520A6F50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8E8ACA8E04775B31DA636E062247CCF3 /* Pods-MacGladysFramework.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2435,7 +2503,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MODULEMAP_FILE = "Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.modulemap";
@@ -2451,102 +2523,40 @@
 			};
 			name = Debug;
 		};
-		7DC0AEC319DB79E99B70B068E0038573 /* Debug */ = {
+		7A5A619A6018087432378EE4B5CB3987 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5ABADE9508EC03090A95E86E62C55D02 /* HotKey.xcconfig */;
+			baseConfigurationReference = A7ED23834CAFF9A870C87631014CBA6C /* ZIPFoundation-iOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/HotKey/HotKey-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Target Support Files/HotKey/HotKey.modulemap";
-				PRODUCT_MODULE_NAME = HotKey;
-				PRODUCT_NAME = HotKey;
-				SDKROOT = macosx;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS.modulemap";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = ZIPFoundation;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		7F3D3ABAED93A71B4FAAB54C79590B78 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F95F1391DC0CBE9DEDAEB97353E3AAB5 /* CallbackURLKit-macOS.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS.modulemap";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = CallbackURLKit;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		81634BC2EB83BACF8BBEEC51EE9B220D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 156CD2249CE5231C915480165867686B /* Fuzi-macOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS.modulemap";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = Fuzi;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		8595DCE1C59D8061CE75331CE40AE327 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2567,7 +2577,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2583,20 +2597,61 @@
 			};
 			name = Debug;
 		};
+		8A01620BEBE5254BF068E12CF64F0CEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 936191B93FE736468DFA73BE25801565 /* Fuzi-iOS.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-iOS/Fuzi-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Fuzi-iOS/Fuzi-iOS.modulemap";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = Fuzi;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		8AA2459BA9A065BCBA158D63C3B89CD6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD8469825A1F17FCA9E52890AD30DB4C /* OpenSSL-Universal-macOS.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		943AF25B1565C0A751BC1B1098D6BD78 /* Debug */ = {
+		90002264ED09D50DC5347D0C62CF52D2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E10AE252EA888E13D47147FE2658B50 /* CallbackURLKit-iOS.xcconfig */;
 			buildSettings = {
@@ -2613,14 +2668,54 @@
 				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS.modulemap";
 				PRODUCT_MODULE_NAME = CallbackURLKit;
 				PRODUCT_NAME = CallbackURLKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		AA56951B010678963A78EC75AE0334C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E10AE252EA888E13D47147FE2658B50 /* CallbackURLKit-iOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS.modulemap";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = CallbackURLKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2646,7 +2741,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysFramework/Pods-GladysFramework-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysFramework/Pods-GladysFramework.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2732,6 +2831,7 @@
 			baseConfigurationReference = 2246E7B12DAFDB946E95CB86A67C0136 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2746,7 +2846,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
@@ -2767,6 +2871,7 @@
 			baseConfigurationReference = 1D50168DE100ABB3603DF8CF55F883BA /* Pods-MacGladysFramework.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2781,7 +2886,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MODULEMAP_FILE = "Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.modulemap";
@@ -2815,7 +2924,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2831,6 +2944,81 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		CC70C08CDF4518150EE23900889CD126 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5ABADE9508EC03090A95E86E62C55D02 /* HotKey.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/HotKey/HotKey-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Target Support Files/HotKey/HotKey.modulemap";
+				PRODUCT_MODULE_NAME = HotKey;
+				PRODUCT_NAME = HotKey;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		CED246634AA0660953EFBA14C18609E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 75743C9D6E8FAEB66D2061854664D8F2 /* ZIPFoundation-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS.modulemap";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = ZIPFoundation;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		CF24F2682C966DD5EB11F603317F8CF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2850,7 +3038,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2885,7 +3077,11 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
 				OTHER_LDFLAGS = "";
@@ -2901,6 +3097,43 @@
 			};
 			name = Debug;
 		};
+		D8C14900D7FC0762DECCB584336C55D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5ABADE9508EC03090A95E86E62C55D02 /* HotKey.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/HotKey/HotKey-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Target Support Files/HotKey/HotKey.modulemap";
+				PRODUCT_MODULE_NAME = HotKey;
+				PRODUCT_NAME = HotKey;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		DE12BFCB334A97489B81BB4AA3D10BF0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B769D8B957280007C2C3BE9739D23CC /* OpenSSL-Universal-iOS.xcconfig */;
@@ -2909,7 +3142,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2921,6 +3157,7 @@
 			baseConfigurationReference = 43CE34127E25ABB5EC31EB8EE0B5934A /* Pods-MacGladys.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2935,7 +3172,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
@@ -2951,11 +3192,11 @@
 			};
 			name = Release;
 		};
-		E5D3FE1885D96517E5E28C81BEED7737 /* Release */ = {
+		E3080B8A9F1664340488708DCB80BC74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75743C9D6E8FAEB66D2061854664D8F2 /* ZIPFoundation-macOS.xcconfig */;
+			baseConfigurationReference = 156CD2249CE5231C915480165867686B /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2967,121 +3208,26 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS.modulemap";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = ZIPFoundation;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Target Support Files/Fuzi-macOS/Fuzi-macOS.modulemap";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = Fuzi;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		E87B757AA9CB6A4AF62480EFAEB565F2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7255928754153F8F0DC42AE8E3C44068 /* CDEvents.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/CDEvents/CDEvents-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CDEvents/CDEvents-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				MODULEMAP_FILE = "Target Support Files/CDEvents/CDEvents.modulemap";
-				PRODUCT_MODULE_NAME = CDEvents;
-				PRODUCT_NAME = CDEvents;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		F52229A8F588F1303B17A3B5E0CEDF6D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F95F1391DC0CBE9DEDAEB97353E3AAB5 /* CallbackURLKit-macOS.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS.modulemap";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = CallbackURLKit;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		F8E01950C41AE222CFFB3A88B3195FD1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75743C9D6E8FAEB66D2061854664D8F2 /* ZIPFoundation-macOS.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS.modulemap";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = ZIPFoundation;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -3089,8 +3235,8 @@
 		206AE7B5318027EC4BDF953F180A3C7D /* Build configuration list for PBXNativeTarget "HotKey" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7DC0AEC319DB79E99B70B068E0038573 /* Debug */,
-				52027D6507688CCB60554D8FA3B86F63 /* Release */,
+				D8C14900D7FC0762DECCB584336C55D4 /* Debug */,
+				CC70C08CDF4518150EE23900889CD126 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3099,7 +3245,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B0BA4B5E8148C7E9B85302E49A5CC966 /* Debug */,
-				21B26A72FDCD52495FD1CE34D2D1D81F /* Release */,
+				2A9AD67CDA3CADEDB2A22C7A7CF03A8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3116,8 +3262,8 @@
 		6AF4BC8719582B1BDC51513D03B10637 /* Build configuration list for PBXNativeTarget "ZIPFoundation-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				094A6EBDA2D2CC3F4E0BAF2EC5B25FA0 /* Debug */,
-				691ACE2DFC75457CB5B2360A6617D5F4 /* Release */,
+				7A5A619A6018087432378EE4B5CB3987 /* Debug */,
+				04593D82A57DCE609EFA5B72AA9F4D8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3134,8 +3280,8 @@
 		8AB22F6EB77865000B93A8CDB3DB9392 /* Build configuration list for PBXNativeTarget "CDEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E87B757AA9CB6A4AF62480EFAEB565F2 /* Debug */,
-				3F6AB2BEF0B2485B4DF48C76667D139B /* Release */,
+				4270980F172A7462483866B2C306D7E0 /* Debug */,
+				0A39D96FD2B0CAF2804B5484D348C6F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3170,8 +3316,8 @@
 		B73013E9FFEDB50ECDA50EB43EAD2EEC /* Build configuration list for PBXNativeTarget "Fuzi-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3FBB91976C9C36FAD92692B14D538420 /* Debug */,
-				81634BC2EB83BACF8BBEEC51EE9B220D /* Release */,
+				137D596D81308B4A61D8D1E40AE71FCB /* Debug */,
+				E3080B8A9F1664340488708DCB80BC74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3179,8 +3325,8 @@
 		BA24693E5E1466C2EFED186758605157 /* Build configuration list for PBXNativeTarget "ZIPFoundation-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F8E01950C41AE222CFFB3A88B3195FD1 /* Debug */,
-				E5D3FE1885D96517E5E28C81BEED7737 /* Release */,
+				CED246634AA0660953EFBA14C18609E7 /* Debug */,
+				748E28979A74D65C4D858B779D01C227 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3206,8 +3352,8 @@
 		D9967213C5334C6F7A3449D0262812DE /* Build configuration list for PBXNativeTarget "CallbackURLKit-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F52229A8F588F1303B17A3B5E0CEDF6D /* Debug */,
-				7F3D3ABAED93A71B4FAAB54C79590B78 /* Release */,
+				0CD4AE312CCB8DB53E4637B8BADE6B58 /* Debug */,
+				0BA0FB0C1FEB2F94772A85D82998A11C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3215,8 +3361,8 @@
 		DC36FFF6E84C822AD250C8696BF2E51B /* Build configuration list for PBXNativeTarget "Fuzi-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				122790B05386E9347A0D8B66EC618E84 /* Debug */,
-				698361FAB5E763D680B09C2FB134EF2C /* Release */,
+				5498DCB12087C443454C9548813E4841 /* Debug */,
+				8A01620BEBE5254BF068E12CF64F0CEC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3233,8 +3379,8 @@
 		EF562CB2629A2A569DFE81EA928BE755 /* Build configuration list for PBXNativeTarget "CallbackURLKit-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				943AF25B1565C0A751BC1B1098D6BD78 /* Debug */,
-				0879A41F3D634093018E8D0D15322ACD /* Release */,
+				AA56951B010678963A78EC75AE0334C4 /* Debug */,
+				90002264ED09D50DC5347D0C62CF52D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

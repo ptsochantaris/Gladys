@@ -89,8 +89,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		super.viewWillDisappear(animated)
 		if !hasChanges { return }
 
-		if typeEntry.classWasWrapped {
-			let d: Any = isAttributed ? textView.attributedText : textView.text
+		if typeEntry.classWasWrapped, let d: Any = (isAttributed ? textView.attributedText : textView.text) {
 			let b = NSKeyedArchiver.archivedData(withRootObject: d)
 			typeEntry.setBytes(b)
 			saveDone()

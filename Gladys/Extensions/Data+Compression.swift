@@ -46,9 +46,10 @@ extension Data {
 			compression_stream_destroy(&stream)
 		}
 
-		return withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Data? in
+		return withUnsafeBytes { bytes -> Data? in
 			// setup the stream's source
-			stream.src_ptr = bytes
+			guard let base = bytes.baseAddress else { return nil }
+			stream.src_ptr = base.assumingMemoryBound(to: UInt8.self)
 			stream.src_size = count
 
 			// setup the stream's output buffer

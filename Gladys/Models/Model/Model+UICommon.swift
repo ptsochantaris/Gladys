@@ -102,7 +102,7 @@ extension Model {
 			var itemIndexes = [Int]()
 			let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
 			let actualItemsToSort = toCheck.compactMap { item -> ArchivedDropItem? in
-				if let index = Model.drops.index(of: item) {
+				if let index = Model.drops.firstIndex(of: item) {
 					itemIndexes.append(index)
 					return item
 				}
@@ -227,7 +227,7 @@ extension Model {
 	}
 
 	static func updateLabel(_ label: LabelToggle) {
-		if let i = labelToggles.index(where: { $0.name == label.name }) {
+		if let i = labelToggles.firstIndex(where: { $0.name == label.name }) {
 			labelToggles[i] = label
 		}
 	}
@@ -282,16 +282,16 @@ extension Model {
 		let closestItem: ArchivedDropItem
 		if index >= filteredDrops.count {
 			closestItem = filteredDrops.last!
-			if let i = drops.index(of: closestItem) {
+			if let i = drops.firstIndex(of: closestItem) {
 				return i+1
 			}
 			return 0
 		} else if index > 0 {
 			closestItem = filteredDrops[index-1]
-			return (drops.index(of: closestItem) ?? 0) + 1
+			return (drops.firstIndex(of: closestItem) ?? 0) + 1
 		} else {
 			closestItem = filteredDrops[0]
-			return drops.index(of: closestItem) ?? 0
+			return drops.firstIndex(of: closestItem) ?? 0
 		}
 	}
 
@@ -470,7 +470,7 @@ extension Model {
 	}
 
 	static func duplicate(item: ArchivedDropItem) {
-		if let previousIndex = drops.index(of: item) {
+		if let previousIndex = drops.firstIndex(of: item) {
 			let newItem = ArchivedDropItem(cloning: item)
 			drops.insert(newItem, at: previousIndex+1)
 			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
@@ -490,7 +490,7 @@ extension Model {
 			let uuid = item.uuid
 			uuidsToRemove.append(uuid)
 
-			if let i = filteredDrops.index(where: { $0.uuid == uuid }) {
+			if let i = filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
 				ipsToRemove.append(IndexPath(item: i, section: 0))
 			}
 
@@ -498,10 +498,10 @@ extension Model {
 		}
 
 		for uuid in uuidsToRemove {
-			if let x = drops.index(where: { $0.uuid == uuid }) {
+			if let x = drops.firstIndex(where: { $0.uuid == uuid }) {
 				drops.remove(at: x)
 			}
-			if let x = cachedFilteredDrops?.index(where: { $0.uuid == uuid }) {
+			if let x = cachedFilteredDrops?.firstIndex(where: { $0.uuid == uuid }) {
 				cachedFilteredDrops!.remove(at: x)
 			}
 		}

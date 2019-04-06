@@ -11,7 +11,8 @@ import Foundation
 extension Data {
 	var isPlist: Bool {
 		guard count > 6 else { return false }
-		return withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
+		return withUnsafeBytes { ptr -> Bool in
+			guard let x = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return false }
 			return x[0] == 0x62
 				&& x[1] == 0x70
 				&& x[2] == 0x6c
@@ -22,7 +23,8 @@ extension Data {
 	}
 	var isZip: Bool {
 		guard count > 3 else { return false }
-		return withUnsafeBytes { (x: UnsafePointer<UInt8>) -> Bool in
+		return withUnsafeBytes { ptr -> Bool in
+			guard let x = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return false }
 			return x[0] == 0x50
 				&& x[1] == 0x4B
 				&& ((x[2] == 3 && x[3] == 4) || (x[2] == 5 && x[3] == 6) || (x[2] == 7 && x[3] == 8))

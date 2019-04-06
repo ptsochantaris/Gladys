@@ -32,8 +32,8 @@ extension ArchivedDropItem: Hashable {
 		return lhs.uuid == rhs.uuid
 	}
 
-	var hashValue: Int {
-		return uuid.hashValue
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(uuid)
 	}
 
 	var trimmedName: String {
@@ -163,15 +163,18 @@ extension ArchivedDropItem: Hashable {
 	}
 
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
+	private static let trueData = "true".data(using: .utf8)!
+	private static let trueDataCount = trueData.count
 	var needsCloudPush: Bool {
 		set {
 			let recordLocation = cloudKitDataPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				_ = recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
 					if newValue {
-						let data = "true".data(using: .utf8)!
-						_ = data.withUnsafeBytes { bytes in
-							setxattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, bytes, data.count, 0, 0)
+						_ = ArchivedDropItem.trueData.withUnsafeBytes { ptr in
+							if let bytes = ptr.baseAddress {
+								setxattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, bytes, ArchivedDropItem.trueDataCount, 0, 0)
+							}
 						}
 					} else {
 						removexattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, 0)
