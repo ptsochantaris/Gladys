@@ -46,6 +46,8 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 		}
 
 		newItems.removeAll()
+		labelsToApply = nil
+		noteToApply = nil
 		Model.reset()
 		Model.reloadDataIfNeeded()
 
@@ -166,13 +168,29 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	private func save() {
 		statusLabel.text = "Saving..."
+
 		let uploadAfterSave = CloudManager.shareActionShouldUpload
 		let newItemIds = newItems.map { $0.uuid.uuidString }
 		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
 		var itemsToCommit = [ArchivedDropItem]()
 		var itemsToInsert = [ArchivedDropItem]()
 		for item in newItems {
+
+			var change = false
+			if let labelsToApply = labelsToApply, item.labels != labelsToApply {
+				item.labels = labelsToApply
+				change = true
+			}
+
+			if let noteToApply = noteToApply, item.note != noteToApply {
+				item.note = noteToApply
+				change = true
+			}
+
 			if Model.drops.contains(item) {
+				if change {
+					item.markUpdated()
+				}
 				itemsToCommit.append(item)
 			} else {
 				itemsToInsert.append(item)
@@ -186,6 +204,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			return
 		}
 
+		Model.reloadDataIfNeeded() // load up any changes we just commited so we can sync them
 		uploadProgress = CloudManager.sendUpdatesUp { [weak self] error in // will callback immediately if sync is off
 			self?.sharingDone(error: error)
 		}
@@ -235,48 +254,30 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	////////////////////// Labels
 
-	private func updateNewItems() {
-		// update references to items that may have just been refreshed
-		newItems = newItems.map { $0.uuid }.compactMap { Model.item(uuid: $0) }
-	}
-
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let destination = segue.destination as? LabelEditorController {
-			Model.reloadDataIfNeeded()
-			updateNewItems()
-			var labels = Set<String>()
-			for item in newItems {
-				labels.formUnion(item.labels)
+			if !newItems.isEmpty { // we're not in the process of adding
+				Model.reloadDataIfNeeded()
 			}
-			destination.note = newItems.first?.note ?? ""
-			destination.selectedLabels = Array(labels)
+			destination.note = noteToApply ?? ""
+			destination.selectedLabels = labelsToApply ?? []
 			destination.completion = applyNewLabels
 		}
 	}
 
+	private var labelsToApply: [String]?
+	private var noteToApply: String?
+
 	private func applyNewLabels(_ newLabels: [String], _ newNote: String) {
-		Model.reloadDataIfNeeded()
-		updateNewItems()
-		var changes = false
-		for item in newItems {
-			var itemChanged = false
-			if item.labels != newLabels {
-				item.labels = newLabels
-				itemChanged = true
-			}
-			if item.note != newNote {
-				item.note = newNote
-				itemChanged = true
-			}
-			if itemChanged {
-				item.markUpdated()
-				changes = true
-			}
-		}
+		labelsToApply = newLabels
+		noteToApply = newNote
+
+		let changes = newItems.contains { $0.labels != newLabels || $0.note != newNote }
 		if changes {
 			navigationItem.rightBarButtonItem = nil
 			labelsButton.isHidden = true
 			statusLabel.isHidden = false
+			Model.reloadDataIfNeeded()
 			commit()
 		}
 	}
