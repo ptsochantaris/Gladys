@@ -45,10 +45,8 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			return
 		}
 
-		newItems.removeAll()
-		labelsToApply = nil
-		noteToApply = nil
-		Model.reset()
+		reset()
+
 		Model.reloadDataIfNeeded()
 
 		if Model.legacyMode {
@@ -152,28 +150,27 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 	func itemIngested(item: ArchivedDropItem) {
 		ingestCount -= 1
 		if ingestCount == 0 {
-			commit()
+			commit(initialAdd: true)
 		}
 	}
 
-	private func commit() {
+	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
 		Model.reIndexWithoutLoading(items: newItems) {
 			DispatchQueue.main.async { [weak self] in
-				self?.save()
+				self?.save(initialAdd: initialAdd)
 			}
 		}
 	}
 
-	private func save() {
+	private func save(initialAdd: Bool) {
 		statusLabel.text = "Saving..."
 
 		let uploadAfterSave = CloudManager.shareActionShouldUpload
 		let newItemIds = newItems.map { $0.uuid.uuidString }
 		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
-		var itemsToCommit = [ArchivedDropItem]()
-		var itemsToInsert = [ArchivedDropItem]()
+
 		for item in newItems {
 
 			var change = false
@@ -187,17 +184,16 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 				change = true
 			}
 
-			if Model.drops.contains(item) {
-				if change {
-					item.markUpdated()
-				}
-				itemsToCommit.append(item)
-			} else {
-				itemsToInsert.append(item)
+			if !initialAdd && change {
+				item.markUpdated()
 			}
 		}
-		Model.commitExistingItemsWithoutLoading(itemsToCommit)
-		Model.insertNewItemsWithoutLoading(items: itemsToInsert, addToDrops: true)
+
+		if initialAdd {
+			Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
+		} else {
+			Model.commitExistingItemsWithoutLoading(newItems)
+		}
 
 		if !uploadAfterSave {
 			sharingDone(error: nil)
@@ -241,7 +237,13 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	private func shutdownExtension() {
 		firstAppearance = true
+		reset()
+	}
+
+	private func reset() {
 		newItems.removeAll()
+		labelsToApply = nil
+		noteToApply = nil
 		Model.reset()
 	}
 
@@ -278,7 +280,7 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 			labelsButton.isHidden = true
 			statusLabel.isHidden = false
 			Model.reloadDataIfNeeded()
-			commit()
+			commit(initialAdd: false)
 		}
 	}
 }
