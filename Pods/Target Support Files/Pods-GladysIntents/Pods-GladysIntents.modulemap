@@ -1,4 +1,4 @@
-framework module Pods_GladysIntents {
+module Pods_GladysIntents {
   umbrella header "Pods-GladysIntents-umbrella.h"
 
   export *

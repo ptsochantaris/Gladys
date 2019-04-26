@@ -1,4 +1,4 @@
-framework module HotKey {
+module HotKey {
   umbrella header "HotKey-umbrella.h"
 
   export *

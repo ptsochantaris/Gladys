@@ -1,5 +1,6 @@
-framework module Fuzi {
+module Fuzi {
   umbrella header "Fuzi-macOS-umbrella.h"
+  exclude header "Fuzi-iOS-umbrella.h"
 
   export *
   module * { export * }

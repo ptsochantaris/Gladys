@@ -1,4 +1,4 @@
-framework module Pods_Gladys {
+module Pods_Gladys {
   umbrella header "Pods-Gladys-umbrella.h"
 
   export *

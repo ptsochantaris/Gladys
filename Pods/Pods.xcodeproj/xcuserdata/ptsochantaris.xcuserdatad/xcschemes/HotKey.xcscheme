@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "91C9120C8D4DC6ECA8A40DEAD4F2B1B5"
-               BuildableName = "HotKey.framework"
+               BlueprintIdentifier = "11C2E5A16660D38A1C43B5E0FB4D48DE"
+               BuildableName = "libHotKey.a"
                BlueprintName = "HotKey"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
@@ -45,8 +45,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "91C9120C8D4DC6ECA8A40DEAD4F2B1B5"
-            BuildableName = "HotKey.framework"
+            BlueprintIdentifier = "11C2E5A16660D38A1C43B5E0FB4D48DE"
+            BuildableName = "libHotKey.a"
             BlueprintName = "HotKey"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>

@@ -1,4 +1,4 @@
-framework module Pods_GladysAction {
+module Pods_GladysAction {
   umbrella header "Pods-GladysAction-umbrella.h"
 
   export *

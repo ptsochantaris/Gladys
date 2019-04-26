@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "993B97C75C1A21836747762E5323C664"
-               BuildableName = "Pods_MacGladysFramework.framework"
+               BlueprintIdentifier = "9E03143C5492D28116BA143CB8367996"
+               BuildableName = "libPods-MacGladysFramework.a"
                BlueprintName = "Pods-MacGladysFramework"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
@@ -45,8 +45,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "993B97C75C1A21836747762E5323C664"
-            BuildableName = "Pods_MacGladysFramework.framework"
+            BlueprintIdentifier = "9E03143C5492D28116BA143CB8367996"
+            BuildableName = "libPods-MacGladysFramework.a"
             BlueprintName = "Pods-MacGladysFramework"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>

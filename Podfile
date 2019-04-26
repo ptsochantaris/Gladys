@@ -1,7 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-use_frameworks!
 inhibit_all_warnings!
+use_modular_headers!
 
 target 'Gladys' do
   platform :ios, '11.0'
