@@ -29,13 +29,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
-				if let w = ViewController.shared.view.window {
-					if NSApp.isActive, w.isVisible {
-						w.orderOut(nil)
-					} else {
-						NSApp.activate(ignoringOtherApps: true)
-						w.makeKeyAndOrderFront(nil)
-					}
+				guard let w = ViewController.shared.view.window else { return }
+				if NSApp.isActive, w.isVisible {
+					w.orderOut(nil)
+				} else {
+					NSApp.activate(ignoringOtherApps: true)
+					w.makeKeyAndOrderFront(nil)
 				}
 			}
 			hotKey = h
@@ -68,8 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		if NSApp.isActive && (ViewController.shared.view.window?.isVisible ?? false) {
 			statusItem?.popUpMenu(menu)
 		} else {
-			NSApp.activate(ignoringOtherApps: true)
-			ViewController.shared.view.window?.makeKeyAndOrderFront(self)
+			focus()
 		}
 	}
 
@@ -252,29 +250,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		return false
 	}
 
+	private func focus() {
+		NSApp.activate(ignoringOtherApps: true)
+		ViewController.shared.view.window?.makeKeyAndOrderFront(nil)
+	}
+
 	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
+
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-				ViewController.shared.highlightItem(with: itemIdentifier)
+				focus()
+				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: true)
 			}
 			return true
 
 		} else if userActivity.activityType == CSQueryContinuationActionType {
 			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
+				focus()
 				ViewController.shared.startSearch(initialText: searchQuery)
 			}
 			return true
 
 		} else if userActivity.activityType == kGladysDetailViewingActivity {
 			if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
+				focus()
 				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
 			} else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
+				focus()
 				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
 			}
 			return true
 			
 		} else if userActivity.activityType == kGladysQuicklookActivity {
 			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
+				focus()
 				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
 				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
 			}
