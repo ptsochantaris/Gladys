@@ -71,10 +71,36 @@ class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
 
-		var providerList = [NSItemProvider]()
-		for inputItem in extensionContext?.inputItems as? [NSExtensionItem] ?? [] {
-			for provider in inputItem.attachments ?? [] {
-				providerList.append(provider)
+		var inputItems = extensionContext?.inputItems as? [NSExtensionItem] ?? []
+
+		if inputItems.count == 2 {
+			// Special Safari behaviour, adds weird 2nd URL, let's remove it
+			var count = 0
+			var hasSafariFlag = false
+			var weirdIndex: Int?
+			var index = 0
+			for item in inputItems {
+				if item.attachments?.count == 1, let provider = item.attachments?.first, provider.registeredTypeIdentifiers.count == 1, provider.registeredTypeIdentifiers.first == "public.url" {
+					count += 1
+					if item.userInfo?["supportsJavaScript"] as? Int == 1 {
+						hasSafariFlag = true
+					} else {
+						weirdIndex = index
+					}
+				}
+				index += 1
+			}
+			// If all are URLs, find the weird link, if any, and trim it
+			if count == inputItems.count, hasSafariFlag, let weirdIndex = weirdIndex {
+				inputItems.remove(at: weirdIndex)
+			}
+		}
+
+		let providerList = inputItems.reduce([]) { list, inputItem -> [NSItemProvider] in
+			if let attachments = inputItem.attachments {
+				return list + attachments
+			} else {
+				return list
 			}
 		}
 

@@ -67,6 +67,9 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 	}
 
 	private var watchModel: Int {
+		#if targetEnvironment(simulator)
+			return 10
+		#else
 		var size: size_t = 0
 		sysctlbyname("hw.machine", nil, &size, nil, 0)
 		var machine = CChar()
@@ -77,6 +80,7 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 		} else {
 			return 0
 		}
+		#endif
 	}
 
 	func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
