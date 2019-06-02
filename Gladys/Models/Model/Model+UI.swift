@@ -133,19 +133,19 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		let session = WCSession.default
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
 		let bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
-		DispatchQueue.global(qos: .background).async {
-			var items = [[String:Any]]()
-			DispatchQueue.main.sync {
-				items = Model.drops.map { $0.watchItem }
+
+		DispatchQueue.main.async {
+			let items = Model.drops.prefix(100).map { $0.watchItem }
+			DispatchQueue.global(qos: .background).async {
+				do {
+					let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
+					try session.updateApplicationContext(["dropList": compressedData])
+					log("Updated watch context")
+				} catch {
+					log("Error updating watch context: \(error.localizedDescription)")
+				}
+				UIApplication.shared.endBackgroundTask(bgTask)
 			}
-			do {
-				let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress)!
-				try session.updateApplicationContext(["dropList": compressedData])
-				log("Updated watch context")
-			} catch {
-				log("Error updating watch context: \(error.localizedDescription)")
-			}
-			UIApplication.shared.endBackgroundTask(bgTask)
 		}
 	}
 }
