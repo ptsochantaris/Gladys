@@ -86,7 +86,7 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 	func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
 
 		let entry: CLKComplicationTimelineEntry?
-		if let template = template(for: complication, count: ExtensionDelegate.totalCount) {
+		if let template = template(for: complication, count: ExtensionDelegate.reportedCount) {
 			entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
 		} else {
 			entry = nil

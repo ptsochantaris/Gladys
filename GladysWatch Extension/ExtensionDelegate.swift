@@ -55,23 +55,25 @@ final class ImageCache {
 final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
 
 	static var currentUUID = ""
-	static var totalCount = 0
+	static var reportedCount = 0
 
-	private func extractDropList(from context: [String: Any]) -> [[String: Any]] {
+	private func extractDropList(from context: [String: Any]) -> ([[String: Any]], Int) {
 		if
+			let reportedCount = context["total"] as? Int,
 			let compressedData = context["dropList"] as? Data,
 			let uncompressedData = compressedData.data(operation: .decompress),
 			let itemInfo = NSKeyedUnarchiver.unarchiveObject(with: uncompressedData) as? [[String : Any]] {
+
 			var count = 1
-			let total = itemInfo.count
-			return itemInfo.map { dict in
+			let list = itemInfo.map { dict -> [String: Any] in
 				var d = dict
-				d["it"] = "\(count) of \(total)"
+				d["it"] = "\(count) of \(reportedCount)"
 				count += 1
 				return d
 			}
+			return (list, reportedCount)
 		} else {
-			return []
+			return ([], 0)
 		}
 	}
 
@@ -86,12 +88,14 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 	}
 
 	private func updatePages(_ compressedList: [String: Any]) {
-		let dropList = extractDropList(from: compressedList)
+		let (dropList, reportedCount) = extractDropList(from: compressedList)
+		DispatchQueue.main.sync {
+			ExtensionDelegate.reportedCount = reportedCount
+			reloadComplications()
+		}
 		if dropList.isEmpty {
 			DispatchQueue.main.sync {
-				ExtensionDelegate.totalCount = 0
 				WKInterfaceController.reloadRootPageControllers(withNames: ["EmptyController"], contexts: nil, orientation: .vertical, pageIndex: 0)
-				reloadComplications()
 			}
 		} else {
 			let names = [String](repeating: "ItemController", count: dropList.count)
@@ -99,9 +103,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			let currentPage = dropList.firstIndex { $0["u"] as? String == currentUUID } ?? 0
 			let index = min(currentPage, names.count-1)
 			DispatchQueue.main.sync {
-				ExtensionDelegate.totalCount = names.count
 				WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
-				reloadComplications()
 			}
 		}
 		DispatchQueue.main.sync {
