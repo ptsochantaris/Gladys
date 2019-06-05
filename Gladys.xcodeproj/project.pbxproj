@@ -383,6 +383,7 @@
 		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
+		16F1BD6922A7B605009BFFD1 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */; };
 		16F254661F2D5632008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F254671F2D5633008EE07B /* ArchivedDropItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */; };
 		16F2990720CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
@@ -802,6 +803,7 @@
 		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F254651F2D55C2008EE07B /* ArchivedDropItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Ingest.swift"; sourceTree = "<group>"; };
 		16F2990620CBEF30005DE3AD /* PushState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushState.swift; sourceTree = "<group>"; };
@@ -1005,6 +1007,7 @@
 				16559C8920A4CC55006C281D /* Global.swift */,
 				162594D420D5548F00A65E06 /* Caches.swift */,
 				162BDD73220F01FA00A3C17B /* Logging.swift */,
+				16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2440,6 +2443,7 @@
 				16C8166720CB0354001C12DF /* PullState.swift in Sources */,
 				162BDD94220F8F0500A3C17B /* SiriShortcutsViewController.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */,
+				16F1BD6922A7B605009BFFD1 /* BackgroundTask.swift in Sources */,
 				1602F31D2030E53D0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,

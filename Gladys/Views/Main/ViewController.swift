@@ -93,18 +93,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	///////////////////////
 
-	private var bgTask: UIBackgroundTaskIdentifier?
+	private var registeredForBackground = false
 	private func startBgTaskIfNeeded() {
-		if bgTask == nil {
-			log("Starting background ingest task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.ingestTask", expirationHandler: nil)
-		}
-	}
-	private func endBgTaskIfNeeded() {
-		if Model.doneIngesting, let b = bgTask {
-			log("Ending background ingest task")
-			UIApplication.shared.endBackgroundTask(b)
-			bgTask = nil
+		if !registeredForBackground {
+			registeredForBackground = true
+			BackgroundTask.registerForBackground()
 		}
 	}
 
@@ -904,9 +897,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		editLabelsButton.isEnabled = someSelected
 		shareButton.isEnabled = someSelected
 
-		for item in Model.itemsToReIngest {
+		let itemsToReIngest = Model.itemsToReIngest
+		if itemsToReIngest.count > 0 {
 			startBgTaskIfNeeded()
-			item.reIngest(delegate: self)
+			itemsToReIngest.forEach { $0.reIngest(delegate: self) }
 		}
 
 		updateLabelIcon()
@@ -1403,11 +1397,15 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		if Model.doneIngesting {
 			Model.save()
 			UIAccessibility.post(notification: .screenChanged, argument: nil)
+
+			if registeredForBackground {
+				registeredForBackground = false
+				BackgroundTask.unregisterForBackground()
+			}
+
 		} else {
 			Model.commitItem(item: item)
 		}
-
-		endBgTaskIfNeeded()
 	}
 
 	//////////////////////////

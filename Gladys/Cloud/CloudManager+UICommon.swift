@@ -14,7 +14,6 @@ typealias VC = UIViewController
 #else
 import Cocoa
 typealias VC = NSViewController
-typealias UIBackgroundTaskIdentifier = Int
 #endif
 
 extension CloudManager {
@@ -820,7 +819,7 @@ extension CloudManager {
 		}
 	}
 
-	private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, existingBgTask: UIBackgroundTaskIdentifier? = nil, completion: @escaping (Error?)->Void) {
+	private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
 		if !syncSwitchedOn {
 			completion(nil)
 			return
@@ -842,15 +841,7 @@ extension CloudManager {
 		}
 
 		#if os(iOS)
-		let bgTask: UIBackgroundTaskIdentifier
-		if let e = existingBgTask {
-			bgTask = e
-		} else {
-			//log("Starting cloud sync background task")
-			bgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.syncTask", expirationHandler: nil)
-		}
-		#else
-		let bgTask: UIBackgroundTaskIdentifier? = nil
+		BackgroundTask.registerForBackground()
 		#endif
 
 		syncing = true
@@ -863,10 +854,7 @@ extension CloudManager {
 			}
 			completion(error)
 			#if os(iOS)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-				//log("Ending cloud sync background task")
-				UIApplication.shared.endBackgroundTask(bgTask)
-			}
+			BackgroundTask.unregisterForBackground()
 			#endif
 		}
 
@@ -880,7 +868,10 @@ extension CloudManager {
 				if let error = error {
 					done(error)
 				} else if syncDirty {
-					attemptSync(scope: nil, force: true, overridingWiFiPreference: overridingWiFiPreference, existingBgTask: bgTask, completion: completion)
+					attemptSync(scope: nil, force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+					#if os(iOS)
+					BackgroundTask.unregisterForBackground()
+					#endif
 				} else {
 					lastSyncCompletion = Date()
 					done(nil)

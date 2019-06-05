@@ -157,7 +157,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 extension Model {
 
 	private static var saveOverlap = 0
-	private static var saveBgTask: UIBackgroundTaskIdentifier?
+	private static var registeredForBackground = false
 
 	private static var watchDelegate: WatchDelegate?
 	
@@ -167,9 +167,10 @@ extension Model {
 
 	static func prepareToSave() {
 		saveOverlap += 1
-		if saveBgTask == nil {
+		if !registeredForBackground {
+			registeredForBackground = true
+			BackgroundTask.registerForBackground()
 			//log("Starting save queue background task")
-			saveBgTask = UIApplication.shared.beginBackgroundTask(withName: "build.bru.Gladys.saveTask", expirationHandler: nil)
 		}
 		rebuildLabels()
 	}
@@ -199,11 +200,13 @@ extension Model {
 
 		saveOverlap -= 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-			if saveOverlap == 0, let b = saveBgTask {
+			if saveOverlap == 0 {
 				watchDelegate?.updateContext()
-				//log("Ending save queue background task")
-				UIApplication.shared.endBackgroundTask(b)
-				saveBgTask = nil
+				if registeredForBackground {
+					registeredForBackground = false
+					BackgroundTask.unregisterForBackground()
+					//log("Ending save queue background task")
+				}
 			}
 		}
 	}
