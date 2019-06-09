@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -692,11 +692,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="2200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quQ-d6-kah">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1643"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="2043"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RSx-tB-L4n">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="1540.5"/>
@@ -1235,7 +1235,7 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <size key="freeformSize" width="320" height="1800"/>
+                    <size key="freeformSize" width="320" height="2200"/>
                     <connections>
                         <outlet property="allowLabelsInExtensionSwitch" destination="xKP-Fg-evj" id="7h9-ce-HXO"/>
                         <outlet property="darkModeSwitch" destination="akV-j6-m9U" id="sDN-fG-kdg"/>
@@ -3332,22 +3332,22 @@ Selecting them will show only items that contain these labels.</string>
         <image name="checkmarkSelected" width="28" height="26"/>
         <image name="details" width="22" height="15"/>
         <image name="gladysImage" width="1024" height="1024"/>
-        <image name="iconArchive2" width="24" height="22"/>
+        <image name="iconArchive2" width="16" height="14.666666984558105"/>
         <image name="iconCloud" width="28" height="18"/>
         <image name="iconDeleteSmall" width="18" height="22"/>
-        <image name="iconEye" width="46" height="36"/>
+        <image name="iconEye" width="15.333333015441895" height="12"/>
         <image name="iconHelp" width="28" height="28"/>
         <image name="iconImportExport" width="28" height="28"/>
         <image name="iconInfo" width="28" height="28"/>
         <image name="iconListSmall" width="20" height="16"/>
         <image name="iconLock" width="21" height="28"/>
-        <image name="iconPencil" width="24" height="24"/>
+        <image name="iconPencil" width="16" height="16"/>
         <image name="iconSettings" width="28" height="28"/>
         <image name="iconShare" width="16" height="22"/>
         <image name="iconSortAscendingSmall" width="22" height="22"/>
         <image name="iconSortDescendingSmall" width="22" height="22"/>
         <image name="iconUserAdd" width="24" height="28"/>
-        <image name="info" width="46" height="46"/>
+        <image name="info" width="15.333333015441895" height="15.333333015441895"/>
         <image name="labels-unselected" width="28" height="22"/>
         <image name="locked" width="17" height="22"/>
         <image name="paste" width="22" height="28"/>
