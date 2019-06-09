@@ -24,6 +24,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
 	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
 
+	@IBOutlet private weak var actionSelector: UISegmentedControl!
+	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
+	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
+
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
 	@IBOutlet private var titleLabels: [UILabel]!
@@ -59,6 +63,21 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func dontAutoLabelNewItemsChanged(_ sender: UISwitch) {
 		PersistedOptions.dontAutoLabelNewItems = sender.isOn
+	}
+
+	@IBAction func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.exclusiveMultipleLabels = sender.isOn
+		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil, userInfo: nil)
+	}
+
+	@IBAction func autoArchiveSwitchSelected(_ sender: UISwitch) {
+		PersistedOptions.autoArchiveUrlComponents = sender.isOn
+	}
+
+	@IBAction func actionSelectorValueChanged(_ sender: UISegmentedControl) {
+		if let value = DefaultTapAction(rawValue: sender.selectedSegmentIndex) {
+			PersistedOptions.actionOnTap = value
+		}
 	}
 
 	@IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
@@ -99,6 +118,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		fullScreenSwitch.onTintColor = view.tintColor
 		allowLabelsInExtensionSwitch.onTintColor = view.tintColor
 		wideModeSwitch.onTintColor = view.tintColor
+		autoArchiveSwitch.onTintColor = view.tintColor
+		exclusiveLabelsSwitch.onTintColor = view.tintColor
 		inclusiveSearchTermsSwitch.onTintColor = view.tintColor
 		subtitleLabels.forEach { $0.textColor = UIColor.gray }
 		titleLabels.forEach { $0.textColor = ViewController.tintColor }
@@ -147,6 +168,12 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		inclusiveSearchTermsSwitch.tintColor = .lightGray
 		inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
 
+		autoArchiveSwitch.tintColor = .lightGray
+		autoArchiveSwitch.isOn = PersistedOptions.autoArchiveUrlComponents
+
+		exclusiveLabelsSwitch.tintColor = .lightGray
+		exclusiveLabelsSwitch.isOn = PersistedOptions.exclusiveMultipleLabels
+
 		darkModeSwitch.tintColor = .lightGray
 		darkModeSwitch.isOn = PersistedOptions.darkMode
 
@@ -155,6 +182,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 		fullScreenSwitch.tintColor = .lightGray
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
+
+		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue
 
 		darkModeChanged()
 	}

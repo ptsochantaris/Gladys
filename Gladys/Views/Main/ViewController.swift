@@ -525,7 +525,29 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		} else {
 			mostRecentIndexPathActioned = indexPath
-			performSegue(withIdentifier: "showDetail", sender: item)
+
+			switch PersistedOptions.actionOnTap {
+
+			case .infoPanel:
+				performSegue(withIdentifier: "showDetail", sender: item)
+
+			case .copy:
+				item.copyToPasteboard()
+				genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+
+			case .open:
+				item.tryOpen(in: ViewController.shared.navigationController!) { [weak self] success in
+					if !success {
+						self?.performSegue(withIdentifier: "showDetail", sender: item)
+					}
+				}
+
+			case .preview:
+				let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
+				if !item.tryPreview(in: ViewController.top, from: cell) {
+					performSegue(withIdentifier: "showDetail", sender: item)
+				}
+			}
 		}
 	}
 

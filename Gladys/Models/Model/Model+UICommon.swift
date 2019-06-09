@@ -299,17 +299,35 @@ extension Model {
 		let enabledToggles = labelToggles.filter { $0.enabled }
 		if enabledToggles.count == 0 { return drops }
 
-		return drops.filter { item in
-			for toggle in enabledToggles {
-				if toggle.emptyChecker {
-					if item.labels.count == 0 {
+		if PersistedOptions.exclusiveMultipleLabels {
+			let expectedCount = enabledToggles.count
+			return drops.filter { item in
+				var matchCount = 0
+				for toggle in enabledToggles {
+					if toggle.emptyChecker {
+						if item.labels.count == 0 {
+							matchCount += 1
+						}
+					} else if item.labels.contains(toggle.name) {
+						matchCount += 1
+					}
+				}
+				return matchCount == expectedCount
+			}
+
+		} else {
+			return drops.filter { item in
+				for toggle in enabledToggles {
+					if toggle.emptyChecker {
+						if item.labels.count == 0 {
+							return true
+						}
+					} else if item.labels.contains(toggle.name) {
 						return true
 					}
-				} else if item.labels.contains(toggle.name) {
-					return true
 				}
+				return false
 			}
-			return false
 		}
 	}
 

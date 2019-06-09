@@ -139,13 +139,15 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
-	func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil) {
+	@discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil) -> Bool {
 		var itemToPreview: ArchivedDropItemType?
 		if let childUuid = childUuid {
 			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
-		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return }
+
+		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return false }
+
 		let n = QLHostingViewController(rootViewController: q)
 		n.relatedItem = self
 
@@ -168,6 +170,7 @@ extension ArchivedDropItem {
 			p.sourceView = cell
 			p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}
+		return true
 	}
 
 	@objc private func previewDismiss() {
@@ -202,6 +205,8 @@ extension ArchivedDropItem {
 				}
 				completion(success)
 			}
+		} else {
+			completion(false)
 		}
 	}
 }

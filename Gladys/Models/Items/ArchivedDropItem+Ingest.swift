@@ -16,7 +16,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 
 	func componentIngested(typeItem: ArchivedDropItemType?) {
 		loadCount = loadCount - 1
-		if loadCount > 0 { return }
+		if loadCount > 0 { return } // more to go
+
 		if let contributedLabels = typeItem?.contributedLabels {
 			for candidate in contributedLabels where !labels.contains(candidate) {
 				labels.append(candidate)
@@ -64,7 +65,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		}
 	}
 
-	func startIngest(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?) -> Progress {
+	func startNewItemIngest(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
 		var progressChildren = [Progress]()
 
@@ -72,15 +73,16 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 
 			var identifiers = ArchivedDropItem.sanitised(provider.registeredTypeIdentifiers)
 			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
+			let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
 
 			if let limit = limitToType {
 				identifiers = [limit]
 			}
 
-			func addTypeItem(type: String, encodeUIImage: Bool, order: Int) {
+			func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) {
 				loadCount += 1
 				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self, order: order)
-				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage)
+				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
 				progressChildren.append(p)
 				typeItems.append(i)
 			}
@@ -88,11 +90,17 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			var order = 0
 			for typeIdentifier in identifiers {
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
-					addTypeItem(type: "public.image", encodeUIImage: true, order: order)
+					addTypeItem(type: "public.image", encodeUIImage: true, createWebArchive: false, order: order)
 					order += 1
 				}
-				addTypeItem(type: typeIdentifier, encodeUIImage: false, order: order)
+
+				addTypeItem(type: typeIdentifier, encodeUIImage: false, createWebArchive: false, order: order)
 				order += 1
+
+				if typeIdentifier == "public.url" && shouldArchiveUrls {
+					addTypeItem(type: "com.apple.webarchive", encodeUIImage: false, createWebArchive: true, order: order)
+					order += 1
+				}
 			}
 		}
 		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))

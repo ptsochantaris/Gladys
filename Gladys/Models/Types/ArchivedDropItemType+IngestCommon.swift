@@ -22,33 +22,74 @@ extension ArchivedDropItemType {
 
 	static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 
-	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool) -> Progress {
+	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool, createWebArchive: Bool) -> Progress {
 		self.delegate = delegate
-		let overallProgress = Progress(totalUnitCount: 30)
+		let overallProgress = Progress(totalUnitCount: 20)
 
-		let p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
-			guard let s = self, s.loadingAborted == false else { return }
-			s.isTransferring = false
-			if let data = data {
-				ArchivedDropItemType.ingestQueue.async {
-					log(">> Received type: [\(s.typeIdentifier)]")
-					s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) {
-						overallProgress.completedUnitCount += 10
+		let p: Progress
+		if createWebArchive {
+			p = provider.loadObject(ofClass: NSURL.self) { [weak self] url, error in
+				guard let s = self, s.loadingAborted == false else { return }
+				s.isTransferring = false
+				if let url = url as? NSURL {
+					ArchivedDropItemType.ingestQueue.async {
+						log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
+						s.ingest(from: url as URL) {
+							overallProgress.completedUnitCount += 10
+						}
 					}
+				} else {
+					overallProgress.completedUnitCount += 10
+					s.ingestFailed(error: error)
 				}
-			} else {
-				let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
-				log(">> Error receiving item: \(error.finalDescription)")
-				s.loadingError = error
-				s.setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-				overallProgress.completedUnitCount += 10
-				s.completeIngest()
+			}
+
+		} else {
+			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
+				guard let s = self, s.loadingAborted == false else { return }
+				s.isTransferring = false
+				if let data = data {
+					ArchivedDropItemType.ingestQueue.async {
+						log(">> Received type: [\(s.typeIdentifier)]")
+						s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) {
+							overallProgress.completedUnitCount += 10
+						}
+					}
+				} else {
+					overallProgress.completedUnitCount += 10
+					s.ingestFailed(error: error)
+				}
 			}
 		}
-		overallProgress.addChild(p, withPendingUnitCount: 20)
+
+		overallProgress.addChild(p, withPendingUnitCount: 10)
 		return overallProgress
 	}
-	
+
+	private func ingestFailed(error: Error?) {
+		let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
+		log(">> Error receiving item: \(error.finalDescription)")
+		loadingError = error
+		setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+		completeIngest()
+	}
+
+	private func ingest(from url: URL, completion: @escaping ()->Void) {
+		ingestCompletion = completion
+		clearCachedFields()
+		representedClass = .data
+		classWasWrapped = false
+
+		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
+			guard let s = self, s.loadingAborted == false else { return }
+			if let data = data {
+				s.handleData(data, resolveUrls: false, true)
+			} else {
+				s.ingestFailed(error: error)
+			}
+		}
+	}
+
 	private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) { // in thread!
 
 		ingestCompletion = completion

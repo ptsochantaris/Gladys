@@ -41,7 +41,7 @@ final class WebArchiver {
 		}
 	}
 
-	public static func archiveWebpageFromUrl(url: URL, data: Data, response: HTTPURLResponse, completionHandler: @escaping ArchiveCompletionHandler) {
+	private static func archiveWebpageFromUrl(url: URL, data: Data, response: HTTPURLResponse, completionHandler: @escaping ArchiveCompletionHandler) {
 
 		let (r, error) = resourcePathsFromUrl(url: url, data: data, response: response)
 		guard let resources = r else {

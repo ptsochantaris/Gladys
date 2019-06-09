@@ -173,7 +173,7 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsUnlock = false
 
-		loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
+		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
 
 	#endif

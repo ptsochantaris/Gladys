@@ -8,7 +8,11 @@
 
 import Foundation
 
-class PersistedOptions {
+enum DefaultTapAction: Int {
+	case infoPanel = 0, preview, open, copy
+}
+
+final class PersistedOptions {
 
 	static let defaults = UserDefaults(suiteName: groupName)!
 
@@ -149,6 +153,34 @@ class PersistedOptions {
 		}
 		set {
 			defaults.set(newValue, forKey: "pasteShortcutAutoDonated")
+		}
+	}
+
+	static var exclusiveMultipleLabels: Bool {
+		get {
+			return defaults.bool(forKey: "exclusiveMultipleLabels")
+		}
+		set {
+			defaults.set(newValue, forKey: "exclusiveMultipleLabels")
+		}
+	}
+
+	static var autoArchiveUrlComponents: Bool {
+		get {
+			return defaults.bool(forKey: "autoArchiveUrlComponents")
+		}
+		set {
+			defaults.set(newValue, forKey: "autoArchiveUrlComponents")
+		}
+	}
+
+	static var actionOnTap: DefaultTapAction {
+		get {
+			let value = defaults.integer(forKey: "actionOnTap")
+			return DefaultTapAction(rawValue: value) ?? .infoPanel
+		}
+		set {
+			defaults.set(newValue.rawValue, forKey: "actionOnTap")
 		}
 	}
 

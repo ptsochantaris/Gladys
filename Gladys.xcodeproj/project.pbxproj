@@ -249,6 +249,8 @@
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A278AA222AAFA4007B810C /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
+		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
+		16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -2301,6 +2303,7 @@
 				1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */,
 				161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */,
 				166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
+				16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */,
 				169763161F15669700537776 /* ArchivedDropItemType+Ingest.swift in Sources */,
 				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
@@ -2549,6 +2552,7 @@
 				16D984A52160CC4200D9D51C /* Caches.swift in Sources */,
 				16D984A92160CC6800D9D51C /* UIImage+Extensions.swift in Sources */,
 				16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */,
+				16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */,
 				16D984B32160D56500D9D51C /* ArchivedDropItemType+Preview.swift in Sources */,
 				16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */,
 				16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */,

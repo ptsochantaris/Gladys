@@ -303,6 +303,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 				item.tryPreview(in: ViewController.top, from: s)
 			}, style: .default, push: push))
 		}
+		actions.append(ShortcutAction(title: "Info Panel", callback: { [weak self] in
+			guard let s = self else { return }
+			s.egress()
+			ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
+		}, style: .default, push: push))
 		actions.append(ShortcutAction(title: "Move to Top", callback: { [weak self] in
 			guard let s = self else { return }
 			s.egress()
