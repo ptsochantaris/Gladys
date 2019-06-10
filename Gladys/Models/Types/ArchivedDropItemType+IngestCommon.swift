@@ -28,13 +28,24 @@ extension ArchivedDropItemType {
 
 		let p: Progress
 		if createWebArchive {
-			p = provider.loadObject(ofClass: NSURL.self) { [weak self] url, error in
+			p = provider.loadDataRepresentation(forTypeIdentifier: "public.url") { [weak self] data, error in
 				guard let s = self, s.loadingAborted == false else { return }
 				s.isTransferring = false
-				if let url = url as? NSURL {
+
+				var url: URL?
+
+				if let data = data, let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
+					if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
+						url = u
+					} else if let array = propertyList as? [Any], let urlString = array.first as? String, let u = URL(string: urlString) { // usually on iOS
+						url = u
+					}
+				}
+
+				if let url = url {
 					ArchivedDropItemType.ingestQueue.async {
 						log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
-						s.ingest(from: url as URL) {
+						s.ingest(from: url) {
 							overallProgress.completedUnitCount += 10
 						}
 					}
@@ -43,7 +54,6 @@ extension ArchivedDropItemType {
 					s.ingestFailed(error: error)
 				}
 			}
-
 		} else {
 			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 				guard let s = self, s.loadingAborted == false else { return }

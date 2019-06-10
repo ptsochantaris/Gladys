@@ -71,7 +71,18 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	}
 
 	@IBAction func autoArchiveSwitchSelected(_ sender: UISwitch) {
-		PersistedOptions.autoArchiveUrlComponents = sender.isOn
+		if sender.isOn {
+			let a = UIAlertController(title: "Are you sure?", message: "This can use a lot of data (and storage) when adding web links!\n\nActivate this only if you know what you are doing.", preferredStyle: .alert)
+			a.addAction(UIAlertAction(title: "Activate", style: .destructive) { _ in
+				PersistedOptions.autoArchiveUrlComponents = true
+			})
+			a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak sender] _ in
+				sender?.setOn(false, animated: true)
+			})
+			present(a, animated: true)
+		} else {
+			PersistedOptions.autoArchiveUrlComponents = false
+		}
 	}
 
 	@IBAction func actionSelectorValueChanged(_ sender: UISegmentedControl) {

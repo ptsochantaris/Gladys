@@ -247,6 +247,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var labelTokenField: TokenTextField!
 	@IBOutlet private weak var sharedIcon: NSImageView!
 	@IBOutlet private weak var bottomStackView: NSStackView!
+	@IBOutlet private weak var copiedLabel: NSTextField!
 
 	private var existingPreviewView: FirstMouseView?
 
@@ -649,7 +650,22 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			if let a = archivedDropItem, a.needsUnlock {
 				ViewController.shared.unlock(self)
 			} else {
-				ViewController.shared.info(self)
+				switch PersistedOptions.actionOnTap {
+				case .copy:
+					copySelected()
+					copiedLabel.wantsLayer = true
+					copiedLabel.layer?.cornerRadius = 5
+					copiedLabel.animator().alphaValue = 1
+					DispatchQueue.main.asyncAfter(deadline: .now()+1) { [weak self] in
+						self?.copiedLabel.animator().alphaValue = 0
+					}
+				case .infoPanel:
+					infoSelected()
+				case .open:
+					openSelected()
+				case .preview:
+					ViewController.shared.toggleQuickLookPreviewPanel(nil)
+				}
 			}
 		}
 	}

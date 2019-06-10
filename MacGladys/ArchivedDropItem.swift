@@ -175,7 +175,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = false
 		isBeingCreatedBySync = false
 
-		loadingProgress = startIngest(providers: providers, delegate: delegate, limitToType: limitToType)
+		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
 
 	init(from record: CKRecord) {

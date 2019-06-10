@@ -31,6 +31,10 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var translucencySwitch: NSButton!
 	@IBOutlet private weak var alwaysOnTopSwitch: NSButton!
 
+	@IBOutlet private weak var autoDownloadSwitch: NSButton!
+	@IBOutlet private weak var exclusiveMultipleLabelsSwitch: NSButton!
+	@IBOutlet private weak var selectionActionPicker: NSPopUpButton!
+
 	@IBOutlet private weak var hotkeyCmd: NSButton!
 	@IBOutlet private weak var hotkeyOption: NSButton!
 	@IBOutlet private weak var hotkeyShift: NSButton!
@@ -55,6 +59,9 @@ final class Preferences: NSViewController {
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
 		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
 		alwaysOnTopSwitch.integerValue = PersistedOptions.alwaysOnTop ? 1 : 0
+		exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
+		autoDownloadSwitch.integerValue = PersistedOptions.autoArchiveUrlComponents ? 1 : 0
+		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -94,6 +101,21 @@ final class Preferences: NSViewController {
 	@IBAction private func menuBarModeSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.menubarIconMode = sender.integerValue == 1
 		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: true)
+	}
+
+	@IBAction private func exclusiveMultipleLabelsSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.exclusiveMultipleLabels = sender.integerValue == 1
+		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+	}
+
+	@IBAction private func autoDownloadSwitchChanged(_ sender: NSButton) {
+		PersistedOptions.autoArchiveUrlComponents = sender.integerValue == 1
+	}
+
+	@IBAction private func selectionActionPickerChanged(_ sender: NSPopUpButton) {
+		if let action = DefaultTapAction(rawValue: sender.indexOfSelectedItem) {
+			PersistedOptions.actionOnTap = action
+		}
 	}
 
 	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {

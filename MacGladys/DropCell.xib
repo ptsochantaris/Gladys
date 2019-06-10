@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,6 +14,7 @@
                 <outlet property="bottomLabel" destination="cNg-lc-Fh3" id="LVr-aA-yFN"/>
                 <outlet property="bottomStackView" destination="D4i-OV-TYP" id="nEs-b9-GcP"/>
                 <outlet property="cancelButton" destination="t0u-49-eaV" id="G1c-68-Kdj"/>
+                <outlet property="copiedLabel" destination="57i-Zw-oXw" id="6Ct-gd-Nzl"/>
                 <outlet property="image" destination="NZY-Vj-9PZ" id="zRO-Yi-3aJ"/>
                 <outlet property="labelTokenField" destination="a86-XO-bJA" id="pVf-3S-Nfe"/>
                 <outlet property="lockImage" destination="yh6-B4-WQQ" id="dpN-qb-qou"/>
@@ -50,11 +51,11 @@
                             </userDefinedRuntimeAttributes>
                         </customView>
                         <imageView wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
-                            <rect key="frame" x="133" y="51" width="17" height="22"/>
+                            <rect key="frame" x="133" y="37" width="17" height="36"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
                         </imageView>
                         <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
-                            <rect key="frame" x="124" y="33" width="35" height="13"/>
+                            <rect key="frame" x="124" y="19" width="35" height="13"/>
                             <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="jch-fj-zkm">
                                 <font key="font" metaFont="label"/>
                                 <color key="textColor" red="0.54335528609999995" green="0.14673578740000001" blue="0.1104804799" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -62,14 +63,14 @@
                             </textFieldCell>
                         </textField>
                         <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4i-OV-TYP">
-                            <rect key="frame" x="0.0" y="0.0" width="283" height="28"/>
+                            <rect key="frame" x="0.0" y="0.0" width="283" height="14"/>
                             <subviews>
                                 <imageView horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-K8-ebl">
-                                    <rect key="frame" x="0.0" y="0.0" width="24" height="28"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="12" height="14"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
                                 </imageView>
                                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
-                                    <rect key="frame" x="30" y="8" width="255" height="13"/>
+                                    <rect key="frame" x="18" y="1" width="267" height="13"/>
                                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
                                         <font key="font" metaFont="label"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -135,10 +136,20 @@ Gw
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
+                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="57i-Zw-oXw">
+                    <rect key="frame" x="107" y="136" width="90" height="31"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="center" title="Copied" drawsBackground="YES" id="Y8C-Fe-6g4">
+                        <font key="font" size="26" name=".AppleSystemUIFont"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
                 <constraint firstItem="72j-vo-hKN" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="Ldk-I1-SXj"/>
                 <constraint firstItem="72j-vo-hKN" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" id="QV8-zT-r1d"/>
+                <constraint firstItem="57i-Zw-oXw" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="b63-2X-J4U"/>
+                <constraint firstItem="57i-Zw-oXw" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" id="bJX-nk-kPw"/>
                 <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="10" id="dvh-qF-Qzh"/>
                 <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" constant="10" id="gvH-wC-pDa"/>
                 <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="10" id="iCR-Wi-2Nr"/>
@@ -159,7 +170,7 @@ Gw
         </customView>
     </objects>
     <resources>
-        <image name="iconUserCheckedSmall" width="24" height="28"/>
+        <image name="iconUserCheckedSmall" width="12" height="14"/>
         <image name="locked" width="17" height="22"/>
     </resources>
 </document>
