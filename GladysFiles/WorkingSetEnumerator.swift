@@ -7,7 +7,7 @@ final class WorkingSetEnumerator: CommonEnumerator {
 		super.init(uuid: NSFileProviderItemIdentifier.workingSet.rawValue)
 	}
 
-	override func getFileItems() -> [FileProviderItem] {
+	override func getFileItems(from: NSFileProviderPage?, length: Int?) -> ([FileProviderItem], NSFileProviderPage?) {
 
 		FileProviderExtension.ensureCurrent(checkAnyway: true)
 
@@ -27,10 +27,19 @@ final class WorkingSetEnumerator: CommonEnumerator {
 			}
 		}
 
-		if sortByDate {
-			return workingSetItems.sorted { $0.contentModificationDate ?? .distantPast < $1.contentModificationDate ?? .distantPast }
-		} else {
-			return workingSetItems.sorted { $0.filename < $1.filename }
+		var lastPage: NSFileProviderPage?
+		if let length = length {
+			if let from = from, let itemUUIDString = String(data: from.rawValue, encoding: .utf8) {
+				workingSetItems = Array(workingSetItems.drop { $0.itemIdentifier.rawValue != itemUUIDString }.prefix(length))
+			} else {
+				workingSetItems = Array(workingSetItems.prefix(length))
+			}
+
+			if workingSetItems.count == length, let d = workingSetItems.last?.itemIdentifier.rawValue.data(using: .utf8) {
+				lastPage = NSFileProviderPage(d)
+			}
 		}
+
+		return (workingSetItems, lastPage)
 	}
 }
