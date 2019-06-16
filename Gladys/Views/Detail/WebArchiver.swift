@@ -352,18 +352,24 @@ final class WebArchiver {
 	///////////////////////////////////////////////
 
 	static private var taskQueue: OperationQueue = {
+
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+		#if MAC
+		URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (macOS; macOS)"]
+		#else
+		URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (iOS; iOS)"]
+		#endif
+
 		let o = OperationQueue()
 		o.maxConcurrentOperationCount = 8
 		return o
 	}()
 
 	static private func fetch(_ url: URL, method: String? = nil, result: @escaping (Data?, URLResponse?, Error?) -> Void) {
-		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
 		var request = URLRequest(url: url)
 		if let method = method {
 			request.httpMethod = method
 		}
-		request.setValue("Gladys/\(v) (iOS; iOS)", forHTTPHeaderField: "User-Agent")
 
 		let g = DispatchSemaphore(value: 0)
 
