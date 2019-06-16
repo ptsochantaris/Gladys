@@ -1,5 +1,4 @@
 
-import Foundation
 import FileProvider
 
 final class DropItemEnumerator: CommonEnumerator {
@@ -8,7 +7,7 @@ final class DropItemEnumerator: CommonEnumerator {
 		super.init(uuid: dropItem.uuid.uuidString)
 	}
 
-	override func getFileItems(from: NSFileProviderPage?, length: Int?) -> ([FileProviderItem], NSFileProviderPage?) {
+	override func getFileItems(from: NSFileProviderPage?, length: Int?) -> ([FileProviderConvertible], NSFileProviderPage?) {
 
 		FileProviderExtension.ensureCurrent(checkAnyway: true)
 		
@@ -16,14 +15,19 @@ final class DropItemEnumerator: CommonEnumerator {
 			return ([], nil)
 		}
 
-		let slice: [ArchivedDropItemType]
+		let slice: [FileProviderConvertible]
 		var lastPage: NSFileProviderPage?
 		if let length = length {
-			if let from = from, let itemUUIDString = String(data: from.rawValue, encoding: .utf8), let itemUUID = UUID(uuidString: itemUUIDString) {
-				slice = Array(dropItem.typeItems.drop { $0.uuid != itemUUID }.prefix(length))
+			let drops = dropItem.typeItems
+			let start: Int
+			if let from = from, let indexString = String(data: from.rawValue, encoding: .utf8), let index = Int(indexString) {
+				start = min(drops.count, index)
 			} else {
-				slice = Array(dropItem.typeItems.prefix(length))
+				start = 0
 			}
+
+			let end = min(drops.count, start + length)
+			slice = Array(drops[start ..< end])
 
 			if slice.count == length, let d = slice.last?.uuid.uuidString.data(using: .utf8) {
 				lastPage = NSFileProviderPage(d)
@@ -33,6 +37,6 @@ final class DropItemEnumerator: CommonEnumerator {
 			slice = dropItem.typeItems
 		}
 
-		return (slice.map { FileProviderItem($0) }, lastPage)
+		return (slice, lastPage)
 	}
 }

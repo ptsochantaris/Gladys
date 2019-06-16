@@ -12,7 +12,7 @@ import MacGladysFramework
 import HotKey
 import CloudKit
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	static private var hotKey: HotKey?
 
@@ -143,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		}
 	}
 
-	class ServicesProvider: NSObject {
+	final class ServicesProvider: NSObject {
 		var urlEventBeforeLaunch = false
 
 		@objc func handleServices(_ pboard: NSPasteboard, userData: String, error: AutoreleasingUnsafeMutablePointer<NSString>) {

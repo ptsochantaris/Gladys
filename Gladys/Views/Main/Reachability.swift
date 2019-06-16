@@ -4,7 +4,7 @@ import SystemConfiguration
 
 let reachability = Reachability()
 
-class Reachability {
+final class Reachability {
 
 	private let reachability: SCNetworkReachability
 

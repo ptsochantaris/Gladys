@@ -12,7 +12,7 @@ extension Notification.Name {
 	static let KillHelper = Notification.Name("KillHelper")
 }
 
-class LauncherCommon {
+final class LauncherCommon {
 
 	static let helperAppId = "build.bru.MacGladys.Helper"
 	static var isHelperRunning: Bool {

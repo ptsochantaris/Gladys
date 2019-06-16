@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DimView: UIView, UIDropInteractionDelegate {
+final class DimView: UIView, UIDropInteractionDelegate {
 	init() {
 		super.init(frame: .zero)
 		let t = UITapGestureRecognizer(target: self, action: #selector(tapped))

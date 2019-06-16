@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
 	static var shared = IAPManager()
 

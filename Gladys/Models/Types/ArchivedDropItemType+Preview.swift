@@ -26,7 +26,7 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	class PreviewItem: NSObject, QLPreviewItem {
+	final class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?
 		let previewItemTitle: String?
 		let needsCleanup: Bool

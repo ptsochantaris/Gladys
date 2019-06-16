@@ -204,7 +204,7 @@ final class FileProviderExtension: NSFileProviderExtension {
 	override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
 		let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
 
-		DispatchQueue.global(qos: .background).async {
+		DispatchQueue.global(qos: .utility).async {
 			let mySize = CGSize(width: 256, height: 256)
 			for itemID in itemIdentifiers {
 				autoreleasepool {

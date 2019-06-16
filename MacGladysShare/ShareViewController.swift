@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class ShareViewController: NSViewController {
+final class ShareViewController: NSViewController {
 
     override var nibName: NSNib.Name? {
         return NSNib.Name("ShareViewController")

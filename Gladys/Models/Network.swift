@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Network {
+final class Network {
 
 	static private var taskQueue: OperationQueue = {
 		let o = OperationQueue()

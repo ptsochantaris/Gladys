@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
+final class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

@@ -7,37 +7,41 @@ final class WorkingSetEnumerator: CommonEnumerator {
 		super.init(uuid: NSFileProviderItemIdentifier.workingSet.rawValue)
 	}
 
-	override func getFileItems(from: NSFileProviderPage?, length: Int?) -> ([FileProviderItem], NSFileProviderPage?) {
+	override func getFileItems(from: NSFileProviderPage?, length: Int?) -> ([FileProviderConvertible], NSFileProviderPage?) {
 
 		FileProviderExtension.ensureCurrent(checkAnyway: true)
 
-		var workingSetItems = [FileProviderItem]()
+		var workingSetItems = [FileProviderConvertible]()
 
 		for drop in Model.visibleDrops {
 			if drop.hasTagData || drop.hasFavouriteRankData {
-				workingSetItems.append(FileProviderItem(drop))
+				workingSetItems.append(drop)
 			}
 			for typeItem in drop.typeItems where typeItem.hasTagData {
-				let fpi = FileProviderItem(typeItem)
-				let id = fpi.itemIdentifier.rawValue
-				if let index = workingSetItems.firstIndex(where: { $0.itemIdentifier.rawValue == id }) { // a type item is overriding the parent
-					workingSetItems.remove(at: index)
+				if drop.typeItems.count == 1 { // ensure parent is not listed, as the child is what's visible
+					let id = typeItem.parentUuid
+					workingSetItems.removeAll { $0.uuid == id }
 				}
-				workingSetItems.append(fpi)
+				workingSetItems.append(typeItem)
 			}
 		}
 
 		var lastPage: NSFileProviderPage?
 		if let length = length {
-			if let from = from, let itemUUIDString = String(data: from.rawValue, encoding: .utf8) {
-				workingSetItems = Array(workingSetItems.drop { $0.itemIdentifier.rawValue != itemUUIDString }.prefix(length))
+			let start: Int
+			if let from = from, let indexString = String(data: from.rawValue, encoding: .utf8), let index = Int(indexString) {
+				start = min(workingSetItems.count, index)
 			} else {
-				workingSetItems = Array(workingSetItems.prefix(length))
+				start = 0
 			}
 
-			if workingSetItems.count == length, let d = workingSetItems.last?.itemIdentifier.rawValue.data(using: .utf8) {
+			let end = min(workingSetItems.count, start + length)
+			workingSetItems = Array(workingSetItems[start ..< end])
+
+			if workingSetItems.count == length, let d = workingSetItems.last?.uuid.uuidString.data(using: .utf8) {
 				lastPage = NSFileProviderPage(d)
 			}
+
 		}
 
 		return (workingSetItems, lastPage)

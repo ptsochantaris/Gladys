@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
+final class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
 
 	@IBOutlet private weak var statusLabel: UILabel!
 	@IBOutlet private weak var cancelButton: UIBarButtonItem!

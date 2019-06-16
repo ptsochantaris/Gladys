@@ -12,8 +12,7 @@ import Messages
 private var messagesCurrentOffset = CGPoint.zero
 private var lastFilter: String?
 
-class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate,
-UICollectionViewDataSource, UISearchBarDelegate {
+final class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
 
 	@IBOutlet private weak var emptyLabel: UILabel!
 	@IBOutlet private weak var itemsView: UICollectionView!

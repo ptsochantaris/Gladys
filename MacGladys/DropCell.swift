@@ -16,7 +16,7 @@ class FirstMouseView: NSView {
 	}
 }
 
-class FirstMouseImageView: NSImageView {
+final class FirstMouseImageView: NSImageView {
 	override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
 		return true
 	}
