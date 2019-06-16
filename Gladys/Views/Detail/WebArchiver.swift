@@ -23,7 +23,7 @@ final class WebArchiver {
 	}
 
 	public static func archiveFromUrl(_ url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
-		Network.fetch(url) { data, response, error in
+		fetch(url) { data, response, error in
 			if let data = data, let response = response as? HTTPURLResponse {
 				if response.mimeType == "text/html" {
 					archiveWebpageFromUrl(url: url, data: data, response: response, completionHandler: completionHandler)
@@ -61,7 +61,7 @@ final class WebArchiver {
 				continue
 			}
 			downloadGroup.enter()
-			Network.fetch(resourceUrl) { data, response, error in
+			fetch(resourceUrl) { data, response, error in
 
 				guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
 					log("Download failed: \(path)")
@@ -157,5 +157,224 @@ final class WebArchiver {
 
 		return (resources, nil)
     }
+
+	/////////////////////////////////////////
+
+	static func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, String?, IMAGE?, Bool)->Void) {
+
+		// in thread!!
+
+		if testing {
+
+			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
+
+			fetch(url, method: "HEAD") { data, response, error in
+				if let response = response as? HTTPURLResponse {
+					if let type = response.mimeType, type.hasPrefix("text/html") {
+						log("Content for this is HTML, will try to fetch title")
+						self.fetchWebPreview(for: url, testing: false, completion: completion)
+					} else {
+						log("Content for this isn't HTML, never mind")
+						completion(nil, nil, nil, false)
+					}
+				}
+				if let error = error {
+					log("Error while investigating URL: \(error.finalDescription)")
+					completion(nil, nil, nil, false)
+				}
+			}
+
+		} else {
+
+			log("Fetching HTML from URL: \(url.absoluteString)")
+
+			fetch(url) { data, response, error in
+				if let data = data,
+					let text = (String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii)),
+					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
+
+					var title: String?
+					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:title\"]") {
+						for node in metaTags {
+							if let content = node.attr("content") {
+								log("Found og title: \(content)")
+								title = content.trimmingCharacters(in: .whitespacesAndNewlines)
+								break
+							}
+						}
+					}
+
+					if title == nil {
+						log("Falling back to HTML title")
+						title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
+					}
+
+					if let title = title {
+						log("Title located at URL: \(title)")
+					} else {
+						log("No title located at URL")
+					}
+
+					let description: String? = nil
+					/*if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
+					for node in metaTags {
+					if let content = node.attr("content") {
+					log("Found og summary: \(content)")
+					description = content.trimmingCharacters(in: .whitespacesAndNewlines)
+					break
+					}
+					}
+					}*/
+
+					func fetchFavIcon() {
+						let favIconUrl = self.repair(path: self.getFavIconPath(from: htmlDoc), using: url)
+						if let iconUrl = favIconUrl {
+							log("Fetching favicon image for site icon: \(iconUrl)")
+							fetchImage(url: iconUrl) { newImage in
+								completion(title, description, newImage, false)
+							}
+						} else {
+							completion(title, description, nil, false)
+						}
+					}
+
+					let thumbnailUrl = self.repair(path: self.getThumbnailPath(from: htmlDoc), using: url)
+					if let iconUrl = thumbnailUrl {
+						log("Fetching thumbnail image for site icon: \(iconUrl)")
+						fetchImage(url: iconUrl) { newImage in
+							if let newImage = newImage {
+								completion(title, description, newImage, true)
+							} else {
+								log("Thumbnail fetch failed, falling back to favicon")
+								fetchFavIcon()
+							}
+						}
+					} else {
+						fetchFavIcon()
+					}
+
+				} else if let error = error {
+					log("Error while fetching title URL: \(error.finalDescription)")
+					completion(nil, nil, nil, false)
+
+				} else {
+					log("Bad HTML data while fetching title URL")
+					completion(nil, nil, nil, false)
+				}
+			}
+		}
+	}
+
+	static private func getThumbnailPath(from htmlDoc: HTMLDocument) -> String? {
+		var thumbnailPath: String?
+
+		if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
+			for node in metaTags {
+				if let content = node.attr("content") {
+					log("Found og image: \(content)")
+					thumbnailPath = content
+					break
+				}
+			}
+		}
+
+		if thumbnailPath == nil, let metaTags = htmlDoc.head?.xpath("//meta[@name=\"thumbnail\" or @name=\"image\"]") {
+			for node in metaTags {
+				if let content = node.attr("content") {
+					log("Found thumbnail image: \(content)")
+					thumbnailPath = content
+					break
+				}
+			}
+		}
+		return thumbnailPath
+	}
+
+	static private func getFavIconPath(from htmlDoc: HTMLDocument) -> String? {
+		var favIconPath = "/favicon.ico"
+		if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+			var imageRank = 0
+			for node in touchIcons {
+				let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
+				var rank = isTouch ? 10 : 1
+				if let sizes = node.attr("sizes") {
+					let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+					if numbers.count > 1 {
+						rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
+					}
+				}
+				if let href = node.attr("href") {
+					if rank > imageRank {
+						imageRank = rank
+						favIconPath = href
+					}
+				}
+			}
+		}
+		return favIconPath
+	}
+
+	static private func repair(path: String?, using url: URL) -> URL? {
+		guard var path = path else { return nil }
+		var iconUrl: URL?
+		if let i = URL(string: path), i.scheme != nil {
+			iconUrl = i
+		} else {
+			if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+				c.path = path
+				var url = c.url
+				if url == nil && (!(path.hasPrefix("/") || path.hasPrefix("."))) {
+					path = "/" + path
+					c.path = path
+					url = c.url
+				}
+				iconUrl = url
+			}
+		}
+		return iconUrl
+	}
+
+	////////////////////////////////////////////
+
+	static func fetchImage(url: URL?, completion: @escaping (IMAGE?)->Void) {
+		guard let url = url else { completion(nil); return }
+		fetch(url) { data, response, error in
+			if let data = data {
+				log("Image fetched for \(url)")
+				completion(IMAGE(data: data))
+			} else {
+				log("Error fetching site icon from \(url)")
+				completion(nil)
+			}
+		}
+	}
+
+	///////////////////////////////////////////////
+
+	static private var taskQueue: OperationQueue = {
+		let o = OperationQueue()
+		o.maxConcurrentOperationCount = 8
+		return o
+	}()
+
+	static private func fetch(_ url: URL, method: String? = nil, result: @escaping (Data?, URLResponse?, Error?) -> Void) {
+		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+		var request = URLRequest(url: url)
+		if let method = method {
+			request.httpMethod = method
+		}
+		request.setValue("Gladys/\(v) (iOS; iOS)", forHTTPHeaderField: "User-Agent")
+
+		let g = DispatchSemaphore(value: 0)
+
+		let task = URLSession.shared.dataTask(with: url) { data, response, error in
+			result(data, response, error)
+			g.signal()
+		}
+		taskQueue.addOperation {
+			task.resume()
+			g.wait()
+		}
+	}
 }
 

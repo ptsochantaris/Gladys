@@ -547,7 +547,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
 		cell.animateArchiving = true
 
-		component.fetchWebPreview(for: url) { _, _, image, _ in
+		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
 				DispatchQueue.main.async {
 					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.typeItems.count)

@@ -477,7 +477,7 @@ final class DetailController: GladysViewController,
 		if readWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
-					s.archiveWebComponent(cell: c, url: i as URL, type: typeEntry)
+					s.archiveWebComponent(cell: c, url: i as URL)
 				}
 			}
 		} else {
@@ -924,13 +924,13 @@ final class DetailController: GladysViewController,
 		return .none
 	}
 
-	private func archiveWebComponent(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
+	private func archiveWebComponent(cell: DetailCell, url: URL) {
 		let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
 		a.addAction(UIAlertAction(title: "Archive Target", style: .default) { _ in
 			self.proceedToArchiveWebComponent(cell: cell, url: url)
 		})
 		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { _ in
-			self.proceedToFetchLinkThumbnail(cell: cell, url: url, type: type)
+			self.proceedToFetchLinkThumbnail(cell: cell, url: url)
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		if let p = a.popoverPresentationController {
@@ -940,9 +940,9 @@ final class DetailController: GladysViewController,
 		present(a, animated: true)
 	}
 
-	private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL, type: ArchivedDropItemType) {
+	private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL) {
 		cell.animateArchive(true)
-		type.fetchWebPreview(for: url) { _, _, image, _ in
+		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let data = image.jpegData(compressionQuality: 1) {
 				DispatchQueue.main.async {
 					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
