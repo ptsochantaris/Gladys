@@ -30,181 +30,181 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		00000AAD01F06CBD2E2511D290485BE7 /* NSEventModifierFlags+HotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F43DAE3DB95F337B7C2A46CB69D12 /* NSEventModifierFlags+HotKey.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		1123B4174C5F37ABFCB64FDAE7D84947 /* CDEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = CA6EC9D777455C0BB00608F05748AC53 /* CDEvents.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		132B29276B30DB69ABA6351B811145DE /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4366777DB107567BB52C57A0F8388E0 /* Document.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		13C94918589B8A7DF9A40D07505FB8D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB81E7B5FE70356010FE88BD74CD5EAD /* Error.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		18E0533671DAC7C5070B633B6B6E789B /* CDEvents-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FF110CA0E00B7C9BA0A8535CEA6B127 /* CDEvents-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		1DAF16E9581EF6568AE27F19B73D6FBC /* ZIPFoundation-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F3D56722059BE8F9A27C098E410FD /* ZIPFoundation-iOS-dummy.m */; };
-		24697FBE9D072A008BB3E54B17F08CE7 /* Fuzi-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B6C69A5A7DE2CA76287B2FB95C015C3 /* Fuzi-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		25B2EB03F79A601D38D104D6EC3073A7 /* ZIPFoundation-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F9549CE919E49CA0D6512F5AF32479 /* ZIPFoundation-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		36607468D3A7E984DEC674AD12A1EA3A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B58DBCD1C1279688F5D4F15A5B710 /* Extensions.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		379307C93DB977DB3B7A7E1B2150A4A2 /* CallbackURLKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C2AE00A32EE713D1133E27C17661A /* CallbackURLKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		39783935FAE730F2F2F364AE6324B65C /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3C38AE7981F3586F434115A88BE86 /* Client.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3D9A618514D6FB8DDA7E138B96A4117F /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62385A02A38F80A35894F8BD4459FBEE /* Manager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3E41686B7055A31D216EA88B74D6F89B /* HotKey-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E5A0FE221EB65D4B9FD9D30547C562 /* HotKey-dummy.m */; };
-		3F132359FD6557A77AC4808E3CF98C61 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DED4EBC08C4D484D0D61B01699EFD1 /* Data+Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		40A8B23A37168DD529E3AB6F4470D3AE /* Fuzi-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 357598A18191B7EA6EBBB20BA4077283 /* Fuzi-iOS-dummy.m */; };
-		40D6CF9682BFD960FD93F27C44BF1400 /* Pods-GladysIntents-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3992ADD1D0001E0EBAF0AFE4EACC9C3A /* Pods-GladysIntents-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		44E60E2370CA1A3C90C38A052D6E6DBF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891F0216C351321A36C6365DF69867AF /* Helpers.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4972A4B3EF73005A59D36D09D8A4366E /* Data+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B065E1107EDB1B215F8A81467D2A01 /* Data+Serialization.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4A742BFFB02AFCB942B45186C6A2C310 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3C38AE7981F3586F434115A88BE86 /* Client.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		51AF52AA6DBC5A2939D4A224076843A9 /* CDEvents-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CC9E9343AA85E5B173B2E413647FAB /* CDEvents-dummy.m */; };
-		593505782E554B2D7EAA3DC3306376F5 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9016363987F5709CA52F2DA4DDAD35 /* Entry.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5ADFE2DCFD3711ED1646A18CA59A82AF /* CDEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E64DB00989657E3BF1DA28027CFDB19 /* CDEvent.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5B3B0C398687597CEE73759A1A5FE8BD /* Pods-GladysAction-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5362BD15CFFA94E62E720470480A76E4 /* Pods-GladysAction-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5BA550E4C3C2F434D311EE7E336A0FBF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B58DBCD1C1279688F5D4F15A5B710 /* Extensions.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5F114B44B2B0A17513AA7B54891A4BF3 /* NodeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656BA59463A88FD465A33C5B80719F63 /* NodeSet.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5F615FEE3599A2ADA01460B3E8E9BB9A /* CallbackURLKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C2AE00A32EE713D1133E27C17661A /* CallbackURLKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		603225B973CE0C16D26AFEB187F0C532 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36FCFE89554236EFF14F1827FD3F079B /* Archive.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		635766F857085226005BB9E2766188C4 /* KeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A433D5965F626D71AB5E0B5D7B66CADB /* KeyCombo.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		636A094978BCCD89FA355243DE196A10 /* CallbackURLKit-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CC4EE9A68D7028BBEBB3F30C7FA02F /* CallbackURLKit-iOS-dummy.m */; };
-		68260B24C58B7404C211B3D451723735 /* CDEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D4027C83351A603B4C9B133A09165310 /* CDEvents.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6FA0637A9BB589ADE061B1E48FBA25CA /* CallbackURLKit-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 262E6AFF23048B118F15C2403BC2D4E0 /* CallbackURLKit-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		6FF1DF915DC02C8DBB9E3852B8D57BC5 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682FEBC68A49B6EEE0F921763FDC86AD /* Key.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		71180F62BD3F2381AC8AB505F263EF6B /* Pods-Gladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 88E4D1F0DED9318593C85402C5382BBE /* Pods-Gladys-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7222E033AD47A7A30A444EEACC5D7227 /* Pods-MacGladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CC4DC65E9F63C8A071646086DFEC241 /* Pods-MacGladys-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7A7A0B06A43F7C9D75B11B03C5357E22 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81258154B83C312CF7F1CA18CA6432F9 /* Element.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7EF70A6CBD1F1FDECB9B67DAEA5841B4 /* HotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAAF10216F9BE25EFA93D08205635E1 /* HotKey.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		8D110C0AA92BFA9B1DC85BBBB2BAA56E /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81258154B83C312CF7F1CA18CA6432F9 /* Element.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		8E07AED41B7AB213354CB440D8F1F9C4 /* FileManager+ZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A770276A1E7AB6B749A93707EC163 /* FileManager+ZIP.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9111884FEEFF7D86A67F3E7EB5F8A6BE /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B2CC45D7AF2935D171B44728D05CB2 /* Queryable.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		93B1D7E65A9F035BE9F1D183857DF1EA /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A0854A21B7482DAAB67A83DFAD72D /* Request.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		98AAB0B5304D4425DBD609E71DC2E7C0 /* CallbackURLKit-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E965EDB05CF4FCCF5B020C587E0AF883 /* CallbackURLKit-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		9B6B31B01CF0381F3E370C65419396F6 /* Pods-GladysIntents-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F7E89890B4AA06FC94A3BCDAC58CC1 /* Pods-GladysIntents-dummy.m */; };
-		9C6D94E749F030F90058B444743982E2 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9016363987F5709CA52F2DA4DDAD35 /* Entry.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9E8037EC03B1BE523AE1C4656005A765 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4366777DB107567BB52C57A0F8388E0 /* Document.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9FEB0E8C80EF3F529C27A968FEE852C9 /* ZIPFoundation-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A607A4474F9DD6019BF357EEB04DBC6 /* ZIPFoundation-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		A00750EAA7DC1EC48D11370842CCE67F /* CDEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 139AFB7944EC536370A41A03790D6468 /* CDEvent.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A457703055A697C2CBD11197B3238132 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62385A02A38F80A35894F8BD4459FBEE /* Manager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A628A6D7626AB60FF4D8C981EC6CF1C5 /* Pods-GladysAction-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A121CA17BFEE7BDA0C0F0EC4302A9 /* Pods-GladysAction-dummy.m */; };
-		A6FD8F5014623C4E0C296991E48F2D47 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A0854A21B7482DAAB67A83DFAD72D /* Request.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A8A18ECCA1867D57838A40C667B79045 /* Fuzi-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B29929D04D8DFC48E94AA3DA4ED9D4 /* Fuzi-macOS-dummy.m */; };
-		ABE08F94A3E33DE63F2C37AA9FD59417 /* HotKey-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B98A7DC27C4773BB960B82160E0DAE15 /* HotKey-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		ACF1400717A3F0DD1F7137E3CBA183D1 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36FCFE89554236EFF14F1827FD3F079B /* Archive.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		ADE51C429A41D26E325E70D571DD8419 /* HotKeysController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8B7653C900A7CDE0F5B97207335E22 /* HotKeysController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B28457F19440CF84F9EA365138CBDB4C /* Archive+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EF965649F8E4752CEB14EB0577C8DC /* Archive+Writing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B2CA18FA0BF09644E80D4DAB9F979ECD /* Pods-MacGladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C251F10DBF8039C0CB8E33E1E922EED /* Pods-MacGladys-dummy.m */; };
-		B3AB50303B9CC45F726D4BC39AE649D7 /* Pods-GladysFramework-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B4763FCC87085BF16689ECEC24A5E3 /* Pods-GladysFramework-dummy.m */; };
-		B884C7112A57248602FB3D3DA78C5FD4 /* Pods-Gladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A7222203D3336343C9389191430AE98 /* Pods-Gladys-dummy.m */; };
-		BC4E645C276E30C5E1A539B966EB0600 /* Archive+Reading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC96599C758E66C0F5DACFC6645DD99 /* Archive+Reading.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		BD56281FA23E5893C0FEFD13F0F0410C /* Pods-MacGladysFramework-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 737F96BE97B13DC08EC993C500087B57 /* Pods-MacGladysFramework-dummy.m */; };
-		BE67F1378CA1ABB3CB1DC57635BC23BF /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB81E7B5FE70356010FE88BD74CD5EAD /* Error.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		BE6DC34C289354D62E4C0B7BF75A8983 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891F0216C351321A36C6365DF69867AF /* Helpers.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		BF8467B396A2AC686DFEF5B67D7F6FBE /* ZIPFoundation-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AA23460BFC8519F8432156D9F502594 /* ZIPFoundation-macOS-dummy.m */; };
-		BFD1D994B0965DF4295F920FB909A683 /* FileManager+ZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A770276A1E7AB6B749A93707EC163 /* FileManager+ZIP.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		C6D8CD1BDBA8A19B8D6EAAAB277F7E7E /* CallbackURLKit-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C50396236044A8491E21D592FED69C6 /* CallbackURLKit-macOS-dummy.m */; };
-		CA3A1B916D0BD1B6627A61159BFE1A06 /* compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9015D854A0BD0ECE991A55D36CEF51C0 /* compat.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		CC154628CE15A726916AB0DBC6C6DDA9 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665692466E41E2A4747346B0A5EE02F /* Node.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D215586ABB089B6AA1ED3E5D68D1C0E2 /* Data+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B065E1107EDB1B215F8A81467D2A01 /* Data+Serialization.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		ED1FD214548EF7E9D7EA5F9BDE3790CA /* CDEventsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C7F97E782E147CFBE9E9BCFC8ED15D2 /* CDEventsDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		EE990A50148CAD6317E455EEC682F5AF /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665692466E41E2A4747346B0A5EE02F /* Node.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		EF59A3EBA5BF874D27D4072280C20F4A /* Archive+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EF965649F8E4752CEB14EB0577C8DC /* Archive+Writing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F26A43B8E56929105C3C05D0A84A6829 /* NodeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656BA59463A88FD465A33C5B80719F63 /* NodeSet.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F61051DD0DD8AD3F540BCD6A0A558FED /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DED4EBC08C4D484D0D61B01699EFD1 /* Data+Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F89697D8ACB541CFBC1E52C6441CB537 /* Fuzi-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A9564B39EA3938D678247131854978 /* Fuzi-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		FD9F095793B67FF6196BB4C6BDEF1AE3 /* Archive+Reading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC96599C758E66C0F5DACFC6645DD99 /* Archive+Reading.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		FFCBE96DDB8F344460FF679BF929CE50 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B2CC45D7AF2935D171B44728D05CB2 /* Queryable.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		018E9A8FC51A4B0E6D47E978A3B02AC4 /* NodeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656BA59463A88FD465A33C5B80719F63 /* NodeSet.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		03332AAA82B2F1C4F8B1411BDE31F48F /* ZIPFoundation-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F3D56722059BE8F9A27C098E410FD /* ZIPFoundation-iOS-dummy.m */; };
+		0C853A7C091842F12B9CD433DB2AE8AC /* Archive+Reading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC96599C758E66C0F5DACFC6645DD99 /* Archive+Reading.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0EAB595580EC1D8473A3435BFFB4B0E5 /* HotKey-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E5A0FE221EB65D4B9FD9D30547C562 /* HotKey-dummy.m */; };
+		10521E6A96A5A7057108371A2437EB38 /* NSEventModifierFlags+HotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F43DAE3DB95F337B7C2A46CB69D12 /* NSEventModifierFlags+HotKey.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		1160C6A9372A33F3A4F5CFE72D42A60B /* CDEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = CA6EC9D777455C0BB00608F05748AC53 /* CDEvents.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		15ED07D7F27D0CC50B291AB58DE6EC4F /* Archive+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EF965649F8E4752CEB14EB0577C8DC /* Archive+Writing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		1AF2914A112311B4C81307892E2F6247 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891F0216C351321A36C6365DF69867AF /* Helpers.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		1C7E83CD2289A101D1D5A3FB83C6FE74 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B2CC45D7AF2935D171B44728D05CB2 /* Queryable.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		20F79F9D1B9E46045C6CF2B6B4B44751 /* Pods-GladysIntents-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3992ADD1D0001E0EBAF0AFE4EACC9C3A /* Pods-GladysIntents-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		21CAA6B0DB1A7A612FD597FDF3E3C118 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81258154B83C312CF7F1CA18CA6432F9 /* Element.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		223FE816BA44BD52CAE63054A7611405 /* Archive+Reading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC96599C758E66C0F5DACFC6645DD99 /* Archive+Reading.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		281469BCFA13D715519CF44C33ADBB74 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3C38AE7981F3586F434115A88BE86 /* Client.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		2B31F21AA04A9DDB0AD6B75419CE5EDD /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4366777DB107567BB52C57A0F8388E0 /* Document.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		30569195AE33FCC13A039E481AB1F857 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665692466E41E2A4747346B0A5EE02F /* Node.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		393F982587D03B6AF14774FACC0F62BC /* CallbackURLKit-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CC4EE9A68D7028BBEBB3F30C7FA02F /* CallbackURLKit-iOS-dummy.m */; };
+		3D853EF2426741E7671719B280D5BD79 /* Pods-MacGladysFramework-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 737F96BE97B13DC08EC993C500087B57 /* Pods-MacGladysFramework-dummy.m */; };
+		415947155A2B417AF3A0F5D0B8AA716A /* CDEvents-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FF110CA0E00B7C9BA0A8535CEA6B127 /* CDEvents-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		42080D6B03ED6DE0043D20AC1E289163 /* Fuzi-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A9564B39EA3938D678247131854978 /* Fuzi-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		42B23AEEF3577E730005D74B073DA328 /* Pods-Gladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 88E4D1F0DED9318593C85402C5382BBE /* Pods-Gladys-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		497AA7F7611BEC8B9ABD709D911D6073 /* CDEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E64DB00989657E3BF1DA28027CFDB19 /* CDEvent.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		509D19064AF19F1E1F49A63FC4023B0A /* CDEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 139AFB7944EC536370A41A03790D6468 /* CDEvent.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		517EBE431917F3E98D9A8659C9CE3F6B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665692466E41E2A4747346B0A5EE02F /* Node.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		55A1597FB92722F81AFAAC679924CD9D /* NodeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656BA59463A88FD465A33C5B80719F63 /* NodeSet.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		594A6A0F8FFF55214A5232E41A177CBC /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36FCFE89554236EFF14F1827FD3F079B /* Archive.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5AD9E62F07705EFAAC4BB1C40827000E /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DED4EBC08C4D484D0D61B01699EFD1 /* Data+Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5F97E540D549AFF07037F06943090BE3 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DED4EBC08C4D484D0D61B01699EFD1 /* Data+Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5FB07EDAE6B0C3B68246897358D974E1 /* ZIPFoundation-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A607A4474F9DD6019BF357EEB04DBC6 /* ZIPFoundation-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		5FD533CA835242E517400540F366F22C /* Pods-GladysIntents-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 16F7E89890B4AA06FC94A3BCDAC58CC1 /* Pods-GladysIntents-dummy.m */; };
+		69536D799330C01C09E6950E1AB80CBC /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81258154B83C312CF7F1CA18CA6432F9 /* Element.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6AB4A5ABE64329EF1C9D1668FE6E3304 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B58DBCD1C1279688F5D4F15A5B710 /* Extensions.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6CEBF1451591B636DC44ED7737F24177 /* Pods-Gladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A7222203D3336343C9389191430AE98 /* Pods-Gladys-dummy.m */; };
+		7085404352504D79B55E341A5AD8710C /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9016363987F5709CA52F2DA4DDAD35 /* Entry.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		708ED91EDB82A65716C698FBC975C677 /* Fuzi-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B29929D04D8DFC48E94AA3DA4ED9D4 /* Fuzi-macOS-dummy.m */; };
+		722379B1FFBB31E2A790C5E74151A4FC /* Fuzi-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 357598A18191B7EA6EBBB20BA4077283 /* Fuzi-iOS-dummy.m */; };
+		739312632DCC43B54DFA011EB6AA082C /* CDEvents-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CC9E9343AA85E5B173B2E413647FAB /* CDEvents-dummy.m */; };
+		753E8293BC17C331C9BEDC4FFAB0CC81 /* CallbackURLKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C2AE00A32EE713D1133E27C17661A /* CallbackURLKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		785610D97B79C8D62B132DD8E4C29A94 /* CallbackURLKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C2AE00A32EE713D1133E27C17661A /* CallbackURLKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7938284F8E7186D1F4197CCEE5630535 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B58DBCD1C1279688F5D4F15A5B710 /* Extensions.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7ABD4C2941391DC224E869C3F33CD9FC /* CallbackURLKit-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E965EDB05CF4FCCF5B020C587E0AF883 /* CallbackURLKit-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7BE8BC76C493E6400AEDF562DEDC10A0 /* CDEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D4027C83351A603B4C9B133A09165310 /* CDEvents.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		823710C5466A013D99F448836AB4A284 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A0854A21B7482DAAB67A83DFAD72D /* Request.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		851AAA350A96983603D0C3867562BDF3 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B2CC45D7AF2935D171B44728D05CB2 /* Queryable.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		859C0134AA322C5E0E5A42A65D05FB08 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62385A02A38F80A35894F8BD4459FBEE /* Manager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		872B64A316A70FC640C6642676A58D52 /* Pods-GladysAction-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A121CA17BFEE7BDA0C0F0EC4302A9 /* Pods-GladysAction-dummy.m */; };
+		87CE076381442CFDBDFC67AAC83CDEAD /* ZIPFoundation-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F9549CE919E49CA0D6512F5AF32479 /* ZIPFoundation-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		91CBA27C6C05C8B7BF0E353960EDE927 /* CDEventsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C7F97E782E147CFBE9E9BCFC8ED15D2 /* CDEventsDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		93AF8C9F5412507A273B19202E116818 /* Data+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B065E1107EDB1B215F8A81467D2A01 /* Data+Serialization.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9BD980F3633D36D2B895037A1056C1D4 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A0854A21B7482DAAB67A83DFAD72D /* Request.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9FB33AD4E9C2AAC8D759F6AA3ECB2EEB /* HotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAAF10216F9BE25EFA93D08205635E1 /* HotKey.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A4DF2A27B43A2E44AA419D939B1B757D /* HotKeysController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8B7653C900A7CDE0F5B97207335E22 /* HotKeysController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A793301888969BC4E3F94F68A4505772 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4366777DB107567BB52C57A0F8388E0 /* Document.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AE267940D280CC77D96EF46162C69D9F /* Pods-MacGladys-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C251F10DBF8039C0CB8E33E1E922EED /* Pods-MacGladys-dummy.m */; };
+		AFFE89F53865E439B25C6E54D4DAF430 /* Pods-GladysAction-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5362BD15CFFA94E62E720470480A76E4 /* Pods-GladysAction-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B1C953F600EC77C1285EBD39F0885B04 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891F0216C351321A36C6365DF69867AF /* Helpers.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B3840DCFDEC6BB1C9BCD3218974FAEA0 /* ZIPFoundation-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AA23460BFC8519F8432156D9F502594 /* ZIPFoundation-macOS-dummy.m */; };
+		BBA5B6DC46266A0A4F22D08C83533E85 /* KeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A433D5965F626D71AB5E0B5D7B66CADB /* KeyCombo.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		BF0CD1D1AC21487265A6E4A69FD7706C /* Data+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B065E1107EDB1B215F8A81467D2A01 /* Data+Serialization.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		C3F6955D51B02CE53EC6A57E0848CC71 /* Fuzi-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B6C69A5A7DE2CA76287B2FB95C015C3 /* Fuzi-iOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CAEA49B822E3A3B2B680DE04D4C5F0F0 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9016363987F5709CA52F2DA4DDAD35 /* Entry.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D315D4F37A1F3636CF2491B9FE75A095 /* compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9015D854A0BD0ECE991A55D36CEF51C0 /* compat.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D597647EF5EDFF980774D443652C1C4F /* FileManager+ZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A770276A1E7AB6B749A93707EC163 /* FileManager+ZIP.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D76C41281A0577DE62338CDF2A706A40 /* Archive+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EF965649F8E4752CEB14EB0577C8DC /* Archive+Writing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DBB86949DF5C7D038678721C7B312244 /* Pods-GladysFramework-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B4763FCC87085BF16689ECEC24A5E3 /* Pods-GladysFramework-dummy.m */; };
+		E044F962E39BA995791DA7C7A84D445B /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62385A02A38F80A35894F8BD4459FBEE /* Manager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E10459DE29BD37A7FE206F8BD6D36404 /* CallbackURLKit-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C50396236044A8491E21D592FED69C6 /* CallbackURLKit-macOS-dummy.m */; };
+		E1A44B4EE9366FABF1F432B329AF4C20 /* HotKey-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B98A7DC27C4773BB960B82160E0DAE15 /* HotKey-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E82FA77FDC69A4E8290F3F9DFB73CD1E /* CallbackURLKit-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 262E6AFF23048B118F15C2403BC2D4E0 /* CallbackURLKit-macOS-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		EBC02EC26624E975BA5D0A885E745167 /* Pods-MacGladys-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CC4DC65E9F63C8A071646086DFEC241 /* Pods-MacGladys-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		ED45EB6590D75F289925DD2829C92310 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB81E7B5FE70356010FE88BD74CD5EAD /* Error.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		EFA70D1830CC7703ACC0A71B540617DF /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36FCFE89554236EFF14F1827FD3F079B /* Archive.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F242D6367F10D0E6E29D5A3203487CF6 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3C38AE7981F3586F434115A88BE86 /* Client.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F286D935C6CEBC4189F65F99828C9A26 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB81E7B5FE70356010FE88BD74CD5EAD /* Error.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F4FB98006C1CA2CE89C68527B925CDC5 /* FileManager+ZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A770276A1E7AB6B749A93707EC163 /* FileManager+ZIP.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		FE35C9C0037020760B1CA4626DEB4453 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682FEBC68A49B6EEE0F921763FDC86AD /* Key.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4BDB4726B09399D6A1A7764F90E6CDD2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A66C7D759E38B56B809928C769C92681;
-			remoteInfo = "OpenSSL-Universal-macOS";
-		};
-		4C91E660B7F454CB310131CE2BC6B589 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 742A576AA43EE4423EBAB92AA1949A56;
-			remoteInfo = "Fuzi-iOS";
-		};
-		5AC74B207822FC582B27FF2E3D8AD12C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C0B9B276287C16316BE0B8EBE179102E;
-			remoteInfo = CDEvents;
-		};
-		6328D13C5E76C868A93BE9FBB8F1C014 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A575E52DFE156E84D0EDE92BC122C55C;
-			remoteInfo = "CallbackURLKit-macOS";
-		};
-		67B1FD5FAE30EC4A4A55B2DE7CCC4AE6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9E3F1B4942CDFC5F78FD8ACC5255499B;
-			remoteInfo = "Fuzi-macOS";
-		};
-		6B9EDAC16CA58391280C2FADBD04F53F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4E534C10C21331DC31EA192EE88A30D;
-			remoteInfo = "OpenSSL-Universal-iOS";
-		};
-		719A13D1D36D4EB0A5B22E8AB00277AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4E534C10C21331DC31EA192EE88A30D;
-			remoteInfo = "OpenSSL-Universal-iOS";
-		};
-		8AE83F033C931BC8180DDF3F24141485 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 742A576AA43EE4423EBAB92AA1949A56;
-			remoteInfo = "Fuzi-iOS";
-		};
-		929973B8FEC9AB81FDD01F58E7D84520 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DB4D977E4336D9F2E9E510A33CD1DB6D;
-			remoteInfo = HotKey;
-		};
-		92A72E42113D7A72AC2AC8E4C104994E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9AF8AE8821E967844EEF26BBB341564D;
-			remoteInfo = "ZIPFoundation-iOS";
-		};
-		9C047145F81A92259B185D2B73998F0E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8B5BB2050078EFCACBEDC5B4195B80CD;
-			remoteInfo = "ZIPFoundation-macOS";
-		};
-		DB91B433186DA2A532668360CC78B773 /* PBXContainerItemProxy */ = {
+		181BF481E3101CCC3D0D39E755153949 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 73D9AA4D0B681873069B574297FB558F;
 			remoteInfo = "CallbackURLKit-iOS";
 		};
-		E43A277D38A0AE965C67449622A6FE37 /* PBXContainerItemProxy */ = {
+		1BB8DBA0EE81D608EB95EB2EE99B8A1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A66C7D759E38B56B809928C769C92681;
+			remoteInfo = "OpenSSL-Universal-macOS";
+		};
+		2E465C0591EAE68F6DD283D48A96933F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 742A576AA43EE4423EBAB92AA1949A56;
 			remoteInfo = "Fuzi-iOS";
 		};
-		E95F621B67A4F6541994C79072C4B3A5 /* PBXContainerItemProxy */ = {
+		46E2CA9105444178ACC8BB30FC36E4E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 742A576AA43EE4423EBAB92AA1949A56;
+			remoteInfo = "Fuzi-iOS";
+		};
+		4E5FCFF29957155AD3670647262DF8E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E3F1B4942CDFC5F78FD8ACC5255499B;
+			remoteInfo = "Fuzi-macOS";
+		};
+		50187E0F0CF16F40BC5C2577BE6F55FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A575E52DFE156E84D0EDE92BC122C55C;
+			remoteInfo = "CallbackURLKit-macOS";
+		};
+		60595C9C35A627C8FC45ACB3C3F57AC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B5BB2050078EFCACBEDC5B4195B80CD;
+			remoteInfo = "ZIPFoundation-macOS";
+		};
+		78538462ABCF23278CE62A91563E5C4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DB4D977E4336D9F2E9E510A33CD1DB6D;
+			remoteInfo = HotKey;
+		};
+		78599C4E8DF37299224576B7263C1DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0B9B276287C16316BE0B8EBE179102E;
+			remoteInfo = CDEvents;
+		};
+		95981520487C2B1E2C47163BE500001B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E4E534C10C21331DC31EA192EE88A30D;
+			remoteInfo = "OpenSSL-Universal-iOS";
+		};
+		9A8C060BF750396E04C4183DBE19AD88 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E4E534C10C21331DC31EA192EE88A30D;
+			remoteInfo = "OpenSSL-Universal-iOS";
+		};
+		9D5BE0AB8986D6C3276ED70F8DBA4BA9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A66C7D759E38B56B809928C769C92681;
 			remoteInfo = "OpenSSL-Universal-macOS";
+		};
+		A410D85BA98EE1D5BA2CD65EDF21F66F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9AF8AE8821E967844EEF26BBB341564D;
+			remoteInfo = "ZIPFoundation-iOS";
+		};
+		B7E93F90D08A85844937B48958295D31 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 742A576AA43EE4423EBAB92AA1949A56;
+			remoteInfo = "Fuzi-iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -491,98 +491,98 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		087BA8AF41387C8D5A7A4F609512145D /* Frameworks */ = {
+		34ACB6AD306F97E16AC123DE19B94BA8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0DA70D127C633BE76531D1455C367E0F /* Frameworks */ = {
+		56F4F1A4B370DAE367CB987A3DCB3231 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		10986E5A3C40DC7251E1F802AC24023C /* Frameworks */ = {
+		6DC397F451BB6D61776CE05CADB835FA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		235F2995082A48C3F6797223A83EE362 /* Frameworks */ = {
+		7776246DE2520386BA4EE9B382498FA5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2B3D52E1B2A422CBA53C966FDCD61AAD /* Frameworks */ = {
+		83F515659637A008B870F22B6F08A88E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3869D28A3BCE639AA9D32C218568DA9C /* Frameworks */ = {
+		94848D602397AC069228D1B563A61313 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		41FB8153214B84EF28CADEACA8439C49 /* Frameworks */ = {
+		B7BD4E01B92928E6078C21A45CE5EA5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		63DB10C9966CC63A8579C5C56829E17E /* Frameworks */ = {
+		CADAC207BD82F56E27F5EEF2628B126F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A633991450CF2C33F573C8A3FCF1018 /* Frameworks */ = {
+		D1137C16114E562F1C5AE6F14573C0BF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8C9AB540E274D8E3E26B3CD5F26E1101 /* Frameworks */ = {
+		D74FC076D138A802058DB8E8CA9EAE9B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		99AAAF4290D6AB65CA92DB7FDB617E1D /* Frameworks */ = {
+		DB91D38B540E12D37E349A540E11615B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A97FCC26548C4FC13644D256409E9B04 /* Frameworks */ = {
+		E77F9B21D719BE80139827E1B24B9818 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BAC642603000DDD16D699A07350B351B /* Frameworks */ = {
+		FCC9E65638B014D05551A532E38AFCCD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DFA1A1FEE95BCE9B298F89113D39A63E /* Frameworks */ = {
+		FDA74808674D818F7473699F10A25E5A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1084,117 +1084,117 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		064135C65B85FDF372F97AFE1D7F48D6 /* Headers */ = {
+		10C09465E9B7A5E4262380219893E2A9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FA0637A9BB589ADE061B1E48FBA25CA /* CallbackURLKit-macOS-umbrella.h in Headers */,
+				C3F6955D51B02CE53EC6A57E0848CC71 /* Fuzi-iOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		171B3724DC03B36660DDC2D2DC6FD900 /* Headers */ = {
+		1556E5D5AA45DD3B4ACB505B9DC17725 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5ADFE2DCFD3711ED1646A18CA59A82AF /* CDEvent.h in Headers */,
-				18E0533671DAC7C5070B633B6B6E789B /* CDEvents-umbrella.h in Headers */,
-				68260B24C58B7404C211B3D451723735 /* CDEvents.h in Headers */,
-				ED1FD214548EF7E9D7EA5F9BDE3790CA /* CDEventsDelegate.h in Headers */,
-				CA3A1B916D0BD1B6627A61159BFE1A06 /* compat.h in Headers */,
+				5FB07EDAE6B0C3B68246897358D974E1 /* ZIPFoundation-iOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1E59EAF343320D4DC360FA20B093F4C4 /* Headers */ = {
+		2B7EF97F6FC50E923992380FF20BFDBC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98AAB0B5304D4425DBD609E71DC2E7C0 /* CallbackURLKit-iOS-umbrella.h in Headers */,
+				42080D6B03ED6DE0043D20AC1E289163 /* Fuzi-macOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		234C140235E4879869E0634F6A77F2BC /* Headers */ = {
+		2BD5236216E592D4F7D222999316FEDA /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7222E033AD47A7A30A444EEACC5D7227 /* Pods-MacGladys-umbrella.h in Headers */,
+				42B23AEEF3577E730005D74B073DA328 /* Pods-Gladys-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5BAF008741A0B8960BCF68D7508E2D27 /* Headers */ = {
+		3B256EAE31DC56887417670EDFE5C3E4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6CDE110169987F74A3C1CA1A003B936E /* Headers */ = {
+		4B1A1B1372272B244C8989C7090AF7D6 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B3B0C398687597CEE73759A1A5FE8BD /* Pods-GladysAction-umbrella.h in Headers */,
+				7ABD4C2941391DC224E869C3F33CD9FC /* CallbackURLKit-iOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		90BDD542972DCA0683DC2B3D8C7D571F /* Headers */ = {
+		4D68A931029895D1B8C6DC872753C382 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40D6CF9682BFD960FD93F27C44BF1400 /* Pods-GladysIntents-umbrella.h in Headers */,
+				87CE076381442CFDBDFC67AAC83CDEAD /* ZIPFoundation-macOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9D1EAD4658ED135F6C17E8B7B1DA5F0A /* Headers */ = {
+		656331BBB35F5DBEF05127212ACF6D91 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				25B2EB03F79A601D38D104D6EC3073A7 /* ZIPFoundation-macOS-umbrella.h in Headers */,
+				497AA7F7611BEC8B9ABD709D911D6073 /* CDEvent.h in Headers */,
+				415947155A2B417AF3A0F5D0B8AA716A /* CDEvents-umbrella.h in Headers */,
+				7BE8BC76C493E6400AEDF562DEDC10A0 /* CDEvents.h in Headers */,
+				91CBA27C6C05C8B7BF0E353960EDE927 /* CDEventsDelegate.h in Headers */,
+				D315D4F37A1F3636CF2491B9FE75A095 /* compat.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD211D8E7236CA43329EB89B3421F803 /* Headers */ = {
+		A8F712D73FE3F729CDE71D2E30E4EC5B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FEB0E8C80EF3F529C27A968FEE852C9 /* ZIPFoundation-iOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B1D885184B75B36E45B0BA7111E32D91 /* Headers */ = {
+		AA2DF28340B08494FE95D5AD4A41BE7B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24697FBE9D072A008BB3E54B17F08CE7 /* Fuzi-iOS-umbrella.h in Headers */,
+				EBC02EC26624E975BA5D0A885E745167 /* Pods-MacGladys-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C85B5DE47D6BC585BCF4DE6B82DB80F7 /* Headers */ = {
+		C0C7822E20996F6F16C69BD989B68D03 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F89697D8ACB541CFBC1E52C6441CB537 /* Fuzi-macOS-umbrella.h in Headers */,
+				E1A44B4EE9366FABF1F432B329AF4C20 /* HotKey-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E047E7B0ED4D53F89A7EC7E54124800A /* Headers */ = {
+		C85182C804955188A062CCE092704497 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABE08F94A3E33DE63F2C37AA9FD59417 /* HotKey-umbrella.h in Headers */,
+				E82FA77FDC69A4E8290F3F9DFB73CD1E /* CallbackURLKit-macOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EF2C01EFE2AE3A3261E45F878D88B423 /* Headers */ = {
+		E7A347FD077C576963846D222573A2AC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71180F62BD3F2381AC8AB505F263EF6B /* Pods-Gladys-umbrella.h in Headers */,
+				AFFE89F53865E439B25C6E54D4DAF430 /* Pods-GladysAction-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FCE25320EAEC70C93C45DD88525BD305 /* Headers */ = {
+		FF219FE0C83DC8F888E389053E6E127E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F79F9D1B9E46045C6CF2B6B4B44751 /* Pods-GladysIntents-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1203,19 +1203,19 @@
 /* Begin PBXNativeTarget section */
 		09ADC17EF5BEFD764983DD3C16388537 /* Pods-Gladys */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CC0638F92BB60CE426B39368AB2CE95B /* Build configuration list for PBXNativeTarget "Pods-Gladys" */;
+			buildConfigurationList = 256FD0958F2DCC815B43D26FEE615BA0 /* Build configuration list for PBXNativeTarget "Pods-Gladys" */;
 			buildPhases = (
-				EF2C01EFE2AE3A3261E45F878D88B423 /* Headers */,
-				CB65AF80459DC2A0C6CAAE7B52C92B5C /* Sources */,
-				BAC642603000DDD16D699A07350B351B /* Frameworks */,
+				2BD5236216E592D4F7D222999316FEDA /* Headers */,
+				D8B80EE67ABA8BF215A5B1817C35CD79 /* Sources */,
+				DB91D38B540E12D37E349A540E11615B /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				46743A3983348FCC3E81CC3DA679F213 /* PBXTargetDependency */,
-				4747000639B126EDE8CE6B14D5265989 /* PBXTargetDependency */,
-				41E0EF9F18CF8609AE9098E5881542DA /* PBXTargetDependency */,
-				7D95EF09C31DFC4E70B76041346B9296 /* PBXTargetDependency */,
+				B02AB433B6F7355E0CDB54375DDE01DA /* PBXTargetDependency */,
+				2B8772DB0FAD187B8296353DF664E0C1 /* PBXTargetDependency */,
+				9F39B1E0997A7DAFB3B58E82E5B1E140 /* PBXTargetDependency */,
+				C00B706C8165315D801FB418E23AAA7D /* PBXTargetDependency */,
 			);
 			name = "Pods-Gladys";
 			productName = "Pods-Gladys";
@@ -1224,16 +1224,16 @@
 		};
 		3451C543EE506ECFFF8D708018CE12DC /* Pods-MacGladysFramework */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A5909C5330907D30C52CA655FCAA5967 /* Build configuration list for PBXNativeTarget "Pods-MacGladysFramework" */;
+			buildConfigurationList = 502703DD63DE2485D9C053172F6650D2 /* Build configuration list for PBXNativeTarget "Pods-MacGladysFramework" */;
 			buildPhases = (
-				FCE25320EAEC70C93C45DD88525BD305 /* Headers */,
-				8012194AA35C3966FC67EA2893824C3F /* Sources */,
-				235F2995082A48C3F6797223A83EE362 /* Frameworks */,
+				3B256EAE31DC56887417670EDFE5C3E4 /* Headers */,
+				FDCF6236744B19BDCFECE4C001EA46D3 /* Sources */,
+				94848D602397AC069228D1B563A61313 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A2E7865AD67521C9C6597CCAD62D01AE /* PBXTargetDependency */,
+				D1EDD7AD9C61625AFAE3E64A1F82F9A0 /* PBXTargetDependency */,
 			);
 			name = "Pods-MacGladysFramework";
 			productName = "Pods-MacGladysFramework";
@@ -1242,16 +1242,16 @@
 		};
 		44F7E0EF1D526499A5391DC2D68F82BD /* Pods-GladysAction */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7BD65CC6CF68A96F45D35F66801DBB92 /* Build configuration list for PBXNativeTarget "Pods-GladysAction" */;
+			buildConfigurationList = 5493FA0F4954F407B968A69774E0D903 /* Build configuration list for PBXNativeTarget "Pods-GladysAction" */;
 			buildPhases = (
-				6CDE110169987F74A3C1CA1A003B936E /* Headers */,
-				A475298A6E4781636E3ACC9158EDD0B4 /* Sources */,
-				41FB8153214B84EF28CADEACA8439C49 /* Frameworks */,
+				E7A347FD077C576963846D222573A2AC /* Headers */,
+				4AFEFB8E564FB29EA41A09D2AE96C8D3 /* Sources */,
+				CADAC207BD82F56E27F5EEF2628B126F /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E2B25F5DFFDAB5DEEC34222C440F0F25 /* PBXTargetDependency */,
+				3CB4ED00116AB2F602D7086D84A893EB /* PBXTargetDependency */,
 			);
 			name = "Pods-GladysAction";
 			productName = "Pods-GladysAction";
@@ -1260,21 +1260,21 @@
 		};
 		5123087C5AB02A22056E38F27BFF330B /* Pods-MacGladys */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5F04417EEC482AF345788A5167DD0AE6 /* Build configuration list for PBXNativeTarget "Pods-MacGladys" */;
+			buildConfigurationList = 7AE75BD349364EC8BD4909F486D51B16 /* Build configuration list for PBXNativeTarget "Pods-MacGladys" */;
 			buildPhases = (
-				234C140235E4879869E0634F6A77F2BC /* Headers */,
-				23FA619D99D55CD03029056DCBF912B1 /* Sources */,
-				A97FCC26548C4FC13644D256409E9B04 /* Frameworks */,
+				AA2DF28340B08494FE95D5AD4A41BE7B /* Headers */,
+				E9B0DEFFCC6B1B0A92CF535862851AE1 /* Sources */,
+				6DC397F451BB6D61776CE05CADB835FA /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				490D673B536A9BFE50DC7DD1E6B7ADE8 /* PBXTargetDependency */,
-				05995A529356471A91F2CF285DBB6503 /* PBXTargetDependency */,
-				F6039CBC90E3A58974CA1BDDC2780A37 /* PBXTargetDependency */,
-				1D199E56FC7CC2AA99C17BFE23004C6F /* PBXTargetDependency */,
-				606F1588A2C16C154F6505FB184A8026 /* PBXTargetDependency */,
-				3830EB66B136CC67E7EFC1E683D519EC /* PBXTargetDependency */,
+				020C6A02CDCED4A3E6DEDE61E1FF25D3 /* PBXTargetDependency */,
+				3A7C143A98C6D91431CFE55939683BC7 /* PBXTargetDependency */,
+				780A98286D756430E8A7A7AB0E52D2AD /* PBXTargetDependency */,
+				101AFEF69169FA6FC4824BBB823B7566 /* PBXTargetDependency */,
+				DE852133AD659FB0637C3BC12470E6AA /* PBXTargetDependency */,
+				6E40AACCBCB70471826F3249F539920E /* PBXTargetDependency */,
 			);
 			name = "Pods-MacGladys";
 			productName = "Pods-MacGladys";
@@ -1283,16 +1283,16 @@
 		};
 		51CAAB7EDFB150836F3AEBBD926A1408 /* Pods-GladysIntents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4788300A8AD444A1854E38D38548E7B0 /* Build configuration list for PBXNativeTarget "Pods-GladysIntents" */;
+			buildConfigurationList = 8B4E356CF17F7C4140BA7197DBEAA72B /* Build configuration list for PBXNativeTarget "Pods-GladysIntents" */;
 			buildPhases = (
-				90BDD542972DCA0683DC2B3D8C7D571F /* Headers */,
-				C56E32CAC0A82D05C3298B02F6576D85 /* Sources */,
-				3869D28A3BCE639AA9D32C218568DA9C /* Frameworks */,
+				FF219FE0C83DC8F888E389053E6E127E /* Headers */,
+				17D3EA7A8E9D8D5954D0EC31267191AF /* Sources */,
+				E77F9B21D719BE80139827E1B24B9818 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E941698769146E8E4A1B5034D20DC020 /* PBXTargetDependency */,
+				8559B1D6925E67B6B880D5D72DF8FE5F /* PBXTargetDependency */,
 			);
 			name = "Pods-GladysIntents";
 			productName = "Pods-GladysIntents";
@@ -1301,12 +1301,12 @@
 		};
 		73D9AA4D0B681873069B574297FB558F /* CallbackURLKit-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 391B245E1663E97C08BE54B6BCA1135C /* Build configuration list for PBXNativeTarget "CallbackURLKit-iOS" */;
+			buildConfigurationList = 0D4F9CC00A87AC342848C1CB89706718 /* Build configuration list for PBXNativeTarget "CallbackURLKit-iOS" */;
 			buildPhases = (
-				1E59EAF343320D4DC360FA20B093F4C4 /* Headers */,
-				48217CDD2A756CDE85B2687EAAF28405 /* Sources */,
-				087BA8AF41387C8D5A7A4F609512145D /* Frameworks */,
-				F891B5945119BB14C1268BEA91A6AAB8 /* Copy generated compatibility header */,
+				4B1A1B1372272B244C8989C7090AF7D6 /* Headers */,
+				2AD99FE72841936B7130926C39F00338 /* Sources */,
+				D74FC076D138A802058DB8E8CA9EAE9B /* Frameworks */,
+				7E555C109E49550A0650A45FBEB1CA27 /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1319,12 +1319,12 @@
 		};
 		742A576AA43EE4423EBAB92AA1949A56 /* Fuzi-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21908185213F02D3D52B9D49DF857607 /* Build configuration list for PBXNativeTarget "Fuzi-iOS" */;
+			buildConfigurationList = 2384AA98FF17A71AEB0F47C002710187 /* Build configuration list for PBXNativeTarget "Fuzi-iOS" */;
 			buildPhases = (
-				B1D885184B75B36E45B0BA7111E32D91 /* Headers */,
-				261552E4F9F6B293A76706A2D91D1A90 /* Sources */,
-				0DA70D127C633BE76531D1455C367E0F /* Frameworks */,
-				B7121B86AEC6BA5222DFCD46C10255EF /* Copy generated compatibility header */,
+				10C09465E9B7A5E4262380219893E2A9 /* Headers */,
+				40695BD5566571056AC2324A8820E2BE /* Sources */,
+				D1137C16114E562F1C5AE6F14573C0BF /* Frameworks */,
+				2660A5D54369AFA92161C8B158D9FD42 /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1337,12 +1337,12 @@
 		};
 		8B5BB2050078EFCACBEDC5B4195B80CD /* ZIPFoundation-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 77DB57E26C8F24491A83D6B4C94865DB /* Build configuration list for PBXNativeTarget "ZIPFoundation-macOS" */;
+			buildConfigurationList = 28670BA0F00024DE66E4679363381DAF /* Build configuration list for PBXNativeTarget "ZIPFoundation-macOS" */;
 			buildPhases = (
-				9D1EAD4658ED135F6C17E8B7B1DA5F0A /* Headers */,
-				C083656AA524F9C3427696EC7DF9E5C9 /* Sources */,
-				8C9AB540E274D8E3E26B3CD5F26E1101 /* Frameworks */,
-				B50ED75658E4E9E0B43916799A24C62F /* Copy generated compatibility header */,
+				4D68A931029895D1B8C6DC872753C382 /* Headers */,
+				44AB111AE317975C34FDE3CD28C5F3BC /* Sources */,
+				7776246DE2520386BA4EE9B382498FA5 /* Frameworks */,
+				CFB94D35ECDA1DD9649E0C243F40B684 /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1355,12 +1355,12 @@
 		};
 		9AF8AE8821E967844EEF26BBB341564D /* ZIPFoundation-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0F651A86F78B0BA13237CFA8BF7B0D5E /* Build configuration list for PBXNativeTarget "ZIPFoundation-iOS" */;
+			buildConfigurationList = 2DBAF1E86D3BCFBDCEC753013BC1611C /* Build configuration list for PBXNativeTarget "ZIPFoundation-iOS" */;
 			buildPhases = (
-				AD211D8E7236CA43329EB89B3421F803 /* Headers */,
-				21A0B7D1D6F9A8F12B747A9B402EFC61 /* Sources */,
-				63DB10C9966CC63A8579C5C56829E17E /* Frameworks */,
-				E272B235E4AC43AF72996041F20683FC /* Copy generated compatibility header */,
+				1556E5D5AA45DD3B4ACB505B9DC17725 /* Headers */,
+				2FCDD3427A50B4114810F9FC8F4DB1E7 /* Sources */,
+				34ACB6AD306F97E16AC123DE19B94BA8 /* Frameworks */,
+				D45CDF10FB98867A6B408C3A1AAE0980 /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1373,12 +1373,12 @@
 		};
 		9E3F1B4942CDFC5F78FD8ACC5255499B /* Fuzi-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 436E71DF88948CEDB5CEA130199BB789 /* Build configuration list for PBXNativeTarget "Fuzi-macOS" */;
+			buildConfigurationList = D1CC76E6363217EBE9FC0472FD386CDE /* Build configuration list for PBXNativeTarget "Fuzi-macOS" */;
 			buildPhases = (
-				C85B5DE47D6BC585BCF4DE6B82DB80F7 /* Headers */,
-				ECE0A1B8F433B866133C9F32A1EA502E /* Sources */,
-				DFA1A1FEE95BCE9B298F89113D39A63E /* Frameworks */,
-				B60107BD1FBF802BB3021A57DD70D9DF /* Copy generated compatibility header */,
+				2B7EF97F6FC50E923992380FF20BFDBC /* Headers */,
+				47CC8A1CD3530273BCFE6FCE476B5C29 /* Sources */,
+				B7BD4E01B92928E6078C21A45CE5EA5E /* Frameworks */,
+				71D8D38D925CD5A4A30C97F35D24FE5A /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1391,12 +1391,12 @@
 		};
 		A575E52DFE156E84D0EDE92BC122C55C /* CallbackURLKit-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5C849A0CA60336309871CC55E7570241 /* Build configuration list for PBXNativeTarget "CallbackURLKit-macOS" */;
+			buildConfigurationList = BC9A7F62C94263EA97175FBA7B143264 /* Build configuration list for PBXNativeTarget "CallbackURLKit-macOS" */;
 			buildPhases = (
-				064135C65B85FDF372F97AFE1D7F48D6 /* Headers */,
-				FBD4B45EED9C475FF1FE01643AB0C6CE /* Sources */,
-				99AAAF4290D6AB65CA92DB7FDB617E1D /* Frameworks */,
-				F027AE95F3BA251B4BE6343DF158EF5B /* Copy generated compatibility header */,
+				C85182C804955188A062CCE092704497 /* Headers */,
+				B85E6565E63BC274D6BC6DA510874334 /* Sources */,
+				83F515659637A008B870F22B6F08A88E /* Frameworks */,
+				B6C2A52B4043EDC9AC618AAB6D3C6FFB /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1409,16 +1409,16 @@
 		};
 		BA27907DE8D2704D6D54ED81E38BFCD6 /* Pods-GladysFramework */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14B986596EB05EDCA80B329B013095C0 /* Build configuration list for PBXNativeTarget "Pods-GladysFramework" */;
+			buildConfigurationList = 46E622A02E427612667EA31E4C52AF29 /* Build configuration list for PBXNativeTarget "Pods-GladysFramework" */;
 			buildPhases = (
-				5BAF008741A0B8960BCF68D7508E2D27 /* Headers */,
-				72FF9576D1DE0ADAA4114F30C6966152 /* Sources */,
-				2B3D52E1B2A422CBA53C966FDCD61AAD /* Frameworks */,
+				A8F712D73FE3F729CDE71D2E30E4EC5B /* Headers */,
+				03756FFCF0BE1BD0200FD6261B470A41 /* Sources */,
+				FDA74808674D818F7473699F10A25E5A /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				75CF7AFB3DDE7F6ACDEB3EF3E56DB342 /* PBXTargetDependency */,
+				9B29082AE012E769CAE80DC25A6CA904 /* PBXTargetDependency */,
 			);
 			name = "Pods-GladysFramework";
 			productName = "Pods-GladysFramework";
@@ -1427,11 +1427,11 @@
 		};
 		C0B9B276287C16316BE0B8EBE179102E /* CDEvents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AE19F32473F792BB680376FDF0E4DC43 /* Build configuration list for PBXNativeTarget "CDEvents" */;
+			buildConfigurationList = ED67C270D1B6EEBC9D6561BBADBEBD55 /* Build configuration list for PBXNativeTarget "CDEvents" */;
 			buildPhases = (
-				171B3724DC03B36660DDC2D2DC6FD900 /* Headers */,
-				7E88A93A51C653476D31F23FF72CF356 /* Sources */,
-				10986E5A3C40DC7251E1F802AC24023C /* Frameworks */,
+				656331BBB35F5DBEF05127212ACF6D91 /* Headers */,
+				4071B9D6C4CE8672610401326C980A9F /* Sources */,
+				FCC9E65638B014D05551A532E38AFCCD /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1444,12 +1444,12 @@
 		};
 		DB4D977E4336D9F2E9E510A33CD1DB6D /* HotKey */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E694C59A4882A759B3AD05D5C4A64152 /* Build configuration list for PBXNativeTarget "HotKey" */;
+			buildConfigurationList = 0BE49E964A466917B402FD0358AAC1C3 /* Build configuration list for PBXNativeTarget "HotKey" */;
 			buildPhases = (
-				E047E7B0ED4D53F89A7EC7E54124800A /* Headers */,
-				4B9BB5EB5EA8C648CBF10F7986F7C3E6 /* Sources */,
-				8A633991450CF2C33F573C8A3FCF1018 /* Frameworks */,
-				4485FBDC1AD99735F1DAAA7CA631873B /* Copy generated compatibility header */,
+				C0C7822E20996F6F16C69BD989B68D03 /* Headers */,
+				2F3D18733C42A34159503DD9CC420593 /* Sources */,
+				56F4F1A4B370DAE367CB987A3DCB3231 /* Frameworks */,
+				5F478DB00F10C19171283033C5A1377B /* Copy generated compatibility header */,
 			);
 			buildRules = (
 			);
@@ -1466,12 +1466,9 @@
 		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1020;
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
 				TargetAttributes = {
-					8B5BB2050078EFCACBEDC5B4195B80CD = {
-						LastSwiftMigration = 1020;
-					};
 					9AF8AE8821E967844EEF26BBB341564D = {
 						LastSwiftMigration = 1020;
 					};
@@ -1510,79 +1507,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4485FBDC1AD99735F1DAAA7CA631873B /* Copy generated compatibility header */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
-				"${PODS_ROOT}/Headers/Public/HotKey/HotKey.modulemap",
-				"${PODS_ROOT}/Headers/Public/HotKey/HotKey-umbrella.h",
-			);
-			name = "Copy generated compatibility header";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
-				"${BUILT_PRODUCTS_DIR}/HotKey-umbrella.h",
-				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/HotKey/HotKey.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/HotKey/HotKey-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
-		};
-		B50ED75658E4E9E0B43916799A24C62F /* Copy generated compatibility header */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
-				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap",
-				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS-umbrella.h",
-			);
-			name = "Copy generated compatibility header";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
-				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS-umbrella.h",
-				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
-		};
-		B60107BD1FBF802BB3021A57DD70D9DF /* Copy generated compatibility header */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
-				"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS.modulemap",
-				"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS-umbrella.h",
-			);
-			name = "Copy generated compatibility header";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
-				"${BUILT_PRODUCTS_DIR}/Fuzi-macOS-umbrella.h",
-				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
-		};
-		B7121B86AEC6BA5222DFCD46C10255EF /* Copy generated compatibility header */ = {
+		2660A5D54369AFA92161C8B158D9FD42 /* Copy generated compatibility header */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1606,7 +1531,7 @@
 			shellPath = /bin/sh;
 			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-iOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-iOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
 		};
-		E272B235E4AC43AF72996041F20683FC /* Copy generated compatibility header */ = {
+		5F478DB00F10C19171283033C5A1377B /* Copy generated compatibility header */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1615,22 +1540,22 @@
 			);
 			inputPaths = (
 				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
-				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap",
-				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS-umbrella.h",
+				"${PODS_ROOT}/Headers/Public/HotKey/HotKey.modulemap",
+				"${PODS_ROOT}/Headers/Public/HotKey/HotKey-umbrella.h",
 			);
 			name = "Copy generated compatibility header";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
-				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/HotKey-umbrella.h",
 				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/HotKey/HotKey.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/HotKey/HotKey-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
 		};
-		F027AE95F3BA251B4BE6343DF158EF5B /* Copy generated compatibility header */ = {
+		71D8D38D925CD5A4A30C97F35D24FE5A /* Copy generated compatibility header */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1639,22 +1564,22 @@
 			);
 			inputPaths = (
 				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
-				"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap",
-				"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS-umbrella.h",
+				"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS.modulemap",
+				"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS-umbrella.h",
 			);
 			name = "Copy generated compatibility header";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
-				"${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/Fuzi-macOS-umbrella.h",
 				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/Fuzi/Fuzi-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
 		};
-		F891B5945119BB14C1268BEA91A6AAB8 /* Copy generated compatibility header */ = {
+		7E555C109E49550A0650A45FBEB1CA27 /* Copy generated compatibility header */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1678,277 +1603,351 @@
 			shellPath = /bin/sh;
 			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-iOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-iOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
 		};
+		B6C2A52B4043EDC9AC618AAB6D3C6FFB /* Copy generated compatibility header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
+				"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap",
+				"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS-umbrella.h",
+			);
+			name = "Copy generated compatibility header";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
+				"${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/CallbackURLKit/CallbackURLKit-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+		};
+		CFB94D35ECDA1DD9649E0C243F40B684 /* Copy generated compatibility header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
+				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap",
+				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS-umbrella.h",
+			);
+			name = "Copy generated compatibility header";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-macOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+		};
+		D45CDF10FB98867A6B408C3A1AAE0980 /* Copy generated compatibility header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
+				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap",
+				"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS-umbrella.h",
+			);
+			name = "Copy generated compatibility header";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation-iOS-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/ZIPFoundation/ZIPFoundation-iOS-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		21A0B7D1D6F9A8F12B747A9B402EFC61 /* Sources */ = {
+		03756FFCF0BE1BD0200FD6261B470A41 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD9F095793B67FF6196BB4C6BDEF1AE3 /* Archive+Reading.swift in Sources */,
-				B28457F19440CF84F9EA365138CBDB4C /* Archive+Writing.swift in Sources */,
-				603225B973CE0C16D26AFEB187F0C532 /* Archive.swift in Sources */,
-				3F132359FD6557A77AC4808E3CF98C61 /* Data+Compression.swift in Sources */,
-				D215586ABB089B6AA1ED3E5D68D1C0E2 /* Data+Serialization.swift in Sources */,
-				593505782E554B2D7EAA3DC3306376F5 /* Entry.swift in Sources */,
-				8E07AED41B7AB213354CB440D8F1F9C4 /* FileManager+ZIP.swift in Sources */,
-				1DAF16E9581EF6568AE27F19B73D6FBC /* ZIPFoundation-iOS-dummy.m in Sources */,
+				DBB86949DF5C7D038678721C7B312244 /* Pods-GladysFramework-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		23FA619D99D55CD03029056DCBF912B1 /* Sources */ = {
+		17D3EA7A8E9D8D5954D0EC31267191AF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2CA18FA0BF09644E80D4DAB9F979ECD /* Pods-MacGladys-dummy.m in Sources */,
+				5FD533CA835242E517400540F366F22C /* Pods-GladysIntents-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		261552E4F9F6B293A76706A2D91D1A90 /* Sources */ = {
+		2AD99FE72841936B7130926C39F00338 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E8037EC03B1BE523AE1C4656005A765 /* Document.swift in Sources */,
-				7A7A0B06A43F7C9D75B11B03C5357E22 /* Element.swift in Sources */,
-				BE67F1378CA1ABB3CB1DC57635BC23BF /* Error.swift in Sources */,
-				40A8B23A37168DD529E3AB6F4470D3AE /* Fuzi-iOS-dummy.m in Sources */,
-				BE6DC34C289354D62E4C0B7BF75A8983 /* Helpers.swift in Sources */,
-				EE990A50148CAD6317E455EEC682F5AF /* Node.swift in Sources */,
-				5F114B44B2B0A17513AA7B54891A4BF3 /* NodeSet.swift in Sources */,
-				FFCBE96DDB8F344460FF679BF929CE50 /* Queryable.swift in Sources */,
+				393F982587D03B6AF14774FACC0F62BC /* CallbackURLKit-iOS-dummy.m in Sources */,
+				753E8293BC17C331C9BEDC4FFAB0CC81 /* CallbackURLKit.swift in Sources */,
+				281469BCFA13D715519CF44C33ADBB74 /* Client.swift in Sources */,
+				7938284F8E7186D1F4197CCEE5630535 /* Extensions.swift in Sources */,
+				E044F962E39BA995791DA7C7A84D445B /* Manager.swift in Sources */,
+				9BD980F3633D36D2B895037A1056C1D4 /* Request.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48217CDD2A756CDE85B2687EAAF28405 /* Sources */ = {
+		2F3D18733C42A34159503DD9CC420593 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				636A094978BCCD89FA355243DE196A10 /* CallbackURLKit-iOS-dummy.m in Sources */,
-				379307C93DB977DB3B7A7E1B2150A4A2 /* CallbackURLKit.swift in Sources */,
-				39783935FAE730F2F2F364AE6324B65C /* Client.swift in Sources */,
-				36607468D3A7E984DEC674AD12A1EA3A /* Extensions.swift in Sources */,
-				A457703055A697C2CBD11197B3238132 /* Manager.swift in Sources */,
-				93B1D7E65A9F035BE9F1D183857DF1EA /* Request.swift in Sources */,
+				0EAB595580EC1D8473A3435BFFB4B0E5 /* HotKey-dummy.m in Sources */,
+				9FB33AD4E9C2AAC8D759F6AA3ECB2EEB /* HotKey.swift in Sources */,
+				A4DF2A27B43A2E44AA419D939B1B757D /* HotKeysController.swift in Sources */,
+				FE35C9C0037020760B1CA4626DEB4453 /* Key.swift in Sources */,
+				BBA5B6DC46266A0A4F22D08C83533E85 /* KeyCombo.swift in Sources */,
+				10521E6A96A5A7057108371A2437EB38 /* NSEventModifierFlags+HotKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B9BB5EB5EA8C648CBF10F7986F7C3E6 /* Sources */ = {
+		2FCDD3427A50B4114810F9FC8F4DB1E7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E41686B7055A31D216EA88B74D6F89B /* HotKey-dummy.m in Sources */,
-				7EF70A6CBD1F1FDECB9B67DAEA5841B4 /* HotKey.swift in Sources */,
-				ADE51C429A41D26E325E70D571DD8419 /* HotKeysController.swift in Sources */,
-				6FF1DF915DC02C8DBB9E3852B8D57BC5 /* Key.swift in Sources */,
-				635766F857085226005BB9E2766188C4 /* KeyCombo.swift in Sources */,
-				00000AAD01F06CBD2E2511D290485BE7 /* NSEventModifierFlags+HotKey.swift in Sources */,
+				223FE816BA44BD52CAE63054A7611405 /* Archive+Reading.swift in Sources */,
+				15ED07D7F27D0CC50B291AB58DE6EC4F /* Archive+Writing.swift in Sources */,
+				EFA70D1830CC7703ACC0A71B540617DF /* Archive.swift in Sources */,
+				5F97E540D549AFF07037F06943090BE3 /* Data+Compression.swift in Sources */,
+				BF0CD1D1AC21487265A6E4A69FD7706C /* Data+Serialization.swift in Sources */,
+				CAEA49B822E3A3B2B680DE04D4C5F0F0 /* Entry.swift in Sources */,
+				F4FB98006C1CA2CE89C68527B925CDC5 /* FileManager+ZIP.swift in Sources */,
+				03332AAA82B2F1C4F8B1411BDE31F48F /* ZIPFoundation-iOS-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		72FF9576D1DE0ADAA4114F30C6966152 /* Sources */ = {
+		40695BD5566571056AC2324A8820E2BE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3AB50303B9CC45F726D4BC39AE649D7 /* Pods-GladysFramework-dummy.m in Sources */,
+				A793301888969BC4E3F94F68A4505772 /* Document.swift in Sources */,
+				21CAA6B0DB1A7A612FD597FDF3E3C118 /* Element.swift in Sources */,
+				F286D935C6CEBC4189F65F99828C9A26 /* Error.swift in Sources */,
+				722379B1FFBB31E2A790C5E74151A4FC /* Fuzi-iOS-dummy.m in Sources */,
+				B1C953F600EC77C1285EBD39F0885B04 /* Helpers.swift in Sources */,
+				517EBE431917F3E98D9A8659C9CE3F6B /* Node.swift in Sources */,
+				55A1597FB92722F81AFAAC679924CD9D /* NodeSet.swift in Sources */,
+				851AAA350A96983603D0C3867562BDF3 /* Queryable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7E88A93A51C653476D31F23FF72CF356 /* Sources */ = {
+		4071B9D6C4CE8672610401326C980A9F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00750EAA7DC1EC48D11370842CCE67F /* CDEvent.m in Sources */,
-				51AF52AA6DBC5A2939D4A224076843A9 /* CDEvents-dummy.m in Sources */,
-				1123B4174C5F37ABFCB64FDAE7D84947 /* CDEvents.m in Sources */,
+				509D19064AF19F1E1F49A63FC4023B0A /* CDEvent.m in Sources */,
+				739312632DCC43B54DFA011EB6AA082C /* CDEvents-dummy.m in Sources */,
+				1160C6A9372A33F3A4F5CFE72D42A60B /* CDEvents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8012194AA35C3966FC67EA2893824C3F /* Sources */ = {
+		44AB111AE317975C34FDE3CD28C5F3BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD56281FA23E5893C0FEFD13F0F0410C /* Pods-MacGladysFramework-dummy.m in Sources */,
+				0C853A7C091842F12B9CD433DB2AE8AC /* Archive+Reading.swift in Sources */,
+				D76C41281A0577DE62338CDF2A706A40 /* Archive+Writing.swift in Sources */,
+				594A6A0F8FFF55214A5232E41A177CBC /* Archive.swift in Sources */,
+				5AD9E62F07705EFAAC4BB1C40827000E /* Data+Compression.swift in Sources */,
+				93AF8C9F5412507A273B19202E116818 /* Data+Serialization.swift in Sources */,
+				7085404352504D79B55E341A5AD8710C /* Entry.swift in Sources */,
+				D597647EF5EDFF980774D443652C1C4F /* FileManager+ZIP.swift in Sources */,
+				B3840DCFDEC6BB1C9BCD3218974FAEA0 /* ZIPFoundation-macOS-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A475298A6E4781636E3ACC9158EDD0B4 /* Sources */ = {
+		47CC8A1CD3530273BCFE6FCE476B5C29 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A628A6D7626AB60FF4D8C981EC6CF1C5 /* Pods-GladysAction-dummy.m in Sources */,
+				2B31F21AA04A9DDB0AD6B75419CE5EDD /* Document.swift in Sources */,
+				69536D799330C01C09E6950E1AB80CBC /* Element.swift in Sources */,
+				ED45EB6590D75F289925DD2829C92310 /* Error.swift in Sources */,
+				708ED91EDB82A65716C698FBC975C677 /* Fuzi-macOS-dummy.m in Sources */,
+				1AF2914A112311B4C81307892E2F6247 /* Helpers.swift in Sources */,
+				30569195AE33FCC13A039E481AB1F857 /* Node.swift in Sources */,
+				018E9A8FC51A4B0E6D47E978A3B02AC4 /* NodeSet.swift in Sources */,
+				1C7E83CD2289A101D1D5A3FB83C6FE74 /* Queryable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C083656AA524F9C3427696EC7DF9E5C9 /* Sources */ = {
+		4AFEFB8E564FB29EA41A09D2AE96C8D3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC4E645C276E30C5E1A539B966EB0600 /* Archive+Reading.swift in Sources */,
-				EF59A3EBA5BF874D27D4072280C20F4A /* Archive+Writing.swift in Sources */,
-				ACF1400717A3F0DD1F7137E3CBA183D1 /* Archive.swift in Sources */,
-				F61051DD0DD8AD3F540BCD6A0A558FED /* Data+Compression.swift in Sources */,
-				4972A4B3EF73005A59D36D09D8A4366E /* Data+Serialization.swift in Sources */,
-				9C6D94E749F030F90058B444743982E2 /* Entry.swift in Sources */,
-				BFD1D994B0965DF4295F920FB909A683 /* FileManager+ZIP.swift in Sources */,
-				BF8467B396A2AC686DFEF5B67D7F6FBE /* ZIPFoundation-macOS-dummy.m in Sources */,
+				872B64A316A70FC640C6642676A58D52 /* Pods-GladysAction-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C56E32CAC0A82D05C3298B02F6576D85 /* Sources */ = {
+		B85E6565E63BC274D6BC6DA510874334 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B6B31B01CF0381F3E370C65419396F6 /* Pods-GladysIntents-dummy.m in Sources */,
+				E10459DE29BD37A7FE206F8BD6D36404 /* CallbackURLKit-macOS-dummy.m in Sources */,
+				785610D97B79C8D62B132DD8E4C29A94 /* CallbackURLKit.swift in Sources */,
+				F242D6367F10D0E6E29D5A3203487CF6 /* Client.swift in Sources */,
+				6AB4A5ABE64329EF1C9D1668FE6E3304 /* Extensions.swift in Sources */,
+				859C0134AA322C5E0E5A42A65D05FB08 /* Manager.swift in Sources */,
+				823710C5466A013D99F448836AB4A284 /* Request.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB65AF80459DC2A0C6CAAE7B52C92B5C /* Sources */ = {
+		D8B80EE67ABA8BF215A5B1817C35CD79 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B884C7112A57248602FB3D3DA78C5FD4 /* Pods-Gladys-dummy.m in Sources */,
+				6CEBF1451591B636DC44ED7737F24177 /* Pods-Gladys-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ECE0A1B8F433B866133C9F32A1EA502E /* Sources */ = {
+		E9B0DEFFCC6B1B0A92CF535862851AE1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				132B29276B30DB69ABA6351B811145DE /* Document.swift in Sources */,
-				8D110C0AA92BFA9B1DC85BBBB2BAA56E /* Element.swift in Sources */,
-				13C94918589B8A7DF9A40D07505FB8D7 /* Error.swift in Sources */,
-				A8A18ECCA1867D57838A40C667B79045 /* Fuzi-macOS-dummy.m in Sources */,
-				44E60E2370CA1A3C90C38A052D6E6DBF /* Helpers.swift in Sources */,
-				CC154628CE15A726916AB0DBC6C6DDA9 /* Node.swift in Sources */,
-				F26A43B8E56929105C3C05D0A84A6829 /* NodeSet.swift in Sources */,
-				9111884FEEFF7D86A67F3E7EB5F8A6BE /* Queryable.swift in Sources */,
+				AE267940D280CC77D96EF46162C69D9F /* Pods-MacGladys-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FBD4B45EED9C475FF1FE01643AB0C6CE /* Sources */ = {
+		FDCF6236744B19BDCFECE4C001EA46D3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6D8CD1BDBA8A19B8D6EAAAB277F7E7E /* CallbackURLKit-macOS-dummy.m in Sources */,
-				5F615FEE3599A2ADA01460B3E8E9BB9A /* CallbackURLKit.swift in Sources */,
-				4A742BFFB02AFCB942B45186C6A2C310 /* Client.swift in Sources */,
-				5BA550E4C3C2F434D311EE7E336A0FBF /* Extensions.swift in Sources */,
-				3D9A618514D6FB8DDA7E138B96A4117F /* Manager.swift in Sources */,
-				A6FD8F5014623C4E0C296991E48F2D47 /* Request.swift in Sources */,
+				3D853EF2426741E7671719B280D5BD79 /* Pods-MacGladysFramework-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		05995A529356471A91F2CF285DBB6503 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "CallbackURLKit-macOS";
-			target = A575E52DFE156E84D0EDE92BC122C55C /* CallbackURLKit-macOS */;
-			targetProxy = 6328D13C5E76C868A93BE9FBB8F1C014 /* PBXContainerItemProxy */;
-		};
-		1D199E56FC7CC2AA99C17BFE23004C6F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = HotKey;
-			target = DB4D977E4336D9F2E9E510A33CD1DB6D /* HotKey */;
-			targetProxy = 929973B8FEC9AB81FDD01F58E7D84520 /* PBXContainerItemProxy */;
-		};
-		3830EB66B136CC67E7EFC1E683D519EC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ZIPFoundation-macOS";
-			target = 8B5BB2050078EFCACBEDC5B4195B80CD /* ZIPFoundation-macOS */;
-			targetProxy = 9C047145F81A92259B185D2B73998F0E /* PBXContainerItemProxy */;
-		};
-		41E0EF9F18CF8609AE9098E5881542DA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OpenSSL-Universal-iOS";
-			target = E4E534C10C21331DC31EA192EE88A30D /* OpenSSL-Universal-iOS */;
-			targetProxy = 719A13D1D36D4EB0A5B22E8AB00277AA /* PBXContainerItemProxy */;
-		};
-		46743A3983348FCC3E81CC3DA679F213 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "CallbackURLKit-iOS";
-			target = 73D9AA4D0B681873069B574297FB558F /* CallbackURLKit-iOS */;
-			targetProxy = DB91B433186DA2A532668360CC78B773 /* PBXContainerItemProxy */;
-		};
-		4747000639B126EDE8CE6B14D5265989 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Fuzi-iOS";
-			target = 742A576AA43EE4423EBAB92AA1949A56 /* Fuzi-iOS */;
-			targetProxy = E43A277D38A0AE965C67449622A6FE37 /* PBXContainerItemProxy */;
-		};
-		490D673B536A9BFE50DC7DD1E6B7ADE8 /* PBXTargetDependency */ = {
+		020C6A02CDCED4A3E6DEDE61E1FF25D3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CDEvents;
 			target = C0B9B276287C16316BE0B8EBE179102E /* CDEvents */;
-			targetProxy = 5AC74B207822FC582B27FF2E3D8AD12C /* PBXContainerItemProxy */;
+			targetProxy = 78599C4E8DF37299224576B7263C1DF1 /* PBXContainerItemProxy */;
 		};
-		606F1588A2C16C154F6505FB184A8026 /* PBXTargetDependency */ = {
+		101AFEF69169FA6FC4824BBB823B7566 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "OpenSSL-Universal-macOS";
-			target = A66C7D759E38B56B809928C769C92681 /* OpenSSL-Universal-macOS */;
-			targetProxy = E95F621B67A4F6541994C79072C4B3A5 /* PBXContainerItemProxy */;
+			name = HotKey;
+			target = DB4D977E4336D9F2E9E510A33CD1DB6D /* HotKey */;
+			targetProxy = 78538462ABCF23278CE62A91563E5C4E /* PBXContainerItemProxy */;
 		};
-		75CF7AFB3DDE7F6ACDEB3EF3E56DB342 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OpenSSL-Universal-iOS";
-			target = E4E534C10C21331DC31EA192EE88A30D /* OpenSSL-Universal-iOS */;
-			targetProxy = 6B9EDAC16CA58391280C2FADBD04F53F /* PBXContainerItemProxy */;
-		};
-		7D95EF09C31DFC4E70B76041346B9296 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ZIPFoundation-iOS";
-			target = 9AF8AE8821E967844EEF26BBB341564D /* ZIPFoundation-iOS */;
-			targetProxy = 92A72E42113D7A72AC2AC8E4C104994E /* PBXContainerItemProxy */;
-		};
-		A2E7865AD67521C9C6597CCAD62D01AE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OpenSSL-Universal-macOS";
-			target = A66C7D759E38B56B809928C769C92681 /* OpenSSL-Universal-macOS */;
-			targetProxy = 4BDB4726B09399D6A1A7764F90E6CDD2 /* PBXContainerItemProxy */;
-		};
-		E2B25F5DFFDAB5DEEC34222C440F0F25 /* PBXTargetDependency */ = {
+		2B8772DB0FAD187B8296353DF664E0C1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Fuzi-iOS";
 			target = 742A576AA43EE4423EBAB92AA1949A56 /* Fuzi-iOS */;
-			targetProxy = 4C91E660B7F454CB310131CE2BC6B589 /* PBXContainerItemProxy */;
+			targetProxy = 2E465C0591EAE68F6DD283D48A96933F /* PBXContainerItemProxy */;
 		};
-		E941698769146E8E4A1B5034D20DC020 /* PBXTargetDependency */ = {
+		3A7C143A98C6D91431CFE55939683BC7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CallbackURLKit-macOS";
+			target = A575E52DFE156E84D0EDE92BC122C55C /* CallbackURLKit-macOS */;
+			targetProxy = 50187E0F0CF16F40BC5C2577BE6F55FA /* PBXContainerItemProxy */;
+		};
+		3CB4ED00116AB2F602D7086D84A893EB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Fuzi-iOS";
 			target = 742A576AA43EE4423EBAB92AA1949A56 /* Fuzi-iOS */;
-			targetProxy = 8AE83F033C931BC8180DDF3F24141485 /* PBXContainerItemProxy */;
+			targetProxy = 46E2CA9105444178ACC8BB30FC36E4E5 /* PBXContainerItemProxy */;
 		};
-		F6039CBC90E3A58974CA1BDDC2780A37 /* PBXTargetDependency */ = {
+		6E40AACCBCB70471826F3249F539920E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ZIPFoundation-macOS";
+			target = 8B5BB2050078EFCACBEDC5B4195B80CD /* ZIPFoundation-macOS */;
+			targetProxy = 60595C9C35A627C8FC45ACB3C3F57AC4 /* PBXContainerItemProxy */;
+		};
+		780A98286D756430E8A7A7AB0E52D2AD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Fuzi-macOS";
 			target = 9E3F1B4942CDFC5F78FD8ACC5255499B /* Fuzi-macOS */;
-			targetProxy = 67B1FD5FAE30EC4A4A55B2DE7CCC4AE6 /* PBXContainerItemProxy */;
+			targetProxy = 4E5FCFF29957155AD3670647262DF8E3 /* PBXContainerItemProxy */;
+		};
+		8559B1D6925E67B6B880D5D72DF8FE5F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Fuzi-iOS";
+			target = 742A576AA43EE4423EBAB92AA1949A56 /* Fuzi-iOS */;
+			targetProxy = B7E93F90D08A85844937B48958295D31 /* PBXContainerItemProxy */;
+		};
+		9B29082AE012E769CAE80DC25A6CA904 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OpenSSL-Universal-iOS";
+			target = E4E534C10C21331DC31EA192EE88A30D /* OpenSSL-Universal-iOS */;
+			targetProxy = 95981520487C2B1E2C47163BE500001B /* PBXContainerItemProxy */;
+		};
+		9F39B1E0997A7DAFB3B58E82E5B1E140 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OpenSSL-Universal-iOS";
+			target = E4E534C10C21331DC31EA192EE88A30D /* OpenSSL-Universal-iOS */;
+			targetProxy = 9A8C060BF750396E04C4183DBE19AD88 /* PBXContainerItemProxy */;
+		};
+		B02AB433B6F7355E0CDB54375DDE01DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CallbackURLKit-iOS";
+			target = 73D9AA4D0B681873069B574297FB558F /* CallbackURLKit-iOS */;
+			targetProxy = 181BF481E3101CCC3D0D39E755153949 /* PBXContainerItemProxy */;
+		};
+		C00B706C8165315D801FB418E23AAA7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ZIPFoundation-iOS";
+			target = 9AF8AE8821E967844EEF26BBB341564D /* ZIPFoundation-iOS */;
+			targetProxy = A410D85BA98EE1D5BA2CD65EDF21F66F /* PBXContainerItemProxy */;
+		};
+		D1EDD7AD9C61625AFAE3E64A1F82F9A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OpenSSL-Universal-macOS";
+			target = A66C7D759E38B56B809928C769C92681 /* OpenSSL-Universal-macOS */;
+			targetProxy = 9D5BE0AB8986D6C3276ED70F8DBA4BA9 /* PBXContainerItemProxy */;
+		};
+		DE852133AD659FB0637C3BC12470E6AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OpenSSL-Universal-macOS";
+			target = A66C7D759E38B56B809928C769C92681 /* OpenSSL-Universal-macOS */;
+			targetProxy = 1BB8DBA0EE81D608EB95EB2EE99B8A1E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		047B4492D9B5E5659A79BFB386C68A2E /* Release */ = {
+		0B5FD907A2D7D652B31CEB7603E73A8C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ACD3570E1F38A9BC25BDD026112C757B /* Pods-GladysIntents.release.xcconfig */;
+			baseConfigurationReference = 36F278ABBE4A4F44D63864278ECEBD76 /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-macOS.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = "Fuzi-macOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1966,29 +1965,6 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-			};
-			name = Release;
-		};
-		0CFFAC9113161300A5BA744D25A419D0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0657FFE9C7011C48B0D006B694CDFC44 /* Pods-Gladys.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -2057,152 +2033,7 @@
 			};
 			name = Debug;
 		};
-		15373A2B6088534D0D9FECA98B8165FA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 706B5FCF2D417211F25E2C9E7E1D6861 /* HotKey.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = Headers/Public/HotKey/HotKey.modulemap;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = HotKey;
-				PRODUCT_NAME = HotKey;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		1781C690519892F8A01E4407D58EB173 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00A6488EC2E5BC6863632A191810C387 /* Fuzi-iOS.xcconfig */;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-iOS/Fuzi-iOS-prefix.pch";
-				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-iOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = "Fuzi-iOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		257F24149A6F13F244AEA804A215DAF5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F42957EC9BC2B0E50D25DDFBB25303D8 /* OpenSSL-Universal-iOS.xcconfig */;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		284F52051FCE1E72C68FAE6F985875C8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FDFBA1A3E5DC0C8B310B641B72567C0A /* CDEvents.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/CDEvents/CDEvents-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				MODULEMAP_FILE = Headers/Public/CDEvents/CDEvents.modulemap;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = CDEvents;
-				PRODUCT_NAME = CDEvents;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		314525EC2B6156C524D36337642E4CC1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F40DC51542B59D9BA9C17445444A3A4 /* Pods-GladysAction.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		3BE7BD898CB4166B6D34036A1C4A3A30 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0C94CBA58863ACACF5807A07E8A48905 /* ZIPFoundation-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = "ZIPFoundation-macOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-			};
-			name = Debug;
-		};
-		51C97DDD221A3D4ECB8DCB43B2D48A92 /* Release */ = {
+		1D3A8CEB0DE766BF216AD650D80245E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 594C8FC9183ECE0F43CDDD5BA6778F88 /* ZIPFoundation-iOS.xcconfig */;
 			buildSettings = {
@@ -2223,14 +2054,56 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		257F24149A6F13F244AEA804A215DAF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F42957EC9BC2B0E50D25DDFBB25303D8 /* OpenSSL-Universal-iOS.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		516D4170CB3904D2FDFA9E1FB865FBAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1DABCC43CDDD698B3FD35F8AEF0D07D9 /* CallbackURLKit-iOS.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
+				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-iOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = "CallbackURLKit-iOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		57F3BAB5D819307475474033920CF00F /* Release */ = {
+		560E8EFF244CD7380346E1E0349FCB02 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0C94CBA58863ACACF5807A07E8A48905 /* ZIPFoundation-macOS.xcconfig */;
+			baseConfigurationReference = BD2BEB17E7157856A208B47197A4B376 /* Pods-MacGladysFramework.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
@@ -2238,21 +2111,16 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = "ZIPFoundation-macOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
 			};
-			name = Release;
+			name = Debug;
 		};
 		5A2ED100A5ABF2A38CCA65CD882F2BDF /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2319,31 +2187,61 @@
 			};
 			name = Release;
 		};
-		6120BB3B97FF9E6EEDF91B334E243517 /* Debug */ = {
+		5CB76CC5B7B62202517D2FB5EF0BC2A8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 594C8FC9183ECE0F43CDDD5BA6778F88 /* ZIPFoundation-iOS.xcconfig */;
+			baseConfigurationReference = 2D8CD91B936A70027DABD058A2FA487C /* CallbackURLKit-macOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-prefix.pch";
-				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = ZIPFoundation;
-				PRODUCT_NAME = "ZIPFoundation-iOS";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = "CallbackURLKit-macOS";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		5E7B6DCE40F32378B69D0015599B586F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D8CD91B936A70027DABD058A2FA487C /* CallbackURLKit-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = CallbackURLKit;
+				PRODUCT_NAME = "CallbackURLKit-macOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		616B1A806CD0F3611EA28A64466A0382 /* Release */ = {
+		612DAC23F9F9DB92279D0FABA5A6EA75 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 36CE325664921C03319BDF1B9D81C0E5 /* Pods-MacGladysFramework.release.xcconfig */;
 			buildSettings = {
@@ -2366,32 +2264,398 @@
 			};
 			name = Release;
 		};
-		798C3C8DD7EA009A73B5693E3F8B7205 /* Debug */ = {
+		79C2D7D86035A7FBB399F3EF867ABD74 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DABCC43CDDD698B3FD35F8AEF0D07D9 /* CallbackURLKit-iOS.xcconfig */;
+			baseConfigurationReference = 30A4C4867EFE2F01875D600C67A8C713 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7BE5492F9A64C6939A2DA607A2E5485E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 706B5FCF2D417211F25E2C9E7E1D6861 /* HotKey.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = Headers/Public/HotKey/HotKey.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = HotKey;
+				PRODUCT_NAME = HotKey;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		839B6CD87FC002CE47704EEC4EC3D2C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 706B5FCF2D417211F25E2C9E7E1D6861 /* HotKey.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = Headers/Public/HotKey/HotKey.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = HotKey;
+				PRODUCT_NAME = HotKey;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		89F891AC61A0C860E43AE47CBD10A88F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C94CBA58863ACACF5807A07E8A48905 /* ZIPFoundation-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = "ZIPFoundation-macOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		8AA2459BA9A065BCBA158D63C3B89CD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 389092A6E3A5C2AB4E75909A6D919B05 /* OpenSSL-Universal-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8BB737BC1ABFB61C03E9C1FE99F412A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FDFBA1A3E5DC0C8B310B641B72567C0A /* CDEvents.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/CDEvents/CDEvents-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MODULEMAP_FILE = Headers/Public/CDEvents/CDEvents.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = CDEvents;
+				PRODUCT_NAME = CDEvents;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		95BDC05FCAE75E408D4E504CF1976B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0657FFE9C7011C48B0D006B694CDFC44 /* Pods-Gladys.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
-				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-iOS.modulemap";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9FAF241035934733416EF0BE297A8F83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F40DC51542B59D9BA9C17445444A3A4 /* Pods-GladysAction.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GladysAction/Pods-GladysAction.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A08478FAB0901A6BBB24F96E036FD097 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 26CB4394426D978F1E6EFFEED86ACBBE /* Pods-GladysIntents.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A188D67DAC928C75883E167876C243CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00A6488EC2E5BC6863632A191810C387 /* Fuzi-iOS.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-iOS/Fuzi-iOS-prefix.pch";
+				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-iOS.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = "CallbackURLKit-iOS";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = "Fuzi-iOS";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A796420FEC0C7D6F3E6D8970A736787B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C94CBA58863ACACF5807A07E8A48905 /* ZIPFoundation-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-macOS/ZIPFoundation-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-macOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = "ZIPFoundation-macOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
-		7DAEC8BF70BA640225C1093DB4D03350 /* Release */ = {
+		B09ED3A0CEE22A8055AF215CD0E15190 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 594C8FC9183ECE0F43CDDD5BA6778F88 /* ZIPFoundation-iOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/ZIPFoundation-iOS/ZIPFoundation-iOS-prefix.pch";
+				MODULEMAP_FILE = "Headers/Public/ZIPFoundation/ZIPFoundation-iOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = ZIPFoundation;
+				PRODUCT_NAME = "ZIPFoundation-iOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B54BFBFE8EE6796A8B1DBE53370E1CA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3F21753883ECE8F141A78A65DC8F9F70 /* Pods-GladysFramework.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BE520023C0884E3195C66B8F541C80EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C624C8A75A4853B3F0513A5AF1C49CF2 /* Pods-MacGladys.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C03524F1459A04ABB54302A0D1CB9873 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 36F278ABBE4A4F44D63864278ECEBD76 /* Fuzi-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-macOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Fuzi;
+				PRODUCT_NAME = "Fuzi-macOS";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C802EEC74EBF53F399E512630894AE30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ACD3570E1F38A9BC25BDD026112C757B /* Pods-GladysIntents.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D3157D20BC5332723C5E60C08F99F53E /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FDFBA1A3E5DC0C8B310B641B72567C0A /* CDEvents.xcconfig */;
 			buildSettings = {
@@ -2418,24 +2682,7 @@
 			};
 			name = Release;
 		};
-		8AA2459BA9A065BCBA158D63C3B89CD6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 389092A6E3A5C2AB4E75909A6D919B05 /* OpenSSL-Universal-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		910BD6013F538D72B7B3CA036FE0640A /* Debug */ = {
+		D3828555450DBF258520B89A369DE8B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 39B3307FE352AB82C3892A7421E23314 /* Pods-GladysFramework.debug.xcconfig */;
 			buildSettings = {
@@ -2457,152 +2704,7 @@
 			};
 			name = Debug;
 		};
-		9F6D39EBD1D49EF8D63DF8036BA490AE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD2BEB17E7157856A208B47197A4B376 /* Pods-MacGladysFramework.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		B3E59C485B0874E49DC4F0C1701022FD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 26CB4394426D978F1E6EFFEED86ACBBE /* Pods-GladysIntents.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-GladysIntents/Pods-GladysIntents.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B520FFFD26DDA210EFEF5358083C752B /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C624C8A75A4853B3F0513A5AF1C49CF2 /* Pods-MacGladys.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		B6D5BB54197F48B4B925A6584FC19FC1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36F278ABBE4A4F44D63864278ECEBD76 /* Fuzi-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-macOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = "Fuzi-macOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		BCAC9AA92A5D408321BAAF8BEE096585 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C3CDC4D130006D1E2B792F51A06B8738 /* Pods-Gladys.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C8712CC9063EF39C8C1F6B5933867D90 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2D8CD91B936A70027DABD058A2FA487C /* CallbackURLKit-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = "CallbackURLKit-macOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		C988EBDE43D54A72D75D515BBFF2BFAE /* Release */ = {
+		D813052577654D0A2CA8E114231A3FA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B0B92C2E583108611561378C49445397 /* Pods-GladysAction.release.xcconfig */;
 			buildSettings = {
@@ -2626,84 +2728,54 @@
 			};
 			name = Release;
 		};
-		D199B8AEE864C40CAC9DAB87A398A90A /* Debug */ = {
+		EF70D41871E4638F853333ADA0C88846 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30A4C4867EFE2F01875D600C67A8C713 /* Pods-MacGladys.debug.xcconfig */;
+			baseConfigurationReference = 1DABCC43CDDD698B3FD35F8AEF0D07D9 /* CallbackURLKit-iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MODULEMAP_FILE = "Target Support Files/Pods-MacGladys/Pods-MacGladys.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		D709D1CEACBD538EF1FFBFFF9241BC6B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2D8CD91B936A70027DABD058A2FA487C /* CallbackURLKit-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-macOS.modulemap";
+				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
+				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-iOS.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PRIVATE_HEADERS_FOLDER_PATH = "";
 				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = "CallbackURLKit-macOS";
+				PRODUCT_NAME = "CallbackURLKit-iOS";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		D85928A592A8C50E17759003CE913C2E /* Release */ = {
+		FCF06FDA46304F2C5B477033E0412D05 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 706B5FCF2D417211F25E2C9E7E1D6861 /* HotKey.xcconfig */;
+			baseConfigurationReference = C3CDC4D130006D1E2B792F51A06B8738 /* Pods-Gladys.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "-";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/HotKey/HotKey-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = Headers/Public/HotKey/HotKey.modulemap;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Gladys/Pods-Gladys.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = HotKey;
-				PRODUCT_NAME = HotKey;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = Debug;
 		};
-		DF590CA97A446F777C16236D3A7DBC54 /* Debug */ = {
+		FD5F16B07DDAFF25ADEDE219DFDC4928 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 00A6488EC2E5BC6863632A191810C387 /* Fuzi-iOS.xcconfig */;
 			buildSettings = {
@@ -2728,81 +2800,6 @@
 			};
 			name = Debug;
 		};
-		E5B78829EBBE55961054D0F60B2B66E3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DABCC43CDDD698B3FD35F8AEF0D07D9 /* CallbackURLKit-iOS.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/CallbackURLKit-iOS/CallbackURLKit-iOS-prefix.pch";
-				MODULEMAP_FILE = "Headers/Public/CallbackURLKit/CallbackURLKit-iOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = CallbackURLKit;
-				PRODUCT_NAME = "CallbackURLKit-iOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		ED28D138F5A608C3E94A3E032B2FE70D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3F21753883ECE8F141A78A65DC8F9F70 /* Pods-GladysFramework.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		F8B5881A665CD7D6D711BD4903EC90C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36F278ABBE4A4F44D63864278ECEBD76 /* Fuzi-macOS.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREFIX_HEADER = "Target Support Files/Fuzi-macOS/Fuzi-macOS-prefix.pch";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MODULEMAP_FILE = "Headers/Public/Fuzi/Fuzi-macOS.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Fuzi;
-				PRODUCT_NAME = "Fuzi-macOS";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
 		FE0F72C2915C637B53A9E3FA03B5D227 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F42957EC9BC2B0E50D25DDFBB25303D8 /* OpenSSL-Universal-iOS.xcconfig */;
@@ -2823,56 +2820,65 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0F651A86F78B0BA13237CFA8BF7B0D5E /* Build configuration list for PBXNativeTarget "ZIPFoundation-iOS" */ = {
+		0BE49E964A466917B402FD0358AAC1C3 /* Build configuration list for PBXNativeTarget "HotKey" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6120BB3B97FF9E6EEDF91B334E243517 /* Debug */,
-				51C97DDD221A3D4ECB8DCB43B2D48A92 /* Release */,
+				839B6CD87FC002CE47704EEC4EC3D2C2 /* Debug */,
+				7BE5492F9A64C6939A2DA607A2E5485E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14B986596EB05EDCA80B329B013095C0 /* Build configuration list for PBXNativeTarget "Pods-GladysFramework" */ = {
+		0D4F9CC00A87AC342848C1CB89706718 /* Build configuration list for PBXNativeTarget "CallbackURLKit-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				910BD6013F538D72B7B3CA036FE0640A /* Debug */,
-				ED28D138F5A608C3E94A3E032B2FE70D /* Release */,
+				EF70D41871E4638F853333ADA0C88846 /* Debug */,
+				516D4170CB3904D2FDFA9E1FB865FBAE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21908185213F02D3D52B9D49DF857607 /* Build configuration list for PBXNativeTarget "Fuzi-iOS" */ = {
+		2384AA98FF17A71AEB0F47C002710187 /* Build configuration list for PBXNativeTarget "Fuzi-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DF590CA97A446F777C16236D3A7DBC54 /* Debug */,
-				1781C690519892F8A01E4407D58EB173 /* Release */,
+				FD5F16B07DDAFF25ADEDE219DFDC4928 /* Debug */,
+				A188D67DAC928C75883E167876C243CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		391B245E1663E97C08BE54B6BCA1135C /* Build configuration list for PBXNativeTarget "CallbackURLKit-iOS" */ = {
+		256FD0958F2DCC815B43D26FEE615BA0 /* Build configuration list for PBXNativeTarget "Pods-Gladys" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				798C3C8DD7EA009A73B5693E3F8B7205 /* Debug */,
-				E5B78829EBBE55961054D0F60B2B66E3 /* Release */,
+				FCF06FDA46304F2C5B477033E0412D05 /* Debug */,
+				95BDC05FCAE75E408D4E504CF1976B28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		436E71DF88948CEDB5CEA130199BB789 /* Build configuration list for PBXNativeTarget "Fuzi-macOS" */ = {
+		28670BA0F00024DE66E4679363381DAF /* Build configuration list for PBXNativeTarget "ZIPFoundation-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F8B5881A665CD7D6D711BD4903EC90C2 /* Debug */,
-				B6D5BB54197F48B4B925A6584FC19FC1 /* Release */,
+				A796420FEC0C7D6F3E6D8970A736787B /* Debug */,
+				89F891AC61A0C860E43AE47CBD10A88F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4788300A8AD444A1854E38D38548E7B0 /* Build configuration list for PBXNativeTarget "Pods-GladysIntents" */ = {
+		2DBAF1E86D3BCFBDCEC753013BC1611C /* Build configuration list for PBXNativeTarget "ZIPFoundation-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B3E59C485B0874E49DC4F0C1701022FD /* Debug */,
-				047B4492D9B5E5659A79BFB386C68A2E /* Release */,
+				1D3A8CEB0DE766BF216AD650D80245E5 /* Debug */,
+				B09ED3A0CEE22A8055AF215CD0E15190 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E622A02E427612667EA31E4C52AF29 /* Build configuration list for PBXNativeTarget "Pods-GladysFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3828555450DBF258520B89A369DE8B7 /* Debug */,
+				B54BFBFE8EE6796A8B1DBE53370E1CA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2886,6 +2892,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		502703DD63DE2485D9C053172F6650D2 /* Build configuration list for PBXNativeTarget "Pods-MacGladysFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				560E8EFF244CD7380346E1E0349FCB02 /* Debug */,
+				612DAC23F9F9DB92279D0FABA5A6EA75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5493FA0F4954F407B968A69774E0D903 /* Build configuration list for PBXNativeTarget "Pods-GladysAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9FAF241035934733416EF0BE297A8F83 /* Debug */,
+				D813052577654D0A2CA8E114231A3FA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		54E2376F95844BEF8D25A200BFA8BE70 /* Build configuration list for PBXAggregateTarget "OpenSSL-Universal-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2895,38 +2919,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5C849A0CA60336309871CC55E7570241 /* Build configuration list for PBXNativeTarget "CallbackURLKit-macOS" */ = {
+		7AE75BD349364EC8BD4909F486D51B16 /* Build configuration list for PBXNativeTarget "Pods-MacGladys" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D709D1CEACBD538EF1FFBFFF9241BC6B /* Debug */,
-				C8712CC9063EF39C8C1F6B5933867D90 /* Release */,
+				79C2D7D86035A7FBB399F3EF867ABD74 /* Debug */,
+				BE520023C0884E3195C66B8F541C80EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5F04417EEC482AF345788A5167DD0AE6 /* Build configuration list for PBXNativeTarget "Pods-MacGladys" */ = {
+		8B4E356CF17F7C4140BA7197DBEAA72B /* Build configuration list for PBXNativeTarget "Pods-GladysIntents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D199B8AEE864C40CAC9DAB87A398A90A /* Debug */,
-				B520FFFD26DDA210EFEF5358083C752B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		77DB57E26C8F24491A83D6B4C94865DB /* Build configuration list for PBXNativeTarget "ZIPFoundation-macOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3BE7BD898CB4166B6D34036A1C4A3A30 /* Debug */,
-				57F3BAB5D819307475474033920CF00F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7BD65CC6CF68A96F45D35F66801DBB92 /* Build configuration list for PBXNativeTarget "Pods-GladysAction" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				314525EC2B6156C524D36337642E4CC1 /* Debug */,
-				C988EBDE43D54A72D75D515BBFF2BFAE /* Release */,
+				A08478FAB0901A6BBB24F96E036FD097 /* Debug */,
+				C802EEC74EBF53F399E512630894AE30 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2940,38 +2946,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A5909C5330907D30C52CA655FCAA5967 /* Build configuration list for PBXNativeTarget "Pods-MacGladysFramework" */ = {
+		BC9A7F62C94263EA97175FBA7B143264 /* Build configuration list for PBXNativeTarget "CallbackURLKit-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9F6D39EBD1D49EF8D63DF8036BA490AE /* Debug */,
-				616B1A806CD0F3611EA28A64466A0382 /* Release */,
+				5E7B6DCE40F32378B69D0015599B586F /* Debug */,
+				5CB76CC5B7B62202517D2FB5EF0BC2A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AE19F32473F792BB680376FDF0E4DC43 /* Build configuration list for PBXNativeTarget "CDEvents" */ = {
+		D1CC76E6363217EBE9FC0472FD386CDE /* Build configuration list for PBXNativeTarget "Fuzi-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				284F52051FCE1E72C68FAE6F985875C8 /* Debug */,
-				7DAEC8BF70BA640225C1093DB4D03350 /* Release */,
+				C03524F1459A04ABB54302A0D1CB9873 /* Debug */,
+				0B5FD907A2D7D652B31CEB7603E73A8C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CC0638F92BB60CE426B39368AB2CE95B /* Build configuration list for PBXNativeTarget "Pods-Gladys" */ = {
+		ED67C270D1B6EEBC9D6561BBADBEBD55 /* Build configuration list for PBXNativeTarget "CDEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BCAC9AA92A5D408321BAAF8BEE096585 /* Debug */,
-				0CFFAC9113161300A5BA744D25A419D0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E694C59A4882A759B3AD05D5C4A64152 /* Build configuration list for PBXNativeTarget "HotKey" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				15373A2B6088534D0D9FECA98B8165FA /* Debug */,
-				D85928A592A8C50E17759003CE913C2E /* Release */,
+				8BB737BC1ABFB61C03E9C1FE99F412A7 /* Debug */,
+				D3157D20BC5332723C5E60C08F99F53E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
