@@ -20,7 +20,7 @@ import Cocoa
 
 extension ArchivedDropItemType {
 
-	static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
 
 	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool, createWebArchive: Bool) -> Progress {
 		self.delegate = delegate

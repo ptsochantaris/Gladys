@@ -135,4 +135,4 @@ enum RepresentedClass: Codable, Equatable {
 	}
 }
 
-let dataAccessQueue = DispatchQueue(label: "build.bru.Gladys.imageAccessQueue", qos: .utility, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+let dataAccessQueue = DispatchQueue(label: "build.bru.Gladys.dataAccessQueue", qos: .utility)

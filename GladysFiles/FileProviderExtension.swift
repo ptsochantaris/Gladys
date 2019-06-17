@@ -13,10 +13,10 @@ final class FileProviderExtension: NSFileProviderExtension {
 		log("File extension terminated")
 	}
 
-	private static let loadQueue = DispatchQueue(label: "build.bru.fileprovider.loading", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private static let modelAccessQueue = DispatchQueue(label: "build.bru.fileprovider.data", qos: .userInitiated)
 	private static var shouldCheck = true
 	static func ensureCurrent(checkAnyway: Bool) {
-		loadQueue.sync {
+		modelAccessQueue.sync {
 			if checkAnyway || shouldCheck {
 				Model.reloadDataIfNeeded()
 				shouldCheck = false
@@ -25,14 +25,14 @@ final class FileProviderExtension: NSFileProviderExtension {
 	}
 
 	private static func save(item: ArchivedDropItem) {
-		loadQueue.sync {
+		modelAccessQueue.sync {
 			Model.commitExistingItemsWithoutLoading([item])
 			shouldCheck = true
 		}
 	}
 
 	private static func shouldCheckModel() {
-		loadQueue.sync {
+		modelAccessQueue.sync {
 			shouldCheck = true
 		}
 	}

@@ -22,7 +22,7 @@ extension Model {
 	private static var modelFilter: String?
 	private static var currentFilterQuery: CSSearchQuery?
 	private static var cachedFilteredDrops: [ArchivedDropItem]?
-	private static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
 	private static var needsAnotherSave = false
 	private static var isSaving = false
 	private static var nextSaveCallbacks: [()->Void]?

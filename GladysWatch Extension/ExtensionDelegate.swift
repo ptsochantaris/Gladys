@@ -77,7 +77,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 		}
 	}
 
-	private let updateQueue = DispatchQueue.init(label: "build.bru.Gladys.watch.updates", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
+	private let updateQueue = DispatchQueue(label: "build.bru.Gladys.watch.updates", qos: .utility)
 
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
 		updatePages(session.receivedApplicationContext)
