@@ -3,15 +3,11 @@ import Foundation
 
 final class GladysTimer {
 
-	private let timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+	private let timer: DispatchSourceTimer
 
-	init(repeats: Bool, interval: TimeInterval, block: @escaping ()->Void) {
-
-		if repeats {
-			timer.schedule(deadline: .now() + interval, repeating: interval)
-		} else {
-			timer.schedule(deadline: .now() + interval)
-		}
+	init(interval: TimeInterval, block: @escaping ()->Void) {
+		timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+		timer.schedule(deadline: .now() + interval)
 		timer.setEventHandler(handler: block)
 		timer.resume()
 	}
@@ -28,7 +24,7 @@ final class PopTimer {
 	private let callback: ()->Void
 
 	func push() {
-		popTimer = GladysTimer(repeats: false, interval: timeInterval) { [weak self] in
+		popTimer = GladysTimer(interval: timeInterval) { [weak self] in
 			self?.abort()
 			self?.callback()
 		}

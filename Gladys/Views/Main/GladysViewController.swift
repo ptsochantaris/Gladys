@@ -160,7 +160,7 @@ class GladysViewController: UIViewController {
 		scrollView = scr
 		scrollLink = CADisplayLink(target: self, selector: selector)
 		scrollLink!.add(to: RunLoop.main, forMode: .common)
-		scrollTimer = GladysTimer(repeats: false, interval: 0.4) {
+		scrollTimer = GladysTimer(interval: 0.4) {
 			self.scrollLink?.invalidate()
 			self.scrollLink = nil
 			self.scrollView = nil
