@@ -51,7 +51,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		arrayMode = propertyList is [Any]
 		table.tableFooterView = UIView(frame: .zero)
 		doneLocation = .right
-		copyButton.isEnabled = shouldEnableCopyButton
+		if !shouldEnableCopyButton, let i = navigationItem.rightBarButtonItems?.firstIndex(of: copyButton) {
+			navigationItem.rightBarButtonItems?.remove(at: i)
+		}
 	}
 
 	override func darkModeChanged() {
@@ -82,7 +84,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 				titleString = mimeType
 			}
 			ViewController.shared.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil), skipVisibleErrors: false)
-			genericAlert(title: nil, message: "Extracted into main collection", buttonTitle: nil)
+			genericAlert(title: nil, message: "Extracted as new item", buttonTitle: nil)
 		}
 	}
 
