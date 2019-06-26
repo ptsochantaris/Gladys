@@ -2821,7 +2821,7 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="3875" y="1641"/>
         </scene>
-        <!--Plist Editor-->
+        <!--Title-->
         <scene sceneID="sN7-23-jzl">
             <objects>
                 <viewController storyboardIdentifier="PlistEditor" hidesBottomBarWhenPushed="YES" id="JWg-wu-LKR" customClass="PlistEditor" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
@@ -2895,9 +2895,17 @@ Selecting them will show only items that contain these labels.</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hVB-Yo-22H"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="5tk-99-BC9">
+                        <barButtonItem key="rightBarButtonItem" title="Copy" image="iconArchive2" id="q5U-C6-HUs">
+                            <connections>
+                                <action selector="copySelected:" destination="JWg-wu-LKR" id="eY9-ml-rmK"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <size key="freeformSize" width="300" height="300"/>
                     <connections>
                         <outlet property="backgroundView" destination="Mvq-HK-d9u" id="elm-gB-4CC"/>
+                        <outlet property="copyButton" destination="q5U-C6-HUs" id="BiM-16-A2N"/>
                         <outlet property="table" destination="tYL-Cd-InP" id="Vn0-uo-eSL"/>
                         <segue destination="OAS-3C-tPm" kind="show" identifier="hexEdit" id="ROM-1G-ayk"/>
                     </connections>
@@ -3472,7 +3480,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="zip" width="20" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7zu-MP-PH8"/>
+        <segue reference="ROM-1G-ayk"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.5764203667640686" green="0.093400068581104279" blue="0.069711051881313324" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

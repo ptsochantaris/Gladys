@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 import GladysFramework
 
 final class PlistEditorCell: UITableViewCell {
@@ -43,12 +44,14 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
 	@IBOutlet private weak var table: UITableView!
 	@IBOutlet private weak var backgroundView: UIImageView!
+	@IBOutlet private weak var copyButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		arrayMode = propertyList is [Any]
 		table.tableFooterView = UIView(frame: .zero)
 		doneLocation = .right
+		copyButton.isEnabled = shouldEnableCopyButton
 	}
 
 	override func darkModeChanged() {
@@ -58,6 +61,28 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 			table.separatorColor = UIColor.darkGray
 		} else {
 			table.separatorColor = UIColor.lightGray
+		}
+	}
+
+	@IBAction func copySelected(_ sender: UIBarButtonItem) {
+		if let p = propertyList as? [AnyHashable: Any],
+			let mimeType = p["WebResourceMIMEType"] as? String,
+			let data = p["WebResourceData"] as? Data,
+			let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() {
+
+			let provider = NSItemProvider()
+			provider.registerDataRepresentation(forTypeIdentifier: uti as String, visibility: .all) { callback -> Progress? in
+				callback(data, nil)
+				return nil
+			}
+			let titleString: String?
+			if let url = p["WebResourceURL"] as? String {
+				titleString = mimeType + " from " + url
+			} else {
+				titleString = mimeType
+			}
+			ViewController.shared.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil), skipVisibleErrors: false)
+			genericAlert(title: nil, message: "Extracted into main collection", buttonTitle: nil)
 		}
 	}
 
@@ -117,13 +142,12 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 			}
 
 		} else if let v = v as? Data {
-			let c = v.count
-			if c == 0 {
+			if v.isEmpty {
 				return "Data, empty"
-			} else if c == 1 {
-				return "Data, 1 byte"
 			} else {
-				return "Data, \(c) bytes"
+				let c = Int64(v.count)
+				let countText = diskSizeFormatter.string(fromByteCount: c)
+				return "Data, \(countText)"
 			}
 
 		} else if let v = v as? String {
@@ -149,6 +173,14 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		return "<unknown>"
 	}
 
+	private func subtitle(at index: Int) -> String? {
+		let v = value(at: index)
+		if let v = v as? [AnyHashable: Any], let url = v["WebResourceURL"] as? String {
+			return url
+		}
+		return nil
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if let p = propertyList as? [Any] {
 			return p.count
@@ -159,6 +191,17 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		}
 	}
 
+	private var shouldEnableCopyButton: Bool {
+		if let p = propertyList as? [AnyHashable: Any],
+			let mimeType = p["WebResourceMIMEType"] as? String,
+			p["WebResourceData"] as? Data != nil,
+			UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil) != nil {
+
+			return true
+		}
+		return false
+	}
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "PlistEntryCell") as! PlistEditorCell
 		cell.accessoryType = selectable(at: indexPath.row) ? .disclosureIndicator : .none
@@ -166,7 +209,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		let d = description(at: indexPath.row)
 		if arrayMode {
 			cell.titleLabel.text = d
-			cell.subtitleLabel.text = nil
+			cell.subtitleLabel.text = subtitle(at: indexPath.row)
 		} else {
 			cell.titleLabel.text = title(at: indexPath.row)
 			cell.subtitleLabel.text = d
