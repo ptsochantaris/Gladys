@@ -132,7 +132,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	func updateContext() {
 		let session = WCSession.default
 		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
-		let bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
+        BackgroundTask.registerForBackground()
 
 		DispatchQueue.main.async {
 			let total = Model.drops.count
@@ -146,7 +146,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 						log("Error updating watch context: \(error.localizedDescription)")
 					}
 				}
-				UIApplication.shared.endBackgroundTask(bgTask)
+                BackgroundTask.unregisterForBackground()
 			}
 		}
 	}

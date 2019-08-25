@@ -25,6 +25,48 @@ extension ArchivedDropItemType {
 			return bytesPath
 		}
 	}
+    
+    final class PreviewCheckItem: NSObject, QLPreviewItem {
+        let previewItemURL: URL?
+        let previewItemTitle: String?
+        let needsCleanup: Bool
+        let parentUuid: UUID
+        let uuid: UUID
+
+        init(typeItem: ArchivedDropItemType) {
+
+            parentUuid = typeItem.parentUuid
+            uuid = typeItem.uuid
+
+            let blobPath = typeItem.bytesPath
+            let tempPath = typeItem.previewTempPath
+
+            needsCleanup = blobPath != tempPath
+
+            if needsCleanup {
+                let fm = FileManager.default
+                if !fm.fileExists(atPath: tempPath.path) {
+                    try? Data().write(to: tempPath)
+                    log("Placed check placeholder at \(tempPath.path)")
+                }
+                previewItemURL = tempPath
+            } else {
+                previewItemURL = blobPath
+            }
+
+            previewItemTitle = typeItem.oneTitle
+        }
+
+        deinit {
+            if needsCleanup, let previewItemURL = previewItemURL {
+                let fm = FileManager.default
+                if fm.fileExists(atPath: previewItemURL.path) {
+                    try? fm.removeItem(at: previewItemURL)
+                    log("Removed check placeholder at \(previewItemURL.path)")
+                }
+            }
+        }
+    }
 
 	final class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?

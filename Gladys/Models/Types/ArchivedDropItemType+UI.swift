@@ -58,8 +58,12 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		if let canPreviewCache = canPreviewCache {
 			return canPreviewCache
 		}
-		let res = isWebArchive || QLPreviewController.canPreview(previewTempPath as NSURL)
+		let res = isWebArchive || qlPreview
 		canPreviewCache = res
 		return res
 	}
+    
+    private var qlPreview: Bool {
+        return QLPreviewController.canPreview(PreviewCheckItem(typeItem: self))
+    }
 }
