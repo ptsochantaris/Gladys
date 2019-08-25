@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.21</string>
 	<key>CFBundleVersion</key>
-	<string>647</string>
+	<string>648</string>
 	<key>CLKComplicationPrincipalClass</key>
 	<string>GladysWatch_Extension.ComplicationDataSource</string>
 	<key>CLKComplicationSupportedFamilies</key>
