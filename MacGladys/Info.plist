@@ -35,6 +35,8 @@
 			<string>File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>None</string>
 			<key>NSDocumentClass</key>
 			<string>NSDocument</string>
 		</dict>
@@ -69,7 +71,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>648</string>
+	<string>650</string>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>

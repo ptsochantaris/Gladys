@@ -22,7 +22,7 @@ final class WebArchiver {
 		case PlistSerializeFailed
 	}
 
-	public static func archiveFromUrl(_ url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
+	static func archiveFromUrl(_ url: URL, completionHandler: @escaping ArchiveCompletionHandler) {
 		fetch(url) { data, response, error in
 			if let data = data, let response = response as? HTTPURLResponse {
 				if response.mimeType == "text/html" {
@@ -53,7 +53,7 @@ final class WebArchiver {
 		var resourceInfo = [AnyHashable: Any]()
 		resourceInfo.reserveCapacity(resources.count)
 
-		let assembleQueue = DispatchQueue.global(qos: .userInitiated)
+		let assembleQueue = DispatchQueue(label: "build.bru.Gladys.webArchiveAssembleQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem, target: nil)
 		let downloadGroup = DispatchGroup()
 
 		for path in resources {
@@ -79,7 +79,7 @@ final class WebArchiver {
 					resource["WebResourceData"] = data
 				}
 
-				assembleQueue.async {
+				assembleQueue.sync {
 					resourceInfo[path] = resource
 				}
 
