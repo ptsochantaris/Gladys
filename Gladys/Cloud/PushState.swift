@@ -14,6 +14,7 @@ final class PushState {
 	private let currentUUIDSequence: [String]
 
 	init(zoneId: CKRecordZone.ID, database: CKDatabase) {
+        //let startTime = Date().timeIntervalSinceReferenceDate
 		self.database = database
 
 		let drops = Model.drops
@@ -102,6 +103,11 @@ final class PushState {
 		dataItemsToPush = _dataItemsToPush
 		dropsToPush = _dropsToPush
 		payloadsToPush = _payloadsToPush
+        
+        //let duration = Date().timeIntervalSinceReferenceDate - startTime
+        //#if MAINAPP
+        //genericAlert(title: "Duration", message: "\(duration)")
+        //#endif
 	}
 
 	static private func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {

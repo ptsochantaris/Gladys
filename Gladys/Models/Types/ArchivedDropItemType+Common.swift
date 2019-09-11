@@ -78,6 +78,14 @@ extension ArchivedDropItemType: Equatable {
 		}
 		return data
 	}
+    
+    var hasBytes: Bool {
+        var exists = false
+        dataAccessQueue.sync {
+            exists = FileManager.default.fileExists(atPath: bytesPath.path)
+        }
+        return exists
+    }
 
 	var encodedUrl: NSURL? {
 
