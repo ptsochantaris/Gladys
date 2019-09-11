@@ -132,6 +132,11 @@
 		163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163EB5F220A8BC5000D0BF74 /* HighlightLabel.swift */; };
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1643C03F2323EDA0005D7BF3 /* StoreKit.framework */; };
+		1643C04123253C24005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		1643C04223253C3D005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		1643C04323253C53005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		1643C04423253C5C005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -650,6 +655,7 @@
 		1641368D1F09195000B34574 /* GladysAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
 		164136931F09195000B34574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1643C03F2323EDA0005D7BF3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallbackSupport+Common.swift"; sourceTree = "<group>"; };
 		164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacGladysShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		164947CE20BEAA6200BD1BEB /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
@@ -848,6 +854,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1643C04423253C5C005D7BF3 /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +862,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1643C04223253C3D005D7BF3 /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -879,6 +887,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1643C04323253C53005D7BF3 /* GladysFramework.framework in Frameworks */,
 				1657B8AD1FD41C1C00EC480D /* Messages.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -898,6 +907,7 @@
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 				CB60619FAEE76D34CD9DBCF3 /* libPods-Gladys.a in Frameworks */,
+				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +922,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1643C04123253C24005D7BF3 /* GladysFramework.framework in Frameworks */,
 				16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1382,6 +1393,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1643C03F2323EDA0005D7BF3 /* StoreKit.framework */,
 				16C389E5221D42AD00AB790A /* ClockKit.framework */,
 				169D54B320B85026004E518E /* ServiceManagement.framework */,
 				16114866209FA5A0008BB332 /* libcrypto.a */,
@@ -1721,7 +1733,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
 					1611484F209FA1B6008BB332 = {
@@ -1808,6 +1820,9 @@
 								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -2697,7 +2712,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 656;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2727,7 +2742,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 656;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2764,7 +2779,9 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = MacGladys/Info.plist;
@@ -2792,8 +2809,10 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladys/Info.plist;
@@ -2819,7 +2838,9 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2847,8 +2868,10 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladysShare/Info.plist;
@@ -2874,6 +2897,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2900,6 +2924,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2927,7 +2952,9 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = MacGladysHelper/Info.plist;
@@ -2953,8 +2980,10 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladysHelper/Info.plist;
@@ -3000,7 +3029,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3037,6 +3065,7 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3057,6 +3086,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3079,6 +3109,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3103,6 +3134,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3126,7 +3158,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 656;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3180,7 +3212,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_TESTABILITY = NO;
@@ -3216,6 +3247,7 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3236,6 +3268,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3258,6 +3291,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3282,6 +3316,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3305,7 +3340,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 656;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3336,6 +3371,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3362,6 +3398,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3390,6 +3427,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3416,6 +3454,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3441,6 +3480,7 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3470,6 +3510,7 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3500,6 +3541,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3530,6 +3572,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 656;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

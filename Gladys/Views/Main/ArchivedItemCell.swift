@@ -401,6 +401,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.image = nil
 	}
 
+    deinit {
+        progressView.observedProgress = nil
+    }
+    
 	private var existingPreviewView: UIView?
 
 	var lowMemoryMode = false
@@ -456,6 +460,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var bottomLabelAlignment: NSTextAlignment?
 		var labels: [String]?
 
+        progressView.observedProgress = nil
+
 		if let item = item {
 
 			if item.shouldDisplayLoading {
@@ -475,7 +481,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 			} else {
 
 				hideImage = false
-				progressView.observedProgress = nil
 				shared = item.shareMode
 
 				imageProcessingQueue.async { [weak self] in
@@ -607,7 +612,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		} else { // item is nil
 			image.image = nil
-			progressView.observedProgress = nil
 		}
 
 		if !(wantColourView || wantMapView), let e = existingPreviewView {

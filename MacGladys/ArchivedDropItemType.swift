@@ -11,6 +11,7 @@ import Cocoa
 import CloudKit
 import MapKit
 import ZIPFoundation
+import Contacts
 import ContactsUI
 
 final class ArchivedDropItemType: Codable {
@@ -83,7 +84,7 @@ final class ArchivedDropItemType: Codable {
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 
 		let a = try v.decode(UInt.self, forKey: .displayTitleAlignment)
-		displayTitleAlignment = NSTextAlignment(rawValue: a) ?? .center
+        displayTitleAlignment = NSTextAlignment(rawValue: Int(a)) ?? .center
 
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center

@@ -14,8 +14,10 @@ import MapKit
 #if os(iOS)
 import UIKit
 import MobileCoreServices
+import GladysFramework
 #else
 import Cocoa
+import MacGladysFramework
 #endif
 
 extension ArchivedDropItemType {
@@ -106,7 +108,7 @@ extension ArchivedDropItemType {
 		clearCachedFields()
 
 		let item: NSSecureCoding
-		if data.isPlist, let obj = (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)) as? NSSecureCoding {
+		if data.isPlist, let obj = (try? SafeUnarchiver.unarchive(data)) as? NSSecureCoding {
 			log("      unwrapped keyed object: \(type(of:obj))")
 			item = obj
 			classWasWrapped = true

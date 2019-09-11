@@ -11,6 +11,17 @@
 #import "MacGladysFramework.h"
 #endif
 
+@implementation SafeUnarchiver
++ (NSObject *)unarchive:(NSData *)data error:(NSError **)error {
+    @try {
+        return [super unarchiveTopLevelObjectWithData:data error:error];
+    } @catch (NSException *exception) {
+        *error = [NSError errorWithDomain:@"build.bru.Gladys.error" code:738 userInfo:nil];
+        return nil;
+    }
+}
+@end
+
 NSData *sha1(NSString *input) {
 	unsigned char digest[CC_SHA1_DIGEST_LENGTH];
 	NSData *stringBytes = [input dataUsingEncoding: NSUTF8StringEncoding];

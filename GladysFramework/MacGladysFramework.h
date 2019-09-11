@@ -23,3 +23,7 @@ NSData *sha1(NSString *input);
 NSString *bundleId = @"build.bru.MacGladys.Framework";
 NSString *receiptId = @"build.bru.MacGladys";
 NSString *infiniteId = @"MACINFINITE";
+
+@interface SafeUnarchiver:NSKeyedUnarchiver
++ (NSObject *)unarchive:(NSData *)data error:(NSError **)error;
+@end
