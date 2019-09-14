@@ -245,10 +245,15 @@ final class ArchivedItemCell: UICollectionViewCell {
 			contentView.addGestureRecognizer(D)
 		}
 
-		let S = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
-		S.direction = .left
-		S.require(toFail: p)
-		contentView.addGestureRecognizer(S)
+		let SL = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
+		SL.direction = .left
+		SL.require(toFail: p)
+		contentView.addGestureRecognizer(SL)
+        
+        let SR = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
+        SR.direction = .right
+        SR.require(toFail: p)
+        contentView.addGestureRecognizer(SR)
 	}
 
 	private func clearAllOtherGestures() {
