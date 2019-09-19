@@ -90,13 +90,16 @@ final class WebArchiver {
 
 		downloadGroup.notify(queue: assembleQueue) {
 
-			let mainResource: [AnyHashable: Any] = [
+			var mainResource: [AnyHashable: Any] = [
 				"WebResourceFrameName": "",
 				"WebResourceMIMEType": response.mimeType ?? "text/html",
-				"WebResourceTextEncodingName": response.textEncodingName ?? "UTF-8",
 				"WebResourceURL": url.absoluteString,
 				"WebResourceData": data
 			]
+            
+            if let encoding = response.textEncodingName {
+                mainResource["WebResourceTextEncodingName"] = encoding
+            }
 
 			let webarchive: [AnyHashable: Any] = [
 				"WebSubresources": (resourceInfo as NSDictionary).allValues,

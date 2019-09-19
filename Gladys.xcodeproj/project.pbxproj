@@ -2712,7 +2712,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2725,6 +2725,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2742,7 +2743,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2756,6 +2757,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2779,7 +2781,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2789,6 +2791,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2809,7 +2812,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2820,6 +2823,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2838,7 +2842,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2850,6 +2854,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2868,7 +2873,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2880,6 +2885,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2897,7 +2903,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2907,6 +2913,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Message;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2924,7 +2931,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2934,6 +2941,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Message;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2952,7 +2960,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2962,6 +2970,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2980,7 +2989,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2991,6 +3000,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3065,13 +3075,14 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3086,7 +3097,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3094,6 +3105,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3109,7 +3121,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3117,6 +3129,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Files;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3134,7 +3147,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3142,6 +3155,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3158,7 +3172,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3171,6 +3185,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3247,13 +3262,14 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3268,7 +3284,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3276,6 +3292,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3291,7 +3308,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysFiles/GladysFiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3299,6 +3316,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Files;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3316,7 +3334,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3324,6 +3342,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3340,7 +3359,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3353,6 +3372,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3371,7 +3391,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3381,6 +3401,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3398,7 +3419,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3408,6 +3429,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3427,13 +3449,14 @@
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3454,13 +3477,14 @@
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = GladysWatch_Extension;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3480,7 +3504,7 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3491,6 +3515,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3510,7 +3535,7 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3521,6 +3546,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.watchkitapp.Extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3541,7 +3567,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3552,6 +3578,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
@@ -3572,7 +3599,7 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIntents/GladysIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 659;
+				CURRENT_PROJECT_VERSION = 660;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3583,6 +3610,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.2.22;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
