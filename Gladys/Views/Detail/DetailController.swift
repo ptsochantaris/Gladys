@@ -292,6 +292,7 @@ final class DetailController: GladysViewController,
 			self.sizeWindow()
 		}
 		present(a, animated: true)
+        a.popoverPresentationController?.barButtonItem = sender
 	}
 
 	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
@@ -1029,7 +1030,7 @@ final class DetailController: GladysViewController,
 			popover.barButtonItem = barButtonItem
 		}
 		cloudSharingController.delegate = self
-		present(cloudSharingController, animated: true) {}
+		present(cloudSharingController, animated: true)
 	}
 
 	func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {

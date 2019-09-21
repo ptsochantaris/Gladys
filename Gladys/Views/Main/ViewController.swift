@@ -940,8 +940,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				self?.setEditing(false, animated: true)
 			}
 		}
-		a.popoverPresentationController?.barButtonItem = sender
 		present(a, animated: true)
+        a.popoverPresentationController?.barButtonItem = sender
 	}
 
 	@IBAction private func sortAscendingButtonSelected() {

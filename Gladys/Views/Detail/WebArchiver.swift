@@ -16,7 +16,6 @@ final class WebArchiver {
 	/// Error type
 	enum ArchiveErrorType: Error {
 		case FetchHTMLError
-		case HTMLInvalid
 		case FailToInitHTMLDocument
 		case FetchResourceFailed
 		case PlistSerializeFailed
@@ -115,16 +114,11 @@ final class WebArchiver {
 			}
 		}
     }
-
+    
 	private static func resourcePathsFromUrl(url: URL, data htmlData: Data, response: HTTPURLResponse) -> ([String]?, ArchiveErrorType?) {
-
-		guard let html = String(data: htmlData, encoding: .utf8) ?? String(data: htmlData, encoding: .ascii) else {
-			log("HTML invalid")
-			return (nil, .HTMLInvalid)
-		}
-
-		guard let doc = try? HTMLDocument(string: html, encoding: .utf8) else {
-			log("Init html doc error, html: \(html)")
+                
+        guard let doc = try? HTMLDocument(data: htmlData) else {
+			log("Init html doc error")
 			return (nil, .FailToInitHTMLDocument)
 		}
 
@@ -192,10 +186,9 @@ final class WebArchiver {
 			log("Fetching HTML from URL: \(url.absoluteString)")
 
 			fetch(url) { data, response, error in
-				if let data = data,
-					let text = (String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii)),
-					let htmlDoc = try? HTMLDocument(string: text, encoding: .utf8) {
-
+                
+				if let data = data, let htmlDoc = try? HTMLDocument(data: data) {
+                    
 					var title: String?
 					if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:title\"]") {
 						for node in metaTags {
