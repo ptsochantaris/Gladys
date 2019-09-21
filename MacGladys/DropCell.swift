@@ -374,7 +374,11 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				} else {
 					let dark = isDark
 					imageProcessingQueue.async { [weak self] in
-						if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+                        var u1: UUID?
+                        DispatchQueue.main.sync {
+                            u1 = self?.archivedDropItem?.uuid
+                        }
+						if u1 == item.uuid {
 							var img = item.displayIcon
 							if img.isTemplate {
 								if dark {

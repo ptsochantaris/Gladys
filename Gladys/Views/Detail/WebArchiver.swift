@@ -200,12 +200,24 @@ final class WebArchiver {
 						}
 					}
 
-					if title == nil {
-						log("Falling back to HTML title")
+                    if (title ?? "").isEmpty {
+						log("Falling back to libXML title")
 						title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
 					}
-
-					if let title = title {
+                    
+                    if (title ?? "").isEmpty,
+                        let htmlText = NSString(data: data, encoding: htmlDoc.encoding.rawValue),
+                        let regex = try? NSRegularExpression(pattern: "\\<title\\>(.+)\\<\\/title\\>", options: .caseInsensitive) {
+                        
+                        log("Attempting to parse TITLE tag")
+                        if let match = regex.firstMatch(in: htmlText as String, options: [], range: NSRange(location: 0, length: htmlText.length)), match.numberOfRanges > 1 {
+                            let r1 = match.range(at: 1)
+                            let titleString = htmlText.substring(with: r1)
+                            title = String(titleString.utf8)
+                        }
+                    }
+                    
+                    if let title = title {
 						log("Title located at URL: \(title)")
 					} else {
 						log("No title located at URL")
