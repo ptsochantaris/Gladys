@@ -197,6 +197,7 @@
 		167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
 		167CDF9820B62DB400EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
 		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
+		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
@@ -698,6 +699,7 @@
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Preview.swift"; sourceTree = "<group>"; };
 		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
+		1686E7EF233D0D9C0012BA63 /* TouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBar.swift; sourceTree = "<group>"; };
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchHolder.swift; sourceTree = "<group>"; };
@@ -1101,6 +1103,7 @@
 				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
 				16EC3D082145286F0015714A /* main.swift */,
 				161D357721BA6A4200CADA41 /* NotesEditor.swift */,
+				1686E7EF233D0D9C0012BA63 /* TouchBar.swift */,
 			);
 			path = MacGladys;
 			sourceTree = "<group>";
@@ -2177,6 +2180,7 @@
 				16CD7D8520A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				161718E42094DFCD005ABD6C /* ArchivedDropItem+Cloud.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
+				1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */,
 				16F2990920CBEF30005DE3AD /* PushState.swift in Sources */,
 				16559C9120A4CC55006C281D /* Global.swift in Sources */,
 				16C3A2D920AF770000A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
@@ -2712,7 +2716,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2725,7 +2729,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2743,7 +2747,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2757,7 +2761,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2781,7 +2785,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2791,7 +2795,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2812,7 +2816,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2823,7 +2827,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2842,7 +2846,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2854,7 +2858,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2873,7 +2877,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2885,7 +2889,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2960,7 +2964,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2970,7 +2974,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2989,7 +2993,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 663;
+				CURRENT_PROJECT_VERSION = 665;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3000,7 +3004,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.22;
+				MARKETING_VERSION = 1.2.23;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -651,26 +651,30 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	override func mouseDown(with event: NSEvent) {
 		super.mouseDown(with: event)
 		if event.clickCount == 2 {
-			if let a = archivedDropItem, a.needsUnlock {
-				ViewController.shared.unlock(self)
-			} else {
-				switch PersistedOptions.actionOnTap {
-				case .copy:
-					copySelected()
-					copiedLabel.wantsLayer = true
-					copiedLabel.layer?.cornerRadius = 5
-					copiedLabel.animator().alphaValue = 1
-					DispatchQueue.main.asyncAfter(deadline: .now()+1) { [weak self] in
-						self?.copiedLabel.animator().alphaValue = 0
-					}
-				case .infoPanel:
-					infoSelected()
-				case .open:
-					openSelected()
-				case .preview:
-					ViewController.shared.toggleQuickLookPreviewPanel(nil)
-				}
-			}
+            actioned()
 		}
 	}
+    
+    func actioned() {
+        if let a = archivedDropItem, a.needsUnlock {
+            ViewController.shared.unlock(self)
+        } else {
+            switch PersistedOptions.actionOnTap {
+            case .copy:
+                copySelected()
+                copiedLabel.wantsLayer = true
+                copiedLabel.layer?.cornerRadius = 5
+                copiedLabel.animator().alphaValue = 1
+                DispatchQueue.main.asyncAfter(deadline: .now()+1) { [weak self] in
+                    self?.copiedLabel.animator().alphaValue = 0
+                }
+            case .infoPanel:
+                infoSelected()
+            case .open:
+                openSelected()
+            case .preview:
+                ViewController.shared.toggleQuickLookPreviewPanel(nil)
+            }
+        }
+    }
 }

@@ -203,7 +203,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 		setupSortMenu()
 	}
-
+    
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		AppDelegate.updateHotkey()
 
@@ -213,6 +213,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		let isShowing = ViewController.shared.view.window?.isVisible ?? false
 		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
 
+        NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
+        
 		Model.startMonitoringForExternalChangesToBlobs()
 	}
 

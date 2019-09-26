@@ -144,7 +144,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	}
 }
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
 
 	@IBOutlet private weak var collection: MainCollectionView!
 
@@ -235,7 +235,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if !indexSet.isEmpty {
 			collection.selectItems(at: indexSet, scrollPosition: .centeredHorizontally)
 		}
+        touchBarScrubber?.reloadData()
 	}
+    
+    var touchBarScrubber: GladysTouchBarScrubber?
 
 	func updateTranslucentMode() {
 		guard let l = view.window?.contentView?.layer else { return }
@@ -552,7 +555,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@IBAction private func searchDoneSelected(_ sender: NSButton) {
-		resetSearch(andLabels: false)
+        findSelected(nil)
 	}
 
 	private func resetSearch(andLabels: Bool) {
@@ -571,9 +574,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@IBAction private func findSelected(_ sender: NSMenuItem) {
+	@IBAction func findSelected(_ sender: NSMenuItem?) {
 		if showSearch {
 			resetSearch(andLabels: false)
+            DispatchQueue.main.async {
+                self.view.window?.makeFirstResponder(self.collection)
+            }
 		} else {
 			showSearch = true
 			DispatchQueue.main.async {
@@ -591,6 +597,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let s = searchBar.stringValue
 		Model.filter = s.isEmpty ? nil : s
 	}
+
+    func touchedItem(_ item: ArchivedDropItem) {
+        if let index = Model.filteredDrops.firstIndex(of: item) {
+            let ip = IndexPath(item: index, section: 0)
+            collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
+            collection.selectionIndexes = IndexSet(integer: index)
+            
+            if let cell = collection.item(at: IndexPath(item: index, section: 0)) as? DropCell {
+                cell.actioned()
+            }
+        }
+    }
 
 	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild: String? = nil) {
 		// focusOnChild ignored for now
