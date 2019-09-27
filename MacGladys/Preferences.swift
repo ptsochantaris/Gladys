@@ -34,6 +34,7 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var autoDownloadSwitch: NSButton!
 	@IBOutlet private weak var exclusiveMultipleLabelsSwitch: NSButton!
 	@IBOutlet private weak var selectionActionPicker: NSPopUpButton!
+    @IBOutlet private weak var touchbarActionPicker: NSPopUpButton!
 
 	@IBOutlet private weak var hotkeyCmd: NSButton!
 	@IBOutlet private weak var hotkeyOption: NSButton!
@@ -62,6 +63,7 @@ final class Preferences: NSViewController {
 		exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
 		autoDownloadSwitch.integerValue = PersistedOptions.autoArchiveUrlComponents ? 1 : 0
 		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
+        touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -117,6 +119,12 @@ final class Preferences: NSViewController {
 			PersistedOptions.actionOnTap = action
 		}
 	}
+
+    @IBAction private func touchbarActionPickerChanged(_ sender: NSPopUpButton) {
+        if let action = DefaultTapAction(rawValue: sender.indexOfSelectedItem) {
+            PersistedOptions.actionOnTouchbar = action
+        }
+    }
 
 	@IBAction private func launchAtLoginSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.launchAtLogin = sender.integerValue == 1

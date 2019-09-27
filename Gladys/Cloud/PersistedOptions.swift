@@ -9,7 +9,7 @@
 import Foundation
 
 enum DefaultTapAction: Int {
-	case infoPanel = 0, preview, open, copy
+	case infoPanel = 0, preview, open, copy, none
 }
 
 final class PersistedOptions {
@@ -184,6 +184,16 @@ final class PersistedOptions {
 		}
 	}
 
+    static var actionOnTouchbar: DefaultTapAction {
+        get {
+            let value = defaults.integer(forKey: "actionOnTouchbar")
+            return DefaultTapAction(rawValue: value) ?? .infoPanel
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: "actionOnTouchbar")
+        }
+    }
+    
 	static var lastSelectedPreferencesTab: Int {
 		get {
 			return defaults.integer(forKey: "lastSelectedPreferencesTab")

@@ -605,7 +605,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             collection.selectionIndexes = IndexSet(integer: index)
             
             if let cell = collection.item(at: IndexPath(item: index, section: 0)) as? DropCell {
-                cell.actioned()
+                cell.actioned(fromTouchbar: true)
             }
         }
     }

@@ -651,15 +651,20 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	override func mouseDown(with event: NSEvent) {
 		super.mouseDown(with: event)
 		if event.clickCount == 2 {
-            actioned()
+            actioned(fromTouchbar: false)
 		}
 	}
     
-    func actioned() {
+    func actioned(fromTouchbar: Bool) {
+        let action = fromTouchbar ? PersistedOptions.actionOnTouchbar : PersistedOptions.actionOnTap
+        if action == .none {
+            return
+        }
+
         if let a = archivedDropItem, a.needsUnlock {
             ViewController.shared.unlock(self)
         } else {
-            switch PersistedOptions.actionOnTap {
+            switch action {
             case .copy:
                 copySelected()
                 copiedLabel.wantsLayer = true
@@ -674,6 +679,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                 openSelected()
             case .preview:
                 ViewController.shared.toggleQuickLookPreviewPanel(nil)
+            case .none:
+                break
             }
         }
     }
