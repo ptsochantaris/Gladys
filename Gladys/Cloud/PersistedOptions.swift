@@ -247,4 +247,13 @@ final class PersistedOptions {
             return defaults.bool(forKey: "AutomaticallyConvertWebLinks")
         }
     }
+    
+    static var blockGladysUrlRequests: Bool {
+        set {
+            defaults.set(newValue, forKey: "BlockGladysUrlRequests")
+        }
+        get {
+            return defaults.bool(forKey: "BlockGladysUrlRequests")
+        }
+    }
 }

@@ -21,11 +21,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			ViewController.executeOrQueue {
 				ViewController.shared.highlightItem(with: itemId, andOpen: true)
 			}
+            return true
 
 		} else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
 			ViewController.executeOrQueue {
 				IAPManager.shared.displayRequest(newTotal: t)
 			}
+            return true
 
 		} else if let c = url.host, c == "paste-clipboard" { // this is legacy
 			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -35,6 +37,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			ViewController.executeOrQueue {
 				CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
 			}
+            return true
 
 		} else if url.host == nil { // just opening
 			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
@@ -59,14 +62,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 					ViewController.top.present(a, animated: true)
 				}
 			}
+            return true
 
-		} else {
+		} else if !PersistedOptions.blockGladysUrlRequests {
 			ViewController.executeOrQueue {
 				CallbackSupport.handlePossibleCallbackURL(url: url)
 			}
+            return true
 		}
 
-		return true
+        return false
 	}
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {

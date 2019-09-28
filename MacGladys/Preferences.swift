@@ -31,7 +31,8 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var menuBarModeSwitch: NSButton!
 	@IBOutlet private weak var translucencySwitch: NSButton!
 	@IBOutlet private weak var alwaysOnTopSwitch: NSButton!
-
+    @IBOutlet private weak var disableUrlSupportSwitch: NSButton!
+    
 	@IBOutlet private weak var autoDownloadSwitch: NSButton!
 	@IBOutlet private weak var exclusiveMultipleLabelsSwitch: NSButton!
 	@IBOutlet private weak var selectionActionPicker: NSPopUpButton!
@@ -62,7 +63,8 @@ final class Preferences: NSViewController {
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
 		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
 		alwaysOnTopSwitch.integerValue = PersistedOptions.alwaysOnTop ? 1 : 0
-		exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
+        disableUrlSupportSwitch.integerValue = PersistedOptions.blockGladysUrlRequests ? 1 : 0
+        exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
 		autoDownloadSwitch.integerValue = PersistedOptions.autoArchiveUrlComponents ? 1 : 0
 		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
         touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
@@ -115,6 +117,10 @@ final class Preferences: NSViewController {
 	@IBAction private func autoDownloadSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.autoArchiveUrlComponents = sender.integerValue == 1
 	}
+    
+    @IBAction private func blockUrlSwitchChanged(_ sender: NSButton) {
+        PersistedOptions.blockGladysUrlRequests = sender.integerValue == 1
+    }
 
 	@IBAction private func selectionActionPickerChanged(_ sender: NSPopUpButton) {
 		if let action = DefaultTapAction(rawValue: sender.indexOfSelectedItem) {

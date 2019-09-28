@@ -24,7 +24,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
 	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
     @IBOutlet private weak var autoConvertUrlsSwitch: UISwitch!
-    
+    @IBOutlet private weak var blockGladysUrls: UISwitch!
+
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
@@ -159,6 +160,9 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
         autoConvertUrlsSwitch.tintColor = .lightGray
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
+        
+        blockGladysUrls.tintColor = .lightGray
+        blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests
         
 		separateItemsSwitch.tintColor = .lightGray
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference

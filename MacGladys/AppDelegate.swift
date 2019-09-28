@@ -151,6 +151,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		}
 
 		@objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+            if PersistedOptions.blockGladysUrlRequests { return }
 			if let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue, let url = URL(string: urlString) {
 				urlEventBeforeLaunch = true
 				CallbackSupport.handlePossibleCallbackURL(url: url)
