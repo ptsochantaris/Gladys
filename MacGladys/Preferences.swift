@@ -23,6 +23,7 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var separateItemsSwitch: NSButton!
 	@IBOutlet private weak var autoLabelSwitch: NSButton!
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: NSButton!
+    @IBOutlet private weak var autoConvertUrlsSwitch: NSButton!
 
 	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
@@ -55,7 +56,8 @@ final class Preferences: NSViewController {
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
 		inclusiveSearchTermsSwitch.integerValue = PersistedOptions.inclusiveSearchTerms ? 1 : 0
-		launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
+        autoConvertUrlsSwitch.integerValue = PersistedOptions.automaticallyDetectAndConvertWebLinks ? 1 : 0
+        launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
 		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
@@ -258,6 +260,10 @@ final class Preferences: NSViewController {
 		PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
 		Model.forceUpdateFilter(signalUpdate: true)
 	}
+    
+    @IBAction private func automaticallyConvertUrlsSwitchChanged(_ sender: NSButton) {
+        PersistedOptions.automaticallyDetectAndConvertWebLinks = sender.integerValue == 1
+    }
 
 	@IBAction private func resetWarningsSelected(_ sender: NSButton) {
 		PersistedOptions.unconfirmedDeletes = false

@@ -732,11 +732,26 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			for type in pasteboardItem.types {
 				if let data = pasteboardItem.data(forType: type), !data.isEmpty {
 					count += 1
-					extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+                    
+                    var finalData = data
+                    var finalType = type.rawValue
+                    if
+                        data.count < 16384,
+                        finalType == kUTTypeUTF8PlainText as String,
+                        PersistedOptions.automaticallyDetectAndConvertWebLinks,
+                        let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                        (text.hasPrefix("http://") || text.hasPrefix("https://")),
+                        let newData = try? PropertyListSerialization.data(fromPropertyList: [text], format: .binary, options: 0) {
+
+                        finalData = newData
+                        finalType = kUTTypeURL as String
+                    }
+                    
+					extractor.registerDataRepresentation(forTypeIdentifier: finalType, visibility: .all) { callback -> Progress? in
 						let p = Progress()
 						p.totalUnitCount = 1
 						DispatchQueue.global(qos: .userInitiated).async {
-							callback(data, nil)
+							callback(finalData, nil)
 							p.completedUnitCount = 1
 						}
 						return p

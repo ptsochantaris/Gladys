@@ -238,4 +238,13 @@ final class PersistedOptions {
 			return UserDefaults.standard.string(forKey: "LastRanVersion")
 		}
 	}
+    
+    static var automaticallyDetectAndConvertWebLinks: Bool {
+        set {
+            defaults.set(newValue, forKey: "AutomaticallyConvertWebLinks")
+        }
+        get {
+            return defaults.bool(forKey: "AutomaticallyConvertWebLinks")
+        }
+    }
 }
