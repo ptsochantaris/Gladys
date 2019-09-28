@@ -547,6 +547,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				if !item.tryPreview(in: ViewController.top, from: cell) {
 					performSegue(withIdentifier: "showDetail", sender: item)
 				}
+                
+            case .none:
+                break
 			}
 		}
 	}

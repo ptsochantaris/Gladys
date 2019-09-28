@@ -9,6 +9,7 @@
 import Cocoa
 import Quartz
 import MacGladysFramework
+import LocalAuthentication
 
 func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (()->Void)? = nil) {
 
@@ -821,15 +822,39 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@objc func removeLock(_ sender: Any?) {
-		let items = removableLockSelectedItems
-		let plural = items.count > 1
-		let actionName = "Remove Lock" + (plural ? "s" : "")
+    @objc func removeLock(_ sender: Any?) {
+        let items = removableLockSelectedItems
+        let plural = items.count > 1
+        let label = "Remove Lock" + (plural ? "s" : "")
 
+        let auth = LAContext()
+        if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+            auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
+                if (error as NSError?)?.code == -2 { return } // cancelled
+                DispatchQueue.main.async { [weak self] in
+                    if success {
+                        for item in items {
+                            item.lockPassword = nil
+                            item.lockHint = nil
+                            item.needsUnlock = false
+                            item.markUpdated()
+                            item.reIndex()
+                        }
+                    } else {
+                        self?.removeLockWithPassword(items: items, label: label, plural: plural)
+                    }
+                }
+            })
+        } else {
+            removeLockWithPassword(items: items, label: label, plural: plural)
+        }
+    }
+    
+    private func removeLockWithPassword(items: [ArchivedDropItem], label: String, plural: Bool) {
 		let a = NSAlert()
-		a.messageText = actionName
+		a.messageText = label
 		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
-		a.addButton(withTitle: actionName)
+		a.addButton(withTitle: label)
 		a.addButton(withTitle: "Cancel")
 		let input = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
 		input.placeholderString = "Password"
@@ -849,7 +874,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					successCount += 1
 				}
 				if successCount == 0 {
-					self?.removeLock(sender)
+                    self?.removeLockWithPassword(items: items, label: label, plural: plural)
 				} else {
 					Model.save()
 				}
@@ -921,13 +946,35 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 	}
+    
+    @objc func unlock(_ sender: Any?) {
+        let items = unlockableSelectedItems
+        let plural = items.count > 1
+        let label = "Access Locked Item" + (plural ? "s" : "")
 
-	@objc func unlock(_ sender: Any?) {
-		let items = unlockableSelectedItems
-		let plural = items.count > 1
+        let auth = LAContext()
+        if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+            auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
+                if (error as NSError?)?.code == -2 { return } // cancelled
+                DispatchQueue.main.async { [weak self] in
+                    if success {
+                        for item in items {
+                            item.needsUnlock = false
+                            item.postModified()
+                        }
+                    } else {
+                        self?.unlockWithPassword(items: items, label: label, plural: plural)
+                    }
+                }
+            })
+        } else {
+            unlockWithPassword(items: items, label: label, plural: plural)
+        }
+    }
 
+    private func unlockWithPassword(items: [ArchivedDropItem], label: String, plural: Bool) {
 		let a = NSAlert()
-		a.messageText = "Access Locked Item" + (plural ? "s" : "")
+        a.messageText = label
 		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
 		a.addButton(withTitle: "Unlock")
 		a.addButton(withTitle: "Cancel")
@@ -946,7 +993,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					successCount += 1
 				}
 				if successCount == 0 {
-					self?.unlock(sender)
+					self?.unlockWithPassword(items: items, label: label, plural: plural)
 				}
 			}
 		}
