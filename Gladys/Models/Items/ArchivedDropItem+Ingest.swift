@@ -1,5 +1,8 @@
 
 import Foundation
+#if os(iOS)
+import MobileCoreServices
+#endif
 
 extension ArchivedDropItem: ComponentIngestionDelegate {
 
@@ -64,6 +67,23 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			}
 		}
 	}
+    
+    private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
+        var extracted: Data?
+        let g = DispatchGroup()
+        g.enter()
+        provider.loadDataRepresentation(forTypeIdentifier: type) { data, error in
+            if let data = data,
+                data.count < 16384,
+                let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                (text.hasPrefix("http://") || text.hasPrefix("https://")) {
+                extracted = try? PropertyListSerialization.data(fromPropertyList: [text], format: .binary, options: 0)
+            }
+            g.leave()
+        }
+        g.wait()
+        return extracted
+    }
 
 	func startNewItemIngest(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?) -> Progress {
 		self.delegate = delegate
@@ -80,9 +100,25 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			}
 
 			func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) {
-				loadCount += 1
-				let i = ArchivedDropItemType(typeIdentifier: type, parentUuid: uuid, delegate: self, order: order)
-				let p = i.startIngest(provider: provider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
+                
+                // replace provider if we want to convert strings to URLs
+                var finalProvider = provider
+                var finalType = type
+                if  UTTypeConformsTo(type as CFString, kUTTypeText),
+                    PersistedOptions.automaticallyDetectAndConvertWebLinks,
+                    let extractedLinkData = extractUrlData(from: provider, for: type) {
+                    
+                    finalType = kUTTypeURL as String
+                    finalProvider = NSItemProvider()
+                    finalProvider.registerDataRepresentation(forTypeIdentifier: finalType, visibility: .all) { provide -> Progress? in
+                        provide(extractedLinkData, nil)
+                        return nil
+                    }
+                }
+
+                loadCount += 1
+                let i = ArchivedDropItemType(typeIdentifier: finalType, parentUuid: uuid, delegate: self, order: order)
+				let p = i.startIngest(provider: finalProvider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
 				progressChildren.append(p)
 				typeItems.append(i)
 			}

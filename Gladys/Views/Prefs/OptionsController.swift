@@ -23,7 +23,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var wideModeSwitch: UISwitch!
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
 	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
-
+    @IBOutlet private weak var autoConvertUrlsSwitch: UISwitch!
+    
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
@@ -116,6 +117,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		PersistedOptions.fullScreenPreviews = sender.isOn
 	}
 
+    @IBAction private func autoConvertUrlsSelected(_ sender: UISwitch) {
+        PersistedOptions.automaticallyDetectAndConvertWebLinks = sender.isOn
+    }
+
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		separateItemsSwitch.onTintColor = view.tintColor
@@ -152,6 +157,9 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 		doneLocation = .right
 
+        autoConvertUrlsSwitch.tintColor = .lightGray
+        autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
+        
 		separateItemsSwitch.tintColor = .lightGray
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 
