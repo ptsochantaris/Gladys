@@ -6,7 +6,6 @@ import Contacts
 import ContactsUI
 import CoreSpotlight
 import MobileCoreServices
-import LocalAuthentication
 import GladysFramework
 
 extension ArchivedDropItem {
@@ -58,10 +57,9 @@ extension ArchivedDropItem {
 	}
 
 	func lock(from: UIViewController, completion: @escaping (Data?, String?)->Void) {
-		let auth = LAContext()
 		let message: String
-		if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-			message = "Please provide a backup password in case Touch or Face ID fails. You can also provide an optional label to display while the item is locked."
+        if LocalAuth.canUseLocalAuth {
+			message = "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
 		} else {
 			message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
 		}
@@ -76,22 +74,19 @@ extension ArchivedDropItem {
 	}
 
 	func unlock(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
-		let auth = LAContext()
-		if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-			auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
-                if (error as NSError?)?.code == -2 { return } // cancelled
-				DispatchQueue.main.async { [weak self] in
-					if success {
-						self?.needsUnlock = false
-						completion(true)
-					} else {
-						self?.unlockWithPassword(from: from, label: label, action: action, completion: completion)
-					}
-				}
-			})
-		} else {
-			unlockWithPassword(from: from, label: label, action: action, completion: completion)
-		}
+        from.view.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+            from.view.isUserInteractionEnabled = true
+        }
+        
+        LocalAuth.attempt(label: label) { [weak self] success in
+            if success {
+                self?.needsUnlock = false
+                completion(true)
+            } else {
+                self?.unlockWithPassword(from: from, label: label, action: action, completion: completion)
+            }
+        }
 	}
 
 	private func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {

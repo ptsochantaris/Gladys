@@ -206,6 +206,8 @@
 		168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
 		168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */; };
+		168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
+		168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
 		168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C940E20B0572700F4139D /* NSColor+Extensions.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
@@ -707,6 +709,7 @@
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Compression.swift"; sourceTree = "<group>"; };
+		168C42F4233F5CA700050E82 /* LocalAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuth.swift; sourceTree = "<group>"; };
 		168C940E20B0572700F4139D /* NSColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
@@ -1017,6 +1020,7 @@
 				162594D420D5548F00A65E06 /* Caches.swift */,
 				162BDD73220F01FA00A3C17B /* Logging.swift */,
 				16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */,
+				168C42F4233F5CA700050E82 /* LocalAuth.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2230,6 +2234,7 @@
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				16CD7D7D20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */,
 				168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */,
+				168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2462,6 +2467,7 @@
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				16F2990720CBEF30005DE3AD /* PushState.swift in Sources */,
 				1651117E2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift in Sources */,
+				168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				169763141F15669000537776 /* ArchivedDropItemType+Ingest.swift in Sources */,

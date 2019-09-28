@@ -9,7 +9,6 @@
 import Cocoa
 import Quartz
 import MacGladysFramework
-import LocalAuthentication
 
 func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (()->Void)? = nil) {
 
@@ -826,27 +825,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let items = removableLockSelectedItems
         let plural = items.count > 1
         let label = "Remove Lock" + (plural ? "s" : "")
-
-        let auth = LAContext()
-        if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-            auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
-                if (error as NSError?)?.code == -2 { return } // cancelled
-                DispatchQueue.main.async { [weak self] in
-                    if success {
-                        for item in items {
-                            item.lockPassword = nil
-                            item.lockHint = nil
-                            item.needsUnlock = false
-                            item.markUpdated()
-                            item.reIndex()
-                        }
-                    } else {
-                        self?.removeLockWithPassword(items: items, label: label, plural: plural)
-                    }
+        
+        LocalAuth.attempt(label: label) { [weak self] success in
+            if success {
+                for item in items {
+                    item.lockPassword = nil
+                    item.lockHint = nil
+                    item.needsUnlock = false
+                    item.markUpdated()
+                    item.reIndex()
                 }
-            })
-        } else {
-            removeLockWithPassword(items: items, label: label, plural: plural)
+            } else {
+                self?.removeLockWithPassword(items: items, label: label, plural: plural)
+            }
         }
     }
     
@@ -952,23 +943,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let plural = items.count > 1
         let label = "Access Locked Item" + (plural ? "s" : "")
 
-        let auth = LAContext()
-        if auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-            auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label, reply: { success, error in
-                if (error as NSError?)?.code == -2 { return } // cancelled
-                DispatchQueue.main.async { [weak self] in
-                    if success {
-                        for item in items {
-                            item.needsUnlock = false
-                            item.postModified()
-                        }
-                    } else {
-                        self?.unlockWithPassword(items: items, label: label, plural: plural)
-                    }
+        LocalAuth.attempt(label: label) { [weak self] success in
+            if success {
+                for item in items {
+                    item.needsUnlock = false
+                    item.postModified()
                 }
-            })
-        } else {
-            unlockWithPassword(items: items, label: label, plural: plural)
+            } else {
+                self?.unlockWithPassword(items: items, label: label, plural: plural)
+            }
         }
     }
 
