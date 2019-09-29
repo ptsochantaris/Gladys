@@ -69,20 +69,26 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 	}
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
-        var extracted: Data?
+        var extractedData: Data?
         let g = DispatchGroup()
         g.enter()
         provider.loadDataRepresentation(forTypeIdentifier: type) { data, error in
-            if let data = data,
-                data.count < 16384,
-                let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
-                (text.hasPrefix("http://") || text.hasPrefix("https://")) {
-                extracted = try? PropertyListSerialization.data(fromPropertyList: [text], format: .binary, options: 0)
+            if let data = data, data.count < 16384 {
+                var extractedText: String?
+                if data.isPlist, let text = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? String {
+                    extractedText = text
+                    
+                } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                    extractedText = text
+                }
+                if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
+                    extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText], format: .binary, options: 0)
+                }
+                g.leave()
             }
-            g.leave()
         }
         g.wait()
-        return extracted
+        return extractedData
     }
 
 	func startNewItemIngest(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?) -> Progress {

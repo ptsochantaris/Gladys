@@ -1354,7 +1354,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2238" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Disable x-callback-url support" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7g-oJ-Tmd">
-                                                        <rect key="frame" x="30" y="6" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="42"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -1363,7 +1363,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="For environents with locked-down security, you may want to ensure Gladys does not respond to any URL requests" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNv-eb-moz">
-                                                        <rect key="frame" x="30" y="48" width="193" height="66.5"/>
+                                                        <rect key="frame" x="30" y="52" width="193" height="62.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>

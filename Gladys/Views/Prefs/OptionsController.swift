@@ -138,7 +138,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		autoArchiveSwitch.onTintColor = view.tintColor
 		exclusiveLabelsSwitch.onTintColor = view.tintColor
 		inclusiveSearchTermsSwitch.onTintColor = view.tintColor
-		subtitleLabels.forEach { $0.textColor = UIColor.gray }
+        autoConvertUrlsSwitch.onTintColor = view.tintColor
+        blockGladysUrls.onTintColor = view.tintColor
+
+        subtitleLabels.forEach { $0.textColor = UIColor.gray }
 		titleLabels.forEach { $0.textColor = ViewController.tintColor }
 		if PersistedOptions.darkMode {
 			headerLabels.forEach { $0.textColor = UIColor.lightGray }

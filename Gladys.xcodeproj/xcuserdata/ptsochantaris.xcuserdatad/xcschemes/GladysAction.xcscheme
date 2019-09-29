@@ -66,6 +66,11 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
+      <RemoteRunnable
+         runnableDebuggingMode = "1"
+         BundleIdentifier = "com.google.ios.youtube"
+         RemotePath = "/var/containers/Bundle/Application/BDF4768E-B663-43F8-A058-25F010135552/YouTube.app">
+      </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
