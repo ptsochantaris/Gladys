@@ -73,10 +73,14 @@ extension ArchivedDropItem {
 		}
 	}
 
+    private static var unlockingItemsBlock = Set<UUID>()
 	func unlock(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
-        from.view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-            from.view.isUserInteractionEnabled = true
+        if ArchivedDropItem.unlockingItemsBlock.contains(uuid) {
+            return
+        }
+        ArchivedDropItem.unlockingItemsBlock.insert(uuid)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            ArchivedDropItem.unlockingItemsBlock.remove(self.uuid)
         }
         
         LocalAuth.attempt(label: label) { [weak self] success in
