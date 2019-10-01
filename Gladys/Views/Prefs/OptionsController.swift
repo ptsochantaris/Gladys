@@ -121,7 +121,11 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func autoConvertUrlsSelected(_ sender: UISwitch) {
         PersistedOptions.automaticallyDetectAndConvertWebLinks = sender.isOn
     }
-
+    
+    @IBAction private func blockGladysLinksSelected(_ sender: UISwitch) {
+        PersistedOptions.blockGladysUrlRequests = sender.isOn
+    }
+    
 	override func darkModeChanged() {
 		super.darkModeChanged()
 		separateItemsSwitch.onTintColor = view.tintColor
