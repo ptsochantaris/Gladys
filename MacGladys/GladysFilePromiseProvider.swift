@@ -116,7 +116,7 @@ extension ArchivedDropItemType {
 		if let s = encodedUrl, !s.isFileURL {
 			bytesToWrite = s.urlFileContent
 		} else {
-			bytesToWrite = dataForWrappedItem
+			bytesToWrite = dataForDropping
 		}
 
 		let directory = destinationUrl.deletingLastPathComponent()

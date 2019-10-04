@@ -16,13 +16,14 @@ extension ArchivedDropItemType {
 		let t = typeIdentifier
 		provider.registerDataRepresentation(forTypeIdentifier: t, visibility: .all) { completion -> Progress? in
 			let p = Progress(totalUnitCount: 1)
-			p.completedUnitCount = 1
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block for type: \(t)")
 				DispatchQueue.main.async {
 					ArchivedDropItemType.droppedIds?.insert(self.parentUuid)
 				}
-				completion(self.dataForWrappedItem ?? self.bytes, nil)
+                let response = self.dataForDropping ?? self.bytes
+                p.completedUnitCount = 1
+				completion(response, nil)
 			}
 			return p
 		}

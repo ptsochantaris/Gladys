@@ -88,7 +88,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
                     extractedText = text
                 }
                 if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
-                    extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText], format: .binary, options: 0)
+                    extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
                 }
             }
             g.leave()
@@ -106,7 +106,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			var identifiers = ArchivedDropItem.sanitised(provider.registeredTypeIdentifiers)
 			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
 			let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
-
+            let alreadyHasUrl = identifiers.contains("public.url")
+            
 			if let limit = limitToType {
 				identifiers = [limit]
 			}
@@ -116,7 +117,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
                 // replace provider if we want to convert strings to URLs
                 var finalProvider = provider
                 var finalType = type
-                if  UTTypeConformsTo(type as CFString, kUTTypeText),
+                if !alreadyHasUrl,
+                    UTTypeConformsTo(type as CFString, kUTTypeText),
                     PersistedOptions.automaticallyDetectAndConvertWebLinks,
                     let extractedLinkData = extractUrlData(from: provider, for: type) {
                     

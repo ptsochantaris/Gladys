@@ -91,7 +91,7 @@ extension ArchivedDropItemType {
 					if tempPath.pathExtension == "webloc", let url = typeItem.encodedUrl { // only happens on macOS, iOS uses another view for previewing
 						try? PropertyListSerialization.data(fromPropertyList: ["URL": url.absoluteString], format: .binary, options: 0).write(to: tempPath)
 						log("Created temporary webloc for preview: \(tempPath.path)")
-					} else if let data = typeItem.dataForWrappedItem {
+					} else if let data = typeItem.dataForDropping {
 						try? data.write(to: tempPath)
 						log("Created temporary file for preview: \(tempPath.path)")
 					} else {
