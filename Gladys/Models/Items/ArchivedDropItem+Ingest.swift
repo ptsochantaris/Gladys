@@ -6,15 +6,21 @@ import MobileCoreServices
 
 extension ArchivedDropItem: ComponentIngestionDelegate {
 
-	static func sanitised(_ idenitfiers: [String]) -> [String] {
-		let blockedSuffixes = [".useractivity", ".internalMessageTransfer", "itemprovider", ".rtfd", ".persisted"]
-		return idenitfiers.filter { typeIdentifier in
+	static func sanitised(_ ids: [String]) -> [String] {
+        let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
+		var identifiers = ids.filter { typeIdentifier in
 			#if os(OSX) // TODO: perhaps do this on iOS too?
 			let cfid = typeIdentifier as CFString
 			if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
 			#endif
 			return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
 		}
+        if #available(iOS 13.0, *) { // iOS 13 apple mail sucks
+            if identifiers.contains("com.apple.mail.email") {
+                identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
+            }
+        }
+        return identifiers
 	}
 
 	func componentIngested(typeItem: ArchivedDropItemType?) {
@@ -84,8 +90,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
                 if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
                     extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText], format: .binary, options: 0)
                 }
-                g.leave()
             }
+            g.leave()
         }
         g.wait()
         return extractedData
