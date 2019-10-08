@@ -1489,7 +1489,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1110;
 				TargetAttributes = {
 					8B5BB2050078EFCACBEDC5B4195B80CD = {
 						LastSwiftMigration = 1100;
@@ -1505,6 +1505,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = 7826A89360D9711178CCD7B8C97091F1 /* Products */;
@@ -1954,7 +1955,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD3E47B7977E85A4FE3A573DF4B8468C /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2085,7 +2085,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CDDC774EDE01892B3AE85858C1E3770E /* OpenSSL-Universal-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2129,7 +2128,6 @@
 			baseConfigurationReference = BD2BEB17E7157856A208B47197A4B376 /* Pods-MacGladysFramework.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2216,7 +2214,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2331A4153F6AA8622DA061DBD5F85348 /* CallbackURLKit-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2243,7 +2240,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2331A4153F6AA8622DA061DBD5F85348 /* CallbackURLKit-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2271,7 +2267,6 @@
 			baseConfigurationReference = 36CE325664921C03319BDF1B9D81C0E5 /* Pods-MacGladysFramework.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2294,7 +2289,6 @@
 			baseConfigurationReference = 30A4C4867EFE2F01875D600C67A8C713 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2317,7 +2311,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C1FD6C604C8699467E5DF9772A01A27A /* HotKey.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2343,7 +2336,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C1FD6C604C8699467E5DF9772A01A27A /* HotKey.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2369,7 +2361,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2A5B5639974EAB327692D3C7E63E2D2D /* ZIPFoundation-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2396,7 +2387,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 442257D0A8ADD807447F6553E275C84B /* CDEvents.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2518,7 +2508,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2A5B5639974EAB327692D3C7E63E2D2D /* ZIPFoundation-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2594,7 +2583,6 @@
 			baseConfigurationReference = C624C8A75A4853B3F0513A5AF1C49CF2 /* Pods-MacGladys.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2617,7 +2605,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD3E47B7977E85A4FE3A573DF4B8468C /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2667,7 +2654,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 442257D0A8ADD807447F6553E275C84B /* CDEvents.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2740,7 +2726,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CDDC774EDE01892B3AE85858C1E3770E /* OpenSSL-Universal-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;

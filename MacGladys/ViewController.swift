@@ -759,8 +759,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return false
 		}
 
-		var insertedIndexPaths = [IndexPath]()
-		var count = 0
+		var insertedUuids = [UUID]()
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides) {
 
@@ -773,18 +772,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				}
 				Model.drops.insert(newItem, at: modelIndex)
 				Model.forceUpdateFilter(signalUpdate: false)
-
-				if let visibleIndex = Model.filteredDrops.firstIndex(of: newItem) {
-					let finalIndex = IndexPath(item: visibleIndex, section: 0)
-					insertedIndexPaths.append(finalIndex)
-				}
-
-				count += 1
+                insertedUuids.append(newItem.uuid)
 			}
 		}
 
-		if count > 0 {
-			if insertedIndexPaths.count > 0 {
+        if insertedUuids.count > 0 {
+            let insertedIndexes = insertedUuids.compactMap { uuid in
+                return Model.filteredDrops.firstIndex { $0.uuid == uuid }
+            }
+            if insertedIndexes.count > 0 {
+                let insertedIndexPaths = insertedIndexes.map { IndexPath(item: $0, section: 0) }
 				reloadData(inserting: insertedIndexPaths)
 			}
 			return true
