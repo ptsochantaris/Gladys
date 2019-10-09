@@ -91,9 +91,8 @@ final class HighlightLabel: UILabel {
 
 			var origins = [CGPoint](repeating: .zero, count: lineCount)
 			CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-			let lineFrame = CTLineGetBoundsWithOptions(line, [])
-			let offset: CGFloat = index < (lineCount-1) ? 2 : -6
-			let lineStart = leftAlign ? 1 : (bounds.width - lineFrame.width + offset) * 0.5
+            let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
+			let lineStart = leftAlign ? 1 : (bounds.width - lineFrame.width) * 0.5
 
 			for r in CTLineGetGlyphRuns(line) as NSArray {
 
@@ -103,9 +102,15 @@ final class HighlightLabel: UILabel {
 				if attributes["HighlightText"] != nil {
 					var runBounds = lineFrame
 
-					runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
-					runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
-					runBounds.origin.y = origins[index].y - 2
+                    runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
+                    runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 3.5
+                    if #available(iOS 13.0, *) {
+                        runBounds.origin.y = origins[index].y - 3
+                        runBounds.size.height += 1
+                    } else {
+                        runBounds.origin.y = origins[index].y - 2
+                        runBounds.size.height += 0.5
+                    }
 
 					context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
 				}

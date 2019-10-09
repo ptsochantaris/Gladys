@@ -92,9 +92,8 @@ final class TokenTextField: NSTextField {
 
 				var origins = [CGPoint](repeating: .zero, count: lineCount)
 				CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-				let lineFrame = CTLineGetBoundsWithOptions(line, [])
-				let offset: CGFloat = index < (lineCount-1) ? 2 : -6
-				let lineStart = (dirtyRect.width - lineFrame.width + offset) * 0.5
+                let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
+				let lineStart = (dirtyRect.width - lineFrame.width) * 0.5
 
 				for r in CTLineGetGlyphRuns(line) as NSArray {
 
@@ -104,9 +103,13 @@ final class TokenTextField: NSTextField {
 					if attributes["HighlightText"] != nil {
 						var runBounds = lineFrame
 
-						runBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil ,nil)) + 6
-						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
-						runBounds.origin.y = origins[index].y - 4.5
+                        runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
+						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
+                        if #available(OSX 10.15, *) {
+                            runBounds.origin.y = origins[index].y - 2
+                        } else {
+                            runBounds.origin.y = origins[index].y - 4
+                        }
 
 						context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
 						context.setLineWidth(0.5)
