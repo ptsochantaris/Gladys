@@ -48,7 +48,7 @@ final class ShareViewController: NSViewController {
 		guard let extensionContext = extensionContext else { return }
 
 		for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
-
+            
 			if let text = inputItem.attributedContentText {
 				log("Ingesting inputItem with text: [\(text.string)]")
 				pasteboardItems.append(text)
@@ -58,8 +58,16 @@ final class ShareViewController: NSViewController {
 				pasteboardItems.append(title)
 
 			} else {
-				log("Ingesting inputItem with \(inputItem.attachments?.count ?? 0) attachment(s)...")
-				for attachment in inputItem.attachments ?? [] {
+                var attachments = inputItem.attachments ?? []
+                if attachments.count == 2, // detect Safari PDF preview getting attached
+                    attachments[0].registeredTypeIdentifiers == ["public.url"],
+                    attachments[1].registeredTypeIdentifiers == ["com.adobe.pdf"] {
+                    log("Safari PDF found, stripping it")
+                    attachments.removeAll { $0.registeredTypeIdentifiers == ["com.adobe.pdf"] }
+                }
+
+                log("Ingesting inputItem with \(attachments.count) attachment(s)...")
+				for attachment in attachments {
 					let newItem = NSPasteboardItem()
 					pasteboardItems.append(newItem)
 					var identifiers = attachment.registeredTypeIdentifiers
