@@ -17,17 +17,21 @@ func genericAlert(title: String, message: String?, windowOverride: NSWindow? = n
 		finalVC = newVC
 	}
 
-	let window = windowOverride ?? finalVC.view.window!
-
 	let a = NSAlert()
 	a.messageText = title
 	a.addButton(withTitle: buttonTitle)
 	if let message = message {
 		a.informativeText = message
 	}
-	a.beginSheetModal(for: window) { _ in
-		completion?()
-	}
+    
+    if let window = windowOverride ?? finalVC.view.window {
+        a.beginSheetModal(for: window) { _ in
+            completion?()
+        }
+    } else {
+        a.runModal()
+        completion?()
+    }
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
