@@ -15,6 +15,7 @@
 			dependencies = (
 			);
 			name = "OpenSSL-Universal-macOS";
+			productName = "OpenSSL-Universal-macOS";
 		};
 		E4E534C10C21331DC31EA192EE88A30D /* OpenSSL-Universal-iOS */ = {
 			isa = PBXAggregateTarget;
@@ -24,6 +25,7 @@
 			dependencies = (
 			);
 			name = "OpenSSL-Universal-iOS";
+			productName = "OpenSSL-Universal-iOS";
 		};
 /* End PBXAggregateTarget section */
 
@@ -221,7 +223,7 @@
 		06BE25CC2A8853E5F5D8018093E8B5C7 /* HotKey-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HotKey-dummy.m"; sourceTree = "<group>"; };
 		07BB9FE99311D724E44AFA8A3E8BE1C1 /* ecdsa.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ecdsa.h; path = macos/include/openssl/ecdsa.h; sourceTree = "<group>"; };
 		089FD02BCCCBA3922D3254A90452C2A5 /* opensslconf-i386.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "opensslconf-i386.h"; path = "ios/include/openssl/opensslconf-i386.h"; sourceTree = "<group>"; };
-		0A056BA8045654EBA8E9F6B3AF119385 /* libCallbackURLKit-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libCallbackURLKit-iOS.a"; path = "libCallbackURLKit-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A056BA8045654EBA8E9F6B3AF119385 /* libCallbackURLKit-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCallbackURLKit-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A118E888C2C3A900C44458181D71922 /* symhacks.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = symhacks.h; path = ios/include/openssl/symhacks.h; sourceTree = "<group>"; };
 		0C160404F892E0CCC06D57208CEE19EB /* Manager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Manager.swift; path = Sources/Manager.swift; sourceTree = "<group>"; };
 		0DC51C01099B8097953F2EF9FD54DE6D /* ZIPFoundation-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZIPFoundation-iOS-umbrella.h"; sourceTree = "<group>"; };
@@ -239,15 +241,15 @@
 		1930B638103E9026E9FA6BAAA1A855D4 /* blowfish.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = blowfish.h; path = macos/include/openssl/blowfish.h; sourceTree = "<group>"; };
 		1A5A11FC01A6103B46C1B8EC17EBDE90 /* Pods-GladysIntents-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysIntents-acknowledgements.plist"; sourceTree = "<group>"; };
 		1A767881B45BE2516CC0873A660E35CB /* hmac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = hmac.h; path = macos/include/openssl/hmac.h; sourceTree = "<group>"; };
-		1C40061A865BFCFB9517E0FCB603E8E9 /* libPods-MacGladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-MacGladysFramework.a"; path = "libPods-MacGladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1D1E62EC9E57AB8ACB8144010336C1A9 /* libPods-GladysIntents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-GladysIntents.a"; path = "libPods-GladysIntents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C40061A865BFCFB9517E0FCB603E8E9 /* libPods-MacGladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MacGladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D1E62EC9E57AB8ACB8144010336C1A9 /* libPods-GladysIntents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GladysIntents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DD6F7B05698766C6F5423003975967B /* md4.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = md4.h; path = ios/include/openssl/md4.h; sourceTree = "<group>"; };
-		1E771902B7293132EFBCA4E69FDE3398 /* libFuzi-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libFuzi-macOS.a"; path = "libFuzi-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E771902B7293132EFBCA4E69FDE3398 /* libFuzi-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libFuzi-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9E964022BC036C236F9F75E4F9C413 /* opensslconf-x86_64.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "opensslconf-x86_64.h"; path = "macos/include/openssl/opensslconf-x86_64.h"; sourceTree = "<group>"; };
 		1F0DC164C498360411468E7CA2FBECA4 /* opensslconf-armv7s.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "opensslconf-armv7s.h"; path = "ios/include/openssl/opensslconf-armv7s.h"; sourceTree = "<group>"; };
 		1F79C31E14E255984432526EE65E6F1A /* ZIPFoundation-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZIPFoundation-iOS-prefix.pch"; sourceTree = "<group>"; };
 		1F7D2003B1DA7BB06F84DA89C089C66D /* des_old.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = des_old.h; path = ios/include/openssl/des_old.h; sourceTree = "<group>"; };
-		213FB8AF4A22110AF50B2862235627AE /* libCallbackURLKit-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libCallbackURLKit-macOS.a"; path = "libCallbackURLKit-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		213FB8AF4A22110AF50B2862235627AE /* libCallbackURLKit-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCallbackURLKit-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		241347192B04BDB4B1ACE33F6544383B /* rsa.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rsa.h; path = macos/include/openssl/rsa.h; sourceTree = "<group>"; };
 		259F4F730F16DA9A000B8C8588CAAC5D /* kssl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = kssl.h; path = ios/include/openssl/kssl.h; sourceTree = "<group>"; };
 		25FD2233883092BA73619C99F4188B29 /* pqueue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pqueue.h; path = ios/include/openssl/pqueue.h; sourceTree = "<group>"; };
@@ -292,7 +294,7 @@
 		4CB11088C74E6039C8288E6A78E72CD2 /* rc2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rc2.h; path = macos/include/openssl/rc2.h; sourceTree = "<group>"; };
 		4CBC753E0E098C892739E846DCC473AA /* pem2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pem2.h; path = macos/include/openssl/pem2.h; sourceTree = "<group>"; };
 		4E1B7A17999F574BC6601F4876A9DC11 /* ssl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl.h; path = macos/include/openssl/ssl.h; sourceTree = "<group>"; };
-		50AE74E1BF8CB77EA26273D720D5D71F /* libCDEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libCDEvents.a; path = libCDEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		50AE74E1BF8CB77EA26273D720D5D71F /* libCDEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCDEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		52A4BAF88C5E0F93EF91176FE13DB0F0 /* Pods-MacGladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MacGladys-acknowledgements.plist"; sourceTree = "<group>"; };
 		5334409F0350491B62CADC129B100CA7 /* ZIPFoundation-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ZIPFoundation-macOS-dummy.m"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS-dummy.m"; sourceTree = "<group>"; };
 		5362BD15CFFA94E62E720470480A76E4 /* Pods-GladysAction-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GladysAction-umbrella.h"; sourceTree = "<group>"; };
@@ -375,9 +377,9 @@
 		98DEEAD3DA5BCA6DFB44094331044512 /* dtls1.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dtls1.h; path = ios/include/openssl/dtls1.h; sourceTree = "<group>"; };
 		9A1B32AD6A2491CE90CCDB9822F9F3D0 /* Data+Compression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Data+Compression.swift"; path = "Sources/ZIPFoundation/Data+Compression.swift"; sourceTree = "<group>"; };
 		9A82AAD99DA25F551ADE3CA2190B5C7A /* Client.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Client.swift; path = Sources/Client.swift; sourceTree = "<group>"; };
-		9BC1F246F7EF310C62A17B761E63BACE /* libZIPFoundation-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libZIPFoundation-macOS.a"; path = "libZIPFoundation-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9EF83BCCEFAE08B31095A9B245E76A58 /* libZIPFoundation-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libZIPFoundation-iOS.a"; path = "libZIPFoundation-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BC1F246F7EF310C62A17B761E63BACE /* libZIPFoundation-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libZIPFoundation-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9EF83BCCEFAE08B31095A9B245E76A58 /* libZIPFoundation-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libZIPFoundation-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F8253F57A689C03F3C6ED506C69B8BD /* comp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = comp.h; path = macos/include/openssl/comp.h; sourceTree = "<group>"; };
 		A038E90B4C559728B18D2D14A0E83B5D /* dtls1.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dtls1.h; path = macos/include/openssl/dtls1.h; sourceTree = "<group>"; };
 		A04D38CA96DB895661E23ECC2351CBE0 /* pkcs7.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pkcs7.h; path = ios/include/openssl/pkcs7.h; sourceTree = "<group>"; };
@@ -386,7 +388,7 @@
 		A2483FFEFD9081530B6B0A51E49929C8 /* txt_db.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = txt_db.h; path = macos/include/openssl/txt_db.h; sourceTree = "<group>"; };
 		A39C7E31BE22AB0CC5AFD7AAC30E3CD1 /* dso.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dso.h; path = macos/include/openssl/dso.h; sourceTree = "<group>"; };
 		A3A6E501AED4395A5406F83ABCF868E5 /* srtp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = srtp.h; path = ios/include/openssl/srtp.h; sourceTree = "<group>"; };
-		A6C728791A680A3D1020EE02EA79FEE0 /* libFuzi-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libFuzi-iOS.a"; path = "libFuzi-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6C728791A680A3D1020EE02EA79FEE0 /* libFuzi-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libFuzi-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7102384A74D684B7BEC84DD2FE94A61 /* ssl23.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl23.h; path = ios/include/openssl/ssl23.h; sourceTree = "<group>"; };
 		A7B14EC7A712416750D2F98B7B1CDCEE /* opensslconf-armv7.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "opensslconf-armv7.h"; path = "ios/include/openssl/opensslconf-armv7.h"; sourceTree = "<group>"; };
 		A81B84DFE13261363CC6AA3749D0F6E0 /* mdc2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mdc2.h; path = ios/include/openssl/mdc2.h; sourceTree = "<group>"; };
@@ -403,7 +405,7 @@
 		B38C22B7435DF3D71C3DE7273A839A4F /* ssl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl.h; path = ios/include/openssl/ssl.h; sourceTree = "<group>"; };
 		B4031CF9CC17944BA872518A0A7C35B8 /* sha.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = sha.h; path = macos/include/openssl/sha.h; sourceTree = "<group>"; };
 		B48ED8CE628AD7A1F5B974CD4A363003 /* ZIPFoundation-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ZIPFoundation-iOS-dummy.m"; sourceTree = "<group>"; };
-		B6009F934942BB705BF62A46C05335B4 /* libPods-GladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-GladysFramework.a"; path = "libPods-GladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6009F934942BB705BF62A46C05335B4 /* libPods-GladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61EE31FEBD52BD027833EEC6A55E758 /* ebcdic.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ebcdic.h; path = ios/include/openssl/ebcdic.h; sourceTree = "<group>"; };
 		B7BD04C7A672970D9A5AC8B7B8976B41 /* ripemd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ripemd.h; path = macos/include/openssl/ripemd.h; sourceTree = "<group>"; };
 		B863BAEDC366970E031AD8F6E80EE352 /* blowfish.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = blowfish.h; path = ios/include/openssl/blowfish.h; sourceTree = "<group>"; };
@@ -453,7 +455,7 @@
 		E311F062D5495AA5C3BF6D61A5EC9496 /* KeyCombo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyCombo.swift; path = Sources/HotKey/KeyCombo.swift; sourceTree = "<group>"; };
 		E3B07A0792B2A49FFD2B40CDFA6B3B51 /* ZIPFoundation-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ZIPFoundation-macOS-umbrella.h"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS-umbrella.h"; sourceTree = "<group>"; };
 		E3B638A1764C198481C3016CA762E7D4 /* err.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = err.h; path = macos/include/openssl/err.h; sourceTree = "<group>"; };
-		E68F75440E52F902FFFC1F0E711D069B /* libPods-Gladys.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Gladys.a"; path = "libPods-Gladys.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E68F75440E52F902FFFC1F0E711D069B /* libPods-Gladys.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Gladys.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6ACF09A674B4C682D694DA712CC3D91 /* CallbackURLKit-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CallbackURLKit-iOS-prefix.pch"; sourceTree = "<group>"; };
 		E75AC212BF291BF42265B9614AFDC5BE /* seed.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = seed.h; path = ios/include/openssl/seed.h; sourceTree = "<group>"; };
 		E76B31E51C0DF28B4CE835DF5F30C9FA /* shim.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = shim.h; path = macos/include/openssl/shim.h; sourceTree = "<group>"; };
@@ -470,8 +472,8 @@
 		ED97F29B066C2518413F858B14E6F874 /* x509_vfy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = x509_vfy.h; path = macos/include/openssl/x509_vfy.h; sourceTree = "<group>"; };
 		EDA5BD61DA7D5C46EBD4BDA3D0471FB4 /* rsa.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = rsa.h; path = ios/include/openssl/rsa.h; sourceTree = "<group>"; };
 		EE7AF391637B02B02DF5862CF4B5C161 /* CDEvent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = CDEvent.h; sourceTree = "<group>"; };
-		EF166A667FB654AF6A2459FDA3B3A4C8 /* libPods-MacGladys.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-MacGladys.a"; path = "libPods-MacGladys.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EFB575B7C7E2CAC30A96A26652055672 /* libPods-GladysAction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-GladysAction.a"; path = "libPods-GladysAction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF166A667FB654AF6A2459FDA3B3A4C8 /* libPods-MacGladys.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MacGladys.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFB575B7C7E2CAC30A96A26652055672 /* libPods-GladysAction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GladysAction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0B4763FCC87085BF16689ECEC24A5E3 /* Pods-GladysFramework-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GladysFramework-dummy.m"; sourceTree = "<group>"; };
 		F1E54F915CB79935CF56D99DE5C82F6C /* asn1_mac.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = asn1_mac.h; path = ios/include/openssl/asn1_mac.h; sourceTree = "<group>"; };
 		F20F453EC992A425A802DE6451D8FEE8 /* e_os2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = e_os2.h; path = macos/include/openssl/e_os2.h; sourceTree = "<group>"; };
@@ -479,7 +481,7 @@
 		F2C753A35D4936E0D0DE08723B96D42E /* ec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ec.h; path = macos/include/openssl/ec.h; sourceTree = "<group>"; };
 		F2CCA947B90ED5FA03D1D909D2AE0EF8 /* x509.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = x509.h; path = ios/include/openssl/x509.h; sourceTree = "<group>"; };
 		F33D849AF73CEEA61894E90631A3A9C0 /* Pods-GladysFramework-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysFramework-acknowledgements.plist"; sourceTree = "<group>"; };
-		F36B2E7BB4C3E92E4DF7443FAFF3AE3F /* libHotKey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libHotKey.a; path = libHotKey.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F36B2E7BB4C3E92E4DF7443FAFF3AE3F /* libHotKey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHotKey.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F398A9E946EC877372B0B97E40D62F89 /* ssl2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl2.h; path = macos/include/openssl/ssl2.h; sourceTree = "<group>"; };
 		F46B3D347811665EA8C24C23E911A819 /* Pods-GladysAction-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GladysAction-acknowledgements.plist"; sourceTree = "<group>"; };
 		F46B51D644613D681FE4F93FBB181490 /* Pods-GladysFramework-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GladysFramework-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -621,7 +623,6 @@
 				C1FA3A4E86F78E3DCB099D319660906A /* NSEventModifierFlags+HotKey.swift */,
 				400A9F51C8F00D2FB5CAEA7B877C1029 /* Support Files */,
 			);
-			name = HotKey;
 			path = HotKey;
 			sourceTree = "<group>";
 		};
@@ -733,7 +734,6 @@
 				584A0C0986BB93D9AA38C6F7F6221AC2 /* Core */,
 				147195C8DED333EDE7AB0E678E3841F0 /* Support Files */,
 			);
-			name = CallbackURLKit;
 			path = CallbackURLKit;
 			sourceTree = "<group>";
 		};
@@ -821,7 +821,6 @@
 				CCE191D4230AFD4E8C92EA9ACF35ACF0 /* Queryable.swift */,
 				FEEA420821CFC585AB91CE6DE6D9C174 /* Support Files */,
 			);
-			name = Fuzi;
 			path = Fuzi;
 			sourceTree = "<group>";
 		};
@@ -1018,7 +1017,6 @@
 				69E18D415BD81FFB5F0827ABBEFB5B9C /* FileManager+ZIP.swift */,
 				43794B59612AA942C41AAF181274E377 /* Support Files */,
 			);
-			name = ZIPFoundation;
 			path = ZIPFoundation;
 			sourceTree = "<group>";
 		};
@@ -1028,7 +1026,6 @@
 				9379C149EAD8FBA6F338916472D225D0 /* Static */,
 				822603727CFC1821BD1652D3140336EE /* Support Files */,
 			);
-			name = "OpenSSL-Universal";
 			path = "OpenSSL-Universal";
 			sourceTree = "<group>";
 		};
@@ -1054,7 +1051,6 @@
 				6E9CB97DC9474FEAE4A4258E8E267482 /* compat.h */,
 				7C1F682BE6D37FCFE785B129F7F2E6D4 /* Support Files */,
 			);
-			name = CDEvents;
 			path = CDEvents;
 			sourceTree = "<group>";
 		};
@@ -1495,7 +1491,15 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1110;
+				TargetAttributes = {
+					8B5BB2050078EFCACBEDC5B4195B80CD = {
+						LastSwiftMigration = 1110;
+					};
+					9AF8AE8821E967844EEF26BBB341564D = {
+						LastSwiftMigration = 1110;
+					};
+				};
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 10.0";
@@ -1952,7 +1956,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8AB013B895064BA5A1191D1B6D07C5D8 /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2091,7 +2094,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E00732192CD7710A7E1A0491E8144C14 /* OpenSSL-Universal-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2180,7 +2182,6 @@
 			baseConfigurationReference = BD2BEB17E7157856A208B47197A4B376 /* Pods-MacGladysFramework.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2267,7 +2268,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 02E710399BBFA3FDFE57697C68307610 /* CallbackURLKit-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2294,7 +2294,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 02E710399BBFA3FDFE57697C68307610 /* CallbackURLKit-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2322,7 +2321,6 @@
 			baseConfigurationReference = 36CE325664921C03319BDF1B9D81C0E5 /* Pods-MacGladysFramework.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2345,7 +2343,6 @@
 			baseConfigurationReference = 30A4C4867EFE2F01875D600C67A8C713 /* Pods-MacGladys.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2368,7 +2365,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B97902A39C1566A1D34D66DF2FE6D3F /* HotKey.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2409,7 +2405,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B97902A39C1566A1D34D66DF2FE6D3F /* HotKey.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2435,7 +2430,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83A2D53A8CB24CCDE8ED1DEA26752291 /* ZIPFoundation-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2462,7 +2456,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 628CF25BFF6C2443F733A85B0EA2A40E /* CDEvents.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2534,7 +2527,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83A2D53A8CB24CCDE8ED1DEA26752291 /* ZIPFoundation-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2610,7 +2602,6 @@
 			baseConfigurationReference = C624C8A75A4853B3F0513A5AF1C49CF2 /* Pods-MacGladys.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2633,7 +2624,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8AB013B895064BA5A1191D1B6D07C5D8 /* Fuzi-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2659,7 +2649,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 628CF25BFF6C2443F733A85B0EA2A40E /* CDEvents.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2748,7 +2737,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E00732192CD7710A7E1A0491E8144C14 /* OpenSSL-Universal-macOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;

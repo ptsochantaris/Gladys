@@ -248,6 +248,15 @@ final class PersistedOptions {
         }
     }
     
+    static var readAndStoreFinderTagsAsLabels: Bool {
+        set {
+            defaults.set(newValue, forKey: "ReadAndStoreFinderTagsAsLabels")
+        }
+        get {
+            return defaults.bool(forKey: "ReadAndStoreFinderTagsAsLabels")
+        }
+    }
+    
     static var blockGladysUrlRequests: Bool {
         set {
             defaults.set(newValue, forKey: "BlockGladysUrlRequests")

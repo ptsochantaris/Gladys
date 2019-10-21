@@ -310,8 +310,12 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) {
-		let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
-		contributedLabels = resourceValues?.tagNames
+        if PersistedOptions.readAndStoreFinderTagsAsLabels {
+            let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
+            contributedLabels = resourceValues?.tagNames
+        } else {
+            contributedLabels = nil
+        }
 
 		accessoryTitle = item.lastPathComponent
 		let fm = FileManager.default

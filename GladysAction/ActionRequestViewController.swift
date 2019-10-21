@@ -70,6 +70,7 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 		}
 
 		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
+        expandButton.isHidden = true
 
 		var inputItems = extensionContext?.inputItems as? [NSExtensionItem] ?? []
 

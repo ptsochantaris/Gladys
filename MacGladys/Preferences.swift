@@ -24,6 +24,7 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var autoLabelSwitch: NSButton!
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: NSButton!
     @IBOutlet private weak var autoConvertUrlsSwitch: NSButton!
+    @IBOutlet private weak var convertLabelsToTagsSwitch: NSButton!
 
 	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
@@ -58,6 +59,7 @@ final class Preferences: NSViewController {
 		autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
 		inclusiveSearchTermsSwitch.integerValue = PersistedOptions.inclusiveSearchTerms ? 1 : 0
         autoConvertUrlsSwitch.integerValue = PersistedOptions.automaticallyDetectAndConvertWebLinks ? 1 : 0
+        convertLabelsToTagsSwitch.integerValue = PersistedOptions.readAndStoreFinderTagsAsLabels ? 1 : 0
         launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
@@ -99,6 +101,10 @@ final class Preferences: NSViewController {
 		view.window!.initialFirstResponder = doneButton
 	}
 
+    @IBAction private func convertLabelsToTagsSwitchSelected(_ sender: NSButton) {
+        PersistedOptions.readAndStoreFinderTagsAsLabels = sender.integerValue == 1
+    }
+    
 	@IBAction private func translucencySwitchSelected(_ sender: NSButton) {
 		PersistedOptions.translucentMode = sender.integerValue == 1
 		ViewController.shared.updateTranslucentMode()

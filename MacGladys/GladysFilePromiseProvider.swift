@@ -138,7 +138,7 @@ extension ArchivedDropItemType {
 			try fm.linkItem(at: bytesPath, to: destinationUrl)
 		}
         
-        if let tags = tags, !tags.isEmpty {
+        if let tags = tags, !tags.isEmpty, PersistedOptions.readAndStoreFinderTagsAsLabels {
             try? (destinationUrl as NSURL).setResourceValue(tags, forKey: .tagNamesKey)
         }
 	}
