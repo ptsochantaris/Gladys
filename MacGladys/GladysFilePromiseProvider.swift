@@ -10,16 +10,17 @@ import Cocoa
 
 final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
-	static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType]) -> GladysFilePromiseProvider {
+    static func provider(for component: ArchivedDropItemType, with title: String, extraItems: [ArchivedDropItemType], tags: [String]?) -> GladysFilePromiseProvider {
 		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
 
-		let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath)
+        let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath, tags: tags)
 
 		let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate)
 		p.component = component
 		p.tempPath = tempPath
 		p.strongDelegate = delegate
+        p.tags = tags
 		p.extraItems = extraItems.filter { $0.typeIdentifier != "public.file-url" }
 		return p
 	}
@@ -28,6 +29,7 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 	private var strongDelegate: GladysFileProviderDelegate?
 	private var component: ArchivedDropItemType?
 	private var tempPath: URL?
+    private var tags: [String]?
 
 	public override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
 		var types = super.writableTypes(for: pasteboard)
@@ -59,7 +61,7 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 			let item = extraItems?.first { $0.typeIdentifier == T }
 			if item == nil && T == "public.file-url", let component = component, let tempPath = tempPath {
 				do {
-					try component.writeBytes(to: tempPath)
+                    try component.writeBytes(to: tempPath, tags: tags)
 				} catch {
 					log("Could not create drop data: \(error.localizedDescription)")
 				}
@@ -76,9 +78,11 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 	private weak var typeItem: ArchivedDropItemType?
 	private let title: String
 	private let tempPath: URL
+    private let tags: [String]?
 
-	init(item: ArchivedDropItemType, title: String, tempPath: URL) {
+    init(item: ArchivedDropItemType, title: String, tempPath: URL, tags: [String]?) {
 		typeItem = item
+        self.tags = tags
 		self.title = title
 		self.tempPath = tempPath
 		super.init()
@@ -92,7 +96,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 		do {
 			let fm = FileManager.default
 			if !fm.fileExists(atPath: tempPath.path) {
-				try typeItem?.writeBytes(to: tempPath)
+                try typeItem?.writeBytes(to: tempPath, tags: tags)
 			}
 			if fm.fileExists(atPath: url.path) {
 				try fm.removeItem(at: url)
@@ -107,7 +111,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 }
 
 extension ArchivedDropItemType {
-	func writeBytes(to destinationUrl: URL) throws {
+    fileprivate func writeBytes(to destinationUrl: URL, tags: [String]?) throws {
 
 		Model.trimTemporaryDirectory()
 
@@ -133,5 +137,9 @@ extension ArchivedDropItemType {
 		} else {
 			try fm.linkItem(at: bytesPath, to: destinationUrl)
 		}
+        
+        if let tags = tags, !tags.isEmpty {
+            try? (destinationUrl as NSURL).setResourceValue(tags, forKey: .tagNamesKey)
+        }
 	}
 }

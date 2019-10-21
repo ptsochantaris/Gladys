@@ -217,7 +217,7 @@ final class ArchivedDropItem: Codable {
 		if typeItems.isEmpty { return nil }
 
 		if forDrag, let t = typeItemForFileDrop {
-			return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: typeItems)
+            return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: typeItems, tags: labels)
 		} else {
 			let pi = NSPasteboardItem()
 			typeItems.forEach { $0.add(to: pi) }
