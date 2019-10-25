@@ -983,12 +983,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private func updateLabelIcon() {
 		if Model.isFilteringLabels {
-			labelsButton.image = #imageLiteral(resourceName: "labels-selected")
+			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle.fill")
 			labelsButton.accessibilityLabel = "Labels"
 			labelsButton.accessibilityValue = "Active"
 			title = Model.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
-			labelsButton.image = #imageLiteral(resourceName: "labels-unselected")
+			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle")
 			labelsButton.accessibilityLabel = "Labels"
 			labelsButton.accessibilityValue = "Inactive"
 			title = "Gladys"

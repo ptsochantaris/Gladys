@@ -86,15 +86,15 @@ final class ArchivedItemCell: UICollectionViewCell {
 				let img = UIImageView(frame: .zero)
 				img.translatesAutoresizingMaskIntoConstraints = false
 				img.tintColor = self.tintColor
-				img.contentMode = .center
-				img.image = #imageLiteral(resourceName: "checkmark")
-				img.highlightedImage = #imageLiteral(resourceName: "checkmarkSelected")
+                img.preferredSymbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
+                img.image = UIImage(systemName: "circle")
+                img.highlightedImage = UIImage(systemName: "checkmark.circle.fill")
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
 				holder.backgroundColor = borderView.backgroundColor
 				holder.layer.maskedCorners = .layerMinXMaxYCorner
-				holder.layer.cornerRadius = 10
+				holder.layer.cornerRadius = 20
 				holder.addSubview(img)
 				contentView.addSubview(holder)
 
@@ -102,13 +102,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
 					holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
 
-					holder.widthAnchor.constraint(equalToConstant: 50),
-					holder.heightAnchor.constraint(equalToConstant: 50),
+					holder.widthAnchor.constraint(equalToConstant: 40),
+					holder.heightAnchor.constraint(equalToConstant: 40),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
 					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
-					img.widthAnchor.constraint(equalToConstant: img.image!.size.width),
-					img.heightAnchor.constraint(equalToConstant: img.image!.size.height),
 				])
 
 				tickImage = img

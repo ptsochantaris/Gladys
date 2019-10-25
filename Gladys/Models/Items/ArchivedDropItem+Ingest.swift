@@ -15,10 +15,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 			#endif
 			return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
 		}
-        if #available(iOS 13.0, *) { // iOS 13 apple mail sucks
-            if identifiers.contains("com.apple.mail.email") {
-                identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
-            }
+        if identifiers.contains("com.apple.mail.email") {
+            identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
         }
         return identifiers
 	}

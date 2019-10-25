@@ -6,9 +6,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@IBOutlet private weak var exportOnlyVisibleSwitch: UISwitch!
 
-	@IBOutlet private var headerLabels: [UILabel]!
-	@IBOutlet private var subtitleLabels: [UILabel]!
-
 	private func showExportActivity(_ show: Bool) {
 		if show {
 			spinner.startAnimating()

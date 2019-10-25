@@ -176,7 +176,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		view.backgroundColor = navigationItem.leftBarButtonItem != nil ? .white : .clear
+        view.backgroundColor = navigationItem.leftBarButtonItem != nil ? UIColor.systemBackground : .clear
 	}
 
 	/////////////// search

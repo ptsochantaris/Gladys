@@ -29,10 +29,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
 
-	@IBOutlet private var headerLabels: [UILabel]!
-	@IBOutlet private var subtitleLabels: [UILabel]!
-	@IBOutlet private var titleLabels: [UILabel]!
-
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
 		clearCaches()

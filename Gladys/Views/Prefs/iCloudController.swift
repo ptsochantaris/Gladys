@@ -18,9 +18,6 @@ final class iCloudController: GladysViewController {
 	@IBOutlet private weak var actionUploadSwitch: UISwitch!
 	@IBOutlet private weak var syncNowButton: UIBarButtonItem!
 
-	@IBOutlet private var headerLabels: [UILabel]!
-	@IBOutlet private var subtitleLabels: [UILabel]!
-
 	@IBAction private func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
 	}
