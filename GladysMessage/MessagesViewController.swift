@@ -96,7 +96,6 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 		searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
 			self?.searchUpdated()
 		}
-		itemsView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
 		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ExternalDataUpdated, object: nil)
     }
 

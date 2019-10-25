@@ -29,16 +29,6 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 		labelText.text = label
 	}
 
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		if PersistedOptions.darkMode {
-			labelText.backgroundColor = .gray
-			labelText.textColor = .black
-			headerLabel.textColor = .gray
-			table.separatorColor = .gray
-		}
-	}
-
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: false)

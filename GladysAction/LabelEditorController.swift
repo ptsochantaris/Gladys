@@ -28,13 +28,6 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		if PersistedOptions.darkMode {
-			backgorundView.image = #imageLiteral(resourceName: "darkPaper")
-			labelText.backgroundColor = .gray
-			labelText.textColor = .black
-			headerLabel.textColor = .gray
-			table.separatorColor = .gray
-		}
 		updateFilter(nil)
 	}
 

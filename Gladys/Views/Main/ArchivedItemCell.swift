@@ -60,24 +60,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		bottomLabel.highlightedTextColor = c
 	}
 
-	@objc private func darkModeChanged() {
-		borderView.backgroundColor = borderViewColor
-		topLabel.textColor = plainTextColor
-		bottomLabel.textColor = plainTextColor
-		if PersistedOptions.darkMode {
-			tintColor = .white
-			backgroundView?.backgroundColor = .darkGray
-			image.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
-		} else {
-			tintColor = nil
-			backgroundView?.backgroundColor = .lightGray
-			image.backgroundColor = ViewController.imageLightBackground
-		}
-		shareImage?.tintColor = shareColor
-		shareHolder?.backgroundColor = borderView.backgroundColor
-		tickHolder?.backgroundColor = borderView.backgroundColor
-	}
-
 	var isSelectedForAction: Bool {
 		set {
 			tickImage?.isHighlighted = newValue
@@ -189,16 +171,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private let borderView = UIView()
 
-	private var borderViewColor: UIColor {
-		return PersistedOptions.darkMode ? .darkGray : .white
-	}
-
 	private var plainTextColor: UIColor {
-		if PersistedOptions.darkMode {
-			return ArchivedItemCell.lightTextColor
-		} else {
-			return ArchivedItemCell.darkTextColor
-		}
+        return ArchivedItemCell.darkTextColor
 	}
 
 	private static let darkTextColor = #colorLiteral(red: 0.2980392157, green: 0.2980392157, blue: 0.2980392157, alpha: 1)
@@ -214,7 +188,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		image.clipsToBounds = true
 		image.squircle = !wideCell
 		image.accessibilityIgnoresInvertColors = true
-		contentView.tintColor = .darkGray
+		contentView.tintColor = UIColor(named: "colorDarkGray")
 
 		let b = UIView()
 		b.layer.cornerRadius = 10
@@ -222,14 +196,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		labelStack.setCustomSpacing(3, after: labelsLabel)
 
-		darkModeChanged()
 		borderView.layer.cornerRadius = 10
+        borderView.backgroundColor = backgroundColor
 		b.cover(with: borderView, insets: UIEdgeInsets(top: 0, left: 0, bottom: 0.5, right: 0))
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
-		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
 		contentView.addGestureRecognizer(p)
@@ -660,13 +633,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	func flash() {
+        let originalColor = borderView.backgroundColor
 		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-			self.borderView.backgroundColor = .red
+			self.borderView.backgroundColor = .systemRed
 		}) { finished in
 			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
-				self.borderView.backgroundColor = self.borderViewColor
-			}) { finished in
-			}
+				self.borderView.backgroundColor = originalColor
+            }, completion: nil)
 		}
 	}
 

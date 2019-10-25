@@ -130,20 +130,6 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 		}
 
 		ingestCount = newItems.count
-
-		if PersistedOptions.darkMode {
-			image.alpha = 0.7
-			background.image = nil
-			if let navigationBar = navigationController?.navigationBar {
-				navigationBar.barTintColor = .darkGray
-				navigationBar.tintColor = .lightGray
-			}
-			statusLabel.textColor = .lightGray
-			view.tintColor = .lightGray
-			view.backgroundColor = .black
-			expandButton.setTitleColor(.white, for: .normal)
-			labelsButton.setTitleColor(.white, for: .normal)
-		}
     }
 
 	@IBAction private func expandSelected(_ sender: UIButton) {

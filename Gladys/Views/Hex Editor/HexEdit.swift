@@ -42,11 +42,6 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		navigationController?.setToolbarHidden(false, animated: animated)
 	}
 
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		addressButton.tintColor = ViewController.tintColor
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneLocation = .right
@@ -55,7 +50,6 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		inspectorButton.accessibilityLabel = "Inspect selection"
 		addressItem.accessibilityLabel = "Selected addresses"
 
-		grid.backgroundView = UIImageView(image: (ViewController.shared.itemView.backgroundView as! UIImageView).image)
 		grid.accessibilityTraits = grid.accessibilityTraits.union(.allowsDirectInteraction)
 		grid.accessibilityLabel = "Data grid"
 
@@ -236,12 +230,6 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 	///////////////////////////////////
 
 	private var lastSize = CGSize.zero
-
-	override var preferredContentSize: CGSize {
-		didSet {
-			navigationController?.preferredContentSize = preferredContentSize
-		}
-	}
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()

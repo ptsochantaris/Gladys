@@ -635,14 +635,14 @@ extension CloudManager {
 		log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
 		var needsRetry = false
-		var optionsByRecordZoneID = [CKRecordZone.ID: CKFetchRecordZoneChangesOperation.ZoneOptions]()
+		var optionsByRecordZoneID = [CKRecordZone.ID: CKFetchRecordZoneChangesOperation.ZoneConfiguration]()
 		for zoneID in zoneIDs {
-			let options = CKFetchRecordZoneChangesOperation.ZoneOptions()
+            let options = CKFetchRecordZoneChangesOperation.ZoneConfiguration()
 			options.previousServerChangeToken = PullState.zoneToken(for: zoneID)
 			optionsByRecordZoneID[zoneID] = options
 		}
 
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
+		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: optionsByRecordZoneID)
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
 		}

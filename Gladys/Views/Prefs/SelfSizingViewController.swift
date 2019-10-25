@@ -18,19 +18,6 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
 			selectedIndex = i
 		}
 		delegate = self
-		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
-		darkModeChanged()
-	}
-
-	@objc private func darkModeChanged() {
-		let bar = tabBar
-		bar.barTintColor = GladysViewController.darkColor
-		if PersistedOptions.darkMode {
-			bar.tintColor = #colorLiteral(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
-		} else {
-			bar.tintColor = ViewController.tintColor
-		}
 	}
 
 	private var firstView = true

@@ -51,16 +51,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		return availableToggles.count
 	}
 
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		if PersistedOptions.darkMode {
-			labelText.backgroundColor = .gray
-			labelText.textColor = .black
-			headerLabel.textColor = .gray
-			table.separatorColor = .gray
-		}
-	}
-
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelEditorCell") as! LabelEditorCell
 

@@ -26,13 +26,8 @@ final class PlistEditorCell: UITableViewCell {
 				topDistance.constant = 2
 				bottomDistance.constant = 2
 			}
-			if PersistedOptions.darkMode {
-				titleLabel.textColor = UIColor.lightGray
-				subtitleLabel.textColor = UIColor.lightGray
-			} else {
-				titleLabel.textColor = UIColor.darkText
-				subtitleLabel.textColor = UIColor.darkGray
-			}
+            titleLabel.textColor = UIColor.darkText
+            subtitleLabel.textColor = UIColor(named: "colorDarkGray")
 		}
 	}
 }
@@ -53,16 +48,6 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		doneLocation = .right
 		if !shouldEnableCopyButton, let i = navigationItem.rightBarButtonItems?.firstIndex(of: copyButton) {
 			navigationItem.rightBarButtonItems?.remove(at: i)
-		}
-	}
-
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		backgroundView.image = (ViewController.shared.itemView.backgroundView as! UIImageView).image
-		if PersistedOptions.darkMode {
-			table.separatorColor = UIColor.darkGray
-		} else {
-			table.separatorColor = UIColor.lightGray
 		}
 	}
 
@@ -249,18 +234,41 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
 	private var lastSize = CGSize.zero
 
-	override var preferredContentSize: CGSize {
-		didSet {
-			navigationController?.preferredContentSize = preferredContentSize
-		}
-	}
-
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		if lastSize != view.frame.size && !view.frame.isEmpty {
-			lastSize = view.frame.size
-			let H = max(table.contentSize.height, 50)
-			preferredContentSize = CGSize(width: preferredContentSize.width, height: H)
-		}
+        DispatchQueue.main.async {
+            self.sizeWindow()
+        }
 	}
+    
+    private var firstAppearance = true
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if firstAppearance {
+            firstAppearance = false
+        } else {
+            lastSize = .zero
+            preferredContentSize = .zero
+            sizeWindow()
+        }
+    }
+    
+    private func sizeWindow() {
+        if lastSize != view.frame.size && !view.frame.isEmpty {
+            lastSize = view.frame.size
+            let H = max(table.contentSize.height, 50)
+            preferredContentSize = CGSize(width: preferredContentSize.width, height: H)
+        }
+    }
+}
+
+extension UINavigationController {
+    open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        if let container = container as? GladysViewController {
+            let p = container.preferredContentSize
+            preferredContentSize = CGSize(width: p.width, height: p.height)
+        } else {
+            super.preferredContentSizeDidChange(forChildContentContainer: container)
+        }
+    }
 }

@@ -39,8 +39,8 @@ final class ByteCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		layer.borderWidth = 0.25
-		layer.borderColor = UIColor.lightGray.cgColor
-		letter.textColor = .gray
+		layer.borderColor = UIColor(named: "colorLightGray")!.cgColor
+		letter.textColor = UIColor(named: "colorGray")
 		isAccessibilityElement = true
 		accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
 		updateSelected()
@@ -48,16 +48,12 @@ final class ByteCell: UICollectionViewCell {
 
 	private func updateSelected() {
 		if isSelected {
-			letter.textColor = .lightGray
+			letter.textColor = UIColor(named: "colorLightGray")
 			label.textColor = .white
-			label.backgroundColor = .darkGray
+			label.backgroundColor = UIColor(named: "colorTint")
 		} else {
-			if PersistedOptions.darkMode {
-				label.textColor = .lightGray
-			} else {
-				label.textColor = .darkGray
-			}
-			letter.textColor = .gray
+            letter.textColor = UIColor(named: "colorGray")
+            label.textColor = UIColor(named: "colorDarkGray")
 			label.backgroundColor = .clear
 		}
 	}

@@ -35,21 +35,6 @@ final class AboutController: GladysViewController {
 		versionLabel.title = "v\(v) (\(b))"
 	}
 
-	@objc override func darkModeChanged() {
-		super.darkModeChanged()
-		if PersistedOptions.darkMode {
-			logo.alpha = 0.8
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		} else {
-			logo.alpha = 1
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		}
-	}
-
 	@IBAction private func aboutSelected(_ sender: UIButton) {
 		let u = URL(string: "https://bru.build/app/gladys")!
 		UIApplication.shared.open(u, options: [:]) { success in

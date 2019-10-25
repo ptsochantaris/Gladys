@@ -41,24 +41,20 @@ final class AsciiCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		layer.borderWidth = 0.25
-		layer.borderColor = UIColor.lightGray.cgColor
-		label.textColor = .gray
+		layer.borderColor = UIColor(named: "colorLightGray")!.cgColor
+		label.textColor = UIColor(named: "colorGray")
 		isAccessibilityElement = true
 		updateSelected()
 	}
 
 	private func updateSelected() {
 		if isSelected {
-			label.textColor = .lightGray
+			label.textColor = UIColor(named: "colorLightGray")
 			letter.textColor = .white
-			letter.backgroundColor = .darkGray
+			letter.backgroundColor = UIColor(named: "colorTint")
 		} else {
-			if PersistedOptions.darkMode {
-				letter.textColor = .lightGray
-			} else {
-				letter.textColor = .darkGray
-			}
-			label.textColor = .gray
+            label.textColor = UIColor(named: "colorGray")
+            letter.textColor = UIColor(named: "colorDarkGray")
 			letter.backgroundColor = .clear
 		}
 	}

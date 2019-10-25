@@ -48,10 +48,6 @@ final class DetailController: GladysViewController,
 		dateLabel.text = item.addedString
 		dateItem.customView = dateLabelHolder
 
-		if PersistedOptions.darkMode {
-			navigationController?.navigationBar.titleTextAttributes = ViewController.shared.navigationController?.navigationBar.titleTextAttributes
-		}
-
 		if !CloudManager.syncSwitchedOn {
 			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
 		}
@@ -94,7 +90,7 @@ final class DetailController: GladysViewController,
 			case .elsewhereReadOnly, .elsewhereReadWrite:
 				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
 				invitesButton.accessibilityLabel = "Imported Share Options"
-				invitesButton.tintColor = .gray
+                invitesButton.tintColor = UIColor(named: "colorGray")
 			case .sharing:
 				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
 				invitesButton.accessibilityLabel = "Exported Share Options"
@@ -197,12 +193,6 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	override var preferredContentSize: CGSize {
-		didSet {
-			navigationController?.preferredContentSize = preferredContentSize
-		}
-	}
-
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)
@@ -239,7 +229,7 @@ final class DetailController: GladysViewController,
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		//log("laid-out for \(view.bounds.size)")
-		sizeWindow()
+        sizeWindow()
 	}
 
 	private var initialWidth: CGFloat = 0
@@ -263,10 +253,16 @@ final class DetailController: GladysViewController,
 		preferredContentSize = preferredSize
 	}
 
+    private var firstAppearance = true
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		//log("view showing")
-		sizeWindow()
+        if firstAppearance {
+            firstAppearance = false
+        } else { // force resize
+            preferredContentSize = .zero
+            sizeWindow()
+        }
 	}
 
 	override var keyCommands: [UIKeyCommand]? {
@@ -644,11 +640,6 @@ final class DetailController: GladysViewController,
 					d.detailActivity = userActivity
 					d.sourceItem = item
 					if let p = d.popoverPresentationController {
-						if PersistedOptions.darkMode {
-							p.backgroundColor = .darkGray
-						} else {
-							p.backgroundColor = .white
-						}
 						p.delegate = self
 					}
 				}
@@ -667,9 +658,6 @@ final class DetailController: GladysViewController,
 			p.permittedArrowDirections = [.left, .right]
 			d.delegate = self
 			p.delegate = self
-			if PersistedOptions.darkMode {
-				p.backgroundColor = ViewController.darkColor
-			}
 			if indexPath.row < item.labels.count {
 				d.title = "Edit Label"
 				d.label = item.labels[indexPath.row]

@@ -116,11 +116,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			})
 		} else if dragModePanel.superview == nil, show {
 			dragModeReverse = false
-			if PersistedOptions.darkMode {
-				dragModePanel.tintColor = self.navigationController?.navigationBar.tintColor
-				dragModePanel.backgroundColor = ViewController.darkColor
-				dragModeTitle.textColor = .white
-			}
 			updateDragModeOverlay()
 			view.addSubview(dragModePanel)
 			let top = dragModePanel.topAnchor.constraint(equalTo: collection.topAnchor)
@@ -382,10 +377,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
 
-	private var patternColor: UIColor {
-		return UIColor(patternImage: (collection.backgroundView as! UIImageView).image!)
-	}
-
 	var phoneMode: Bool {
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
@@ -406,13 +397,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			p.sourceView = navigationController!.view
 			p.delegate = self
 
-			let c = patternColor
-			p.backgroundColor = c
-
-			for n in t.viewControllers ?? [] {
-				n.view.backgroundColor = c
-			}
-
 		case "showDetail":
 			guard let item = sender as? ArchivedDropItem,
 				let indexPath = mostRecentIndexPathActioned,
@@ -425,14 +409,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 			d.item = item
 
-			let c = patternColor
-			n.view.backgroundColor = c
-
 			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: myNavView)
 			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.down, .left, .right]
 			p.sourceView = navigationController!.view
 			p.sourceRect = cellRect
-			p.backgroundColor = c
 			p.delegate = self
 
 			if componentDropActiveFromDetailView != nil {
@@ -445,9 +425,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				else { return }
 
 			p.delegate = self
-			if PersistedOptions.darkMode {
-				p.backgroundColor = ViewController.darkColor
-			}
 			if isEditing {
 				setEditing(false, animated: true)
 			}
@@ -459,9 +436,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				else { return }
 
 			p.delegate = self
-			if PersistedOptions.darkMode {
-				p.backgroundColor = ViewController.darkColor
-			}
 			e.selectedItems = selectedItems
 			e.endCallback = { [weak self] hasChanges in
 				if hasChanges {
@@ -571,35 +545,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		dragModePanel.alpha = 0
 	}
 
-	@objc override func darkModeChanged() {
-		super.darkModeChanged()
-
-		lastSyncUpdate()
-
-		if PersistedOptions.darkMode {
-			collection.backgroundView = UIImageView(image: #imageLiteral(resourceName: "darkPaper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
-			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-				DispatchQueue.main.async {
-					t.textColor = .lightGray
-				}
-			}
-		} else {
-			collection.backgroundView = UIImageView(image: #imageLiteral(resourceName: "paper").resizableImage(withCapInsets: .zero, resizingMode: .tile))
-			if let t = navigationItem.searchController?.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-				DispatchQueue.main.async {
-					t.textColor = .darkText
-				}
-			}
-		}
-
-		if let nav = firstPresentedNavigationController {
-			nav.popoverPresentationController?.backgroundColor = patternColor
-			nav.tabBarController?.viewControllers?.forEach {
-				$0.view.backgroundColor = patternColor
-			}
-		}
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -616,22 +561,19 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		CSSearchableIndex.default().indexDelegate = Model.indexDelegate
 
 		navigationController?.navigationBar.titleTextAttributes = [
-			.foregroundColor: UIColor.lightGray
+            .foregroundColor: UIColor(named: "colorLightGray")!
 		]
 		navigationController?.navigationBar.largeTitleTextAttributes = [
-			.foregroundColor: UIColor.lightGray
+			.foregroundColor: UIColor(named: "colorLightGray")!
 		]
 
 		let searchController = UISearchController(searchResultsController: nil)
-		searchController.dimsBackgroundDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.delegate = self
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 
-		darkModeChanged()
-		
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
 		    Model.filter = searchController?.searchBar.text
 			self?.didUpdateItems()
@@ -656,7 +598,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
-		emptyView?.alpha = PersistedOptions.darkMode ? 0.5 : 1
+		emptyView?.alpha = 1
 		blurb("Ready! Drop me stuff.")
 
 		cloudStatusChanged()
@@ -747,11 +689,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private func lastSyncUpdate() {
 		if let r = collection.refreshControl {
-			if PersistedOptions.darkMode {
-				r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor.lightGray])
-			} else {
-				r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor.darkGray])
-			}
+            r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor(named: "colorDarkGray")!])
 		}
 	}
 
@@ -1066,7 +1004,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			l.tag = 9265
 			l.translatesAutoresizingMaskIntoConstraints = false
 			l.font = UIFont.preferredFont(forTextStyle: .caption2)
-			l.textColor = .darkGray
+			l.textColor = UIColor(named: "colorDarkGray")
 			l.textAlignment = .center
 			l.text = message
 			l.numberOfLines = 0
@@ -1102,7 +1040,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			if animated {
 				e.alpha = 0
 				UIView.animate(animations: {
-					e.alpha = PersistedOptions.darkMode ? 0.5 : 1
+					e.alpha = 1
 				})
 			}
 

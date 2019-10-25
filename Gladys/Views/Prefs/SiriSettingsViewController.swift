@@ -40,29 +40,15 @@ final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortc
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		if PersistedOptions.darkMode {
-			backgroundView.backgroundColor = .darkGray
-		} else {
-			backgroundView.backgroundColor = .white
-		}
+        backgroundView.backgroundColor = .white
 
-		let darkMode = PersistedOptions.darkMode
-		let style: INUIAddVoiceShortcutButtonStyle = darkMode ? .white : .black
+		let style: INUIAddVoiceShortcutButtonStyle = .black
 
 		let pasteInGladysShortcutButton = INUIAddVoiceShortcutButton(style: style)
 		pasteInGladysShortcutButton.shortcut = INShortcut(intent: ViewController.shared.pasteIntent)
 		pasteInGladysShortcutButton.place(in: pasteInGladysContainer, buttonDelegate: self)
 
 		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .fittingSizeLevel)
-	}
-
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		let d = PersistedOptions.darkMode
-
-		let color: UIColor = d ? .lightText : .gray
-		headers.forEach { $0.textColor = color }
-		footers.forEach { $0.textColor = color }
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

@@ -27,21 +27,6 @@ final class PersistedOptions {
 		}
 	}
 
-	private static var darkModeCache: Bool?
-	static var darkMode: Bool {
-		get {
-			if let c = darkModeCache {
-				return c
-			}
-			darkModeCache = defaults.bool(forKey: "darkMode")
-			return darkModeCache!
-		}
-		set {
-			darkModeCache = newValue
-			defaults.set(newValue, forKey: "darkMode")
-		}
-	}
-
 	private static var wideModeCache: Bool?
 	static var wideMode: Bool {
 		get {

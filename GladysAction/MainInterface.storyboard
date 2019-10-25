@@ -2,8 +2,8 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,9 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="RFu-pz-evy">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                            </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jgp-rO-Atm">
                                 <rect key="frame" x="20" y="92" width="280" height="342.5"/>
                                 <subviews>
@@ -54,15 +51,11 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="bottom" secondItem="zMn-AG-sqS" secondAttribute="bottom" id="0lB-pB-HOQ"/>
                             <constraint firstItem="VVe-Uw-JpX" firstAttribute="trailing" secondItem="Jgp-rO-Atm" secondAttribute="trailing" constant="20" id="424-fi-hyc"/>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="trailing" secondItem="zMn-AG-sqS" secondAttribute="trailing" id="QOb-OG-LDz"/>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="top" secondItem="zMn-AG-sqS" secondAttribute="top" id="TES-2o-PaI"/>
                             <constraint firstItem="QQw-Qu-GXD" firstAttribute="centerY" secondItem="VVe-Uw-JpX" secondAttribute="centerY" constant="-60" id="gLQ-VJ-cOr"/>
                             <constraint firstItem="Jgp-rO-Atm" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" constant="20" id="khb-nu-x5i"/>
-                            <constraint firstItem="RFu-pz-evy" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leading" id="wiH-mX-EYz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VVe-Uw-JpX"/>
                     </view>
@@ -77,7 +70,6 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
-                        <outlet property="background" destination="RFu-pz-evy" id="grm-I2-xGE"/>
                         <outlet property="cancelButton" destination="4KA-eY-A04" id="57d-sC-Z7T"/>
                         <outlet property="expandButton" destination="S0c-iC-66X" id="RvU-Fc-FKn"/>
                         <outlet property="image" destination="QQw-Qu-GXD" id="KtA-qT-8Ay"/>
@@ -119,9 +111,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="Cu2-ky-cFp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                            </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5aI-Qq-s6Y">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -191,16 +180,12 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="F5v-aE-vAS" firstAttribute="trailing" secondItem="5aI-Qq-s6Y" secondAttribute="trailing" id="1LW-Ba-24I"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="trailing" secondItem="gjt-sS-I4S" secondAttribute="trailing" id="6lp-D3-IcL"/>
                             <constraint firstAttribute="bottom" secondItem="5aI-Qq-s6Y" secondAttribute="bottom" id="DVM-NA-HnK"/>
                             <constraint firstItem="5aI-Qq-s6Y" firstAttribute="leading" secondItem="F5v-aE-vAS" secondAttribute="leading" id="Hp8-0Y-kNV"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="leading" secondItem="gjt-sS-I4S" secondAttribute="leading" id="O2o-oq-8ZZ"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="bottom" secondItem="gjt-sS-I4S" secondAttribute="bottom" id="T2V-sM-JzJ"/>
                             <constraint firstItem="5aI-Qq-s6Y" firstAttribute="top" secondItem="gjt-sS-I4S" secondAttribute="top" id="sXq-99-hiQ"/>
-                            <constraint firstItem="Cu2-ky-cFp" firstAttribute="top" secondItem="gjt-sS-I4S" secondAttribute="top" id="sgh-OE-V7T"/>
                         </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
@@ -214,7 +199,6 @@
                     </navigationItem>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
-                        <outlet property="backgorundView" destination="Cu2-ky-cFp" id="jYa-te-xyD"/>
                         <outlet property="headerLabel" destination="iEP-oB-gY3" id="cAF-Ky-fg6"/>
                         <outlet property="headerView" destination="1oI-9b-WQS" id="SAT-L7-vmh"/>
                         <outlet property="labelText" destination="gCw-g5-P07" id="Nqy-EP-3PQ"/>
@@ -285,7 +269,9 @@
         <image name="checkmark" width="28" height="26"/>
         <image name="checkmarkSelected" width="28" height="26"/>
         <image name="gladysImage" width="1024" height="1024"/>
-        <image name="paper" width="2100" height="1500"/>
+        <namedColor name="colorPaper">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
     <color key="tintColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

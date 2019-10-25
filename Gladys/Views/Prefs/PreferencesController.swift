@@ -9,37 +9,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@IBOutlet private var headerLabels: [UILabel]!
 	@IBOutlet private var subtitleLabels: [UILabel]!
 
-	@objc override func darkModeChanged() {
-		super.darkModeChanged()
-		if PersistedOptions.darkMode {
-			container.backgroundColor = .gray
-			zipContainer.backgroundColor = .gray
-			zipInnerFrame.backgroundColor = ViewController.darkColor
-			innerFrame.backgroundColor = ViewController.darkColor
-			spinner.color = ViewController.tintColor
-			zipSpinner.color = ViewController.tintColor
-			for l in headerLabels {
-				l.textColor = UIColor.lightGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		} else {
-			container.backgroundColor = .white
-			zipContainer.backgroundColor = .white
-			zipInnerFrame.backgroundColor = ViewController.imageLightBackground
-			innerFrame.backgroundColor = ViewController.imageLightBackground
-			spinner.color = zipImage.tintColor
-			zipSpinner.color = zipImage.tintColor
-			for l in headerLabels {
-				l.textColor = UIColor.darkGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		}
-	}
-
 	private func showExportActivity(_ show: Bool) {
 		if show {
 			spinner.startAnimating()
@@ -225,7 +194,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		zipInnerFrame.layer.cornerRadius = 5
 
 		exportOnlyVisibleSwitch.onTintColor = view.tintColor
-		exportOnlyVisibleSwitch.tintColor = .lightGray
+		exportOnlyVisibleSwitch.tintColor = UIColor(named: "colorLightGray")
 		exportOnlyVisibleSwitch.isOn = PersistedOptions.exportOnlyVisibleItems
 
 		let dragInteraction = UIDragInteraction(delegate: self)

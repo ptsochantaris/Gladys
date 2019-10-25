@@ -29,15 +29,6 @@ final class NotesEditorViewController: GladysViewController {
 		textView.becomeFirstResponder()
 	}
 
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		if PersistedOptions.darkMode {
-			textView.backgroundColor = GladysViewController.darkColor
-			textView.textColor = UIColor.lightGray
-			navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkGray]
-		}
-	}
-
 	@IBAction func saveSelected(_ sender: UIBarButtonItem) {
 		let text = textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 		delegate?.newNoteSaved(note: text)

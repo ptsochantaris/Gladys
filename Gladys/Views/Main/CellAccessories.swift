@@ -96,7 +96,7 @@ final class MiniMapView: UIImageView {
 		let O = MKMapSnapshotter.Options()
 		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
 		O.showsBuildings = true
-		O.showsPointsOfInterest = true
+        O.pointOfInterestFilter = .includingAll
 		O.size = bounds.size
 		snapshotOptions = O
 

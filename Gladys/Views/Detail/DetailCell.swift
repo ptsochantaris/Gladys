@@ -66,7 +66,7 @@ final class DetailCell: UITableViewCell {
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
-		b.backgroundColor = .lightGray
+		b.backgroundColor = UIColor(named: "colorLightGray")
 		b.layer.cornerRadius = 10
 		contentView.insertSubview(b, belowSubview: borderView)
 		NSLayoutConstraint.activate([
@@ -75,14 +75,6 @@ final class DetailCell: UITableViewCell {
 			b.trailingAnchor.constraint(equalTo: borderView.trailingAnchor),
 			b.bottomAnchor.constraint(equalTo: borderView.bottomAnchor, constant: 0.5)
 		])
-
-		if PersistedOptions.darkMode {
-			borderView.backgroundColor = .darkGray
-			b.backgroundColor = ViewController.darkColor
-			nameHolder.backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
-			name.textColor = ViewController.tintColor
-			desc.textColor = .lightGray
-		}
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
@@ -117,7 +109,7 @@ final class DetailCell: UITableViewCell {
 	func animateArchive(_ animate: Bool) {
 		let existingSpinner = contentView.viewWithTag(72634) as? UIActivityIndicatorView
 		if animate, existingSpinner == nil {
-			let a = UIActivityIndicatorView(style: .gray)
+			let a = UIActivityIndicatorView(style: .medium)
 			a.tag = 72634
 			a.color = tintColor
 			a.translatesAutoresizingMaskIntoConstraints = false

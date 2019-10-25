@@ -23,38 +23,11 @@ class GladysViewController: UIViewController {
 		UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 	}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		darkModeChanged()
-		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(darkModeChanged), name: .DarkModeChanged, object: nil)
-	}
-
-	@objc func darkModeChanged() {
-		guard let nav = navigationController?.navigationBar, let bar = navigationController?.toolbar else { return }
-
-		let d = GladysViewController.darkColor
-		nav.barTintColor = d
-		bar.barTintColor = d
-
-		let c = GladysViewController.tintColor
-		nav.tintColor = c
-		view.tintColor = c
-		bar.tintColor = c
-	}
-
 	static var tintColor: UIColor {
-		if PersistedOptions.darkMode {
-			return .lightGray
-		} else {
-			return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
-		}
+        return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
 	}
 
 	static var darkColor: UIColor? {
-		if PersistedOptions.darkMode {
-			return #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 1)
-		}
 		return nil
 	}
 
@@ -136,8 +109,8 @@ class GladysViewController: UIViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
 		var a = [
-			UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(scrollDown), discoverabilityTitle: "Scroll Down"),
-			UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(scrollUp), discoverabilityTitle: "Scroll Up"),
+			UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow),
+			UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow),
 		]
 		if self.popoverPresenter != nil {
 			let w = UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(done), discoverabilityTitle: "Close This View")

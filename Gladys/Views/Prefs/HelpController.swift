@@ -10,16 +10,6 @@ import UIKit
 
 final class HelpControllerCell: UITableViewCell {
 	@IBOutlet weak var label: UILabel!
-
-	var darkMode = false {
-		didSet {
-			if darkMode {
-				label.textColor = .lightGray
-			} else {
-				label.textColor = .darkGray
-			}
-		}
-	}
 }
 
 final class HelpController: GladysViewController, UITableViewDataSource, UITableViewDelegate {
@@ -31,11 +21,6 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		doneLocation = .right
 		table.backgroundView = nil
 		table.backgroundColor = .clear
-	}
-
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		table.reloadData()
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
@@ -52,7 +37,6 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		cell.selectionStyle = hasLink ? .default : .none
 		cell.accessoryType = hasLink ? .disclosureIndicator : .none
 		cell.label.text = text(for: indexPath.section)
-		cell.darkMode = PersistedOptions.darkMode
 		return cell
 	}
 

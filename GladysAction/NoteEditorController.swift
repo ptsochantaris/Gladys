@@ -22,10 +22,6 @@ final class NoteEditorController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		if PersistedOptions.darkMode {
-			textView.backgroundColor = UIColor.black
-			textView.textColor = UIColor.lightGray
-		}
 		textView.text = initialNote
 	}
 

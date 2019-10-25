@@ -97,7 +97,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		O.region = MKCoordinateRegion(center: mapItem.placemark.coordinate, latitudinalMeters: 150.0, longitudinalMeters: 150.0)
 		O.size = size
 		O.showsBuildings = true
-		O.showsPointsOfInterest = true
+        O.pointOfInterestFilter = .includingAll
 		let S = MKMapSnapshotter(options: O)
 		S.start { snapshot, error in
 			if let error = error {

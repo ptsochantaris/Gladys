@@ -39,40 +39,16 @@ final class iCloudController: GladysViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
-		icloudSwitch.tintColor = .lightGray
+		icloudSwitch.tintColor = UIColor(named: "colorLightGray")
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
 
 		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
-		limitToWiFiSwitch.tintColor = .lightGray
+		limitToWiFiSwitch.tintColor = UIColor(named: "colorLightGray")
 
 		actionUploadSwitch.isOn = CloudManager.shareActionShouldUpload
-		actionUploadSwitch.tintColor = .lightGray
+		actionUploadSwitch.tintColor = UIColor(named: "colorLightGray")
 
 		updateiCloudControls()
-	}
-
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		icloudSpinner.color = ViewController.tintColor
-		icloudSwitch.onTintColor = view.tintColor
-		limitToWiFiSwitch.onTintColor = view.tintColor
-		actionUploadSwitch.onTintColor = view.tintColor
-		eraseAlliCloudData.tintColor = view.tintColor
-		if PersistedOptions.darkMode {
-			for l in headerLabels {
-				l.textColor = UIColor.lightGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		} else {
-			for l in headerLabels {
-				l.textColor = UIColor.darkGray
-			}
-			for s in subtitleLabels {
-				s.textColor = UIColor.gray
-			}
-		}
 	}
 
 	@IBAction private func eraseiCloudDataSelected(_ sender: UIButton) {

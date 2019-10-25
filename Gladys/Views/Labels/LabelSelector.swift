@@ -33,7 +33,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			emptyLabel.isHidden = true
 
 			let searchController = UISearchController(searchResultsController: nil)
-			searchController.dimsBackgroundDuringPresentation = false
+			searchController.obscuresBackgroundDuringPresentation = false
 			searchController.obscuresBackgroundDuringPresentation = false
 			searchController.delegate = self
 			searchController.searchResultsUpdater = self
@@ -42,21 +42,11 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
 
-			if PersistedOptions.darkMode {
-				table.separatorColor = .gray
-				if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-					DispatchQueue.main.async {
-						t.textColor = .lightGray
-					}
-				}
-			} else {
-				if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-					DispatchQueue.main.async {
-						t.textColor = .darkText
-					}
-				}
-			}
-
+            if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
+                DispatchQueue.main.async {
+                    t.textColor = .darkText
+                }
+            }
 		}
 
 		table.tableFooterView = UIView()
@@ -89,12 +79,10 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	private func sizeWindow() {
 		if table.isHidden {
-			navigationController?.preferredContentSize = CGSize(width: 240, height: 240)
+			preferredContentSize = CGSize(width: 240, height: 240)
 		} else {
-			navigationController!.view.layoutIfNeeded()
-			let n = navigationController!.navigationBar
-			let full = table.contentSize.height + n.frame.size.height + 8
-			navigationController!.preferredContentSize = CGSize(width: 240, height: full)
+			let full = table.contentSize.height + 8
+			preferredContentSize = CGSize(width: 240, height: full)
 		}
 	}
 

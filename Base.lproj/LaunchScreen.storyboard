@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="ipad9_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,9 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paper" translatesAutoresizingMaskIntoConstraints="NO" id="ZWG-NS-L2S">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="b9H-D8-eYA">
                                 <rect key="frame" x="304" y="432" width="160" height="160"/>
                                 <constraints>
@@ -33,20 +29,16 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just a sec..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wKQ-ii-lGp">
                                 <rect key="frame" x="304" y="600" width="160" height="14"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="colorDarkGray"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="wKQ-ii-lGp" firstAttribute="top" secondItem="b9H-D8-eYA" secondAttribute="bottom" constant="8" id="AkK-WO-OA2"/>
-                            <constraint firstAttribute="trailing" secondItem="ZWG-NS-L2S" secondAttribute="trailing" id="ENg-LM-nrf"/>
                             <constraint firstItem="b9H-D8-eYA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="HNy-f8-BFo"/>
                             <constraint firstItem="b9H-D8-eYA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="HXx-ah-1Ay"/>
                             <constraint firstItem="wKQ-ii-lGp" firstAttribute="width" secondItem="b9H-D8-eYA" secondAttribute="width" id="Ql4-am-v0S"/>
-                            <constraint firstAttribute="bottom" secondItem="ZWG-NS-L2S" secondAttribute="bottom" id="Srr-k1-IVg"/>
-                            <constraint firstItem="ZWG-NS-L2S" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="gvL-GF-sbL"/>
-                            <constraint firstItem="ZWG-NS-L2S" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="oG7-bv-bs5"/>
                             <constraint firstItem="wKQ-ii-lGp" firstAttribute="centerX" secondItem="b9H-D8-eYA" secondAttribute="centerX" id="wPs-JV-cBR"/>
                         </constraints>
                     </view>
@@ -58,6 +50,12 @@
     </scenes>
     <resources>
         <image name="gladysImage" width="1024" height="1024"/>
-        <image name="paper" width="2100" height="1500"/>
+        <namedColor name="colorDarkGray">
+            <color red="0.33300000000000002" green="0.33300000000000002" blue="0.33300000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorPaper">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
+    <color key="tintColor" name="colorTint"/>
 </document>

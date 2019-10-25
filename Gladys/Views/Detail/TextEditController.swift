@@ -55,12 +55,6 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
 	}
 
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		backgroundView.image = (ViewController.shared.itemView.backgroundView as! UIImageView).image
-		textView.textColor = PersistedOptions.darkMode ? UIColor.lightGray : UIColor.darkText
-	}
-
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			bottomDistance.constant = 0

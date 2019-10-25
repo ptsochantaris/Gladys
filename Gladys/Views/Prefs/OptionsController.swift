@@ -16,7 +16,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var dontAutoLabelNewItemsSwitch: UISwitch!
 	@IBOutlet private weak var displayNotesInMainViewSwitch: UISwitch!
 	@IBOutlet private weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
-	@IBOutlet private weak var darkModeSwitch: UISwitch!
 	@IBOutlet private weak var fullScreenSwitch: UISwitch!
 	@IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
 	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
@@ -109,11 +108,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		ViewController.shared.reloadData(onlyIfPopulated: true)
 	}
 
-	@IBAction private func darkModeSelected(_ sender: UISwitch) {
-		PersistedOptions.darkMode = sender.isOn
-		NotificationCenter.default.post(name: .DarkModeChanged, object: nil)
-	}
-
 	@IBAction private func fullScreenPreviewsSelected(_ sender: UISwitch) {
 		PersistedOptions.fullScreenPreviews = sender.isOn
 	}
@@ -126,34 +120,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.blockGladysUrlRequests = sender.isOn
     }
     
-	override func darkModeChanged() {
-		super.darkModeChanged()
-		separateItemsSwitch.onTintColor = view.tintColor
-		twoColumnsSwitch.onTintColor = view.tintColor
-		removeItemsWhenDraggedOutSwitch.onTintColor = view.tintColor
-		dontAutoLabelNewItemsSwitch.onTintColor = view.tintColor
-		displayNotesInMainViewSwitch.onTintColor = view.tintColor
-		displayLabelsInMainViewSwitch.onTintColor = view.tintColor
-		showCopyMoveSwitchSelectorSwitch.onTintColor = view.tintColor
-		darkModeSwitch.onTintColor = view.tintColor
-		fullScreenSwitch.onTintColor = view.tintColor
-		allowLabelsInExtensionSwitch.onTintColor = view.tintColor
-		wideModeSwitch.onTintColor = view.tintColor
-		autoArchiveSwitch.onTintColor = view.tintColor
-		exclusiveLabelsSwitch.onTintColor = view.tintColor
-		inclusiveSearchTermsSwitch.onTintColor = view.tintColor
-        autoConvertUrlsSwitch.onTintColor = view.tintColor
-        blockGladysUrls.onTintColor = view.tintColor
-
-        subtitleLabels.forEach { $0.textColor = UIColor.gray }
-		titleLabels.forEach { $0.textColor = ViewController.tintColor }
-		if PersistedOptions.darkMode {
-			headerLabels.forEach { $0.textColor = UIColor.lightGray }
-		} else {
-			headerLabels.forEach { $0.textColor = UIColor.darkGray }
-		}
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -165,68 +131,59 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 		doneLocation = .right
 
-        autoConvertUrlsSwitch.tintColor = .lightGray
+        autoConvertUrlsSwitch.tintColor = UIColor(named: "colorLightGray")
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
         
-        blockGladysUrls.tintColor = .lightGray
+        blockGladysUrls.tintColor = UIColor(named: "colorLightGray")
         blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests
         
-		separateItemsSwitch.tintColor = .lightGray
+		separateItemsSwitch.tintColor = UIColor(named: "colorLightGray")
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 
-		twoColumnsSwitch.tintColor = .lightGray
+		twoColumnsSwitch.tintColor = UIColor(named: "colorLightGray")
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 
-		removeItemsWhenDraggedOutSwitch.tintColor = .lightGray
+		removeItemsWhenDraggedOutSwitch.tintColor = UIColor(named: "colorLightGray")
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut
 
-		dontAutoLabelNewItemsSwitch.tintColor = .lightGray
+		dontAutoLabelNewItemsSwitch.tintColor = UIColor(named: "colorLightGray")
 		dontAutoLabelNewItemsSwitch.isOn = PersistedOptions.dontAutoLabelNewItems
 
-		displayNotesInMainViewSwitch.tintColor = .lightGray
+		displayNotesInMainViewSwitch.tintColor = UIColor(named: "colorLightGray")
 		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
 
-		displayLabelsInMainViewSwitch.tintColor = .lightGray
+		displayLabelsInMainViewSwitch.tintColor = UIColor(named: "colorLightGray")
 		displayLabelsInMainViewSwitch.isOn = PersistedOptions.displayLabelsInMainView
 
-		showCopyMoveSwitchSelectorSwitch.tintColor = .lightGray
+		showCopyMoveSwitchSelectorSwitch.tintColor = UIColor(named: "colorLightGray")
 		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
 
-		allowLabelsInExtensionSwitch.tintColor = .lightGray
+		allowLabelsInExtensionSwitch.tintColor = UIColor(named: "colorLightGray")
 		allowLabelsInExtensionSwitch.isOn = PersistedOptions.setLabelsWhenActioning
 
-		inclusiveSearchTermsSwitch.tintColor = .lightGray
+		inclusiveSearchTermsSwitch.tintColor = UIColor(named: "colorLightGray")
 		inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
 
-		autoArchiveSwitch.tintColor = .lightGray
+		autoArchiveSwitch.tintColor = UIColor(named: "colorLightGray")
 		autoArchiveSwitch.isOn = PersistedOptions.autoArchiveUrlComponents
 
-		exclusiveLabelsSwitch.tintColor = .lightGray
+		exclusiveLabelsSwitch.tintColor = UIColor(named: "colorLightGray")
 		exclusiveLabelsSwitch.isOn = PersistedOptions.exclusiveMultipleLabels
 
-		darkModeSwitch.tintColor = .lightGray
-		darkModeSwitch.isOn = PersistedOptions.darkMode
-
-		wideModeSwitch.tintColor = .lightGray
+		wideModeSwitch.tintColor = UIColor(named: "colorLightGray")
 		wideModeSwitch.isOn = PersistedOptions.wideMode
 
-		fullScreenSwitch.tintColor = .lightGray
+		fullScreenSwitch.tintColor = UIColor(named: "colorLightGray")
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
 
 		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue
-
-		darkModeChanged()
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
 		if #available(iOS 12.0, *) {
 			if segue.identifier == "toSiriOptions", let p = segue.destination.popoverPresentationController {
-				if PersistedOptions.darkMode {
-					p.backgroundColor = .darkGray
-				} else {
-					p.backgroundColor = .white
-				}
+                p.backgroundColor = .white
 				p.delegate = self
 			}
 		}

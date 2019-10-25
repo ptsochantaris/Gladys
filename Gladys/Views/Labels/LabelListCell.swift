@@ -10,12 +10,5 @@ import UIKit
 
 final class LabelListCell: UITableViewCell {
 	@IBOutlet weak var labelName: UILabel!
-
-	override func awakeFromNib() {
-		super.awakeFromNib()
-		if PersistedOptions.darkMode {
-			labelName.textColor = .lightGray
-		}
-	}
 }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,7 +19,7 @@
                             <collectionView clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
                                 <rect key="frame" x="0.0" y="0.0" width="800" height="800"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="colorPaper"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="O1B-Q3-jL2">
                                     <size key="itemSize" width="300" height="300"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -99,6 +99,7 @@
                                                 </stackView>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstItem="wcA-QO-E6S" firstAttribute="centerY" secondItem="x5M-NP-dlj" secondAttribute="centerY" constant="10" id="872-rN-Tuk"/>
                                             <constraint firstItem="vTt-su-nuo" firstAttribute="centerX" secondItem="x5M-NP-dlj" secondAttribute="centerX" id="CVi-xK-MQo"/>
@@ -151,10 +152,10 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="FSI-ng-CKW">
                                                                     <rect key="frame" x="8" y="18" width="368.5" height="44.5"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
                                                                             <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                             <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -168,13 +169,13 @@
                                                                                 <constraint firstAttribute="bottom" secondItem="UeM-ck-Te4" secondAttribute="bottom" id="hwf-eQ-KYp"/>
                                                                             </constraints>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
                                                                             <rect key="frame" x="0.0" y="15.5" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="31" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -227,6 +228,7 @@
                                                 </imageView>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstItem="hg2-Ru-0IH" firstAttribute="leading" secondItem="0dQ-7c-9PT" secondAttribute="leading" constant="29" id="EPU-4f-T16"/>
                                             <constraint firstItem="PgL-nd-XcQ" firstAttribute="centerY" secondItem="0dQ-7c-9PT" secondAttribute="centerY" id="LJQ-aT-Gat"/>
@@ -265,6 +267,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <viewLayoutGuide key="safeArea" id="iPl-vG-1da"/>
                     </view>
                     <toolbarItems>
@@ -356,7 +359,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                            <rect key="frame" x="0.0" y="99" width="290" height="24"/>
+                            <rect key="frame" x="0.0" y="99" width="290" height="26.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -407,13 +410,13 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIL-f2-cgn">
                                                     <rect key="frame" x="15" y="11" width="210" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="1000" text="Item count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phz-mJ-ghT">
                                                     <rect key="frame" x="15" y="29" width="210" height="30"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -642,6 +645,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="d7y-8b-Uup" firstAttribute="leading" secondItem="wBp-li-D4L" secondAttribute="leading" id="2zq-Pr-LSh"/>
                             <constraint firstItem="wBp-li-D4L" firstAttribute="trailing" secondItem="d7y-8b-Uup" secondAttribute="trailing" id="6ir-tI-QnT"/>
@@ -683,7 +687,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6158" y="-541"/>
+            <point key="canvasLocation" x="6157" y="-612"/>
         </scene>
         <!--Options Controller-->
         <scene sceneID="DO8-pZ-FEn">
@@ -697,7 +701,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="56" width="320" height="2226"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RSx-tB-L4n">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="2352.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="2264"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wF6-Q4-Mvi">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="60.5"/>
@@ -727,6 +731,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="VpB-kf-y3J">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="twoColumnsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="ZHr-Tx-7Sa"/>
                                                         </connections>
@@ -755,6 +760,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <subviews>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JPg-Em-fla">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="fullScreenPreviewsSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Gvz-zx-PMg"/>
                                                         </connections>
@@ -795,6 +801,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ftx-hG-yxt">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="wideModeSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="WyO-Zq-4jk"/>
                                                         </connections>
@@ -818,54 +825,20 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="sFB-bX-njT" firstAttribute="leading" secondItem="s1o-UY-Pov" secondAttribute="leading" id="qbN-Ri-6BH"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IV3-hI-iJq" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="372" width="320" height="78.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Dark mode" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eft-3s-nuc">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="akV-j6-m9U">
-                                                        <rect key="frame" x="241" y="10" width="51" height="31"/>
-                                                        <connections>
-                                                            <action selector="darkModeSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="mS9-U6-gmK"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Darken the interface so that it doesn't contrast as much next to dark-themed apps" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UqN-1X-z0c">
-                                                        <rect key="frame" x="30" y="32" width="193" height="46.5"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                        <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="UqN-1X-z0c" firstAttribute="trailing" secondItem="Eft-3s-nuc" secondAttribute="trailing" id="6fj-4o-OgX"/>
-                                                    <constraint firstItem="akV-j6-m9U" firstAttribute="leading" secondItem="Eft-3s-nuc" secondAttribute="trailing" constant="18" id="Ijt-6u-2rd"/>
-                                                    <constraint firstItem="UqN-1X-z0c" firstAttribute="top" secondItem="Eft-3s-nuc" secondAttribute="bottom" constant="4" id="T7J-bd-tRE"/>
-                                                    <constraint firstAttribute="bottom" secondItem="UqN-1X-z0c" secondAttribute="bottom" id="UID-jy-kUg"/>
-                                                    <constraint firstItem="Eft-3s-nuc" firstAttribute="leading" secondItem="IV3-hI-iJq" secondAttribute="leading" constant="30" id="WdZ-oT-Yb9"/>
-                                                    <constraint firstItem="Eft-3s-nuc" firstAttribute="top" secondItem="akV-j6-m9U" secondAttribute="top" id="bGP-1P-hFK"/>
-                                                    <constraint firstItem="Eft-3s-nuc" firstAttribute="top" secondItem="IV3-hI-iJq" secondAttribute="top" constant="10" id="cpe-a7-TGL"/>
-                                                    <constraint firstAttribute="trailing" secondItem="akV-j6-m9U" secondAttribute="trailing" constant="30" id="pbW-qq-bTY"/>
-                                                    <constraint firstItem="UqN-1X-z0c" firstAttribute="leading" secondItem="Eft-3s-nuc" secondAttribute="leading" id="qtq-AM-93c"/>
-                                                </constraints>
-                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bkz-t9-6ZM" userLabel="Actions">
-                                                <rect key="frame" x="0.0" y="460.5" width="320" height="121.5"/>
+                                                <rect key="frame" x="0.0" y="372" width="320" height="121.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ytr-ti-QpI">
-                                                        <rect key="frame" x="30" y="10" width="260" height="111.5"/>
+                                                        <rect key="frame" x="30" y="10" width="271" height="111.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" text="When tapping on an item" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B6b-F7-z07">
-                                                                <rect key="frame" x="0.0" y="0.0" width="260" height="18"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="271" height="18"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kb7-3p-Ejf">
-                                                                <rect key="frame" x="0.0" y="26" width="260" height="32"/>
+                                                                <rect key="frame" x="0.0" y="26" width="271" height="32"/>
                                                                 <segments>
                                                                     <segment title="Info"/>
                                                                     <segment title="Preview"/>
@@ -877,7 +850,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                 </connections>
                                                             </segmentedControl>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" text="If the action cannot be performed, the info panel will open; you can always open the info panel via each item's shortcut menu" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M24-E5-1cc">
-                                                                <rect key="frame" x="0.0" y="65" width="260" height="46.5"/>
+                                                                <rect key="frame" x="0.0" y="65" width="271" height="46.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                 <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -892,7 +865,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JpX-eq-vlq">
-                                                <rect key="frame" x="0.0" y="592" width="320" height="60.5"/>
+                                                <rect key="frame" x="0.0" y="503.5" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labels &amp; Notes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9C4-5z-JUG">
                                                         <rect key="frame" x="102.5" y="30" width="120.5" height="30.5"/>
@@ -909,7 +882,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jzC-dY-oSN" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="662.5" width="320" height="62.5"/>
+                                                <rect key="frame" x="0.0" y="574" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display labels in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rne-ok-zIN">
                                                         <rect key="frame" x="30" y="6" width="193" height="18"/>
@@ -919,6 +892,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NV4-Kh-f7a">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="displayLabelsInMainViewSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="v2B-kb-S2u"/>
                                                         </connections>
@@ -943,7 +917,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="06N-WZ-EiG" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="735" width="320" height="62.5"/>
+                                                <rect key="frame" x="0.0" y="646.5" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display notes in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bb1-c4-GaQ">
                                                         <rect key="frame" x="30" y="10" width="193" height="18"/>
@@ -953,6 +927,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i0F-Pk-jHK">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="displayNotesInMainViewSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="4bh-Oo-o00"/>
                                                         </connections>
@@ -977,7 +952,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpJ-qH-eLu" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="807.5" width="320" height="78.5"/>
+                                                <rect key="frame" x="0.0" y="719" width="320" height="78.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Do not auto-label new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aea-Um-r1E">
                                                         <rect key="frame" x="30" y="10" width="193" height="18"/>
@@ -987,6 +962,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-qp-Jk6">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="dontAutoLabelNewItemsChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="0ml-q8-Z6m"/>
                                                         </connections>
@@ -1011,7 +987,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YYt-tq-ZhV" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="896" width="320" height="98.5"/>
+                                                <rect key="frame" x="0.0" y="807.5" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Set labels or notes during &quot;Keep In Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeI-MN-asw">
                                                         <rect key="frame" x="30" y="10" width="193" height="38"/>
@@ -1021,6 +997,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xKP-Fg-evj">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="allowLabelsInExtensionSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="hRL-Nu-FTm"/>
                                                         </connections>
@@ -1045,7 +1022,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2k-yV-TAd" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1004.5" width="320" height="98.5"/>
+                                                <rect key="frame" x="0.0" y="916" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Exclusive multiple labels " textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obz-va-oDg">
                                                         <rect key="frame" x="30" y="10" width="193" height="18"/>
@@ -1055,6 +1032,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Wpv-EZ-zak">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="exclusiveMultipleLabelsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="g2M-5X-f7a"/>
                                                         </connections>
@@ -1079,7 +1057,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dsu-gX-Dlc">
-                                                <rect key="frame" x="0.0" y="1113" width="320" height="60.5"/>
+                                                <rect key="frame" x="0.0" y="1024.5" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dragging" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wd1-LM-Zfz">
                                                         <rect key="frame" x="149.5" y="30" width="73.5" height="30.5"/>
@@ -1096,7 +1074,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fye-fd-Bru" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1183.5" width="320" height="98.5"/>
+                                                <rect key="frame" x="0.0" y="1095" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove items after they are dragged out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UAB-01-35Y">
                                                         <rect key="frame" x="30" y="6" width="193" height="42"/>
@@ -1106,6 +1084,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="foO-r4-VVP">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="removeItemsWhenDraggedOutChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Na3-qh-9gd"/>
                                                         </connections>
@@ -1130,7 +1109,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="htf-ZB-EHW" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1292" width="320" height="98.5"/>
+                                                <rect key="frame" x="0.0" y="1203.5" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Offer copy/move switch while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLg-q9-oEP">
                                                         <rect key="frame" x="30" y="10" width="193" height="38"/>
@@ -1140,6 +1119,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jLY-Yd-XP1">
                                                         <rect key="frame" x="241" y="10" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="showCopyMoveSwitchSelectorSwitchChanged:" destination="mOB-Wa-q7c" eventType="valueChanged" id="lbc-Tc-gMm"/>
                                                         </connections>
@@ -1164,7 +1144,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vaB-J0-jOE">
-                                                <rect key="frame" x="0.0" y="1400.5" width="320" height="60.5"/>
+                                                <rect key="frame" x="0.0" y="1312" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Components" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5t-2y-EqR">
                                                         <rect key="frame" x="79" y="30" width="144" height="30.5"/>
@@ -1181,7 +1161,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aBc-JG-R1d" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1471" width="320" height="114.5"/>
+                                                <rect key="frame" x="0.0" y="1382.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create separate items for each data component" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Osl-Ls-obl">
                                                         <rect key="frame" x="30" y="6" width="193" height="42"/>
@@ -1191,6 +1171,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Re0-bQ-XI7">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="separateItemsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="Azk-qN-ie7"/>
                                                         </connections>
@@ -1215,7 +1196,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7k2-kq-1Wm" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1595.5" width="320" height="178.5"/>
+                                                <rect key="frame" x="0.0" y="1507" width="320" height="178.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Automatically download targets of URL components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z8p-Se-Dag">
                                                         <rect key="frame" x="30" y="6" width="193" height="106"/>
@@ -1225,6 +1206,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3Rh-Bw-j1R">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="autoArchiveSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="K5f-U3-kJ6"/>
                                                         </connections>
@@ -1249,7 +1231,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nIh-ob-FG9" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1784" width="320" height="178.5"/>
+                                                <rect key="frame" x="0.0" y="1695.5" width="320" height="178.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Automatically convert text URLs to links" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icu-Rd-qAL">
                                                         <rect key="frame" x="30" y="6" width="193" height="38"/>
@@ -1259,6 +1241,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KRV-Az-Gx3">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="autoConvertUrlsSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="aCq-Cj-mHy"/>
                                                         </connections>
@@ -1283,7 +1266,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXe-jw-384">
-                                                <rect key="frame" x="0.0" y="1972.5" width="320" height="60.5"/>
+                                                <rect key="frame" x="0.0" y="1884" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jjh-s5-9EJ">
                                                         <rect key="frame" x="167" y="30" width="56" height="30.5"/>
@@ -1300,7 +1283,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCh-AP-kzS" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="2043" width="320" height="114.5"/>
+                                                <rect key="frame" x="0.0" y="1954.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Inclusive search terms" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xy7-kO-9Hx">
                                                         <rect key="frame" x="30" y="6" width="193" height="18"/>
@@ -1310,6 +1293,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jHl-BA-be6">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="inclusiveSearchTermsSwitchSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="0lo-3A-Wzl"/>
                                                         </connections>
@@ -1334,7 +1318,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="161-rU-OQy">
-                                                <rect key="frame" x="0.0" y="2167.5" width="320" height="60.5"/>
+                                                <rect key="frame" x="0.0" y="2079" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Misc" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NlR-Fz-XBZ">
                                                         <rect key="frame" x="185" y="30" width="38" height="30.5"/>
@@ -1351,7 +1335,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yEz-uX-Ed5" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="2238" width="320" height="114.5"/>
+                                                <rect key="frame" x="0.0" y="2149.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Disable x-callback-url support" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7g-oJ-Tmd">
                                                         <rect key="frame" x="30" y="6" width="193" height="42"/>
@@ -1361,6 +1345,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0xv-Of-TKC">
                                                         <rect key="frame" x="241" y="6" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="blockGladysLinksSelected:" destination="mOB-Wa-q7c" eventType="valueChanged" id="YPz-47-xM9"/>
                                                         </connections>
@@ -1390,12 +1375,11 @@ Selecting them will show only items that contain these labels.</string>
                                             <constraint firstItem="wF6-Q4-Mvi" firstAttribute="leading" secondItem="RSx-tB-L4n" secondAttribute="leading" id="AKk-q1-GNi"/>
                                             <constraint firstItem="V5t-2y-EqR" firstAttribute="trailing" secondItem="Osl-Ls-obl" secondAttribute="trailing" id="Cbb-FK-24P"/>
                                             <constraint firstItem="Jjh-s5-9EJ" firstAttribute="trailing" secondItem="xy7-kO-9Hx" secondAttribute="trailing" id="Fgu-R7-Zaz"/>
-                                            <constraint firstItem="Ytr-ti-QpI" firstAttribute="trailing" secondItem="akV-j6-m9U" secondAttribute="trailing" id="JTd-Sh-Vad"/>
                                             <constraint firstItem="wd1-LM-Zfz" firstAttribute="trailing" secondItem="UAB-01-35Y" secondAttribute="trailing" id="R2E-vs-HAC"/>
                                             <constraint firstItem="9C4-5z-JUG" firstAttribute="trailing" secondItem="Rne-ok-zIN" secondAttribute="trailing" id="W3d-wy-wYW"/>
-                                            <constraint firstItem="Ytr-ti-QpI" firstAttribute="leading" secondItem="UqN-1X-z0c" secondAttribute="leading" id="Yhg-Nr-lU2"/>
                                             <constraint firstItem="QcS-l6-XaN" firstAttribute="trailing" secondItem="0PN-Dk-mlt" secondAttribute="trailing" id="c38-sK-rOn"/>
                                             <constraint firstItem="NlR-Fz-XBZ" firstAttribute="trailing" secondItem="K7g-oJ-Tmd" secondAttribute="trailing" id="foY-Jc-cmI"/>
+                                            <constraint firstItem="kb7-3p-Ejf" firstAttribute="leading" secondItem="sFB-bX-njT" secondAttribute="leading" id="g3o-yf-hGz"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -1408,6 +1392,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="wOj-7s-Sqp" firstAttribute="trailing" secondItem="quQ-d6-kah" secondAttribute="trailing" id="3HD-Br-6Ua"/>
                             <constraint firstItem="wOj-7s-Sqp" firstAttribute="bottom" secondItem="quQ-d6-kah" secondAttribute="bottom" id="C7B-pa-NDj"/>
@@ -1434,7 +1419,6 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="autoArchiveSwitch" destination="3Rh-Bw-j1R" id="pUE-zL-msB"/>
                         <outlet property="autoConvertUrlsSwitch" destination="KRV-Az-Gx3" id="OzE-1p-M15"/>
                         <outlet property="blockGladysUrls" destination="0xv-Of-TKC" id="qlj-Ny-KJJ"/>
-                        <outlet property="darkModeSwitch" destination="akV-j6-m9U" id="sDN-fG-kdg"/>
                         <outlet property="displayLabelsInMainViewSwitch" destination="NV4-Kh-f7a" id="tfR-BP-DVy"/>
                         <outlet property="displayNotesInMainViewSwitch" destination="i0F-Pk-jHK" id="MKk-6g-pc1"/>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="5wI-qp-Jk6" id="P61-9b-Sq8"/>
@@ -1453,7 +1437,6 @@ Selecting them will show only items that contain these labels.</string>
                         <outletCollection property="headerLabels" destination="aea-Um-r1E" collectionClass="NSMutableArray" id="WYZ-Sj-hjA"/>
                         <outletCollection property="headerLabels" destination="bb1-c4-GaQ" collectionClass="NSMutableArray" id="T4v-ws-gLF"/>
                         <outletCollection property="headerLabels" destination="kLg-q9-oEP" collectionClass="NSMutableArray" id="hGB-X5-u3t"/>
-                        <outletCollection property="headerLabels" destination="Eft-3s-nuc" collectionClass="NSMutableArray" id="6QW-G8-wW8"/>
                         <outletCollection property="headerLabels" destination="t25-a7-DGX" collectionClass="NSMutableArray" id="8os-yw-W9h"/>
                         <outletCollection property="headerLabels" destination="Rne-ok-zIN" collectionClass="NSMutableArray" id="9Ae-mS-yUZ"/>
                         <outletCollection property="headerLabels" destination="BeI-MN-asw" collectionClass="NSMutableArray" id="XEH-NQ-IMw"/>
@@ -1463,7 +1446,6 @@ Selecting them will show only items that contain these labels.</string>
                         <outletCollection property="subtitleLabels" destination="VRo-mb-1fQ" collectionClass="NSMutableArray" id="sxJ-ED-cEw"/>
                         <outletCollection property="subtitleLabels" destination="Y0I-9x-T9K" collectionClass="NSMutableArray" id="Zrt-zg-34T"/>
                         <outletCollection property="subtitleLabels" destination="d4K-b8-7vf" collectionClass="NSMutableArray" id="Ubg-OM-ax7"/>
-                        <outletCollection property="subtitleLabels" destination="UqN-1X-z0c" collectionClass="NSMutableArray" id="ojr-l8-1bM"/>
                         <outletCollection property="subtitleLabels" destination="x5F-pD-D5I" collectionClass="NSMutableArray" id="xHP-lF-WxI"/>
                         <outletCollection property="subtitleLabels" destination="CdL-dZ-yEL" collectionClass="NSMutableArray" id="wHP-9Z-j5t"/>
                         <outletCollection property="subtitleLabels" destination="PkJ-LT-EPc" collectionClass="NSMutableArray" id="dW0-vO-a5O"/>
@@ -1521,6 +1503,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
                                                         <rect key="frame" x="210" y="17.5" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                     </switch>
                                                 </subviews>
                                                 <constraints>
@@ -1548,6 +1531,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
                                                         <rect key="frame" x="210" y="17.5" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
                                                         </connections>
@@ -1575,6 +1559,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kbo-iY-5gJ">
                                                         <rect key="frame" x="210" y="17.5" width="51" height="31"/>
+                                                        <color key="onTintColor" name="colorTint"/>
                                                         <connections>
                                                             <action selector="uploadItemsFromShareChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="vyb-LL-qB4"/>
                                                         </connections>
@@ -1678,6 +1663,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="XAu-Zj-d4Q" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" id="7ok-Ng-FxU"/>
                             <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" secondItem="XAu-Zj-d4Q" secondAttribute="bottom" id="ggt-10-oSP"/>
@@ -1770,6 +1756,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="yXI-xr-evN" firstAttribute="width" secondItem="6e9-dF-Uv9" secondAttribute="width" id="HfB-v5-ptO"/>
                             <constraint firstItem="vGD-oM-cWh" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" id="Jpj-9q-eeY"/>
@@ -2073,7 +2060,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="gOE-Fp-Sbs" firstAttribute="top" secondItem="o6P-jX-a91" secondAttribute="top" id="EAu-0I-6C3"/>
                             <constraint firstItem="gOE-Fp-Sbs" firstAttribute="leading" secondItem="kBf-EA-UxQ" secondAttribute="leading" id="O9G-Ez-p3r"/>
@@ -2184,7 +2171,8 @@ Selecting them will show only items that contain these labels.</string>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqu-FV-J7n">
                                 <rect key="frame" x="0.0" y="44" width="300" height="207"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="colorPaper"/>
+                                <color key="tintColor" name="colorTint"/>
                                 <collectionViewLayout key="collectionViewLayout" id="5nK-jh-NtK" customClass="GridLayout" customModule="Gladys" customModuleProvider="target"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ByteCell" id="w7h-0F-LGz" customClass="ByteCell" customModule="Gladys" customModuleProvider="target">
@@ -2197,13 +2185,13 @@ Selecting them will show only items that contain these labels.</string>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hww-8H-o4g">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FXQ-bG-Jdn">
                                                     <rect key="frame" x="3" y="2" width="11" height="10.5"/>
                                                     <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="9"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -2233,13 +2221,13 @@ Selecting them will show only items that contain these labels.</string>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BcV-HJ-RFX">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hnn-MC-DZY">
                                                     <rect key="frame" x="3" y="2" width="11" height="10.5"/>
                                                     <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="9"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -2267,7 +2255,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="wqu-FV-J7n" firstAttribute="leading" secondItem="25f-IC-Bbw" secondAttribute="leading" id="8K7-Fj-rGz"/>
                             <constraint firstItem="25f-IC-Bbw" firstAttribute="trailing" secondItem="wqu-FV-J7n" secondAttribute="trailing" id="kSP-mQ-4Wi"/>
@@ -2443,7 +2431,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="Hws-Re-89h" firstAttribute="leading" secondItem="OWD-db-yUR" secondAttribute="leading" id="7H0-qC-cLV"/>
                             <constraint firstAttribute="trailing" secondItem="Hws-Re-89h" secondAttribute="trailing" id="DxA-3J-RTX"/>
@@ -2476,7 +2464,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1mb-1O-pOP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4893" y="1722"/>
+            <point key="canvasLocation" x="4877" y="1722"/>
         </scene>
         <!--Data Inspector-->
         <scene sceneID="Vh6-0C-4We">
@@ -2559,12 +2547,15 @@ Selecting them will show only items that contain these labels.</string>
                                     </view>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dRd-B9-Eez">
                                         <rect key="frame" x="125.5" y="161" width="51" height="31"/>
+                                        <color key="onTintColor" name="colorTint"/>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E7G-HI-NQu">
                                         <rect key="frame" x="125.5" y="122" width="51" height="31"/>
+                                        <color key="onTintColor" name="colorTint"/>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="cWP-6y-u15">
                                         <rect key="frame" x="125.5" y="200" width="51" height="31"/>
+                                        <color key="onTintColor" name="colorTint"/>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signed" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSM-Mj-7do">
                                         <rect key="frame" x="8" y="130" width="109" height="15"/>
@@ -2638,7 +2629,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="rXg-dS-YHQ" firstAttribute="leading" secondItem="qva-Pm-sXj" secondAttribute="leading" id="UvH-a4-I3R"/>
                             <constraint firstItem="rXg-dS-YHQ" firstAttribute="trailing" secondItem="qva-Pm-sXj" secondAttribute="trailing" id="nBM-IE-Yqn"/>
@@ -2869,14 +2860,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="0bO-QF-axJ" customClass="TextEditController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lbp-E8-EMb">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2B9-BA-5TC">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
-                            </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wbu-HM-Ndy">
-                                <rect key="frame" x="0.0" y="44" width="300" height="256"/>
+                                <rect key="frame" x="0.0" y="44" width="200" height="256"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -2885,30 +2873,25 @@ Selecting them will show only items that contain these labels.</string>
                                 </connections>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="Wbu-HM-Ndy" firstAttribute="leading" secondItem="kpG-6z-O1x" secondAttribute="leading" id="DYr-y7-8jD"/>
                             <constraint firstItem="kpG-6z-O1x" firstAttribute="trailing" secondItem="Wbu-HM-Ndy" secondAttribute="trailing" id="H0I-Jf-LLP"/>
-                            <constraint firstItem="2B9-BA-5TC" firstAttribute="top" secondItem="lbp-E8-EMb" secondAttribute="top" id="Tun-Jh-Swk"/>
-                            <constraint firstItem="2B9-BA-5TC" firstAttribute="bottom" secondItem="lbp-E8-EMb" secondAttribute="bottom" id="ht1-bk-vZ3"/>
-                            <constraint firstItem="2B9-BA-5TC" firstAttribute="trailing" secondItem="lbp-E8-EMb" secondAttribute="trailing" id="lHe-9n-FgC"/>
                             <constraint firstItem="kpG-6z-O1x" firstAttribute="bottom" secondItem="Wbu-HM-Ndy" secondAttribute="bottom" id="rza-u8-wNE"/>
                             <constraint firstItem="Wbu-HM-Ndy" firstAttribute="top" secondItem="kpG-6z-O1x" secondAttribute="top" id="sTG-tc-wwe"/>
-                            <constraint firstItem="2B9-BA-5TC" firstAttribute="leading" secondItem="lbp-E8-EMb" secondAttribute="leading" id="zSP-Vl-s1n"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kpG-6z-O1x"/>
                     </view>
                     <navigationItem key="navigationItem" title="Edit Text" id="aVA-Oj-idi"/>
-                    <size key="freeformSize" width="300" height="300"/>
+                    <size key="freeformSize" width="200" height="300"/>
                     <connections>
-                        <outlet property="backgroundView" destination="2B9-BA-5TC" id="2X2-3F-7nj"/>
                         <outlet property="bottomDistance" destination="rza-u8-wNE" id="MjX-kc-ifw"/>
                         <outlet property="textView" destination="Wbu-HM-Ndy" id="tnQ-Gl-tgA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VO4-yh-Yz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3875" y="1641"/>
+            <point key="canvasLocation" x="3965" y="1641"/>
         </scene>
         <!--Title-->
         <scene sceneID="sN7-23-jzl">
@@ -2929,19 +2912,19 @@ Selecting them will show only items that contain these labels.</string>
                                         <rect key="frame" x="0.0" y="28" width="300" height="77"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="y2L-Lx-8XT" id="QpT-Ag-0Zi">
-                                            <rect key="frame" x="0.0" y="0.0" width="273.5" height="77"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="274" height="77"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Bfg-tT-oO3">
-                                                    <rect key="frame" x="15" y="11" width="250.5" height="55"/>
+                                                    <rect key="frame" x="15" y="11" width="251" height="55"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hZ9-wp-Fuh">
-                                                            <rect key="frame" x="0.0" y="0.0" width="250.5" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="251" height="20.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aY7-ut-4ys">
-                                                            <rect key="frame" x="0.0" y="20.5" width="250.5" height="34.5"/>
+                                                            <rect key="frame" x="0.0" y="20.5" width="251" height="34.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -2972,6 +2955,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </connections>
                             </tableView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="hVB-Yo-22H" firstAttribute="trailing" secondItem="tYL-Cd-InP" secondAttribute="trailing" id="NRg-gp-RtP"/>
                             <constraint firstAttribute="trailing" secondItem="Mvq-HK-d9u" secondAttribute="trailing" id="bCb-mu-XC9"/>
@@ -3095,7 +3079,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="96y-tG-0db" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3274" y="1742"/>
+            <point key="canvasLocation" x="3273" y="1740"/>
         </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
@@ -3417,6 +3401,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </connections>
                             </tableView>
                         </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="iAy-ee-hjf" firstAttribute="trailing" secondItem="dVc-qJ-l47" secondAttribute="trailing" id="8ql-uU-o1F"/>
                             <constraint firstItem="iAy-ee-hjf" firstAttribute="bottom" secondItem="dVc-qJ-l47" secondAttribute="bottom" id="XYB-6v-JYw"/>
@@ -3506,7 +3491,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="NVQ-9p-rAL" firstAttribute="top" secondItem="xyQ-dS-ghA" secondAttribute="top" id="9EK-S4-doM"/>
                             <constraint firstItem="NVQ-9p-rAL" firstAttribute="leading" secondItem="xyQ-dS-ghA" secondAttribute="leading" id="MqL-dN-how"/>
@@ -3566,9 +3551,18 @@ Selecting them will show only items that contain these labels.</string>
         <image name="siriNormal" width="16" height="28"/>
         <image name="siriSmall" width="14" height="22"/>
         <image name="zip" width="20" height="28"/>
+        <namedColor name="colorDarkGray">
+            <color red="0.33300000000000002" green="0.33300000000000002" blue="0.33300000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorPaper">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorTint">
+            <color red="0.78431372549019607" green="0.78431372549019607" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="ROM-1G-ayk"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.5764203667640686" green="0.093400068581104279" blue="0.069711051881313324" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" name="colorTint"/>
 </document>

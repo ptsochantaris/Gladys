@@ -34,9 +34,6 @@ final class LabelCell: UITableViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		labelHolder.layer.cornerRadius = 15
-		if PersistedOptions.darkMode {
-			labelHolder.backgroundColor = ViewController.darkColor
-		}
 	}
 
 	override func setHighlighted(_ highlighted: Bool, animated: Bool) {
