@@ -629,20 +629,30 @@ extension CloudManager {
 		}
 		perform(operation, on: database, type: "fetch database changes")
 	}
-
+    
 	private static func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID], stats: PullState, completion: @escaping (Error?) -> Void) {
 
 		log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
+        #if os(iOS)
+        typealias ZoneConfig=CKFetchRecordZoneChangesOperation.ZoneConfiguration
+        #else
+        typealias ZoneConfig=CKFetchRecordZoneChangesOperation.ZoneOptions
+        #endif
+
 		var needsRetry = false
-		var optionsByRecordZoneID = [CKRecordZone.ID: CKFetchRecordZoneChangesOperation.ZoneConfiguration]()
+		var configurationsByRecordZoneID = [CKRecordZone.ID: ZoneConfig]()
 		for zoneID in zoneIDs {
-            let options = CKFetchRecordZoneChangesOperation.ZoneConfiguration()
+            let options = ZoneConfig()
 			options.previousServerChangeToken = PullState.zoneToken(for: zoneID)
-			optionsByRecordZoneID[zoneID] = options
+			configurationsByRecordZoneID[zoneID] = options
 		}
 
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: optionsByRecordZoneID)
+        #if os(iOS)
+		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)
+        #else
+        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: configurationsByRecordZoneID)
+        #endif
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
 			recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
 		}

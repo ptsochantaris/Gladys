@@ -19,6 +19,10 @@ abstract_target 'iOS' do
   target 'GladysIntents' do
     pod 'Fuzi'
   end
+  
+  target 'GladysFramework' do
+    pod 'OpenSSL-Universal'
+  end
 end
 
 abstract_target 'macOS' do
@@ -30,6 +34,10 @@ abstract_target 'macOS' do
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
     pod 'CDEvents'
+  end
+
+  target 'GladysFrameworkMac' do
+    pod 'OpenSSL-Universal'
   end
 end
 
