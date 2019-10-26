@@ -138,7 +138,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 			let total = Model.drops.count
 			let items = Model.drops.prefix(100).map { $0.watchItem }
 			DispatchQueue.global(qos: .background).async {
-				if let compressedData = NSKeyedArchiver.archivedData(withRootObject: items).data(operation: .compress) {
+				if let compressedData = try? NSKeyedArchiver.archivedData(withRootObject: items, requiringSecureCoding: false).data(operation: .compress) {
 					do {
 						try session.updateApplicationContext(["total": total, "dropList": compressedData])
 						log("Updated watch context")

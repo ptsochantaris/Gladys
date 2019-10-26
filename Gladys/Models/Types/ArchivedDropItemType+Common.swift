@@ -60,7 +60,7 @@ extension ArchivedDropItemType: Equatable {
 		//}
 
 		if classWasWrapped {
-			return try? SafeUnarchiver.unarchive(bytes) as Any
+			return try? SafeUnarchiver.unarchive(bytes)
 		} else if bytes.isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {

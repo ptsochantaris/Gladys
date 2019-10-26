@@ -49,7 +49,7 @@ extension ArchivedDropItem {
 		set {
 			let location = favoriteRankPath
 			if let newValue = newValue {
-				try! NSKeyedArchiver.archivedData(withRootObject: newValue).write(to: location, options: .atomic)
+                try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false).write(to: location, options: .atomic)
 			} else {
 				let f = FileManager.default
 				if f.fileExists(atPath: location.path) {
@@ -59,9 +59,8 @@ extension ArchivedDropItem {
 		}
 		get {
 			let location = favoriteRankPath
-			if FileManager.default.fileExists(atPath: location.path) {
-				let d = try! Data(contentsOf: location, options: [.alwaysMapped])
-				return NSKeyedUnarchiver.unarchiveObject(with: d) as? NSNumber
+			if FileManager.default.fileExists(atPath: location.path), let d = try? Data(contentsOf: location, options: []) {
+                return try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: d)
 			} else {
 				return nil
 			}

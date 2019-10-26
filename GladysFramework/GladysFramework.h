@@ -27,5 +27,5 @@ NSString *infiniteId = @"INFINITE";
 uint32_t valueForKeyedArchiverUID(id keyedArchiverUID);
 
 @interface SafeUnarchiver:NSKeyedUnarchiver
-+ (NSObject *)unarchive:(NSData *)data error:(NSError **)error;
++ (id)unarchive:(NSData *)data error:(NSError **)error;
 @end

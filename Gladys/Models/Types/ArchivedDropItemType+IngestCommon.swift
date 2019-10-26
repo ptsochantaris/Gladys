@@ -107,15 +107,15 @@ extension ArchivedDropItemType {
 		ingestCompletion = completion
 		clearCachedFields()
 
-		let item: NSSecureCoding
-		if data.isPlist, let obj = (try? SafeUnarchiver.unarchive(data)) as? NSSecureCoding {
+		let item: Any
+		if data.isPlist, let obj = try? SafeUnarchiver.unarchive(data) {
 			log("      unwrapped keyed object: \(type(of:obj))")
 			item = obj
 			classWasWrapped = true
 
 		} else {
 			log("      looks like raw data")
-			item = data as NSSecureCoding
+			item = data
 		}
 
 		if let item = item as? NSString {

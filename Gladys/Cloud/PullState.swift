@@ -96,15 +96,16 @@ final class PullState {
 	private static var legacyZoneChangeToken: CKServerChangeToken? {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
-				return NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken
+                return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
 			} else {
 				return nil
 			}
 		}
 		set {
 			if let n = newValue {
-				let data = NSKeyedArchiver.archivedData(withRootObject: n)
-				PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
+                if let data = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false) {
+                    PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
+                }
 			} else {
 				PersistedOptions.defaults.set(Data(), forKey: "zoneChangeToken")
 			}
@@ -123,7 +124,7 @@ final class PullState {
 	static func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
 		if let lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data],
 			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName],
-			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
+            let token = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data) {
 			return token
 		}
 		return nil
@@ -133,7 +134,7 @@ final class PullState {
 		var lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data] ?? [String : Data]()
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
-			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
+			lookup[key] = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false)
 		} else {
 			lookup[key] = nil
 		}
@@ -151,7 +152,7 @@ final class PullState {
 		let key = database.keyName
 		if let lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data],
 			let data = lookup[key],
-			let token = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKServerChangeToken {
+            let token = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data) {
 			return token
 		}
 		return nil
@@ -161,7 +162,7 @@ final class PullState {
 		let key = database.keyName
 		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
 		if let n = token {
-			lookup[key] = NSKeyedArchiver.archivedData(withRootObject: n)
+			lookup[key] = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false)
 		} else {
 			lookup[key] = nil
 		}

@@ -77,9 +77,6 @@ final class CloudManager {
 
 	static var showNetwork: Bool = false {
 		didSet {
-			#if MAINAPP
-			UIApplication.shared.isNetworkActivityIndicatorVisible = showNetwork
-			#endif
 			#if MAC
 			NSApplication.shared.dockTile.badgeLabel = showNetwork ? "↔" : nil
 			#endif
@@ -236,14 +233,15 @@ final class CloudManager {
 	static var uuidSequence: [String] {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
-				return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
+                return (try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as? [String]) ?? []
 			} else {
 				return []
 			}
 		}
 		set {
-			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-			PersistedOptions.defaults.set(data, forKey: "uuidSequence")
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                PersistedOptions.defaults.set(data, forKey: "uuidSequence")
+            }
 		}
 	}
 
@@ -288,15 +286,15 @@ final class CloudManager {
 			let recordLocation = deleteQueuePath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
 				let data = try! Data(contentsOf: recordLocation, options: [])
-				return (NSKeyedUnarchiver.unarchiveObject(with: data) as? Set<String>) ?? []
+                return (try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSSet.self, from: data) as? Set<String>) ?? []
 			} else {
 				return []
 			}
 		}
 		set {
-			let recordLocation = deleteQueuePath
-			let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-			try? data.write(to: recordLocation, options: .atomic)
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                try? data.write(to: deleteQueuePath, options: .atomic)
+            }
 		}
 	}
 

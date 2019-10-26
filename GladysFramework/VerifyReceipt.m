@@ -12,9 +12,9 @@
 #endif
 
 @implementation SafeUnarchiver
-+ (NSObject *)unarchive:(NSData *)data error:(NSError **)error {
++ (id)unarchive:(NSData *)data error:(NSError **)error {
     @try {
-        return [super unarchiveTopLevelObjectWithData:data error:error];
+        return [super unarchivedObjectOfClass:[NSObject class] fromData:data error:error];
     } @catch (NSException *exception) {
         *error = [NSError errorWithDomain:@"build.bru.Gladys.error" code:738 userInfo:nil];
         return nil;
