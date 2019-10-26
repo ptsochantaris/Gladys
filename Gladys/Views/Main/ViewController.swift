@@ -613,6 +613,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		if !PersistedOptions.pasteShortcutAutoDonated {
 			donatePasteIntent()
 		}
+        
+        // TODO: do properly
+        FileAreaManager.mirrorBlobsToFiles()
 	}
 
 	deinit {

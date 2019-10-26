@@ -11,7 +11,6 @@ import CoreSpotlight
 import CloudKit
 #if os(iOS)
 import CoreAudioKit
-import FileProvider
 #else
 import Cocoa
 #endif
@@ -624,21 +623,10 @@ extension Model {
 						nextSaveCallbacks = nil
 					}
 					trimTemporaryDirectory()
-					signalFileProvider()
 					saveComplete()
 				}
 			}
 		}
-	}
-
-	private static func signalFileProvider() { // can be in thread
-		#if os(iOS)
-		NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
-			if let e = error {
-				log("Error signalling: \(e.finalDescription)")
-			}
-		}
-		#endif
 	}
 
 	static func saveIndexOnly() {
@@ -669,7 +657,6 @@ extension Model {
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [uuid])
 				log("Ingest completed for item (\(uuid)) and committed to disk")
-				signalFileProvider()
 			} catch {
 				log("Warning: Error while committing item to disk: (\(error.finalDescription))")
 			}
