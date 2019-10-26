@@ -1,6 +1,0 @@
-module Pods_Gladys {
-  umbrella header "Pods-Gladys-umbrella.h"
-
-  export *
-  module * { export * }
-}

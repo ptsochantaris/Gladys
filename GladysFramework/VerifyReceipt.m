@@ -4,12 +4,7 @@
 #import <openssl/evp.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <TargetConditionals.h>
-
-#if TARGET_OS_IOS
 #import "GladysFramework.h"
-#else
-#import "MacGladysFramework.h"
-#endif
 
 NSData *sha1(NSString *input) {
 	unsigned char digest[CC_SHA1_DIGEST_LENGTH];

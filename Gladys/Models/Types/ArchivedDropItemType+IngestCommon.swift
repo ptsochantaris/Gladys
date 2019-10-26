@@ -15,11 +15,10 @@ import SafeUnarchiver
 #if os(iOS)
 import UIKit
 import MobileCoreServices
-import GladysFramework
 #else
 import Cocoa
-import MacGladysFramework
 #endif
+import GladysFramework
 
 extension ArchivedDropItemType {
 

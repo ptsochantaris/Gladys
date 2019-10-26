@@ -8,7 +8,7 @@
 
 import Cocoa
 import Quartz
-import MacGladysFramework
+import GladysFramework
 
 func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (()->Void)? = nil) {
 

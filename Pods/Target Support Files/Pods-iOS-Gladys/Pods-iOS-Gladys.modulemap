@@ -1,0 +1,6 @@
+module Pods_iOS_Gladys {
+  umbrella header "Pods-iOS-Gladys-umbrella.h"
+
+  export *
+  module * { export * }
+}

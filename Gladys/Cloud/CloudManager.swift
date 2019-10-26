@@ -6,13 +6,13 @@
 //  Copyright © 2017 Paul Tsochantaris. All rights reserved.
 //
 
-import SafeUnarchiver
 #if os(iOS)
 import UIKit
 #else
 import Cocoa
 #endif
 import CloudKit
+import SafeUnarchiver
 
 let diskSizeFormatter = ByteCountFormatter()
 

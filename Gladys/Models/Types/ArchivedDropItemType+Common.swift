@@ -12,10 +12,8 @@ import CloudKit
 import SafeUnarchiver
 #if os(iOS)
 import MobileCoreServices
-import GladysFramework
-#else
-import MacGladysFramework
 #endif
+import GladysFramework
 
 extension ArchivedDropItemType: Equatable {
 

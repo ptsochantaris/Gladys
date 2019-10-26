@@ -8,7 +8,7 @@
 
 import Cocoa
 import CoreSpotlight
-import MacGladysFramework
+import GladysFramework
 import HotKey
 import CloudKit
 

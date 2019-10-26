@@ -1,6 +1,0 @@
-module Pods_GladysIntents {
-  umbrella header "Pods-GladysIntents-umbrella.h"
-
-  export *
-  module * { export * }
-}

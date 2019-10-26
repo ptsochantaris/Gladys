@@ -1,6 +1,0 @@
-module Pods_GladysAction {
-  umbrella header "Pods-GladysAction-umbrella.h"
-
-  export *
-  module * { export * }
-}

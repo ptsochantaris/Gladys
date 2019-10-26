@@ -3,55 +3,49 @@ source 'https://github.com/CocoaPods/Specs.git'
 inhibit_all_warnings!
 use_modular_headers!
 
-target 'Gladys' do
-  platform :ios, '11.0'
-  pod 'Fuzi'
-  pod 'ZIPFoundation'
-  pod 'CallbackURLKit'
+abstract_target 'iOS' do
+  platform :ios, '13.0'
+
+  target 'Gladys' do
+    pod 'Fuzi'
+    pod 'ZIPFoundation'
+    pod 'CallbackURLKit'
+  end
+
+  target 'GladysAction' do
+    pod 'Fuzi'
+  end
+
+  target 'GladysIntents' do
+    pod 'Fuzi'
+  end
 end
 
-target 'GladysAction' do
-  platform :ios, '11.0'
-  pod 'Fuzi'
-end
-
-target 'MacGladys' do
+abstract_target 'macOS' do
   platform :osx, '10.13'
-  pod 'Fuzi'
-  pod 'HotKey'
-  pod 'ZIPFoundation'
-  pod 'CallbackURLKit'
-  pod 'CDEvents'
-end
 
-target 'GladysIntents' do
-  platform :ios, '11.0'
-  pod 'Fuzi'
-end
-
-target 'GladysFramework' do
-  platform :ios, '11.0'
-  pod 'OpenSSL-Universal'
-end
-
-target 'MacGladysFramework' do
-  platform :osx, '10.13'
-  pod 'OpenSSL-Universal'
+  target 'MacGladys' do
+    pod 'Fuzi'
+    pod 'HotKey'
+    pod 'ZIPFoundation'
+    pod 'CallbackURLKit'
+    pod 'CDEvents'
+  end
 end
 
 post_install do |installer|
-	installer.pods_project.build_configurations.each do |config|
-		if config.name.include?("Release")
-			config.build_settings['GCC_FAST_MATH'] = 'YES'
-			config.build_settings['LLVM_LTO'] = 'YES'
-			config.build_settings['SWIFT_DISABLE_SAFETY_CHECKS'] = 'YES'
-			config.build_settings['SWIFT_ENFORCE_EXCLUSIVE_ACCESS'] = 'debug-only'
-		end
-	end
-
-	installer.pods_project.targets.each do |target|
-		target.build_configurations.each do |config|
-			config.build_settings.delete('IPHONEOS_DEPLOYMENT_TARGET')
-		end
-	end
+  installer.pods_project.build_configurations.each do |config|
+    if config.name.include?("Release")
+      config.build_settings['GCC_FAST_MATH'] = 'YES'
+      config.build_settings['LLVM_LTO'] = 'YES'
+      config.build_settings['SWIFT_DISABLE_SAFETY_CHECKS'] = 'YES'
+      config.build_settings['SWIFT_ENFORCE_EXCLUSIVE_ACCESS'] = 'debug-only'
+    end
+  end
+  
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings.delete('IPHONEOS_DEPLOYMENT_TARGET')
+    end
+  end
 end

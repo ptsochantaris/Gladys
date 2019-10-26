@@ -1,7 +1,6 @@
 
 #if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 import UIKit
-import GladysFramework
 
 fileprivate func getDeviceId() -> Data {
 	guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return Data() }
@@ -11,9 +10,10 @@ fileprivate func getDeviceId() -> Data {
 }
 #endif
 
+import GladysFramework
+
 #if MAC
 import Foundation
-import MacGladysFramework
 
 fileprivate func getDeviceId() -> Data {
 

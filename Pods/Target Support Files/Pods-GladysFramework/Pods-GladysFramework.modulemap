@@ -1,6 +1,0 @@
-framework module Pods_GladysFramework {
-  umbrella header "Pods-GladysFramework-umbrella.h"
-
-  export *
-  module * { export * }
-}

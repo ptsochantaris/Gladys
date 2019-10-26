@@ -149,8 +149,8 @@
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark" highlightedImage="checkmarkSelected" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-qO-gUb">
-                                                    <rect key="frame" x="285" y="25" width="20" height="20"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="circle" catalog="system" highlightedImage="checkmark.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-qO-gUb">
+                                                    <rect key="frame" x="285" y="25.5" width="20" height="19"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="IlX-4s-iEv"/>
                                                         <constraint firstAttribute="width" constant="20" id="RIx-hM-3ld"/>
@@ -266,11 +266,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="checkmark" width="28" height="26"/>
-        <image name="checkmarkSelected" width="28" height="26"/>
+        <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
+        <image name="circle" catalog="system" width="64" height="60"/>
         <image name="gladysImage" width="1024" height="1024"/>
         <namedColor name="colorPaper">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.15000000149011611" green="0.15000000894069671" blue="0.15000000894069671" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <color key="tintColor" red="0.57642036679999997" green="0.093400068579999995" blue="0.06971105188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
