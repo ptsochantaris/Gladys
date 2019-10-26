@@ -11,6 +11,7 @@ import AVFoundation
 import Fuzi
 import Contacts
 import MapKit
+import SafeUnarchiver
 #if os(iOS)
 import UIKit
 import MobileCoreServices
@@ -108,7 +109,7 @@ extension ArchivedDropItemType {
 		clearCachedFields()
 
 		let item: Any
-		if data.isPlist, let obj = try? SafeUnarchiver.unarchive(data) {
+		if data.isPlist, let obj = SafeUnarchiver.unarchive(data) {
 			log("      unwrapped keyed object: \(type(of:obj))")
 			item = obj
 			classWasWrapped = true

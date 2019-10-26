@@ -8,6 +8,14 @@ enum PasteResult {
 	case success, noData, tooManyItems
 }
 
+extension UIKeyCommand {
+    static func makeCommand(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, title: String) -> UIKeyCommand {
+        let c = UIKeyCommand(input: input, modifierFlags: modifierFlags, action: action)
+        c.title = title
+        return c
+    }
+}
+
 @discardableResult
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -361,7 +369,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	private var dimView: DimView?
-	func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
 		if let d = dimView {
 			dimView = nil
 			d.dismiss()
@@ -938,7 +946,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				if let p = a.popoverPresentationController {
-					_ = self.popoverPresentationControllerShouldDismissPopover(p)
+					_ = self.presentationControllerShouldDismiss(p)
 				}
 				self.selectedItems?.removeAll()
 				self.collection.reloadData()
@@ -959,7 +967,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				if let p = a.popoverPresentationController {
-					_ = self.popoverPresentationControllerShouldDismissPopover(p)
+					_ = self.presentationControllerShouldDismiss(p)
 				}
 				self.selectedItems = Model.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
@@ -1208,7 +1216,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
 		a.addAction(UIAlertAction(title: msg, style: .destructive) { action in
 			if let p = a.popoverPresentationController {
-				_ = self.popoverPresentationControllerShouldDismissPopover(p)
+				_ = self.presentationControllerShouldDismiss(p)
 			}
 			self.proceedWithDelete()
 		})
@@ -1267,7 +1275,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	func dismissAnyPopOver(completion: (()->Void)? = nil) {
 		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
-			if popoverPresentationControllerShouldDismissPopover(pc) {
+			if presentationControllerShouldDismiss(pc) {
 				firstPresentedAlertController?.dismiss(animated: true) {
 					completion?()
 				}
@@ -1533,16 +1541,16 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@objc private func toggleEdit() {
 		setEditing(!isEditing, animated: true)
 	}
-
+    
 	override var keyCommands: [UIKeyCommand]? {
 		var a = super.keyCommands ?? []
 		a.append(contentsOf: [
-			UIKeyCommand(input: "v", modifierFlags: .command, action: #selector(pasteSelected(_:)), discoverabilityTitle: "Paste From Clipboard"),
-			UIKeyCommand(input: "l", modifierFlags: .command, action: #selector(showLabels), discoverabilityTitle: "Labels Menu"),
-			UIKeyCommand(input: "l", modifierFlags: [.command, .alternate], action: #selector(resetLabels), discoverabilityTitle: "Clear Active Labels"),
-			UIKeyCommand(input: ",", modifierFlags: .command, action: #selector(showPreferences), discoverabilityTitle: "Preferences Menu"),
-			UIKeyCommand(input: "f", modifierFlags: .command, action: #selector(openSearch), discoverabilityTitle: "Search Items"),
-			UIKeyCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), discoverabilityTitle: "Toggle Edit Mode")
+            UIKeyCommand.makeCommand(input: "v", modifierFlags: .command, action: #selector(pasteSelected(_:)), title: "Paste From Clipboard"),
+			UIKeyCommand.makeCommand(input: "l", modifierFlags: .command, action: #selector(showLabels), title: "Labels Menu"),
+			UIKeyCommand.makeCommand(input: "l", modifierFlags: [.command, .alternate], action: #selector(resetLabels), title: "Clear Active Labels"),
+			UIKeyCommand.makeCommand(input: ",", modifierFlags: .command, action: #selector(showPreferences), title: "Preferences Menu"),
+			UIKeyCommand.makeCommand(input: "f", modifierFlags: .command, action: #selector(openSearch), title: "Search Items"),
+			UIKeyCommand.makeCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), title: "Toggle Edit Mode")
 		])
 		return a
 	}

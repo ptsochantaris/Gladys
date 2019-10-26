@@ -9,6 +9,7 @@
 
 import Foundation
 import CloudKit
+import SafeUnarchiver
 #if os(iOS)
 import MobileCoreServices
 import GladysFramework
@@ -60,7 +61,7 @@ extension ArchivedDropItemType: Equatable {
 		//}
 
 		if classWasWrapped {
-			return try? SafeUnarchiver.unarchive(bytes)
+			return SafeUnarchiver.unarchive(bytes)
 		} else if bytes.isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {

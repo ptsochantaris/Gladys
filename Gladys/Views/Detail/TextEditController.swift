@@ -8,6 +8,7 @@
 
 import UIKit
 import MobileCoreServices
+import SafeUnarchiver
 
 protocol TextEditControllerDelegate: class {
 	func textEditControllerMadeChanges(_ textEditController: TextEditController)
@@ -84,7 +85,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		if !hasChanges { return }
 
 		if typeEntry.classWasWrapped, let d: Any = (isAttributed ? textView.attributedText : textView.text) {
-			let b = (try? NSKeyedArchiver.archivedData(withRootObject: d, requiringSecureCoding: false)) ?? Data()
+			let b = SafeArchiver.archive(d) ?? Data()
 			typeEntry.setBytes(b)
 			saveDone()
 

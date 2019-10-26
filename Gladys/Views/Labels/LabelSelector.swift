@@ -163,7 +163,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	}
 
 	override func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.presentationControllerShouldDismiss {
 			_ = f(p)
 		}
 		if navigationItem.searchController?.isActive ?? false {

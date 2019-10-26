@@ -6,6 +6,7 @@
 //  Copyright © 2017 Paul Tsochantaris. All rights reserved.
 //
 
+import SafeUnarchiver
 #if os(iOS)
 import UIKit
 #else
@@ -239,7 +240,7 @@ final class CloudManager {
 			}
 		}
 		set {
-            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+            if let data = SafeArchiver.archive(newValue) {
                 PersistedOptions.defaults.set(data, forKey: "uuidSequence")
             }
 		}
@@ -292,9 +293,7 @@ final class CloudManager {
 			}
 		}
 		set {
-            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
-                try? data.write(to: deleteQueuePath, options: .atomic)
-            }
+            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath, options: .atomic)
 		}
 	}
 

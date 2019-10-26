@@ -59,7 +59,7 @@ class GladysViewController: UIViewController {
 	}
 
 	@objc func done() {
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.popoverPresentationControllerShouldDismissPopover {
+		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.presentationControllerShouldDismiss {
 			_ = f(p)
 		}
 		dismiss(animated: true)
@@ -105,7 +105,7 @@ class GladysViewController: UIViewController {
 			UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow),
 		]
 		if self.popoverPresenter != nil {
-			let w = UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(done), discoverabilityTitle: "Close This View")
+            let w = UIKeyCommand.makeCommand(input: "w", modifierFlags: .command, action: #selector(done), title: "Close This View")
 			a.insert(w, at: 0)
 		}
 		return a

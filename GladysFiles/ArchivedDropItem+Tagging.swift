@@ -1,5 +1,6 @@
 
 import FileProvider
+import SafeUnarchiver
 
 extension ArchivedDropItem {
 	var tagDataPath: URL {
@@ -49,7 +50,7 @@ extension ArchivedDropItem {
 		set {
 			let location = favoriteRankPath
 			if let newValue = newValue {
-                try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false).write(to: location, options: .atomic)
+                try? SafeArchiver.archive(newValue)?.write(to: location, options: .atomic)
 			} else {
 				let f = FileManager.default
 				if f.fileExists(atPath: location.path) {

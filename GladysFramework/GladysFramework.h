@@ -25,7 +25,3 @@ NSString *receiptId = @"build.bru.Gladys";
 NSString *infiniteId = @"INFINITE";
 
 uint32_t valueForKeyedArchiverUID(id keyedArchiverUID);
-
-@interface SafeUnarchiver:NSKeyedUnarchiver
-+ (id)unarchive:(NSData *)data error:(NSError **)error;
-@end

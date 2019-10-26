@@ -267,7 +267,8 @@ final class DetailController: GladysViewController,
 
 	override var keyCommands: [UIKeyCommand]? {
 		var a = super.keyCommands ?? []
-		a.append(UIKeyCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), discoverabilityTitle: "Copy Item To Clipboard"))
+        let c = UIKeyCommand.makeCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), title: "Copy Item To Clipboard")
+        a.append(c)
 		return a
 	}
 

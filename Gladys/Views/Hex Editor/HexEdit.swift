@@ -175,7 +175,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
-	func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
 		inspector = nil
 		return true
 	}

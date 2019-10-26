@@ -1,4 +1,5 @@
 import CloudKit
+import SafeUnarchiver
 
 final class PullState {
 	var updatedSequence = false
@@ -103,7 +104,7 @@ final class PullState {
 		}
 		set {
 			if let n = newValue {
-                if let data = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false) {
+                if let data = SafeArchiver.archive(n) {
                     PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
                 }
 			} else {
@@ -134,7 +135,7 @@ final class PullState {
 		var lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data] ?? [String : Data]()
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
-			lookup[key] = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false)
+			lookup[key] = SafeArchiver.archive(n)
 		} else {
 			lookup[key] = nil
 		}
@@ -162,7 +163,7 @@ final class PullState {
 		let key = database.keyName
 		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
 		if let n = token {
-			lookup[key] = try? NSKeyedArchiver.archivedData(withRootObject: n, requiringSecureCoding: false)
+            lookup[key] = SafeArchiver.archive(n)
 		} else {
 			lookup[key] = nil
 		}
