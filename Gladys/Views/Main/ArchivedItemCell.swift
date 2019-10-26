@@ -556,8 +556,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         var actions = [ShortcutAction]()
         if item.canOpen {
-            actions.append(ShortcutAction(title: "Open", callback: { [weak self] in
-                guard let s = self else { return }
+            actions.append(ShortcutAction(title: "Open", callback: {
                 ViewController.shared.noteLastActionedItem(item)
                 item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
