@@ -23,14 +23,6 @@ class GladysViewController: UIViewController {
 		UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 	}
 
-	static var tintColor: UIColor {
-        return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
-	}
-
-	static var darkColor: UIColor? {
-		return nil
-	}
-
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if popoverPresenter != nil {

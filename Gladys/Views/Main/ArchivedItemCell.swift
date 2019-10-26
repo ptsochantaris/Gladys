@@ -23,7 +23,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	@IBOutlet private weak var cancelButton: UIButton!
 	@IBOutlet private weak var lockImage: UIImageView!
-	@IBOutlet private weak var mergeImage: UIImageView!
 	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	@IBOutlet private weak var topLabelLeft: NSLayoutConstraint!
@@ -43,7 +42,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private var shareColor: UIColor? {
 		if archivedDropItem?.shareMode == .sharing {
-			return ViewController.tintColor
+			return UIColor(named: "colorTint")
 		} else {
 			return image.backgroundColor
 		}
@@ -99,8 +98,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				contentView.addSubview(holder)
 
 				NSLayoutConstraint.activate([
-					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-					holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+					holder.topAnchor.constraint(equalTo: topAnchor),
+					holder.trailingAnchor.constraint(equalTo: trailingAnchor),
 
 					holder.widthAnchor.constraint(equalToConstant: 40),
 					holder.heightAnchor.constraint(equalToConstant: 40),
@@ -128,30 +127,27 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				let img = UIImageView(frame: .zero)
 				img.translatesAutoresizingMaskIntoConstraints = false
-				img.contentMode = .center
-				let image = #imageLiteral(resourceName: "iconUserChecked")
-				let imageSize = image.size
-				img.image = image
+                img.tintColor = self.tintColor
+                img.preferredSymbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
+				img.image = UIImage(systemName: "person.crop.circle.fill.badge.checkmark")
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
 				holder.backgroundColor = borderView.backgroundColor
-				holder.layer.cornerRadius = 10
+				holder.layer.cornerRadius = 20
 				holder.layer.maskedCorners = .layerMaxXMaxYCorner
 				holder.addSubview(img)
 				contentView.insertSubview(holder, belowSubview: topLabel)
 
 				NSLayoutConstraint.activate([
-					holder.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-					holder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+					holder.topAnchor.constraint(equalTo: topAnchor),
+					holder.leadingAnchor.constraint(equalTo: leadingAnchor),
 
-					holder.widthAnchor.constraint(equalToConstant: 44),
-					holder.heightAnchor.constraint(equalToConstant: 50),
+					holder.widthAnchor.constraint(equalToConstant: 47),
+					holder.heightAnchor.constraint(equalToConstant: 40),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
 					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
-					img.widthAnchor.constraint(equalToConstant: imageSize.width),
-					img.heightAnchor.constraint(equalToConstant: imageSize.height),
 				])
 
 				shareImage = img

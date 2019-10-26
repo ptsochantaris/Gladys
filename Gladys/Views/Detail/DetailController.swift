@@ -84,17 +84,17 @@ final class DetailController: GladysViewController,
 
 			switch item.shareMode {
 			case .none:
-				invitesButton.image = #imageLiteral(resourceName: "iconUserAdd")
+				invitesButton.image = UIImage(systemName: "person.crop.circle.badge.plus")
 				invitesButton.accessibilityLabel = "Share With Others"
-				invitesButton.tintColor = ViewController.tintColor
+                invitesButton.tintColor = UIColor(named: "colorTint")
 			case .elsewhereReadOnly, .elsewhereReadWrite:
-				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+				invitesButton.image = UIImage(systemName: "person.crop.circle.fill.badge.checkmark")
 				invitesButton.accessibilityLabel = "Imported Share Options"
                 invitesButton.tintColor = UIColor(named: "colorGray")
 			case .sharing:
-				invitesButton.image = #imageLiteral(resourceName: "iconUserChecked")
+				invitesButton.image = UIImage(systemName: "person.crop.circle.fill.badge.checkmark")
 				invitesButton.accessibilityLabel = "Exported Share Options"
-				invitesButton.tintColor = ViewController.tintColor
+				invitesButton.tintColor = UIColor(named: "colorTint")
 			}
 		}
 
@@ -110,7 +110,7 @@ final class DetailController: GladysViewController,
 			if titleView == nil {
 				titleView = UILabel()
 				titleView!.font = UIFont.preferredFont(forTextStyle: .caption1)
-				titleView!.textColor = ViewController.tintColor
+				titleView!.textColor = UIColor(named: "colorTint")
 			}
 			titleView!.text = title
 		}

@@ -157,10 +157,10 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="FSI-ng-CKW">
                                                                     <rect key="frame" x="8" y="18" width="368.5" height="44.5"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
                                                                             <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                             <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -174,13 +174,13 @@
                                                                                 <constraint firstAttribute="bottom" secondItem="UeM-ck-Te4" secondAttribute="bottom" id="hwf-eQ-KYp"/>
                                                                             </constraints>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
                                                                             <rect key="frame" x="0.0" y="15.5" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="31" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1925,9 +1925,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                         <constraint firstAttribute="height" constant="40" id="mPG-lj-hTC"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                                    <state key="normal" image="archivebox" catalog="system">
-                                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
-                                                                                    </state>
+                                                                                    <state key="normal" image="arrow.down.doc" catalog="system"/>
                                                                                     <connections>
                                                                                         <action selector="archiveSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="REB-Y8-Rw0"/>
                                                                                     </connections>
@@ -1939,7 +1937,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="pencil" catalog="system">
-                                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium"/>
+                                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="semibold"/>
                                                                                     </state>
                                                                                     <connections>
                                                                                         <action selector="editSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="QwI-h1-rx6"/>
@@ -1952,7 +1950,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                     <state key="normal" image="magnifyingglass" catalog="system">
-                                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium"/>
                                                                                     </state>
                                                                                     <connections>
                                                                                         <action selector="inspectSelected:" destination="Px0-DU-AgV" eventType="touchUpInside" id="WBa-Em-Eyp"/>
@@ -2055,7 +2053,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <action selector="openSelected:" destination="Ftr-GB-y6U" id="84p-41-AZd"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="iconUserAdd" id="z3I-Nm-WFY">
+                        <barButtonItem key="rightBarButtonItem" image="person.badge.plus" catalog="system" id="z3I-Nm-WFY">
                             <connections>
                                 <action selector="inviteButtonSelected:" destination="Ftr-GB-y6U" id="Ra0-YG-oAN"/>
                             </connections>
@@ -2915,7 +2913,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="hVB-Yo-22H"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="5tk-99-BC9">
-                        <barButtonItem key="rightBarButtonItem" title="Copy" image="archivebox" catalog="system" id="q5U-C6-HUs">
+                        <barButtonItem key="rightBarButtonItem" title="Copy" image="arrow.down.doc" catalog="system" id="q5U-C6-HUs">
                             <connections>
                                 <action selector="copySelected:" destination="JWg-wu-LKR" id="eY9-ml-rmK"/>
                             </connections>
@@ -3469,7 +3467,7 @@ Selecting them will show only items that contain these labels.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="archivebox" catalog="system" width="64" height="52"/>
+        <image name="arrow.down.doc" catalog="system" width="56" height="64"/>
         <image name="arrow.up.arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="bin.xmark" catalog="system" width="64" height="46"/>
         <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
@@ -3482,7 +3480,6 @@ Selecting them will show only items that contain these labels.</string>
         <image name="icloud" catalog="system" width="64" height="44"/>
         <image name="iconSortAscendingSmall" width="22" height="22"/>
         <image name="iconSortDescendingSmall" width="22" height="22"/>
-        <image name="iconUserAdd" width="24" height="28"/>
         <image name="info.circle" catalog="system" width="64" height="60"/>
         <image name="line.horizontal.3.decrease.circle" catalog="system" width="64" height="60"/>
         <image name="list.bullet" catalog="system" width="64" height="44"/>
@@ -3490,6 +3487,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="magnifyingglass" catalog="system" width="64" height="56"/>
         <image name="mic" catalog="system" width="54" height="64"/>
         <image name="pencil" catalog="system" width="64" height="56"/>
+        <image name="person.badge.plus" catalog="system" width="64" height="58"/>
         <image name="questionmark.circle" catalog="system" width="64" height="60"/>
         <image name="slider.horizontal.3" catalog="system" width="64" height="50"/>
         <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>

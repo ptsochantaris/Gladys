@@ -31,7 +31,7 @@ final class QLHostingViewController: UINavigationController, UIViewControllerAni
     override func viewDidLoad() {
         super.viewDidLoad()
         preferredContentSize = mainWindow.bounds.size
-        let tint = ViewController.tintColor
+        let tint = UIColor(named: "colorTint")
         view.tintColor = tint
         navigationBar.tintColor = tint
         if let sourceBar = ViewController.shared.navigationController?.navigationBar {
