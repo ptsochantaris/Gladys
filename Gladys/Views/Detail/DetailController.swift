@@ -70,10 +70,10 @@ final class DetailController: GladysViewController,
 	private func updateLockButton() {
 		if item.isLocked {
 			lockButton.accessibilityLabel = "Remove Lock"
-			lockButton.image = #imageLiteral(resourceName: "locked")
+			lockButton.image = UIImage(systemName: "lock.fill")
 		} else {
 			lockButton.accessibilityLabel = "Lock Item"
-			lockButton.image = #imageLiteral(resourceName: "unlocked")
+			lockButton.image = UIImage(systemName: "lock.open")
 		}
 		lockButton.isEnabled = !item.isImportedShare
 	}
