@@ -544,53 +544,62 @@ final class ArchivedItemCell: UICollectionViewCell {
 }
 
 extension ArchivedItemCell: UIContextMenuInteractionDelegate {
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+    private func createShortcutActions() -> UIMenu? {
         guard let item = archivedDropItem else { return nil }
         
-        struct ShortcutAction {
-            let title: String
-            let callback: () -> Void
-            let style: UIAction.Attributes
-            let iconName: String?
+        func makeAction(title: String, callback: @escaping () -> Void, style: UIAction.Attributes, iconName: String?) -> UIAction {
+            let a = UIAction(title: title) { _ in callback() }
+            a.attributes = style
+            if let iconName = iconName {
+                a.image = UIImage(systemName: iconName)
+            }
+            return a
         }
         
-        var actions = [ShortcutAction]()
+        var children = [UIMenuElement]()
+        
         if item.canOpen {
-            actions.append(ShortcutAction(title: "Open", callback: {
+            children.append(makeAction(title: "Open", callback: {
                 ViewController.shared.noteLastActionedItem(item)
                 item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
+        
         if item.canPreview {
-            actions.append(ShortcutAction(title: "Quick Look", callback: { [weak self] in
+            children.append(makeAction(title: "Quick Look", callback: { [weak self] in
                 guard let s = self else { return }
                 ViewController.shared.noteLastActionedItem(item)
                 item.tryPreview(in: ViewController.top, from: s)
                 }, style: [], iconName: "eye"))
         }
-        actions.append(ShortcutAction(title: "Info Panel", callback: {
+        
+        children.append(makeAction(title: "Info Panel", callback: {
             ViewController.shared.noteLastActionedItem(item)
             ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
         }, style: [], iconName: "list.bullet.below.rectangle"))
-        actions.append(ShortcutAction(title: "Move to Top", callback: {
+        
+        children.append(makeAction(title: "Move to Top", callback: {
             ViewController.shared.noteLastActionedItem(item)
             ViewController.shared.sendToTop(item: item)
         }, style: [], iconName: "arrow.turn.left.up"))
-        actions.append(ShortcutAction(title: "Copy to Clipboard", callback: {
+        
+        children.append(makeAction(title: "Copy to Clipboard", callback: {
             ViewController.shared.noteLastActionedItem(item)
             item.copyToPasteboard()
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Copied.")
             }
         }, style: [], iconName: "doc.on.doc"))
-        actions.append(ShortcutAction(title: "Duplicate", callback: {
+        
+        children.append(makeAction(title: "Duplicate", callback: {
             ViewController.shared.noteLastActionedItem(item)
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
             }
             }, style: [], iconName: "arrow.branch"))
-        actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
+        
+        children.append(makeAction(title: "Share", callback: { [weak self] in
             guard let s = self else { return }
             ViewController.shared.noteLastActionedItem(item)
             let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
@@ -600,39 +609,30 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
                 p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
             }
         }, style: [], iconName: "square.and.arrow.up"))
-                
-        var children: [UIMenuElement] = actions.map { action -> UIAction in
-            let a = UIAction(title: action.title) { _ in action.callback() }
-            a.attributes = action.style
-            if let iconName = action.iconName {
-                a.image = UIImage(systemName: iconName)
-            }
-            return a
-        }
-        
-        let deleteTitle: String
-        if item.shareMode == .sharing {
-            deleteTitle = "Confirm (Will delete from shared users too)"
-        } else {
-            deleteTitle = "Confirm Delete"
-        }
-        let confirmAction = UIAction(title: deleteTitle) { _ in
+                  
+        let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm Delete"
+        let confirmAction = UIAction(title: confirmTitle) { _ in
             ViewController.shared.deleteRequested(for: [item])
         }
         confirmAction.attributes = .destructive
         confirmAction.image = UIImage(systemName: "bin.xmark")
-        
         let deleteMenu = UIMenu(title: "Delete", image: confirmAction.image, identifier: nil, options: .destructive, children: [confirmAction])
         children.append(deleteMenu)
-
-        return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSCopying, previewProvider: {
-            if item.canPreview {
-                return item.previewableTypeItem?.quickLook(extraRightButton: nil)
+        
+        return UIMenu(title: item.displayTitleOrUuid, image: nil, identifier: nil, options: [], children: children)
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let item = archivedDropItem else { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak item] in
+            guard let i = item else { return nil }
+            if i.canPreview {
+                return i.previewableTypeItem?.quickLook(extraRightButton: nil)
             } else {
                 return nil
             }
-        }, actionProvider: { _ in
-            return UIMenu(title: item.displayTitleOrUuid, image: nil, identifier: nil, options: [], children: children)
+        }, actionProvider: { [weak self] _ in
+            return self?.createShortcutActions()
         })
     }
 }
