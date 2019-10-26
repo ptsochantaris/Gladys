@@ -614,8 +614,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			donatePasteIntent()
 		}
         
-        // TODO: do properly
-        FileAreaManager.mirrorBlobsToFiles()
+        // TODO: WIP
+        //FileAreaManager.mirrorBlobsToFiles()
 	}
 
 	deinit {

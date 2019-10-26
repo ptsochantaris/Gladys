@@ -1,14 +1,6 @@
 
 import UIKit
 import MapKit
-import WebKit
-
-struct ShortcutAction {
-	let title: String
-	let callback: ()->Void
-	let style: UIAlertAction.Style
-	let push: Bool
-}
 
 final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet private weak var image: GladysImageView!
@@ -201,137 +193,19 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
 		contentView.addGestureRecognizer(p)
-
-		if ViewController.shared.traitCollection.forceTouchCapability == .available {
-			let d = DeepPressGestureRecognizer(target: self, action: #selector(deepPressed(_:)), threshold: 0.9)
-			contentView.addGestureRecognizer(d)
-		} else {
-			let D = UILongPressGestureRecognizer(target: self, action: #selector(doubleTapped(_:)))
-			D.numberOfTouchesRequired = 2
-			D.require(toFail: p)
-			D.minimumPressDuration = 0.01
-			contentView.addGestureRecognizer(D)
-		}
-
-		let SL = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
-		SL.direction = .left
-		SL.require(toFail: p)
-		contentView.addGestureRecognizer(SL)
         
-        let SR = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
-        SR.direction = .right
-        SR.require(toFail: p)
-        contentView.addGestureRecognizer(SR)
+        let interaction = UIContextMenuInteraction(delegate: self)
+        addInteraction(interaction)
 	}
-
-	private func clearAllOtherGestures() {
-		for r in ViewController.shared.itemView.gestureRecognizers ?? [] {
-			r.state = .failed
-		}
-	}
-
+    
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
 		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.needsUnlock {
 			pinchRecognizer.state = .ended
-			clearAllOtherGestures()
 			item.tryPreview(in: ViewController.top, from: self)
 		}
 	}
 
-	@objc private func deepPressed(_ deepPressRecognizer: DeepPressGestureRecognizer) {
-		if let item = archivedDropItem, deepPressRecognizer.state == .began, !item.shouldDisplayLoading, !item.needsUnlock {
-			clearAllOtherGestures()
-			showShortcutMenu(push: true)
-		}
-	}
-
-	@objc private func swiped(_ swipeRegognizer: UISwipeGestureRecognizer) {
-		if let item = archivedDropItem, swipeRegognizer.state == .recognized, !item.shouldDisplayLoading, !item.needsUnlock {
-			clearAllOtherGestures()
-			showShortcutMenu(push: false)
-		}
-	}
-
-	@objc private func doubleTapped(_ tapRecognizer: UITapGestureRecognizer) {
-		if let item = archivedDropItem, tapRecognizer.state == .ended, !item.shouldDisplayLoading, !item.needsUnlock {
-			clearAllOtherGestures()
-			showShortcutMenu(push: false)
-		}
-	}
-
-	private func shortcutActions(push: Bool) -> [ShortcutAction] {
-		var actions = [ShortcutAction]()
-		guard let item = archivedDropItem else { return actions }
-		if item.canOpen {
-			actions.append(ShortcutAction(title: "Open", callback: { [weak self] in
-				guard let s = self else { return }
-				s.egress()
-				item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
-			}, style: .default, push: push))
-		}
-		if item.canPreview {
-			actions.append(ShortcutAction(title: "Quick Look", callback: { [weak self] in
-				guard let s = self else { return }
-				s.egress()
-				item.tryPreview(in: ViewController.top, from: s)
-			}, style: .default, push: push))
-		}
-		actions.append(ShortcutAction(title: "Info Panel", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
-		}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Move to Top", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			ViewController.shared.sendToTop(item: item)
-		}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Copy to Clipboard", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			item.copyToPasteboard()
-			if UIAccessibility.isVoiceOverRunning {
-				UIAccessibility.post(notification: .announcement, argument: "Copied.")
-			}
-		}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Duplicate", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			Model.duplicate(item: item)
-			if UIAccessibility.isVoiceOverRunning {
-				UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
-			}
-			}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
-			ViewController.shared.present(a, animated: true)
-			if let p = a.popoverPresentationController {
-				p.sourceView = s
-				p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
-			}
-		}, style: .default, push: push))
-		actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
-			guard let s = self else { return }
-			s.egress()
-			s.confirmDelete(for: item, push: push)
-		}, style: .destructive, push: push))
-		return actions
-	}
-
-	private func showShortcutMenu(push: Bool) {
-		guard let item = archivedDropItem else { return }
-		let title = item.addedString
-		let subtitle = item.note.isEmpty ? nil : item.note
-		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .actionSheet)
-		for action in shortcutActions(push: push) {
-			a.addAction(UIAlertAction(title: action.title, style: action.style) { _ in action.callback() })
-		}
-		presentAlert(a, push: push)
-	}
-
-	private func confirmDelete(for item: ArchivedDropItem, push: Bool) {
+	private func confirmDelete(for item: ArchivedDropItem) {
 		var title, message: String?
 		if item.shareMode == .sharing {
 			title = "You are sharing this item"
@@ -341,10 +215,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive) { _ in
 			ViewController.shared.deleteRequested(for: [item])
 		})
-		presentAlert(a, push: push)
+		presentAlert(a)
 	}
 
-	private func presentAlert(_ a: UIAlertController, push: Bool) {
+	private func presentAlert(_ a: UIAlertController) {
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 			self.egress()
 		})
@@ -353,11 +227,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if let p = a.popoverPresentationController {
 			p.sourceView = self
 			p.sourceRect = self.contentView.bounds.insetBy(dx: 6, dy: 6)
-		}
-		if push {
-			a.transitionCoordinator?.animate(alongsideTransition: { context in
-				self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-			}, completion: nil)
 		}
 	}
 
@@ -647,12 +516,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		})
 	}
 
-	@objc private func performShortcut(_ sender: UIAccessibilityCustomAction) -> Bool {
-		guard let action = shortcutActions(push: false).first(where: { $0.title == sender.name }) else { return false }
-		action.callback()
-		return true
-	}
-
 	/////////////////////////////////////////
 
 	override func accessibilityActivate() -> Bool {
@@ -661,15 +524,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 			return true
 		} else {
 			return super.accessibilityActivate()
-		}
-	}
-
-	override var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
-		set {}
-		get {
-			return shortcutActions(push: false).map {
-				UIAccessibilityCustomAction(name: $0.title, target: self, selector: #selector(performShortcut(_:)))
-			}
 		}
 	}
 
@@ -723,3 +577,91 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 }
 
+extension ArchivedItemCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let item = archivedDropItem else { return nil }
+        
+        struct ShortcutAction {
+            let title: String
+            let callback: () -> Void
+            let style: UIAction.Attributes
+            let iconName: String?
+        }
+        
+        var actions = [ShortcutAction]()
+        if item.canOpen {
+            actions.append(ShortcutAction(title: "Open", callback: { [weak self] in
+                guard let s = self else { return }
+                s.egress()
+                item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
+            }, style: [], iconName: "arrow.up.doc"))
+        }
+        if item.canPreview {
+            actions.append(ShortcutAction(title: "Quick Look", callback: { [weak self] in
+                guard let s = self else { return }
+                s.egress()
+                item.tryPreview(in: ViewController.top, from: s)
+                }, style: [], iconName: "eye"))
+        }
+        actions.append(ShortcutAction(title: "Info Panel", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
+        }, style: [], iconName: "list.bullet.below.rectangle"))
+        actions.append(ShortcutAction(title: "Move to Top", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            ViewController.shared.sendToTop(item: item)
+        }, style: [], iconName: "arrow.turn.left.up"))
+        actions.append(ShortcutAction(title: "Copy to Clipboard", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            item.copyToPasteboard()
+            if UIAccessibility.isVoiceOverRunning {
+                UIAccessibility.post(notification: .announcement, argument: "Copied.")
+            }
+        }, style: [], iconName: "doc.on.doc"))
+        actions.append(ShortcutAction(title: "Duplicate", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            Model.duplicate(item: item)
+            if UIAccessibility.isVoiceOverRunning {
+                UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
+            }
+            }, style: [], iconName: "arrow.branch"))
+        actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
+            ViewController.shared.present(a, animated: true)
+            if let p = a.popoverPresentationController {
+                p.sourceView = s
+                p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
+            }
+        }, style: [], iconName: "square.and.arrow.up"))
+        actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
+            guard let s = self else { return }
+            s.egress()
+            s.confirmDelete(for: item)
+        }, style: .destructive, iconName: "bin.xmark"))
+
+        let children = actions.map { action -> UIAction in
+            let a = UIAction(title: action.title) { _ in action.callback() }
+            a.attributes = action.style
+            if let iconName = action.iconName {
+                a.image = UIImage(systemName: iconName)
+            }
+            return a
+        }
+
+        return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSCopying, previewProvider: {
+            if item.canPreview {
+                return item.previewableTypeItem?.quickLook(extraRightButton: nil)
+            } else {
+                return nil
+            }
+        }, actionProvider: { _ in
+            return UIMenu(title: item.displayTitleOrUuid, image: nil, identifier: nil, options: [], children: children)
+        })
+    }
+}
