@@ -91,15 +91,6 @@ extension PersistedOptions {
 		}
 	}
 
-	static var translucentMode: Bool {
-		get {
-			return defaults.bool(forKey: "translucentMode")
-		}
-		set {
-			defaults.set(newValue, forKey: "translucentMode")
-		}
-	}
-
 	static var alwaysOnTop: Bool {
 		get {
 			return defaults.bool(forKey: "alwaysOnTop")

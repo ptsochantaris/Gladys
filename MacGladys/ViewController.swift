@@ -78,7 +78,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 		if let f = lastWindowPosition {
 			window?.setFrame(f, display: false)
 		}
-		ViewController.shared.updateTranslucentMode()
 	}
 
 	private var firstShow = true
@@ -243,20 +242,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
     
     var touchBarScrubber: GladysTouchBarScrubber?
-
-	func updateTranslucentMode() {
-		guard let l = view.window?.contentView?.layer else { return }
-		if PersistedOptions.translucentMode {
-			translucentView.isHidden = false
-			l.contents = nil
-		} else {
-			translucentView.isHidden = true
-			let i = #imageLiteral(resourceName: "paper")
-			i.resizingMode = .tile
-			l.contents = i
-			l.contentsGravity = .resize
-		}
-	}
 
 	private func updateDragOperationIndicators() {
 		collection.setDraggingSourceOperationMask(.move, forLocal: true)

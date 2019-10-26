@@ -30,7 +30,6 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
 	@IBOutlet private weak var menuBarModeSwitch: NSButton!
-	@IBOutlet private weak var translucencySwitch: NSButton!
 	@IBOutlet private weak var alwaysOnTopSwitch: NSButton!
     @IBOutlet private weak var disableUrlSupportSwitch: NSButton!
     
@@ -63,7 +62,6 @@ final class Preferences: NSViewController {
         launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
 		hideMainWindowSwitch.integerValue = PersistedOptions.hideMainWindowAtStartup ? 1 : 0
 		menuBarModeSwitch.integerValue = PersistedOptions.menubarIconMode ? 1 : 0
-		translucencySwitch.integerValue = PersistedOptions.translucentMode ? 1 : 0
 		alwaysOnTopSwitch.integerValue = PersistedOptions.alwaysOnTop ? 1 : 0
         disableUrlSupportSwitch.integerValue = PersistedOptions.blockGladysUrlRequests ? 1 : 0
         exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
@@ -105,11 +103,6 @@ final class Preferences: NSViewController {
         PersistedOptions.readAndStoreFinderTagsAsLabels = sender.integerValue == 1
     }
     
-	@IBAction private func translucencySwitchSelected(_ sender: NSButton) {
-		PersistedOptions.translucentMode = sender.integerValue == 1
-		ViewController.shared.updateTranslucentMode()
-	}
-
 	@IBAction private func menuBarModeSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.menubarIconMode = sender.integerValue == 1
 		AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: true)
