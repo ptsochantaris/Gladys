@@ -205,31 +205,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	private func confirmDelete(for item: ArchivedDropItem) {
-		var title, message: String?
-		if item.shareMode == .sharing {
-			title = "You are sharing this item"
-			message = "Deleting it will remove it from others' collections too."
-		}
-		let a = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive) { _ in
-			ViewController.shared.deleteRequested(for: [item])
-		})
-		presentAlert(a)
-	}
-
-	private func presentAlert(_ a: UIAlertController) {
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-			self.egress()
-		})
-		a.modalPresentationStyle = .popover
-		ViewController.top.present(a, animated: true)
-		if let p = a.popoverPresentationController {
-			p.sourceView = self
-			p.sourceRect = self.contentView.bounds.insetBy(dx: 6, dy: 6)
-		}
-	}
-
 	var archivedDropItem: ArchivedDropItem? {
 		didSet {
 			reDecorate()
@@ -507,15 +482,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	private func egress() {
-		if let a = archivedDropItem {
-			ViewController.shared.noteLastActionedItem(a)
-		}
-		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
-			self.transform = .identity
-		})
-	}
-
 	/////////////////////////////////////////
 
 	override func accessibilityActivate() -> Bool {
@@ -592,38 +558,34 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         if item.canOpen {
             actions.append(ShortcutAction(title: "Open", callback: { [weak self] in
                 guard let s = self else { return }
-                s.egress()
+                ViewController.shared.noteLastActionedItem(item)
                 item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
         if item.canPreview {
             actions.append(ShortcutAction(title: "Quick Look", callback: { [weak self] in
                 guard let s = self else { return }
-                s.egress()
+                ViewController.shared.noteLastActionedItem(item)
                 item.tryPreview(in: ViewController.top, from: s)
                 }, style: [], iconName: "eye"))
         }
-        actions.append(ShortcutAction(title: "Info Panel", callback: { [weak self] in
-            guard let s = self else { return }
-            s.egress()
+        actions.append(ShortcutAction(title: "Info Panel", callback: {
+            ViewController.shared.noteLastActionedItem(item)
             ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
         }, style: [], iconName: "list.bullet.below.rectangle"))
-        actions.append(ShortcutAction(title: "Move to Top", callback: { [weak self] in
-            guard let s = self else { return }
-            s.egress()
+        actions.append(ShortcutAction(title: "Move to Top", callback: {
+            ViewController.shared.noteLastActionedItem(item)
             ViewController.shared.sendToTop(item: item)
         }, style: [], iconName: "arrow.turn.left.up"))
-        actions.append(ShortcutAction(title: "Copy to Clipboard", callback: { [weak self] in
-            guard let s = self else { return }
-            s.egress()
+        actions.append(ShortcutAction(title: "Copy to Clipboard", callback: {
+            ViewController.shared.noteLastActionedItem(item)
             item.copyToPasteboard()
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Copied.")
             }
         }, style: [], iconName: "doc.on.doc"))
-        actions.append(ShortcutAction(title: "Duplicate", callback: { [weak self] in
-            guard let s = self else { return }
-            s.egress()
+        actions.append(ShortcutAction(title: "Duplicate", callback: {
+            ViewController.shared.noteLastActionedItem(item)
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
@@ -631,7 +593,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             }, style: [], iconName: "arrow.branch"))
         actions.append(ShortcutAction(title: "Share", callback: { [weak self] in
             guard let s = self else { return }
-            s.egress()
+            ViewController.shared.noteLastActionedItem(item)
             let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
             ViewController.shared.present(a, animated: true)
             if let p = a.popoverPresentationController {
@@ -639,13 +601,8 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
                 p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
             }
         }, style: [], iconName: "square.and.arrow.up"))
-        actions.append(ShortcutAction(title: "Delete", callback: { [weak self] in
-            guard let s = self else { return }
-            s.egress()
-            s.confirmDelete(for: item)
-        }, style: .destructive, iconName: "bin.xmark"))
-
-        let children = actions.map { action -> UIAction in
+                
+        var children: [UIMenuElement] = actions.map { action -> UIAction in
             let a = UIAction(title: action.title) { _ in action.callback() }
             a.attributes = action.style
             if let iconName = action.iconName {
@@ -653,6 +610,21 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             }
             return a
         }
+        
+        let deleteTitle: String
+        if item.shareMode == .sharing {
+            deleteTitle = "Confirm (Will delete from shared users too)"
+        } else {
+            deleteTitle = "Confirm Delete"
+        }
+        let confirmAction = UIAction(title: deleteTitle) { _ in
+            ViewController.shared.deleteRequested(for: [item])
+        }
+        confirmAction.attributes = .destructive
+        confirmAction.image = UIImage(systemName: "bin.xmark")
+        
+        let deleteMenu = UIMenu(title: "Delete", image: confirmAction.image, identifier: nil, options: .destructive, children: [confirmAction])
+        children.append(deleteMenu)
 
         return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSCopying, previewProvider: {
             if item.canPreview {
