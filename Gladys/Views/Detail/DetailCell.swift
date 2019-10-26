@@ -66,7 +66,7 @@ final class DetailCell: UITableViewCell {
 
 		let b = UIView()
 		b.translatesAutoresizingMaskIntoConstraints = false
-		b.backgroundColor = UIColor(named: "colorLightGray")
+        b.backgroundColor = UIColor(named: "colorShadow")
 		b.layer.cornerRadius = 10
 		contentView.insertSubview(b, belowSubview: borderView)
 		NSLayoutConstraint.activate([

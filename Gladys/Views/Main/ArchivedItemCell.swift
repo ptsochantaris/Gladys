@@ -193,6 +193,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		borderView.layer.cornerRadius = 10
         borderView.backgroundColor = backgroundColor
 		b.cover(with: borderView, insets: UIEdgeInsets(top: 0, left: 0, bottom: 0.5, right: 0))
+        b.backgroundColor = UIColor(named: "colorShadowContrast")
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
@@ -629,7 +630,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	func flash() {
         let originalColor = borderView.backgroundColor
 		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-			self.borderView.backgroundColor = .systemRed
+			self.borderView.backgroundColor = UIColor(named: "colorTint")
 		}) { finished in
 			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
 				self.borderView.backgroundColor = originalColor
