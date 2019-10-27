@@ -28,7 +28,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
-
+    @IBOutlet private weak var fileMirrorSwitch: UISwitch!
+    
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
 		clearCaches()
@@ -116,6 +117,21 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.blockGladysUrlRequests = sender.isOn
     }
     
+    @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
+        let on = sender.isOn
+        PersistedOptions.mirrorFilesToDocuments = on
+        sender.isEnabled = false
+        if on {
+            Model.performFirstMirror {
+                sender.isEnabled = true
+            }
+        } else {
+            Model.disableMirror {
+                sender.isEnabled = true
+            }
+        }
+    }
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -127,49 +143,21 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 		doneLocation = .right
 
-        autoConvertUrlsSwitch.tintColor = UIColor(named: "colorLightGray")
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
-        
-        blockGladysUrls.tintColor = UIColor(named: "colorLightGray")
         blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests
-        
-		separateItemsSwitch.tintColor = UIColor(named: "colorLightGray")
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
-
-		twoColumnsSwitch.tintColor = UIColor(named: "colorLightGray")
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
-
-		removeItemsWhenDraggedOutSwitch.tintColor = UIColor(named: "colorLightGray")
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut
-
-		dontAutoLabelNewItemsSwitch.tintColor = UIColor(named: "colorLightGray")
 		dontAutoLabelNewItemsSwitch.isOn = PersistedOptions.dontAutoLabelNewItems
-
-		displayNotesInMainViewSwitch.tintColor = UIColor(named: "colorLightGray")
 		displayNotesInMainViewSwitch.isOn = PersistedOptions.displayNotesInMainView
-
-		displayLabelsInMainViewSwitch.tintColor = UIColor(named: "colorLightGray")
 		displayLabelsInMainViewSwitch.isOn = PersistedOptions.displayLabelsInMainView
-
-		showCopyMoveSwitchSelectorSwitch.tintColor = UIColor(named: "colorLightGray")
 		showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
-
-		allowLabelsInExtensionSwitch.tintColor = UIColor(named: "colorLightGray")
 		allowLabelsInExtensionSwitch.isOn = PersistedOptions.setLabelsWhenActioning
-
-		inclusiveSearchTermsSwitch.tintColor = UIColor(named: "colorLightGray")
 		inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
-
-		autoArchiveSwitch.tintColor = UIColor(named: "colorLightGray")
 		autoArchiveSwitch.isOn = PersistedOptions.autoArchiveUrlComponents
-
-		exclusiveLabelsSwitch.tintColor = UIColor(named: "colorLightGray")
 		exclusiveLabelsSwitch.isOn = PersistedOptions.exclusiveMultipleLabels
-
-		wideModeSwitch.tintColor = UIColor(named: "colorLightGray")
+        fileMirrorSwitch.isOn = PersistedOptions.mirrorFilesToDocuments
 		wideModeSwitch.isOn = PersistedOptions.wideMode
-
-		fullScreenSwitch.tintColor = UIColor(named: "colorLightGray")
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
 
 		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue
