@@ -482,43 +482,10 @@ final class ArchivedDropItemType: Codable {
 	private static let lastModificationKey = "build.bru.Gladys.lastGladysModification"
 	var lastGladysBlobUpdate: Date? { // be sure to protect with dataAccessQueue
 		get {
-			let recordLocation = bytesPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					let length = getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, nil, 0, 0, 0)
-					if length > 0 {
-						var data = Data(count: length)
-						let result = data.withUnsafeMutableBytes { ptr -> Int in
-							guard let base = ptr.baseAddress else { return 0 }
-							return getxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, base, length, 0, 0)
-						}
-						if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
-							return Date(timeIntervalSinceReferenceDate: time)
-						}
-					}
-					return nil
-				}
-			}
-			return nil
+            return FileManager.default.getDateAttribute(ArchivedDropItemType.lastModificationKey, from: bytesPath)
 		}
 		set {
-			let recordLocation = bytesPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					if let newValue = newValue {
-						if let data = String(newValue.timeIntervalSinceReferenceDate).data(using: .utf8) {
-							log("Setting external update stamp for \(recordLocation.path) to \(newValue)")
-							_ = data.withUnsafeBytes { ptr in
-								guard let base = ptr.baseAddress else { return }
-								setxattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, base, data.count, 0, 0)
-							}
-						}
-					} else {
-						log("Clearing external update stamp for \(recordLocation.path)")
-						removexattr(fileSystemPath, ArchivedDropItemType.lastModificationKey, 0)
-					}
-				}
-			}
+            FileManager.default.setDateAttribute(ArchivedDropItemType.lastModificationKey, at: bytesPath, to: newValue)
 		}
 	}
 }

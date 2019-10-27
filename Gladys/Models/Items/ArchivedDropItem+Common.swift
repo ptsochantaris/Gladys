@@ -163,35 +163,12 @@ extension ArchivedDropItem: Hashable {
 	}
 
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
-	private static let trueData = "true".data(using: .utf8)!
-	private static let trueDataCount = trueData.count
 	var needsCloudPush: Bool {
 		set {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				_ = recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					if newValue {
-						_ = ArchivedDropItem.trueData.withUnsafeBytes { ptr in
-							if let bytes = ptr.baseAddress {
-								setxattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, bytes, ArchivedDropItem.trueDataCount, 0, 0)
-							}
-						}
-					} else {
-						removexattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, 0)
-					}
-				}
-			}
+            FileManager.default.setBoolAttribute(ArchivedDropItem.needsCloudPushKey, at: cloudKitDataPath, to: newValue)
 		}
 		get {
-			let recordLocation = cloudKitDataPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				return recordLocation.withUnsafeFileSystemRepresentation { fileSystemPath in
-					let length = getxattr(fileSystemPath, ArchivedDropItem.needsCloudPushKey, nil, 0, 0, 0)
-					return length > 0
-				}
-			} else {
-				return true
-			}
+            return FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
 		}
 	}
 

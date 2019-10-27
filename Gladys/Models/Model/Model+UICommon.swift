@@ -567,7 +567,9 @@ extension Model {
 			Model.legacyMode = false
 			log("Migration done")
 		}
-        FileAreaManager.mirrorBlobsToFiles()
+        #if MAINAPP
+        FileAreaManager.mirrorToFiles(from: Model.drops)
+        #endif
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			PersistedOptions.lastRanVersion = currentBuild
 		})
@@ -594,6 +596,8 @@ extension Model {
 	private static func performSave() {
 
 		let itemsToSave = drops.filter { $0.goodToSave }
+        FileAreaManager.mirrorToFiles(from: itemsToSave.filter { $0.needsSaving} )
+
 		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
 			if i.needsSaving {
 				i.isBeingCreatedBySync = false
@@ -602,7 +606,7 @@ extension Model {
 			}
 			return nil
 		}
-
+        
 		isSaving = true
 		needsAnotherSave = false
 

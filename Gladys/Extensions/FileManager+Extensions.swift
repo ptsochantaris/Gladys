@@ -35,4 +35,121 @@ extension FileManager {
 		}
 		try copyItem(at: at, to: to)
 	}
+    
+    func getDateAttribute(_ attributeName: String, from url: URL) -> Date? {
+        guard fileExists(atPath: url.path) else {
+            return nil
+        }
+        
+        return url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            let length = getxattr(fileSystemPath, attributeName, nil, 0, 0, 0)
+            if length > 0 {
+                var data = Data(count: length)
+                let result = data.withUnsafeMutableBytes { ptr -> Int in
+                    guard let base = ptr.baseAddress else { return 0 }
+                    return getxattr(fileSystemPath, attributeName, base, length, 0, 0)
+                }
+                if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
+                    return Date(timeIntervalSinceReferenceDate: time)
+                }
+            }
+            return nil
+        }
+    }
+    
+    func setDateAttribute(_ attributeName: String, at url: URL, to date: Date?) {
+        guard fileExists(atPath: url.path) else {
+            return
+        }
+        
+        url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            if let newValue = date {
+                let string = String(newValue.timeIntervalSinceReferenceDate)
+                if let data = string.data(using: .utf8) {
+                    _ = data.withUnsafeBytes { ptr in
+                        guard let base = ptr.baseAddress else { return }
+                        let res = setxattr(fileSystemPath, attributeName, base, data.count, 0, 0)
+                        if res < 0 {
+                            log(String(format: "Error while setting date attribute: %s for %s", strerror(errno), fileSystemPath!))
+                        }
+                    }
+                }
+            } else {
+                removexattr(fileSystemPath, attributeName, 0)
+            }
+        }
+    }
+    
+    private static let trueData = "true".data(using: .utf8)!
+    private static let trueDataCount = trueData.count
+    func setBoolAttribute(_ attributeName: String, at url: URL, to newValue: Bool) {
+        guard fileExists(atPath: url.path) else {
+            return
+        }
+        url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            if newValue {
+                _ = FileManager.trueData.withUnsafeBytes { ptr in
+                    if let bytes = ptr.baseAddress {
+                        let res = setxattr(fileSystemPath, attributeName, bytes, FileManager.trueDataCount, 0, 0)
+                        if res < 0 {
+                            log(String(format: "Error while setting bool attribute: %s for %s", strerror(errno), fileSystemPath!))
+                        }
+                    }
+                }
+            } else {
+                removexattr(fileSystemPath, attributeName, 0)
+            }
+        }
+    }
+    
+    func getBoolAttribute(_ attributeName: String, from url: URL) -> Bool? {
+        guard fileExists(atPath: url.path) else {
+            return nil
+        }
+        return url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            let length = getxattr(fileSystemPath, attributeName, nil, 0, 0, 0)
+            return length > 0
+        }
+    }
+    
+    func getUUIDAttribute(_ attributeName: String, from url: URL) -> UUID? {
+        guard fileExists(atPath: url.path) else {
+            return nil
+        }
+        
+        return url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            if getxattr(fileSystemPath, attributeName, nil, 0, 0, 0) == 16 {
+                var d = [UInt8](repeating: 0, count: 16)
+                let result = d.withUnsafeMutableBytes { ptr -> Int in
+                    guard let base = ptr.baseAddress else { return 0 }
+                    return getxattr(fileSystemPath, attributeName, base, 16, 0, 0)
+                }
+                if result > 0 {
+                    return UUID(uuid: (d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12], d[13], d[14], d[15]))
+                }
+            }
+            return nil
+        }
+    }
+    
+    func setUUIDAttribute(_ attributeName: String, at url: URL, to uuid: UUID?) {
+        guard fileExists(atPath: url.path) else {
+            return
+        }
+        
+        url.withUnsafeFileSystemRepresentation { fileSystemPath in
+            if let u = uuid?.uuid {
+                let bytes = [u.0, u.1, u.2, u.3, u.4, u.5, u.6, u.7, u.8, u.9, u.10, u.11, u.12, u.13, u.14, u.15]
+                _ = bytes.withUnsafeBytes { ptr in
+                    guard let base = ptr.baseAddress else { return }
+                    let res = setxattr(fileSystemPath, attributeName, base, 16, 0, 0)
+                    if res < 0 {
+                        log(String(format: "Error while setting uuid attribute: %s for %s", strerror(errno), fileSystemPath!))
+                    }
+                }
+            } else {
+                removexattr(fileSystemPath, attributeName, 0)
+            }
+        }
+    }
 }
