@@ -93,8 +93,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 					holder.topAnchor.constraint(equalTo: topAnchor),
 					holder.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-					holder.widthAnchor.constraint(equalToConstant: 40),
-					holder.heightAnchor.constraint(equalToConstant: 40),
+					holder.widthAnchor.constraint(equalToConstant: 41),
+					holder.heightAnchor.constraint(equalToConstant: 41),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
 					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
@@ -129,14 +129,14 @@ final class ArchivedItemCell: UICollectionViewCell {
 				holder.layer.cornerRadius = 20
 				holder.layer.maskedCorners = .layerMaxXMaxYCorner
 				holder.addSubview(img)
-				contentView.insertSubview(holder, belowSubview: topLabel)
+                contentView.addSubview(holder)
 
 				NSLayoutConstraint.activate([
 					holder.topAnchor.constraint(equalTo: topAnchor),
 					holder.leadingAnchor.constraint(equalTo: leadingAnchor),
 
 					holder.widthAnchor.constraint(equalToConstant: 47),
-					holder.heightAnchor.constraint(equalToConstant: 40),
+					holder.heightAnchor.constraint(equalToConstant: 41),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
 					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
@@ -468,7 +468,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			spinner.startAnimating()
 		}
 
-		topLabelLeft.constant = (shareHolder == nil || wideCell) ? 0 : 35
+		topLabelLeft.constant = (shareHolder == nil || wideCell) ? 0 : 46
 	}
 
 	func flash() {

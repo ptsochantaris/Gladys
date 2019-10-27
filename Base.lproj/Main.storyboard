@@ -3152,7 +3152,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="circle" catalog="system" highlightedImage="checkmark.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="XuS-mV-EV4">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" highlightedImage="checkmark.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="XuS-mV-EV4">
                                                     <rect key="frame" x="205" y="25.5" width="20" height="19"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="Oj4-F2-SmH"/>
@@ -3507,8 +3507,8 @@ Selecting them will show only items that contain these labels.</string>
         <image name="arrow.down.doc" catalog="system" width="56" height="64"/>
         <image name="arrow.up.arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="bin.xmark" catalog="system" width="64" height="46"/>
+        <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
-        <image name="circle" catalog="system" width="64" height="60"/>
         <image name="details" width="22" height="15"/>
         <image name="doc.on.doc" catalog="system" width="58" height="64"/>
         <image name="eye" catalog="system" width="64" height="40"/>

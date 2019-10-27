@@ -7,7 +7,6 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private weak var headerLabel: UILabel!
-	@IBOutlet private weak var backgorundView: UIImageView!
 
 	var selectedLabels = [String]()
 	var completion: (([String], String)->Void)?
