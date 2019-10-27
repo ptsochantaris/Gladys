@@ -187,6 +187,7 @@ extension Model {
 
 	static func saveComplete() {
 		NotificationCenter.default.post(name: .SaveComplete, object: nil)
+        FileAreaManager.mirrorBlobsToFiles()
 		if saveIsDueToSyncFetch {
 			saveIsDueToSyncFetch = false
 			log("Will not sync to cloud, as the save was due to the completion of a cloud sync")

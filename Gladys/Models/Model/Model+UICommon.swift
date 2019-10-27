@@ -567,6 +567,7 @@ extension Model {
 			Model.legacyMode = false
 			log("Migration done")
 		}
+        FileAreaManager.mirrorBlobsToFiles()
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			PersistedOptions.lastRanVersion = currentBuild
 		})
@@ -688,9 +689,7 @@ extension Model {
 					let t = u.uuid
 					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
 					if let e = e, dirtyUuids.contains(u) {
-						try autoreleasepool {
-							try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
-						}
+                        try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
 					}
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)

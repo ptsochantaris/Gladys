@@ -1,103 +1,92 @@
 import Foundation
 
 final class FileAreaManager {
-    static let appDocumentsUrl: URL = {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
-    }()
-    
     static func mirrorBlobsToFiles() {
-        for item in Model.drops where item.goodToSave {
-            item.mirrorBlobToFiles()
+        let drops = Model.drops.filter { $0.goodToSave }
+        BackgroundTask.registerForBackground()
+        dataAccessQueue.async {
+            do {
+                let f = FileManager.default
+                let baseDir = f.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
+                if !f.fileExists(atPath: baseDir.path) {
+                    try f.createDirectory(at: baseDir, withIntermediateDirectories: true, attributes: nil)
+                }
+                let createdUrls = try drops.compactMap { try $0.mirrorBlobToFiles(using: f, at: baseDir)?.path }
+                try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
+                    let existing = baseDir.appendingPathComponent(name).path
+                    return createdUrls.contains(existing) ? nil : existing
+                }.forEach {
+                    try f.removeItem(atPath: $0)
+                }
+            } catch {
+                log("Error while mirroring items from file area: \(error.localizedDescription)")
+            }
+            BackgroundTask.unregisterForBackground()
         }
     }
 }
 
 extension ArchivedDropItem {
-    func mirrorBlobToFiles() {
-        let f = FileManager.default
-        
-        let parentUrl: URL = FileAreaManager.appDocumentsUrl.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32))
-        do {
-            if typeItems.count == 1, let child = typeItems.first {
-                try child.mirror(to: parentUrl, asChild: false, using: f)
+    fileprivate func mirrorBlobToFiles(using f: FileManager, at baseDir: URL) throws -> URL? {
+        let url = baseDir.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32))
+        if typeItems.count == 1, let child = typeItems.first {
+            return try child.mirror(to: url, asChild: false, using: f)
+        } else {
+            try mirror(to: url, using: f)
+            return url
+        }
+    }
+    
+    private func mirror(to url: URL, using f: FileManager) throws {
+        let path = url.path
+        if f.fileExists(atPath: path) {
+            if let date = try f.attributesOfItem(atPath: url.path)[FileAttributeKey.modificationDate] as? Date, date == updatedAt {
+                return
             } else {
-                try f.createDirectory(at: parentUrl, withIntermediateDirectories: true, attributes: nil)
-                for child in typeItems {
-                    try child.mirror(to: parentUrl, asChild: true, using: f)
-                }
+                try f.removeItem(atPath: path)
             }
-        } catch {
-            log("Error while mirroring item \(uuid) to file area: \(error.localizedDescription)")
+        }
+        try f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        try f.setAttributes([
+            .extensionHidden: false,
+            .creationDate: createdAt,
+            .modificationDate: updatedAt
+        ], ofItemAtPath: path)
+        for child in typeItems {
+            _ = try child.mirror(to: url, asChild: true, using: f)
         }
     }
 }
 
 extension ArchivedDropItemType {
-    func mirror(to parentUrl: URL, asChild: Bool, using f: FileManager) throws {
+    fileprivate func mirror(to parentUrl: URL, asChild: Bool, using f: FileManager) throws -> URL {
         if !f.fileExists(atPath: bytesPath.path) {
-            return
+            return parentUrl
         }
 
         var url = asChild ? parentUrl.appendingPathComponent(filenameTypeIdentifier) : parentUrl
         
-        if let ext = fileExtension {
+        if let ext = fileExtension, !url.path.hasSuffix("." + ext) {
             url = url.appendingPathExtension(ext)
         }
         
         let path = url.path
         if f.fileExists(atPath: path) {
-            try f.removeItem(at: url)
+            if let date = try f.attributesOfItem(atPath: url.path)[FileAttributeKey.modificationDate] as? Date, date == updatedAt {
+                return url
+            } else {
+                try f.removeItem(atPath: path)
+            }
         }
+        
         try f.copyItem(at: bytesPath, to: url)
-        try f.setAttributes([.extensionHidden: false, .type: typeIdentifier], ofItemAtPath: path)
+        try f.setAttributes([
+            .extensionHidden: false,
+            .creationDate: createdAt,
+            .modificationDate: updatedAt,
+            .type: typeIdentifier
+        ], ofItemAtPath: path)
+        
+        return url
     }
 }
-
-/*
-	var creationDate: Date? {
-		return dropItem?.createdAt ?? typeItem?.createdAt
-	}
-
-	var contentModificationDate: Date? {
-		return dropItem?.updatedAt ?? typeItem?.updatedAt
-	}
-
-	var gladysModificationDate: Date {
-		var date = contentModificationDate ?? .distantPast
-
-		// tags
-		if dropItem?.hasTagData ?? false, let path = dropItem?.tagDataPath, let d = Model.modificationDate(for: path) {
-			date = max(date, d)
-		} else if typeItem?.hasTagData ?? false, let path = typeItem?.tagDataPath, let d = Model.modificationDate(for: path) {
-			date = max(date, d)
-		}
-
-		// previews
-		if let dropItem = dropItem {
-			for typeItem in dropItem.typeItems {
-				date = max(date, typeItem.updatedAt) // if child is fresher, use that date
-				if let d = Model.modificationDate(for: typeItem.bytesPath) {
-					date = max(date, d)
-				}
-			}
-		} else if let typeItem = typeItem, let d = Model.modificationDate(for: typeItem.bytesPath) {
-			date = max(date, d)
-		}
-
-		return date
-	}
-    
-    var capabilities: NSFileProviderItemCapabilities {
-		if let t = typeItem, let parent = Model.item(uuid: t.parentUuid) {
-			if parent.shareMode == .elsewhereReadOnly {
-				return [.allowsReading]
-			} else {
-				return [.allowsReading, .allowsWriting, .allowsDeleting]
-			}
-		} else if dropItem != nil {
-			return [.allowsReading, .allowsDeleting]
-		} else {
-			return [.allowsReading]
-		}
-    }
-*/
