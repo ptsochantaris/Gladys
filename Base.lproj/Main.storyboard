@@ -157,10 +157,10 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="FSI-ng-CKW">
                                                                     <rect key="frame" x="8" y="18" width="368.5" height="44.5"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
+                                                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
                                                                             <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                             <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -174,13 +174,13 @@
                                                                                 <constraint firstAttribute="bottom" secondItem="UeM-ck-Te4" secondAttribute="bottom" id="hwf-eQ-KYp"/>
                                                                             </constraints>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
                                                                             <rect key="frame" x="0.0" y="15.5" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="31" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2980,51 +2980,55 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController storyboardIdentifier="WebPreview" hidesBottomBarWhenPushed="YES" id="wbd-m0-Cft" customClass="WebPreviewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ndK-jn-u5m">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzu-kl-oLc">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                 <wkWebViewConfiguration key="configuration" allowsInlineMediaPlayback="YES">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="RoG-HQ-ty2">
-                                <rect key="frame" x="177.5" y="323.5" width="20" height="20"/>
-                            </activityIndicatorView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uja-Ru-1K2">
-                                <rect key="frame" x="20" y="0.0" width="335" height="667"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="MJE-Ny-bGj">
+                                <rect key="frame" x="67.5" y="162.5" width="240" height="50.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVY-2l-WkD">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="14.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="RoG-HQ-ty2">
+                                        <rect key="frame" x="0.0" y="30.5" width="240" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="xQ9-VN-QxP"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="xzu-kl-oLc" firstAttribute="top" secondItem="ndK-jn-u5m" secondAttribute="top" id="BqE-d8-zV1"/>
-                            <constraint firstItem="uja-Ru-1K2" firstAttribute="top" secondItem="cvj-8E-BYA" secondAttribute="top" id="DtD-J2-s9H"/>
-                            <constraint firstItem="cvj-8E-BYA" firstAttribute="trailing" secondItem="uja-Ru-1K2" secondAttribute="trailing" constant="20" id="GZv-5Z-ry6"/>
-                            <constraint firstItem="cvj-8E-BYA" firstAttribute="bottom" secondItem="uja-Ru-1K2" secondAttribute="bottom" id="K2X-yM-Q2L"/>
                             <constraint firstItem="xzu-kl-oLc" firstAttribute="leading" secondItem="ndK-jn-u5m" secondAttribute="leading" id="Vat-2l-C3F"/>
                             <constraint firstAttribute="bottom" secondItem="xzu-kl-oLc" secondAttribute="bottom" id="YBj-sC-KM4"/>
-                            <constraint firstItem="RoG-HQ-ty2" firstAttribute="centerX" secondItem="ndK-jn-u5m" secondAttribute="centerX" id="ahq-xM-aO2"/>
-                            <constraint firstItem="RoG-HQ-ty2" firstAttribute="centerY" secondItem="ndK-jn-u5m" secondAttribute="centerY" id="e7H-WU-mf1"/>
+                            <constraint firstItem="MJE-Ny-bGj" firstAttribute="centerX" secondItem="ndK-jn-u5m" secondAttribute="centerX" id="cow-f8-6hk"/>
                             <constraint firstAttribute="trailing" secondItem="xzu-kl-oLc" secondAttribute="trailing" id="edd-Fr-BxB"/>
-                            <constraint firstItem="uja-Ru-1K2" firstAttribute="leading" secondItem="cvj-8E-BYA" secondAttribute="leading" constant="20" id="tzj-Zq-oif"/>
+                            <constraint firstItem="MJE-Ny-bGj" firstAttribute="centerY" secondItem="ndK-jn-u5m" secondAttribute="centerY" id="lUC-XS-ltG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cvj-8E-BYA"/>
                     </view>
+                    <size key="freeformSize" width="375" height="375"/>
                     <connections>
                         <outlet property="spinner" destination="RoG-HQ-ty2" id="wXd-7U-KjB"/>
-                        <outlet property="statusLabel" destination="uja-Ru-1K2" id="4NU-oy-Mxb"/>
+                        <outlet property="statusLabel" destination="dVY-2l-WkD" id="FpL-qV-0ka"/>
                         <outlet property="web" destination="xzu-kl-oLc" id="Mj4-Cs-rzz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="96y-tG-0db" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3273" y="1740"/>
+            <point key="canvasLocation" x="3273" y="1607"/>
         </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
@@ -3465,6 +3469,39 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="7666" y="-2200"/>
         </scene>
+        <!--Link View Controller-->
+        <scene sceneID="hYs-qh-kbx">
+            <objects>
+                <viewController storyboardIdentifier="LinkPreview" hidesBottomBarWhenPushed="YES" id="hgW-hl-pPi" customClass="LinkViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="URi-sC-MAf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wp5-6y-O1D">
+                                <rect key="frame" x="20" y="20" width="335" height="335"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="4LM-Al-Ctu" firstAttribute="bottom" secondItem="Wp5-6y-O1D" secondAttribute="bottom" constant="20" id="9V3-4j-Wgy"/>
+                            <constraint firstItem="Wp5-6y-O1D" firstAttribute="leading" secondItem="4LM-Al-Ctu" secondAttribute="leading" constant="20" id="TSc-Y4-dvS"/>
+                            <constraint firstItem="Wp5-6y-O1D" firstAttribute="top" secondItem="4LM-Al-Ctu" secondAttribute="top" constant="20" id="eCf-uo-Opu"/>
+                            <constraint firstItem="4LM-Al-Ctu" firstAttribute="trailing" secondItem="Wp5-6y-O1D" secondAttribute="trailing" constant="20" id="mUy-sr-ODE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="4LM-Al-Ctu"/>
+                    </view>
+                    <size key="freeformSize" width="375" height="375"/>
+                    <connections>
+                        <outlet property="statusLabel" destination="Wp5-6y-O1D" id="Dba-Km-Tvo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jeU-kC-QFD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3272.8000000000002" y="2058.6206896551726"/>
+        </scene>
     </scenes>
     <resources>
         <image name="arrow.down.doc" catalog="system" width="56" height="64"/>
@@ -3493,16 +3530,16 @@ Selecting them will show only items that contain these labels.</string>
         <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
         <image name="zip" width="20" height="28"/>
         <namedColor name="colorDarkGray">
-            <color red="0.33300000000000002" green="0.33300000000000002" blue="0.33300000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorFill">
-            <color red="0.10000000596046447" green="0.10000000596046447" blue="0.10000000596046447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.84299999475479126" green="0.83099997043609619" blue="0.80800002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorPaper">
-            <color red="0.15000000149011611" green="0.15000000894069671" blue="0.15000000894069671" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.90196078431372551" green="0.89803921568627454" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorTint">
-            <color red="0.396078431372549" green="0.92941176470588238" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>

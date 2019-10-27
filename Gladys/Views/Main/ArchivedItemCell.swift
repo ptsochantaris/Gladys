@@ -627,7 +627,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak item] in
             guard let i = item else { return nil }
             if i.canPreview {
-                return i.previewableTypeItem?.quickLook(extraRightButton: nil)
+                return i.previewableTypeItem?.quickLook(extraRightButton: nil, forceLinkPreviewForUrls: true)
             } else {
                 return nil
             }
