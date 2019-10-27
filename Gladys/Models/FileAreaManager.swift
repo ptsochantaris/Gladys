@@ -5,36 +5,53 @@ final class FileAreaManager {
     static fileprivate let mirrorDateKey = "build.bru.Gladys.fileMirrorDateKey"
     static fileprivate let mirrorUuidKey = "build.bru.Gladys.fileMirrorUuidKey"
 
-    static let fileAreaQueue = DispatchQueue(label: "build.bru.Gladys.mirrorQueue", qos: .background, attributes: [], autoreleaseFrequency: .workItem, target: nil)
-
-    static func mirrorToFiles(from drops: [ArchivedDropItem]) {
+    static func removeMirrorIfNeeded() throws {
+        let f = FileManager.default
+        let baseDir = f.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
+        if f.fileExists(atPath: baseDir.path) {
+            try f.removeItem(at: baseDir)
+        }
+    }
+    
+    static func mirrorToFiles(from drops: [ArchivedDropItem]) throws {
         if drops.isEmpty {
             log("Nothing to mirror")
             return
         }
-        BackgroundTask.registerForBackground()
-        fileAreaQueue.async {
-            log("Mirroring \(drops.count) items...")
-            do {
-                let f = FileManager.default
-                let baseDir = f.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
-                if !f.fileExists(atPath: baseDir.path) {
-                    try f.createDirectory(at: baseDir, withIntermediateDirectories: true, attributes: nil)
-                }
-                let createdUrls = try drops.compactMap { try $0.mirrorToFiles(using: f, at: baseDir)?.path }
-                log("Removing files for non-existent items...")
-                try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
-                    let existing = baseDir.appendingPathComponent(name).path
-                    return createdUrls.contains(existing) ? nil : existing
-                }.forEach {
-                    try f.removeItem(atPath: $0)
-                }
-            } catch {
-                log("Error while mirroring items from file area: \(error.localizedDescription)")
-            }
-            log("Mirroring items done")
-            BackgroundTask.unregisterForBackground()
+        
+        let f = FileManager.default
+        let baseDir = f.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
+        if !f.fileExists(atPath: baseDir.path) {
+            log("Creating mirror directory \(baseDir.path)")
+            try f.createDirectory(at: baseDir, withIntermediateDirectories: true, attributes: nil)
         }
+        
+        var createdUrls = [String]()
+        let coordinator = NSFileCoordinator()
+        var coordinationError: NSError?
+        var mirrorError: NSError?
+        log("Mirroring \(drops.count) items...")
+        coordinator.coordinate(readingItemAt: Model.itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { _ in
+            do {
+                createdUrls = try drops.compactMap { try $0.mirrorToFiles(using: f, at: baseDir)?.path }
+            } catch {
+                mirrorError = error as NSError
+            }
+        }
+        
+        if let error = coordinationError ?? mirrorError {
+            throw error
+        }
+        
+        log("Removing files for non-existent items...")
+        try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
+            let existing = baseDir.appendingPathComponent(name).path
+            return createdUrls.contains(existing) ? nil : existing
+        }.forEach {
+            try f.removeItem(atPath: $0)
+        }
+            
+        log("Mirroring items done")
     }
 }
 

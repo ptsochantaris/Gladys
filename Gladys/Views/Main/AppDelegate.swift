@@ -114,7 +114,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
-		PersistedOptions.migrateBrokenDefaults()
 		Model.reloadDataIfNeeded()
 		PullState.checkMigrations()
 		if CloudManager.syncSwitchedOn {

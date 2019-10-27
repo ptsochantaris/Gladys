@@ -567,9 +567,6 @@ extension Model {
 			Model.legacyMode = false
 			log("Migration done")
 		}
-        #if MAINAPP
-        FileAreaManager.mirrorToFiles(from: Model.drops)
-        #endif
 		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
 			PersistedOptions.lastRanVersion = currentBuild
 		})
@@ -592,27 +589,44 @@ extension Model {
 			performSave()
 		}
 	}
+    
+    private static func performFirstMirror(completion: @escaping (Error?)->Void) {
+        let itemsToSave = drops.filter { $0.goodToSave }
+        saveQueue.async {
+            do {
+                try FileAreaManager.mirrorToFiles(from: itemsToSave)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
+    }
 
 	private static func performSave() {
 
 		let itemsToSave = drops.filter { $0.goodToSave }
-        FileAreaManager.mirrorToFiles(from: itemsToSave.filter { $0.needsSaving} )
+        
+        let itemsNeedingSaving = itemsToSave.filter { $0.needsSaving}
 
-		let uuidsToEncode = itemsToSave.compactMap { i -> UUID? in
-			if i.needsSaving {
-				i.isBeingCreatedBySync = false
-				i.needsSaving = false
-				return i.uuid
-			}
-			return nil
+		let uuidsToEncode = itemsNeedingSaving.map { i -> UUID in
+            i.isBeingCreatedBySync = false
+            i.needsSaving = false
+            return i.uuid
 		}
         
 		isSaving = true
 		needsAnotherSave = false
 
+        let shouldMirror = PersistedOptions.mirrorFilesToDocuments
+        
 		saveQueue.async {
 			do {
-				try self.coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+                if shouldMirror {
+                    try FileAreaManager.mirrorToFiles(from: itemsNeedingSaving)
+                } else {
+                    try FileAreaManager.removeMirrorIfNeeded()
+                }
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}

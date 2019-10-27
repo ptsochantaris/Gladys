@@ -16,17 +16,6 @@ final class PersistedOptions {
 
 	static let defaults = UserDefaults(suiteName: groupName)!
 
-	static func migrateBrokenDefaults() { // keep this around for a while
-		if let brokenDefaults = UserDefaults(suiteName: "group.buildefaults.bru.Gladys") {
-			for key in ["separateItemPreference", "forceTwoColumnPreference", "lastiCloudAccount", "lastSyncCompletion", "zoneChangeMayNotReflectSavedChanges", "syncSwitchedOn", "onlySyncOverWiFi", "zoneChangeToken", "uuidSequence"] {
-				if let o = brokenDefaults.object(forKey: key) {
-					defaults.set(o, forKey: key)
-					brokenDefaults.removeObject(forKey: key)
-				}
-			}
-		}
-	}
-
 	private static var wideModeCache: Bool?
 	static var wideMode: Bool {
 		get {
@@ -95,6 +84,15 @@ final class PersistedOptions {
 			defaults.set(newValue, forKey: "removeItemsWhenDraggedOut")
 		}
 	}
+    
+    static var mirrorFilesToDocuments: Bool {
+        get {
+            return defaults.bool(forKey: "mirrorFilesToDocuments")
+        }
+        set {
+            defaults.set(newValue, forKey: "mirrorFilesToDocuments")
+        }
+    }
 
 	static var dontAutoLabelNewItems: Bool {
 		get {
