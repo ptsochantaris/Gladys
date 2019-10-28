@@ -154,12 +154,12 @@ extension ArchivedDropItem {
 		}
 
 		if ViewController.shared.phoneMode || PersistedOptions.fullScreenPreviews {
-			let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDismiss))
+			let r = makeDoneButton(target: self, action: #selector(previewDismiss))
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
 			if UIAccessibility.isVoiceOverRunning {
-				let r = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(previewDone))
+				let r = makeDoneButton(target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
 		}

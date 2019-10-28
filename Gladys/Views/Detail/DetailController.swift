@@ -507,7 +507,7 @@ final class DetailController: GladysViewController,
 					n.relatedItem = s.item
 					n.relatedChildItem = typeEntry
 					n.sourceItemView = c
-					q.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: s, action: #selector(s.closePreview))
+					q.navigationItem.rightBarButtonItem = makeDoneButton(target: s, action: #selector(s.closePreview))
 					ViewController.top.present(n, animated: true)
 				}
 			}

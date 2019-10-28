@@ -8,6 +8,15 @@
 
 import UIKit
 
+func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
+    let d = UIBarButtonItem(image: UIImage(systemName: "xmark.circle.fill"),
+                            style: .done,
+                            target: target,
+                            action: action)
+    d.accessibilityLabel = "Done"
+    return d
+}
+
 extension UIImage {
 
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {

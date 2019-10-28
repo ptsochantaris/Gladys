@@ -33,27 +33,29 @@
                                             <rect key="frame" x="0.0" y="0.0" width="120" height="90"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="VpK-Xo-WZd">
-                                                    <rect key="frame" x="10" y="23" width="100" height="57"/>
-                                                    <color key="backgroundColor" red="0.84313725490000002" green="0.83137254900000002" blue="0.80784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" text="Line 1" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SdU-GT-bis">
-                                                    <rect key="frame" x="8" y="6.0000000000000009" width="104" height="13.333333333333336"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                    <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="yaN-Uu-b7f">
+                                                    <rect key="frame" x="8" y="6" width="144" height="113"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" text="Line 1" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SdU-GT-bis">
+                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="13.333333333333334"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="VpK-Xo-WZd">
+                                                            <rect key="frame" x="0.0" y="15.333333333333332" width="100" height="54.666666666666671"/>
+                                                            <color key="backgroundColor" name="colorFill"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                </stackView>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="VpK-Xo-WZd" secondAttribute="trailing" constant="10" id="497-yK-jB1"/>
-                                            <constraint firstItem="VpK-Xo-WZd" firstAttribute="leading" secondItem="PiZ-gd-FlF" secondAttribute="leading" constant="10" id="Vou-AV-QHf"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="SdU-GT-bis" secondAttribute="trailing" id="czW-gf-6Sh"/>
-                                            <constraint firstAttribute="bottom" secondItem="VpK-Xo-WZd" secondAttribute="bottom" constant="10" id="ozd-ui-q5G"/>
-                                            <constraint firstItem="VpK-Xo-WZd" firstAttribute="top" secondItem="SdU-GT-bis" secondAttribute="bottom" constant="3.5" id="tOU-cP-0Qh"/>
-                                            <constraint firstItem="SdU-GT-bis" firstAttribute="top" secondItem="PiZ-gd-FlF" secondAttribute="topMargin" constant="-2" id="xfz-VO-KXS"/>
-                                            <constraint firstItem="SdU-GT-bis" firstAttribute="leading" secondItem="PiZ-gd-FlF" secondAttribute="leadingMargin" id="yEC-hD-5cC"/>
+                                            <constraint firstAttribute="bottom" secondItem="yaN-Uu-b7f" secondAttribute="bottom" constant="10" id="0RM-6d-frl"/>
+                                            <constraint firstItem="yaN-Uu-b7f" firstAttribute="leading" secondItem="PiZ-gd-FlF" secondAttribute="leading" constant="10" id="Biu-5I-eDE"/>
+                                            <constraint firstItem="yaN-Uu-b7f" firstAttribute="top" secondItem="PiZ-gd-FlF" secondAttribute="top" constant="10" id="fbf-Wj-16H"/>
+                                            <constraint firstAttribute="trailing" secondItem="yaN-Uu-b7f" secondAttribute="trailing" constant="10" id="fkD-K9-UZJ"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="VpK-Xo-WZd" id="lYD-AL-eDm"/>
@@ -106,12 +108,16 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="118"/>
+            <point key="canvasLocation" x="75.369458128078819" y="116.8"/>
         </scene>
     </scenes>
     <resources>
+        <namedColor name="colorFill">
+            <color red="0.10000000149011612" green="0.10000000149011612" blue="0.10000000149011612" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="colorPaper">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.15000000596046448" green="0.15000000596046448" blue="0.15000000596046448" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
+    <color key="tintColor" name="colorTint"/>
 </document>

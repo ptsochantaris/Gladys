@@ -173,6 +173,6 @@ class GladysViewController: UIViewController {
 	}
 
 	private lazy var doneButton: UIBarButtonItem = {
-		return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        return makeDoneButton(target: self, action: #selector(done))
 	}()
 }

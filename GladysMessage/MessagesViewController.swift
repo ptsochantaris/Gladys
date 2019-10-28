@@ -39,7 +39,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 		let count = CGFloat(itemsPerRow(for: size))
 		var s = size
 		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
-		s.height = s.width
+		s.height = min(175, s.width)
 		f.itemSize = s
 		f.sectionInset.top = searchBar.frame.size.height
 		f.invalidateLayout()

@@ -245,7 +245,7 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 	}
 
 	private func showDone() {
-		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+		navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
 	}
 
 	private func shutdownExtension() {

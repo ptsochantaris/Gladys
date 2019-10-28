@@ -20,7 +20,7 @@ final class MessageCell: UICollectionViewCell {
 		super.awakeFromNib()
 
 		let b = UIView()
-		b.backgroundColor = .white
+		b.backgroundColor = .systemBackground
 		b.layer.cornerRadius = 10
 		b.clipsToBounds = true
 		backgroundView = b
