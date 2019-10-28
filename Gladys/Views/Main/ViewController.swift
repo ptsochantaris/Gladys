@@ -1113,7 +1113,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				itemSize = CGSize(width: 300, height: 200)
 			} else if lastSize.width >= 1024 {
 				calculateSizes(for: 4)
-			} else if lastSize.width >= 694 {
+			} else if lastSize.width > 438 {
 				calculateSizes(for: 3)
 			} else {
 				calculateSizes(for: 2)

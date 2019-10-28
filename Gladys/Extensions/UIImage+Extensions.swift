@@ -9,7 +9,7 @@
 import UIKit
 
 func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
-    let d = UIBarButtonItem(image: UIImage(systemName: "xmark.circle.fill"),
+    let d = UIBarButtonItem(image: UIImage(systemName: "xmark.circle"),
                             style: .done,
                             target: target,
                             action: action)
