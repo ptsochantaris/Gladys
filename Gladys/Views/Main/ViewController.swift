@@ -1111,7 +1111,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		} else {
 			if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
 				itemSize = CGSize(width: 300, height: 200)
-			} else if lastSize.width >= 1024 {
+			} else if lastSize.width > 980 {
 				calculateSizes(for: 4)
 			} else if lastSize.width > 438 {
 				calculateSizes(for: 3)

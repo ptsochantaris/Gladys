@@ -410,22 +410,44 @@ final class DetailController: GladysViewController,
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 			let typeEntry = item.typeItems[indexPath.row]
 			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
-				cell.name.alpha = 1.0
-				cell.name.text = "\"\(title)\""
 				cell.name.textAlignment = typeEntry.displayTitleAlignment
-				setCallbacks(for: cell, for: typeEntry)
+                if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
+                    cell.name.text = nil
+                    cell.imageHolder.image = nil
+                    icon.desaturated { img in
+                        cell.imageHolder.image = img
+                    }
+                } else {
+                    cell.name.alpha = 1.0
+                    cell.name.text = "\"\(title)\""
+                    cell.imageHolder.image = nil
+                }
+                setCallbacks(for: cell, for: typeEntry)
+                
 			} else if typeEntry.dataExists {
 				cell.name.alpha = 0.7
 				if typeEntry.isWebArchive {
 					cell.name.text = DetailController.shortFormatter.string(from: typeEntry.createdAt)
+                    cell.imageHolder.image = nil
 				} else {
-					cell.name.text = "Binary Data"
+                    if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
+                        cell.name.text = nil
+                        cell.imageHolder.image = nil
+                        icon.desaturated { img in
+                            cell.imageHolder.image = img
+                        }
+                    } else {
+                        cell.name.text = "Binary Data"
+                        cell.imageHolder.image = nil
+                    }
 				}
 				cell.name.textAlignment = .center
 				setCallbacks(for: cell, for: typeEntry)
+                
 			} else {
 				cell.name.alpha = 0.7
 				cell.name.text = "Loading Error"
+                cell.imageHolder.image = nil
 				cell.name.textAlignment = .center
 				cell.inspectionCallback = nil
 				cell.viewCallback = nil

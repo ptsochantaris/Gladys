@@ -86,4 +86,21 @@ extension UIImage {
 
 		return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
 	}
+    
+    func desaturated(completion: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .utility).async {
+            guard let ciImage = CIImage(image: self) else {
+                completion(nil)
+                return
+            }
+            let blackAndWhiteImage = ciImage.applyingFilter("CIColorControls", parameters: [
+                "inputSaturation": 0,
+                "inputContrast": 0.35,
+                "inputBrightness": -0.3])
+            let img = UIImage(ciImage: blackAndWhiteImage)
+            DispatchQueue.main.async {
+                completion(img)
+            }
+        }
+    }
 }

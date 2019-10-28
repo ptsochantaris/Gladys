@@ -1922,7 +1922,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VbD-WF-VPn" userLabel="Description And Actions">
                                                                     <rect key="frame" x="0.0" y="17.5" width="282" height="160"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
+                                                                        <view clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
                                                                             <rect key="frame" x="0.0" y="0.0" width="238" height="160"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
@@ -1931,11 +1931,19 @@ Selecting them will show only items that contain these labels.</string>
                                                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
+                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H5L-gJ-sUR">
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="238" height="160"/>
+                                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </imageView>
                                                                             </subviews>
                                                                             <color key="backgroundColor" name="colorFill"/>
                                                                             <constraints>
+                                                                                <constraint firstAttribute="bottom" secondItem="H5L-gJ-sUR" secondAttribute="bottom" id="9rT-YT-qYL"/>
                                                                                 <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="5" id="A4z-xs-pX2"/>
+                                                                                <constraint firstItem="H5L-gJ-sUR" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="MH2-hx-7Sq"/>
                                                                                 <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" constant="10" id="VyL-e1-tLl"/>
+                                                                                <constraint firstItem="H5L-gJ-sUR" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="kTO-AX-G75"/>
+                                                                                <constraint firstAttribute="trailing" secondItem="H5L-gJ-sUR" secondAttribute="trailing" id="nqS-Za-62l"/>
                                                                                 <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="5" id="sDA-vR-FnE"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="c4v-Gs-QKx" secondAttribute="trailing" constant="10" id="vjp-PR-kDd"/>
                                                                             </constraints>
@@ -2028,6 +2036,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="borderView" destination="SCX-mM-he8" id="Pwc-O4-o3O"/>
                                             <outlet property="desc" destination="X2E-UF-eyf" id="UAI-bk-gWx"/>
                                             <outlet property="editButton" destination="95r-TU-tTc" id="t5R-Vc-po9"/>
+                                            <outlet property="imageHolder" destination="H5L-gJ-sUR" id="AqF-1E-s2v"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
                                             <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>

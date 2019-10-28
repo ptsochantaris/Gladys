@@ -14,6 +14,8 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
 
+    @IBOutlet weak var imageHolder: UIImageView!
+    
 	var inspectionCallback: (()->Void)? {
 		didSet {
 			setNeedsUpdateConstraints()
