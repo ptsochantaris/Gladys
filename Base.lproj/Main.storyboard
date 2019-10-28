@@ -24,11 +24,11 @@
                                     <size key="itemSize" width="300" height="300"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
+                                    <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArchivedItemCell" id="x5M-NP-dlj" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="167" y="10" width="466" height="384"/>
+                                        <rect key="frame" x="167" y="0.0" width="466" height="384"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="466" height="384"/>
@@ -135,7 +135,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="WideArchivedItemCell" id="0dQ-7c-9PT" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="167" y="404" width="466" height="80"/>
+                                        <rect key="frame" x="167" y="394" width="466" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="466" height="80"/>
@@ -157,10 +157,10 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="FSI-ng-CKW">
                                                                     <rect key="frame" x="8" y="18" width="368.5" height="44.5"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-oy-He6" userLabel="Top Label Holder">
                                                                             <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                             <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="999" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeM-ck-Te4">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="368.5" height="13.5"/>
                                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -174,13 +174,13 @@
                                                                                 <constraint firstAttribute="bottom" secondItem="UeM-ck-Te4" secondAttribute="bottom" id="hwf-eQ-KYp"/>
                                                                             </constraints>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCt-gj-sKh">
                                                                             <rect key="frame" x="0.0" y="15.5" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="31" width="368.5" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -193,8 +193,8 @@
                                                                 <constraint firstItem="FSI-ng-CKW" firstAttribute="centerY" secondItem="6Wm-U4-gKl" secondAttribute="centerY" id="7BV-6V-Hj5"/>
                                                                 <constraint firstAttribute="trailing" secondItem="FSI-ng-CKW" secondAttribute="trailing" constant="8" id="Xmz-oh-xjf"/>
                                                                 <constraint firstItem="FSI-ng-CKW" firstAttribute="leading" secondItem="6Wm-U4-gKl" secondAttribute="leading" constant="8" id="axG-3z-rzg"/>
-                                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="FSI-ng-CKW" secondAttribute="bottom" constant="8" id="fHH-Tw-AvC"/>
-                                                                <constraint firstItem="FSI-ng-CKW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Wm-U4-gKl" secondAttribute="top" constant="8" id="wYY-iw-M8D"/>
+                                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="FSI-ng-CKW" secondAttribute="bottom" constant="6" id="fHH-Tw-AvC"/>
+                                                                <constraint firstItem="FSI-ng-CKW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Wm-U4-gKl" secondAttribute="top" constant="6" id="wYY-iw-M8D"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -203,8 +203,8 @@
                                                         <constraint firstItem="6Wm-U4-gKl" firstAttribute="height" secondItem="f1S-fj-ABq" secondAttribute="height" id="mqk-S9-NLL"/>
                                                     </constraints>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kIl-Ti-m4W">
-                                                    <rect key="frame" x="36.5" y="24.5" width="393" height="43"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="kIl-Ti-m4W">
+                                                    <rect key="frame" x="36.5" y="22.5" width="393" height="41"/>
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8qU-wy-3p4">
                                                             <rect key="frame" x="32.5" y="0.0" width="328" height="2"/>
@@ -212,7 +212,7 @@
                                                             <color key="trackTintColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </progressView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rCO-7L-9h4">
-                                                            <rect key="frame" x="170" y="10" width="53" height="33"/>
+                                                            <rect key="frame" x="170" y="8" width="53" height="33"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <state key="normal" title="Cancel"/>
                                                             <connections>
@@ -248,7 +248,7 @@
                                             <constraint firstItem="PgL-nd-XcQ" firstAttribute="centerX" secondItem="hg2-Ru-0IH" secondAttribute="centerX" id="aE7-Ut-dtA"/>
                                             <constraint firstAttribute="bottom" secondItem="f1S-fj-ABq" secondAttribute="bottom" id="ctR-Iu-LHv"/>
                                             <constraint firstAttribute="trailing" secondItem="f1S-fj-ABq" secondAttribute="trailing" id="dZG-F8-lnQ"/>
-                                            <constraint firstItem="kIl-Ti-m4W" firstAttribute="centerY" secondItem="0dQ-7c-9PT" secondAttribute="centerY" constant="6" id="iri-pB-0rb"/>
+                                            <constraint firstItem="kIl-Ti-m4W" firstAttribute="centerY" secondItem="0dQ-7c-9PT" secondAttribute="centerY" constant="3" id="iri-pB-0rb"/>
                                             <constraint firstItem="hg2-Ru-0IH" firstAttribute="centerY" secondItem="0dQ-7c-9PT" secondAttribute="centerY" id="z7j-Q1-H6Y"/>
                                         </constraints>
                                         <size key="customSize" width="466" height="80"/>
