@@ -89,8 +89,8 @@
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vTy-88-2LK">
                                                             <rect key="frame" x="0.0" y="0.0" width="280" height="2"/>
-                                                            <color key="progressTintColor" red="0.57073712350000005" green="0.0" blue="0.02017655782" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="trackTintColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="progressTintColor" name="colorTint"/>
+                                                            <color key="trackTintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                         </progressView>
                                                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEc-YZ-ZGZ">
                                                             <rect key="frame" x="0.0" y="12" width="280" height="33"/>
@@ -208,8 +208,8 @@
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8qU-wy-3p4">
                                                             <rect key="frame" x="32.5" y="0.0" width="328" height="2"/>
-                                                            <color key="progressTintColor" red="0.57073712350000005" green="0.0" blue="0.02017655782" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="trackTintColor" red="0.81988459830000004" green="0.80843728780000002" blue="0.7830626369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="progressTintColor" name="colorTint"/>
+                                                            <color key="trackTintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                         </progressView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rCO-7L-9h4">
                                                             <rect key="frame" x="170" y="8" width="53" height="33"/>
