@@ -61,7 +61,6 @@
 		16118D302364897400454326 /* SafeUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 166EEC77236443A9000BE78A /* SafeUnarchiver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		16118D312364897800454326 /* SafeUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 166EEC8123644476000BE78A /* SafeUnarchiver.m */; };
 		16118D32236489C700454326 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		16118D33236489D300454326 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */; };
 		16118D34236489D600454326 /* VerifyReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = 167A18D41F128A9300B7F0AF /* VerifyReceipt.m */; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
@@ -94,6 +93,8 @@
 		162594D820D5548F00A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		162594D920D557D300A65E06 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626650A221056B800068136 /* SiriSettingsViewController.swift */; };
+		16287A3D2368A9A500D9BB79 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 16287A3C2368A9A500D9BB79 /* AppleIncRootCertificate.cer */; };
+		16287A3E2368A9A500D9BB79 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 16287A3C2368A9A500D9BB79 /* AppleIncRootCertificate.cer */; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -179,7 +180,6 @@
 		166EEC9A23645391000BE78A /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 166EEC9923645391000BE78A /* Media.xcassets */; };
 		1673D0E5236497CE00564753 /* FileAreaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8161EFF3745000087DD /* FileAreaManager.swift */; };
 		167574031F12C22500385079 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1675740C1F12C2A500385079 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */; };
 		1675740D1F12C2A800385079 /* VerifyReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = 167A18D41F128A9300B7F0AF /* VerifyReceipt.m */; };
 		1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D01EF475FE005697CB /* AppDelegate.swift */; };
 		1678F9D31EF475FF005697CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D21EF475FF005697CB /* ViewController.swift */; };
@@ -650,6 +650,7 @@
 		162383F520F96C650086E719 /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		162594D420D5548F00A65E06 /* Caches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caches.swift; sourceTree = "<group>"; };
 		1626650A221056B800068136 /* SiriSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSettingsViewController.swift; sourceTree = "<group>"; };
+		16287A3C2368A9A500D9BB79 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -707,7 +708,6 @@
 		1678F9DA1EF475FF005697CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Gladys/Info.plist; sourceTree = "<group>"; };
 		167A18D41F128A9300B7F0AF /* VerifyReceipt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerifyReceipt.m; sourceTree = "<group>"; };
-		167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
 		167ABEC81F7770DF0075E0E8 /* DimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
@@ -1217,8 +1217,8 @@
 			isa = PBXGroup;
 			children = (
 				167574011F12C22500385079 /* GladysFramework.h */,
-				167A18D71F128BB900B7F0AF /* AppleIncRootCertificate.cer */,
 				167A18D41F128A9300B7F0AF /* VerifyReceipt.m */,
+				16287A3C2368A9A500D9BB79 /* AppleIncRootCertificate.cer */,
 				167574021F12C22500385079 /* Info.plist */,
 			);
 			path = GladysFramework;
@@ -1693,9 +1693,9 @@
 			buildConfigurationList = 167574091F12C22500385079 /* Build configuration list for PBXNativeTarget "GladysFramework" */;
 			buildPhases = (
 				CE5935A36461022F421E3011 /* [CP] Check Pods Manifest.lock */,
+				167573FC1F12C22500385079 /* Headers */,
 				167573FA1F12C22500385079 /* Sources */,
 				167573FB1F12C22500385079 /* Frameworks */,
-				167573FC1F12C22500385079 /* Headers */,
 				167573FD1F12C22500385079 /* Resources */,
 			);
 			buildRules = (
@@ -2019,7 +2019,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16118D33236489D300454326 /* AppleIncRootCertificate.cer in Resources */,
+				16287A3E2368A9A500D9BB79 /* AppleIncRootCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2081,7 +2081,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1675740C1F12C2A500385079 /* AppleIncRootCertificate.cer in Resources */,
+				16287A3D2368A9A500D9BB79 /* AppleIncRootCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2908,7 +2908,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.GladysFrameworkMac;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = GladysFramework;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -2937,7 +2937,7 @@
 					"@loader_path/Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.GladysFrameworkMac;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Framework;
 				PRODUCT_NAME = GladysFramework;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -3262,7 +3262,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 688;
+				CURRENT_PROJECT_VERSION = 689;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3419,7 +3419,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 688;
+				CURRENT_PROJECT_VERSION = 689;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_TESTABILITY = NO;
