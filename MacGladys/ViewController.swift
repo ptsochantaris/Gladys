@@ -155,21 +155,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
-	static let labelColor = NSColor.labelColor
-
-	static var tintColor: NSColor {
-		if #available(OSX 10.14, *) {
-			switch ViewController.shared.view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
-			case NSAppearance.Name.darkAqua:
-				return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-			default:
-				return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
-			}
-		} else {
-			return #colorLiteral(red: 0.5764705882, green: 0.09411764706, blue: 0.07058823529, alpha: 1)
-		}
-	}
-
 	@IBOutlet private weak var searchHolder: NSView!
 	@IBOutlet private weak var searchBar: NSSearchField!
 

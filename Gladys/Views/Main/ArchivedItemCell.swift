@@ -157,13 +157,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private let borderView = UIView()
 
-	private var plainTextColor: UIColor {
-        return ArchivedItemCell.darkTextColor
-	}
-
-	private static let darkTextColor = #colorLiteral(red: 0.2980392157, green: 0.2980392157, blue: 0.2980392157, alpha: 1)
-	private static let lightTextColor = #colorLiteral(red: 0.7843137255, green: 0.7843137255, blue: 0.7843137255, alpha: 1)
-
 	private lazy var wideCell = { return reuseIdentifier == "WideArchivedItemCell" }()
 
 	override func awakeFromNib() {

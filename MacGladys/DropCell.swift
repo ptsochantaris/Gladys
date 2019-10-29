@@ -43,7 +43,7 @@ final class TokenTextField: NSTextField {
 
 			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
 				.font: font!,
-				.foregroundColor: ViewController.tintColor,
+				.foregroundColor: NSColor(named: "colorTint")!,
 				.paragraphStyle: p,
 				.baselineOffset: -2,
 				])
@@ -69,7 +69,7 @@ final class TokenTextField: NSTextField {
 
 		guard !attributedStringValue.string.isEmpty, let labels = labels, let context = NSGraphicsContext.current?.cgContext else { return }
 
-		let highlightColor = ViewController.tintColor
+		let highlightColor = NSColor(named: "colorTint")!
 
 		let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
 
@@ -206,37 +206,21 @@ extension NSMenu {
 }
 
 final class CardView: FirstMouseView {
+    @IBInspectable var bgColor: NSColor?
 
-	@IBInspectable var lightColor: NSColor?
-	@IBInspectable var darkColor: NSColor?
+    @available(OSX 10.14, *)
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateLayer()
+    }
 
-	@available(OSX 10.14, *)
-	override func viewDidChangeEffectiveAppearance() {
-		super.viewDidChangeEffectiveAppearance()
-		updateLayer()
-	}
-
-	func flatColor() {
-		layer?.contents = nil
-		updateLayer()
-	}
-
-	override func updateLayer() {
-		super.updateLayer()
-
-		guard let l = layer else { return }
-
-		if #available(OSX 10.14, *) {
-			switch effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
-			case NSAppearance.Name.darkAqua:
-				l.backgroundColor = darkColor?.cgColor
-			default:
-				l.backgroundColor = lightColor?.cgColor
-			}
-		} else {
-			l.backgroundColor = lightColor?.cgColor
-		}
-	}
+    func flatColor() {
+        layer?.contents = nil
+    }
+    override func updateLayer() {
+        super.updateLayer()
+        layer?.backgroundColor = bgColor?.cgColor
+    }
 }
 
 final class DropCell: NSCollectionViewItem, NSMenuDelegate {
@@ -253,10 +237,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var copiedLabel: NSTextField!
 
 	private var existingPreviewView: FirstMouseView?
-
-	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)) }()
-
-	private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserCheckedSmall").template(with: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)) }()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -316,15 +296,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		image.flatColor()
 	}
 
-	private var isDark: Bool {
-		if #available(OSX 10.14, *) {
-			if view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua {
-				return true
-			}
-		}
-		return false
-	}
-
 	private func reDecorate() {
 		let item = archivedDropItem
 
@@ -375,7 +346,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				if let cachedImage = imageCache.object(forKey: cacheKey) {
 					image.layer?.contents = cachedImage
 				} else {
-					let dark = isDark
 					imageProcessingQueue.async { [weak self] in
                         var u1: UUID?
                         DispatchQueue.main.sync {
@@ -384,11 +354,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 						if u1 == item.uuid {
 							var img = item.displayIcon
 							if img.isTemplate {
-								if dark {
-									img = img.template(with: self?.image.lightColor ?? NSColor.white)
-								} else {
-									img = img.template(with: self?.image.darkColor ?? NSColor.black)
-								}
+                                img = img.template(with: NSColor(named: "colorTint")!)
 							}
 							imageCache.setObject(img, forKey: cacheKey)
 							DispatchQueue.main.sync { [weak self] in
@@ -521,7 +487,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		bottomLabel.stringValue = bottomLabelText
 		bottomLabel.isHidden = hideBottomLabel
 		bottomLabel.alignment = bottomLabelAlignment
-		bottomLabel.textColor = bottomLabelHighlight ? ViewController.tintColor : ViewController.labelColor
+        bottomLabel.textColor = bottomLabelHighlight ? NSColor(named: "colorTint")! : NSColor.labelColor
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
@@ -530,15 +496,14 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 		switch share {
 		case .none:
-			sharedIcon.image = nil
 			sharedIcon.isHidden = true
 			bottomStackView.isHidden = hideBottomLabel
 		case .elsewhereReadOnly, .elsewhereReadWrite:
-			sharedIcon.image = DropCell.shareImage
+            sharedIcon.image = sharedIcon.image?.template(with: NSColor.systemGray)
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		case .sharing:
-			sharedIcon.image = DropCell.shareImageTinted
+            sharedIcon.image = sharedIcon.image?.template(with: NSColor(named: "colorTint")!)
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		}
@@ -642,7 +607,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		didSet {
 			guard let l = view.layer else { return }
 			if isSelected {
-				l.borderColor = ViewController.tintColor.cgColor
+				l.borderColor = NSColor(named: "colorTint")?.cgColor
 				l.borderWidth = 2
 			} else {
 				l.borderColor = NSColor.clear.cgColor
@@ -650,7 +615,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			}
 		}
 	}
-
+    
 	override func mouseDown(with event: NSEvent) {
 		super.mouseDown(with: event)
 		if event.clickCount == 2 {

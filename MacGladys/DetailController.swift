@@ -26,16 +26,34 @@ protocol FocusableTextFieldDelegate: class {
 }
 
 final class FocusableTextField: NSTextField {
-	weak var focusDelegate: FocusableTextFieldDelegate?
-	override func awakeFromNib() {
+	
+    weak var focusDelegate: FocusableTextFieldDelegate?
+	
+    override func awakeFromNib() {
 		super.awakeFromNib()
 		wantsLayer = true
 		layer?.cornerRadius = 2.5
 	}
+    
 	override func becomeFirstResponder() -> Bool {
 		focusDelegate?.fieldReceivedFocus(self)
 		return super.becomeFirstResponder()
 	}
+    
+    @available(OSX 10.14, *)
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateLayer()
+    }
+    
+    override func updateLayer() {
+        super.updateLayer()
+        if isEditable {
+            layer?.backgroundColor = NSColor.controlLightHighlightColor.cgColor
+        } else {
+            layer?.backgroundColor = NSColor.clear.cgColor
+        }
+    }
 }
 
 final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate, NSMenuItemValidation {
@@ -56,8 +74,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	@IBOutlet private weak var components: ComponentCollectionView!
 	private let componentCellId = NSUserInterfaceItemIdentifier("ComponentCell")
-
-	private var appearanceChangeObservation: NSKeyValueObservation?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -80,37 +96,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 		titleField.focusDelegate = self
 		notesField.focusDelegate = self
-
-		appearanceChangeObservation = view.observe(\.effectiveAppearance) { [weak self] _, _  in
-			self?.updateAppearanceRelatedChanges()
-		}
-	}
-
-	private func updateAppearanceRelatedChanges() {
-		if representedObject == nil { return }
-		let shareMode = item.shareMode
-		let readWrite = shareMode != .elsewhereReadOnly
-		updateTextfields(readWrite)
-	}
-
-	private func updateTextfields(_ readWrite: Bool) {
-		let bgColor: CGColor
-		if readWrite {
-			if #available(OSX 10.14, *) {
-				switch view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) {
-				case NSAppearance.Name.darkAqua:
-					bgColor = NSColor.darkGray.cgColor
-				default:
-					bgColor = NSColor.white.cgColor
-				}
-			} else {
-				bgColor = NSColor.textBackgroundColor.cgColor
-			}
-		} else {
-			bgColor = NSColor.clear.cgColor
-		}
-		titleField.layer?.backgroundColor = bgColor
-		notesField.layer?.backgroundColor = bgColor
 	}
 
 	private var lastUpdate = Date.distantPast
@@ -204,8 +189,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			inviteButton.image = DetailController.shareImageTinted
 		}
 
-		updateTextfields(readWrite)
-
 		titleField.isEditable = readWrite
 		notesField.isEditable = readWrite
 		labelAdd.isEnabled = readWrite
@@ -214,7 +197,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.secondaryLabelColor) }()
 
-	private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: #colorLiteral(red: 0.5924374461, green: 0.09241057187, blue: 0.07323873788, alpha: 1)) }()
+    private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor(named: "colorTint")!) }()
 
 	override func viewWillDisappear() {
 		done(notesCheck: notesField.currentEditor() != nil, titleCheck: titleField.currentEditor() != nil)

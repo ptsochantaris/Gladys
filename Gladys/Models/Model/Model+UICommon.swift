@@ -589,33 +589,6 @@ extension Model {
 			performSave()
 		}
 	}
-    
-    static func performFirstMirror(completion: @escaping ()->Void) {
-        let itemsToSave = drops.filter { $0.goodToSave }
-        saveQueue.async {
-            do {
-                try FileAreaManager.mirrorToFiles(from: itemsToSave)
-            } catch {
-                log("Error while performing first mirror: \(error.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
-    }
-    
-    static func disableMirror(completion: @escaping ()->Void) {
-        saveQueue.async {
-            do {
-                try FileAreaManager.removeMirrorIfNeeded()
-            } catch {
-                log("Error while disabling mirror: \(error.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
-    }
 
 	private static func performSave() {
 
@@ -632,14 +605,18 @@ extension Model {
 		isSaving = true
 		needsAnotherSave = false
 
+        #if MAINAPP
         let shouldMirror = PersistedOptions.mirrorFilesToDocuments
+        #endif
         
 		saveQueue.async {
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+                #if MAINAPP
                 if shouldMirror {
                     try FileAreaManager.mirrorToFiles(from: itemsNeedingSaving)
                 }
+                #endif
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}

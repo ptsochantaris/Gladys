@@ -389,8 +389,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
 
-	static let imageLightBackground = #colorLiteral(red: 0.8431372549, green: 0.831372549, blue: 0.8078431373, alpha: 1)
-
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		switch segue.identifier {
