@@ -133,6 +133,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 			previewLabel.isHidden = false
 		}
 
+        var showPreview = false
 		if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
 			previewLabel.alphaValue = 1.0
 			previewLabel.stringValue = "\"\(title)\""
@@ -141,6 +142,9 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 			previewLabel.alphaValue = 0.7
 			if typeEntry.isWebArchive {
 				previewLabel.stringValue = ComponentCell.shortFormatter.string(from: typeEntry.createdAt)
+            } else if typeEntry.displayIconContentMode == .fill {
+                previewLabel.stringValue = ""
+                showPreview = true
 			} else {
 				previewLabel.stringValue = "Binary Data"
 			}
@@ -150,7 +154,20 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 			previewLabel.stringValue = "Loading Error"
 			previewLabel.alignment = .center
 		}
+        
+        if showPreview, let icon = typeEntry.displayIcon {
+            icon.desaturated { img in
+                self.centreBlock.layer?.contents = img
+            }
+        } else {
+            centreBlock.layer?.contents = nil
+        }
 	}
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        centreBlock.layer?.contentsGravity = .resizeAspectFill
+    }
 
 	private static let shortFormatter: DateFormatter = {
 		let d = DateFormatter()
