@@ -499,11 +499,19 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			sharedIcon.isHidden = true
 			bottomStackView.isHidden = hideBottomLabel
 		case .elsewhereReadOnly, .elsewhereReadWrite:
-            sharedIcon.image = sharedIcon.image?.template(with: NSColor.systemGray)
+            if #available(OSX 10.14, *) {
+                sharedIcon.contentTintColor = NSColor.systemGray
+            } else {
+                sharedIcon.image = sharedIcon.image?.template(with: NSColor.systemGray)
+            }
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		case .sharing:
-            sharedIcon.image = sharedIcon.image?.template(with: NSColor(named: "colorTint")!)
+            if #available(OSX 10.14, *) {
+                sharedIcon.contentTintColor = NSColor(named: "colorTint")
+            } else {
+                sharedIcon.image = sharedIcon.image?.template(with: NSColor(named: "colorTint")!)
+            }
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		}

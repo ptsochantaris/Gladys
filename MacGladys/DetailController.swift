@@ -177,16 +177,36 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		switch shareMode {
 		case .none:
 			readOnlyLabel.isHidden = true
-			inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
+            if #available(OSX 10.14, *) {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
+                inviteButton.contentTintColor = NSColor.systemGray
+            } else {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd").template(with: NSColor.systemGray)
+            }
 		case .elsewhereReadOnly:
 			readOnlyLabel.isHidden = false
-			inviteButton.image = DetailController.shareImage
+            if #available(OSX 10.14, *) {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+                inviteButton.contentTintColor = NSColor.systemGray
+            } else {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.systemGray)
+            }
 		case .elsewhereReadWrite:
 			readOnlyLabel.isHidden = true
-			inviteButton.image = DetailController.shareImage
+            if #available(OSX 10.14, *) {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+                inviteButton.contentTintColor = NSColor.systemGray
+            } else {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.systemGray)
+            }
 		case .sharing:
 			readOnlyLabel.isHidden = true
-			inviteButton.image = DetailController.shareImageTinted
+            if #available(OSX 10.14, *) {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+                inviteButton.contentTintColor = NSColor(named: "colorTint")
+            } else {
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor(named: "colorTint")!)
+            }
 		}
 
 		titleField.isEditable = readWrite
@@ -194,10 +214,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labelAdd.isEnabled = readWrite
 		labelRemove.isEnabled = readWrite
 	}
-
-	private static let shareImage: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.secondaryLabelColor) }()
-
-    private static let shareImageTinted: NSImage = { return #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor(named: "colorTint")!) }()
 
 	override func viewWillDisappear() {
 		done(notesCheck: notesField.currentEditor() != nil, titleCheck: titleField.currentEditor() != nil)
