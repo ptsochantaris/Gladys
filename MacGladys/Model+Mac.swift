@@ -20,7 +20,7 @@ extension Model {
 	static func startMonitoringForExternalChangesToBlobs() {
 		syncWithExternalUpdates()
 
-        eventMonitor = FileMonitor(pathsToWatch: [appStorageUrl.path]) { path, flags in
+        eventMonitor = FileMonitor(directory: appStorageUrl) { path in
 			let components = path.split(separator: "/")
 			let count = components.count
 
@@ -33,7 +33,7 @@ extension Model {
 			if let parent = item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.typeItems.first(where: { $0.uuid == potentialComponentUUID}), component.scanForBlobChanges() {
 				parent.needsReIngest = true
 				parent.markUpdated()
-				log("Detected a modified component blob, uuid \(component)")
+                log("Detected a modified component blob, uuid \(potentialComponentUUID)")
 				parent.reIngest(delegate: ViewController.shared)
 			}
 		}

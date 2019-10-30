@@ -1,38 +1,53 @@
+//
+//  FileMonitor.swift
+//  Gladys
+//
+//  Created by Paul Tsochantaris on 30/10/2019.
+//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
+//
+
 import Foundation
+#if os(iOS)
+import UIKit
+#endif
 
-// Tweaked from https://blog.beecomedigital.com/2015/06/27/developing-a-filesystemwatcher-for-os-x-by-using-fsevents-with-swift-2/
+final class FileMonitor: NSObject, NSFilePresenter {
 
-final class FileMonitor {
+    var presentedItemURL: URL?
+    
+    var presentedItemOperationQueue = OperationQueue.main
+    
+    func presentedSubitemDidChange(at url: URL) {
+        completion(url.path)
+    }
+    
+    private let completion: (String) -> Void
 
-    private var streamRef: FSEventStreamRef!
-    private var callback: (String, FSEventStreamEventFlags) -> Void
+    init(directory: URL, completion: @escaping (String) -> Void) {
+        self.presentedItemURL = directory
+        self.completion = completion
 
-    init(pathsToWatch: [String], callback: @escaping (String, FSEventStreamEventFlags) -> Void) {
-        self.callback = callback
+        super.init()
+
+        NSFileCoordinator.addFilePresenter(self)
         
-        let startEventId = FSEventStreamEventId(kFSEventStreamEventIdSinceNow)
-        var context = FSEventStreamContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-        context.info = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
-        let flags = UInt32(kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagFileEvents)
-        streamRef = FSEventStreamCreate(kCFAllocatorDefault, eventCallback, &context, pathsToWatch as CFArray, startEventId, 0, flags)
-         
-        FSEventStreamScheduleWithRunLoop(streamRef, CFRunLoopGetMain(), RunLoop.Mode.default.rawValue as CFString)
-        FSEventStreamStart(streamRef)
+        #if os(iOS)
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
+        nc.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        #endif
     }
-     
+    
+    @objc private func foregrounded() {
+        NSFileCoordinator.addFilePresenter(self)
+    }
+
+    @objc private func backgrounded() {
+        NSFileCoordinator.removeFilePresenter(self)
+    }
+
     deinit {
-        FSEventStreamStop(streamRef)
-        FSEventStreamInvalidate(streamRef)
-        FSEventStreamRelease(streamRef)
-    }
- 
-    private let eventCallback: FSEventStreamCallback = { (stream: ConstFSEventStreamRef, contextInfo: UnsafeMutableRawPointer?, numEvents: Int, eventPaths: UnsafeMutableRawPointer, eventFlags: UnsafePointer<FSEventStreamEventFlags>, eventIds: UnsafePointer<FSEventStreamEventId>) in
-        guard let contextInfo = contextInfo else { return }
-        let monitor = Unmanaged<FileMonitor>.fromOpaque(contextInfo).takeUnretainedValue()
-        let paths = Unmanaged<NSArray>.fromOpaque(eventPaths).takeUnretainedValue() as! [String]
-         
-        for index in 0 ..< numEvents {
-            monitor.callback(paths[index], eventFlags[index])
-        }
+        NotificationCenter.default.removeObserver(self)
+        NSFileCoordinator.removeFilePresenter(self)
     }
 }
