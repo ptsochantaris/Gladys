@@ -1,6 +1,5 @@
 
 import Foundation
-import CDEvents
 
 extension Model {
 
@@ -17,17 +16,17 @@ extension Model {
 		trimTemporaryDirectory()
 	}
 
-	private static var eventMonitor: CDEvents?
+	private static var eventMonitor: FileMonitor?
 	static func startMonitoringForExternalChangesToBlobs() {
 		syncWithExternalUpdates()
 
-		eventMonitor = CDEvents(urls: [appStorageUrl], block: { _, event in
-			guard let components = event?.url.pathComponents else { return }
+        eventMonitor = FileMonitor(pathsToWatch: [appStorageUrl.path]) { path, flags in
+			let components = path.split(separator: "/")
 			let count = components.count
 
-			guard count > 2, components[count-3].hasSuffix(".MacGladys"),
-				let potentialParentUUID = UUID(uuidString: components[count-2]),
-				let potentialComponentUUID = UUID(uuidString: components[count-1])
+			guard count > 3, components[count-4].hasSuffix(".MacGladys"),
+				let potentialParentUUID = UUID(uuidString: String(components[count-3])),
+				let potentialComponentUUID = UUID(uuidString: String(components[count-2]))
 				else { return }
 
 			log("Examining potential external update for component \(potentialComponentUUID)")
@@ -37,7 +36,7 @@ extension Model {
 				log("Detected a modified component blob, uuid \(component)")
 				parent.reIngest(delegate: ViewController.shared)
 			}
-		}, on: RunLoop.current, sinceEventIdentifier: kCDEventsSinceEventNow, notificationLantency: 1, ignoreEventsFromSubDirs: false, excludeURLs: [], streamCreationFlags: kCDEventsDefaultEventStreamFlags)
+		}
 	}
 
 	private static func syncWithExternalUpdates() {

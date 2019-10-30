@@ -33,7 +33,6 @@ abstract_target 'macOS' do
     pod 'HotKey'
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
-    pod 'CDEvents'
   end
 
   target 'GladysFrameworkMac' do

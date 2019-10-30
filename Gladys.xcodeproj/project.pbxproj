@@ -164,6 +164,8 @@
 		165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		165A567F218EE52900E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A8F0821AA92D300405701 /* PlistEditor.swift */; };
+		166B638D236A36B700115AC3 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166B638C236A36B700115AC3 /* FileMonitor.swift */; };
+		166B638E236A36B700115AC3 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166B638C236A36B700115AC3 /* FileMonitor.swift */; };
 		166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
@@ -690,6 +692,7 @@
 		1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepPressGestureRecognizer.swift; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
+		166B638C236A36B700115AC3 /* FileMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		166EEC75236443A9000BE78A /* SafeUnarchiver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SafeUnarchiver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		166EEC77236443A9000BE78A /* SafeUnarchiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafeUnarchiver.h; sourceTree = "<group>"; };
@@ -1061,6 +1064,7 @@
 				16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */,
 				168C42F4233F5CA700050E82 /* LocalAuth.swift */,
 				1619E8161EFF3745000087DD /* FileAreaManager.swift */,
+				166B638C236A36B700115AC3 /* FileMonitor.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2308,6 +2312,7 @@
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
+				166B638E236A36B700115AC3 /* FileMonitor.swift in Sources */,
 				16C8166820CB0354001C12DF /* PullState.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
@@ -2529,6 +2534,7 @@
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				16CD7D7F20A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
 				1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */,
+				166B638D236A36B700115AC3 /* FileMonitor.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,
 				165A567F218EE52900E27C22 /* ModelFilePresenter.swift in Sources */,
 				165173031F99483E006CAF0A /* GladysViewController.swift in Sources */,
