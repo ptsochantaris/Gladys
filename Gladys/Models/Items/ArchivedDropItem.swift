@@ -60,6 +60,7 @@ final class ArchivedDropItem: Codable {
 	var loadingProgress: Progress?
 	var needsSaving: Bool
 	var needsUnlock: Bool
+    var skipMirrorAtNextSave: Bool
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -109,6 +110,7 @@ final class ArchivedDropItem: Codable {
 		lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
 		needsSaving = false
 		needsUnlock = lockPassword != nil
+        skipMirrorAtNextSave = false
 	}
 
 	#if MAINAPP
@@ -124,6 +126,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = false
 		needsSaving = true
 		needsDeletion = false
+        skipMirrorAtNextSave = false
 
 		titleOverride = item.titleOverride
 		note = item.note
@@ -172,6 +175,7 @@ final class ArchivedDropItem: Codable {
 		typeItems = [ArchivedDropItemType]()
 		needsSaving = true
 		needsUnlock = false
+        skipMirrorAtNextSave = false
 
 		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
@@ -211,6 +215,7 @@ final class ArchivedDropItem: Codable {
 		needsDeletion = false
 		typeItems = []
 		isBeingCreatedBySync = true
+        skipMirrorAtNextSave = false
 
 		cloudKitRecord = record
 	}

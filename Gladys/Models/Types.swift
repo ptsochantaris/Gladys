@@ -29,22 +29,22 @@ extension Error {
 
 extension String {
 	var filenameSafe: String {
-		if let url = URL(string: self) {
-			if let host = url.host {
-				return host + "-" + url.path.split(separator: "/").joined(separator: "-")
+        if let components = URLComponents(string: self) {
+            if let host = components.host {
+				return host + "-" + components.path.split(separator: "/").joined(separator: "-")
 			} else {
-				return url.path.split(separator: "/").joined(separator: "-")
+				return components.path.split(separator: "/").joined(separator: "-")
 			}
 		} else {
 			return replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
 		}
 	}
 	var dropFilenameSafe: String {
-		if let url = URL(string: self) {
-			if let host = url.host {
-				return host + "-" + url.path.split(separator: "/").joined(separator: "-")
+        if let components = URLComponents(string: self) {
+			if let host = components.host {
+				return host + "-" + components.path.split(separator: "/").joined(separator: "-")
 			} else {
-				return url.path.split(separator: "/").joined(separator: "-")
+				return components.path.split(separator: "/").joined(separator: "-")
 			}
 		} else {
 			return replacingOccurrences(of: ":", with: "-").replacingOccurrences(of: "/", with: "-")

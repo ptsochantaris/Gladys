@@ -251,30 +251,30 @@ extension Model {
 		NSFileCoordinator.removeFilePresenter(filePresenter)
 	}
     
-    static func performFirstMirror(completion: @escaping ()->Void) {
-        let itemsToSave = drops.filter { $0.goodToSave }
-        saveQueue.async {
-            do {
-                try FileAreaManager.mirrorToFiles(from: itemsToSave)
-            } catch {
-                log("Error while performing first mirror: \(error.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
+    static func createMirror(completion: @escaping ()->Void) {
+        log("Creating file mirror")
+        drops.forEach { $0.skipMirrorAtNextSave = false }
+        runMirror(completion: completion)
+    }
+
+    static func updateMirror(completion: @escaping ()->Void) {
+        log("Updating file mirror")
+        runMirror(completion: completion)
+    }
+
+    private static func runMirror(completion: @escaping ()->Void) {
+        let itemsToMirror = drops.filter { $0.goodToSave }
+        MirrorManager.pruneNonExistentEntries(allDrops: itemsToMirror)
+        MirrorManager.mirrorToFiles(from: itemsToMirror, completion: completion)
     }
     
-    static func disableMirror(completion: @escaping ()->Void) {
-        saveQueue.async {
-            do {
-                try FileAreaManager.removeMirrorIfNeeded()
-            } catch {
-                log("Error while disabling mirror: \(error.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
+    static func scanForMirrorChanges(completion: @escaping ()->Void) {
+        let itemsToMirror = drops.filter { $0.goodToSave }
+        MirrorManager.scanForMirrorChanges(items: itemsToMirror, completion: completion)
+    }
+    
+    static func deleteMirror(completion: @escaping ()->Void) {
+        log("Deleting file mirror")
+        MirrorManager.removeMirrorIfNeeded(completion: completion)
     }
 }

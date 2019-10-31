@@ -248,7 +248,7 @@ final class Model {
 	}
 
 	static func modificationDate(for url: URL) -> Date? {
-		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[FileAttributeKey.modificationDate] as? Date
+		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
 	}
 
 	static let appStorageUrl: URL = {

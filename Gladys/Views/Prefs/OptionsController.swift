@@ -122,11 +122,13 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.mirrorFilesToDocuments = on
         sender.isEnabled = false
         if on {
-            Model.performFirstMirror {
+            MirrorManager.startMirrorMonitoring()
+            Model.createMirror {
                 sender.isEnabled = true
             }
         } else {
-            Model.disableMirror {
+            MirrorManager.stopMirrorMonitoring()
+            Model.deleteMirror {
                 sender.isEnabled = true
             }
         }

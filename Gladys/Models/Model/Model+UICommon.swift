@@ -335,6 +335,7 @@ extension Model {
 		drops.removeAll { !$0.isImportedShare }
 		modelFilter = nil
 		cachedFilteredDrops = nil
+        deleteMirror {}
 		clearCaches()
 		save()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
@@ -522,6 +523,8 @@ extension Model {
 				cachedFilteredDrops!.remove(at: x)
 			}
 		}
+        
+        MirrorManager.removeItems(items: items)
 
 		return ipsToRemove
 	}
@@ -604,23 +607,21 @@ extension Model {
         
 		isSaving = true
 		needsAnotherSave = false
-
-        #if MAINAPP
-        let shouldMirror = PersistedOptions.mirrorFilesToDocuments
-        #endif
         
 		saveQueue.async {
 			do {
 				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
-                #if MAINAPP
-                if shouldMirror {
-                    try FileAreaManager.mirrorToFiles(from: itemsNeedingSaving)
-                }
-                #endif
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}
-			DispatchQueue.main.async {
+
+            #if MAINAPP
+            if PersistedOptions.mirrorFilesToDocuments {
+                MirrorManager.mirrorToFiles(from: itemsNeedingSaving) {}
+            }
+            #endif
+
+            DispatchQueue.main.async {
 				if needsAnotherSave {
 					performSave()
 				} else {

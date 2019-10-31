@@ -20,8 +20,8 @@ extension Model {
 	static func startMonitoringForExternalChangesToBlobs() {
 		syncWithExternalUpdates()
 
-        eventMonitor = FileMonitor(directory: appStorageUrl) { path in
-			let components = path.split(separator: "/")
+        eventMonitor = FileMonitor(directory: appStorageUrl) { url in
+            let components = url.pathComponents
 			let count = components.count
 
 			guard count > 3, components[count-4].hasSuffix(".MacGladys"),

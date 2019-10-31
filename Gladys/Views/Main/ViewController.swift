@@ -592,13 +592,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		n.addObserver(self, selector: #selector(reloadData), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
-		n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
-		n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
+        n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
+        n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        n.addObserver(self, selector: #selector(madeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 
 		Model.checkForUpgrade()
 
@@ -611,6 +612,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		if !PersistedOptions.pasteShortcutAutoDonated {
 			donatePasteIntent()
 		}
+        
+        if PersistedOptions.mirrorFilesToDocuments {
+            MirrorManager.startMirrorMonitoring()
+        }
 	}
 
 	deinit {
@@ -797,6 +802,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			blurb(Greetings.randomGreetLine)
 		}
 	}
+    
+    @objc private func madeActive() {
+        if PersistedOptions.mirrorFilesToDocuments {
+            Model.scanForMirrorChanges {
+                Model.updateMirror { }
+            }
+        }
+    }
 
 	private func detectExternalDeletions() {
 		var shouldSaveInAnyCase = false

@@ -18,12 +18,13 @@ final class FileMonitor: NSObject, NSFilePresenter {
     var presentedItemOperationQueue = OperationQueue.main
     
     func presentedSubitemDidChange(at url: URL) {
-        completion(url.path)
+        completion(url)
     }
     
-    private let completion: (String) -> Void
+    private let completion: (URL) -> Void
 
-    init(directory: URL, completion: @escaping (String) -> Void) {
+    init(directory: URL, completion: @escaping (URL) -> Void) {
+        log("Starting monitoring of \(directory.path)")
         self.presentedItemURL = directory
         self.completion = completion
 
@@ -45,8 +46,11 @@ final class FileMonitor: NSObject, NSFilePresenter {
     @objc private func backgrounded() {
         NSFileCoordinator.removeFilePresenter(self)
     }
-
-    deinit {
+    
+    func stop() {
+        if let p = presentedItemURL {
+            log("Ending monitoring of \(p.path)")
+        }
         NotificationCenter.default.removeObserver(self)
         NSFileCoordinator.removeFilePresenter(self)
     }
