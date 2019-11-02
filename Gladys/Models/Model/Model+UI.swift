@@ -273,7 +273,6 @@ extension Model {
     }
     
     static func deleteMirror(completion: @escaping ()->Void) {
-        log("Deleting file mirror")
         MirrorManager.removeMirrorIfNeeded(completion: completion)
     }
 }

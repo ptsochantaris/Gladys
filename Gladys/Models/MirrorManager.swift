@@ -10,9 +10,9 @@ final class MirrorManager {
         return o
     }()
     
-    static var mirrorBase: URL {
+    fileprivate static let mirrorBase: URL = {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
-    }
+    }()
     
     private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping ()->Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
@@ -38,11 +38,11 @@ final class MirrorManager {
     }
     
     static func removeMirrorIfNeeded(completion: @escaping ()->Void) {
-        let baseDir = mirrorBase
         coordinateWrite(types: [.forDeleting]) {
+            log("Deleting file mirror")
             let f = FileManager.default
-            if f.fileExists(atPath: baseDir.path) {
-                try? f.removeItem(at: baseDir)
+            if f.fileExists(atPath: mirrorBase.path) {
+                try? f.removeItem(at: mirrorBase)
             }
             DispatchQueue.main.async {
                 completion()
@@ -65,29 +65,27 @@ final class MirrorManager {
     private static var monitor: FileMonitor?
     
     static func startMirrorMonitoring() {
-        if monitor == nil {
-            monitor = FileMonitor(directory: mirrorBase) { url in
-                self.handleChange(at: url)
+        mirrorQueue.addOperation {
+            if monitor == nil {
+                monitor = FileMonitor(directory: mirrorBase) { url in
+                    handleChange(at: url)
+                }
             }
         }
     }
-    
+        
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
-            if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
-                if let item = Model.item(uuid: uuid), item.shouldAssimilateFromMirror {
-                    item.assimilateMirrorChanges()
-                } else if let typeItem = Model.typeItem(uuid: uuid.uuidString), let parent = typeItem.parent, parent.shouldAssimilateFromMirror {
-                    parent.assimilateMirrorChanges()
-                }
+            if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), let typeItem = Model.typeItem(uuid: uuid.uuidString) {
+                typeItem.parent?.assimilateMirrorChanges()
             }
         }
     }
     
     static func scanForMirrorChanges(items: [ArchivedDropItem], completion: @escaping ()->Void) {
         coordinateRead(type: []) {
-            items.filter { $0.shouldAssimilateFromMirror }.forEach {
-                $0.assimilateMirrorChanges()
+            for item in items {
+                item.assimilateMirrorChanges()
             }
             DispatchQueue.main.async {
                 completion()
@@ -96,113 +94,104 @@ final class MirrorManager {
     }
     
     static func stopMirrorMonitoring() {
-        if let m = monitor {
-            m.stop()
-            monitor = nil
+        mirrorQueue.addOperation {
+            if let m = monitor {
+                m.stop()
+                monitor = nil
+            }
         }
     }
-
+    
     static func mirrorToFiles(from drops: [ArchivedDropItem], completion: @escaping ()->Void) {
         coordinateWrite(types: [.forDeleting, .forMerging]) {
 
             let start = Date()
-            let baseDir = mirrorBase
             let f = FileManager.default
+            let baseDir = mirrorBase.path
             
-            do {
-                try _pruneMirror(keeping: drops, at: baseDir, using: f)
-            } catch {
-                log("Error while pruning mirror: \(error.localizedDescription)")
+            if f.fileExists(atPath: baseDir) {
+                do {
+                    let urlsOfDrops = Set(drops.map { $0.fileMirrorPath })
+                    let prefix = baseDir + "/"
+                    try f.contentsOfDirectory(atPath: baseDir).forEach {
+                        let p = prefix + $0
+                        if !urlsOfDrops.contains(p) {
+                            log("Pruning \(p)")
+                            try f.removeItem(atPath: p)
+                        }
+                    }
+                    log("Pruning done \(-start.timeIntervalSinceNow)s")
+                } catch {
+                    log("Error while pruning mirror: \(error.localizedDescription)")
+                }
             }
 
-            log("Pruning done \(-start.timeIntervalSinceNow)s")
-
             do {
-                let dropsToMirror = drops.filter { !$0.skipMirrorAtNextSave }
-                try _mirrorToFiles(from: dropsToMirror, at: baseDir, using: f)
+                if !f.fileExists(atPath: baseDir) {
+                    log("Creating mirror directory \(baseDir)")
+                    try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
+                }
+                
+                try drops.forEach { try $0.mirrorToFiles(using: f) }
+                log("Mirroring done \(-start.timeIntervalSinceNow)s")
+
             } catch {
                 log("Error while mirroring: \(error.localizedDescription)")
             }
             
-            log("Mirroring done \(-start.timeIntervalSinceNow)s")
-
             DispatchQueue.main.async {
                 drops.filter { $0.skipMirrorAtNextSave }.forEach { $0.skipMirrorAtNextSave = false }
                 completion()
             }
         }
     }
-    
-    static private func _pruneMirror(keeping drops: [ArchivedDropItem], at baseDir: URL, using f: FileManager) throws {
-        let urlsOfExistingItems = drops.map { $0.fileMirrorPath }
-        try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
-            let existing = baseDir.appendingPathComponent(name).path
-            return urlsOfExistingItems.contains(existing)
-                ? nil
-                : existing
-        }.forEach {
-            log("Pruning \($0)")
-            try f.removeItem(atPath: $0)
-        }
-    }
-
-    static private func _mirrorToFiles(from drops: [ArchivedDropItem], at baseDir: URL, using f: FileManager) throws {
-        if !f.fileExists(atPath: baseDir.path) {
-            log("Creating mirror directory \(baseDir.path)")
-            try f.createDirectory(at: baseDir, withIntermediateDirectories: true, attributes: nil)
-        }
-
-        if drops.isEmpty {
-            log("Nothing to mirror")
-            return
-        }
-        
-        try drops.forEach { try $0.mirrorToFiles(using: f) }
-    }
-        
+            
     fileprivate static func modificationDate(for url: URL, using f: FileManager) throws -> Date? {
         return try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
     }
 }
 
 extension ArchivedDropItem {
-    fileprivate var directoryMirrorUrl: URL {
-        return MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32))
-    }
-    
     fileprivate var fileMirrorPath: String {
-        if typeItems.count == 1 {
-            return typeItems.first!.typeMirrorUrl.path
+        var base = MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)).path
+        if typeItems.count == 1, let item = typeItems.first {
+            if let ext = item.fileExtension, !base.hasSuffix("." + ext) {
+                base += "." + ext
+            }
         }
-        return directoryMirrorUrl.path
+        return base
     }
     
     fileprivate func mirrorToFiles(using f: FileManager) throws {
-        if typeItems.count == 0 {
+        if skipMirrorAtNextSave || typeItems.count == 0 {
             return
-        } else if typeItems.count == 1 {
-            _ = try typeItems.first!.mirror(using: f)
+        }
+        let mirrorPath = fileMirrorPath
+        if typeItems.count == 1 {
+            _ = try typeItems.first!.mirror(to: mirrorPath, using: f)
         } else {
-            try mirror(to: directoryMirrorUrl, using: f)
+            try mirrorFolder(to: mirrorPath, using: f)
         }
     }
     
-    private func mirror(to url: URL, using f: FileManager) throws {
+    private func mirrorFolder(to path: String, using f: FileManager) throws {
         
-        let path = url.path
+        let url = URL(fileURLWithPath: path)
         if f.fileExists(atPath: path) {
-            if let fileUuid = f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
-                if uuid != fileUuid {
-                    return // same name but other object
-                }
+            if let fileUuid = f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), uuid != fileUuid {
+                return // same name but other object
             }
         } else {
-            try f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            try f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         }
         
         var mirrored = false
         for child in typeItems {
-            if try child.mirror(using: f) {
+            var childPath = path + "/" + child.filenameTypeIdentifier
+            if let ext = child.fileExtension {
+                childPath += "." + ext
+            }
+            if try child.mirror(to: childPath, using: f) {
                 mirrored = true
             }
         }
@@ -212,21 +201,29 @@ extension ArchivedDropItem {
             log("Mirrored item dir \(uuid.uuidString)")
         }
     }
-    
-    fileprivate var shouldAssimilateFromMirror: Bool {
-        if needsSaving || isTransferring || isDeleting || needsReIngest {
-            return false
-        }
-        return typeItems.contains { $0.shouldAssimilateFromMirror }
-    }
-    
+        
     fileprivate func assimilateMirrorChanges() {
 
-        typeItems.forEach {
-            log("Assimilating mirror changes into component \($0.uuid.uuidString)")
-            try? FileManager.default.copyAndReplaceItem(at: $0.typeMirrorUrl, to: $0.bytesPath)
-            $0.markUpdated()
+        if needsSaving || isTransferring || isDeleting || needsReIngest {
+            return
         }
+        
+        var mirrorCount = 0
+        for child in typeItems {
+            if let url = child.assimilationUrl {
+                
+                log("Assimilating mirror changes into component \(child.uuid.uuidString)")
+                try? FileManager.default.copyAndReplaceItem(at: url, to: child.bytesPath)
+                child.markUpdated()
+                
+                mirrorCount += 1
+            }
+        }
+        
+        if mirrorCount == 0 {
+            return
+        }
+    
         markUpdated()
         needsReIngest = true
         skipMirrorAtNextSave = true
@@ -238,33 +235,15 @@ extension ArchivedDropItem {
 }
 
 extension ArchivedDropItemType {
-    fileprivate var typeMirrorUrl: URL {
-        guard let parent = parent else {
-            abort()
-        }
-        
-        var url = parent.directoryMirrorUrl
-        
-        if parent.typeItems.count != 1 {
-            url.appendPathComponent(filenameTypeIdentifier)
-        }
     
-        if let ext = fileExtension, !url.path.hasSuffix("." + ext) {
-            url = url.appendingPathExtension(ext)
-        }
-        
-        return url
-    }
-    
-    fileprivate func mirror(using f: FileManager) throws -> Bool {
+    fileprivate func mirror(to path: String, using f: FileManager) throws -> Bool {
                 
         if !f.fileExists(atPath: bytesPath.path) {
             return false
         }
         
-        var url = typeMirrorUrl
-
-        let path = url.path
+        var url = URL(fileURLWithPath: path)
+        
         if f.fileExists(atPath: path) {
             
             if let fileUuid = f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
@@ -288,26 +267,35 @@ extension ArchivedDropItemType {
         v.hasHiddenExtension = true
         v.creationDate = createdAt
         v.contentModificationDate = updatedAt
-        //v.typeIdentifier = typeIdentifier
         try url.setResourceValues(v)
                 
-        log("Mirrored component \(uuid.uuidString) to \(url.path)")
+        log("Mirrored component \(uuid.uuidString) to \(path)")
         return true
     }
     
-    fileprivate var shouldAssimilateFromMirror: Bool {
-        let f = FileManager.default
-        let url = typeMirrorUrl
-        let path = url.path
+    fileprivate var assimilationUrl: URL? {
+        guard let parent = parent else {
+            return nil
+        }
         
+        var path = parent.fileMirrorPath
+        if parent.typeItems.count > 1 {
+            path.append(filenameTypeIdentifier)
+            if let ext = fileExtension {
+                path.append("." + ext)
+            }
+        }
+                
+        let f = FileManager.default
         guard f.fileExists(atPath: path) else {
-            return false
+            return nil
         }
 
-        if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate > updatedAt {
-            return true
+        let url = URL(fileURLWithPath: path)
+        if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate <= updatedAt {
+            return nil
         }
         
-        return false
+        return url
     }
 }
