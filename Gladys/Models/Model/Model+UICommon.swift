@@ -335,7 +335,9 @@ extension Model {
 		drops.removeAll { !$0.isImportedShare }
 		modelFilter = nil
 		cachedFilteredDrops = nil
+        #if MAINAPP
         deleteMirror {}
+        #endif
 		clearCaches()
 		save()
 		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
@@ -499,7 +501,9 @@ extension Model {
 		var ipsToRemove = [IndexPath]()
 		var uuidsToRemove = [UUID]()
 
+        #if MAINAPP
         MirrorManager.removeItems(items: items)
+        #endif
 
 		for item in items {
 

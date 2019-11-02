@@ -250,7 +250,6 @@
 		16A278AA222AAFA4007B810C /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
-		16A4AB45236B6A0100320078 /* MirrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8161EFF3745000087DD /* MirrorManager.swift */; };
 		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -2326,7 +2325,6 @@
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
 				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
-				16A4AB45236B6A0100320078 /* MirrorManager.swift in Sources */,
 				16ED386320C08FAA00B9BFDA /* Model.swift in Sources */,
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
