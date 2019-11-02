@@ -36,15 +36,15 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 	}
 
     func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
-
+        var ret: UIViewController?
+        
 		if isWebURL, let url = encodedUrl {
             let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
             d.title = "Loading..."
             d.address = url as URL
             d.relatedItem = Model.item(uuid: parentUuid)
             d.relatedChildItem = self
-			d.navigationItem.rightBarButtonItem = extraRightButton
-			return d
+			ret = d
 
 		} else if isWebArchive {
 			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
@@ -52,20 +52,24 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 			d.webArchive = PreviewItem(typeItem: self)
 			d.relatedItem = Model.item(uuid: parentUuid)
 			d.relatedChildItem = self
-			d.navigationItem.rightBarButtonItem = extraRightButton
-			return d
+            ret = d
 
 		} else if canPreview {
-			let q = QLPreviewController()
-			q.title = oneTitle
-			q.dataSource = self
-			q.modalPresentationStyle = .popover
-			q.navigationItem.rightBarButtonItem = extraRightButton
-			q.preferredContentSize = mainWindow.bounds.size
-			return q
+			let d = QLPreviewController()
+			d.title = oneTitle
+			d.dataSource = self
+			d.modalPresentationStyle = .popover
+			d.preferredContentSize = mainWindow.bounds.size
+            ret = d
 		}
+        
+        if let n = ret?.navigationItem, let extra = extraRightButton {
+            var buttons = n.rightBarButtonItems ?? [UIBarButtonItem]()
+            buttons.append(extra)
+            n.rightBarButtonItems = buttons
+        }
 
-		return nil
+		return ret
 	}
 
 	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {

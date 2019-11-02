@@ -74,9 +74,9 @@ final class MirrorManager {
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
             if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
-                if let item = Model.item(uuid: uuid), item.mirrorIsNewer {
+                if let item = Model.item(uuid: uuid), item.shouldAssimilateFromMirror {
                     item.assimilateMirrorChanges()
-                } else if let typeItem = Model.typeItem(uuid: uuid.uuidString), let parent = typeItem.parent, parent.mirrorIsNewer {
+                } else if let typeItem = Model.typeItem(uuid: uuid.uuidString), let parent = typeItem.parent, parent.shouldAssimilateFromMirror {
                     parent.assimilateMirrorChanges()
                 }
             }
@@ -85,7 +85,7 @@ final class MirrorManager {
     
     static func scanForMirrorChanges(items: [ArchivedDropItem], completion: @escaping ()->Void) {
         coordinateRead(type: []) {
-            items.filter { $0.mirrorIsNewer }.forEach {
+            items.filter { $0.shouldAssimilateFromMirror }.forEach {
                 $0.assimilateMirrorChanges()
             }
             DispatchQueue.main.async {
@@ -219,8 +219,11 @@ extension ArchivedDropItem {
         }
     }
     
-    fileprivate var mirrorIsNewer: Bool {
-        return typeItems.contains { $0.mirrorIsNewer }
+    fileprivate var shouldAssimilateFromMirror: Bool {
+        if needsSaving || isTransferring || isDeleting || needsReIngest {
+            return false
+        }
+        return typeItems.contains { $0.shouldAssimilateFromMirror }
     }
     
     fileprivate func assimilateMirrorChanges() {
@@ -298,7 +301,7 @@ extension ArchivedDropItemType {
         return true
     }
     
-    fileprivate var mirrorIsNewer: Bool {
+    fileprivate var shouldAssimilateFromMirror: Bool {
         let f = FileManager.default
         let url = typeMirrorUrl
         let path = url.path

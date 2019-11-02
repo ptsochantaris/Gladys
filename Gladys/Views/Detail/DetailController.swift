@@ -520,16 +520,16 @@ final class DetailController: GladysViewController,
 			cell.viewCallback = { [weak self, weak cell] in
 				guard let s = self, let c = cell else { return }
 				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
-					let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.image == nil }
+					let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.accessibilityLabel == "Done" }
 					guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
 					s.navigationController?.pushViewController(q, animated: true)
 				} else {
-					guard let q = typeEntry.quickLook(extraRightButton: nil) else { return }
+                    let done = makeDoneButton(target: s, action: #selector(s.closePreview))
+					guard let q = typeEntry.quickLook(extraRightButton: done) else { return }
 					let n = QLHostingViewController(rootViewController: q)
 					n.relatedItem = s.item
 					n.relatedChildItem = typeEntry
 					n.sourceItemView = c
-					q.navigationItem.rightBarButtonItem = makeDoneButton(target: s, action: #selector(s.closePreview))
 					ViewController.top.present(n, animated: true)
 				}
 			}

@@ -9,12 +9,7 @@
 import UIKit
 
 func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
-    let d = UIBarButtonItem(image: UIImage(systemName: "xmark.circle"),
-                            style: .done,
-                            target: target,
-                            action: action)
-    d.accessibilityLabel = "Done"
-    return d
+    return UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
 }
 
 extension UIImage {
