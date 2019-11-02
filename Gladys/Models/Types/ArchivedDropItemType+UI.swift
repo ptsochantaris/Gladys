@@ -35,22 +35,14 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return i
 	}
 
-    func quickLook(extraRightButton: UIBarButtonItem?, forceLinkPreviewForUrls: Bool = false) -> UIViewController? {
+    func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
 
 		if isWebURL, let url = encodedUrl {
-            let d: UIViewController
-            if forceLinkPreviewForUrls {
-                let x = ViewController.shared.storyboard!.instantiateViewController(identifier: "LinkPreview") as! LinkViewController
-                x.url = url as URL
-                d = x
-            } else {
-                let x = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-                x.title = "Loading..."
-                x.address = url as URL
-                x.relatedItem = Model.item(uuid: parentUuid)
-                x.relatedChildItem = self
-                d = x
-            }
+            let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+            d.title = "Loading..."
+            d.address = url as URL
+            d.relatedItem = Model.item(uuid: parentUuid)
+            d.relatedChildItem = self
 			d.navigationItem.rightBarButtonItem = extraRightButton
 			return d
 

@@ -612,15 +612,21 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         let deleteMenu = UIMenu(title: "Delete", image: confirmAction.image, identifier: nil, options: .destructive, children: [confirmAction])
         children.append(deleteMenu)
         
-        return UIMenu(title: item.displayTitleOrUuid, image: nil, identifier: nil, options: [], children: children)
+        return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
     }
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = archivedDropItem else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak item] in
             guard let i = item else { return nil }
-            if i.canPreview {
-                return i.previewableTypeItem?.quickLook(extraRightButton: nil, forceLinkPreviewForUrls: true)
+            if i.canPreview, let previewItem = i.previewableTypeItem {
+                if previewItem.isWebURL, let url = previewItem.encodedUrl {
+                    let x = ViewController.shared.storyboard!.instantiateViewController(identifier: "LinkPreview") as! LinkViewController
+                    x.url = url as URL
+                    return x
+                } else {
+                    return previewItem.quickLook(extraRightButton: nil)
+                }
             } else {
                 return nil
             }

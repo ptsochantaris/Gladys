@@ -499,6 +499,8 @@ extension Model {
 		var ipsToRemove = [IndexPath]()
 		var uuidsToRemove = [UUID]()
 
+        MirrorManager.removeItems(items: items)
+
 		for item in items {
 
 			if item.shouldDisplayLoading {
@@ -524,8 +526,6 @@ extension Model {
 			}
 		}
         
-        MirrorManager.removeItems(items: items)
-
 		return ipsToRemove
 	}
 
