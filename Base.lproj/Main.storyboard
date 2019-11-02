@@ -2256,7 +2256,7 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="25f-IC-Bbw"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem enabled="NO" image="details" id="3z5-TK-BXZ">
+                        <barButtonItem enabled="NO" title="Info" image="info.circle" catalog="system" id="3z5-TK-BXZ">
                             <connections>
                                 <action selector="inspectSelected:" destination="OAS-3C-tPm" id="VXB-c6-UpR"/>
                                 <segue destination="FAN-hL-Hea" kind="popoverPresentation" identifier="inspector" popoverAnchorBarButtonItem="3z5-TK-BXZ" id="yUF-Ko-61s">
@@ -2267,7 +2267,7 @@ Selecting them will show only items that contain these labels.</string>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="DyL-OI-bNM"/>
                         <barButtonItem title="Item" id="mls-SP-eXy"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="hWi-7U-vmM"/>
-                        <barButtonItem title="ASCII" id="tkW-TX-Wxg">
+                        <barButtonItem title="ASCII" image="a.circle" catalog="system" id="tkW-TX-Wxg">
                             <connections>
                                 <action selector="asciiSelected:" destination="OAS-3C-tPm" id="gHw-2c-Uky"/>
                             </connections>
@@ -3550,12 +3550,12 @@ Selecting them will show only items that contain these labels.</string>
         </scene>
     </scenes>
     <resources>
+        <image name="a.circle" catalog="system" width="64" height="60"/>
         <image name="arrow.down.doc" catalog="system" width="56" height="64"/>
         <image name="arrow.up.arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="bin.xmark" catalog="system" width="64" height="46"/>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
-        <image name="details" width="22" height="15"/>
         <image name="doc.on.doc" catalog="system" width="58" height="64"/>
         <image name="eye" catalog="system" width="64" height="40"/>
         <image name="gear" catalog="system" width="64" height="58"/>
@@ -3589,7 +3589,7 @@ Selecting them will show only items that contain these labels.</string>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7zu-MP-PH8"/>
+        <segue reference="ROM-1G-ayk"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="colorTint"/>
 </document>

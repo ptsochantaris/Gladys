@@ -621,7 +621,7 @@ extension Model {
 
             #if MAINAPP
             if PersistedOptions.mirrorFilesToDocuments {
-                MirrorManager.mirrorToFiles(from: itemsNeedingSaving) {}
+                updateMirror {}
             }
             #endif
 

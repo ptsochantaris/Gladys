@@ -58,7 +58,8 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		navigationController?.interactivePopGestureRecognizer?.require(toFail: selectionRecognizer)
 
 		addressItem.customView = addressViewHolder
-		asciiModeButton.title = asciiMode ? "HEX" : "ASCII"
+		asciiModeButton.title = asciiMode ? "Bytes" : "Characters"
+        asciiModeButton.image = UIImage(systemName: asciiMode ? "number.circle" : "a.circle")
 		clearSelection()
 
 		if bytes.count == 0 {
@@ -198,7 +199,8 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 	@IBAction private func asciiSelected(_ sender: UIBarButtonItem) {
 		let selectedIndexes = grid.indexPathsForSelectedItems
 		asciiMode = !asciiMode
-		sender.title = asciiMode ? "HEX" : "ASCII"
+        sender.title = asciiMode ? "Bytes" : "Characters"
+        sender.image = UIImage(systemName: asciiMode ? "number.circle" : "a.circle")        
 		grid.reloadData()
 		for i in selectedIndexes ?? [] {
 			grid.selectItem(at: i, animated: false, scrollPosition: .centeredHorizontally)
