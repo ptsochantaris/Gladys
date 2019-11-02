@@ -25,7 +25,7 @@
                 <outlet property="view" destination="zta-tj-lHd" id="lVx-8r-5Oa"/>
             </connections>
         </collectionViewItem>
-        <customView wantsLayer="YES" id="zta-tj-lHd" customClass="CardView" customModule="Gladys" customModuleProvider="target">
+        <customView autoresizesSubviews="NO" wantsLayer="YES" id="zta-tj-lHd" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="303" height="302"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -40,7 +40,7 @@
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
-                        <customView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="CardView" customModule="Gladys" customModuleProvider="target">
+                        <customView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="78" width="283" height="186"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
@@ -109,10 +109,10 @@
                 <stackView autoresizesSubviews="NO" distribution="fill" orientation="vertical" alignment="centerX" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72j-vo-hKN">
                     <rect key="frame" x="117" y="125" width="70" height="53"/>
                     <subviews>
-                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
+                        <progressIndicator autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" maxValue="1" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="15T-lS-AOB">
                             <rect key="frame" x="27" y="37" width="16" height="16"/>
                         </progressIndicator>
-                        <button wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
+                        <button autoresizesSubviews="NO" wantsLayer="YES" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="t0u-49-eaV">
                             <rect key="frame" x="-6" y="-7" width="82" height="32"/>
                             <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Dm-0x-pAW">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -135,7 +135,7 @@ Gw
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
-                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="57i-Zw-oXw">
+                <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="57i-Zw-oXw">
                     <rect key="frame" x="107" y="136" width="90" height="30"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="center" title="Copied" drawsBackground="YES" id="Y8C-Fe-6g4">
                         <font key="font" metaFont="system" size="26"/>

@@ -21,7 +21,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private weak var descriptionLabel: NSTextField!
 	@IBOutlet private weak var previewLabel: NSTextField!
 	@IBOutlet private weak var sizeLabel: NSTextField!
-	@IBOutlet private weak var centreBlock: CardView!
+	@IBOutlet private weak var centreBlock: FirstMouseView!
 	@IBOutlet private weak var spinner: NSProgressIndicator!
 
 	weak var delegate: ComponentCellDelegate?

@@ -39,15 +39,8 @@ final class FocusableTextField: NSTextField {
 		focusDelegate?.fieldReceivedFocus(self)
 		return super.becomeFirstResponder()
 	}
-    
-    @available(OSX 10.14, *)
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        updateLayer()
-    }
-    
+        
     override func updateLayer() {
-        super.updateLayer()
         if isEditable {
             layer?.backgroundColor = NSColor.controlLightHighlightColor.cgColor
         } else {

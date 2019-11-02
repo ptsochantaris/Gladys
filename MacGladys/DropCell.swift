@@ -11,9 +11,29 @@ import Cocoa
 import MapKit
 
 class FirstMouseView: NSView {
-	override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        
+    override final func acceptsFirstMouse(for event: NSEvent?) -> Bool {
 		return true
 	}
+    
+    @IBInspectable final var bgColor: NSColor?
+
+    @available(OSX 10.14, *)
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        let ea = effectiveAppearance
+        if !(NSAppearance.current === ea) {
+            NSAppearance.current = ea
+        }
+    }
+    
+    final func flatColor() {
+        layer?.contents = nil
+    }
+
+    override final func updateLayer() { // explicitly not calling super, as per docs
+        layer?.backgroundColor = bgColor?.cgColor
+    }
 }
 
 final class FirstMouseImageView: NSImageView {
@@ -205,23 +225,11 @@ extension NSMenu {
 	}
 }
 
-final class CardView: FirstMouseView {
-    @IBInspectable var bgColor: NSColor?
-    
-    func flatColor() {
-        layer?.contents = nil
-    }
-
-    override func updateLayer() { // explicitly not calling super
-        layer?.backgroundColor = bgColor?.cgColor
-    }
-}
-
 final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 	@IBOutlet private weak var topLabel: NSTextField!
 	@IBOutlet private weak var bottomLabel: NSTextField!
-	@IBOutlet private weak var image: CardView!
+	@IBOutlet private weak var image: FirstMouseView!
 	@IBOutlet private weak var progressView: NSProgressIndicator!
 	@IBOutlet private weak var cancelButton: NSButton!
 	@IBOutlet private weak var lockImage: NSImageView!
@@ -609,7 +617,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		didSet {
 			guard let l = view.layer else { return }
 			if isSelected {
-				l.borderColor = NSColor(named: "colorTint")?.cgColor
+				l.borderColor = NSColor(named: "colorTint")!.cgColor
 				l.borderWidth = 2
 			} else {
 				l.borderColor = NSColor.clear.cgColor

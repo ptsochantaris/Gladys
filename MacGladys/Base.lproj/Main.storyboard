@@ -1744,7 +1744,7 @@ Only</string>
                                     <rect key="frame" x="0.0" y="0.0" width="670" height="440"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <collectionView wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="Gladys" customModuleProvider="target">
+                                        <collectionView autoresizesSubviews="NO" wantsLayer="YES" selectable="YES" allowsMultipleSelection="YES" id="OAb-Qq-Rfr" customClass="MainCollectionView" customModule="Gladys" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="670" height="418"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" id="wzT-XP-gBe">
@@ -1776,16 +1776,16 @@ Only</string>
                             <stackView autoresizesSubviews="NO" wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
                                 <rect key="frame" x="0.0" y="380" width="670" height="60"/>
                                 <subviews>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="WdL-bw-uFk">
+                                    <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WdL-bw-uFk">
                                         <rect key="frame" x="0.0" y="38" width="670" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="22" id="EWe-6q-p52"/>
                                         </constraints>
                                     </customView>
-                                    <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
+                                    <customView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">
                                         <rect key="frame" x="0.0" y="0.0" width="670" height="38"/>
                                         <subviews>
-                                            <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
+                                            <searchField autoresizesSubviews="NO" wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZb-eu-7ee">
                                                 <rect key="frame" x="8" y="8" width="593" height="22"/>
                                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search" usesSingleLineMode="YES" bezelStyle="round" id="tai-4w-9Jp">
                                                     <font key="font" metaFont="message" size="11"/>
@@ -1796,7 +1796,7 @@ Only</string>
                                                     <outlet property="delegate" destination="XfG-lQ-9wD" id="WuY-HM-N56"/>
                                                 </connections>
                                             </searchField>
-                                            <button wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
+                                            <button autoresizesSubviews="NO" wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsE-la-tYA">
                                                 <rect key="frame" x="600" y="2" width="68" height="32"/>
                                                 <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="eek-0f-6mI">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
