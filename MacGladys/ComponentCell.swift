@@ -29,7 +29,6 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.layer?.cornerRadius = 8
-		centreBlock.layer?.cornerRadius = 4
 	}
 
 	override var representedObject: Any? {
@@ -167,6 +166,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         centreBlock.layer?.contentsGravity = .resizeAspectFill
+        centreBlock.layer?.cornerRadius = 4
     }
 
 	private static let shortFormatter: DateFormatter = {

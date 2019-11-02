@@ -5,7 +5,7 @@
   },
   "colors" : [
     {
-      "idiom" : "universal",
+      "idiom" : "mac",
       "color" : {
         "color-space" : "srgb",
         "components" : {
@@ -17,7 +17,7 @@
       }
     },
     {
-      "idiom" : "universal",
+      "idiom" : "mac",
       "appearances" : [
         {
           "appearance" : "luminosity",

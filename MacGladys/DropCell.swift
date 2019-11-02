@@ -207,18 +207,12 @@ extension NSMenu {
 
 final class CardView: FirstMouseView {
     @IBInspectable var bgColor: NSColor?
-
-    @available(OSX 10.14, *)
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        updateLayer()
-    }
-
+    
     func flatColor() {
         layer?.contents = nil
     }
-    override func updateLayer() {
-        super.updateLayer()
+
+    override func updateLayer() { // explicitly not calling super
         layer?.backgroundColor = bgColor?.cgColor
     }
 }

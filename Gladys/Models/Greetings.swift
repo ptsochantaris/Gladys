@@ -9,6 +9,8 @@
 import Foundation
 
 final class Greetings {
+    static let openLine = "Ready! Drop me stuff."
+    
 	static var randomCleanLine: String {
 		let count = UInt32(cleanLines.count)
 		return cleanLines[Int(arc4random_uniform(count))]
@@ -29,7 +31,9 @@ final class Greetings {
 		"What's next?",
 		"Minimalism!",
 		"Done!",
-		"Taken care of."
+		"Taken care of.",
+        "Neat.",
+        "Gladys zero!"
 	]
 
 	static var randomGreetLine: String {
@@ -50,6 +54,7 @@ final class Greetings {
 		"Ready!",
 		"Greetings.",
 		"You called?",
-		"Namaste."
+		"Namaste.",
+        "All set.",
 	]
 }

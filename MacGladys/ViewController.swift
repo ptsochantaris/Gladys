@@ -306,10 +306,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		updateTitle()
 		postSave()
-
-		if Model.drops.count == 0 {
-			blurb("Ready! Drop me stuff.")
-		}
 	}
 
 	@objc private func interfaceModeChanged(sender: NSNotification) {
@@ -348,9 +344,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.updateServices()
 	}
 
+    private var firstKey = true
 	func isKey() {
 		if Model.filteredDrops.count == 0 {
-			blurb(Greetings.randomGreetLine)
+            if firstKey {
+                firstKey = false
+                blurb(Greetings.openLine)
+            } else {
+                blurb(Greetings.randomGreetLine)
+            }
 		}
 	}
 
@@ -1185,7 +1187,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		emptyLabel.alphaValue = 0
 		emptyLabel.stringValue = text
 		emptyLabel.animator().alphaValue = 1
-		DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
+		DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
 			self?.emptyLabel.animator().alphaValue = 0
 		}
 	}

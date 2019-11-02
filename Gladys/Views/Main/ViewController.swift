@@ -606,7 +606,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		didUpdateItems()
 		updateEmptyView(animated: false)
 		emptyView?.alpha = 1
-		blurb("Ready! Drop me stuff.")
+        blurb(Greetings.openLine)
 
 		cloudStatusChanged()
 		if !PersistedOptions.pasteShortcutAutoDonated {
@@ -1023,7 +1023,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			l.tag = 9265
 			l.translatesAutoresizingMaskIntoConstraints = false
 			l.font = UIFont.preferredFont(forTextStyle: .caption2)
-			l.textColor = UIColor(named: "colorDarkGray")
+            l.textColor = .secondaryLabel
 			l.textAlignment = .center
 			l.text = message
 			l.numberOfLines = 0
@@ -1037,7 +1037,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 				l.widthAnchor.constraint(equalTo: e.widthAnchor),
 			])
 
-			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
 				UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {
 					l.alpha = 0
 				}, completion: { finished in
@@ -1049,11 +1049,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private func updateEmptyView(animated: Bool) {
 		if Model.drops.count == 0 && emptyView == nil {
-			let e = UIImageView(frame: .zero)
+            let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
 			e.isAccessibilityElement = false
-			e.contentMode = .center
-			e.image = #imageLiteral(resourceName: "gladysImage").limited(to: CGSize(width: 160, height: 160), limitTo: 1, useScreenScale: true)
+            e.contentMode = .scaleAspectFit
 			e.center(on: view)
+            NSLayoutConstraint.activate([
+                e.widthAnchor.constraint(equalToConstant: 160),
+                e.heightAnchor.constraint(equalToConstant: 160)
+            ])
 			emptyView = e
 
 			if animated {
