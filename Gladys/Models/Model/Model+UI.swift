@@ -264,7 +264,6 @@ extension Model {
 
     private static func runMirror(completion: @escaping ()->Void) {
         let itemsToMirror = drops.filter { $0.goodToSave }
-        MirrorManager.pruneNonExistentEntries(allDrops: itemsToMirror)
         MirrorManager.mirrorToFiles(from: itemsToMirror, completion: completion)
     }
     

@@ -14,9 +14,10 @@ final class MirrorManager {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
     }
     
-    private static func coordinateWrite(type: NSFileCoordinator.WritingOptions, perform: @escaping ()->Void) {
+    private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping ()->Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
-        coordinator.coordinate(with: [.writingIntent(with: mirrorBase, options: type)], queue: mirrorQueue) { error in
+        let intents = types.map { NSFileAccessIntent.writingIntent(with: mirrorBase, options: $0) }
+        coordinator.coordinate(with: intents, queue: mirrorQueue) { error in
             if let error = error {
                 log("Error while trying to coordinate mirror: \(error.localizedDescription)")
                 return
@@ -38,7 +39,7 @@ final class MirrorManager {
     
     static func removeMirrorIfNeeded(completion: @escaping ()->Void) {
         let baseDir = mirrorBase
-        coordinateWrite(type: .forDeleting) {
+        coordinateWrite(types: [.forDeleting]) {
             let f = FileManager.default
             if f.fileExists(atPath: baseDir.path) {
                 try? f.removeItem(at: baseDir)
@@ -50,12 +51,12 @@ final class MirrorManager {
     }
     
     static func removeItems(items: [ArchivedDropItem]) {
-        let urls = items.map { $0.fileMirrorUrl }
-        coordinateWrite(type: .forDeleting) {
+        let paths = items.map { $0.fileMirrorPath }
+        coordinateWrite(types: [.forDeleting]) {
             let f = FileManager.default
-            for url in urls {
-                if f.fileExists(atPath: url.path) {
-                    try? f.removeItem(at: url)
+            for path in paths {
+                if f.fileExists(atPath: path) {
+                    try? f.removeItem(atPath: path)
                 }
             }
         }
@@ -102,27 +103,50 @@ final class MirrorManager {
     }
 
     static func mirrorToFiles(from drops: [ArchivedDropItem], completion: @escaping ()->Void) {
-        let dropsToMirror = drops.filter { !$0.skipMirrorAtNextSave }
+        coordinateWrite(types: [.forDeleting, .forMerging]) {
 
-        drops.filter { $0.skipMirrorAtNextSave }.forEach { $0.skipMirrorAtNextSave = false }
-
-        coordinateWrite(type: []) {
+            let start = Date()
+            let baseDir = mirrorBase
+            let f = FileManager.default
+            
             do {
-                try _mirrorToFiles(from: dropsToMirror)
+                try _pruneMirror(keeping: drops, at: baseDir, using: f)
+            } catch {
+                log("Error while pruning mirror: \(error.localizedDescription)")
+            }
+
+            log("Pruning done \(-start.timeIntervalSinceNow)s")
+
+            do {
+                let dropsToMirror = drops.filter { !$0.skipMirrorAtNextSave }
+                try _mirrorToFiles(from: dropsToMirror, at: baseDir, using: f)
             } catch {
                 log("Error while mirroring: \(error.localizedDescription)")
             }
+            
+            log("Mirroring done \(-start.timeIntervalSinceNow)s")
+
             DispatchQueue.main.async {
+                drops.filter { $0.skipMirrorAtNextSave }.forEach { $0.skipMirrorAtNextSave = false }
                 completion()
             }
         }
     }
+    
+    static private func _pruneMirror(keeping drops: [ArchivedDropItem], at baseDir: URL, using f: FileManager) throws {
+        let urlsOfExistingItems = drops.map { $0.fileMirrorPath }
+        try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
+            let existing = baseDir.appendingPathComponent(name).path
+            return urlsOfExistingItems.contains(existing)
+                ? nil
+                : existing
+        }.forEach {
+            log("Pruning \($0)")
+            try f.removeItem(atPath: $0)
+        }
+    }
 
-    static private func _mirrorToFiles(from drops: [ArchivedDropItem]) throws {
-
-        let baseDir = mirrorBase
-        
-        let f = FileManager.default
+    static private func _mirrorToFiles(from drops: [ArchivedDropItem], at baseDir: URL, using f: FileManager) throws {
         if !f.fileExists(atPath: baseDir.path) {
             log("Creating mirror directory \(baseDir.path)")
             try f.createDirectory(at: baseDir, withIntermediateDirectories: true, attributes: nil)
@@ -133,38 +157,9 @@ final class MirrorManager {
             return
         }
         
-        coordinateWrite(type: []) {
-            do {
-                try drops.forEach { try $0.mirrorToFiles(using: f) }
-                log("Mirroring items done")
-            } catch {
-                log("Error while mirroring items: \(error.localizedDescription)")
-            }
-        }
+        try drops.forEach { try $0.mirrorToFiles(using: f) }
     }
-    
-    static func pruneNonExistentEntries(allDrops: [ArchivedDropItem]) {
-        log("Removing mirrored files of non-existent items...")
-        let urls = allDrops.map { $0.fileMirrorUrl.path }
-        let baseDir = mirrorBase
-        coordinateWrite(type: .forDeleting) {
-            do {
-                let f = FileManager.default
-                try f.contentsOfDirectory(atPath: baseDir.path).compactMap { name -> String? in
-                    let existing = baseDir.appendingPathComponent(name).path
-                    return urls.contains(existing)
-                        ? nil
-                        : existing
-                }.forEach {
-                    log("Pruning \($0)")
-                    try f.removeItem(atPath: $0)
-                }
-            } catch {
-                log("Error while pruning mirror: \(error.localizedDescription)")
-            }
-        }
-    }
-    
+        
     fileprivate static func modificationDate(for url: URL, using f: FileManager) throws -> Date? {
         return try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
     }
@@ -175,19 +170,18 @@ extension ArchivedDropItem {
         return MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32))
     }
     
-    fileprivate var fileMirrorUrl: URL {
+    fileprivate var fileMirrorPath: String {
         if typeItems.count == 1 {
-            return typeItems.first!.typeMirrorUrl
+            return typeItems.first!.typeMirrorUrl.path
         }
-        return directoryMirrorUrl
+        return directoryMirrorUrl.path
     }
     
     fileprivate func mirrorToFiles(using f: FileManager) throws {
         if typeItems.count == 0 {
             return
         } else if typeItems.count == 1 {
-            let item = typeItems.first!
-            _ = try item.mirror(using: f)
+            _ = try typeItems.first!.mirror(using: f)
         } else {
             try mirror(to: directoryMirrorUrl, using: f)
         }
