@@ -200,17 +200,24 @@ extension Model {
 		}
 
 		saveOverlap -= 1
-		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-			if saveOverlap == 0 {
-				watchDelegate?.updateContext()
-				if registeredForBackground {
-					registeredForBackground = false
-					BackgroundTask.unregisterForBackground()
-					//log("Ending save queue background task")
-				}
-			}
-		}
+        if saveOverlap == 0 {
+            if PersistedOptions.mirrorFilesToDocuments {
+                updateMirror {
+                    saveDone()
+                }
+            } else {
+                saveDone()
+            }
+        }
 	}
+    
+    private static func saveDone() {
+        watchDelegate?.updateContext()
+        if registeredForBackground {
+            registeredForBackground = false
+            BackgroundTask.unregisterForBackground()
+        }
+    }
 
 	static func saveIndexComplete() {
 		watchDelegate?.updateContext()

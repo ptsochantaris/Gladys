@@ -619,12 +619,6 @@ extension Model {
 				log("Saving Error: \(error.finalDescription)")
 			}
 
-            #if MAINAPP
-            if PersistedOptions.mirrorFilesToDocuments {
-                updateMirror {}
-            }
-            #endif
-
             DispatchQueue.main.async {
 				if needsAnotherSave {
 					performSave()

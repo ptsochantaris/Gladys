@@ -6,6 +6,7 @@ final class MirrorManager {
     
     private static let mirrorQueue: OperationQueue = {
         let o = OperationQueue()
+        o.qualityOfService = .background
         o.maxConcurrentOperationCount = 1
         return o
     }()
