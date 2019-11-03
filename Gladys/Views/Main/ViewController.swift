@@ -804,9 +804,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
     
     @objc private func madeActive() {
         if PersistedOptions.mirrorFilesToDocuments {
-            Model.scanForMirrorChanges {
-                Model.updateMirror { }
-            }
+            Model.scanForMirrorChanges {}
         }
     }
 

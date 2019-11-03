@@ -85,9 +85,11 @@ final class MirrorManager {
     
     static func scanForMirrorChanges(items: [ArchivedDropItem], completion: @escaping ()->Void) {
         coordinateRead(type: []) {
+            let start = Date()
             for item in items {
                 item.assimilateMirrorChanges()
             }
+            log("Mirror scan done \(-start.timeIntervalSinceNow)s")
             DispatchQueue.main.async {
                 completion()
             }
@@ -189,8 +191,6 @@ extension ArchivedDropItem {
         
         if !f.fileExists(atPath: path) {
             try f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-            let url = URL(fileURLWithPath: path)
-            f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
         }
         
         var mirrored = false
@@ -209,31 +209,65 @@ extension ArchivedDropItem {
         
     fileprivate func assimilateMirrorChanges() {
 
-        if needsSaving || isTransferring || isDeleting || needsReIngest {
+        if needsSaving || isTransferring || isDeleting || needsReIngest || typeItems.isEmpty {
             return
         }
         
-        var mirrorCount = 0
-        for child in typeItems {
-            if let url = child.assimilationUrl {
+        let fmp = fileMirrorPath
+        let f = FileManager.default
+        guard f.fileExists(atPath: fmp) else {
+            return
+        }
+
+        var assimilated = false
+
+        if typeItems.count == 1, let child = typeItems.first {
+                        
+            let itemUrl = URL(fileURLWithPath: fmp)
+            if let fileDate = try? MirrorManager.modificationDate(for: itemUrl, using: f), fileDate <= updatedAt {
+                return
+            }
+            
+            log("Assimilating mirror changes into component \(child.uuid.uuidString)")
+            _ = try? f.copyAndReplaceItem(at: itemUrl, to: child.bytesPath)
+            child.markUpdated()
+            assimilated = true
+            
+        } else { // multiple items
+            for child in typeItems {
                 
+                let path: String
+                let t = child.filenameTypeIdentifier
+                if let ext = child.fileExtension {
+                    path = fmp + "/" + t + "." + ext
+                } else {
+                    path = fmp + "/" + t
+                }
+                
+                guard f.fileExists(atPath: path) else {
+                    continue
+                }
+
+                let url = URL(fileURLWithPath: path)
+                if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate <= updatedAt {
+                    continue
+                }
+
                 log("Assimilating mirror changes into component \(child.uuid.uuidString)")
-                try? FileManager.default.copyAndReplaceItem(at: url, to: child.bytesPath)
+                try? f.copyAndReplaceItem(at: url, to: child.bytesPath)
                 child.markUpdated()
-                
-                mirrorCount += 1
+                assimilated = true
             }
         }
         
-        if mirrorCount == 0 {
+        if !assimilated {
             return
         }
-    
-        markUpdated()
-        needsReIngest = true
-        skipMirrorAtNextSave = true
-                
+                    
         DispatchQueue.main.async {
+            self.markUpdated()
+            self.needsReIngest = true
+            self.skipMirrorAtNextSave = true
             self.reIngest(delegate: ViewController.shared)
         }
     }
@@ -253,13 +287,12 @@ extension ArchivedDropItemType {
             if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
             } else {
-                _ = try f.replaceItemAt(url, withItemAt: bytesPath, options: []) // explicitly empty options, to merge metadata
+                try f.removeItem(at: url)
             }
-        } else {
-            try f.copyItem(at: bytesPath, to: url)
-            f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
         }
-        
+        try f.copyItem(at: bytesPath, to: url)
+        f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
+
         var v = URLResourceValues()
         v.hasHiddenExtension = true
         v.creationDate = createdAt
@@ -267,31 +300,5 @@ extension ArchivedDropItemType {
         try url.setResourceValues(v)
                 
         return true
-    }
-    
-    fileprivate var assimilationUrl: URL? {
-        guard let parent = parent else {
-            return nil
-        }
-        
-        var path = parent.fileMirrorPath
-        if parent.typeItems.count > 1 {
-            path.append(filenameTypeIdentifier)
-            if let ext = fileExtension {
-                path.append("." + ext)
-            }
-        }
-                
-        let f = FileManager.default
-        guard f.fileExists(atPath: path) else {
-            return nil
-        }
-
-        let url = URL(fileURLWithPath: path)
-        if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate <= updatedAt {
-            return nil
-        }
-        
-        return url
     }
 }
