@@ -320,26 +320,33 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
                         <leftBarButtonItems>
-                            <barButtonItem image="gear" catalog="system" id="8HU-04-Ir2">
+                            <barButtonItem title="Settings" image="slider.horizontal.3" catalog="system" id="8HU-04-Ir2">
                                 <connections>
                                     <segue destination="QNh-jL-bwn" kind="popoverPresentation" identifier="showPreferences" popoverAnchorBarButtonItem="8HU-04-Ir2" id="cZU-UX-k5o">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Item" image="doc.on.doc" catalog="system" id="jsK-Yx-Re8">
+                            <barButtonItem title="Paste" image="doc.on.doc" catalog="system" id="jsK-Yx-Re8">
                                 <connections>
                                     <action selector="pasteSelected:" destination="BYZ-38-t0r" id="Z8T-pE-mzS"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="line.horizontal.3.decrease.circle" catalog="system" id="rde-vn-hL8">
-                            <connections>
-                                <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Edit" image="ellipsis.circle" catalog="system" id="Ra4-MV-xG3">
+                                <connections>
+                                    <action selector="editButtonSelected:" destination="BYZ-38-t0r" id="oTl-lS-Wch"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Labels" image="line.horizontal.3.decrease.circle" catalog="system" id="rde-vn-hL8">
+                                <connections>
+                                    <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="800" height="800"/>
@@ -349,6 +356,7 @@
                         <outlet property="dragModeButton" destination="85D-T5-Fjo" id="ujb-j3-fnL"/>
                         <outlet property="dragModePanel" destination="WNd-OH-aUx" id="r4J-DU-6i9"/>
                         <outlet property="dragModeTitle" destination="srE-1O-tlR" id="aGp-HB-LOg"/>
+                        <outlet property="editButton" destination="Ra4-MV-xG3" id="MpX-Kz-99u"/>
                         <outlet property="editLabelsButton" destination="MZc-J5-Dyp" id="Yao-os-MAr"/>
                         <outlet property="itemsCount" destination="2pe-qg-DFG" id="16f-Tg-bgD"/>
                         <outlet property="labelsButton" destination="rde-vn-hL8" id="JRS-KK-Z2o"/>
@@ -3557,8 +3565,8 @@ Selecting them will show only items that contain these labels.</string>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
         <image name="doc.on.doc" catalog="system" width="58" height="64"/>
+        <image name="ellipsis.circle" catalog="system" width="64" height="60"/>
         <image name="eye" catalog="system" width="64" height="40"/>
-        <image name="gear" catalog="system" width="64" height="58"/>
         <image name="gladysImage" width="1024" height="1024"/>
         <image name="icloud" catalog="system" width="64" height="44"/>
         <image name="iconSortAscendingSmall" width="22" height="22"/>
@@ -3576,19 +3584,19 @@ Selecting them will show only items that contain these labels.</string>
         <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
         <image name="zip" width="20" height="28"/>
         <namedColor name="colorComponentLabel">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorDarkGray">
             <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorFill">
-            <color red="0.84299999475479126" green="0.83099997043609619" blue="0.80800002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.10000000149011612" green="0.10000000149011612" blue="0.10000000149011612" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorPaper">
-            <color red="0.90196078431372551" green="0.89803921568627454" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.15000000596046448" green="0.15000000596046448" blue="0.15000000596046448" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorTint">
-            <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.90196078431372551" green="0.67843137254901964" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>

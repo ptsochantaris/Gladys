@@ -71,6 +71,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBOutlet private weak var dragModeButton: UIButton!
 	@IBOutlet private weak var dragModeTitle: UILabel!
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
+    @IBOutlet private weak var editButton: UIBarButtonItem!
 
 	static var shared: ViewController!
 
@@ -542,6 +543,8 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		settingsButton.accessibilityLabel = "Settings"
 		shareButton.accessibilityLabel = "Share"
 
+        pasteButton.image = UIImage(systemName: "doc.on.doc", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
+        
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
 		dragModePanel.layer.shadowColor = UIColor.black.cgColor
 		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -557,8 +560,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		ViewController.shared = self
 
 	    Model.beginMonitoringChanges()
-
-		navigationItem.rightBarButtonItems?.insert(editButtonItem, at: 0)
 
 		collection.reorderingCadence = .fast
 		collection.accessibilityLabel = "Items"
@@ -844,7 +845,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private var emptyView: UIImageView?
 	@objc private func didUpdateItems() {
-		editButtonItem.isEnabled = Model.drops.count > 0
+		editButton.isEnabled = Model.drops.count > 0
 
 		selectedItems = selectedItems?.filter { uuid in Model.drops.contains(where: { $0.uuid == uuid }) }
 
@@ -1076,6 +1077,10 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			}
 		}
 	}
+    
+    @IBAction func editButtonSelected(_ sender: UIBarButtonItem) {
+        setEditing(!isEditing, animated: true)
+    }
 
 	override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
@@ -1083,8 +1088,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		navigationController?.setToolbarHidden(!editing, animated: animated)
 		if editing {
 			selectedItems = [UUID]()
+            editButton.title = "Done"
+            editButton.image = UIImage(systemName: "ellipsis.circle.fill")
 		} else {
 			selectedItems = nil
+            editButton.title = "Edit"
+            editButton.image = UIImage(systemName: "ellipsis.circle")
 			deleteButton.isEnabled = false
 		}
 
