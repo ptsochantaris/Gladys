@@ -271,12 +271,20 @@ extension Model {
 
     private static func runMirror(completion: @escaping ()->Void) {
         let itemsToMirror = drops.filter { $0.goodToSave }
-        MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true, completion: completion)
+        BackgroundTask.registerForBackground()
+        MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true) {
+            completion()
+            BackgroundTask.unregisterForBackground()
+        }
     }
     
     static func scanForMirrorChanges(completion: @escaping ()->Void) {
+        BackgroundTask.registerForBackground()
         let itemsToMirror = drops.filter { $0.goodToSave }
-        MirrorManager.scanForMirrorChanges(items: itemsToMirror, completion: completion)
+        MirrorManager.scanForMirrorChanges(items: itemsToMirror) {
+            completion()
+            BackgroundTask.unregisterForBackground()
+        }
     }
     
     static func deleteMirror(completion: @escaping ()->Void) {
