@@ -32,15 +32,18 @@ final class TodayCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemThickMaterial))
 		backgroundEffect.layer.cornerRadius = 10
 		backgroundEffect.clipsToBounds = true
 		backgroundView = backgroundEffect
 
-		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
 		imageEffect.layer.cornerRadius = 5
 		imageEffect.clipsToBounds = true
 		imageView.coverUnder(with: imageEffect)
+        
+        topLabel.font = topLabel.font.withSize(topLabel.font.pointSize - 2)
+        bottomLabel.font = bottomLabel.font.withSize(bottomLabel.font.pointSize - 2)
 
 		imageView.layer.cornerRadius = 5
 		isAccessibilityElement = true
@@ -62,19 +65,25 @@ final class TodayCell: UICollectionViewCell {
 			guard let dropItem = dropItem else { return }
 			topLabel.text = dropItem.displayText.0
 			bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
+            let size: CGFloat
 			switch dropItem.displayMode {
 			case .center, .circle:
-				imageView.image = dropItem.displayIcon
+                size = 18
 				imageView.contentMode = .center
 			case .fill:
-				let b = imageView.bounds
-				imageView.image = dropItem.displayIcon.limited(to: CGSize(width: b.width, height: b.width), limitTo: 1, useScreenScale: true, singleScale: true)
+                size = imageView.bounds.width
 				imageView.contentMode = .scaleAspectFill
 			case .fit:
-				let b = imageView.bounds
-				imageView.image = dropItem.displayIcon.limited(to: CGSize(width: b.height, height: b.height), limitTo: 1, useScreenScale: true, singleScale: true)
+                size = imageView.bounds.height
 				imageView.contentMode = .scaleAspectFit
 			}
+            var icon = dropItem.displayIcon
+            let tint = icon.renderingMode == .alwaysTemplate
+            icon = icon.limited(to: CGSize(width: size, height: size), limitTo: 1, useScreenScale: true, singleScale: true)
+            if tint {
+                icon = icon.withTintColor(imageView.tintColor)
+            }
+            imageView.image = icon
 			accessibilityLabel = "Added " + (bottomLabel.text ?? "")
 			accessibilityValue = topLabel.text ?? ""
 
