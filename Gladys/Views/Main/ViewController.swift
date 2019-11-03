@@ -680,7 +680,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@objc private func cloudStatusChanged() {
 		if CloudManager.syncSwitchedOn && collection.refreshControl == nil {
 			let refresh = UIRefreshControl()
-			refresh.tintColor = view.tintColor
 			refresh.addTarget(self, action: #selector(refreshControlChanged(_:)), for: .valueChanged)
 			collection.refreshControl = refresh
 
@@ -700,7 +699,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private func lastSyncUpdate() {
 		if let r = collection.refreshControl {
-            r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor(named: "colorDarkGray")!])
+            r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [:])
 		}
 	}
 
@@ -1165,7 +1164,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		super.viewDidAppear(animated)
 		if firstAppearance {
 			firstAppearance = false
-			collection.refreshControl?.tintColor = view.tintColor
 			detectExternalDeletions()
 			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 			DispatchQueue.main.async {
