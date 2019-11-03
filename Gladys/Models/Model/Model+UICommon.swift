@@ -652,22 +652,28 @@ extension Model {
 		}
 	}
 
+    private static var commitQueue = [ArchivedDropItem]()
 	static func commitItem(item: ArchivedDropItem) {
-		let itemsToSave = drops.filter { $0.goodToSave }
 		item.isBeingCreatedBySync = false
 		item.needsSaving = false
-		let uuid = item.uuid
+        commitQueue.append(item)
 		saveQueue.async {
-			if item.isDeleting {
-				log("Skipping save of item \(uuid) as it's marked for deletion")
-				return
-			}
-			do {
-				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [uuid])
-				log("Ingest completed for item (\(uuid)) and committed to disk")
-			} catch {
-				log("Warning: Error while committing item to disk: (\(error.finalDescription))")
-			}
+            var nextItemUUIDs = [UUID]()
+            var itemsToSave = [ArchivedDropItem]()
+            DispatchQueue.main.sync {
+                nextItemUUIDs = commitQueue.filter { !$0.isDeleting }.map { $0.uuid }
+                commitQueue.removeAll()
+                itemsToSave = drops.filter { $0.goodToSave }
+            }
+            if nextItemUUIDs.isEmpty {
+                return
+            }
+            do {
+                try coordinatedSave(allItems: itemsToSave, dirtyUuids: nextItemUUIDs)
+                log("Ingest completed for items (\(nextItemUUIDs)) and committed to disk")
+            } catch {
+                log("Warning: Error while committing item to disk: (\(error.finalDescription))")
+            }
 		}
 	}
 

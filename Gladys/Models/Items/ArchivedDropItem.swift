@@ -159,6 +159,8 @@ final class ArchivedDropItem: Codable {
 	}
 
 	var loadCount = 0
+    var isDeleting = false
+    var isBeingCreatedBySync = false
 	weak var delegate: ItemIngestionDelegate?
 
 	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
@@ -179,12 +181,6 @@ final class ArchivedDropItem: Codable {
 
 		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
 	}
-
-	#endif
-
-	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
-	var isDeleting = false
-	var isBeingCreatedBySync = false
 
 	var isTransferring: Bool {
 		return typeItems.contains { $0.isTransferring }
