@@ -253,14 +253,13 @@ extension ArchivedDropItemType {
             if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
             } else {
-                try f.removeItem(atPath: path)
+                _ = try f.replaceItemAt(url, withItemAt: bytesPath, options: []) // explicitly empty options, to merge metadata
             }
+        } else {
+            try f.copyItem(at: bytesPath, to: url)
+            f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
         }
-                
-        try f.copyItem(at: bytesPath, to: url)
         
-        f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
-
         var v = URLResourceValues()
         v.hasHiddenExtension = true
         v.creationDate = createdAt
