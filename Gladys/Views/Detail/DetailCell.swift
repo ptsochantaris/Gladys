@@ -2,19 +2,16 @@
 import UIKit
 
 final class DetailCell: UITableViewCell {
-	@IBOutlet weak var name: UILabel!
-	@IBOutlet weak var size: UILabel!
-	@IBOutlet weak var desc: UILabel!
-
+	@IBOutlet private weak var name: UILabel!
+	@IBOutlet private weak var size: UILabel!
+	@IBOutlet private weak var desc: UILabel!
 	@IBOutlet weak var borderView: UIView!
 	@IBOutlet private weak var nameHolder: UIView!
-
 	@IBOutlet weak var inspectButton: UIButton!
 	@IBOutlet private weak var viewButton: UIButton!
 	@IBOutlet weak var archiveButton: UIButton!
 	@IBOutlet private weak var editButton: UIButton!
-
-    @IBOutlet weak var imageHolder: UIImageView!
+    @IBOutlet private weak var imageHolder: UIImageView!
     
 	var inspectionCallback: (()->Void)? {
 		didSet {
@@ -61,7 +58,10 @@ final class DetailCell: UITableViewCell {
 		borderView.layer.cornerRadius = 10
 		nameHolder.layer.cornerRadius = 5
 
-		inspectButton.accessibilityLabel = "Inspect raw data"
+        //name.shadowColor = UIColor.systemBackground
+        //name.shadowOffset = CGSize(width: 0, height: 1)
+
+		inspectButton.accessibilityLabel = "Inspect data"
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
@@ -130,6 +130,57 @@ final class DetailCell: UITableViewCell {
 		}
 	}
 
+    private static let shortFormatter: DateFormatter = {
+        let d = DateFormatter()
+        d.doesRelativeDateFormatting = true
+        d.dateStyle = .short
+        d.timeStyle = .short
+        return d
+    }()
+
+    func configure(with typeEntry: ArchivedDropItemType, showTypeDetails: Bool, darkMode: Bool) -> Bool {
+        imageHolder.image = nil
+
+        var hasImage = false
+        if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
+            hasImage = true
+            icon.desaturated(darkMode: darkMode) { [weak self] img in
+                self?.imageHolder.image = img
+            }
+        }
+    
+        var ok = true
+        
+        if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
+            name.textAlignment = typeEntry.displayTitleAlignment
+            name.text = "\"\(title)\""
+            
+        } else if typeEntry.dataExists {
+            if typeEntry.isWebArchive {
+                name.text = DetailCell.shortFormatter.string(from: typeEntry.createdAt)
+            } else {
+                name.text = hasImage ? nil : "Binary Data"
+            }
+            name.textAlignment = .center
+            
+        } else {
+            ok = false
+            name.text = "Loading Error"
+            name.textAlignment = .center
+            inspectionCallback = nil
+            viewCallback = nil
+        }
+        
+        size.text = typeEntry.sizeDescription
+        if showTypeDetails {
+            desc.text = typeEntry.typeIdentifier.uppercased()
+        } else {
+            desc.text = typeEntry.typeDescription.uppercased()
+        }
+        
+        return ok
+    }
+    
 	/////////////////////////////////////
 
 	override var accessibilityLabel: String? {

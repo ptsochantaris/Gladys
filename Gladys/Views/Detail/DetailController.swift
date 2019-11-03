@@ -368,14 +368,6 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private static let shortFormatter: DateFormatter = {
-		let d = DateFormatter()
-		d.doesRelativeDateFormatting = true
-		d.dateStyle = .short
-		d.timeStyle = .short
-		return d
-	}()
-
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		if indexPath.section == 0 {
@@ -409,60 +401,21 @@ final class DetailController: GladysViewController,
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 			let typeEntry = item.typeItems[indexPath.row]
-			if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
-				cell.name.textAlignment = typeEntry.displayTitleAlignment
-                if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
-                    cell.name.text = nil
-                    cell.imageHolder.image = nil
-                    icon.desaturated { img in
-                        cell.imageHolder.image = img
-                    }
-                } else {
-                    cell.name.alpha = 1.0
-                    cell.name.text = "\"\(title)\""
-                    cell.imageHolder.image = nil
-                }
+            if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, darkMode: darkMode) {
                 setCallbacks(for: cell, for: typeEntry)
-                
-			} else if typeEntry.dataExists {
-				cell.name.alpha = 0.7
-				if typeEntry.isWebArchive {
-					cell.name.text = DetailController.shortFormatter.string(from: typeEntry.createdAt)
-                    cell.imageHolder.image = nil
-				} else {
-                    if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
-                        cell.name.text = nil
-                        cell.imageHolder.image = nil
-                        icon.desaturated { img in
-                            cell.imageHolder.image = img
-                        }
-                    } else {
-                        cell.name.text = "Binary Data"
-                        cell.imageHolder.image = nil
-                    }
-				}
-				cell.name.textAlignment = .center
-				setCallbacks(for: cell, for: typeEntry)
-                
-			} else {
-				cell.name.alpha = 0.7
-				cell.name.text = "Loading Error"
-                cell.imageHolder.image = nil
-				cell.name.textAlignment = .center
-				cell.inspectionCallback = nil
-				cell.viewCallback = nil
-			}
-			cell.size.text = typeEntry.sizeDescription
-			if showTypeDetails {
-				cell.desc.text = typeEntry.typeIdentifier.uppercased()
-			} else {
-				cell.desc.text = typeEntry.typeDescription.uppercased()
-			}
-
+            }
 			return cell
 		}
 	}
+    
+    private lazy var darkMode = {
+        view.traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
+    }()
 
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        darkMode = newCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
+    }
+    
 	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
 		if component.bytes?.isPlist == true {
 			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
