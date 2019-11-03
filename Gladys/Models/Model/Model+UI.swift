@@ -271,7 +271,7 @@ extension Model {
 
     private static func runMirror(completion: @escaping ()->Void) {
         let itemsToMirror = drops.filter { $0.goodToSave }
-        MirrorManager.mirrorToFiles(from: itemsToMirror, completion: completion)
+        MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true, completion: completion)
     }
     
     static func scanForMirrorChanges(completion: @escaping ()->Void) {

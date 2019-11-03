@@ -103,43 +103,45 @@ final class MirrorManager {
         }
     }
     
-    static func mirrorToFiles(from drops: [ArchivedDropItem], completion: @escaping ()->Void) {
+    static func mirrorToFiles(from drops: [ArchivedDropItem], andPruneOthers: Bool, completion: @escaping ()->Void) {
         coordinateWrite(types: [.forDeleting, .forMerging]) {
-
-            let start = Date()
-            let f = FileManager.default
-            let baseDir = mirrorBase.path
             
-            if f.fileExists(atPath: baseDir) {
-                do {
-                    let urlsOfDrops = Set(drops.map { $0.fileMirrorPath })
-                    let prefix = baseDir + "/"
-                    try f.contentsOfDirectory(atPath: baseDir).forEach {
-                        let p = prefix + $0
-                        if !urlsOfDrops.contains(p) {
-                            log("Pruning \(p)")
-                            try f.removeItem(atPath: p)
-                        }
-                    }
-                    log("Pruning done \(-start.timeIntervalSinceNow)s")
-                } catch {
-                    log("Error while pruning mirror: \(error.localizedDescription)")
-                }
-            }
-
             do {
+                let start = Date()
+                let f = FileManager.default
+                let baseDir = mirrorBase.path
+
+                var pathsExamined = Set<String>()
+                pathsExamined.reserveCapacity(drops.count)
+
                 if !f.fileExists(atPath: baseDir) {
                     log("Creating mirror directory \(baseDir)")
                     try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
                 }
                 
-                try drops.forEach { try $0.mirrorToFiles(using: f) }
+                for drop in drops {
+                    if let examinedPath = try drop.mirrorToFiles(using: f, pathsExamined: pathsExamined) {
+                        pathsExamined.insert(examinedPath)
+                    }
+                }
+
+                if andPruneOthers {
+                    let prefix = baseDir + "/"
+                    try f.contentsOfDirectory(atPath: baseDir).forEach {
+                        let p = prefix + $0
+                        if !pathsExamined.contains(p) {
+                            log("Pruning \(p)")
+                            try f.removeItem(atPath: p)
+                        }
+                    }
+                }
+
                 log("Mirroring done \(-start.timeIntervalSinceNow)s")
 
             } catch {
                 log("Error while mirroring: \(error.localizedDescription)")
             }
-            
+
             DispatchQueue.main.async {
                 drops.filter { $0.skipMirrorAtNextSave }.forEach { $0.skipMirrorAtNextSave = false }
                 completion()
@@ -163,27 +165,32 @@ extension ArchivedDropItem {
         return base
     }
     
-    fileprivate func mirrorToFiles(using f: FileManager) throws {
-        if skipMirrorAtNextSave || typeItems.count == 0 {
-            return
-        }
+    fileprivate func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
         let mirrorPath = fileMirrorPath
-        if typeItems.count == 1 {
-            _ = try typeItems.first!.mirror(to: mirrorPath, using: f)
-        } else {
-            try mirrorFolder(to: mirrorPath, using: f)
+        if skipMirrorAtNextSave || typeItems.count == 0 {
+            return mirrorPath
         }
+        if pathsExamined.contains(mirrorPath) { // some other drop has claimed this path
+            return nil
+        }
+        let res: Bool
+        if typeItems.count == 1 {
+            res = try typeItems.first!.mirror(to: mirrorPath, using: f)
+        } else {
+            res = try mirrorFolder(to: mirrorPath, using: f)
+        }
+        if res {
+            log("Mirrored item \(uuid.uuidString): \(displayTitleOrUuid)")
+        }
+        return mirrorPath
     }
     
-    private func mirrorFolder(to path: String, using f: FileManager) throws {
+    private func mirrorFolder(to path: String, using f: FileManager) throws -> Bool {
         
-        let url = URL(fileURLWithPath: path)
-        if f.fileExists(atPath: path) {
-            if let fileUuid = f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), uuid != fileUuid {
-                return // same name but other object
-            }
-        } else {
+        if !f.fileExists(atPath: path) {
             try f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            let url = URL(fileURLWithPath: path)
+            f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
         }
         
         var mirrored = false
@@ -197,10 +204,7 @@ extension ArchivedDropItem {
             }
         }
         
-        if mirrored {
-            f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
-            log("Mirrored item dir \(uuid.uuidString)")
-        }
+        return mirrored
     }
         
     fileprivate func assimilateMirrorChanges() {
@@ -246,14 +250,7 @@ extension ArchivedDropItemType {
         var url = URL(fileURLWithPath: path)
         
         if f.fileExists(atPath: path) {
-            
-            if let fileUuid = f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
-                if uuid != fileUuid {
-                    return false // same name but was written by identically named object
-                }
-            }
-            
-            if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate == updatedAt {
+            if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
             } else {
                 try f.removeItem(atPath: path)
@@ -270,7 +267,6 @@ extension ArchivedDropItemType {
         v.contentModificationDate = updatedAt
         try url.setResourceValues(v)
                 
-        log("Mirrored component \(uuid.uuidString) to \(path)")
         return true
     }
     
