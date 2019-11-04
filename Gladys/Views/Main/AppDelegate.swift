@@ -12,9 +12,7 @@ import CloudKit
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-
-	var window: UIWindow?
-
+        
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
 		if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {

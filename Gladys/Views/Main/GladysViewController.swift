@@ -62,7 +62,6 @@ class GladysViewController: UIViewController {
         if isInStandaloneWindow, let session = view.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard
-            session.stateRestorationActivity = userActivity
             UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
             return
         }
