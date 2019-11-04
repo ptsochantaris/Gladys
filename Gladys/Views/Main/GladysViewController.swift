@@ -59,6 +59,7 @@ class GladysViewController: UIViewController {
 	}
 
 	@objc func done() {
+        NotificationCenter.default.removeObserver(self) // since we may not be deinited immediately, still no need for the UI to be active
         if isInStandaloneWindow, let session = view.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard

@@ -722,9 +722,10 @@ final class DetailController: GladysViewController,
 		if let session = session.localDragSession {
 			if session.localContext as? String == "typeItem" {
 				ViewController.shared.componentDropActiveFromDetailView = self
-				NotificationCenter.default.removeObserver(self) // since we won't be deinited immediately, still no need for the UI to be active
 			}
-			done()
+            if !isInStandaloneWindow {
+                done()
+            }
 		}
 	}
 

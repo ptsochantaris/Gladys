@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension UIScene {
+    var isDetail: Bool {
+        let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
+        return n?.topViewController is DetailController
+    }
+    var firstGladysController: GladysViewController? {
+        let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
+        return n?.viewControllers.first as? GladysViewController
+    }
+}
+
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
@@ -21,9 +32,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
-        guard let scene = scene as? UIWindowScene else { return nil }
-        let n = scene.windows.first?.rootViewController as? UINavigationController
-        return n?.viewControllers.first?.userActivity
+        return scene.firstGladysController?.userActivity
+    }
+        
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        if !scene.isDetail { // master scene
+            if PersistedOptions.mirrorFilesToDocuments {
+                Model.scanForMirrorChanges {}
+            }
+        }
     }
 
     private func setupDetail(scene: UIScene, activity: NSUserActivity) {

@@ -600,7 +600,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(madeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 
 		Model.checkForUpgrade()
 
@@ -803,12 +802,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 	}
     
-    @objc private func madeActive() {
-        if PersistedOptions.mirrorFilesToDocuments {
-            Model.scanForMirrorChanges {}
-        }
-    }
-
 	private func detectExternalDeletions() {
 		var shouldSaveInAnyCase = false
 		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
@@ -1148,7 +1141,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
 		if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell, let b = cell.backgroundView {
 			let corner = b.layer.cornerRadius
-			let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
+			let path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
 			let params = UIDragPreviewParameters()
 			params.backgroundColor = .clear
 			params.visiblePath = path
