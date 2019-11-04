@@ -191,7 +191,7 @@ extension ArchivedDropItem {
 			viewController.pushViewController(c, animated: true)
 			completion(false)
 		} else if let item = item as? URL {
-			UIApplication.shared.open(item, options: [:]) { success in
+            UIApplication.shared.connectedScenes.first?.open(item, options: nil) { success in
 				if !success {
 					let message: String
 					if item.isFileURL {

@@ -28,8 +28,8 @@ final class AboutController: GladysViewController {
 	}
 
 	@IBAction private func aboutSelected(_ sender: UIButton) {
-		let u = URL(string: "https://bru.build/app/gladys")!
-		UIApplication.shared.open(u, options: [:]) { success in
+        guard let u = URL(string: "https://bru.build/app/gladys") else { return }
+        UIApplication.shared.connectedScenes.first?.open(u, options: nil) { success in
 			if success {
 				self.done()
 			}

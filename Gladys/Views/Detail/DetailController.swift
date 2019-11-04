@@ -57,6 +57,12 @@ final class DetailController: GladysViewController,
 		} else {
 			siriButton.isEnabled = false
 		}
+        
+        if !isInStandaloneWindow && UIDevice.current.userInterfaceIdiom == .pad {
+            let n = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected(_:)))
+            n.image = UIImage(systemName: "uiwindow.split.2x1")
+            navigationItem.rightBarButtonItems?.append(n)
+        }
 		
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
@@ -173,6 +179,16 @@ final class DetailController: GladysViewController,
 			ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
 		}
 	}
+    
+    @objc private func newWindowSelected(_ sender: UIBarButtonItem) {
+        let activity = userActivity
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = navigationController?.view.window?.windowScene
+        done()
+        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
+            log("Error opening new window: \(error.localizedDescription)")
+        }
+    }
 
 	@objc private func updateUI() {
 		view.endEditing(true)

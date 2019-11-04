@@ -175,6 +175,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                 inviteButton.contentTintColor = NSColor.systemGray
             } else {
                 inviteButton.image = #imageLiteral(resourceName: "iconUserAdd").template(with: NSColor.systemGray)
+                @IBAction func newWindowSelected(_ sender: UIBarButtonItem) {
+                }
+                @IBAction func newWindowSelected(_ sender: UIBarButtonItem) {
+                }
             }
 		case .elsewhereReadOnly:
 			readOnlyLabel.isHidden = false

@@ -1769,7 +1769,7 @@ Selecting them will show only items that contain these labels.</string>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Detail" automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o6P-jX-a91">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

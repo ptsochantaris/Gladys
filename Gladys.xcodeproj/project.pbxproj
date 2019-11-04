@@ -290,6 +290,7 @@
 		16C8166720CB0354001C12DF /* PullState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* PullState.swift */; };
 		16C8166820CB0354001C12DF /* PullState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* PullState.swift */; };
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
+		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */; };
 		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
 		16CD7D7320A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */; };
@@ -787,6 +788,7 @@
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
 		16C8166620CB0354001C12DF /* PullState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullState.swift; sourceTree = "<group>"; };
 		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		16CA7AA0236F880C00F96699 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		16CD7D7220A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+IngestCommon.swift"; sourceTree = "<group>"; };
@@ -1360,6 +1362,7 @@
 				162289B3207CC72600DAC6A2 /* CallbackSupport.swift */,
 				1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */,
 				16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */,
+				16CA7AA0236F880C00F96699 /* SceneDelegate.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2519,6 +2522,7 @@
 				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */,
 				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
+				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				16E034FA20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,

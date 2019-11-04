@@ -59,6 +59,14 @@ class GladysViewController: UIViewController {
 	}
 
 	@objc func done() {
+        if isInStandaloneWindow, let session = view.window?.windowScene?.session {
+            let options = UIWindowSceneDestructionRequestOptions()
+            options.windowDismissalAnimation = .standard
+            session.stateRestorationActivity = userActivity
+            UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
+            return
+        }
+        
 		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.presentationControllerShouldDismiss {
 			_ = f(p)
 		}
@@ -90,10 +98,14 @@ class GladysViewController: UIViewController {
 					showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
 				}
 			} else { // full window?
-				showDone(ViewController.shared.phoneMode)
+				showDone(ViewController.shared.phoneMode || isInStandaloneWindow)
 			}
 		}
 	}
+    
+    var isInStandaloneWindow: Bool {
+        return navigationController == navigationController?.view.window?.rootViewController
+    }
 
 	private var scrollTimer: GladysTimer?
 	private var scrollLink: CADisplayLink?
