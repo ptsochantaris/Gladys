@@ -57,20 +57,20 @@ class GladysViewController: UIViewController {
 			}
 		}
 	}
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
 	@objc func done() {
-        NotificationCenter.default.removeObserver(self) // since we may not be deinited immediately, still no need for the UI to be active
+        NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
         if isInStandaloneWindow, let session = view.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard
             UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
-            return
+        } else {
+            dismiss(animated: true)
         }
-        
-		if let n = navigationController, let p = n.popoverPresentationController, let d = p.delegate, let f = d.presentationControllerShouldDismiss {
-			_ = f(p)
-		}
-		dismiss(animated: true)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

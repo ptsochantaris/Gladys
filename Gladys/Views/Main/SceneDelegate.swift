@@ -70,9 +70,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.showDetail(for: item, in: scene, count: count + 1)
             }
         } else {
-            let d = scene.session.configuration.storyboard?.instantiateViewController(identifier: "Detail") as! DetailController
+            let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
+            let d = n.viewControllers.first as! DetailController
             d.item = item
-            let n = UINavigationController(rootViewController: d)
             scene.windows.first?.rootViewController = n
         }
     }

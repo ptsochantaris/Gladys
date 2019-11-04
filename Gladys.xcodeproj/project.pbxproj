@@ -188,7 +188,6 @@
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
 		167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */; };
-		167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABEC81F7770DF0075E0E8 /* DimView.swift */; };
 		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
 		167CDF9520B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
 		167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
@@ -713,7 +712,6 @@
 		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Gladys/Info.plist; sourceTree = "<group>"; };
 		167A18D41F128A9300B7F0AF /* VerifyReceipt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerifyReceipt.m; sourceTree = "<group>"; };
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
-		167ABEC81F7770DF0075E0E8 /* DimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Preview.swift"; sourceTree = "<group>"; };
 		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
@@ -1356,7 +1354,6 @@
 				1678F9D01EF475FE005697CB /* AppDelegate.swift */,
 				1678F9D21EF475FF005697CB /* ViewController.swift */,
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
-				167ABEC81F7770DF0075E0E8 /* DimView.swift */,
 				1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */,
 				165173021F99483E006CAF0A /* GladysViewController.swift */,
 				162289B3207CC72600DAC6A2 /* CallbackSupport.swift */,
@@ -2520,7 +2517,6 @@
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
-				167ABEC91F7770DF0075E0E8 /* DimView.swift in Sources */,
 				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,

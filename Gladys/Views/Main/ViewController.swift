@@ -369,23 +369,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		return countInserts(in: session) > 0 ? .copy : .move
 	}
 
-	private var dimView: DimView?
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-		if let d = dimView {
-			dimView = nil
-			d.dismiss()
-		}
-		return true
-	}
-	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
-		if dimView == nil {
-			let d = DimView()
-			popoverPresentationController.presentingViewController.view.cover(with: d)
-			popoverPresentationController.passthroughViews = [d]
-			dimView = d
-		}
-	}
-
 	var phoneMode: Bool {
 		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
 	}
@@ -947,9 +930,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
-				if let p = a.popoverPresentationController {
-					_ = self.presentationControllerShouldDismiss(p)
-				}
 				self.selectedItems?.removeAll()
 				self.collection.reloadData()
 				self.didUpdateItems()
@@ -968,9 +948,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
-				if let p = a.popoverPresentationController {
-					_ = self.presentationControllerShouldDismiss(p)
-				}
 				self.selectedItems = Model.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
 				self.didUpdateItems()
@@ -1227,9 +1204,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
 		a.addAction(UIAlertAction(title: msg, style: .destructive) { action in
-			if let p = a.popoverPresentationController {
-				_ = self.presentationControllerShouldDismiss(p)
-			}
 			self.proceedWithDelete()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -1281,23 +1255,14 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
-	private var firstPresentedAlertController: UIAlertController? {
-		return (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
-	}
-
 	func dismissAnyPopOver(completion: (()->Void)? = nil) {
-		if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController, let pc = p.popoverPresentationController {
-			if presentationControllerShouldDismiss(pc) {
-				firstPresentedAlertController?.dismiss(animated: true) {
-					completion?()
-				}
-				firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true) {
-					completion?()
-				}
-				return
-			}
-		}
-		completion?()
+        let firstPresentedAlertController = (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
+        firstPresentedAlertController?.dismiss(animated: true) {
+            completion?()
+        }
+        firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true) {
+            completion?()
+        }
 	}
 
 	func dismissAnyPopOverOrModal(completion: (()->Void)? = nil) {
