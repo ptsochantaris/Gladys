@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 extension UIScene {
     var isDetail: Bool {
@@ -23,12 +24,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity else { return }
-        setupDetail(scene: scene, activity: activity)
+        let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity
+        setupScene(scene: scene, activity: activity)
     }
         
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        setupDetail(scene: scene, activity: userActivity)
+        setupScene(scene: scene, activity: userActivity)
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -42,14 +43,24 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
-
-    private func setupDetail(scene: UIScene, activity: NSUserActivity) {
+        
+    private func setupScene(scene: UIScene, activity: NSUserActivity?) {
         guard let scene = scene as? UIWindowScene else { return }
 
+        let app = UIApplication.shared
+        
+        guard let activity = activity else {
+            // don't start two mains
+            for otherMain in app.openSessions.filter({ $0.stateRestorationActivity == nil && $0 !== scene.session }) {
+                app.requestSceneSessionDestruction(otherMain, options: nil, errorHandler: nil)
+            }
+            return // no activity, we're done
+        }
+        
         if scene.session.stateRestorationActivity == nil {
             scene.session.stateRestorationActivity = activity
         }
-
+        
         switch activity.activityType {
         case kGladysQuicklookActivity:
             if //detail view
@@ -68,7 +79,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     if let child = child {
                         self.showQuicklook(for: item, child: child, in: scene)
                     } else {
-                        // TODO: not found view with close button
+                        UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
                     }
                 }
             }
@@ -83,8 +94,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
 
+        case CSSearchableItemActionType:
+            if let itemIdentifier = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+                ViewController.shared.highlightItem(with: itemIdentifier)
+            }
+
+        case CSQueryContinuationActionType:
+            if let searchQuery = activity.userInfo?[CSSearchQueryString] as? String {
+                ViewController.shared.startSearch(initialText: searchQuery)
+            }
+            
         default: break
         }
+        
+        //if sessionForMain == nil { // need main app instance before we proceed
+            //app.requestSceneSessionActivation(nil, userActivity: nil, options: nil, errorHandler: nil)
+        //}
     }
     
     private func waitForBoot(count: Int, in scene: UIWindowScene, completion: @escaping ()->Void) {
@@ -95,7 +120,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 scene.windows.first?.rootViewController = v
                 
             } else if count == 10 {
-                UIApplication.shared.requestSceneSessionActivation(nil, userActivity: nil, options: nil, errorHandler: nil)
+                UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+                return
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

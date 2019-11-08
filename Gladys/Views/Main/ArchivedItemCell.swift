@@ -617,6 +617,22 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = archivedDropItem else { return nil }
+        if item.needsUnlock {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+                let unlockAction = UIAction(title: "Unlock") { _ in
+                    item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
+                        if success {
+                            item.needsUnlock = false
+                            item.postModified()
+                        }
+                    }
+                }
+                unlockAction.image = UIImage(systemName: "lock.open.fill")
+                
+                return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [unlockAction])
+            })
+        }
+        
         return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak self, weak item] in
             guard let s = self, let i = item else { return nil }
             if i.canPreview, let previewItem = i.previewableTypeItem {

@@ -71,7 +71,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return false
 	}
-
+    
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
 
 		switch userActivity.activityType {
@@ -109,7 +109,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			return false
 		}
 	}
-    
+        
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		Model.reloadDataIfNeeded()

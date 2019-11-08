@@ -603,6 +603,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	deinit {
 		Model.doneMonitoringChanges()
+        log("Main VC deinitialised")
 	}
 
 	var pasteIntent: PasteClipboardIntent {
