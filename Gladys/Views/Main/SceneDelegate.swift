@@ -115,6 +115,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func showQuicklook(for item: ArchivedDropItem, child: ArchivedDropItemType, in scene: UIWindowScene) {
         guard let q = child.quickLook(in: scene) else { return }
-        scene.windows.first?.rootViewController = PreviewHostingViewController(rootViewController: q)
+        let n = PreviewHostingViewController(rootViewController: q)
+        scene.windows.first?.rootViewController = n
     }
 }

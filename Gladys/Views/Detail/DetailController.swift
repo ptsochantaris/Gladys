@@ -477,11 +477,13 @@ final class DetailController: GladysViewController,
                 let scene = s.view.window?.windowScene
 				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
                     guard let q = typeEntry.quickLook(in: scene) else { return }
-					s.navigationController?.pushViewController(q, animated: true)
+                    let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
+                    n.qlController = q
+					s.navigationController?.pushViewController(n, animated: true)
                     
 				} else {
                     guard let q = typeEntry.quickLook(in: scene) else { return }
-					let n = PreviewHostingViewController(rootViewController: q)
+                    let n = PreviewHostingViewController(rootViewController: q)
 					n.sourceItemView = c
                     ViewController.top.present(n, animated: true)
 				}

@@ -7,13 +7,67 @@
 //
 
 import UIKit
+import QuickLook
+
+final class PreviewHostingInternalController: GladysViewController {
+    var qlController: UIViewController?
+    
+    private var titleObservation: NSKeyValueObservation?
+    private var activityObservation: NSKeyValueObservation?
+    private var sizeObservation: NSKeyValueObservation?
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nil, bundle: nil)
+        hidesBottomBarWhenPushed = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        preferredContentSize = mainWindow.bounds.size
+        let tint = UIColor(named: "colorTint")
+        view.tintColor = tint
+        
+        windowLocation = .right        
+        doneLocation = .right
+        
+        titleObservation = qlController?.observe(\.title) { [weak self] q, _ in
+            self?.title = q.title
+        }
+        
+        activityObservation = qlController?.observe(\.userActivity) { [weak self] q, _ in
+            self?.userActivity = q.userActivity
+            self?.userActivity?.needsSave = true
+        }
+        
+        sizeObservation = qlController?.observe(\.preferredContentSize) { [weak self] q, _ in
+            self?.preferredContentSizeDidChange(forChildContentContainer: q)
+        }
+        
+        if let qlController = qlController {
+            addChildController(qlController, to: view)
+        }
+    }
+        
+    deinit {
+        if let qlController = qlController {
+            removeChildController(qlController)
+        }
+    }
+}
 
 final class PreviewHostingViewController: UINavigationController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
 
     weak var sourceItemView: UIView?
 
     override init(rootViewController: UIViewController) {
-        super.init(rootViewController: rootViewController)
+        let i = PreviewHostingInternalController(nibName: nil, bundle: nil)
+        i.qlController = rootViewController
+        super.init(rootViewController: i)
         modalPresentationStyle = .custom
         transitioningDelegate = self
     }
@@ -24,16 +78,14 @@ final class PreviewHostingViewController: UINavigationController, UIViewControll
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        preferredContentSize = mainWindow.bounds.size
         let tint = UIColor(named: "colorTint")
         view.tintColor = tint
         navigationBar.tintColor = tint
         if let sourceBar = ViewController.shared.navigationController?.navigationBar {
             navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-            navigationBar.barTintColor = sourceBar.barTintColor
         }
     }
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         viewControllers = []

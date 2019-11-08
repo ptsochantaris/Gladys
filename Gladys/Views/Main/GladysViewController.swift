@@ -85,28 +85,30 @@ class GladysViewController: UIViewController {
 	}
 
 	private func checkActionLocations() {
-		if doneLocation != .none {
-			if UIAccessibility.isVoiceOverRunning || isInStandaloneWindow {
-				showDone(true)
-            } else {
-                let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
-                if s == -1 { // hovering
-                    if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
-                        showDone(false)
-                    } else {
-                        showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
-                    }
-                } else { // full window?
-                    showDone(ViewController.shared.phoneMode || isInStandaloneWindow)
-                }
-            }
-		}
         if windowLocation != .none && UIDevice.current.userInterfaceIdiom == .pad {
             if !isInStandaloneWindow {
                 showWindow(true)
             }
         }
-	}
+        
+        if doneLocation != .none {
+            if UIAccessibility.isVoiceOverRunning || isInStandaloneWindow {
+                showDone(true)
+                return
+            }
+            
+            let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
+            if s == -1 { // hovering
+                if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
+                    showDone(false)
+                } else {
+                    showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
+                }
+            } else { // full window?
+                showDone(popoverPresentationController == nil || ViewController.shared.phoneMode || isInStandaloneWindow)
+            }
+        }
+    }
      
     @objc private func newWindowSelected() {
         let activity = userActivity

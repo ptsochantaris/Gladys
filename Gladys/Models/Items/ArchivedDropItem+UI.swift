@@ -152,18 +152,12 @@ extension ArchivedDropItem {
 			n.sourceItemView = cell
 		}
 
-		if ViewController.shared.phoneMode || PersistedOptions.fullScreenPreviews {
-            let r = makeDoneButton(target: self, action: #selector(previewDismiss))
-			q.navigationItem.rightBarButtonItem = r
-		} else {
+		if !PersistedOptions.fullScreenPreviews {
 			n.modalPresentationStyle = .popover
-			if UIAccessibility.isVoiceOverRunning {
-                let r = makeDoneButton(target: self, action: #selector(previewDone))
-				q.navigationItem.rightBarButtonItem = r
-			}
 		}
+        
 		viewController.present(n, animated: true)
-		if let p = q.popoverPresentationController, let cell = cell {
+		if let p = n.popoverPresentationController, let cell = cell {
 			p.sourceView = cell
 			p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
 		}
@@ -172,10 +166,6 @@ extension ArchivedDropItem {
 
 	@objc private func previewDismiss() {
 		ViewController.top.dismiss(animated: true)
-	}
-
-	@objc private func previewDone() {
-		ViewController.shared.dismissAnyPopOver()
 	}
 
 	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
