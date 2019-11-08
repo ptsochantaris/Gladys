@@ -52,12 +52,6 @@ final class DetailController: GladysViewController,
 		if !CloudManager.syncSwitchedOn {
 			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
 		}
-
-		if #available(iOS 12.0, *) {
-			siriButton.isEnabled = true
-		} else {
-			siriButton.isEnabled = false
-		}
         		
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
@@ -475,14 +469,12 @@ final class DetailController: GladysViewController,
 				guard let s = self, let c = cell else { return }
                                 
                 let scene = s.view.window?.windowScene
+                guard let q = typeEntry.quickLook(in: scene) else { return }
 				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
-                    guard let q = typeEntry.quickLook(in: scene) else { return }
                     let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
                     n.qlController = q
 					s.navigationController?.pushViewController(n, animated: true)
-                    
 				} else {
-                    guard let q = typeEntry.quickLook(in: scene) else { return }
                     let n = PreviewHostingViewController(rootViewController: q)
 					n.sourceItemView = c
                     ViewController.top.present(n, animated: true)
@@ -609,15 +601,13 @@ final class DetailController: GladysViewController,
 			e.propertyList = propertyList
 
 		} else if segue.identifier == "toSiriShortcuts" {
-			if #available(iOS 12.0, *) {
-				if let d = segue.destination as? SiriShortcutsViewController {
-					d.detailActivity = userActivity
-					d.sourceItem = item
-					if let p = d.popoverPresentationController {
-						p.delegate = self
-					}
-				}
-			}
+            if let d = segue.destination as? SiriShortcutsViewController {
+                d.detailActivity = userActivity
+                d.sourceItem = item
+                if let p = d.popoverPresentationController {
+                    p.delegate = self
+                }
+            }
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,

@@ -605,7 +605,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.doneMonitoringChanges()
 	}
 
-	@available(iOS 12.0, *)
 	var pasteIntent: PasteClipboardIntent {
 		let intent = PasteClipboardIntent()
 		intent.suggestedInvocationPhrase = "Paste in Gladys"
@@ -613,18 +612,16 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	func donatePasteIntent() {
-		if #available(iOS 12.0, *) {
-			let interaction = INInteraction(intent: pasteIntent, response: nil)
-			interaction.identifier = "paste-in-gladys"
-			interaction.donate { error in
-				if let error = error {
-					log("Error donating paste shortcut: \(error.localizedDescription)")
-				} else {
-					log("Donated paste shortcut")
-					PersistedOptions.pasteShortcutAutoDonated = true
-				}
-			}
-		}
+        let interaction = INInteraction(intent: pasteIntent, response: nil)
+        interaction.identifier = "paste-in-gladys"
+        interaction.donate { error in
+            if let error = error {
+                log("Error donating paste shortcut: \(error.localizedDescription)")
+            } else {
+                log("Donated paste shortcut")
+                PersistedOptions.pasteShortcutAutoDonated = true
+            }
+        }
 	}
 
 	private var acceptAlert: UIAlertController?

@@ -36,7 +36,6 @@ extension ArchivedDropItem {
 	}
 
 	#if MAINAPP
-	@available(iOS 12.0, *)
 	var copyIntent: CopyItemIntent {
 		let intent = CopyItemIntent()
 		let trimmed = displayTitleOrUuid.truncateWithEllipses(limit: 24)
@@ -48,34 +47,30 @@ extension ArchivedDropItem {
 
 	func donateCopyIntent() {
 		#if MAINAPP
-		if #available(iOS 12.0, *) {
-			let interaction = INInteraction(intent: copyIntent, response: nil)
-			interaction.identifier = "copy-\(uuid.uuidString)"
-			interaction.donate { error in
-				if let error = error {
-					log("Error donating copy shortcut: \(error.localizedDescription)")
-				} else {
-					log("Donated copy shortcut")
-				}
-			}
-		}
+        let interaction = INInteraction(intent: copyIntent, response: nil)
+        interaction.identifier = "copy-\(uuid.uuidString)"
+        interaction.donate { error in
+            if let error = error {
+                log("Error donating copy shortcut: \(error.localizedDescription)")
+            } else {
+                log("Donated copy shortcut")
+            }
+        }
 		#endif
 	}
 
 	func removeIntents() {
 		#if MAINAPP
-		if #available(iOS 12.0, *) {
-			INInteraction.delete(with: ["copy-\(uuid.uuidString)"]) { error in
-				if let error = error {
-					log("Copy intent could not be removed: \(error.localizedDescription)")
-				} else {
-					log("Copy intent removed")
-				}
-			}
-			for item in typeItems {
-				item.removeIntents()
-			}
-		}
+        INInteraction.delete(with: ["copy-\(uuid.uuidString)"]) { error in
+            if let error = error {
+                log("Copy intent could not be removed: \(error.localizedDescription)")
+            } else {
+                log("Copy intent removed")
+            }
+        }
+        for item in typeItems {
+            item.removeIntents()
+        }
 		#endif
 	}
 }

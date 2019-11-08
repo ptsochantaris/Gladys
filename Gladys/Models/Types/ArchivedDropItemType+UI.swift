@@ -29,7 +29,7 @@ final class LinkViewController: UIViewController {
 
 final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource {
     private var typeItem: ArchivedDropItemType
-    
+        
     init(item: ArchivedDropItemType) {
         self.typeItem = item
         super.init(nibName: nil, bundle: nil)
@@ -40,8 +40,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-                
+        super.viewDidLoad()                
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
     }
     

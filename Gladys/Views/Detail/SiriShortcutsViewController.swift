@@ -9,7 +9,6 @@
 import UIKit
 import IntentsUI
 
-@available(iOS 12.0, *)
 final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
 
 	@IBOutlet private weak var openItemDetailContainer: UIView!

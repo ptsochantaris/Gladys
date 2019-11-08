@@ -121,14 +121,10 @@ extension ArchivedDropItem {
 		#if MAC
 			activity.isEligibleForSearch = false
 		#else
-		if #available(iOS 12.0, *) {
-			activity.isEligibleForPrediction = true
-			activity.contentAttributeSet = item.searchAttributes
-			activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
-			activity.isEligibleForSearch = true
-		} else {
-			activity.isEligibleForSearch = false
-		}
+        activity.isEligibleForPrediction = true
+        activity.contentAttributeSet = item.searchAttributes
+        activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
+        activity.isEligibleForSearch = true
 		#endif
 	}
 }

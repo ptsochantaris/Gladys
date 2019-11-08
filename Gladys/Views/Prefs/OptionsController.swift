@@ -137,12 +137,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		if #available(iOS 12.0, *) {
-			siriSettingsButton.isEnabled = true
-		} else {
-			siriSettingsButton.isEnabled = false
-		}
-
 		doneLocation = .right
 
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
@@ -167,12 +161,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
-		if #available(iOS 12.0, *) {
-			if segue.identifier == "toSiriOptions", let p = segue.destination.popoverPresentationController {
-                p.backgroundColor = .white
-				p.delegate = self
-			}
-		}
+        if segue.identifier == "toSiriOptions", let p = segue.destination.popoverPresentationController {
+            p.backgroundColor = .white
+            p.delegate = self
+        }
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {

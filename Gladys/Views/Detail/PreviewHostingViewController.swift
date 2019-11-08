@@ -34,21 +34,22 @@ final class PreviewHostingInternalController: GladysViewController {
         
         windowLocation = .right        
         doneLocation = .right
-        
-        titleObservation = qlController?.observe(\.title) { [weak self] q, _ in
-            self?.title = q.title
-        }
-        
-        activityObservation = qlController?.observe(\.userActivity) { [weak self] q, _ in
-            self?.userActivity = q.userActivity
-            self?.userActivity?.needsSave = true
-        }
-        
-        sizeObservation = qlController?.observe(\.preferredContentSize) { [weak self] q, _ in
-            self?.preferredContentSizeDidChange(forChildContentContainer: q)
-        }
-        
+                
         if let qlController = qlController {
+            
+            titleObservation = qlController.observe(\.title) { [weak self] q, _ in
+                self?.title = q.title
+            }
+            
+            activityObservation = qlController.observe(\.userActivity) { [weak self] q, _ in
+                self?.userActivity = q.userActivity
+                self?.userActivity?.needsSave = true
+            }
+            
+            sizeObservation = qlController.observe(\.preferredContentSize) { [weak self] q, _ in
+                self?.preferredContentSizeDidChange(forChildContentContainer: q)
+            }
+
             addChildController(qlController, to: view)
         }
     }

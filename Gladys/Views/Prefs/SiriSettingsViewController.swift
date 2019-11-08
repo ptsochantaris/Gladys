@@ -9,7 +9,6 @@
 import UIKit
 import IntentsUI
 
-@available(iOS 12.0, *)
 extension INUIAddVoiceShortcutButton {
 	func place(in holder: UIView, buttonDelegate: INUIAddVoiceShortcutButtonDelegate, extraWidth: CGFloat = 0) {
 		delegate = buttonDelegate
@@ -27,7 +26,6 @@ extension INUIAddVoiceShortcutButton {
 	}
 }
 
-@available(iOS 12.0, *)
 final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
 
 	@IBOutlet private weak var pasteInGladysContainer: UIView!
