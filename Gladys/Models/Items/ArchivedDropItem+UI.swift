@@ -144,22 +144,21 @@ extension ArchivedDropItem {
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
 
-		guard let q = itemToPreview?.quickLook(extraRightButton: nil) else { return false }
+        guard let q = itemToPreview?.quickLook(in: viewController.view.window?.windowScene) else { return false }
 
-		let n = QLHostingViewController(rootViewController: q)
-		n.relatedItem = self
+		let n = PreviewHostingViewController(rootViewController: q)
 
 		if !PersistedOptions.wideMode {
 			n.sourceItemView = cell
 		}
 
 		if ViewController.shared.phoneMode || PersistedOptions.fullScreenPreviews {
-			let r = makeDoneButton(target: self, action: #selector(previewDismiss))
+            let r = makeDoneButton(target: self, action: #selector(previewDismiss))
 			q.navigationItem.rightBarButtonItem = r
 		} else {
 			n.modalPresentationStyle = .popover
 			if UIAccessibility.isVoiceOverRunning {
-				let r = makeDoneButton(target: self, action: #selector(previewDone))
+                let r = makeDoneButton(target: self, action: #selector(previewDone))
 				q.navigationItem.rightBarButtonItem = r
 			}
 		}

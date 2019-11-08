@@ -13,9 +13,9 @@ extension UIScene {
         let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
         return n?.topViewController is DetailController
     }
-    var firstGladysController: GladysViewController? {
+    var firstController: UIViewController? {
         let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
-        return n?.viewControllers.first as? GladysViewController
+        return n?.viewControllers.first
     }
 }
 
@@ -32,7 +32,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
-        return scene.firstGladysController?.userActivity
+        return scene.firstController?.userActivity
     }
         
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -44,36 +44,77 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func setupDetail(scene: UIScene, activity: NSUserActivity) {
-        guard //detail view
-            let scene = scene as? UIWindowScene,
-            activity.activityType == kGladysDetailViewingActivity,
-            let userInfo = activity.userInfo,
-            let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
-            let item = Model.item(uuid: uuidString)
-            else { return }
+        guard let scene = scene as? UIWindowScene else { return }
 
-        showDetail(for: item, in: scene, count: 0)
+        if scene.session.stateRestorationActivity == nil {
+            scene.session.stateRestorationActivity = activity
+        }
+
+        switch activity.activityType {
+        case kGladysQuicklookActivity:
+            if //detail view
+                let userInfo = activity.userInfo,
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
+                let item = Model.item(uuid: uuidString) {
+                waitForBoot(count: 0, in: scene) {
+                    
+                    let child: ArchivedDropItemType?
+                    if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
+                        child = Model.typeItem(uuid: childUuid)
+                    } else {
+                        child = item.previewableTypeItem
+                    }
+                    
+                    if let child = child {
+                        self.showQuicklook(for: item, child: child, in: scene)
+                    } else {
+                        // TODO: not found view with close button
+                    }
+                }
+            }
+
+        case kGladysDetailViewingActivity:
+            if //detail view
+                let userInfo = activity.userInfo,
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
+                let item = Model.item(uuid: uuidString) {
+                waitForBoot(count: 0, in: scene) {
+                    self.showDetail(for: item, in: scene)
+                }
+            }
+
+        default: break
+        }
     }
     
-    private func showDetail(for item: ArchivedDropItem, in scene: UIWindowScene, count: Int) {
+    private func waitForBoot(count: Int, in scene: UIWindowScene, completion: @escaping ()->Void) {
         if ViewController.shared == nil {
             if count == 0 {
                 let v = UIViewController()
                 v.view.backgroundColor = UIColor(named: "colorPaper")
                 scene.windows.first?.rootViewController = v
-
-            } else if count == 4 {
+                
+            } else if count == 10 {
                 UIApplication.shared.requestSceneSessionActivation(nil, userActivity: nil, options: nil, errorHandler: nil)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.showDetail(for: item, in: scene, count: count + 1)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.waitForBoot(count: count + 1, in: scene, completion: completion)
             }
         } else {
-            let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
-            let d = n.viewControllers.first as! DetailController
-            d.item = item
-            scene.windows.first?.rootViewController = n
+            completion()
         }
+    }
+    
+    private func showDetail(for item: ArchivedDropItem, in scene: UIWindowScene) {
+        let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
+        let d = n.viewControllers.first as! DetailController
+        d.item = item
+        scene.windows.first?.rootViewController = n
+    }
+    
+    private func showQuicklook(for item: ArchivedDropItem, child: ArchivedDropItemType, in scene: UIWindowScene) {
+        guard let q = child.quickLook(in: scene) else { return }
+        scene.windows.first?.rootViewController = PreviewHostingViewController(rootViewController: q)
     }
 }

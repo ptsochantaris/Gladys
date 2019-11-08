@@ -26,7 +26,10 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+        
+        doneLocation = .right
+        windowLocation = .right
+        
 		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { w, v in
 			if let n = v.newValue {
 				if n > 0.85 {
@@ -54,7 +57,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 
 		if relatedItem != nil {
 			userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-		}
+		}        
 	}
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {

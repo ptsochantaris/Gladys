@@ -8,15 +8,9 @@
 
 import UIKit
 
-final class QLHostingViewController: UINavigationController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
+final class PreviewHostingViewController: UINavigationController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
 
-    var relatedItem: ArchivedDropItem?
-    var relatedChildItem: ArchivedDropItemType?
     weak var sourceItemView: UIView?
-
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
 
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
@@ -40,18 +34,6 @@ final class QLHostingViewController: UINavigationController, UIViewControllerAni
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if relatedItem != nil {
-            userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-        }
-    }
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        super.updateUserActivityState(activity)
-        if let relatedItem = relatedItem {
-            ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Quick look")
-        }
-    }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         viewControllers = []

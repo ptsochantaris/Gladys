@@ -27,7 +27,45 @@ final class LinkViewController: UIViewController {
     }
 }
 
-extension ArchivedDropItemType: QLPreviewControllerDataSource {
+final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource {
+    private var typeItem: ArchivedDropItemType
+    
+    init(item: ArchivedDropItemType) {
+        self.typeItem = item
+        super.init(nibName: nil, bundle: nil)
+        title = item.oneTitle
+        dataSource = self
+        modalPresentationStyle = .popover
+        preferredContentSize = mainWindow.bounds.size
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+                
+        userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        super.updateUserActivityState(activity)
+        if let relatedItem = typeItem.parent {
+            ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
+        }
+    }
+    
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return 1
+    }
+
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return ArchivedDropItemType.PreviewItem(typeItem: typeItem)
+    }
+}
+
+extension ArchivedDropItemType {
 
 	var dragItem: UIDragItem {
 		let i = UIDragItem(itemProvider: itemProvider)
@@ -35,7 +73,7 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
 		return i
 	}
 
-    func quickLook(extraRightButton: UIBarButtonItem?) -> UIViewController? {
+    func quickLook(in scene: UIWindowScene?) -> UIViewController? {
         var ret: UIViewController?
         
 		if isWebURL, let url = encodedUrl {
@@ -55,41 +93,18 @@ extension ArchivedDropItemType: QLPreviewControllerDataSource {
             ret = d
 
 		} else if canPreview {
-			let d = QLPreviewController()
-			d.title = oneTitle
-			d.dataSource = self
-			d.modalPresentationStyle = .popover
-			d.preferredContentSize = mainWindow.bounds.size
-            ret = d
+            ret = GladysPreviewController(item: self)
 		}
         
-        if let n = ret?.navigationItem, let extra = extraRightButton {
-            var buttons = n.rightBarButtonItems ?? [UIBarButtonItem]()
-            buttons.append(extra)
-            n.rightBarButtonItems = buttons
-        }
-
 		return ret
 	}
-
-	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return 1
-	}
-
-	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		return PreviewItem(typeItem: self)
-	}
-
+    
 	var canPreview: Bool {
 		if let canPreviewCache = canPreviewCache {
 			return canPreviewCache
 		}
-		let res = isWebArchive || qlPreview
+		let res = isWebArchive || QLPreviewController.canPreview(PreviewCheckItem(typeItem: self))
 		canPreviewCache = res
 		return res
 	}
-    
-    private var qlPreview: Bool {
-        return QLPreviewController.canPreview(PreviewCheckItem(typeItem: self))
-    }
 }

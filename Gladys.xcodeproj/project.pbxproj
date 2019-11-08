@@ -267,7 +267,9 @@
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		16C2A42F217B1EA1006CF0F4 /* QLHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */; };
+		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
+		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
+		16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -776,7 +778,8 @@
 		16AED98921B457550049E433 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
-		16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QLHostingViewController.swift; sourceTree = "<group>"; };
+		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHostingViewController.swift; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
 		16C3A2D020AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
@@ -1011,6 +1014,7 @@
 				168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */,
 				166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */,
 				16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */,
+				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1039,7 +1043,7 @@
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
 				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
-				16C2A42E217B1EA1006CF0F4 /* QLHostingViewController.swift */,
+				16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */,
 				165A8F0821AA92D300405701 /* PlistEditor.swift */,
 				162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */,
 			);
@@ -2390,6 +2394,7 @@
 				16F2990820CBEF30005DE3AD /* PushState.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
+				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
@@ -2575,7 +2580,7 @@
 				166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
-				16C2A42F217B1EA1006CF0F4 /* QLHostingViewController.swift in Sources */,
+				16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
@@ -2584,6 +2589,7 @@
 				16C3A2D620AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
 				162BDD74220F01FA00A3C17B /* Logging.swift in Sources */,
+				16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 				1610899B1FA322260095FE34 /* ArchivedDropItem+Cloud.swift in Sources */,
 				16CD7D7C20A108BB0039E6C2 /* ArchivedDropItem+UICommon.swift in Sources */,

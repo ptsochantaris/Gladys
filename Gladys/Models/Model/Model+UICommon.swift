@@ -204,7 +204,7 @@ extension Model {
 		let previous = labelToggles
 		labelToggles.removeAll()
 		for (label, count) in counts {
-			let previousEnabled = (previous.first { $0.enabled == true && $0.name == label } != nil)
+			let previousEnabled = previous.contains { $0.enabled && $0.name == label }
 			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
 			labelToggles.append(toggle)
 		}
@@ -212,7 +212,7 @@ extension Model {
 			labelToggles.sort { $0.name < $1.name }
 
 			let name = "Items with no labels"
-			let previousEnabled = (previous.first { $0.enabled == true && $0.name == name } != nil)
+			let previousEnabled = previous.contains { $0.enabled && $0.name == name }
 			labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
 		}
 	}

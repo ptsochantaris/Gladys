@@ -28,6 +28,7 @@ final class DetailController: GladysViewController,
 		super.viewDidLoad()
 
 		doneLocation = .right
+        windowLocation = .right
 
 		table.estimatedRowHeight = 120
         table.rowHeight = UITableView.automaticDimension
@@ -57,13 +58,7 @@ final class DetailController: GladysViewController,
 		} else {
 			siriButton.isEnabled = false
 		}
-        
-        if !isInStandaloneWindow && UIDevice.current.userInterfaceIdiom == .pad {
-            let n = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected(_:)))
-            n.image = UIImage(systemName: "uiwindow.split.2x1")
-            navigationItem.rightBarButtonItems?.append(n)
-        }
-		
+        		
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
@@ -179,17 +174,7 @@ final class DetailController: GladysViewController,
 			ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
 		}
 	}
-    
-    @objc private func newWindowSelected(_ sender: UIBarButtonItem) {
-        let activity = userActivity
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = navigationController?.view.window?.windowScene
-        done()
-        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
-            log("Error opening new window: \(error.localizedDescription)")
-        }
-    }
-
+        
 	@objc private func updateUI() {
 		view.endEditing(true)
 		if item == nil {
@@ -488,25 +473,24 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self, weak cell] in
 				guard let s = self, let c = cell else { return }
+                                
+                let scene = s.view.window?.windowScene
 				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
-					let extraButton = s.navigationItem.rightBarButtonItems?.first { $0.accessibilityLabel == "Done" }
-					guard let q = typeEntry.quickLook(extraRightButton: extraButton) else { return }
+                    guard let q = typeEntry.quickLook(in: scene) else { return }
 					s.navigationController?.pushViewController(q, animated: true)
+                    
 				} else {
-                    let done = makeDoneButton(target: s, action: #selector(s.closePreview))
-					guard let q = typeEntry.quickLook(extraRightButton: done) else { return }
-					let n = QLHostingViewController(rootViewController: q)
-					n.relatedItem = s.item
-					n.relatedChildItem = typeEntry
+                    guard let q = typeEntry.quickLook(in: scene) else { return }
+					let n = PreviewHostingViewController(rootViewController: q)
 					n.sourceItemView = c
-					ViewController.top.present(n, animated: true)
+                    ViewController.top.present(n, animated: true)
 				}
 			}
 		} else {
 			cell.viewCallback = nil
 		}
 	}
-
+    
 	private func editURL(_ typeItem: ArchivedDropItemType, existingEdit: String?) {
 		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }
@@ -521,10 +505,6 @@ final class DetailController: GladysViewController,
 				}
 			}
 		}
-	}
-
-	@objc private func closePreview() {
-		ViewController.top.dismiss(animated: true)
 	}
 
 	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

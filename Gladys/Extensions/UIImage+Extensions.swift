@@ -8,10 +8,6 @@
 
 import UIKit
 
-func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
-    return UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
-}
-
 extension UIImage {
 
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {

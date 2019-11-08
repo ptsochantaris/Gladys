@@ -617,15 +617,15 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = archivedDropItem else { return nil }
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak item] in
-            guard let i = item else { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak self, weak item] in
+            guard let s = self, let i = item else { return nil }
             if i.canPreview, let previewItem = i.previewableTypeItem {
                 if previewItem.isWebURL, let url = previewItem.encodedUrl {
                     let x = ViewController.shared.storyboard!.instantiateViewController(identifier: "LinkPreview") as! LinkViewController
                     x.url = url as URL
                     return x
                 } else {
-                    return previewItem.quickLook(extraRightButton: nil)
+                    return previewItem.quickLook(in: s.window?.windowScene)
                 }
             } else {
                 return nil
@@ -633,5 +633,5 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         }, actionProvider: { [weak self] _ in
             return self?.createShortcutActions()
         })
-    }
+    }    
 }

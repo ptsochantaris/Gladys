@@ -10,10 +10,11 @@ import UIKit
 
 class GladysViewController: UIViewController {
 
-	enum DoneLocation {
+	enum ActionLocation {
 		case none, left, right
 	}
-	var doneLocation = DoneLocation.none
+	var doneLocation = ActionLocation.none
+    var windowLocation = ActionLocation.none
 
 	var initialAccessibilityElement: UIView {
 		return navigationController?.navigationBar ?? view
@@ -64,7 +65,7 @@ class GladysViewController: UIViewController {
 
 	@objc func done() {
         NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
-        if isInStandaloneWindow, let session = view.window?.windowScene?.session {
+        if isInStandaloneWindow, let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard
             UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
@@ -75,39 +76,49 @@ class GladysViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		checkDoneLocation()
+		checkActionLocations()
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		checkDoneLocation()
+		checkActionLocations()
 	}
 
-	private func checkDoneLocation() {
+	private func checkActionLocations() {
 		if doneLocation != .none {
-			if UIAccessibility.isVoiceOverRunning {
+			if UIAccessibility.isVoiceOverRunning || isInStandaloneWindow {
 				showDone(true)
-				return
-			}
-
-			let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
-			if s == -1 { // hovering
-				if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
-					showDone(false)
-				} else {
-					showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
-				}
-			} else { // full window?
-				showDone(ViewController.shared.phoneMode || isInStandaloneWindow)
-			}
+            } else {
+                let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
+                if s == -1 { // hovering
+                    if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
+                        showDone(false)
+                    } else {
+                        showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
+                    }
+                } else { // full window?
+                    showDone(ViewController.shared.phoneMode || isInStandaloneWindow)
+                }
+            }
 		}
+        if windowLocation != .none && UIDevice.current.userInterfaceIdiom == .pad {
+            if !isInStandaloneWindow {
+                showWindow(true)
+            }
+        }
 	}
-    
-    var isInStandaloneWindow: Bool {
-        return navigationController == navigationController?.view.window?.rootViewController
+     
+    @objc private func newWindowSelected() {
+        let activity = userActivity
+        done()
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = view.window?.windowScene
+        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
+            log("Error opening new window: \(error.localizedDescription)")
+        }
     }
 
-	private var scrollTimer: GladysTimer?
+    private var scrollTimer: GladysTimer?
 	private var scrollLink: CADisplayLink?
 	private var scrollView: UIScrollView?
 
@@ -162,29 +173,47 @@ class GladysViewController: UIViewController {
 	}
 
 	private func showDone(_ show: Bool) {
-		switch doneLocation {
-		case .left:
-			var leftItems = navigationItem.leftBarButtonItems ?? []
-			if show && !leftItems.contains(doneButton) {
-				leftItems.insert(doneButton, at: 0)
-				navigationItem.leftBarButtonItems = leftItems
-			} else if !show && leftItems.contains(doneButton) {
-				navigationItem.leftBarButtonItems = leftItems.filter { $0 != doneButton }
-			}
-		case .right:
-			var rightItems = navigationItem.rightBarButtonItems ?? []
-			if show && !rightItems.contains(doneButton) {
-				rightItems.insert(doneButton, at: 0)
-				navigationItem.rightBarButtonItems = rightItems
-			} else if !show && rightItems.contains(doneButton) {
-				navigationItem.rightBarButtonItems = rightItems.filter { $0 != doneButton }
-			}
-		case .none:
-			break
-		}
+        showButton(show, location: doneLocation, button: doneButton)
 	}
+    
+    private func showWindow(_ show: Bool) {
+        showButton(show, location: windowLocation, button: windowButton)
+    }
 
+    private func showButton(_ show: Bool, location: ActionLocation, button: UIBarButtonItem) {
+        switch location {
+        case .left:
+            var leftItems = navigationItem.leftBarButtonItems ?? []
+            if show && !leftItems.contains(button) {
+                leftItems.insert(button, at: 0)
+                navigationItem.leftBarButtonItems = leftItems
+            } else if !show && leftItems.contains(button) {
+                navigationItem.leftBarButtonItems = leftItems.filter { $0 != button }
+            }
+        case .right:
+            var rightItems = navigationItem.rightBarButtonItems ?? []
+            if show && !rightItems.contains(button) {
+                rightItems.insert(button, at: 0)
+                navigationItem.rightBarButtonItems = rightItems
+            } else if !show && rightItems.contains(button) {
+                navigationItem.rightBarButtonItems = rightItems.filter { $0 != button }
+            }
+        case .none:
+            break
+        }
+    }
+    
 	private lazy var doneButton: UIBarButtonItem = {
         return makeDoneButton(target: self, action: #selector(done))
 	}()
+    
+    private lazy var windowButton: UIBarButtonItem = {
+        let n = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
+        n.image = UIImage(systemName: "uiwindow.split.2x1")
+        return n
+    }()
+    
+    var isInStandaloneWindow: Bool {
+        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isInStandaloneWindow ?? false
+    }
 }
