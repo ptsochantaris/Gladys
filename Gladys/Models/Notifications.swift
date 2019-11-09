@@ -8,6 +8,20 @@
 
 import Foundation
 
+struct HighlightRequest {
+    let uuid: String
+    let open: Bool
+    let preview: Bool
+    let focusOnChildUuid: String?
+    
+    init(uuid: String, open: Bool = false, preview: Bool = false, focusOnChildUuid: String? = nil) {
+        self.uuid = uuid
+        self.open = open
+        self.preview = preview
+        self.focusOnChildUuid = focusOnChildUuid
+    }
+}
+
 extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
@@ -26,6 +40,7 @@ extension Notification.Name {
 	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
     static let NoteLastActionedUUID = Notification.Name("NoteLastActionedUUID")
     static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
+    static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
 }
 
 #if MAC

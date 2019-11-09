@@ -478,7 +478,7 @@ final class DetailController: GladysViewController,
 				} else {
                     let n = PreviewHostingViewController(rootViewController: q)
 					n.sourceItemView = c
-                    ViewController.top.present(n, animated: true)
+                    SceneDelegate.top.present(n, animated: true)
 				}
 			}
 		} else {
@@ -920,7 +920,7 @@ final class DetailController: GladysViewController,
 		makeIndexAndSaveItem()
 		updateUI()
 		item.postModified()
-		item.reIngest(delegate: ViewController.shared)
+		item.reIngest()
 		if let newCell = table.cellForRow(at: IndexPath(row: 0, section: table.numberOfSections-1)) {
 			UIAccessibility.post(notification: .layoutChanged, argument: newCell)
 		}

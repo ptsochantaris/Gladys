@@ -141,19 +141,19 @@ final class ArchivedDropItem: Codable {
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 
-	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
+	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					let item = ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides)
+					let item = ArchivedDropItem(providers: [p], limitToType: t, overrides: overrides)
 					res.append(item)
 				}
 			}
 			return res
 
 		} else {
-			let item = ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)
+			let item = ArchivedDropItem(providers: providers, limitToType: nil, overrides: overrides)
 			return [item]
 		}
 	}
@@ -161,9 +161,8 @@ final class ArchivedDropItem: Codable {
 	var loadCount = 0
     var isDeleting = false
     var isBeingCreatedBySync = false
-	weak var delegate: ItemIngestionDelegate?
 
-	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
+	private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
 
 		uuid = UUID()
 		createdAt = Date()
@@ -179,7 +178,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = false
         skipMirrorAtNextSave = false
 
-		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
+		loadingProgress = startNewItemIngest(providers: providers, limitToType: limitToType)
 	}
 
 	var isTransferring: Bool {

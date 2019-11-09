@@ -141,25 +141,24 @@ final class ArchivedDropItem: Codable {
 		}
 	}
 
-	static func importData(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, overrides: ImportOverrides?) -> [ArchivedDropItem] {
+	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> [ArchivedDropItem] {
 		if PersistedOptions.separateItemPreference {
 			var res = [ArchivedDropItem]()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					res.append(ArchivedDropItem(providers: [p], delegate: delegate, limitToType: t, overrides: overrides))
+					res.append(ArchivedDropItem(providers: [p], limitToType: t, overrides: overrides))
 				}
 			}
 			return res
 
 		} else {
-			return [ArchivedDropItem(providers: providers, delegate: delegate, limitToType: nil, overrides: overrides)]
+			return [ArchivedDropItem(providers: providers, limitToType: nil, overrides: overrides)]
 		}
 	}
 
 	var loadCount = 0
-	weak var delegate: ItemIngestionDelegate?
 
-	private init(providers: [NSItemProvider], delegate: ItemIngestionDelegate?, limitToType: String?, overrides: ImportOverrides?) {
+	private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
 
 		uuid = UUID()
 		createdAt = Date()
@@ -175,7 +174,7 @@ final class ArchivedDropItem: Codable {
 		needsUnlock = false
 		isBeingCreatedBySync = false
 
-		loadingProgress = startNewItemIngest(providers: providers, delegate: delegate, limitToType: limitToType)
+		loadingProgress = startNewItemIngest(providers: providers, limitToType: limitToType)
 	}
 
 	init(from record: CKRecord) {

@@ -268,7 +268,7 @@ extension ArchivedDropItem {
             self.markUpdated()
             self.needsReIngest = true
             self.skipMirrorAtNextSave = true
-            self.reIngest(delegate: ViewController.shared)
+            self.reIngest()
         }
     }
 }

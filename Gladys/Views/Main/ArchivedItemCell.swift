@@ -194,7 +194,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
 		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.needsUnlock {
 			pinchRecognizer.state = .ended
-			item.tryPreview(in: ViewController.top, from: self)
+			item.tryPreview(in: SceneDelegate.top, from: self)
 		}
 	}
 
@@ -562,7 +562,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             children.append(makeAction(title: "Quick Look", callback: { [weak self] in
                 guard let s = self else { return }
                 NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-                item.tryPreview(in: ViewController.top, from: s)
+                item.tryPreview(in: SceneDelegate.top, from: s)
                 }, style: [], iconName: "eye"))
         }
         
@@ -620,7 +620,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         if item.needsUnlock {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
                 let unlockAction = UIAction(title: "Unlock") { _ in
-                    item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
+                    item.unlock(from: SceneDelegate.top, label: "Unlock Item", action: "Unlock") { success in
                         if success {
                             item.needsUnlock = false
                             item.postModified()

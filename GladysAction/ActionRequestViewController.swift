@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class ActionRequestViewController: UIViewController, ItemIngestionDelegate {
+final class ActionRequestViewController: UIViewController {
 
 	@IBOutlet private weak var statusLabel: UILabel!
 	@IBOutlet private weak var cancelButton: UIBarButtonItem!
@@ -32,6 +32,10 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 		if firstAppearance {
 			firstAppearance = false
 			// and proceed with setup
+            
+            let n = NotificationCenter.default
+            n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+
 		} else {
 			return
 		}
@@ -118,12 +122,12 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 		}
 
 		if allDifferentTypes { // posibly this is a composite item, leave it up to the user's settings
-			for newItem in ArchivedDropItem.importData(providers: providerList, delegate: self, overrides: nil) {
+			for newItem in ArchivedDropItem.importData(providers: providerList, overrides: nil) {
 				newItems.append(newItem)
 			}
 		} else { // list of items shares common types, let's assume they are multiple items per provider
 			for provider in providerList {
-				for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
+				for newItem in ArchivedDropItem.importData(providers: [provider], overrides: nil) {
 					newItems.append(newItem)
 				}
 			}
@@ -150,7 +154,6 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
 
 		for loadingItem in newItems {
-			loadingItem.delegate = nil
 			loadingItem.cancelIngest()
 		}
 
@@ -160,7 +163,7 @@ final class ActionRequestViewController: UIViewController, ItemIngestionDelegate
 		extensionContext?.cancelRequest(withError: error)
 	}
 
-	func itemIngested(item: ArchivedDropItem) {
+    @objc private func itemIngested(_ notification: Notification) {
 		ingestCount -= 1
 		if ingestCount == 0 {
 			commit(initialAdd: true)

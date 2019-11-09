@@ -23,7 +23,7 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
-	ViewController.top.present(a, animated: true)
+	SceneDelegate.top.present(a, animated: true)
 
 	if buttonTitle == nil && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -54,7 +54,7 @@ let mainWindow: UIWindow = {
 	return UIApplication.shared.windows.first!
 }()
 
-final class ViewController: GladysViewController, UICollectionViewDelegate, ItemIngestionDelegate, UICollectionViewDataSourcePrefetching,
+final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
     UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
@@ -83,17 +83,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 		} else {
 			block()
 		}
-	}
-
-	static var top: UIViewController {
-		let searchController = ViewController.shared.navigationItem.searchController
-		let searching = searchController?.isActive ?? false
-		var finalVC: UIViewController = (searching ? searchController : nil) ?? ViewController.shared
-		while let newVC = finalVC.presentedViewController {
-			if newVC is UIAlertController { break }
-			finalVC = newVC
-		}
-		return finalVC
 	}
 
 	var itemView: UICollectionView {
@@ -281,7 +270,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 
 				startBgTaskIfNeeded()
 				var firstDestinationPath: IndexPath?
-				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], delegate: self, overrides: nil) {
+				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
 					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
@@ -480,7 +469,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 
 		} else if item.needsUnlock {
 			mostRecentIndexPathActioned = indexPath
-			item.unlock(from: ViewController.top, label: "Unlock Item", action: "Unlock") { success in
+			item.unlock(from: SceneDelegate.top, label: "Unlock Item", action: "Unlock") { success in
 				if success {
 					item.needsUnlock = false
                     item.postModified()
@@ -508,7 +497,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 
 			case .preview:
 				let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
-				if !item.tryPreview(in: ViewController.top, from: cell) {
+				if !item.tryPreview(in: SceneDelegate.top, from: cell) {
 					performSegue(withIdentifier: "showDetail", sender: item)
 				}
                 
@@ -586,6 +575,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
         n.addObserver(self, selector: #selector(itemsDeleted(_:)), name: .ItemsRemoved, object: nil)
         n.addObserver(self, selector: #selector(noteLastActionedItem(_:)), name: .NoteLastActionedUUID, object: nil)
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
+        n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+        n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
 
 		Model.checkForUpgrade()
 
@@ -694,7 +685,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 		}
 
 		for provider in providers { // separate item for each provider in the pasteboard
-			for item in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides) {
+			for item in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
 
 				if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
 					item.labels = Model.enabledLabelsForItems
@@ -838,7 +829,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 		let itemsToReIngest = Model.itemsToReIngest
 		if itemsToReIngest.count > 0 {
 			startBgTaskIfNeeded()
-			itemsToReIngest.forEach { $0.reIngest(delegate: self) }
+			itemsToReIngest.forEach { $0.reIngest() }
 		}
 
 		updateLabelIcon()
@@ -1299,7 +1290,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 		}
 	}
 
-	func itemIngested(item: ArchivedDropItem) {
+    @objc private func itemIngested(_ notification: Notification) {
+        guard let item = notification.object as? ArchivedDropItem else { return }
 
 		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {
@@ -1374,16 +1366,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 		s.delegate = self
 	}
 
-	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild childUuid: String? = nil) {
-		if let index = Model.filteredDrops.firstIndex(where: { $0.uuid.uuidString == identifier }) {
+    @objc private func highlightItem(_ notification: Notification) {
+        guard let request = notification.object as? HighlightRequest else { return }
+        if let index = Model.filteredDrops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
 			dismissAnyPopOverOrModal() {
-				self.highlightItem(at: index, andOpen: andOpen, andPreview: andPreview, focusOnChild: childUuid)
+                self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
-		} else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == identifier }) {
+        } else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
 			dismissAnyPopOverOrModal() {
 				self.resetSearch(andLabels: true)
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.highlightItem(at: index, andOpen: andOpen, andPreview: andPreview, focusOnChild: childUuid)
+                    self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 				}
 			}
 		}
@@ -1400,7 +1393,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, Item
 					self.collectionView(self.collection, didSelectItemAt: ip)
 				} else if andPreview {
 					let item = Model.filteredDrops[index]
-					item.tryPreview(in: ViewController.top, from: cell, preferChild: childUuid)
+					item.tryPreview(in: SceneDelegate.top, from: cell, preferChild: childUuid)
 				}
 			}
 			self.collection.isUserInteractionEnabled = true

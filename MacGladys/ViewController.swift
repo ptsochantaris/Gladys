@@ -147,7 +147,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	}
 }
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, ItemIngestionDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
 
 	@IBOutlet private weak var collection: MainCollectionView!
 
@@ -295,12 +295,23 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
         
         let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
-            self?.itemsDeleted(notification)
+            guard let indexes = notification.object as? [Int] else { return }
+            self?.itemsDeleted(indexes: indexes)
+        }
+        
+        let a11 = n.addObserver(forName: .IngestComplete, object: nil, queue: .main) { [weak self] notification in
+            guard let item = notification.object as? ArchivedDropItem else { return }
+            self?.itemIngested(item)
+        }
+        
+        let a12 = n.addObserver(forName: .HighlightItemRequested, object: nil, queue: .main) { [weak self] notification in
+            guard let request = notification.object as? HighlightRequest else { return }
+            self?.highlightItem(with: request)
         }
 
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10]
+		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -420,13 +431,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func postSave() {
 		for i in Model.itemsToReIngest {
-			i.reIngest(delegate: self)
+			i.reIngest()
 		}
 		updateEmptyView()
 	}
 
-	func itemIngested(item: ArchivedDropItem) {
-
+    private func itemIngested(_ item: ArchivedDropItem) {
 		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {
 			loadingError = true
@@ -590,17 +600,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-	func highlightItem(with identifier: String, andOpen: Bool = false, andPreview: Bool = false, focusOnChild: String? = nil) {
+    private func highlightItem(with request: HighlightRequest) {
 		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
-		if let item = Model.item(uuid: identifier) {
+        if let item = Model.item(uuid: request.uuid) {
 			if let i = Model.drops.firstIndex(of: item) {
 				let ip = IndexPath(item: i, section: 0)
 				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
 				collection.selectionIndexes = IndexSet(integer: i)
-				if andOpen {
+                if request.open {
 					info(nil)
-				} else if andPreview {
+                } else if request.preview {
 					if !(previewPanel?.isVisible ?? false) {
 						ViewController.shared.toggleQuickLookPreviewPanel(self)
 					}
@@ -741,7 +751,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		var insertedUuids = [UUID]()
 		for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: overrides) {
+			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
 
 				var modelIndex = indexPath.item
 				if Model.isFiltering {
@@ -784,8 +794,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-    private func itemsDeleted(_ notification: Notification) {
-        guard let indexes = notification.object as? [Int] else { return }
+    private func itemsDeleted(indexes: [Int]) {
         let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
 		if !ipsToRemove.isEmpty {

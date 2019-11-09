@@ -165,7 +165,7 @@ extension ArchivedDropItem {
 	}
 
 	@objc private func previewDismiss() {
-		ViewController.top.dismiss(animated: true)
+		SceneDelegate.top.dismiss(animated: true)
 	}
 
 	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {

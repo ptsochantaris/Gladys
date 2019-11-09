@@ -34,7 +34,7 @@ extension Model {
 				parent.needsReIngest = true
 				parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID)")
-				parent.reIngest(delegate: ViewController.shared)
+				parent.reIngest()
 			}
 		}
 	}
@@ -45,7 +45,7 @@ extension Model {
 			log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
 			item.needsReIngest = true
 			item.markUpdated()
-			item.reIngest(delegate: ViewController.shared)
+			item.reIngest()
 		}
 	}
 

@@ -10,7 +10,7 @@ import Intents
 import CoreSpotlight
 import UIKit
 
-final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngestionDelegate, CopyItemIntentHandling, CopyComponentIntentHandling {
+final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
 
 	private var loadCount = 0
 	private var newItems = [ArchivedDropItem]()
@@ -100,14 +100,19 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, ItemIngest
 
 	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		intentCompletion = completion
-		for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], delegate: self, overrides: nil) {
+        
+        let n = NotificationCenter.default
+        n.removeObserver(self)
+        n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+
+        for provider in itemProviders {
+			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: nil) {
 				newItems.append(newItem)
 			}
 		}
 	}
 
-	func itemIngested(item: ArchivedDropItem) {
+    @objc private func itemIngested(_ notification: Notification) {
 		loadCount -= 1
 		if loadCount == 0 {
 			pasteCommit()

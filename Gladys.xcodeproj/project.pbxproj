@@ -161,6 +161,7 @@
 		1657B8D51FD449D900EC480D /* ArchivedDropItemType+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* ArchivedDropItemType+Copy.swift */; };
 		1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		165847062376CC2400666B7B /* Model+Siri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165847052376CC2400666B7B /* Model+Siri.swift */; };
+		165847072376D4BB00666B7B /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
 		1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */; };
 		165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		165A567F218EE52900E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
@@ -2687,6 +2688,7 @@
 				16D984AE2160D31C00D9D51C /* ArchivedDropItem+Ingest.swift in Sources */,
 				1651117C2163D73700C5C874 /* ArchivedDropItemType+Copy.swift in Sources */,
 				16D984B12160D51B00D9D51C /* ArchivedDropItemType+Ingest.swift in Sources */,
+				165847072376D4BB00666B7B /* Notifications.swift in Sources */,
 				16D9849F2160CBFE00D9D51C /* Global.swift in Sources */,
 				16D984A02160CC0200D9D51C /* Types.swift in Sources */,
 			);

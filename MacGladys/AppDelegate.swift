@@ -263,7 +263,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
 				focus()
-				ViewController.shared.highlightItem(with: itemIdentifier, andOpen: true)
+                let request = HighlightRequest(uuid: itemIdentifier, open: true)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			}
 			return true
 
@@ -277,10 +278,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		} else if userActivity.activityType == kGladysDetailViewingActivity {
 			if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
 				focus()
-				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
+                let request = HighlightRequest(uuid: uuid.uuidString, open: true)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			} else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
 				focus()
-				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
+                let request = HighlightRequest(uuid: uuidString, open: true)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			}
 			return true
 			
@@ -288,7 +291,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
 				focus()
 				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
-				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
+                let request = HighlightRequest(uuid: uuidString, preview: true, focusOnChildUuid: childUuid)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			}
 			return true
 		}

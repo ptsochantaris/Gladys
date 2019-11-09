@@ -62,7 +62,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             ViewController.executeOrQueue {
-                ViewController.shared.highlightItem(with: itemId, andOpen: true)
+                let request = HighlightRequest(uuid: itemId, open: true)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
             }
             
         } else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
@@ -98,7 +99,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 })
                 a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 ViewController.executeOrQueue {
-                    ViewController.top.present(a, animated: true)
+                    SceneDelegate.top.present(a, animated: true)
                 }
             }
             
@@ -160,7 +161,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         case CSSearchableItemActionType:
             if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-                ViewController.shared.highlightItem(with: itemIdentifier)
+                let request = HighlightRequest(uuid: itemIdentifier)
+                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
             }
 
         case CSQueryContinuationActionType:
@@ -203,5 +205,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             completion()
         }
+    }
+    
+    static var top: UIViewController {
+        let searchController = ViewController.shared.navigationItem.searchController
+        let searching = searchController?.isActive ?? false
+        var finalVC: UIViewController = (searching ? searchController : nil) ?? ViewController.shared
+        while let newVC = finalVC.presentedViewController {
+            if newVC is UIAlertController { break }
+            finalVC = newVC
+        }
+        return finalVC
     }
 }
