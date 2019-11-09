@@ -475,10 +475,11 @@ final class DetailController: GladysViewController,
                     let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
                     n.qlController = q
 					s.navigationController?.pushViewController(n, animated: true)
-				} else {
+                    
+				} else if let presenter = s.view.window?.alertPresenter {
                     let n = PreviewHostingViewController(rootViewController: q)
-					n.sourceItemView = c
-                    SceneDelegate.top.present(n, animated: true)
+                    n.sourceItemView = c
+                    presenter.present(n, animated: true)
 				}
 			}
 		} else {

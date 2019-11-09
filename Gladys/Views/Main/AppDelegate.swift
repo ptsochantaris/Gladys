@@ -20,19 +20,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		if CloudManager.syncSwitchedOn {
 			UIApplication.shared.registerForRemoteNotifications()
 		}
-		log("Initial reachability status: \(reachability.status.name)")
 		CallbackSupport.setupCallbackSupport()
 		IAPManager.shared.start()
-        
-        for s in application.openSessions where !s.isMaster { // kill all detail views
-            application.requestSceneSessionDestruction(s, options: nil, errorHandler: nil)
-        }
-        
-        let masterSessions = application.openSessions.filter { $0.isMaster }
-        masterSessions.dropFirst().forEach { // kill all masters except one
-            application.requestSceneSessionDestruction($0, options: nil, errorHandler: nil)
-        }
-        
+        Model.detectExternalDeletions()
+        CloudManager.opportunisticSyncIfNeeded(isStartup: true)
+
+        log("Initial reachability status: \(reachability.status.name)")
 		return true
 	}
     

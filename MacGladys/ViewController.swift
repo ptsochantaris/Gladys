@@ -255,7 +255,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let n = NotificationCenter.default
 
 		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
-			self?.detectExternalDeletions()
+			Model.detectExternalDeletions()
 			Model.rebuildLabels()
 			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
 			self?.updateEmptyView()
@@ -379,27 +379,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             } else {
                 blurb(Greetings.randomGreetLine)
             }
-		}
-	}
-
-	private func detectExternalDeletions() {
-		var shouldSaveInAnyCase = false
-		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
-			let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
-			if componentsToDelete.count > 0 {
-				item.typeItems = item.typeItems.filter { !$0.needsDeletion }
-				for c in componentsToDelete {
-					c.deleteFromStorage()
-				}
-				item.needsReIngest = true
-				shouldSaveInAnyCase = !CloudManager.syncing // this could be from the file provider
-			}
-		}
-		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
-		if itemsToDelete.count > 0 {
-            Model.delete(items: itemsToDelete) // will also save
-		} else if shouldSaveInAnyCase {
-			Model.save()
 		}
 	}
 

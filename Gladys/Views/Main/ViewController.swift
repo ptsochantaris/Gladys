@@ -19,7 +19,15 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
-	SceneDelegate.top.present(a, animated: true)
+    let allWindowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+    var preferredScene = allWindowScenes.filter { $0.activationState == .foregroundActive }.first
+    if preferredScene == nil {
+        preferredScene = allWindowScenes.filter { $0.activationState == .foregroundInactive }.first
+    }
+    if preferredScene == nil {
+        preferredScene = allWindowScenes.filter { $0.activationState == .background }.first
+    }
+    preferredScene?.windows.first?.alertPresenter?.present(a, animated: true)
 
 	if buttonTitle == nil && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -447,13 +455,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		} else if item.needsUnlock {
 			mostRecentIndexPathActioned = indexPath
-			item.unlock(from: SceneDelegate.top, label: "Unlock Item", action: "Unlock") { success in
-				if success {
-					item.needsUnlock = false
-                    item.postModified()
-				}
-			}
-
+            if let presenter = view.window?.alertPresenter {
+                item.unlock(from: presenter, label: "Unlock Item", action: "Unlock") { success in
+                    if success {
+                        item.needsUnlock = false
+                        item.postModified()
+                    }
+                }
+            }
+            
 		} else {
 			mostRecentIndexPathActioned = indexPath
 
@@ -475,10 +485,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 			case .preview:
 				let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
-				if !item.tryPreview(in: SceneDelegate.top, from: cell) {
-					performSegue(withIdentifier: "showDetail", sender: item)
-				}
-                
+                if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
+                    performSegue(withIdentifier: "showDetail", sender: item)
+                }
             case .none:
                 break
 			}
@@ -719,31 +728,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-	private func detectExternalDeletions() {
-		var shouldSaveInAnyCase = false
-		for item in Model.drops.filter({ !$0.needsDeletion }) { // partial deletes
-			let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
-			if componentsToDelete.count > 0 {
-				item.typeItems = item.typeItems.filter { !$0.needsDeletion }
-				for c in componentsToDelete {
-					c.deleteFromStorage()
-				}
-				item.needsReIngest = true
-				shouldSaveInAnyCase = !CloudManager.syncing // this could be from the file provider
-			}
-		}
-		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
-		if itemsToDelete.count > 0 {
-            Model.delete(items: itemsToDelete) // will also save
-		} else if shouldSaveInAnyCase {
-			Model.save()
-		}
-	}
-
 	@objc private func externalDataUpdate() {
 	    Model.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData(onlyIfPopulated: false)
-		detectExternalDeletions()
+        Model.detectExternalDeletions()
 		didUpdateItems()
 		updateEmptyView(animated: true)
 	}
@@ -1076,19 +1064,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return dragParameters(for: indexPath)
 	}
 
-	private var firstAppearance = true
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		if firstAppearance {
-			firstAppearance = false
-			detectExternalDeletions()
-			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
-			DispatchQueue.main.async {
-                SceneDelegate.mainViewBooted = true
-			}
-		}
-	}
-
 	private var lastSize = CGSize.zero
 	@objc private func forceLayout() {
 		lastSize = .zero
@@ -1357,9 +1332,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				cell.flash()
 				if andOpen {
 					self.collectionView(self.collection, didSelectItemAt: ip)
-				} else if andPreview {
+                    
+                } else if andPreview, let presenter = self.view.window?.alertPresenter {
 					let item = Model.filteredDrops[index]
-					item.tryPreview(in: SceneDelegate.top, from: cell, preferChild: childUuid)
+					item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
 				}
 			}
 			self.collection.isUserInteractionEnabled = true

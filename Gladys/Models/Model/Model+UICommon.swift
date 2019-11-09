@@ -722,6 +722,23 @@ extension Model {
 		}
 	}
     
+    static func detectExternalDeletions() {
+        for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
+            let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
+            if componentsToDelete.count > 0 {
+                item.typeItems = item.typeItems.filter { !$0.needsDeletion }
+                for c in componentsToDelete {
+                    c.deleteFromStorage()
+                }
+                item.needsReIngest = true
+            }
+        }
+        let itemsToDelete = drops.filter { $0.needsDeletion }
+        if itemsToDelete.count > 0 {
+            delete(items: itemsToDelete) // will also save
+        }
+    }
+    
     static func sendToTop(items: [ArchivedDropItem]) {
         let uuids = Set(items.map { $0.uuid })
         let cut = drops.filter { uuids.contains($0.uuid) }

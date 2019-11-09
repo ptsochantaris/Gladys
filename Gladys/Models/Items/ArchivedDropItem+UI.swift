@@ -164,10 +164,6 @@ extension ArchivedDropItem {
 		return true
 	}
 
-	@objc private func previewDismiss() {
-		SceneDelegate.top.dismiss(animated: true)
-	}
-
 	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {
 		let item = mostRelevantTypeItem?.objectForShare
 		if let item = item as? MKMapItem {

@@ -9,6 +9,19 @@
 import UIKit
 import CoreSpotlight
 
+extension UIWindow {
+    var alertPresenter: UIViewController? {
+        var vc = self.rootViewController
+        while let p = vc?.presentedViewController {
+            if p is UIAlertController {
+                break
+            }
+            vc = p
+        }
+        return vc
+    }
+}
+
 extension UISceneSession {
     var isMaster: Bool {
         return stateRestorationActivity == nil
@@ -38,9 +51,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             handleActivity(activity, in: scene)
         }
     }
-    
-    static var mainViewBooted = false
-    
+        
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         waitForBoot(in: windowScene) {
             if shortcutItem.type.hasSuffix(".Search") {
@@ -60,12 +71,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
         waitForBoot(in: scene) {
             for c in URLContexts {
-                self.openUrl(c.url, options: c.options)
+                self.openUrl(c.url, options: c.options, in: scene)
             }
         }
     }
     
-    private func openUrl(_ url: URL, options: UIScene.OpenURLOptions) {
+    private func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let request = HighlightRequest(uuid: itemId, open: true)
@@ -75,7 +86,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             IAPManager.shared.displayRequest(newTotal: t)
                         
         } else if url.host == nil { // just opening
-            if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
+            if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
                 a.addAction(UIAlertAction(title: "Import", style: .destructive) { _ in
                     var securityScoped = false
@@ -92,7 +103,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 })
                 a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                SceneDelegate.top.present(a, animated: true)
+                presenter.present(a, animated: true)
             }
             
         } else if !PersistedOptions.blockGladysUrlRequests {
@@ -167,44 +178,40 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         return scene.firstController?.userActivity
     }
+    
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        booted = true
+    }
         
     func sceneWillEnterForeground(_ scene: UIScene) {
         if scene.isMaster { // master scene
             if PersistedOptions.mirrorFilesToDocuments {
                 Model.scanForMirrorChanges {}
             }
+            CloudManager.opportunisticSyncIfNeeded(isStartup: false)
         }
-        CloudManager.opportunisticSyncIfNeeded(isStartup: false)
     }
+    
+    private var booted = false
     
     private func waitForBoot(count: Int = 0, in scene: UIWindowScene, completion: @escaping ()->Void) {
-        if !SceneDelegate.mainViewBooted {
-            if count == 0 {
-                let v = UIViewController()
-                v.view.backgroundColor = UIColor(named: "colorPaper")
-                scene.windows.first?.rootViewController = v
-                
-            } else if count == 10 {
-                UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
-                return
-            }
-                        
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.waitForBoot(count: count + 1, in: scene, completion: completion)
-            }
-        } else {
+        if booted {
             completion()
+            return
         }
-    }
-    
-    static var top: UIViewController {
-        let searchController = ViewController.shared.navigationItem.searchController
-        let searching = searchController?.isActive ?? false
-        var finalVC: UIViewController = (searching ? searchController : nil) ?? ViewController.shared
-        while let newVC = finalVC.presentedViewController {
-            if newVC is UIAlertController { break }
-            finalVC = newVC
+
+        if count == 0 {
+            let v = UIViewController()
+            v.view.backgroundColor = UIColor(named: "colorPaper")
+            scene.windows.first?.rootViewController = v
+            
+        } else if count == 10 {
+            UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+            return
         }
-        return finalVC
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.waitForBoot(count: count + 1, in: scene, completion: completion)
+        }
     }
 }
