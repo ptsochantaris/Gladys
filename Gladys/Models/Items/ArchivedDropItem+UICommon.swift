@@ -66,6 +66,9 @@ extension ArchivedDropItem {
 				try? f.removeItem(at: folderUrl)
 			}
 		}
+        #if MAINAPP
+        MirrorManager.removeItems(items: [self])
+        #endif
 	}
 
 	func renumberTypeItems() {

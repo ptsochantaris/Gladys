@@ -75,7 +75,7 @@ extension ArchivedDropItemType {
     func quickLook(in scene: UIWindowScene?) -> UIViewController? {
         
 		if isWebURL, let url = encodedUrl {
-            let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+            let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
             d.title = "Loading..."
             d.address = url as URL
             d.relatedItem = Model.item(uuid: parentUuid)
@@ -83,7 +83,7 @@ extension ArchivedDropItemType {
             return d
 
 		} else if isWebArchive {
-			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading..."
 			d.webArchive = PreviewItem(typeItem: self)
 			d.relatedItem = Model.item(uuid: parentUuid)

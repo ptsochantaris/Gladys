@@ -54,17 +54,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		CloudManager.received(notificationInfo: userInfo, fetchCompletionHandler: completionHandler)
 	}
 
-	func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-		ViewController.executeOrQueue {
-			if shortcutItem.type.hasSuffix(".Search") {
-				ViewController.shared.forceStartSearch()
-			} else if shortcutItem.type.hasSuffix(".Paste") {
-				ViewController.shared.forcePaste()
-			}
-			completionHandler(true)
-		}
-	}
-
 	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
 		DispatchQueue.main.async { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
 			CloudManager.acceptShare(cloudKitShareMetadata)

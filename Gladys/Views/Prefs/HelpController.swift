@@ -42,7 +42,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let urlString = link(for: indexPath.section) {
-			let d = ViewController.shared.storyboard!.instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
+			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading..."
 			d.address = URL(string: urlString)
 			navigationController?.pushViewController(d, animated: true)

@@ -56,7 +56,7 @@ let mainWindow: UIWindow = {
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, ItemIngestionDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
-UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
+    UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
 	@IBOutlet private weak var collection: UICollectionView!
 	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
@@ -183,7 +183,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		let items = droppedIds.compactMap { Model.item(uuid: $0) }
 		if items.count > 0 {
 			if dragModeMove {
-				deleteRequested(for: items)
+				Model.delete(items: items)
 			} else {
 				items.forEach { $0.donateCopyIntent() }
 			}
@@ -573,7 +573,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
-		n.addObserver(self, selector: #selector(reloadData), name: .ItemCollectionNeedsDisplay, object: nil)
+        n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
@@ -583,6 +583,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        n.addObserver(self, selector: #selector(itemsDeleted(_:)), name: .ItemsRemoved, object: nil)
+        n.addObserver(self, selector: #selector(noteLastActionedItem(_:)), name: .NoteLastActionedUUID, object: nil)
+        n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
 
 		Model.checkForUpgrade()
 
@@ -593,7 +596,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 		cloudStatusChanged()
 		if !PersistedOptions.pasteShortcutAutoDonated {
-			donatePasteIntent()
+            Model.donatePasteIntent()
 		}
         
         if PersistedOptions.mirrorFilesToDocuments {
@@ -604,25 +607,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	deinit {
 		Model.doneMonitoringChanges()
         log("Main VC deinitialised")
-	}
-
-	var pasteIntent: PasteClipboardIntent {
-		let intent = PasteClipboardIntent()
-		intent.suggestedInvocationPhrase = "Paste in Gladys"
-		return intent
-	}
-
-	func donatePasteIntent() {
-        let interaction = INInteraction(intent: pasteIntent, response: nil)
-        interaction.identifier = "paste-in-gladys"
-        interaction.donate { error in
-            if let error = error {
-                log("Error donating paste shortcut: \(error.localizedDescription)")
-            } else {
-                log("Donated paste shortcut")
-                PersistedOptions.pasteShortcutAutoDonated = true
-            }
-        }
 	}
 
 	private var acceptAlert: UIAlertController?
@@ -691,7 +675,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	@IBOutlet private weak var pasteButton: UIBarButtonItem!
 
 	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
-		donatePasteIntent()
+        Model.donatePasteIntent()
 		pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil, skipVisibleErrors: false)
 	}
 
@@ -752,7 +736,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		Model.drops.remove(at: i)
 		Model.drops.insert(item, at: 0)
 		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData()
+		reloadData(onlyIfPopulated: false)
 		Model.saveIndexOnly()
 	}
 
@@ -798,7 +782,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		}
 		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
 		if itemsToDelete.count > 0 {
-			deleteRequested(for: itemsToDelete) // will also save
+            Model.delete(items: itemsToDelete) // will also save
 		} else if shouldSaveInAnyCase {
 			Model.save()
 		}
@@ -806,7 +790,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	@objc private func externalDataUpdate() {
 	    Model.forceUpdateFilter(signalUpdate: false) // will force below
-		reloadData()
+		reloadData(onlyIfPopulated: false)
 		detectExternalDeletions()
 		didUpdateItems()
 		updateEmptyView(animated: true)
@@ -917,7 +901,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			let sortMethod = option.handlerForSort(itemsToSort: items, ascending: ascending)
 			sortMethod()
 			Model.forceUpdateFilter(signalUpdate: false)
-			reloadData()
+			reloadData(onlyIfPopulated: false)
 			Model.save()
 		}
 	}
@@ -1149,7 +1133,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 	}
 
 	private var lastSize = CGSize.zero
-	func forceLayout() {
+	@objc private func forceLayout() {
 		lastSize = .zero
 		view.setNeedsLayout()
 	}
@@ -1221,7 +1205,7 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			candidates.contains(where: { $0 == item.uuid })
 		}
 		if itemsToDelete.count > 0 {
-			deleteRequested(for: itemsToDelete)
+			Model.delete(items: itemsToDelete)
 		}
 
 		selectedItems?.removeAll()
@@ -1278,17 +1262,16 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 			}
 		}
 	}
+    
+    @objc private func itemsDeleted(_ notification: Notification) {
+        guard let indexes = notification.object as? [Int] else { return }
+        let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
-	func deleteRequested(for items: [ArchivedDropItem]) {
-
-		let ipsToRemove = Model.delete(items: items)
 		if !ipsToRemove.isEmpty {
 			collection.performBatchUpdates({
 				self.collection.deleteItems(at: ipsToRemove)
 			})
 		}
-
-	    Model.save()
 
 		ensureNoEmptySearchResult()
 
@@ -1360,9 +1343,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	//////////////////////////
 
-	func startSearch(initialText: String) {
+	func startSearch(initialText: String?) {
 		if let s = navigationItem.searchController {
-			s.searchBar.text = initialText
+            if let initialText = initialText {
+                s.searchBar.text = initialText
+            }
 			s.isActive = true
 		}
 	}
@@ -1432,7 +1417,12 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 		searchTimer.push()
 	}
 
-	@objc func reloadData(onlyIfPopulated: Bool = false) {
+    @objc private func reloadDataRequested(_ notification: Notification) {
+        let onlyIfPopulated = notification.object as? Bool ?? false
+        reloadData(onlyIfPopulated: onlyIfPopulated)
+    }
+    
+    private func reloadData(onlyIfPopulated: Bool) {
 		updateLabelIcon()
 		if onlyIfPopulated && Model.filteredDrops.filter({ !$0.isBeingCreatedBySync }).isEmpty {
 			return
@@ -1453,14 +1443,6 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	///////////////////////////// Quick actions
 
-	func forceStartSearch() {
-		dismissAnyPopOver() {
-			if let s = self.navigationItem.searchController, !s.isActive {
-				s.searchBar.becomeFirstResponder()
-			}
-		}
-	}
-
 	func forcePaste() {
 		resetSearch(andLabels: true)
 		dismissAnyPopOver()
@@ -1471,8 +1453,9 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
 
 	private var mostRecentIndexPathActioned: IndexPath?
 
-	func noteLastActionedItem(_ item: ArchivedDropItem) {
-		if let i = Model.filteredDrops.firstIndex(of: item) {
+    @objc private func noteLastActionedItem(_ notification: Notification) {
+        guard let uuid = notification.object as? UUID else { return }
+        if let i = Model.filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 		}
 	}

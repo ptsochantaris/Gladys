@@ -28,7 +28,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBAction private func cancelSelected(_ sender: UIButton) {
 		progressView.observedProgress = nil
 		if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
-			ViewController.shared.deleteRequested(for: [archivedDropItem])
+            Model.delete(items: [archivedDropItem])
 		}
 	}
 
@@ -553,7 +553,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         if item.canOpen {
             children.append(makeAction(title: "Open", callback: {
-                ViewController.shared.noteLastActionedItem(item)
+                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
                 item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
@@ -561,23 +561,23 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         if item.canPreview {
             children.append(makeAction(title: "Quick Look", callback: { [weak self] in
                 guard let s = self else { return }
-                ViewController.shared.noteLastActionedItem(item)
+                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
                 item.tryPreview(in: ViewController.top, from: s)
                 }, style: [], iconName: "eye"))
         }
         
         children.append(makeAction(title: "Info Panel", callback: {
-            ViewController.shared.noteLastActionedItem(item)
+            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
         }, style: [], iconName: "list.bullet.below.rectangle"))
         
         children.append(makeAction(title: "Move to Top", callback: {
-            ViewController.shared.noteLastActionedItem(item)
+            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             ViewController.shared.sendToTop(item: item)
         }, style: [], iconName: "arrow.turn.left.up"))
         
         children.append(makeAction(title: "Copy to Clipboard", callback: {
-            ViewController.shared.noteLastActionedItem(item)
+            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             item.copyToPasteboard()
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Copied.")
@@ -585,7 +585,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         }, style: [], iconName: "doc.on.doc"))
         
         children.append(makeAction(title: "Duplicate", callback: {
-            ViewController.shared.noteLastActionedItem(item)
+            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
@@ -594,7 +594,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         children.append(makeAction(title: "Share", callback: { [weak self] in
             guard let s = self else { return }
-            ViewController.shared.noteLastActionedItem(item)
+            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
             ViewController.shared.present(a, animated: true)
             if let p = a.popoverPresentationController {
@@ -605,7 +605,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
                   
         let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm Delete"
         let confirmAction = UIAction(title: confirmTitle) { _ in
-            ViewController.shared.deleteRequested(for: [item])
+            Model.delete(items: [item])
         }
         confirmAction.attributes = .destructive
         confirmAction.image = UIImage(systemName: "bin.xmark")
@@ -637,7 +637,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             guard let s = self, let i = item else { return nil }
             if i.canPreview, let previewItem = i.previewableTypeItem {
                 if previewItem.isWebURL, let url = previewItem.encodedUrl {
-                    let x = ViewController.shared.storyboard!.instantiateViewController(identifier: "LinkPreview") as! LinkViewController
+                    let x = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "LinkPreview") as! LinkViewController
                     x.url = url as URL
                     return x
                 } else {

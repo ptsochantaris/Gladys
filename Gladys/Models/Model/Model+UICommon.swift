@@ -497,40 +497,24 @@ extension Model {
 		}
 	}
 
-	static func delete(items: [ArchivedDropItem]) -> [IndexPath] {
-		var ipsToRemove = [IndexPath]()
-		var uuidsToRemove = [UUID]()
+	static func delete(items: [ArchivedDropItem]) {
 
-        #if MAINAPP
-        MirrorManager.removeItems(items: items)
-        #endif
-
+        let uuidsToRemove = Set(items.map { $0.uuid })
+        let indexesToRemove = uuidsToRemove.compactMap { uuid in filteredDrops.firstIndex(where: { $0.uuid == uuid }) }
+        
 		for item in items {
-
 			if item.shouldDisplayLoading {
 				item.cancelIngest()
 			}
-
-			let uuid = item.uuid
-			uuidsToRemove.append(uuid)
-
-			if let i = filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
-				ipsToRemove.append(IndexPath(item: i, section: 0))
-			}
-
 			item.delete()
 		}
 
-		for uuid in uuidsToRemove {
-			if let x = drops.firstIndex(where: { $0.uuid == uuid }) {
-				drops.remove(at: x)
-			}
-			if let x = cachedFilteredDrops?.firstIndex(where: { $0.uuid == uuid }) {
-				cachedFilteredDrops!.remove(at: x)
-			}
-		}
+        drops.removeAll { uuidsToRemove.contains($0.uuid) }
+        cachedFilteredDrops?.removeAll { uuidsToRemove.contains($0.uuid) }
         
-		return ipsToRemove
+        NotificationCenter.default.post(name: .ItemsRemoved, object: indexesToRemove)
+        
+        save()
 	}
 
 	static var doneIngesting: Bool {

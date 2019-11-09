@@ -43,7 +43,7 @@ final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortc
 		let style: INUIAddVoiceShortcutButtonStyle = .black
 
 		let pasteInGladysShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		pasteInGladysShortcutButton.shortcut = INShortcut(intent: ViewController.shared.pasteIntent)
+		pasteInGladysShortcutButton.shortcut = INShortcut(intent: Model.pasteIntent)
 		pasteInGladysShortcutButton.place(in: pasteInGladysContainer, buttonDelegate: self)
 
 		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .fittingSizeLevel)

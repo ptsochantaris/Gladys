@@ -314,12 +314,13 @@ final class DetailController: GladysViewController,
 			self.done()
 			if let item = self.item {
 				DispatchQueue.main.async {
-					ViewController.shared.deleteRequested(for: [item])
+                    Model.delete(items: [item])
 				}
 			}
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
+        a.popoverPresentationController?.barButtonItem = sender
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1008,7 +1009,7 @@ final class DetailController: GladysViewController,
 		if wasImported {
 			DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
 				self?.done()
-				ViewController.shared.deleteRequested(for: [i])
+                Model.delete(items: [i])
 			}
 		} else {
 			item.postModified()

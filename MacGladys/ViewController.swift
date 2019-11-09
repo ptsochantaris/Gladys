@@ -293,10 +293,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let a9 = n.addObserver(forName: NSScroller.preferredScrollerStyleDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
 			self?.handleLayout()
 		}
+        
+        let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
+            self?.itemsDeleted(notification)
+        }
 
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9]
+		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -371,7 +375,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		let itemsToDelete = Model.drops.filter { $0.needsDeletion }
 		if itemsToDelete.count > 0 {
-			deleteRequested(for: itemsToDelete) // will also save
+            Model.delete(items: itemsToDelete) // will also save
 		} else if shouldSaveInAnyCase {
 			Model.save()
 		}
@@ -656,7 +660,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if let d = draggingIndexPaths, !d.isEmpty {
 			if optionPressed {
 				let items = d.map { Model.filteredDrops[$0.item] }
-				deleteRequested(for: items)
+                Model.delete(items: items)
 			}
 			draggingIndexPaths = nil
 		}
@@ -780,14 +784,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-	func deleteRequested(for items: [ArchivedDropItem]) {
+    private func itemsDeleted(_ notification: Notification) {
+        guard let indexes = notification.object as? [Int] else { return }
+        let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
-		let ipsToRemove = Model.delete(items: items)
 		if !ipsToRemove.isEmpty {
 			reloadData(deleting: ipsToRemove)
 		}
-
-		Model.save()
 
 		if Model.filteredDrops.count == 0 {
 			blurb(Greetings.randomCleanLine)
@@ -1036,7 +1039,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let items = collection.actionableSelectedItems
 		if items.isEmpty { return }
 		if PersistedOptions.unconfirmedDeletes {
-			ViewController.shared.deleteRequested(for: items)
+            Model.delete(items: items)
 		} else {
 			let a = NSAlert()
 			if items.count == 1, let first = items.first, first.shareMode == .sharing {
@@ -1051,7 +1054,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			a.suppressionButton?.title = "Don't ask me again"
 			a.beginSheetModal(for: view.window!) { response in
 				if response.rawValue == 1000 {
-					ViewController.shared.deleteRequested(for: items)
+                    Model.delete(items: items)
 					if let s = a.suppressionButton, s.integerValue > 0 {
 						PersistedOptions.unconfirmedDeletes = true
 					}

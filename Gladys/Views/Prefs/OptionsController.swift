@@ -33,13 +33,13 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
 		clearCaches()
-		ViewController.shared.forceLayout()
-		ViewController.shared.reloadData(onlyIfPopulated: true)
+        NotificationCenter.default.post(name: .ForceLayoutRequested, object: nil)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 
 	@IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.inclusiveSearchTerms = sender.isOn
-		ViewController.shared.reloadData(onlyIfPopulated: true)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 
 	@IBAction private func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
@@ -48,7 +48,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.displayLabelsInMainView = sender.isOn
-		ViewController.shared.reloadData(onlyIfPopulated: true)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 
 	@IBAction private func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
@@ -92,7 +92,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
 		if ViewController.shared.phoneMode {
-			ViewController.shared.forceLayout()
+            NotificationCenter.default.post(name: .ForceLayoutRequested, object: nil)
 		}
 	}
 
@@ -102,7 +102,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func displayNotesInMainViewSelected(_ sender: UISwitch) {
 		PersistedOptions.displayNotesInMainView = sender.isOn
-		ViewController.shared.reloadData(onlyIfPopulated: true)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 
 	@IBAction private func fullScreenPreviewsSelected(_ sender: UISwitch) {

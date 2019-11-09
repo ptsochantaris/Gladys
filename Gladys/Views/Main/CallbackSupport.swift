@@ -84,7 +84,7 @@ struct CallbackSupport {
 		ViewController.shared.dismissAnyPopOver()
 		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
-		ViewController.shared.donatePasteIntent()
+		Model.donatePasteIntent()
 		return ViewController.shared.pasteItems(from: UIPasteboard.general.itemProviders, overrides: importOverrides, skipVisibleErrors: skipVisibleErrors)
 	}
 

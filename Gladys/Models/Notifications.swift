@@ -13,6 +13,7 @@ extension Notification.Name {
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
 	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
 	static let ItemModified = Notification.Name("ItemModified")
+    static let ItemsRemoved = Notification.Name("ItemsRemoved")
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")
 	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
 	static let DetailViewClosing = Notification.Name("DetailViewClosing")
@@ -23,6 +24,8 @@ extension Notification.Name {
 	static let AcceptEnding = Notification.Name("AcceptEnding")
 	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
 	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
+    static let NoteLastActionedUUID = Notification.Name("NoteLastActionedUUID")
+    static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
 }
 
 #if MAC

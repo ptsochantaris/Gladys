@@ -34,10 +34,20 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
         } else if let activity = session.stateRestorationActivity { // restoring scene
             handleActivity(activity, in: scene)
-
         }
     }
-        
+    
+    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        ViewController.executeOrQueue {
+            if shortcutItem.type.hasSuffix(".Search") {
+                ViewController.shared.startSearch(initialText: nil)
+            } else if shortcutItem.type.hasSuffix(".Paste") {
+                ViewController.shared.forcePaste()
+            }
+            completionHandler(true)
+        }
+    }
+    
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         handleActivity(userActivity, in: scene) // handoff
     }
@@ -98,7 +108,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
-        
+    
     private func handleActivity(_ userActivity: NSUserActivity, in scene: UIScene) {
         guard let scene = scene as? UIWindowScene else { return }
         waitForBoot(in: scene) {
@@ -125,7 +135,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
                 
                 if let child = child {
-                    self.showQuicklook(for: item, child: child, in: scene)
+                    guard let q = child.quickLook(in: scene) else { return }
+                    let n = PreviewHostingViewController(rootViewController: q)
+                    scene.windows.first?.rootViewController = n
+
                 } else {
                     UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
                 }
@@ -137,7 +150,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
                 let item = Model.item(uuid: uuidString) {
 
-                self.showDetail(for: item, in: scene)
+                let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
+                let d = n.viewControllers.first as! DetailController
+                d.item = item
+                scene.windows.first?.rootViewController = n
+            } else {
+                UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
             }
 
         case CSSearchableItemActionType:
@@ -185,18 +203,5 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             completion()
         }
-    }
-    
-    private func showDetail(for item: ArchivedDropItem, in scene: UIWindowScene) {
-        let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
-        let d = n.viewControllers.first as! DetailController
-        d.item = item
-        scene.windows.first?.rootViewController = n
-    }
-    
-    private func showQuicklook(for item: ArchivedDropItem, child: ArchivedDropItemType, in scene: UIWindowScene) {
-        guard let q = child.quickLook(in: scene) else { return }
-        let n = PreviewHostingViewController(rootViewController: q)
-        scene.windows.first?.rootViewController = n
     }
 }
