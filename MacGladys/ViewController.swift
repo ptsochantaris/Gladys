@@ -255,18 +255,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let n = NotificationCenter.default
 
 		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
-			Model.detectExternalDeletions()
+			Model.detectExternalChanges()
 			Model.rebuildLabels()
 			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
 			self?.updateEmptyView()
 			self?.reloadData()
-			self?.postSave()
+            self?.updateEmptyView()
 		}
 
 		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
 			self?.reloadData()
-			self?.postSave()
+            self?.updateEmptyView()
 		}
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
@@ -331,7 +331,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		Model.checkForUpgrade()
 
 		updateTitle()
-		postSave()
+        updateEmptyView()
 	}
 
 	@objc private func interfaceModeChanged(sender: NSNotification) {
@@ -417,13 +417,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		w.standardWindowButton(.miniaturizeButton)?.isHidden = true
 		w.standardWindowButton(.zoomButton)?.isHidden = true
 		updateScrollviewInsets()
-	}
-
-	private func postSave() {
-		for i in Model.itemsToReIngest {
-			i.reIngest()
-		}
-		updateEmptyView()
 	}
 
     private func itemIngested(_ item: ArchivedDropItem) {

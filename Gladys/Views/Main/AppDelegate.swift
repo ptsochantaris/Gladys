@@ -22,7 +22,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 		CallbackSupport.setupCallbackSupport()
 		IAPManager.shared.start()
-        Model.detectExternalDeletions()
+        Model.detectExternalChanges()
         CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 
         log("Initial reachability status: \(reachability.status.name)")

@@ -521,10 +521,6 @@ extension Model {
 		return !drops.contains { ($0.needsReIngest && !$0.isDeleting) || ($0.loadingProgress != nil && $0.loadingError == nil) }
 	}
 
-	static var itemsToReIngest: [ArchivedDropItem] {
-		return drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }
-	}
-
 	static func lockUnlockedItems() {
 		for item in drops where item.isTemporarilyUnlocked {
 			item.needsUnlock = true
@@ -722,7 +718,7 @@ extension Model {
 		}
 	}
     
-    static func detectExternalDeletions() {
+    static func detectExternalChanges() {
         for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
             let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
             if componentsToDelete.count > 0 {
@@ -737,6 +733,8 @@ extension Model {
         if itemsToDelete.count > 0 {
             delete(items: itemsToDelete) // will also save
         }
+        
+        drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }.forEach { $0.reIngest() }
     }
     
     static func sendToTop(items: [ArchivedDropItem]) {

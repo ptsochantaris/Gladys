@@ -48,6 +48,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
+        n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+    }
+    
+    @objc private func externalDataUpdate() {
+        Model.forceUpdateFilter(signalUpdate: false) // will force below
+        Model.detectExternalChanges()
     }
     
     @objc private func ingestComplete(_ notification: Notification) {

@@ -216,7 +216,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
         
-        Model.detectExternalDeletions()
+        Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
 	}
 

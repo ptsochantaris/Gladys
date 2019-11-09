@@ -81,16 +81,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return collection!
 	}
 
-	///////////////////////
-
-	private var registeredForBackground = false
-	private func startBgTaskIfNeeded() {
-		if !registeredForBackground {
-			registeredForBackground = true
-			BackgroundTask.registerForBackground()
-		}
-	}
-
 	/////////////////////////////
 
 	private var dragModeReverse = false
@@ -260,7 +250,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 			} else {
 
-				startBgTaskIfNeeded()
 				var firstDestinationPath: IndexPath?
 				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
 					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
@@ -732,9 +721,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
 	@objc private func externalDataUpdate() {
-	    Model.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData(onlyIfPopulated: false)
-        Model.detectExternalDeletions()
 		didUpdateItems()
 		updateEmptyView(animated: true)
 	}
@@ -777,12 +764,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		deleteButton.isEnabled = someSelected
 		editLabelsButton.isEnabled = someSelected
 		shareButton.isEnabled = someSelected
-
-		let itemsToReIngest = Model.itemsToReIngest
-		if itemsToReIngest.count > 0 {
-			startBgTaskIfNeeded()
-			itemsToReIngest.forEach { $0.reIngest() }
-		}
 
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
@@ -1263,11 +1244,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		if Model.doneIngesting {
 			UIAccessibility.post(notification: .screenChanged, argument: nil)
-
-			if registeredForBackground {
-				registeredForBackground = false
-				BackgroundTask.unregisterForBackground()
-			}
 		}
 	}
 
