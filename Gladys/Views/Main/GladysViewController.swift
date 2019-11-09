@@ -74,18 +74,13 @@ class GladysViewController: UIViewController {
         }
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		checkActionLocations()
-	}
-
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		checkActionLocations()
 	}
 
 	private func checkActionLocations() {
-        if windowLocation != .none && UIDevice.current.userInterfaceIdiom == .pad {
+        if windowLocation != .none && traitCollection.userInterfaceIdiom == .pad {
             if !isInStandaloneWindow {
                 showWindow(true)
             }
@@ -99,17 +94,17 @@ class GladysViewController: UIViewController {
             
             let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
             if s == -1 { // hovering
-                if ViewController.shared.traitCollection.horizontalSizeClass == .compact {
+                if traitCollection.horizontalSizeClass == .compact {
                     showDone(false)
                 } else {
-                    showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
+                    showDone(traitCollection.verticalSizeClass == .compact)
                 }
             } else { // full window?
                 showDone(popoverPresentationController == nil || phoneMode || isInStandaloneWindow)
             }
         }
     }
-     
+         
     @objc private func newWindowSelected() {
         let activity = userActivity
         done()

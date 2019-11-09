@@ -25,6 +25,8 @@ extension UIScene {
     }
 }
 
+var componentDropActiveFromDetailView: DetailController?
+
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
@@ -37,12 +39,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
+    static var mainViewBooted = false
+    
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        ViewController.executeOrQueue {
+        waitForBoot(in: windowScene) {
             if shortcutItem.type.hasSuffix(".Search") {
-                ViewController.shared.startSearch(initialText: nil)
+                NotificationCenter.default.post(name: .StartSearchRequest, object: nil)
             } else if shortcutItem.type.hasSuffix(".Paste") {
-                ViewController.shared.forcePaste()
+                NotificationCenter.default.post(name: .ForcePasteRequest, object: nil)
             }
             completionHandler(true)
         }
@@ -53,23 +57,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        for c in URLContexts {
-            openUrl(c.url, options: c.options)
+        guard let scene = scene as? UIWindowScene else { return }
+        waitForBoot(in: scene) {
+            for c in URLContexts {
+                self.openUrl(c.url, options: c.options)
+            }
         }
     }
     
     private func openUrl(_ url: URL, options: UIScene.OpenURLOptions) {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
-            ViewController.executeOrQueue {
-                let request = HighlightRequest(uuid: itemId, open: true)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
-            }
+            let request = HighlightRequest(uuid: itemId, open: true)
+            NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
             
         } else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
-            ViewController.executeOrQueue {
-                IAPManager.shared.displayRequest(newTotal: t)
-            }
+            IAPManager.shared.displayRequest(newTotal: t)
                         
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
@@ -89,15 +92,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 })
                 a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                ViewController.executeOrQueue {
-                    SceneDelegate.top.present(a, animated: true)
-                }
+                SceneDelegate.top.present(a, animated: true)
             }
             
         } else if !PersistedOptions.blockGladysUrlRequests {
-            ViewController.executeOrQueue {
-                CallbackSupport.handlePossibleCallbackURL(url: url)
-            }
+            CallbackSupport.handlePossibleCallbackURL(url: url)
         }
     }
     
@@ -158,7 +157,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         case CSQueryContinuationActionType:
             if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-                ViewController.shared.startSearch(initialText: searchQuery)
+                NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery)
             }
             
         default: break
@@ -177,9 +176,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         CloudManager.opportunisticSyncIfNeeded(isStartup: false)
     }
-        
+    
     private func waitForBoot(count: Int = 0, in scene: UIWindowScene, completion: @escaping ()->Void) {
-        if ViewController.shared == nil {
+        if !SceneDelegate.mainViewBooted {
             if count == 0 {
                 let v = UIViewController()
                 v.view.backgroundColor = UIColor(named: "colorPaper")

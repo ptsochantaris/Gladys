@@ -168,7 +168,7 @@ extension ArchivedDropItem {
 		SceneDelegate.top.dismiss(animated: true)
 	}
 
-	func tryOpen(in viewController: UINavigationController, completion: @escaping (Bool)->Void) {
+	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {
 		let item = mostRelevantTypeItem?.objectForShare
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])
@@ -177,7 +177,12 @@ extension ArchivedDropItem {
 			let c = CNContactViewController(forUnknownContact: contact)
 			c.contactStore = CNContactStore()
 			c.hidesBottomBarWhenPushed = true
-			viewController.pushViewController(c, animated: true)
+            if let viewController = viewController {
+                viewController.pushViewController(c, animated: true)
+            } else {
+                let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true)
+                NotificationCenter.default.post(name: .UIRequest, object: request)
+            }
 			completion(false)
 		} else if let item = item as? URL {
             UIApplication.shared.connectedScenes.first?.open(item, options: nil) { success in

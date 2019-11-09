@@ -74,13 +74,13 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
 				message = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.\n\nWe cannot seem to fetch the in-app purchase information at this time. Please check your internet connection and try again in a moment."
 			}
 
-			ViewController.shared.showIAPPrompt(title: title,
-												subtitle: message,
-												actionTitle: "Try Again",
-												actionAction: { [weak self] in
-													self?.iapFetchCallbackCount = newTotal
-													self?.fetch()
-				}, cancelTitle: "Later")
+            showIAPPrompt(title: title,
+                          subtitle: message,
+                          actionTitle: "Try Again",
+                          actionAction: { [weak self] in
+                            self?.iapFetchCallbackCount = newTotal
+                            self?.fetch()
+                }, cancelTitle: "Later")
 
 			fetch()
 			return
@@ -104,11 +104,11 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
 		#else
 		let os = "Mac"
 		#endif
-		ViewController.shared.showIAPPrompt(title: title,
-											subtitle: message,
-											actionTitle: "Restore previous \(os) purchase",
-											actionAction: {
-												SKPaymentQueue.default().restoreCompletedTransactions()
+        showIAPPrompt(title: title,
+                      subtitle: message,
+                      actionTitle: "Restore previous \(os) purchase",
+            actionAction: {
+                SKPaymentQueue.default().restoreCompletedTransactions()
 		}, destructiveTitle: "Buy for \(infiniteModeItemPrice)", destructiveAction: {
 			let payment = SKPayment(product: infiniteModeItem)
 			SKPaymentQueue.default().add(payment)
@@ -172,4 +172,66 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
 		}
 		return false
 	}
+    
+    #if MAINAPP
+    private func showIAPPrompt(title: String, subtitle: String,
+                       actionTitle: String? = nil, actionAction: (()->Void)? = nil,
+                       destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
+                       cancelTitle: String? = nil) {
+
+        NotificationCenter.default.post(name: .DismissPopoversRequest, object: nil)
+        NotificationCenter.default.post(name: .ResetSearchRequest, object: nil)
+
+        let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
+        if let destructiveTitle = destructiveTitle {
+            a.addAction(UIAlertAction(title: destructiveTitle, style: .destructive) { _ in destructiveAction?() })
+        }
+        if let actionTitle = actionTitle {
+            a.addAction(UIAlertAction(title: actionTitle, style: .default) { _ in actionAction?() })
+        }
+        if let cancelTitle = cancelTitle {
+            a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
+        }
+
+        let request = UIRequest(vc: a, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: false)
+        NotificationCenter.default.post(name: .UIRequest, object: request)
+    }
+    #endif
+
+    #if MAC
+    func showIAPPrompt(title: String, subtitle: String,
+                       actionTitle: String? = nil, actionAction: (()->Void)? = nil,
+                       destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
+                       cancelTitle: String? = nil) {
+
+        assert(Thread.isMainThread)
+
+        if Model.isFiltering {
+            ViewController.shared.resetSearch(andLabels: true)
+        }
+
+        let a = NSAlert()
+        a.messageText = title
+        a.informativeText = subtitle
+        if let cancelTitle = cancelTitle {
+            a.addButton(withTitle: cancelTitle)
+        }
+        if let actionTitle = actionTitle {
+            a.addButton(withTitle: actionTitle)
+        }
+        if let destructiveTitle = destructiveTitle {
+            a.addButton(withTitle: destructiveTitle)
+        }
+        a.beginSheetModal(for: ViewController.shared.view.window!) { response in
+            switch response.rawValue {
+            case 1001:
+                actionAction?()
+            case 1002:
+                destructiveAction?()
+            default:
+                break
+            }
+        }
+    }
+    #endif
 }

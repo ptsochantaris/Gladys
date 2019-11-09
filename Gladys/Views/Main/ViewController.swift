@@ -69,18 +69,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
     @IBOutlet private weak var editButton: UIBarButtonItem!
 
-	static var shared: ViewController!
-
-	static var launchQueue = [()->Void]()
-
-	static func executeOrQueue(block: @escaping ()->Void) {
-		if shared == nil {
-			launchQueue.append(block)
-		} else {
-			block()
-		}
-	}
-
 	var itemView: UICollectionView {
 		return collection!
 	}
@@ -436,8 +424,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-	var componentDropActiveFromDetailView: DetailController?
-
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
 		if collectionView.hasActiveDrop && componentDropActiveFromDetailView == nil { return }
@@ -481,8 +467,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
 
 			case .open:
-                guard let navigationController = navigationController else { return }
-				item.tryOpen(in: navigationController) { [weak self] success in
+				item.tryOpen(in: nil) { [weak self] success in
 					if !success {
 						self?.performSegue(withIdentifier: "showDetail", sender: item)
 					}
@@ -521,8 +506,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		ViewController.shared = self
 
 	    Model.beginMonitoringChanges()
 
@@ -571,8 +554,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
+        n.addObserver(self, selector: #selector(uiRequest(_:)), name: .UIRequest, object: nil)
+        n.addObserver(self, selector: #selector(segueRequest(_:)), name: .SegueRequest, object: nil)
+        n.addObserver(self, selector: #selector(dismissAnyPopOver), name: .DismissPopoversRequest, object: nil)
+        n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
+        n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
+        n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
 
-		Model.checkForUpgrade()
+        Model.checkForUpgrade()
 
 		didUpdateItems()
 		updateEmptyView(animated: false)
@@ -588,6 +577,31 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             MirrorManager.startMirrorMonitoring()
         }
 	}
+    
+    @objc private func resetSearchRequest() {
+        if searchActive || Model.isFiltering {
+            resetSearch(andLabels: true)
+        }
+    }
+    
+    @objc private func segueRequest(_ notification: Notification) {
+        guard let name = notification.object as? String else { return }
+        performSegue(withIdentifier: name, sender: nil)
+    }
+    
+    @objc private func uiRequest(_ notification: Notification) {
+        guard let request = notification.object as? UIRequest else { return }
+        if request.pushInsteadOfPresent {
+            navigationController?.pushViewController(request.vc, animated: true)
+        } else {
+            present(request.vc, animated: true)
+            if let p = request.vc.popoverPresentationController {
+                p.sourceView = request.sourceView
+                p.sourceRect = request.sourceRect ?? .zero
+                p.barButtonItem = request.sourceButton
+            }
+        }
+    }
     
     @objc private func insertedItems(_ notification: Notification) {
         guard let count = notification.object as? Int, count > 0 else { return }
@@ -995,7 +1009,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-	var itemSize = CGSize.zero
+    
+    private var itemSize: CGSize = .zero {
+        didSet {
+            viewIfLoaded?.window?.windowScene?.session.userInfo?["ItemSize"] = itemSize
+        }
+    }
+    
 	private func calculateItemSize() {
 
 		func calculateSizes(for columnCount: CGFloat) {
@@ -1064,8 +1084,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			detectExternalDeletions()
 			CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 			DispatchQueue.main.async {
-				ViewController.launchQueue.forEach { $0() }
-				ViewController.launchQueue.removeAll(keepingCapacity: false)
+                SceneDelegate.mainViewBooted = true
 			}
 		}
 	}
@@ -1175,7 +1194,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
-	func dismissAnyPopOver(completion: (()->Void)? = nil) {
+	@objc private func dismissAnyPopOver(completion: (()->Void)? = nil) {
         let firstPresentedAlertController = (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
         firstPresentedAlertController?.dismiss(animated: true) {
             completion?()
@@ -1282,9 +1301,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	//////////////////////////
 
-	func startSearch(initialText: String?) {
+    @objc private func startSearch(_ notification: Notification) {
 		if let s = navigationItem.searchController {
-            if let initialText = initialText {
+            if let initialText = notification.object as? String {
                 s.searchBar.text = initialText
             }
 			s.isActive = true
@@ -1383,7 +1402,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	///////////////////////////// Quick actions
 
-	func forcePaste() {
+	@objc private func forcePaste() {
 		resetSearch(andLabels: true)
 		dismissAnyPopOver()
 		pasteSelected(pasteButton)
@@ -1459,31 +1478,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var searchActive: Bool {
 		return navigationItem.searchController?.isActive ?? false
-	}
-
-	func showIAPPrompt(title: String, subtitle: String,
-					   actionTitle: String? = nil, actionAction: (()->Void)? = nil,
-					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
-					   cancelTitle: String? = nil) {
-
-		dismissAnyPopOver()
-
-		if searchActive || Model.isFiltering {
-			resetSearch(andLabels: true)
-		}
-
-		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		if let destructiveTitle = destructiveTitle {
-			a.addAction(UIAlertAction(title: destructiveTitle, style: .destructive) { _ in destructiveAction?() })
-		}
-		if let actionTitle = actionTitle {
-			a.addAction(UIAlertAction(title: actionTitle, style: .default) { _ in actionAction?() })
-		}
-		if let cancelTitle = cancelTitle {
-			a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
-		}
-
-		present(a, animated: true)
 	}
 }
 

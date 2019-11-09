@@ -45,10 +45,33 @@ extension Notification.Name {
 	static let AcceptEnding = Notification.Name("AcceptEnding")
 	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
 	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
-    static let NoteLastActionedUUID = Notification.Name("NoteLastActionedUUID")
-    static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
     static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
 }
+
+#if MAINAPP
+import UIKit
+
+struct UIRequest {
+    let vc: UIViewController
+    let sourceView: UIView?
+    let sourceRect: CGRect?
+    let sourceButton: UIBarButtonItem?
+    let pushInsteadOfPresent: Bool
+}
+
+extension Notification.Name {
+    static let UIRequest = Notification.Name("UIRequest")
+    static let SegueRequest = Notification.Name("SegueRequest")
+    static let DismissPopoversRequest = Notification.Name("DismissPopoversRequest")
+    static let NoteLastActionedUUID = Notification.Name("NoteLastActionedUUID")
+    static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
+    static let ResetSearchRequest = Notification.Name("ResetSearchRequest")
+
+    static let StartSearchRequest = Notification.Name("StartSearchRequest")
+    static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
+
+}
+#endif
 
 #if MAC
 extension Notification.Name {

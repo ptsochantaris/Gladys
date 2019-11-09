@@ -81,8 +81,9 @@ struct CallbackSupport {
 
 	@discardableResult
 	static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Model.PasteResult {
-		ViewController.shared.dismissAnyPopOver()
-		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+        NotificationCenter.default.post(name: .DismissPopoversRequest, object: nil)
+		
+        let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
         defer {
             Model.donatePasteIntent()

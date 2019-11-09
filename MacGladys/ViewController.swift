@@ -559,7 +559,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         findSelected(nil)
 	}
 
-	private func resetSearch(andLabels: Bool) {
+	func resetSearch(andLabels: Bool) {
 		searchBar.stringValue = ""
 		showSearch = false
 		updateSearch()
@@ -1204,41 +1204,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		emptyLabel.animator().alphaValue = 1
 		DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
 			self?.emptyLabel.animator().alphaValue = 0
-		}
-	}
-
-	func showIAPPrompt(title: String, subtitle: String,
-					   actionTitle: String? = nil, actionAction: (()->Void)? = nil,
-					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
-					   cancelTitle: String? = nil) {
-
-		assert(Thread.isMainThread)
-
-		if Model.isFiltering {
-			ViewController.shared.resetSearch(andLabels: true)
-		}
-
-		let a = NSAlert()
-		a.messageText = title
-		a.informativeText = subtitle
-		if let cancelTitle = cancelTitle {
-			a.addButton(withTitle: cancelTitle)
-		}
-		if let actionTitle = actionTitle {
-			a.addButton(withTitle: actionTitle)
-		}
-		if let destructiveTitle = destructiveTitle {
-			a.addButton(withTitle: destructiveTitle)
-		}
-		a.beginSheetModal(for: view.window!) { response in
-			switch response.rawValue {
-			case 1001:
-				actionAction?()
-			case 1002:
-				destructiveAction?()
-			default:
-				break
-			}
 		}
 	}
 

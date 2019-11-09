@@ -82,9 +82,10 @@ final class PreviewHostingViewController: UINavigationController, UIViewControll
         let tint = UIColor(named: "colorTint")
         view.tintColor = tint
         navigationBar.tintColor = tint
-        if let sourceBar = ViewController.shared.navigationController?.navigationBar {
-            navigationBar.titleTextAttributes = sourceBar.titleTextAttributes
-        }
+        navigationBar.titleTextAttributes = [
+            .font: UIFont.preferredFont(forTextStyle: .body, compatibleWith: traitCollection),
+            .foregroundColor: UIColor.secondaryLabel
+        ]
     }
     
     override func viewDidDisappear(_ animated: Bool) {

@@ -209,6 +209,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.observedProgress = nil
 		progressView.progress = 0
 		image.image = nil
+        if let size = window?.windowScene?.session.userInfo?["ItemSize"] as? CGSize {
+            itemSize = size
+        }
 	}
 
     deinit {
@@ -331,7 +334,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 					}
 				}
 
-				let H = ViewController.shared.itemSize.height
+                let H = itemSize.height
 				let wideMode = H > 145
 				let smallMode = H < 240
 
@@ -463,7 +466,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		topLabelLeft.constant = (shareHolder == nil || wideCell) ? 0 : 41
 	}
-
+    
+    private var itemSize = CGSize(width: 200, height: 200)
+    
 	func flash() {
         let originalColor = borderView.backgroundColor
 		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
@@ -554,7 +559,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         if item.canOpen {
             children.append(makeAction(title: "Open", callback: {
                 NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-                item.tryOpen(in: ViewController.shared.navigationController!) { _ in }
+                item.tryOpen(in: nil) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
         
@@ -568,7 +573,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         children.append(makeAction(title: "Info Panel", callback: {
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-            ViewController.shared.performSegue(withIdentifier: "showDetail", sender: item)
+            NotificationCenter.default.post(name: .SegueRequest, object: "showDetail")
         }, style: [], iconName: "list.bullet.below.rectangle"))
         
         children.append(makeAction(title: "Move to Top", callback: {
@@ -596,11 +601,9 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             guard let s = self else { return }
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
-            ViewController.shared.present(a, animated: true)
-            if let p = a.popoverPresentationController {
-                p.sourceView = s
-                p.sourceRect = s.contentView.bounds.insetBy(dx: 6, dy: 6)
-            }
+            let request = UIRequest(vc: a, sourceView: s, sourceRect: s.contentView.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
+            NotificationCenter.default.post(name: .UIRequest, object: request)
+            
         }, style: [], iconName: "square.and.arrow.up"))
                   
         let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm Delete"
