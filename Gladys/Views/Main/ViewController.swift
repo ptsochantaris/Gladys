@@ -4,10 +4,6 @@ import CoreSpotlight
 import GladysFramework
 import Intents
 
-enum PasteResult {
-	case success, noData, tooManyItems
-}
-
 extension UIKeyCommand {
     static func makeCommand(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, title: String) -> UIKeyCommand {
         let c = UIKeyCommand(input: input, modifierFlags: modifierFlags, action: action)
@@ -358,10 +354,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return countInserts(in: session) > 0 ? .copy : .move
 	}
 
-	var phoneMode: Bool {
-		return traitCollection.horizontalSizeClass == .compact || traitCollection.verticalSizeClass == .compact
-	}
-
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		switch segue.identifier {
@@ -489,7 +481,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
 
 			case .open:
-				item.tryOpen(in: ViewController.shared.navigationController!) { [weak self] success in
+                guard let navigationController = navigationController else { return }
+				item.tryOpen(in: navigationController) { [weak self] success in
 					if !success {
 						self?.performSegue(withIdentifier: "showDetail", sender: item)
 					}
@@ -563,6 +556,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
         n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
+        n.addObserver(self, selector: #selector(insertedItems(_:)), name: .ItemsCreated, object: nil)
 		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
 		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
@@ -594,6 +588,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             MirrorManager.startMirrorMonitoring()
         }
 	}
+    
+    @objc private func insertedItems(_ notification: Notification) {
+        guard let count = notification.object as? Int, count > 0 else { return }
+        collection.performBatchUpdates({
+            let ips = (0 ..< count).map { IndexPath(item: $0, section: 0) }
+            collection.insertItems(at: ips)
+        }, completion: nil)
+    }
 
 	deinit {
 		Model.doneMonitoringChanges()
@@ -667,68 +669,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
         Model.donatePasteIntent()
-		pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil, skipVisibleErrors: false)
-	}
-
-	@discardableResult
-	func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?, skipVisibleErrors: Bool) -> PasteResult {
-		
-		if providers.count == 0 {
-			if !skipVisibleErrors {
-				genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")
-			}
-			return .noData
-		}
-
-		if IAPManager.shared.checkInfiniteMode(for: 1) {
-			return .tooManyItems
-		}
-
-		for provider in providers { // separate item for each provider in the pasteboard
-			for item in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
-
-				if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-					item.labels = Model.enabledLabelsForItems
-				}
-
-				let destinationIndexPath = IndexPath(item: 0, section: 0)
-
-				var itemVisiblyInserted = false
-				collection.performBatchUpdates({
-					Model.drops.insert(item, at: 0)
-					Model.forceUpdateFilter(signalUpdate: false)
-					itemVisiblyInserted = Model.filteredDrops.contains(item)
-					if itemVisiblyInserted {
-						collection.insertItems(at: [destinationIndexPath])
-						collection.isAccessibilityElement = false
-					}
-				}, completion: { finished in
-					if itemVisiblyInserted {
-						self.collection.scrollToItem(at: destinationIndexPath, at: .centeredVertically, animated: true)
-						self.mostRecentIndexPathActioned = destinationIndexPath
-					}
-					self.focusInitialAccessibilityElement()
-				})
-
-				updateEmptyView(animated: true)
-			}
-		}
-
-		startBgTaskIfNeeded()
-		return .success
+        if Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) == .noData {
+            genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")
+        }
 	}
 
 	@objc private func detailViewClosing() {
 		ensureNoEmptySearchResult()
-	}
-
-	func sendToTop(item: ArchivedDropItem) {
-		guard let i = Model.drops.firstIndex(of: item) else { return }
-		Model.drops.remove(at: i)
-		Model.drops.insert(item, at: 0)
-		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData(onlyIfPopulated: false)
-		Model.saveIndexOnly()
 	}
 
 	private var lowMemoryMode = false {
@@ -1519,10 +1466,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 					   destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
 					   cancelTitle: String? = nil) {
 
-		ViewController.shared.dismissAnyPopOver()
+		dismissAnyPopOver()
 
 		if searchActive || Model.isFiltering {
-			ViewController.shared.resetSearch(andLabels: true)
+			resetSearch(andLabels: true)
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)

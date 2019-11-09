@@ -471,7 +471,7 @@ final class DetailController: GladysViewController,
                                 
                 let scene = s.view.window?.windowScene
                 guard let q = typeEntry.quickLook(in: scene) else { return }
-				if ViewController.shared.phoneMode || !PersistedOptions.fullScreenPreviews {
+                if s.phoneMode || !PersistedOptions.fullScreenPreviews {
                     let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
                     n.qlController = q
 					s.navigationController?.pushViewController(n, animated: true)

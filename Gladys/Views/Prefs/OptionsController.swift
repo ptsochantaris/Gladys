@@ -91,7 +91,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
-		if ViewController.shared.phoneMode {
+		if phoneMode {
             NotificationCenter.default.post(name: .ForceLayoutRequested, object: nil)
 		}
 	}

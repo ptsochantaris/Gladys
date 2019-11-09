@@ -573,7 +573,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         children.append(makeAction(title: "Move to Top", callback: {
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-            ViewController.shared.sendToTop(item: item)
+            Model.sendToTop(items: [item])
         }, style: [], iconName: "arrow.turn.left.up"))
         
         children.append(makeAction(title: "Copy to Clipboard", callback: {

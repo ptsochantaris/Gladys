@@ -68,8 +68,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 			} else {
 				titleString = mimeType
 			}
-			ViewController.shared.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil), skipVisibleErrors: false)
-			genericAlert(title: nil, message: "Extracted as new item", buttonTitle: nil)
+            if Model.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil)) != .noData {
+                genericAlert(title: nil, message: "Extracted as new item", buttonTitle: nil)
+            }
 		}
 	}
 

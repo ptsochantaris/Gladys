@@ -721,4 +721,17 @@ extension Model {
 			throw e
 		}
 	}
+    
+    static func sendToTop(items: [ArchivedDropItem]) {
+        let uuids = Set(items.map { $0.uuid })
+        let cut = drops.filter { uuids.contains($0.uuid) }
+        if cut.isEmpty { return }
+        
+        drops.removeAll { uuids.contains($0.uuid) }
+        drops.insert(contentsOf: cut, at: 0)
+
+        forceUpdateFilter(signalUpdate: false)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: false)
+        saveIndexOnly()
+    }
 }

@@ -70,16 +70,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             ViewController.executeOrQueue {
                 IAPManager.shared.displayRequest(newTotal: t)
             }
-            
-        } else if let c = url.host, c == "paste-clipboard" { // this is legacy
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
-            let noteParameter = components?.queryItems?.first { $0.name == "note" }
-            let labelsList = components?.queryItems?.first { $0.name == "labels" }
-            ViewController.executeOrQueue {
-                CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
-            }
-            
+                        
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)

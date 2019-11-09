@@ -22,10 +22,17 @@ struct HighlightRequest {
     }
 }
 
+struct PasteRequest {
+    let providers: [NSItemProvider]
+    let overrides: ImportOverrides?
+    let skipVisibleErrors: Bool
+}
+
 extension Notification.Name {
 	static let SaveComplete = Notification.Name("SaveComplete")
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
 	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
+    static let ItemsCreated = Notification.Name("ItemsCreated")
 	static let ItemModified = Notification.Name("ItemModified")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")

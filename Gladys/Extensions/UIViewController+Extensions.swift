@@ -39,4 +39,9 @@ extension UIViewController {
         vc.view.removeFromSuperview()
         vc.removeFromParent()
     }
+    
+    var phoneMode: Bool {
+        guard let t = view.window?.traitCollection else { return false }
+        return t.horizontalSizeClass == .compact || t.verticalSizeClass == .compact
+    }
 }

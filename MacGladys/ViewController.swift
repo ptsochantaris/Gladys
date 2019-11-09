@@ -200,6 +200,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	var itemView: MainCollectionView {
 		return collection
 	}
+    
+    private func insertItems(count: Int) {
+        collection.deselectAll(nil)
+        let ips = (0 ..< count).map { IndexPath(item: $0, section: 0) }
+        collection.animator().insertItems(at: Set(ips))
+    }
 
 	private func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
 		let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
@@ -308,10 +314,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             guard let request = notification.object as? HighlightRequest else { return }
             self?.highlightItem(with: request)
         }
+        
+        let a13 = n.addObserver(forName: .ItemsCreated, object: nil, queue: .main) { [weak self] notification in
+            guard let count = notification.object as? Int, count > 0 else { return }
+            self?.insertItems(count: count)
+        }
 
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12]
+		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -1033,15 +1044,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func moveToTop(_ sender: Any?) {
-		for item in collection.actionableSelectedItems {
-			if let i = Model.drops.firstIndex(of: item) {
-				Model.drops.remove(at: i)
-				Model.drops.insert(item, at: 0)
-			}
-		}
-		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData()
-		Model.save()
+        Model.sendToTop(items: collection.actionableSelectedItems)
 	}
 
 	@objc func delete(_ sender: Any?) {

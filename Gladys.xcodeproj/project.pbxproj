@@ -162,6 +162,8 @@
 		1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		165847062376CC2400666B7B /* Model+Siri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165847052376CC2400666B7B /* Model+Siri.swift */; };
 		165847072376D4BB00666B7B /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
+		165847092376EE4A00666B7B /* Model+Importing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165847082376EE4A00666B7B /* Model+Importing.swift */; };
+		1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
 		1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */; };
 		165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		165A567F218EE52900E27C22 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
@@ -325,7 +327,6 @@
 		16CD7D9D20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
 		16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9C20A117BA0039E6C2 /* CloudManager+UICommon.swift */; };
 		16CD7DB820A124390039E6C2 /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
-		16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
@@ -694,6 +695,7 @@
 		1657B8C31FD4329300EC480D /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		1657B8C51FD4381700EC480D /* ArchivedDropItem+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Messages.swift"; sourceTree = "<group>"; };
 		165847052376CC2400666B7B /* Model+Siri.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Siri.swift"; sourceTree = "<group>"; };
+		165847082376EE4A00666B7B /* Model+Importing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Importing.swift"; sourceTree = "<group>"; };
 		1658722B1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepPressGestureRecognizer.swift; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
@@ -1073,6 +1075,7 @@
 				1619E8161EFF3745000087DD /* MirrorManager.swift */,
 				166B638F236A451F00115AC3 /* FileMonitor.swift */,
 				165847052376CC2400666B7B /* Model+Siri.swift */,
+				165847082376EE4A00666B7B /* Model+Importing.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2314,6 +2317,7 @@
 				16C3A2D920AF770000A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
+				1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */,
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
@@ -2337,7 +2341,6 @@
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
 				162BDD7B220F021000A3C17B /* Logging.swift in Sources */,
-				16CD7DBE20A124390039E6C2 /* Model+UICommon.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
@@ -2585,6 +2588,7 @@
 				166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16CD7D8F20A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
+				165847092376EE4A00666B7B /* Model+Importing.swift in Sources */,
 				16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,

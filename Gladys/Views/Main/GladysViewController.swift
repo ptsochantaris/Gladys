@@ -105,7 +105,7 @@ class GladysViewController: UIViewController {
                     showDone(ViewController.shared.traitCollection.verticalSizeClass == .compact)
                 }
             } else { // full window?
-                showDone(popoverPresentationController == nil || ViewController.shared.phoneMode || isInStandaloneWindow)
+                showDone(popoverPresentationController == nil || phoneMode || isInStandaloneWindow)
             }
         }
     }

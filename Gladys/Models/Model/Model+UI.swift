@@ -45,7 +45,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 			}
 
 		} else if let uuid = message["moveToTop"] as? String, let item = Model.item(uuid: uuid) {
-			ViewController.shared.sendToTop(item: item)
+            Model.sendToTop(items: [item])
 			DispatchQueue.global(qos: .userInitiated).async {
 				replyHandler([:])
 			}
@@ -290,7 +290,5 @@ extension Model {
     
     static func deleteMirror(completion: @escaping ()->Void) {
         MirrorManager.removeMirrorIfNeeded(completion: completion)
-    }
-    
-    
+    }    
 }
