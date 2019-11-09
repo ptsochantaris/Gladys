@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eMV-4y-lvX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
@@ -1779,7 +1779,7 @@ Selecting them will show only items that contain these labels.</string>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailContentController" automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o6P-jX-a91">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2668,10 +2668,37 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="5707" y="1115"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="guN-Qh-8Za">
+            <objects>
+                <viewController id="kiZ-3T-dZQ" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Wk5-yt-ach">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z5b-ii-Xc2">
+                                <rect key="frame" x="150" y="323" width="75" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
+                        <constraints>
+                            <constraint firstItem="Z5b-ii-Xc2" firstAttribute="centerX" secondItem="Wk5-yt-ach" secondAttribute="centerX" id="2yW-ML-8qr"/>
+                            <constraint firstItem="Z5b-ii-Xc2" firstAttribute="centerY" secondItem="Wk5-yt-ach" secondAttribute="centerY" id="JwO-yd-axZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="9yY-D5-eut"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pRm-2F-1Mk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-325.60000000000002" y="942.27886056971522"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="Central" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="oc1-ut-DYH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>

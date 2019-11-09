@@ -82,8 +82,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let activity = connectionOptions.userActivities.first { // new scene
             handleActivity(activity, in: scene)
             
-        } else if let activity = session.stateRestorationActivity { // restoring scene
-            handleActivity(activity, in: scene)
+        } else {
+            handleActivity(session.stateRestorationActivity, in: scene)
         }
     }
     
@@ -146,20 +146,21 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func handleActivity(_ userActivity: NSUserActivity, in scene: UIScene) {
+    private func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene) {
         guard let scene = scene as? UIWindowScene else { return }
         waitForBoot(in: scene) {
             self.handleActivityAfterBoot(userActivity: userActivity, in: scene)
         }
     }
-    
-    private func handleActivityAfterBoot(userActivity: NSUserActivity, in scene: UIWindowScene) {
+        
+    private func handleActivityAfterBoot(userActivity: NSUserActivity?, in scene: UIWindowScene) {
         
         scene.session.stateRestorationActivity = userActivity
                                 
-        switch userActivity.activityType {
+        switch userActivity?.activityType {
         case kGladysQuicklookActivity:
-            if //detail view
+            if
+                let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
                 let item = Model.item(uuid: uuidString) {
@@ -175,14 +176,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     guard let q = child.quickLook(in: scene) else { return }
                     let n = PreviewHostingViewController(rootViewController: q)
                     scene.windows.first?.rootViewController = n
+                    return
 
-                } else {
-                    UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
                 }
             }
 
         case kGladysDetailViewingActivity:
-            if //detail view
+            if
+                let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
                 let item = Model.item(uuid: uuidString) {
@@ -191,23 +192,28 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let d = n.viewControllers.first as! DetailController
                 d.item = item
                 scene.windows.first?.rootViewController = n
-            } else {
-                UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+                return
             }
 
         case CSSearchableItemActionType:
-            if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+            if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier)
                 NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                return
             }
 
         case CSQueryContinuationActionType:
-            if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
+            if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
                 NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery)
+                return
             }
             
-        default: break
+        default:
+            scene.windows.first?.rootViewController = scene.session.configuration.storyboard?.instantiateViewController(identifier: "Central")
+            return
         }
+        
+        UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -219,12 +225,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
         
     func sceneWillEnterForeground(_ scene: UIScene) {
-        if scene.isMaster { // master scene
-            if PersistedOptions.mirrorFilesToDocuments {
-                Model.scanForMirrorChanges {}
-            }
-            CloudManager.opportunisticSyncIfNeeded(isStartup: false)
+        if PersistedOptions.mirrorFilesToDocuments {
+            Model.scanForMirrorChanges {}
         }
+        CloudManager.opportunisticSyncIfNeeded(isStartup: false)
     }
     
     private var booted = false
