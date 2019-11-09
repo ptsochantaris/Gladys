@@ -9,10 +9,15 @@
 import UIKit
 import CoreSpotlight
 
+extension UISceneSession {
+    var isMaster: Bool {
+        return stateRestorationActivity == nil
+    }
+}
+
 extension UIScene {
-    var isDetail: Bool {
-        let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
-        return n?.topViewController is DetailController
+    var isMaster: Bool {
+        return session.isMaster
     }
     var firstController: UIViewController? {
         let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
@@ -24,12 +29,129 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity
-        setupScene(scene: scene, activity: activity)
+        if let activity = connectionOptions.userActivities.first { // new scene
+            handleActivity(activity, in: scene)
+            
+        } else if let activity = session.stateRestorationActivity { // restoring scene
+            handleActivity(activity, in: scene)
+
+        }
     }
         
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        setupScene(scene: scene, activity: userActivity)
+        handleActivity(userActivity, in: scene) // handoff
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        for c in URLContexts {
+            openUrl(c.url, options: c.options)
+        }
+    }
+    
+    private func openUrl(_ url: URL, options: UIScene.OpenURLOptions) {
+        
+        if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
+            ViewController.executeOrQueue {
+                ViewController.shared.highlightItem(with: itemId, andOpen: true)
+            }
+            
+        } else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
+            ViewController.executeOrQueue {
+                IAPManager.shared.displayRequest(newTotal: t)
+            }
+            
+        } else if let c = url.host, c == "paste-clipboard" { // this is legacy
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
+            let noteParameter = components?.queryItems?.first { $0.name == "note" }
+            let labelsList = components?.queryItems?.first { $0.name == "labels" }
+            ViewController.executeOrQueue {
+                CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
+            }
+            
+        } else if url.host == nil { // just opening
+            if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
+                let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
+                a.addAction(UIAlertAction(title: "Import", style: .destructive) { _ in
+                    var securityScoped = false
+                    if options.openInPlace {
+                        securityScoped = url.startAccessingSecurityScopedResource()
+                    }
+                    do {
+                        try Model.importArchive(from: url, removingOriginal: !options.openInPlace)
+                    } catch {
+                        genericAlert(title: "Could not import data", message: error.finalDescription)
+                    }
+                    if securityScoped {
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                })
+                a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                ViewController.executeOrQueue {
+                    ViewController.top.present(a, animated: true)
+                }
+            }
+            
+        } else if !PersistedOptions.blockGladysUrlRequests {
+            ViewController.executeOrQueue {
+                CallbackSupport.handlePossibleCallbackURL(url: url)
+            }
+        }
+    }
+        
+    private func handleActivity(_ userActivity: NSUserActivity, in scene: UIScene) {
+        guard let scene = scene as? UIWindowScene else { return }
+        waitForBoot(in: scene) {
+            self.handleActivityAfterBoot(userActivity: userActivity, in: scene)
+        }
+    }
+    
+    private func handleActivityAfterBoot(userActivity: NSUserActivity, in scene: UIWindowScene) {
+        
+        scene.session.stateRestorationActivity = userActivity
+                                
+        switch userActivity.activityType {
+        case kGladysQuicklookActivity:
+            if //detail view
+                let userInfo = userActivity.userInfo,
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
+                let item = Model.item(uuid: uuidString) {
+                    
+                let child: ArchivedDropItemType?
+                if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
+                    child = Model.typeItem(uuid: childUuid)
+                } else {
+                    child = item.previewableTypeItem
+                }
+                
+                if let child = child {
+                    self.showQuicklook(for: item, child: child, in: scene)
+                } else {
+                    UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+                }
+            }
+
+        case kGladysDetailViewingActivity:
+            if //detail view
+                let userInfo = userActivity.userInfo,
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
+                let item = Model.item(uuid: uuidString) {
+
+                self.showDetail(for: item, in: scene)
+            }
+
+        case CSSearchableItemActionType:
+            if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+                ViewController.shared.highlightItem(with: itemIdentifier)
+            }
+
+        case CSQueryContinuationActionType:
+            if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
+                ViewController.shared.startSearch(initialText: searchQuery)
+            }
+            
+        default: break
+        }
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -37,82 +159,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
         
     func sceneWillEnterForeground(_ scene: UIScene) {
-        if !scene.isDetail { // master scene
+        if scene.isMaster { // master scene
             if PersistedOptions.mirrorFilesToDocuments {
                 Model.scanForMirrorChanges {}
             }
         }
+        CloudManager.opportunisticSyncIfNeeded(isStartup: false)
     }
         
-    private func setupScene(scene: UIScene, activity: NSUserActivity?) {
-        guard let scene = scene as? UIWindowScene else { return }
-
-        let app = UIApplication.shared
-        
-        guard let activity = activity else {
-            // don't start two mains
-            for otherMain in app.openSessions.filter({ $0.stateRestorationActivity == nil && $0 !== scene.session }) {
-                app.requestSceneSessionDestruction(otherMain, options: nil, errorHandler: nil)
-            }
-            return // no activity, we're done
-        }
-        
-        if scene.session.stateRestorationActivity == nil {
-            scene.session.stateRestorationActivity = activity
-        }
-        
-        switch activity.activityType {
-        case kGladysQuicklookActivity:
-            if //detail view
-                let userInfo = activity.userInfo,
-                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
-                let item = Model.item(uuid: uuidString) {
-                waitForBoot(count: 0, in: scene) {
-                    
-                    let child: ArchivedDropItemType?
-                    if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                        child = Model.typeItem(uuid: childUuid)
-                    } else {
-                        child = item.previewableTypeItem
-                    }
-                    
-                    if let child = child {
-                        self.showQuicklook(for: item, child: child, in: scene)
-                    } else {
-                        UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
-                    }
-                }
-            }
-
-        case kGladysDetailViewingActivity:
-            if //detail view
-                let userInfo = activity.userInfo,
-                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
-                let item = Model.item(uuid: uuidString) {
-                waitForBoot(count: 0, in: scene) {
-                    self.showDetail(for: item, in: scene)
-                }
-            }
-
-        case CSSearchableItemActionType:
-            if let itemIdentifier = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-                ViewController.shared.highlightItem(with: itemIdentifier)
-            }
-
-        case CSQueryContinuationActionType:
-            if let searchQuery = activity.userInfo?[CSSearchQueryString] as? String {
-                ViewController.shared.startSearch(initialText: searchQuery)
-            }
-            
-        default: break
-        }
-        
-        //if sessionForMain == nil { // need main app instance before we proceed
-            //app.requestSceneSessionActivation(nil, userActivity: nil, options: nil, errorHandler: nil)
-        //}
-    }
-    
-    private func waitForBoot(count: Int, in scene: UIWindowScene, completion: @escaping ()->Void) {
+    private func waitForBoot(count: Int = 0, in scene: UIWindowScene, completion: @escaping ()->Void) {
         if ViewController.shared == nil {
             if count == 0 {
                 let v = UIViewController()
@@ -123,7 +178,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
                 return
             }
-            
+                        
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.waitForBoot(count: count + 1, in: scene, completion: completion)
             }

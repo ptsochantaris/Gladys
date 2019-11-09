@@ -1258,7 +1258,11 @@ UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentatio
         firstPresentedAlertController?.dismiss(animated: true) {
             completion?()
         }
-        firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true) {
+        let vc = firstPresentedNavigationController?.viewControllers.first
+        vc?.dismiss(animated: true) {
+            completion?()
+        }
+        if firstPresentedAlertController == nil || vc == nil {
             completion?()
         }
 	}

@@ -12,104 +12,7 @@ import CloudKit
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-        
-	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-
-		if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
-			ViewController.executeOrQueue {
-				ViewController.shared.highlightItem(with: itemId, andOpen: true)
-			}
-            return true
-
-		} else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
-			ViewController.executeOrQueue {
-				IAPManager.shared.displayRequest(newTotal: t)
-			}
-            return true
-
-		} else if let c = url.host, c == "paste-clipboard" { // this is legacy
-			let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-			let titleParameter = components?.queryItems?.first { $0.name == "title" || $0.name == "label" }
-			let noteParameter = components?.queryItems?.first { $0.name == "note" }
-			let labelsList = components?.queryItems?.first { $0.name == "labels" }
-			ViewController.executeOrQueue {
-				CallbackSupport.handlePasteRequest(title: titleParameter?.value, note: noteParameter?.value, labels: labelsList?.value, skipVisibleErrors: false)
-			}
-            return true
-
-		} else if url.host == nil { // just opening
-			if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive" {
-				let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
-				a.addAction(UIAlertAction(title: "Import", style: .destructive) { _ in
-					let inPlace = options[.openInPlace] as? Bool ?? false
-					var securityScoped = false
-					if inPlace {
-						securityScoped = url.startAccessingSecurityScopedResource()
-					}
-					do {
-						try Model.importArchive(from: url, removingOriginal: !inPlace)
-					} catch {
-						genericAlert(title: "Could not import data", message: error.finalDescription)
-					}
-					if securityScoped {
-						url.stopAccessingSecurityScopedResource()
-					}
-				})
-				a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-				ViewController.executeOrQueue {
-					ViewController.top.present(a, animated: true)
-				}
-			}
-            return true
-
-		} else if !PersistedOptions.blockGladysUrlRequests {
-			ViewController.executeOrQueue {
-				CallbackSupport.handlePossibleCallbackURL(url: url)
-			}
-            return true
-		}
-
-        return false
-	}
     
-	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-
-		switch userActivity.activityType {
-		case CSSearchableItemActionType:
-			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-				ViewController.shared.highlightItem(with: itemIdentifier)
-			}
-			return true
-
-		case CSQueryContinuationActionType:
-			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-				ViewController.shared.startSearch(initialText: searchQuery)
-			}
-			return true
-
-		case kGladysDetailViewingActivity:
-			if let userInfo = userActivity.userInfo, let uuid = userInfo[kGladysDetailViewingActivityItemUuid] as? UUID { // legacy
-				ViewController.shared.highlightItem(with: uuid.uuidString, andOpen: true)
-			} else if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-				ViewController.shared.highlightItem(with: uuidString, andOpen: true)
-			}
-			return true
-
-		case kGladysQuicklookActivity:
-			if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-				let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
-				ViewController.shared.highlightItem(with: uuidString, andPreview: true, focusOnChild: childUuid)
-			}
-			return true
-
-		case "PasteClipboardIntent", "CopyItemIntent", "CopyComponentIntent":
-			return true
-
-		default:
-			return false
-		}
-	}
-        
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		Model.reloadDataIfNeeded()
@@ -120,15 +23,21 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		log("Initial reachability status: \(reachability.status.name)")
 		CallbackSupport.setupCallbackSupport()
 		IAPManager.shared.start()
+        
+        for s in application.openSessions where !s.isMaster { // kill all detail views
+            application.requestSceneSessionDestruction(s, options: nil, errorHandler: nil)
+        }
+        
+        let masterSessions = application.openSessions.filter { $0.isMaster }
+        masterSessions.dropFirst().forEach { // kill all masters except one
+            application.requestSceneSessionDestruction($0, options: nil, errorHandler: nil)
+        }
+        
 		return true
 	}
-
+    
 	func applicationWillTerminate(_ application: UIApplication) {
 		IAPManager.shared.stop()
-	}
-
-	func applicationWillEnterForeground(_ application: UIApplication) {
-		CloudManager.opportunisticSyncIfNeeded(isStartup: false)
 	}
 
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
