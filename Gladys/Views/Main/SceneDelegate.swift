@@ -22,16 +22,7 @@ extension UIWindow {
     }
 }
 
-extension UISceneSession {
-    var isMaster: Bool {
-        return stateRestorationActivity == nil
-    }
-}
-
 extension UIScene {
-    var isMaster: Bool {
-        return session.isMaster
-    }
     var firstController: UIViewController? {
         let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
         return n?.viewControllers.first
@@ -88,34 +79,41 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        waitForBoot(in: windowScene) {
-            if shortcutItem.type.hasSuffix(".Search") {
-                NotificationCenter.default.post(name: .StartSearchRequest, object: nil)
-            } else if shortcutItem.type.hasSuffix(".Paste") {
-                NotificationCenter.default.post(name: .ForcePasteRequest, object: nil)
-            }
-            completionHandler(true)
+
+        if shortcutItem.type.hasSuffix(".Search") {
+            showMaster(andHandle: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
+
+        } else if shortcutItem.type.hasSuffix(".Paste") {
+            showMaster(andHandle: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
+
         }
+        completionHandler(true)
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        handleActivity(userActivity, in: scene) // handoff
+        showMaster(andHandle: userActivity, in: scene)
+    }
+    
+    private func showMaster(andHandle activity: NSUserActivity?, in scene: UIScene?) {
+        let masterSession = UIApplication.shared.openSessions.first { $0.stateRestorationActivity == nil }
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = scene
+        UIApplication.shared.requestSceneSessionActivation(masterSession, userActivity: activity, options: options, errorHandler: nil)
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let scene = scene as? UIWindowScene else { return }
-        waitForBoot(in: scene) {
-            for c in URLContexts {
-                self.openUrl(c.url, options: c.options, in: scene)
-            }
+        for c in URLContexts {
+            self.openUrl(c.url, options: c.options, in: scene)
         }
     }
     
     private func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
-            let request = HighlightRequest(uuid: itemId, open: true)
-            NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+            let activity = NSUserActivity(activityType: CSSearchableItemActionType)
+            activity.userInfo = [CSSearchableItemActivityIdentifier: itemId]
+            showMaster(andHandle: activity, in: scene)
             
         } else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
             IAPManager.shared.displayRequest(newTotal: t)
@@ -148,15 +146,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene) {
         guard let scene = scene as? UIWindowScene else { return }
-        waitForBoot(in: scene) {
-            self.handleActivityAfterBoot(userActivity: userActivity, in: scene)
-        }
-    }
-        
-    private func handleActivityAfterBoot(userActivity: NSUserActivity?, in scene: UIWindowScene) {
         
         scene.session.stateRestorationActivity = userActivity
-                                
+        
         switch userActivity?.activityType {
         case kGladysQuicklookActivity:
             if
@@ -194,63 +186,51 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 scene.windows.first?.rootViewController = n
                 return
             }
+            
+        case kGladysStartPasteShortcutActivity:
+            showCentral(in: scene) { NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
+            return
+
+        case kGladysStartSearchShortcutActivity:
+            showCentral(in: scene) { NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
+            return
 
         case CSSearchableItemActionType:
             if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                showCentral(in: scene) { NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
                 return
             }
 
         case CSQueryContinuationActionType:
             if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-                NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery)
+                showCentral(in: scene) { NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
                 return
             }
-            
+
         default:
-            scene.windows.first?.rootViewController = scene.session.configuration.storyboard?.instantiateViewController(identifier: "Central")
+            showCentral(in: scene) {}
             return
         }
         
         UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
     }
     
+    private func showCentral(in scene: UIWindowScene, completion: @escaping ()->Void) {
+        let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
+        let v = n.viewControllers.first as! ViewController
+        v.onLoad = completion
+        scene.windows.first?.rootViewController = n
+    }
+    
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         return scene.firstController?.userActivity
     }
-    
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        booted = true
-    }
-        
+            
     func sceneWillEnterForeground(_ scene: UIScene) {
         if PersistedOptions.mirrorFilesToDocuments {
             Model.scanForMirrorChanges {}
         }
         CloudManager.opportunisticSyncIfNeeded(isStartup: false)
-    }
-    
-    private var booted = false
-    
-    private func waitForBoot(count: Int = 0, in scene: UIWindowScene, completion: @escaping ()->Void) {
-        if booted {
-            completion()
-            return
-        }
-
-        if count == 0 {
-            let v = UIViewController()
-            v.view.backgroundColor = UIColor(named: "colorPaper")
-            scene.windows.first?.rootViewController = v
-            
-        } else if count == 10 {
-            UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
-            return
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.waitForBoot(count: count + 1, in: scene, completion: completion)
-        }
     }
 }

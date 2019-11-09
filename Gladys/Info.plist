@@ -104,8 +104,8 @@
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>iconActionSearch</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeSearch</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Search</string>
 			<key>UIApplicationShortcutItemType</key>
@@ -117,8 +117,8 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>iconActionPaste</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeUpdate</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Paste</string>
 			<key>UIApplicationShortcutItemType</key>

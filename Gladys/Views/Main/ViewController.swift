@@ -501,6 +501,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		dragModePanel.layer.cornerRadius = 100
 		dragModePanel.alpha = 0
 	}
+    
+    var onLoad: (()->Void)?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -575,6 +577,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             MirrorManager.startMirrorMonitoring()
         }
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let o = onLoad {
+            o()
+            onLoad = nil
+        }
+    }
     
     @objc private func resetSearchRequest() {
         if searchActive || Model.isFiltering {
@@ -1255,6 +1265,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 s.searchBar.text = initialText
             }
 			s.isActive = true
+            s.searchBar.becomeFirstResponder()
 		}
 	}
 

@@ -1,6 +1,11 @@
 
 import Foundation
 
+#if MAINAPP
+let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
+let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
+#endif
+
 #if MAINAPP || MAC
 let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
 let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
