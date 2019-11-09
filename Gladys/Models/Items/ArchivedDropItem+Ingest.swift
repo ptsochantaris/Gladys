@@ -34,7 +34,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
         needsReIngest = false
-                
+
 		NotificationCenter.default.post(name: .IngestComplete, object: self)
 	}
 
@@ -47,6 +47,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 	}
 
 	func reIngest() {
+        NotificationCenter.default.post(name: .IngestStart, object: self)
+
 		loadCount = typeItems.count
 		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
 		needsUnlock = lockPassword != nil && !wasExplicitlyUnlocked
@@ -91,6 +93,9 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
     }
 
 	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) -> Progress {
+        
+        NotificationCenter.default.post(name: .IngestStart, object: self)
+
 		var progressChildren = [Progress]()
 
 		for provider in providers {

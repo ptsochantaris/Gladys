@@ -411,11 +411,11 @@
             <objects>
                 <viewController id="XPV-LI-EHc" customClass="LabelSelector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9l2-YE-hbb">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9At-u8-ZrJ">
-                                <rect key="frame" x="0.0" y="44" width="240" height="196"/>
+                                <rect key="frame" x="0.0" y="56" width="240" height="404"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelToggleCell" rowHeight="70" id="pwg-9e-MlX" customClass="LabelToggleCell" customModule="Gladys" customModuleProvider="target">
@@ -465,7 +465,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOj-EL-dRw">
-                                <rect key="frame" x="30" y="0.0" width="180" height="240"/>
+                                <rect key="frame" x="24" y="214" width="192" height="88"/>
                                 <string key="text">You can add labels to items, and they will appear here.
 
 Selecting them will show only items that contain these labels.</string>
@@ -473,17 +473,26 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWn-S9-INk">
+                                <rect key="frame" x="80.5" y="346" width="79" height="38"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeSelected:" destination="XPV-LI-EHc" eventType="touchUpInside" id="UM2-sP-yGV"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="BE5-Vu-R9c" firstAttribute="bottom" secondItem="9At-u8-ZrJ" secondAttribute="bottom" id="8Jj-3h-ghd"/>
-                            <constraint firstAttribute="bottom" secondItem="YOj-EL-dRw" secondAttribute="bottom" id="XrU-AJ-Z0Q"/>
+                            <constraint firstItem="YOj-EL-dRw" firstAttribute="centerX" secondItem="9At-u8-ZrJ" secondAttribute="centerX" id="8rZ-I1-2Sa"/>
+                            <constraint firstItem="YOj-EL-dRw" firstAttribute="centerY" secondItem="BE5-Vu-R9c" secondAttribute="centerY" id="Rtl-dT-Hhi"/>
+                            <constraint firstItem="YOj-EL-dRw" firstAttribute="width" secondItem="9At-u8-ZrJ" secondAttribute="width" multiplier="0.8" id="SD3-Kb-ZQK"/>
+                            <constraint firstItem="FWn-S9-INk" firstAttribute="centerX" secondItem="YOj-EL-dRw" secondAttribute="centerX" id="Wlg-wV-VNf"/>
                             <constraint firstItem="9At-u8-ZrJ" firstAttribute="leading" secondItem="BE5-Vu-R9c" secondAttribute="leading" id="bcc-80-aIw"/>
-                            <constraint firstItem="YOj-EL-dRw" firstAttribute="top" secondItem="9l2-YE-hbb" secondAttribute="top" id="igw-jh-xkC"/>
                             <constraint firstItem="9At-u8-ZrJ" firstAttribute="top" secondItem="BE5-Vu-R9c" secondAttribute="top" id="mHF-Ew-hTT"/>
-                            <constraint firstItem="BE5-Vu-R9c" firstAttribute="trailing" secondItem="YOj-EL-dRw" secondAttribute="trailing" constant="30" id="nAK-Pm-IqA"/>
-                            <constraint firstItem="YOj-EL-dRw" firstAttribute="leading" secondItem="BE5-Vu-R9c" secondAttribute="leading" constant="30" id="s4Z-TV-i9z"/>
                             <constraint firstItem="BE5-Vu-R9c" firstAttribute="trailing" secondItem="9At-u8-ZrJ" secondAttribute="trailing" id="v8T-aD-HKI"/>
+                            <constraint firstItem="YOj-EL-dRw" firstAttribute="bottom" secondItem="FWn-S9-INk" secondAttribute="top" constant="-44" id="yvr-8v-FOn"/>
                         </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="BE5-Vu-R9c"/>
@@ -496,16 +505,17 @@ Selecting them will show only items that contain these labels.</string>
                         </barButtonItem>
                     </navigationItem>
                     <value key="contentSizeForViewInPopover" type="size" width="240" height="240"/>
-                    <size key="freeformSize" width="240" height="240"/>
+                    <size key="freeformSize" width="240" height="480"/>
                     <connections>
                         <outlet property="clearAllButton" destination="odU-hR-vng" id="Xhq-qy-2Ax"/>
+                        <outlet property="closeButton" destination="FWn-S9-INk" id="TOI-dU-SyR"/>
                         <outlet property="emptyLabel" destination="YOj-EL-dRw" id="br0-0c-FhJ"/>
                         <outlet property="table" destination="9At-u8-ZrJ" id="Rdo-vl-HRE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kTp-Ow-OyL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1613" y="1998"/>
+            <point key="canvasLocation" x="1613" y="2034"/>
         </scene>
         <!--Preferences Controller-->
         <scene sceneID="UOX-0n-X4D">

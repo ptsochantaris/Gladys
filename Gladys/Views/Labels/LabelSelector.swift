@@ -11,9 +11,10 @@ import UIKit
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
 
 	@IBOutlet private weak var table: UITableView!
-	@IBOutlet private var clearAllButton: UIBarButtonItem!
+	@IBOutlet private weak var clearAllButton: UIBarButtonItem!
 	@IBOutlet private weak var emptyLabel: UILabel!
-
+    @IBOutlet private weak var closeButton: UIButton!
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneLocation = .left
@@ -54,7 +55,11 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
 	}
 
-	@objc private func labelsUpdated() {
+    @IBAction private func closeSelected(_ sender: UIButton) {
+        done()
+    }
+    
+    @objc private func labelsUpdated() {
 		table.reloadData()
 		clearAllButton.isEnabled = Model.isFilteringLabels
 	}
@@ -173,7 +178,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-        view.backgroundColor = navigationItem.leftBarButtonItem != nil ? UIColor.systemBackground : .clear
+        let fullscreen = navigationItem.leftBarButtonItem != nil
+        view.backgroundColor = fullscreen ? UIColor.systemBackground : .clear
+        closeButton.isHidden = !fullscreen
 	}
 
 	/////////////// search

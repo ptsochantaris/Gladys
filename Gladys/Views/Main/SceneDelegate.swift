@@ -47,6 +47,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         super.init()
         
         let n = NotificationCenter.default
+        n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
     }
@@ -56,10 +57,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Model.detectExternalChanges()
     }
     
+    private var ingestRunning = false
+    @objc private func ingestStart(_ notification: Notification) {
+        if !ingestRunning {
+            ingestRunning = true
+            BackgroundTask.registerForBackground()
+        }
+    }
+    
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedDropItem else { return }
         if Model.doneIngesting {
             Model.save()
+            if ingestRunning {
+                BackgroundTask.unregisterForBackground()
+                ingestRunning = false
+            }
         } else {
             Model.commitItem(item: item)
         }
@@ -73,7 +86,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             handleActivity(activity, in: scene)
         }
     }
-        
+    
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         waitForBoot(in: windowScene) {
             if shortcutItem.type.hasSuffix(".Search") {

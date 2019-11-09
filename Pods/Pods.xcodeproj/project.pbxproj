@@ -1398,13 +1398,10 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1120;
 				TargetAttributes = {
-					8B5BB2050078EFCACBEDC5B4195B80CD = {
-						LastSwiftMigration = 1110;
-					};
 					9AF8AE8821E967844EEF26BBB341564D = {
-						LastSwiftMigration = 1110;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -1414,7 +1411,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = DFBF72BD04324572F77C34C36345DDD0 /* Products */;

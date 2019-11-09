@@ -30,7 +30,13 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		updateFilter(nil)
+        doneLocation = .left
 	}
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        view.backgroundColor = navigationItem.leftBarButtonItem != nil ? UIColor.systemBackground : .clear
+    }
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
