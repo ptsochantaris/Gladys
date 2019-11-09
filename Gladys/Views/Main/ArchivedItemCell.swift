@@ -577,7 +577,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         
         children.append(makeAction(title: "Info Panel", callback: {
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-            NotificationCenter.default.post(name: .SegueRequest, object: "showDetail")
+            NotificationCenter.default.post(name: .SegueRequest, object: ["name": "showDetail", "sender": item])
         }, style: [], iconName: "list.bullet.below.rectangle"))
         
         children.append(makeAction(title: "Move to Top", callback: {

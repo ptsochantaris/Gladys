@@ -594,8 +594,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func segueRequest(_ notification: Notification) {
-        guard let name = notification.object as? String else { return }
-        performSegue(withIdentifier: name, sender: nil)
+        guard
+            let info = notification.object as? [AnyHashable: Any],
+            let name = info["name"] as? String
+            else { return }
+        performSegue(withIdentifier: name, sender: info["sender"])
     }
     
     @objc private func uiRequest(_ notification: Notification) {
@@ -1240,8 +1243,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
-		item.needsReIngest = false
-
 		if let i = Model.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 			if currentDetailView == nil {
@@ -1261,16 +1262,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
 		if Model.doneIngesting {
-			Model.save()
 			UIAccessibility.post(notification: .screenChanged, argument: nil)
 
 			if registeredForBackground {
 				registeredForBackground = false
 				BackgroundTask.unregisterForBackground()
 			}
-
-		} else {
-			Model.commitItem(item: item)
 		}
 	}
 

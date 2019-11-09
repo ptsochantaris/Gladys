@@ -433,8 +433,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
-		item.needsReIngest = false
-
 		if Model.filteredDrops.contains(item) {
 			item.reIndex()
 		} else {

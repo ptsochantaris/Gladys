@@ -33,6 +33,8 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		}
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
+        needsReIngest = false
+                
 		NotificationCenter.default.post(name: .IngestComplete, object: self)
 	}
 

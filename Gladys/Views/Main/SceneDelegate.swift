@@ -43,6 +43,22 @@ var componentDropActiveFromDetailView: DetailController?
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
+    override init() {
+        super.init()
+        
+        let n = NotificationCenter.default
+        n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
+    }
+    
+    @objc private func ingestComplete(_ notification: Notification) {
+        guard let item = notification.object as? ArchivedDropItem else { return }
+        if Model.doneIngesting {
+            Model.save()
+        } else {
+            Model.commitItem(item: item)
+        }
+    }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let activity = connectionOptions.userActivities.first { // new scene
             handleActivity(activity, in: scene)
