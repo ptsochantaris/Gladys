@@ -15,7 +15,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
-		Model.reloadDataIfNeeded()
+        Model.beginMonitoringChanges() // will reload data as well
 		PullState.checkMigrations()
 		if CloudManager.syncSwitchedOn {
 			UIApplication.shared.registerForRemoteNotifications()

@@ -67,10 +67,9 @@ extension Notification.Name {
     static let NoteLastActionedUUID = Notification.Name("NoteLastActionedUUID")
     static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
     static let ResetSearchRequest = Notification.Name("ResetSearchRequest")
-
     static let StartSearchRequest = Notification.Name("StartSearchRequest")
     static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
-
+    static let ItemOrderChangedByUser = Notification.Name("ItemOrderChangedByUser")
 }
 #endif
 

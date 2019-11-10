@@ -290,10 +290,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		if needSave{
 		    Model.save()
+            signalOrderChange()
 		} else {
 			updateEmptyView(animated: true)
 		}
 	}
+    
+    private func signalOrderChange() {
+        NotificationCenter.default.post(name: .ItemOrderChangedByUser, object: self)
+    }
 
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -507,8 +512,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-	    Model.beginMonitoringChanges()
-
 		collection.reorderingCadence = .fast
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
@@ -560,7 +563,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
-
+        n.addObserver(self, selector: #selector(itemOrderChanged(_:)), name: .ItemOrderChangedByUser, object: nil)
+        
         Model.checkForUpgrade()
 
 		didUpdateItems()
@@ -577,6 +581,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             MirrorManager.startMirrorMonitoring()
         }
 	}
+    
+    @objc private func itemOrderChanged(_ notification: Notification) {
+        guard let o = notification.object as? ViewController else { return }
+        if o === self {
+            return
+        }
+        externalDataUpdate()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -623,7 +635,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
 	deinit {
-		Model.doneMonitoringChanges()
         log("Main VC deinitialised")
 	}
 
@@ -734,6 +745,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		reloadData(onlyIfPopulated: false)
 		didUpdateItems()
 		updateEmptyView(animated: true)
+        if let scene = view.window?.windowScene, scene.activationState == .background {
+            UIApplication.shared.requestSceneSessionRefresh(scene.session)
+        }
 	}
 
 	private func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
@@ -837,6 +851,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			Model.forceUpdateFilter(signalUpdate: false)
 			reloadData(onlyIfPopulated: false)
 			Model.save()
+            signalOrderChange()
 		}
 	}
 

@@ -238,16 +238,6 @@ extension Model {
 		foregrounded()
 	}
 
-	static func doneMonitoringChanges() {
-		let n = NotificationCenter.default
-		if let foregroundObserver = foregroundObserver {
-			n.removeObserver(foregroundObserver)
-		}
-		if let backgroundObserver = backgroundObserver {
-			n.removeObserver(backgroundObserver)
-		}
-	}
-
 	private static let filePresenter = ModelFilePresenter()
 	
 	private static func foregrounded() {
