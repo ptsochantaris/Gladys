@@ -28,39 +28,26 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
         dismiss(animated: true)
     }
 
-	private var firstView = true
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if firstView {
-			firstView = false
-			sizeWindow(animate: false)
-		}
+        sizeWindow()
 	}
 
 	func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-		sizeWindow(animate: true)
+		sizeWindow()
 		if let index = viewControllers?.firstIndex(of: viewController) {
 			PersistedOptions.lastSelectedPreferencesTab = index
 		}
 	}
 	
-	private func sizeWindow(animate: Bool) {
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			if let n = self.selectedViewController as? UINavigationController, let v = n.topViewController {
-				var size = v.view.systemLayoutSizeFitting(CGSize(width: 320, height: 0),
-														  withHorizontalFittingPriority: .required,
-														  verticalFittingPriority: .fittingSizeLevel)
-				if let s = v.view.subviews.first as? UIScrollView {
-					size.height += s.contentSize.height
-				}
-				if animate {
-					self.preferredContentSize = size
-				} else {
-					UIView.performWithoutAnimation {
-						self.preferredContentSize = size
-					}
-				}
-			}
-		}
+	private func sizeWindow() {
+        if let n = selectedViewController as? UINavigationController, let v = n.topViewController {
+            n.view.layoutIfNeeded()
+            var size = CGSize(width: 320, height: tabBar.frame.height + n.navigationBar.frame.height)
+            if let s = v.view.subviews.first as? UIScrollView {
+                size.height += s.contentSize.height
+            }
+            preferredContentSize = size
+        }
 	}
 }

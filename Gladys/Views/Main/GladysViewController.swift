@@ -171,21 +171,25 @@ class GladysViewController: UIViewController {
 	}
 
 	private func showDone(_ show: Bool) {
-        showButton(show, location: doneButtonLocation, button: doneButton)
+        showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
 	}
     
     private func showWindow(_ show: Bool) {
-        showButton(show && isAccessoryWindow, location: windowButtonLocation, button: mainWindowButton)
-        showButton(show && !isAccessoryWindow, location: windowButtonLocation, button: newWindowButton)
+        showButton(show && isAccessoryWindow, location: windowButtonLocation, button: mainWindowButton, priority: false)
+        showButton(show && !isAccessoryWindow, location: windowButtonLocation, button: newWindowButton, priority: false)
     }
 
-    private func showButton(_ show: Bool, location: ActionLocation, button: UIBarButtonItem) {
+    private func showButton(_ show: Bool, location: ActionLocation, button: UIBarButtonItem, priority: Bool) {
         let tag = button.tag
         switch location {
         case .left:
             var leftItems = navigationItem.leftBarButtonItems ?? []
             if show && !leftItems.contains(where: { $0.tag == tag }) {
-                leftItems.append(button)
+                if priority {
+                    leftItems.insert(button, at: 0)
+                } else {
+                    leftItems.append(button)
+                }
                 navigationItem.leftBarButtonItems = leftItems
             } else if !show {
                 navigationItem.leftBarButtonItems?.removeAll { $0.tag == tag }
@@ -193,7 +197,11 @@ class GladysViewController: UIViewController {
         case .right:
             var rightItems = navigationItem.rightBarButtonItems ?? []
             if show && !rightItems.contains(where: { $0.tag == tag }) {
-                rightItems.append(button)
+                if priority {
+                    rightItems.insert(button, at: 0)
+                } else {
+                    rightItems.append(button)
+                }
                 navigationItem.rightBarButtonItems = rightItems
             } else if !show {
                 navigationItem.rightBarButtonItems?.removeAll { $0.tag == tag }
