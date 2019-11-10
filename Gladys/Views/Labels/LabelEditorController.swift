@@ -21,17 +21,28 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 	var endCallback: ((Bool)->Void)?
 
-	private var allToggles: [Model.LabelToggle] = {
-		return Model.labelToggles.filter { !$0.emptyChecker }
-	}()
+    private var modelToggles: [Model.LabelToggle] {
+        return Model.labelToggles.filter { !$0.emptyChecker }
+    }
+    
+	private lazy var allToggles = [Model.LabelToggle]()
 
 	private var availableToggles = [Model.LabelToggle]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		updateFilter(nil)
+        labelsUpdated()
         doneLocation = .left
+        
+        let n = NotificationCenter.default
+        n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
+        n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
 	}
+    
+    @objc private func labelsUpdated() {
+        allToggles = modelToggles
+        updateFilter(labelText.text)
+    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

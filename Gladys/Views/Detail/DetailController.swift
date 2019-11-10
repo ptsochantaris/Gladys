@@ -59,7 +59,9 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
-		n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
+		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
+        n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
+        n.addObserver(self, selector: #selector(checkRemoval), name: .ItemsRemoved, object: nil)
 	}
 
 	private func updateLockButton() {
@@ -72,6 +74,13 @@ final class DetailController: GladysViewController,
 		}
 		lockButton.isEnabled = !item.isImportedShare
 	}
+    
+    @objc private func checkRemoval() {
+        if let uuid = item?.uuid, Model.item(uuid: uuid) != nil {
+            return
+        }
+        done()
+    }
 
 	private func updateInviteButton() {
 		if let invitesButton = invitesButton {

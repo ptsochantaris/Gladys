@@ -52,7 +52,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 		table.tableFooterView = UIView()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
+        let n = NotificationCenter.default
+		n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
+        n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
 	}
 
     @IBAction private func closeSelected(_ sender: UIButton) {
