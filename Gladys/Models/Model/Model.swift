@@ -207,6 +207,14 @@ final class Model {
 			}
 		}
 	}
+    
+    static func moveItem(at source: Int, to destination: Int) {
+        if destination == source {
+            return
+        }
+        let item = drops.remove(at: source)
+        drops.insert(item, at: destination)
+    }
 
 	static var visibleDrops: [ArchivedDropItem] {
 		if Model.legacyMode {

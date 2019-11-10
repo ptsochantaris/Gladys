@@ -218,6 +218,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
 		var needSave = false
+        var needDataSave = false
 
 		coordinator.session.progressIndicatorStyle = .none
 
@@ -227,21 +228,39 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			if let existingItem = dragItem.localObject as? ArchivedDropItem {
 
 				guard
-					let filteredDestinationIndexPath = coordinator.destinationIndexPath,
-					let sourceIndex = Model.drops.firstIndex(of: existingItem),
-					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { continue }
-
-				let destinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
+					let destinationIndexPath = coordinator.destinationIndexPath,
+					let sourceIndex = Model.drops.firstIndex(of: existingItem)
+                    else { continue }
 
 				collectionView.performBatchUpdates({
-				    Model.drops.remove(at: sourceIndex)
-				    Model.drops.insert(existingItem, at: destinationIndex)
-				    filter.forceUpdateFilter(signalUpdate: false)
-					collectionView.deleteItems(at: [filteredPreviousIndex])
-					collectionView.insertItems(at: [filteredDestinationIndexPath])
-				})
 
-				coordinator.drop(dragItem, toItemAt: filteredDestinationIndexPath)
+                    let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+
+                    // update UI
+                    if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
+                        // previous item was visible on our collection view
+                        Model.moveItem(at: sourceIndex, to: modelDestinationIndex)
+                        if filter.isFiltering {
+                            filter.forceUpdateFilter(signalUpdate: false)
+                        }
+                        let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
+                        collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
+
+                    } else { // from another window
+                        if let labels = filter?.enabledLabelsForItems, !labels.isEmpty {
+                            existingItem.labels.append(contentsOf: labels)
+                            needDataSave = true
+                        }
+                        Model.drops.insert(existingItem, at: modelDestinationIndex)
+                        if filter.isFiltering {
+                            filter.forceUpdateFilter(signalUpdate: false)
+                        }
+                        collectionView.insertItems(at: [destinationIndexPath])
+                    }
+
+                    coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+                })
+
 				needSave = true
 
 			} else {
@@ -284,7 +303,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
 
-		if needSave {
+        if needDataSave {
+            Model.save()
+        } else if needSave {
             Model.saveIndexOnly(from: self)
 		} else {
 			updateEmptyView(animated: true)
@@ -522,7 +543,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.delegate = self
 		searchController.searchResultsUpdater = self
-		searchController.searchBar.tintColor = view.tintColor
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -1327,7 +1347,24 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
+    func willPresentSearchController(_ searchController: UISearchController) {
+        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
+            UIView.animate(animations: {
+                var newInsets = layout.sectionInset
+                newInsets.top = 10
+                layout.sectionInset = newInsets
+            })
+        }
+    }
+    
 	func willDismissSearchController(_ searchController: UISearchController) {
+        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
+            UIView.animate(animations: {
+                var newInsets = layout.sectionInset
+                newInsets.top = 0
+                layout.sectionInset = newInsets
+            })
+        }
 		resetSearch(andLabels: false)
 	}
 
