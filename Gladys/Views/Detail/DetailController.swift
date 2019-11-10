@@ -61,7 +61,7 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(updateUI), name: .ModelDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
-        n.addObserver(self, selector: #selector(checkRemoval), name: .ItemsRemoved, object: nil)
+        n.addObserver(self, selector: #selector(checkRemoval(_:)), name: .ItemsRemoved, object: nil)
 	}
 
 	private func updateLockButton() {
@@ -75,11 +75,11 @@ final class DetailController: GladysViewController,
 		lockButton.isEnabled = !item.isImportedShare
 	}
     
-    @objc private func checkRemoval() {
-        if let uuid = item?.uuid, Model.item(uuid: uuid) != nil {
-            return
+    @objc private func checkRemoval(_ notification: Notification) {
+        guard let uuids = notification.object as? Set<UUID> else { return }
+        if let uuid = item?.uuid, uuids.contains(uuid) {
+            done()
         }
-        done()
     }
 
 	private func updateInviteButton() {

@@ -69,6 +69,7 @@ extension Notification.Name {
     static let StartSearchRequest = Notification.Name("StartSearchRequest")
     static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
     static let MultipleWindowModeChange = Notification.Name("MainWindowCloseStateChange")
+    static let PreferencesOpen = Notification.Name("PreferencesOpen")
 }
 #endif
 

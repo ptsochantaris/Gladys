@@ -615,9 +615,8 @@ extension Model {
 		needsAnotherSave = false
         
 		saveQueue.async {
-            var changesMade = true
 			do {
-				changesMade = try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}
@@ -634,7 +633,7 @@ extension Model {
 						nextSaveCallbacks = nil
 					}
 					trimTemporaryDirectory()
-                    if changesMade {
+                    if !uuidsToEncode.isEmpty {
                         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
                     }
 					saveComplete()
@@ -684,12 +683,11 @@ extension Model {
 		}
 	}
 
-	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws -> Bool {
+	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
 		if brokenMode {
 			log("Ignoring save, model is broken, app needs restart.")
-			return false
+			return
 		}
-        var changesMade = dirtyUuids.count > 0
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
@@ -722,7 +720,6 @@ extension Model {
 							if !uuidStrings.contains(file) && file != "uuids" { // old file
 								log("Removing save file for non-existent item: \(file)")
 								try? fm.removeItem(atPath: url.appendingPathComponent(file).path)
-                                changesMade = true
 							}
 						}
 					}
@@ -745,7 +742,6 @@ extension Model {
 		if let e = coordinationError ?? closureError {
 			throw e
 		}
-        return changesMade
 	}
     
     static func detectExternalChanges() {

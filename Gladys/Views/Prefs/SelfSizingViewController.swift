@@ -18,7 +18,15 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
 			selectedIndex = i
 		}
 		delegate = self
+        
+        let n = NotificationCenter.default
+        n.post(name: .PreferencesOpen, object: nil)
+        n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
 	}
+    
+    @objc private func otherPrefsOpened() {
+        dismiss(animated: true)
+    }
 
 	private var firstView = true
 	override func viewWillAppear(_ animated: Bool) {

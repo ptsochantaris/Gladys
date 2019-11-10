@@ -33,9 +33,7 @@ var componentDropActiveFromDetailView: DetailController?
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    
-    static weak var latestMainSession: UISceneSession?
-        
+            
     override init() {
         super.init()
         
@@ -236,7 +234,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
             
     func sceneWillEnterForeground(_ scene: UIScene) {
-        SceneDelegate.latestMainSession = scene.session
         if UIApplication.shared.applicationState == .background {
             // just launching, or user was in another app
             if PersistedOptions.mirrorFilesToDocuments {

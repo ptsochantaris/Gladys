@@ -14,13 +14,14 @@ extension UIKeyCommand {
 
 @discardableResult
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
+        
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if let buttonTitle = buttonTitle {
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
-    if let scene = SceneDelegate.latestMainSession?.scene as? UIWindowScene, let window = scene.windows.first {
-        window.alertPresenter?.present(a, animated: true)
+    if let connectedWindow = UIApplication.shared.connectedScenes.filter({ $0.activationState != .background }).compactMap({ ($0 as? UIWindowScene)?.windows.first }).lazy.first {
+        connectedWindow.alertPresenter?.present(a, animated: true)
     }
     
 	if buttonTitle == nil && autoDismiss {
@@ -1211,21 +1212,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     @objc private func itemsDeleted(_ notification: Notification) {
-        guard let uuids = notification.object as? [UUID] else { return }
-        let indexes = uuids.compactMap { uuid in
-            filter.filteredDrops.firstIndex{ $0.uuid == uuid }
-        }
-        let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
+        guard let uuids = notification.object as? Set<UUID> else { return }
+        collection.performBatchUpdates({
+            let indexes = uuids.compactMap { uuid in
+                filter.filteredDrops.firstIndex{ $0.uuid == uuid }
+            }
+            let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
-		if !ipsToRemove.isEmpty {
-			collection.performBatchUpdates({
-				self.collection.deleteItems(at: ipsToRemove)
-			})
-		}
+            if !ipsToRemove.isEmpty {
+				collection.deleteItems(at: ipsToRemove)
+            }
+        })
 
 		ensureNoEmptySearchResult()
 
-		if filter.filteredDrops.count == 0 {
+		if filter.filteredDrops.isEmpty {
 			mostRecentIndexPathActioned = nil
 			updateEmptyView(animated: true)
 			if isEditing {
