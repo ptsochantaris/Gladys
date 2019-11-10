@@ -15,12 +15,357 @@ import CoreAudioKit
 import Cocoa
 #endif
 
+final class ModelFilterContext {
+
+    private var modelFilter: String?
+    private var currentFilterQuery: CSSearchQuery?
+    private var cachedFilteredDrops: [ArchivedDropItem]?
+    
+    private var removalObservation: NSObjectProtocol?
+    private var reloadObservation: NSObjectProtocol?
+    
+    init() {
+        removalObservation = NotificationCenter.default.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
+            guard let uuids = notification.object as? Set<UUID> else { return }
+            self?.cachedFilteredDrops?.removeAll { uuids.contains($0.uuid) }
+        }
+        reloadObservation = NotificationCenter.default.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
+            self?.rebuildLabels()
+        }
+        rebuildLabels()
+    }
+    
+    deinit {
+        removalObservation = nil
+        reloadObservation = nil
+    }
+
+    var filteredSizeInBytes: Int64 {
+        return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
+    }
+
+    var sizeOfVisibleItemsInBytes: Int64 {
+        return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
+    }
+
+    var isFilteringText: Bool {
+        return currentFilterQuery != nil
+    }
+
+    var isFilteringLabels: Bool {
+        return labelToggles.contains { $0.enabled }
+    }
+
+    var isFiltering: Bool {
+        return isFilteringText || isFilteringLabels
+    }
+
+    var filteredDrops: [ArchivedDropItem] {
+        return cachedFilteredDrops ?? Model.drops
+    }
+
+    var filter: String? {
+        get {
+            return modelFilter
+        }
+        set {
+            if modelFilter == newValue { return }
+            forceUpdateFilter(with: newValue, signalUpdate: true)
+        }
+    }
+    
+    var threadSafeFilteredDrops: [ArchivedDropItem] {
+        if Thread.isMainThread {
+            return filteredDrops
+        } else {
+            var dropsClone = [ArchivedDropItem]()
+            DispatchQueue.main.sync {
+                dropsClone = filteredDrops
+            }
+            return dropsClone
+        }
+    }
+    
+    func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
+        guard isFiltering else {
+            return index
+        }
+        if filteredDrops.count == 0 {
+            return 0
+        }
+        let closestItem: ArchivedDropItem
+        if index >= filteredDrops.count {
+            closestItem = filteredDrops.last!
+            if let i = Model.drops.firstIndex(of: closestItem) {
+                return i+1
+            }
+            return 0
+        } else if index > 0 {
+            closestItem = filteredDrops[index-1]
+            return (Model.drops.firstIndex(of: closestItem) ?? 0) + 1
+        } else {
+            closestItem = filteredDrops[0]
+            return Model.drops.firstIndex(of: closestItem) ?? 0
+        }
+    }
+
+    @discardableResult
+    func forceUpdateFilter(with newValue: String? = nil, signalUpdate: Bool) -> Bool {
+        currentFilterQuery = nil
+        modelFilter = newValue ?? modelFilter
+
+        let previouslyVisibleUuids = filteredDrops.map { $0.uuid }
+        var filtering = false
+
+        if let terms = Model.terms(for: filter), !terms.isEmpty {
+
+            filtering = true
+
+            var replacementResults = [String]()
+
+            let group = DispatchGroup()
+            group.enter()
+
+            let queryString: String
+            if     terms.count > 1 {
+                if PersistedOptions.inclusiveSearchTerms {
+                    queryString = "(" + terms.joined(separator: ") || (") + ")"
+                } else {
+                    queryString = "(" + terms.joined(separator: ") && (") + ")"
+                }
+            } else {
+                queryString = terms.first ?? ""
+            }
+
+            let q = CSSearchQuery(queryString: queryString, attributes: nil)
+            q.foundItemsHandler = { items in
+                let uuids = items.map { $0.uniqueIdentifier }
+                replacementResults.append(contentsOf: uuids)
+            }
+            q.completionHandler = { error in
+                if let error = error {
+                    log("Search error: \(error.finalDescription)")
+                }
+                group.leave()
+            }
+            currentFilterQuery = q
+
+            q.start()
+            group.wait()
+
+            cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
+        } else {
+            cachedFilteredDrops = postLabelDrops
+        }
+
+        let changesToVisibleItems = previouslyVisibleUuids != filteredDrops.map { $0.uuid }
+        if signalUpdate && changesToVisibleItems {
+
+            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+
+            #if os(iOS)
+            if filtering && UIAccessibility.isVoiceOverRunning {
+                let resultString: String
+                let c = filteredDrops.count
+                if c == 0 {
+                    resultString = "No results"
+                } else if c == 1 {
+                    resultString = "One result"
+                } else  {
+                    resultString = "\(filteredDrops.count) results"
+                }
+                UIAccessibility.post(notification: .announcement, argument: resultString)
+            }
+            #endif
+        }
+
+        return changesToVisibleItems
+    }
+    
+    private var postLabelDrops: [ArchivedDropItem] {
+        let enabledToggles = labelToggles.filter { $0.enabled }
+        if enabledToggles.count == 0 { return Model.drops }
+
+        if PersistedOptions.exclusiveMultipleLabels {
+            let expectedCount = enabledToggles.count
+            return Model.drops.filter { item in
+                var matchCount = 0
+                for toggle in enabledToggles {
+                    if toggle.emptyChecker {
+                        if item.labels.count == 0 {
+                            matchCount += 1
+                        }
+                    } else if item.labels.contains(toggle.name) {
+                        matchCount += 1
+                    }
+                }
+                return matchCount == expectedCount
+            }
+
+        } else {
+            return Model.drops.filter { item in
+                for toggle in enabledToggles {
+                    if toggle.emptyChecker {
+                        if item.labels.count == 0 {
+                            return true
+                        }
+                    } else if item.labels.contains(toggle.name) {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+    }
+    
+    func resetEverything() {
+        modelFilter = nil
+        cachedFilteredDrops = nil
+        Model.resetEverything()
+    }
+    
+    var enabledLabelsForItems: [String] {
+        return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
+    }
+
+    var enabledLabelsForTitles: [String] {
+        return labelToggles.compactMap { $0.enabled ? $0.name : nil }
+    }
+    
+    var eligibleDropsForExport: [ArchivedDropItem] {
+        let items = PersistedOptions.exportOnlyVisibleItems ? threadSafeFilteredDrops : Model.threadSafeDrops
+        return items.filter { $0.goodToSave }
+    }
+    
+    var labelToggles = [LabelToggle]()
+
+    struct LabelToggle {
+        let name: String
+        let count: Int
+        var enabled: Bool
+        let emptyChecker: Bool
+
+        enum State {
+            case none, some, all
+            var accessibilityValue: String? {
+                switch self {
+                case .none: return nil
+                case .some: return "Applied to some selected items"
+                case .all: return "Applied to all selected items"
+                }
+            }
+        }
+
+        func toggleState(across uuids: [UUID]?) -> State {
+            let n = uuids?.reduce(0) { total, uuid -> Int in
+                if let item = Model.item(uuid: uuid), item.labels.contains(name) {
+                    return total + 1
+                }
+                return total
+                } ?? 0
+            if n == (uuids?.count ?? -1) {
+                return .all
+            }
+            return n > 0 ? .some : .none
+        }
+    }
+    
+    func disableAllLabels() {
+        labelToggles = labelToggles.map {
+            if $0.enabled {
+                var l = $0
+                l.enabled = false
+                return l
+            } else {
+                return $0
+            }
+        }
+    }
+
+    func rebuildLabels() {
+        var counts = [String:Int]()
+        var noLabelCount = 0
+        for item in Model.drops {
+            item.labels.forEach {
+                if let c = counts[$0] {
+                    counts[$0] = c+1
+                } else {
+                    counts[$0] = 1
+                }
+            }
+            if item.labels.count == 0 {
+                noLabelCount += 1
+            }
+        }
+
+        let previous = labelToggles
+        labelToggles.removeAll()
+        for (label, count) in counts {
+            let previousEnabled = previous.contains { $0.enabled && $0.name == label }
+            let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
+            labelToggles.append(toggle)
+        }
+        if labelToggles.count > 0 {
+            labelToggles.sort { $0.name < $1.name }
+
+            let name = "Items with no labels"
+            let previousEnabled = previous.contains { $0.enabled && $0.name == name }
+            labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+        }
+    }
+
+    func updateLabel(_ label: LabelToggle) {
+        if let i = labelToggles.firstIndex(where: { $0.name == label.name }) {
+            labelToggles[i] = label
+        }
+    }
+    
+    func removeLabel(_ label : String) {
+        var itemsNeedingReIndex = [ArchivedDropItem]()
+        for i in Model.drops {
+            if i.labels.contains(label) {
+                i.labels = i.labels.filter { $0 != label }
+                itemsNeedingReIndex.append(i)
+            }
+        }
+        rebuildLabels()
+        if itemsNeedingReIndex.count > 0 {
+            NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+            for i in itemsNeedingReIndex {
+                i.needsCloudPush = true
+            }
+            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemsNeedingReIndex.map { $0.uuid.uuidString }) {
+                DispatchQueue.main.async {
+                    Model.save()
+                }
+            }
+        }
+    }
+}
+
+extension UISceneSession {
+    var associatedFilter: ModelFilterContext? {
+        if let existing = userInfo?["mainFilter"] as? ModelFilterContext {
+            return existing
+        }
+        let newFilter = ModelFilterContext()
+        if userInfo == nil {
+            userInfo = [String: Any]()
+        }
+        userInfo!["mainFilter"] = newFilter
+        return newFilter
+    }
+}
+
+extension UIView {
+    var associatedFilter: ModelFilterContext? {
+        return window?.windowScene?.session.associatedFilter
+    }
+}
+
 extension Model {
 	static var saveIsDueToSyncFetch = false
 
-	private static var modelFilter: String?
-	private static var currentFilterQuery: CSSearchQuery?
-	private static var cachedFilteredDrops: [ArchivedDropItem]?
 	static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
 	private static var needsAnotherSave = false
 	private static var isSaving = false
@@ -30,49 +375,8 @@ extension Model {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
-	static var filteredSizeInBytes: Int64 {
-		return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
-	}
-
 	static func sizeForItems(uuids: [UUID]) -> Int64 {
 		return drops.reduce(0, { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) })
-	}
-
-	static var sizeOfVisibleItemsInBytes: Int64 {
-		return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
-	}
-
-	static var labelToggles = [LabelToggle]()
-
-	struct LabelToggle {
-		let name: String
-		let count: Int
-		var enabled: Bool
-		let emptyChecker: Bool
-
-		enum State {
-			case none, some, all
-			var accessibilityValue: String? {
-				switch self {
-				case .none: return nil
-				case .some: return "Applied to some selected items"
-				case .all: return "Applied to all selected items"
-				}
-			}
-		}
-
-		func toggleState(across uuids: [UUID]?) -> State {
-			let n = uuids?.reduce(0) { total, uuid -> Int in
-				if let item = Model.item(uuid: uuid), item.labels.contains(name) {
-					return total + 1
-				}
-				return total
-				} ?? 0
-			if n == (uuids?.count ?? -1) {
-				return .all
-			}
-			return n > 0 ? .some : .none
-		}
 	}
 
 	enum SortOption {
@@ -157,103 +461,14 @@ extension Model {
 					let item = actualItemsToSort[pos]
 					Model.drops[itemIndex] = item
 				}
-				Model.forceUpdateFilter(signalUpdate: false)
+				//Model.forceUpdateFilter(signalUpdate: false)
 				Model.save()
 			}
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }
 	}
 
-	static var isFilteringLabels: Bool {
-		return labelToggles.contains { $0.enabled }
-	}
-
-	static func disableAllLabels() {
-		labelToggles = labelToggles.map {
-			if $0.enabled {
-				var l = $0
-				l.enabled = false
-				return l
-			} else {
-				return $0
-			}
-		}
-	}
-
-	static func reloadCompleted() {
-		rebuildLabels()
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-	}
-
-	static func rebuildLabels() {
-		var counts = [String:Int]()
-		var noLabelCount = 0
-		for item in drops {
-			item.labels.forEach {
-				if let c = counts[$0] {
-					counts[$0] = c+1
-				} else {
-					counts[$0] = 1
-				}
-			}
-			if item.labels.count == 0 {
-				noLabelCount += 1
-			}
-		}
-
-		let previous = labelToggles
-		labelToggles.removeAll()
-		for (label, count) in counts {
-			let previousEnabled = previous.contains { $0.enabled && $0.name == label }
-			let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
-			labelToggles.append(toggle)
-		}
-		if labelToggles.count > 0 {
-			labelToggles.sort { $0.name < $1.name }
-
-			let name = "Items with no labels"
-			let previousEnabled = previous.contains { $0.enabled && $0.name == name }
-			labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
-		}
-	}
-
-	static var enabledLabelsForItems: [String] {
-		return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
-	}
-
-	static var enabledLabelsForTitles: [String] {
-		return labelToggles.compactMap { $0.enabled ? $0.name : nil }
-	}
-
-	static func updateLabel(_ label: LabelToggle) {
-		if let i = labelToggles.firstIndex(where: { $0.name == label.name }) {
-			labelToggles[i] = label
-		}
-	}
-
-	static var isFilteringText: Bool {
-		return currentFilterQuery != nil
-	}
-
-	static var isFiltering: Bool {
-		return isFilteringText || isFilteringLabels
-	}
-
-	static var filteredDrops: [ArchivedDropItem] {
-		return cachedFilteredDrops ?? drops
-	}
-
-	static var filter: String? {
-		get {
-			return modelFilter
-		}
-		set {
-			if modelFilter == newValue { return }
-			forceUpdateFilter(with: newValue, signalUpdate: true)
-		}
-	}
-
-	static private func terms(for f: String?) -> [String]? {
+	static fileprivate func terms(for f: String?) -> [String]? {
 		guard let f = f?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
 
 		var terms = [String]()
@@ -271,104 +486,19 @@ extension Model {
 		return terms
 	}
 
-	static func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
-		guard isFiltering else {
-			return index
-		}
-		if filteredDrops.count == 0 {
-			return 0
-		}
-		let closestItem: ArchivedDropItem
-		if index >= filteredDrops.count {
-			closestItem = filteredDrops.last!
-			if let i = drops.firstIndex(of: closestItem) {
-				return i+1
-			}
-			return 0
-		} else if index > 0 {
-			closestItem = filteredDrops[index-1]
-			return (drops.firstIndex(of: closestItem) ?? 0) + 1
-		} else {
-			closestItem = filteredDrops[0]
-			return drops.firstIndex(of: closestItem) ?? 0
-		}
-	}
-
-	private static var postLabelDrops: [ArchivedDropItem] {
-		let enabledToggles = labelToggles.filter { $0.enabled }
-		if enabledToggles.count == 0 { return drops }
-
-		if PersistedOptions.exclusiveMultipleLabels {
-			let expectedCount = enabledToggles.count
-			return drops.filter { item in
-				var matchCount = 0
-				for toggle in enabledToggles {
-					if toggle.emptyChecker {
-						if item.labels.count == 0 {
-							matchCount += 1
-						}
-					} else if item.labels.contains(toggle.name) {
-						matchCount += 1
-					}
-				}
-				return matchCount == expectedCount
-			}
-
-		} else {
-			return drops.filter { item in
-				for toggle in enabledToggles {
-					if toggle.emptyChecker {
-						if item.labels.count == 0 {
-							return true
-						}
-					} else if item.labels.contains(toggle.name) {
-						return true
-					}
-				}
-				return false
-			}
-		}
-	}
-
-	static func resetEverything() {
+	static fileprivate func resetEverything() {
 		drops.filter { !$0.isImportedShare }.forEach { $0.delete() }
 		drops.removeAll { !$0.isImportedShare }
-		modelFilter = nil
-		cachedFilteredDrops = nil
         #if MAINAPP
         deleteMirror {}
         #endif
 		clearCaches()
 		save()
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	static func removeImportedShares() {
 		drops.removeAll { $0.isImportedShare }
 		save()
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-	}
-
-	static func removeLabel(_ label : String) {
-		var itemsNeedingReIndex = [ArchivedDropItem]()
-		for i in drops {
-			if i.labels.contains(label) {
-				i.labels = i.labels.filter { $0 != label }
-				itemsNeedingReIndex.append(i)
-			}
-		}
-		rebuildLabels()
-		if itemsNeedingReIndex.count > 0 {
-			NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-			for i in itemsNeedingReIndex {
-				i.needsCloudPush = true
-			}
-			Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemsNeedingReIndex.map { $0.uuid.uuidString }) {
-				DispatchQueue.main.async {
-					self.save()
-				}
-			}
-		}
 	}
 
 	static var threadSafeDrops: [ArchivedDropItem] {
@@ -383,98 +513,12 @@ extension Model {
 		}
 	}
 
-	static var threadSafeFilteredDrops: [ArchivedDropItem] {
-		if Thread.isMainThread {
-			return filteredDrops
-		} else {
-			var dropsClone = [ArchivedDropItem]()
-			DispatchQueue.main.sync {
-				dropsClone = filteredDrops
-			}
-			return dropsClone
-		}
-	}
-
-	@discardableResult
-	static func forceUpdateFilter(with newValue: String? = modelFilter, signalUpdate: Bool) -> Bool {
-		currentFilterQuery = nil
-		modelFilter = newValue
-
-		let previouslyVisibleUuids = filteredDrops.map { $0.uuid }
-		var filtering = false
-
-		if let terms = terms(for: filter), !terms.isEmpty {
-
-			filtering = true
-
-			var replacementResults = [String]()
-
-			let group = DispatchGroup()
-			group.enter()
-
-			let queryString: String
-			if 	terms.count > 1 {
-				if PersistedOptions.inclusiveSearchTerms {
-					queryString = "(" + terms.joined(separator: ") || (") + ")"
-				} else {
-					queryString = "(" + terms.joined(separator: ") && (") + ")"
-				}
-			} else {
-				queryString = terms.first ?? ""
-			}
-
-			let q = CSSearchQuery(queryString: queryString, attributes: nil)
-			q.foundItemsHandler = { items in
-				let uuids = items.map { $0.uniqueIdentifier }
-				replacementResults.append(contentsOf: uuids)
-			}
-			q.completionHandler = { error in
-				if let error = error {
-					log("Search error: \(error.finalDescription)")
-				}
-				group.leave()
-			}
-			currentFilterQuery = q
-
-			q.start()
-			group.wait()
-
-			cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
-		} else {
-			cachedFilteredDrops = postLabelDrops
-		}
-
-		let changesToVisibleItems = previouslyVisibleUuids != filteredDrops.map { $0.uuid }
-		if signalUpdate && changesToVisibleItems {
-
-			NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
-
-			#if os(iOS)
-			if filtering && UIAccessibility.isVoiceOverRunning {
-				let resultString: String
-				let c = filteredDrops.count
-				if c == 0 {
-					resultString = "No results"
-				} else if c == 1 {
-					resultString = "One result"
-				} else  {
-					resultString = "\(filteredDrops.count) results"
-				}
-				UIAccessibility.post(notification: .announcement, argument: resultString)
-			}
-			#endif
-		}
-
-		return changesToVisibleItems
-	}
-
 	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
 		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
 		for item in itemsRelatedToZone {
 			item.removeFromCloudkit()
 		}
 		_ = delete(items: itemsRelatedToZone)
-		NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 	}
 
 	static var sharingMyItems: Bool {
@@ -493,14 +537,13 @@ extension Model {
 		if let previousIndex = drops.firstIndex(of: item) {
 			let newItem = ArchivedDropItem(cloning: item)
 			drops.insert(newItem, at: previousIndex+1)
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
+            save()
 		}
 	}
 
-	static func delete(items: [ArchivedDropItem]) {
+    static func delete(items: [ArchivedDropItem]) {
 
         let uuidsToRemove = Set(items.map { $0.uuid })
-        let indexesToRemove = uuidsToRemove.compactMap { uuid in filteredDrops.firstIndex(where: { $0.uuid == uuid }) }
         
 		for item in items {
 			if item.shouldDisplayLoading {
@@ -510,9 +553,8 @@ extension Model {
 		}
 
         drops.removeAll { uuidsToRemove.contains($0.uuid) }
-        cachedFilteredDrops?.removeAll { uuidsToRemove.contains($0.uuid) }
         
-        NotificationCenter.default.post(name: .ItemsRemoved, object: indexesToRemove)
+        NotificationCenter.default.post(name: .ItemsRemoved, object: uuidsToRemove)
         
         save()
 	}
@@ -593,8 +635,9 @@ extension Model {
 		needsAnotherSave = false
         
 		saveQueue.async {
+            var changesMade = true
 			do {
-				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+				changesMade = try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}
@@ -611,22 +654,26 @@ extension Model {
 						nextSaveCallbacks = nil
 					}
 					trimTemporaryDirectory()
+                    if changesMade {
+                        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
+                    }
 					saveComplete()
 				}
 			}
 		}
 	}
 
-	static func saveIndexOnly() {
+    static func saveIndexOnly(from requester: UIViewController?) {
 		let itemsToSave = drops.filter { $0.goodToSave }
 		saveQueue.async {
 			do {
-				try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
+				_ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
 				log("Saved index only")
 			} catch {
 				log("Warning: Error while committing index to disk: (\(error.finalDescription))")
 			}
 			DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .ModelDataUpdated, object: requester)
 				saveIndexComplete()
 			}
 		}
@@ -649,7 +696,7 @@ extension Model {
                 return
             }
             do {
-                try coordinatedSave(allItems: itemsToSave, dirtyUuids: nextItemUUIDs)
+                _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: nextItemUUIDs)
                 log("Ingest completed for items (\(nextItemUUIDs)) and committed to disk")
             } catch {
                 log("Warning: Error while committing item to disk: (\(error.finalDescription))")
@@ -657,11 +704,12 @@ extension Model {
 		}
 	}
 
-	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
+	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws -> Bool {
 		if brokenMode {
 			log("Ignoring save, model is broken, app needs restart.")
-			return
+			return false
 		}
+        var changesMade = dirtyUuids.count > 0
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
@@ -694,6 +742,7 @@ extension Model {
 							if !uuidStrings.contains(file) && file != "uuids" { // old file
 								log("Removing save file for non-existent item: \(file)")
 								try? fm.removeItem(atPath: url.appendingPathComponent(file).path)
+                                changesMade = true
 							}
 						}
 					}
@@ -716,6 +765,7 @@ extension Model {
 		if let e = coordinationError ?? closureError {
 			throw e
 		}
+        return changesMade
 	}
     
     static func detectExternalChanges() {
@@ -745,8 +795,6 @@ extension Model {
         drops.removeAll { uuids.contains($0.uuid) }
         drops.insert(contentsOf: cut, at: 0)
 
-        forceUpdateFilter(signalUpdate: false)
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: false)
-        saveIndexOnly()
+        saveIndexOnly(from: nil)
     }
 }

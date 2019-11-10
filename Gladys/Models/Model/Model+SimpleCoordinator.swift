@@ -9,5 +9,4 @@ extension Model {
 	static func saveComplete() {}
 	static func saveIndexComplete() {}
 	static func startupComplete() {}
-	static func reloadCompleted() {}
 }

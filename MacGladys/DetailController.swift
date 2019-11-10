@@ -73,8 +73,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: representedObject)
 		n.addObserver(self, selector: #selector(updateInfo), name: .IngestComplete, object: representedObject)
-		n.addObserver(self, selector: #selector(checkForChanges), name: .ExternalDataUpdated, object: nil)
-		n.addObserver(self, selector: #selector(checkForChanges), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(checkForChanges), name: .ModelDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(foreground(_:)), name: .ForegroundDisplayedItem, object: nil)
 		n.addObserver(self, selector: #selector(updateAlwaysOnTop), name: .AlwaysOnTopChanged, object: nil)
 

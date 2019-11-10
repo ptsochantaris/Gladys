@@ -19,16 +19,10 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
-    let allWindowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
-    var preferredScene = allWindowScenes.filter { $0.activationState == .foregroundActive }.first
-    if preferredScene == nil {
-        preferredScene = allWindowScenes.filter { $0.activationState == .foregroundInactive }.first
+    if let scene = SceneDelegate.latestMainSession?.scene as? UIWindowScene, let window = scene.windows.first {
+        window.alertPresenter?.present(a, animated: true)
     }
-    if preferredScene == nil {
-        preferredScene = allWindowScenes.filter { $0.activationState == .background }.first
-    }
-    preferredScene?.windows.first?.alertPresenter?.present(a, animated: true)
-
+    
 	if buttonTitle == nil && autoDismiss {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
 			a.dismiss(animated: true, completion: completion)
@@ -77,6 +71,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
     @IBOutlet private weak var editButton: UIBarButtonItem!
 
+    var filter: ModelFilterContext!
+    
 	var itemView: UICollectionView {
 		return collection!
 	}
@@ -164,13 +160,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		ArchivedDropItemType.droppedIds = Set<UUID>()
-		let item = Model.filteredDrops[indexPath.item]
+		let item = filter.filteredDrops[indexPath.item]
 		if item.needsUnlock { return [] }
 		return [item.dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let item = Model.filteredDrops[indexPath.item]
+		let item = filter.filteredDrops[indexPath.item]
 		let dragItem = item.dragItem
 		if session.localContext as? String == "typeItem" || session.items.contains(dragItem) || item.needsUnlock {
 			return []
@@ -180,15 +176,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return Model.filteredDrops.count
+		return filter.filteredDrops.count
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
-		if indexPath.item < Model.filteredDrops.count {
+		if indexPath.item < filter.filteredDrops.count {
 			cell.lowMemoryMode = lowMemoryMode
-			let item = Model.filteredDrops[indexPath.item]
+			let item = filter.filteredDrops[indexPath.item]
 			cell.archivedDropItem = item
 			cell.isEditing = isEditing
 			cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
@@ -198,7 +194,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 		for indexPath in indexPaths {
-			ArchivedItemCell.warmUp(for: Model.filteredDrops[indexPath.item])
+			ArchivedItemCell.warmUp(for: filter.filteredDrops[indexPath.item])
 		}
 	}
 
@@ -235,12 +231,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 					let sourceIndex = Model.drops.firstIndex(of: existingItem),
 					let filteredPreviousIndex = coordinatorItem.sourceIndexPath else { continue }
 
-				let destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
+				let destinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(filteredDestinationIndexPath.item)
 
 				collectionView.performBatchUpdates({
 				    Model.drops.remove(at: sourceIndex)
 				    Model.drops.insert(existingItem, at: destinationIndex)
-				    Model.forceUpdateFilter(signalUpdate: false)
+				    filter.forceUpdateFilter(signalUpdate: false)
 					collectionView.deleteItems(at: [filteredPreviousIndex])
 					collectionView.insertItems(at: [filteredDestinationIndexPath])
 				})
@@ -252,21 +248,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 				var firstDestinationPath: IndexPath?
 				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-					var dataIndex = coordinator.destinationIndexPath?.item ?? Model.filteredDrops.count
+					var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
 					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
 
-					if Model.isFiltering {
-						dataIndex = Model.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-						if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-							item.labels = Model.enabledLabelsForItems
+					if filter.isFiltering {
+						dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+						if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+							item.labels = filter.enabledLabelsForItems
 						}
 					}
 
 					var itemVisiblyInserted = false
 					collectionView.performBatchUpdates({
 						Model.drops.insert(item, at: dataIndex)
-						Model.forceUpdateFilter(signalUpdate: false)
-						itemVisiblyInserted = Model.filteredDrops.contains(item)
+						filter.forceUpdateFilter(signalUpdate: false)
+						itemVisiblyInserted = filter.filteredDrops.contains(item)
 						if itemVisiblyInserted {
 							collectionView.isAccessibilityElement = false
 							collectionView.insertItems(at: [destinationIndexPath])
@@ -288,18 +284,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
 
-		if needSave{
-		    Model.save()
-            signalOrderChange()
+		if needSave {
+            Model.saveIndexOnly(from: self)
 		} else {
 			updateEmptyView(animated: true)
 		}
 	}
     
-    private func signalOrderChange() {
-        NotificationCenter.default.post(name: .ItemOrderChangedByUser, object: self)
-    }
-
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
 	}
@@ -389,6 +380,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			if isEditing {
 				setEditing(false, animated: true)
 			}
+            (n.viewControllers.first as? LabelSelector)?.filter = filter
 
 		case "showLabelEditor":
 			guard let n = segue.destination as? UINavigationController,
@@ -397,6 +389,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				else { return }
 
 			p.delegate = self
+            e.currentFilter = filter
 			e.selectedItems = selectedItems
 			e.endCallback = { [weak self] hasChanges in
 				if hasChanges {
@@ -430,7 +423,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		if collectionView.hasActiveDrop && componentDropActiveFromDetailView == nil { return }
 
-		let item = Model.filteredDrops[indexPath.item]
+		let item = filter.filteredDrops[indexPath.item]
 		if item.shouldDisplayLoading {
 			return
 		}
@@ -533,7 +526,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
-		    Model.filter = searchController?.searchBar.text
+            self?.filter.filter = searchController?.searchBar.text
 			self?.didUpdateItems()
 		}
 
@@ -542,9 +535,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
         n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
-        n.addObserver(self, selector: #selector(insertedItems(_:)), name: .ItemsCreated, object: nil)
-		n.addObserver(self, selector: #selector(didUpdateItems), name: .SaveComplete, object: nil)
-		n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(modelDataUpdate(_:)), name: .ModelDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
@@ -563,7 +554,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
-        n.addObserver(self, selector: #selector(itemOrderChanged(_:)), name: .ItemOrderChangedByUser, object: nil)
         
         Model.checkForUpgrade()
 
@@ -581,15 +571,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             MirrorManager.startMirrorMonitoring()
         }
 	}
-    
-    @objc private func itemOrderChanged(_ notification: Notification) {
-        guard let o = notification.object as? ViewController else { return }
-        if o === self {
-            return
-        }
-        externalDataUpdate()
-    }
-    
+        
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let o = onLoad {
@@ -599,7 +581,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func resetSearchRequest() {
-        if searchActive || Model.isFiltering {
+        if searchActive || filter.isFiltering {
             resetSearch(andLabels: true)
         }
     }
@@ -741,7 +723,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-	@objc private func externalDataUpdate() {
+    @objc private func modelDataUpdate(_ notification: Notification) {
+        if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
+        filter.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData(onlyIfPopulated: false)
 		didUpdateItems()
 		updateEmptyView(animated: true)
@@ -764,7 +748,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		let selectedCount = selectedItems?.count ?? 0
 		let someSelected = selectedCount > 0
 
-		let itemCount = Model.filteredDrops.count
+		let itemCount = filter.filteredDrops.count
 		let c = someSelected ? selectedCount : itemCount
 		if c > 1 {
 			if someSelected {
@@ -783,7 +767,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 		itemsCount.isEnabled = itemCount > 0
 
-		let size = someSelected ? Model.sizeForItems(uuids: selectedItems ?? []) : Model.filteredSizeInBytes
+		let size = someSelected ? Model.sizeForItems(uuids: selectedItems ?? []) : filter.filteredSizeInBytes
 		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
 		deleteButton.isEnabled = someSelected
 		editLabelsButton.isEnabled = someSelected
@@ -791,7 +775,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
-		collection.isAccessibilityElement = Model.filteredDrops.isEmpty
+		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
 	}
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
@@ -848,10 +832,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			let sortMethod = option.handlerForSort(itemsToSort: items, ascending: ascending)
 			sortMethod()
-			Model.forceUpdateFilter(signalUpdate: false)
+			filter.forceUpdateFilter(signalUpdate: false)
 			reloadData(onlyIfPopulated: false)
 			Model.save()
-            signalOrderChange()
 		}
 	}
 
@@ -874,12 +857,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				p.delegate = self
 			}
 		} else {
-			let itemCount = Model.filteredDrops.count
+			let itemCount = filter.filteredDrops.count
 			guard itemCount > 0 else { return }
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
-				self.selectedItems = Model.filteredDrops.map { $0.uuid }
+                self.selectedItems = self.filter.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
 				self.didUpdateItems()
 			})
@@ -895,16 +878,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	@objc private func labelSelectionChanged() {
-	    Model.forceUpdateFilter(signalUpdate: true)
+	    filter.forceUpdateFilter(signalUpdate: true)
 		updateLabelIcon()
 	}
 
 	private func updateLabelIcon() {
-		if Model.isFilteringLabels {
+		if filter.isFilteringLabels {
 			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle.fill")
 			labelsButton.accessibilityLabel = "Labels"
 			labelsButton.accessibilityValue = "Active"
-			title = Model.enabledLabelsForTitles.joined(separator: ", ")
+			title = filter.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
 			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle")
 			labelsButton.accessibilityLabel = "Labels"
@@ -1205,7 +1188,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     @objc private func itemsDeleted(_ notification: Notification) {
-        guard let indexes = notification.object as? [Int] else { return }
+        guard let uuids = notification.object as? [UUID] else { return }
+        let indexes = uuids.compactMap { uuid in
+            filter.filteredDrops.firstIndex{ $0.uuid == uuid }
+        }
         let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
 		if !ipsToRemove.isEmpty {
@@ -1216,7 +1202,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		ensureNoEmptySearchResult()
 
-		if Model.filteredDrops.count == 0 {
+		if filter.filteredDrops.count == 0 {
 			mostRecentIndexPathActioned = nil
 			updateEmptyView(animated: true)
 			if isEditing {
@@ -1234,8 +1220,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func ensureNoEmptySearchResult() {
-	    Model.forceUpdateFilter(signalUpdate: true)
-		if Model.filteredDrops.count == 0 && Model.isFiltering {
+	    filter.forceUpdateFilter(signalUpdate: true)
+		if filter.filteredDrops.count == 0 && filter.isFiltering {
 			resetSearch(andLabels: true)
 		}
 	}
@@ -1249,7 +1235,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
-		if let i = Model.filteredDrops.firstIndex(of: item) {
+		if let i = filter.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 			if currentDetailView == nil {
 				focusInitialAccessibilityElement()
@@ -1258,7 +1244,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			item.reIndex {
 				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
-					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
+                    if !self.filter.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt && !item.loadingAborted {
 							genericAlert(title: "Item(s) Added", message: nil, buttonTitle: nil)
 						}
@@ -1292,14 +1278,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		s.isActive = false
 
 		if andLabels {
-			Model.disableAllLabels()
+			filter.disableAllLabels()
 			updateLabelIcon()
 		}
 
-		if Model.filter == nil { // because the next line won't have any effect if it's already nil
-			Model.forceUpdateFilter(signalUpdate: true)
+		if filter.filter == nil { // because the next line won't have any effect if it's already nil
+			filter.forceUpdateFilter(signalUpdate: true)
 		} else {
-			Model.filter = nil
+			filter.filter = nil
 		}
 
 		s.searchResultsUpdater = self
@@ -1308,7 +1294,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     @objc private func highlightItem(_ notification: Notification) {
         guard let request = notification.object as? HighlightRequest else { return }
-        if let index = Model.filteredDrops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
+        if let index = filter.filteredDrops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
 			dismissAnyPopOverOrModal() {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
@@ -1333,7 +1319,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 					self.collectionView(self.collection, didSelectItemAt: ip)
                     
                 } else if andPreview, let presenter = self.view.window?.alertPresenter {
-					let item = Model.filteredDrops[index]
+                    let item = self.filter.filteredDrops[index]
 					item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
 				}
 			}
@@ -1358,7 +1344,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private func reloadData(onlyIfPopulated: Bool) {
 		updateLabelIcon()
-		if onlyIfPopulated && Model.filteredDrops.filter({ !$0.isBeingCreatedBySync }).isEmpty {
+		if onlyIfPopulated && filter.filteredDrops.filter({ !$0.isBeingCreatedBySync }).isEmpty {
 			return
 		}
 		collection.performBatchUpdates({
@@ -1389,13 +1375,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     @objc private func noteLastActionedItem(_ notification: Notification) {
         guard let uuid = notification.object as? UUID else { return }
-        if let i = Model.filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
+        if let i = filter.filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 		}
 	}
 
 	private var closestIndexPathSinceLast: IndexPath? {
-		let count = Model.filteredDrops.count
+		let count = filter.filteredDrops.count
 		if count == 0 {
 			return nil
 		}

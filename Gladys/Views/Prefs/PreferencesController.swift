@@ -34,13 +34,15 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private var archiveDragItems: [UIDragItem] {
+        guard let filter = view.associatedFilter else { return [] }
+
 		let i = NSItemProvider()
 		i.suggestedName = "Gladys Archive.gladysArchive"
 		i.registerFileRepresentation(forTypeIdentifier: GladysFileUTI, fileOptions: [], visibility: .all) { completion -> Progress? in
 			DispatchQueue.main.async {
 				self.showExportActivity(true)
 			}
-			return Model.createArchive { url, error in
+            return Model.createArchive(using: filter) { url, error in
 				completion(url, false, error)
 				if let url = url {
 					try? FileManager.default.removeItem(at: url)
@@ -56,13 +58,15 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private var zipDragItems: [UIDragItem] {
-		let i = NSItemProvider()
+        guard let filter = view.associatedFilter else { return [] }
+
+        let i = NSItemProvider()
 		i.suggestedName = "Gladys.zip"
 		i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
 			DispatchQueue.main.async {
 				self.showZipActivity(true)
 			}
-			return Model.createZip { url, error in
+            return Model.createZip(using: filter) { url, error in
 				completion(url, false, error)
 				if let url = url {
 					try? FileManager.default.removeItem(at: url)
@@ -170,8 +174,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: actionName, style: .destructive) { action in
-			Model.resetEverything()
+		a.addAction(UIAlertAction(title: actionName, style: .destructive) { [weak self] action in
+            self?.view.associatedFilter?.resetEverything()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(a, animated: true)
@@ -202,7 +206,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		let zipDragInteraction = UIDragInteraction(delegate: self)
 		zipContainer.addInteraction(zipDragInteraction)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: .ModelDataUpdated, object: nil)
 		updateUI()
 
 		container.isAccessibilityElement = true
@@ -229,10 +233,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	@objc private func updateUI() {
 		spinner.stopAnimating()
 		exportOnlyVisibleSwitch.isEnabled = true
-		let count = Model.eligibleDropsForExport.count
+
+        guard let filter = view.associatedFilter else { return }
+
+		let count = filter.eligibleDropsForExport.count
 		if PersistedOptions.exportOnlyVisibleItems {
 			if count > 0 {
-				let size = diskSizeFormatter.string(fromByteCount: Model.sizeOfVisibleItemsInBytes)
+                let bytes = filter.sizeOfVisibleItemsInBytes
+				let size = diskSizeFormatter.string(fromByteCount: bytes)
 				if count > 1 {
 					infoLabel.text = "\(count) Visible Items\n\(size)"
 				} else {
@@ -274,10 +282,11 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	private func exportSelected() {
+        guard let filter = view.associatedFilter else { return }
 		DispatchQueue.main.async {
 			self.showExportActivity(true)
 		}
-		Model.createArchive { url, error in
+        Model.createArchive(using: filter) { url, error in
 			self.completeOperation(to: url, error: error)
 			DispatchQueue.main.async {
 				self.showExportActivity(false)
@@ -315,10 +324,12 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	}
 
 	@objc private func zipSelected() {
+        guard let filter = view.associatedFilter else { return }
+        
 		DispatchQueue.main.async {
 			self.showZipActivity(true)
 		}
-		Model.createZip { url, error in
+        Model.createZip(using: filter) { url, error in
 			self.completeOperation(to: url, error: error)
 			DispatchQueue.main.async {
 				self.showZipActivity(false)

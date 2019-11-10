@@ -15,6 +15,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	@IBOutlet private weak var emptyLabel: UILabel!
     @IBOutlet private weak var closeButton: UIButton!
     
+    var filter: ModelFilterContext!
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneLocation = .left
@@ -25,7 +27,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			}
 			count += 1
 		}
-		clearAllButton.isEnabled = Model.isFilteringLabels
+		clearAllButton.isEnabled = filter.isFilteringLabels
 		if filteredToggles.count == 0 {
 			table.isHidden = true
 			navigationController?.setNavigationBarHidden(true, animated: false)
@@ -53,8 +55,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		table.tableFooterView = UIView()
 
         let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
-        n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
+        n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
 	}
 
     @IBAction private func closeSelected(_ sender: UIButton) {
@@ -63,7 +64,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     
     @objc private func labelsUpdated() {
 		table.reloadData()
-		clearAllButton.isEnabled = Model.isFilteringLabels
+		clearAllButton.isEnabled = filter.isFilteringLabels
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -116,7 +117,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	}
 
 	@IBAction private func clearAllSelected(_ sender: UIBarButtonItem) {
-	    Model.disableAllLabels()
+	    filter.disableAllLabels()
 		updates()
 		done()
 		LabelSelector.filter = ""
@@ -124,13 +125,13 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	private func updates() {
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-		clearAllButton.isEnabled = Model.isFilteringLabels
+		clearAllButton.isEnabled = filter.isFilteringLabels
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		var newState = filteredToggles[indexPath.row]
 		newState.enabled = !newState.enabled
-	    Model.updateLabel(newState)
+	    filter.updateLabel(newState)
 		if !newState.enabled {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
@@ -147,8 +148,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] action in
 			guard let s = self else { return }
-		    Model.removeLabel(toggle.name)
-			if Model.labelToggles.count == 0 {
+            s.filter.removeLabel(toggle.name)
+            if s.filter.labelToggles.count == 0 {
 				tableView.isHidden = true
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
@@ -189,12 +190,12 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	static private var filter = ""
 
-	var filteredToggles: [Model.LabelToggle] {
-		let items: [Model.LabelToggle]
+	var filteredToggles: [ModelFilterContext.LabelToggle] {
+		let items: [ModelFilterContext.LabelToggle]
 		if LabelSelector.filter.isEmpty {
-			items = Model.labelToggles
+			items = filter.labelToggles
 		} else {
-			items = Model.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
+			items = filter.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
 		}
 		return items.filter { !$0.emptyChecker || $0.enabled || $0.count > 0 }
 	}

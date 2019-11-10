@@ -96,7 +96,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 		searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
 			self?.searchUpdated()
 		}
-		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ExternalDataUpdated, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ModelDataUpdated, object: nil)
     }
 
 	@objc private func externalDataUpdated() {

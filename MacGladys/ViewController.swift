@@ -254,17 +254,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let n = NotificationCenter.default
 
-		let a1 = n.addObserver(forName: .ExternalDataUpdated, object: nil, queue: .main) { [weak self] _ in
+		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
 			Model.detectExternalChanges()
 			Model.rebuildLabels()
 			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
-			self?.updateEmptyView()
-			self?.reloadData()
-            self?.updateEmptyView()
-		}
-
-		let a2 = n.addObserver(forName: .SaveComplete, object: nil, queue: .main) { [weak self] _ in
-			self?.updateTitle()
+            self?.updateTitle()
 			self?.reloadData()
             self?.updateEmptyView()
 		}
@@ -301,7 +295,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
         
         let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
-            guard let indexes = notification.object as? [Int] else { return }
+            guard let uuids = notification.object as? Set<UUID> else { return }
+            let indexes = uuids.compactMap { uuid in
+                Model.filteredDrops.firstIndex{ $0.uuid == uuid }
+            }
             self?.itemsDeleted(indexes: indexes)
         }
         
@@ -315,14 +312,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             self?.highlightItem(with: request)
         }
         
-        let a13 = n.addObserver(forName: .ItemsCreated, object: nil, queue: .main) { [weak self] notification in
-            guard let count = notification.object as? Int, count > 0 else { return }
-            self?.insertItems(count: count)
-        }
-
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
+		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -1008,9 +1000,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				Model.duplicate(item: item)
 			}
 		}
-		Model.forceUpdateFilter(signalUpdate: false)
-		reloadData()
-		Model.save()
 	}
 
 	@objc func moveToTop(_ sender: Any?) {

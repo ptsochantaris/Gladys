@@ -20,14 +20,16 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	var editedUUIDs = Set<UUID>()
 
 	var endCallback: ((Bool)->Void)?
+    
+    var currentFilter: ModelFilterContext!
 
-    private var modelToggles: [Model.LabelToggle] {
-        return Model.labelToggles.filter { !$0.emptyChecker }
+    private var modelToggles: [ModelFilterContext.LabelToggle] {
+        return currentFilter.labelToggles.filter { !$0.emptyChecker }
     }
     
-	private lazy var allToggles = [Model.LabelToggle]()
+	private lazy var allToggles = [ModelFilterContext.LabelToggle]()
 
-	private var availableToggles = [Model.LabelToggle]()
+	private var availableToggles = [ModelFilterContext.LabelToggle]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -35,8 +37,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         doneLocation = .left
         
         let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
-        n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
+        n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
 	}
     
     @objc private func labelsUpdated() {
@@ -153,7 +154,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 		textField.text = nil
 		if !allToggles.contains(where: { $0.name == newTag }) {
-			let newToggle = Model.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
+			let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
 		}

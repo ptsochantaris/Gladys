@@ -14,8 +14,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let n = NotificationCenter.default
-		n.addObserver(self, selector: #selector(labelsUpdated), name: .ExternalDataUpdated, object: nil)
-		n.addObserver(self, selector: #selector(labelsUpdated), name: .SaveComplete, object: nil)
+		n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
 		labelsUpdated()
 	}
 

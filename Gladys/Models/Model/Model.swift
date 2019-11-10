@@ -147,7 +147,7 @@ final class Model {
 			DispatchQueue.main.async {
 				if isStarted {
 					if didLoad {
-						reloadCompleted()
+                        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
 					}
 				} else {
 					isStarted = true
@@ -199,7 +199,7 @@ final class Model {
 		DispatchQueue.main.async {
 			if isStarted {
 				if didLoad {
-					reloadCompleted()
+                    NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
 				}
 			} else {
 				isStarted = true

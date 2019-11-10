@@ -58,7 +58,7 @@ final class DetailController: GladysViewController,
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
-		n.addObserver(self, selector: #selector(updateUI), name: .ExternalDataUpdated, object: nil)
+		n.addObserver(self, selector: #selector(updateUI), name: .ModelDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
         n.addObserver(self, selector: #selector(checkRemoval), name: .ItemsRemoved, object: nil)
@@ -632,6 +632,7 @@ final class DetailController: GladysViewController,
 			}
 			p.permittedArrowDirections = [.left, .right]
 			d.delegate = self
+            d.modelFilter = view.associatedFilter
 			p.delegate = self
 			if indexPath.row < item.labels.count {
 				d.title = "Edit Label"

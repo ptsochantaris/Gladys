@@ -39,7 +39,6 @@ extension Model {
 				try? fm.removeItem(at: url)
 			}
 			save()
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
 		}
 
 		let data = try Data(contentsOf: url.appendingPathComponent("items.json"), options: [.alwaysMapped])
@@ -61,11 +60,6 @@ extension Model {
 		}
 	}
 
-	static var eligibleDropsForExport: [ArchivedDropItem] {
-		let items = PersistedOptions.exportOnlyVisibleItems ? Model.threadSafeFilteredDrops : Model.threadSafeDrops
-		return items.filter { $0.goodToSave }
-	}
-
 	private class FileManagerFilter: NSObject, FileManagerDelegate {
 		func fileManager(_ fileManager: FileManager, shouldCopyItemAt srcURL: URL, to dstURL: URL) -> Bool {
 			guard let lastComponent = srcURL.pathComponents.last else { return false }
@@ -76,8 +70,8 @@ extension Model {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@discardableResult
-	static func createArchive(completion: @escaping (URL?, Error?) -> Void) -> Progress {
-		let eligibleItems = eligibleDropsForExport.filter { !$0.isImportedShare }
+    static func createArchive(using filter: ModelFilterContext, completion: @escaping (URL?, Error?) -> Void) -> Progress {
+        let eligibleItems = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
 		let count = 2 + eligibleItems.count
 		let p = Progress(totalUnitCount: Int64(count))
 
@@ -123,9 +117,9 @@ extension Model {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@discardableResult
-	static func createZip(completion: @escaping (URL?, Error?)->Void) -> Progress {
+    static func createZip(using filter: ModelFilterContext, completion: @escaping (URL?, Error?)->Void) -> Progress {
 
-		let dropsCopy = eligibleDropsForExport
+        let dropsCopy = filter.eligibleDropsForExport
 		let itemCount = Int64(1 + dropsCopy.count)
 		let p = Progress(totalUnitCount: itemCount)
 

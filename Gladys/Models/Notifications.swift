@@ -29,9 +29,8 @@ struct PasteRequest {
 }
 
 extension Notification.Name {
-	static let SaveComplete = Notification.Name("SaveComplete")
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
-	static let ExternalDataUpdated = Notification.Name("ExternalDataUpdated")
+	static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
     static let ItemsCreated = Notification.Name("ItemsCreated")
 	static let ItemModified = Notification.Name("ItemModified")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
@@ -69,7 +68,6 @@ extension Notification.Name {
     static let ResetSearchRequest = Notification.Name("ResetSearchRequest")
     static let StartSearchRequest = Notification.Name("StartSearchRequest")
     static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
-    static let ItemOrderChangedByUser = Notification.Name("ItemOrderChangedByUser")
 }
 #endif
 

@@ -34,17 +34,18 @@ var componentDropActiveFromDetailView: DetailController?
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
+    static weak var latestMainSession: UISceneSession?
+    
     override init() {
         super.init()
         
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
-        n.addObserver(self, selector: #selector(externalDataUpdate), name: .ExternalDataUpdated, object: nil)
+        n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
     }
     
-    @objc private func externalDataUpdate() {
-        Model.forceUpdateFilter(signalUpdate: false) // will force below
+    @objc private func modelDataUpdate() {
         Model.detectExternalChanges()
     }
     
@@ -217,8 +218,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showCentral(in scene: UIWindowScene, completion: @escaping ()->Void) {
-        let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
+        let s = scene.session
+        let n = s.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
         let v = n.viewControllers.first as! ViewController
+        v.filter = s.associatedFilter
         v.onLoad = completion
         scene.windows.first?.rootViewController = n
     }
@@ -232,5 +235,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Model.scanForMirrorChanges {}
         }
         CloudManager.opportunisticSyncIfNeeded(isStartup: false)
+    }
+    
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        SceneDelegate.latestMainSession = scene.session
     }
 }

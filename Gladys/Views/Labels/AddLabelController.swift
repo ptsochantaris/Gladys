@@ -28,12 +28,14 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 		super.viewDidLoad()
 		labelText.text = label
 	}
+    
+    var modelFilter: ModelFilterContext!
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: false)
 
-		let h: CGFloat = Model.labelToggles.count == 0 ? 67 : 320
+		let h: CGFloat = modelFilter.labelToggles.count == 0 ? 67 : 320
 		preferredContentSize = CGSize(width: preferredContentSize.width, height: h)
 	}
 
@@ -44,14 +46,14 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 
 	var filteredToggles: [String] {
 		if filter.isEmpty {
-			return Model.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
+			return modelFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
 		} else {
-			return Model.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
+			return modelFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
 		}
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		if Model.labelToggles.count == 0 {
+		if modelFilter.labelToggles.count == 0 {
 			return 0
 		} else {
 			return 1

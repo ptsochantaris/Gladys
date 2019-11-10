@@ -51,11 +51,6 @@ final class PullState {
 		}
 		
 		let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
-
-		if itemsModified || updatedSequence {
-			log("Posting external data update notification")
-			NotificationCenter.default.post(name: .ExternalDataUpdated, object: nil)
-		}
 		
 		if itemsModified {
 			// need to save stuff that's been modified
@@ -69,7 +64,7 @@ final class PullState {
 		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
-				Model.saveIndexOnly()
+                Model.saveIndexOnly(from: nil)
 			}
 			if commitTokens {
 				commitNewTokens()

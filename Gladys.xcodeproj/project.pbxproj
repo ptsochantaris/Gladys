@@ -33,6 +33,8 @@
 		1604A3361F091D7D005A477E /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1604A3371F091D80005A477E /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		1604A3381F093073005A477E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		1605050423784952002755A2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
+		1605050523784961002755A2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
 		1605C5FC1F13A95600F54B19 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */; };
 		16062E091EFE647800AB5353 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E081EFE647800AB5353 /* DetailController.swift */; };
 		16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E0B1EFE705800AB5353 /* DetailCell.swift */; };
@@ -2371,6 +2373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
+				1605050523784961002755A2 /* Notifications.swift in Sources */,
 				16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16A80A102113AFE7004C72AB /* Caches.swift in Sources */,
 				16287AF61EFB05E4007188AE /* ArchivedDropItemType.swift in Sources */,
@@ -2620,6 +2623,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1605050423784952002755A2 /* Notifications.swift in Sources */,
 				16C3A2D720AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
 				162BDD78220F020900A3C17B /* Logging.swift in Sources */,
 				16969BAD1FB0E675007B2F77 /* ArchivedDropItemType.swift in Sources */,
