@@ -27,8 +27,8 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
-        doneLocation = .right
-        windowLocation = .right
+        doneButtonLocation = .right
+        windowButtonLocation = .right
         
 		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { w, v in
 			if let n = v.newValue {

@@ -31,7 +31,7 @@ final class iCloudController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		doneLocation = .right
+		doneButtonLocation = .right
 
 		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
 

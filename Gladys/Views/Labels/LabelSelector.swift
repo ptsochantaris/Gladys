@@ -19,7 +19,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		doneLocation = .left
+		doneButtonLocation = .left
 		var count = 0
 		for toggle in filteredToggles {
 			if toggle.enabled {

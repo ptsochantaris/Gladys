@@ -186,7 +186,7 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		doneLocation = .right
+		doneButtonLocation = .right
 
 		container.layer.cornerRadius = 10
 		innerFrame.layer.cornerRadius = 5

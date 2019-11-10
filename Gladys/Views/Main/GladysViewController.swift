@@ -13,8 +13,8 @@ class GladysViewController: UIViewController {
 	enum ActionLocation {
 		case none, left, right
 	}
-	var doneLocation = ActionLocation.none
-    var windowLocation = ActionLocation.none
+	var doneButtonLocation = ActionLocation.none
+    var windowButtonLocation = ActionLocation.none
 
 	var initialAccessibilityElement: UIView {
 		return navigationController?.navigationBar ?? view
@@ -73,20 +73,23 @@ class GladysViewController: UIViewController {
             dismiss(animated: true)
         }
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateButtons(traits: traitCollection)
 
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		checkActionLocations()
-	}
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        updateButtons(traits: newCollection)
+    }
 
-	private func checkActionLocations() {
-        if windowLocation != .none && traitCollection.userInterfaceIdiom == .pad {
-            if !isInStandaloneWindow {
-                showWindow(true)
-            }
+    private func updateButtons(traits: UITraitCollection) {
+        if windowButtonLocation != .none && traits.userInterfaceIdiom == .pad {
+            showWindow(true)
         }
         
-        if doneLocation != .none {
+        if doneButtonLocation != .none {
             if UIAccessibility.isVoiceOverRunning || isInStandaloneWindow {
                 showDone(true)
                 return
@@ -94,10 +97,10 @@ class GladysViewController: UIViewController {
             
             let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
             if s == -1 { // hovering
-                if traitCollection.horizontalSizeClass == .compact {
+                if traits.horizontalSizeClass == .compact {
                     showDone(false)
                 } else {
-                    showDone(traitCollection.verticalSizeClass == .compact)
+                    showDone(traits.verticalSizeClass == .compact)
                 }
             } else { // full window?
                 showDone(popoverPresentationController == nil || phoneMode || isInStandaloneWindow)
@@ -115,6 +118,15 @@ class GladysViewController: UIViewController {
         }
     }
 
+    @objc private func mainWindowSelected() {
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = view.window?.windowScene
+        let mainWindowSession = UIApplication.shared.openSessions.first { $0.stateRestorationActivity == nil }
+        UIApplication.shared.requestSceneSessionActivation(mainWindowSession, userActivity: nil, options: options) { error in
+            log("Error opening new window: \(error.localizedDescription)")
+        }
+    }
+    
     private var scrollTimer: GladysTimer?
 	private var scrollLink: CADisplayLink?
 	private var scrollView: UIScrollView?
@@ -170,11 +182,17 @@ class GladysViewController: UIViewController {
 	}
 
 	private func showDone(_ show: Bool) {
-        showButton(show, location: doneLocation, button: doneButton)
+        showButton(show, location: doneButtonLocation, button: doneButton)
 	}
     
     private func showWindow(_ show: Bool) {
-        showButton(show, location: windowLocation, button: windowButton)
+        let n1 = UIBarButtonItem(title: "Main Window", style: .plain, target: self, action: #selector(mainWindowSelected))
+        n1.image = UIImage(systemName: "square.grid.2x2")
+        showButton(isInStandaloneWindow, location: windowButtonLocation, button: n1)
+
+        let n2 = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
+        n2.image = UIImage(systemName: "uiwindow.split.2x1")
+        showButton(!isInStandaloneWindow, location: windowButtonLocation, button: n2)
     }
 
     private func showButton(_ show: Bool, location: ActionLocation, button: UIBarButtonItem) {
@@ -203,12 +221,6 @@ class GladysViewController: UIViewController {
 	private lazy var doneButton: UIBarButtonItem = {
         return makeDoneButton(target: self, action: #selector(done))
 	}()
-    
-    private lazy var windowButton: UIBarButtonItem = {
-        let n = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
-        n.image = UIImage(systemName: "uiwindow.split.2x1")
-        return n
-    }()
     
     var isInStandaloneWindow: Bool {
         return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isInStandaloneWindow ?? false

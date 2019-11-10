@@ -137,7 +137,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		doneLocation = .right
+		doneButtonLocation = .right
 
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
         blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests

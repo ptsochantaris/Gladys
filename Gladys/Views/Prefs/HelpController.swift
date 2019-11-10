@@ -18,7 +18,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		doneLocation = .right
+		doneButtonLocation = .right
 		table.backgroundView = nil
 		table.backgroundColor = .clear
 	}

@@ -29,7 +29,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		doneLocation = .right
+		doneButtonLocation = .right
 
 		if let decoded = typeEntry.decode() {
 

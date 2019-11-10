@@ -32,8 +32,8 @@ final class PreviewHostingInternalController: GladysViewController {
         let tint = UIColor(named: "colorTint")
         view.tintColor = tint
         
-        windowLocation = .right        
-        doneLocation = .right
+        windowButtonLocation = .right        
+        doneButtonLocation = .right
                 
         if let qlController = qlController {
             

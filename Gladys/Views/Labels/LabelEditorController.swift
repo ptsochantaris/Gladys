@@ -34,7 +34,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	override func viewDidLoad() {
 		super.viewDidLoad()
         labelsUpdated()
-        doneLocation = .left
+        doneButtonLocation = .left
         
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)

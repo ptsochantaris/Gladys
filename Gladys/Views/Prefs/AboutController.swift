@@ -18,7 +18,7 @@ final class AboutController: GladysViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		doneLocation = .right
+		doneButtonLocation = .right
 
         unlimitedButton.isHidden = infiniteMode
 

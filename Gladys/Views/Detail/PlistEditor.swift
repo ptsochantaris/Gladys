@@ -45,7 +45,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		super.viewDidLoad()
 		arrayMode = propertyList is [Any]
 		table.tableFooterView = UIView(frame: .zero)
-		doneLocation = .right
+		doneButtonLocation = .right
 		if !shouldEnableCopyButton, let i = navigationItem.rightBarButtonItems?.firstIndex(of: copyButton) {
 			navigationItem.rightBarButtonItems?.remove(at: i)
 		}
