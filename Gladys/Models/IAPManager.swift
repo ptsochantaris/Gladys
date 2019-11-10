@@ -206,7 +206,7 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
 
         assert(Thread.isMainThread)
 
-        if Model.isFiltering {
+        if Model.sharedFilter.isFiltering {
             ViewController.shared.resetSearch(andLabels: true)
         }
 

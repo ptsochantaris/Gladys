@@ -19,12 +19,12 @@ final class NewLabelController: NSViewController, NSTableViewDelegate, NSTableVi
 
 	weak var delegate: NewLabelControllerDelegate?
 
-	private var filteredLabels: [Model.LabelToggle] {
+	private var filteredLabels: [ModelFilterContext.LabelToggle] {
 		let l = labelField.stringValue
 		if l.isEmpty {
-			return Model.labelToggles.filter { !$0.emptyChecker }
+            return Model.sharedFilter.labelToggles.filter { !$0.emptyChecker }
 		} else {
-			return Model.labelToggles.filter { !$0.emptyChecker && $0.name.localizedCaseInsensitiveContains(l) }
+			return Model.sharedFilter.labelToggles.filter { !$0.emptyChecker && $0.name.localizedCaseInsensitiveContains(l) }
 		}
 	}
 

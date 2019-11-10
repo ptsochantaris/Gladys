@@ -10,11 +10,11 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		return availableToggles.count
 	}
 
-	private var allToggles: [Model.LabelToggle] = {
-		return Model.labelToggles.filter { !$0.emptyChecker }
+	private var allToggles: [ModelFilterContext.LabelToggle] = {
+		return Model.sharedFilter.labelToggles.filter { !$0.emptyChecker }
 	}()
 
-	private var availableToggles: [Model.LabelToggle] {
+	private var availableToggles: [ModelFilterContext.LabelToggle] {
 		let filter = newLabelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
 		if filter.isEmpty {
 			return allToggles
@@ -75,7 +75,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 
 		newLabelField.stringValue = ""
 		if !allToggles.contains(where: { $0.name == newTag }) {
-			let newToggle = Model.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
+			let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
 		}

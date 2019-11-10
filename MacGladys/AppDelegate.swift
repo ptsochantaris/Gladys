@@ -417,7 +417,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		s.allowedFileTypes = ["gladysArchive"]
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
-				let p = Model.createArchive { createdUrl, error in
+                let p = Model.createArchive(using: Model.sharedFilter) { createdUrl, error in
 					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
 				ViewController.shared.startProgress(for: p)
@@ -453,7 +453,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		s.beginSheetModal(for: w) { response in
 			if response == .OK, let selectedUrl = s.url {
 				assert(Thread.isMainThread)
-				let p = Model.createZip { createdUrl, error in
+                let p = Model.createZip(using: Model.sharedFilter) { createdUrl, error in
 					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
 				}
 				ViewController.shared.startProgress(for: p)

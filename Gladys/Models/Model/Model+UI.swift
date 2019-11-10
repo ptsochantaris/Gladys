@@ -154,7 +154,25 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	}
 }
 
-//////////////////////////////////////////////////////////
+extension UISceneSession {
+    var associatedFilter: ModelFilterContext? {
+        if let existing = userInfo?["mainFilter"] as? ModelFilterContext {
+            return existing
+        }
+        let newFilter = ModelFilterContext()
+        if userInfo == nil {
+            userInfo = [String: Any]()
+        }
+        userInfo!["mainFilter"] = newFilter
+        return newFilter
+    }
+}
+
+extension UIView {
+    var associatedFilter: ModelFilterContext? {
+        return window?.windowScene?.session.associatedFilter
+    }
+}
 
 extension Model {
 

@@ -106,12 +106,12 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     }
     
     func numberOfItems(for scrubber: NSScrubber) -> Int {
-        return Model.filteredDrops.count
+        return Model.sharedFilter.filteredDrops.count
     }
     
     func scrubber(_ scrubber: NSScrubber, viewForItemAt index: Int) -> NSScrubberItemView {
         if let itemView = scrubber.makeItem(withIdentifier: GladysThumbnailItemView.identifier, owner: nil) as? GladysThumbnailItemView {
-            let drop = Model.filteredDrops[index]
+            let drop = Model.sharedFilter.filteredDrops[index]
             itemView.decorate(with: drop)
             return itemView
         }
@@ -124,7 +124,7 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     }
     
     func scrubber(_ scrubber: NSScrubber, didSelectItemAt index: Int) {
-        let drop = Model.filteredDrops[index]
+        let drop = Model.sharedFilter.filteredDrops[index]
         ViewController.shared.touchedItem(drop)
     }
 }

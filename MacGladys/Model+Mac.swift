@@ -3,16 +3,18 @@ import Foundation
 
 extension Model {
 
+    static let sharedFilter = ModelFilterContext()
+
 	static var coordinator: NSFileCoordinator {
 		return NSFileCoordinator(filePresenter: nil)
 	}
 
 	static func prepareToSave() {
-		rebuildLabels()
+        Model.sharedFilter.rebuildLabels()
 	}
 
 	static func startupComplete() {
-		rebuildLabels()
+		Model.sharedFilter.rebuildLabels()
 		trimTemporaryDirectory()
 	}
 

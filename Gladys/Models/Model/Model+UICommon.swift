@@ -343,26 +343,6 @@ final class ModelFilterContext {
     }
 }
 
-extension UISceneSession {
-    var associatedFilter: ModelFilterContext? {
-        if let existing = userInfo?["mainFilter"] as? ModelFilterContext {
-            return existing
-        }
-        let newFilter = ModelFilterContext()
-        if userInfo == nil {
-            userInfo = [String: Any]()
-        }
-        userInfo!["mainFilter"] = newFilter
-        return newFilter
-    }
-}
-
-extension UIView {
-    var associatedFilter: ModelFilterContext? {
-        return window?.windowScene?.session.associatedFilter
-    }
-}
-
 extension Model {
 	static var saveIsDueToSyncFetch = false
 
@@ -663,7 +643,7 @@ extension Model {
 		}
 	}
 
-    static func saveIndexOnly(from requester: UIViewController?) {
+    static func saveIndexOnly(from requester: Any?) {
 		let itemsToSave = drops.filter { $0.goodToSave }
 		saveQueue.async {
 			do {

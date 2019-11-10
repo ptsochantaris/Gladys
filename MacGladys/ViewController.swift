@@ -101,7 +101,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 
 	var actionableSelectedItems: [ArchivedDropItem] {
 		return selectionIndexPaths.compactMap {
-			let item = Model.filteredDrops[$0.item]
+			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return item.needsUnlock ? nil : item
 		}
 	}
@@ -151,7 +151,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@IBOutlet private weak var collection: MainCollectionView!
 
-	static var shared: ViewController! = nil
+	static var shared: ViewController!
 
 	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
@@ -220,7 +220,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 		var index = 0
 		var indexSet = Set<IndexPath>()
-		for i in Model.filteredDrops {
+		for i in Model.sharedFilter.filteredDrops {
 			if selectedUUIDS.contains(i.uuid) {
 				indexSet.insert(IndexPath(item: index, section: 0))
 			}
@@ -256,8 +256,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
 			Model.detectExternalChanges()
-			Model.rebuildLabels()
-			Model.forceUpdateFilter(signalUpdate: false) // refresh filtered items
+			Model.sharedFilter.rebuildLabels()
+			Model.sharedFilter.forceUpdateFilter(signalUpdate: false) // refresh filtered items
             self?.updateTitle()
 			self?.reloadData()
             self?.updateEmptyView()
@@ -274,7 +274,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.deselectAll(nil)
-			Model.forceUpdateFilter(signalUpdate: true)
+			Model.sharedFilter.forceUpdateFilter(signalUpdate: true)
 			self?.updateTitle()
 		}
 
@@ -297,7 +297,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
             guard let uuids = notification.object as? Set<UUID> else { return }
             let indexes = uuids.compactMap { uuid in
-                Model.filteredDrops.firstIndex{ $0.uuid == uuid }
+                Model.sharedFilter.filteredDrops.firstIndex{ $0.uuid == uuid }
             }
             self?.itemsDeleted(indexes: indexes)
         }
@@ -337,8 +337,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func updateTitle() {
 		var title: String
-		if Model.isFilteringLabels {
-			title = Model.enabledLabelsForTitles.joined(separator: ", ")
+		if Model.sharedFilter.isFilteringLabels {
+			title = Model.sharedFilter.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
 			title = "Gladys"
 		}
@@ -364,7 +364,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     private var firstKey = true
 	func isKey() {
-		if Model.filteredDrops.count == 0 {
+		if Model.sharedFilter.filteredDrops.count == 0 {
             if firstKey {
                 firstKey = false
                 blurb(Greetings.openLine)
@@ -418,12 +418,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
 
-		if Model.filteredDrops.contains(item) {
+		if Model.sharedFilter.filteredDrops.contains(item) {
 			item.reIndex()
 		} else {
 			item.reIndex {
 				DispatchQueue.main.async { // if item is invisible after re-indexing, let the user know
-					if !Model.forceUpdateFilter(signalUpdate: true) && !loadingError {
+					if !Model.sharedFilter.forceUpdateFilter(signalUpdate: true) && !loadingError {
 						if item.createdAt == item.updatedAt && !item.loadingAborted {
 							genericAlert(title: "Item(s) Added", message: nil)
 						}
@@ -451,12 +451,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-		return Model.filteredDrops.count
+		return Model.sharedFilter.filteredDrops.count
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
 		let i = collectionView.makeItem(withIdentifier: ViewController.dropCellId, for: indexPath)
-		i.representedObject = Model.filteredDrops[indexPath.item]
+		i.representedObject = Model.sharedFilter.filteredDrops[indexPath.item]
 		return i
 	}
 
@@ -503,7 +503,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func shareSelected(_ sender: Any?) {
 		guard let itemToShare = collection.actionableSelectedItems.first,
-			let i = Model.filteredDrops.firstIndex(of: itemToShare),
+			let i = Model.sharedFilter.filteredDrops.firstIndex(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
 			else { return }
 
@@ -527,13 +527,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateSearch()
 
 		if andLabels {
-			Model.disableAllLabels()
+			Model.sharedFilter.disableAllLabels()
 		}
 
-		if Model.filter == nil { // because the next line won't have any effect if it's already nil
-			Model.forceUpdateFilter(signalUpdate: true)
+		if Model.sharedFilter.filter == nil { // because the next line won't have any effect if it's already nil
+			Model.sharedFilter.forceUpdateFilter(signalUpdate: true)
 		} else {
-			Model.filter = nil
+			Model.sharedFilter.filter = nil
 		}
 	}
 
@@ -558,11 +558,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	private func updateSearch() {
 		let s = searchBar.stringValue
-		Model.filter = s.isEmpty ? nil : s
+		Model.sharedFilter.filter = s.isEmpty ? nil : s
 	}
 
     func touchedItem(_ item: ArchivedDropItem) {
-        if let index = Model.filteredDrops.firstIndex(of: item) {
+        if let index = Model.sharedFilter.filteredDrops.firstIndex(of: item) {
             let ip = IndexPath(item: index, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: index)
@@ -620,11 +620,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return Model.filteredDrops[indexPath.item].pasteboardItem(forDrag: true)
+		return Model.sharedFilter.filteredDrops[indexPath.item].pasteboardItem(forDrag: true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return !indexPaths.map { Model.filteredDrops[$0.item].needsUnlock }.contains(true)
+		return !indexPaths.map { Model.sharedFilter.filteredDrops[$0.item].needsUnlock }.contains(true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
@@ -642,7 +642,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
 		if let d = draggingIndexPaths, !d.isEmpty {
 			if optionPressed {
-				let items = d.map { Model.filteredDrops[$0.item] }
+				let items = d.map { Model.sharedFilter.filteredDrops[$0.item] }
                 Model.delete(items: items)
 			}
 			draggingIndexPaths = nil
@@ -658,25 +658,25 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return false
 			}
 
-			var destinationIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			var destinationIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
 			if destinationIndex >= Model.drops.count {
 				destinationIndex = Model.drops.count - 1
 			}
 
 			var indexPath = indexPath
-			if indexPath.item >= Model.filteredDrops.count {
-				indexPath.item = Model.filteredDrops.count - 1
+			if indexPath.item >= Model.sharedFilter.filteredDrops.count {
+				indexPath.item = Model.sharedFilter.filteredDrops.count - 1
 			}
 
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
-				let sourceItem = Model.filteredDrops[draggingIndexPath.item]
+				let sourceItem = Model.sharedFilter.filteredDrops[draggingIndexPath.item]
 				let sourceIndex = Model.drops.firstIndex(of: sourceItem)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
 				collection.animator().moveItem(at: draggingIndexPath, to: indexPath)
 				collection.deselectAll(nil)
 			}
-			Model.forceUpdateFilter(signalUpdate: false)
+			Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
 			Model.save()
 			return true
 		} else {
@@ -727,21 +727,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
 
 				var modelIndex = indexPath.item
-				if Model.isFiltering {
-					modelIndex = Model.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-					if Model.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-						newItem.labels = Model.enabledLabelsForItems
+				if Model.sharedFilter.isFiltering {
+					modelIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+					if Model.sharedFilter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+						newItem.labels = Model.sharedFilter.enabledLabelsForItems
 					}
 				}
 				Model.drops.insert(newItem, at: modelIndex)
-				Model.forceUpdateFilter(signalUpdate: false)
+				Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
                 insertedUuids.append(newItem.uuid)
 			}
 		}
 
         if insertedUuids.count > 0 {
             let insertedIndexes = insertedUuids.compactMap { uuid in
-                return Model.filteredDrops.firstIndex { $0.uuid == uuid }
+                return Model.sharedFilter.filteredDrops.firstIndex { $0.uuid == uuid }
             }
             if insertedIndexes.count > 0 {
                 let insertedIndexPaths = insertedIndexes.map { IndexPath(item: $0, section: 0) }
@@ -774,7 +774,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			reloadData(deleting: ipsToRemove)
 		}
 
-		if Model.filteredDrops.count == 0 {
+		if Model.sharedFilter.filteredDrops.count == 0 {
 			blurb(Greetings.randomCleanLine)
 		}
 	}
@@ -832,7 +832,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func addCellToSelection(_ sender: DropCell) {
-		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.filteredDrops.firstIndex(of: cellItem) {
+		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.sharedFilter.filteredDrops.firstIndex(of: cellItem) {
 			let newIp = IndexPath(item: index, section: 0)
 			if !collection.selectionIndexPaths.contains(newIp) {
 				collection.selectionIndexPaths = [newIp]
@@ -1040,7 +1040,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	var lockableSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.filteredDrops[$0.item]
+			let item = Model.sharedFilter.filteredDrops[$0.item]
 			let isLocked = item.isLocked
 			let canBeLocked = !isLocked || (isLocked && !item.needsUnlock)
 			return (!canBeLocked || item.isImportedShare) ? nil : item
@@ -1049,20 +1049,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	var selectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.map {
-			Model.filteredDrops[$0.item]
+			Model.sharedFilter.filteredDrops[$0.item]
 		}
 	}
 
 	var removableLockSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.filteredDrops[$0.item]
+			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return (!item.isLocked || item.isImportedShare) ? nil : item
 		}
 	}
 
 	var unlockableSelectedItems: [ArchivedDropItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.filteredDrops[$0.item]
+			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return (!item.needsUnlock || item.isImportedShare) ? nil : item
 		}
 	}
@@ -1189,7 +1189,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
 		let index = collection.selectionIndexPaths.sorted()[index].item
-		return Model.filteredDrops[index].previewableTypeItem?.quickLookItem
+		return Model.sharedFilter.filteredDrops[index].previewableTypeItem?.quickLookItem
 	}
 
 	func previewPanel(_ panel: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
@@ -1202,7 +1202,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
 		guard let qlItem = item as? ArchivedDropItemType.PreviewItem else { return .zero }
-		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.filteredDrops.firstIndex(of: drop) {
+		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.sharedFilter.filteredDrops.firstIndex(of: drop) {
 			let frameRealativeToCollection = collection.frameForItem(at: index)
 			let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
 			let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)

@@ -29,9 +29,9 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		return filteredLabels.count
 	}
 
-	private var filteredLabels: [Model.LabelToggle] {
+	private var filteredLabels: [ModelFilterContext.LabelToggle] {
 		let text = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-		let toggles = Model.labelToggles.filter { $0.count > 0 }
+		let toggles = Model.sharedFilter.labelToggles.filter { $0.count > 0 }
 		if text.isEmpty {
 			return toggles
 		} else {
@@ -60,7 +60,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
 		var item = filteredLabels[row]
 		item.enabled = (object as? Int == 1)
-		Model.updateLabel(item)
+		Model.sharedFilter.updateLabel(item)
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 		labelsUpdated()
 	}
@@ -70,14 +70,14 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	@IBOutlet private weak var searchField: NSSearchField!
 
 	@IBAction private func clearAllSelected(_ sender: NSButton) {
-		Model.disableAllLabels()
+		Model.sharedFilter.disableAllLabels()
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 		labelsUpdated()
 	}
 
 	@objc private func labelsUpdated() {
 		tableView.reloadData()
-		clearAllButton.isEnabled = Model.isFilteringLabels
+		clearAllButton.isEnabled = Model.sharedFilter.isFilteringLabels
 	}
 
 	func controlTextDidChange(_ obj: Notification) {
