@@ -24,7 +24,7 @@ extension Model {
             return .tooManyItems
         }
         
-        let currentFilter = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first?.associatedFilter
+        let currentFilter = currentWindow?.associatedFilter
 
         for provider in providers { // separate item for each provider in the pasteboard
             for item in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {

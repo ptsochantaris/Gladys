@@ -12,6 +12,10 @@ extension UIKeyCommand {
     }
 }
 
+var currentWindow: UIWindow? {
+    return UIApplication.shared.connectedScenes.filter({ $0.activationState != .background }).compactMap({ ($0 as? UIWindowScene)?.windows.first }).lazy.first
+}
+
 @discardableResult
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
         
@@ -20,7 +24,7 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
 
-    if let connectedWindow = UIApplication.shared.connectedScenes.filter({ $0.activationState != .background }).compactMap({ ($0 as? UIWindowScene)?.windows.first }).lazy.first {
+    if let connectedWindow = currentWindow {
         connectedWindow.alertPresenter?.present(a, animated: true)
     }
     

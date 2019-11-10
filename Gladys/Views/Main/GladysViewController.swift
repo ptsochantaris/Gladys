@@ -185,7 +185,7 @@ class GladysViewController: UIViewController {
         case .left:
             var leftItems = navigationItem.leftBarButtonItems ?? []
             if show && !leftItems.contains(where: { $0.tag == tag }) {
-                leftItems.insert(button, at: 0)
+                leftItems.append(button)
                 navigationItem.leftBarButtonItems = leftItems
             } else if !show {
                 navigationItem.leftBarButtonItems?.removeAll { $0.tag == tag }
@@ -193,7 +193,7 @@ class GladysViewController: UIViewController {
         case .right:
             var rightItems = navigationItem.rightBarButtonItems ?? []
             if show && !rightItems.contains(where: { $0.tag == tag }) {
-                rightItems.insert(button, at: 0)
+                rightItems.append(button)
                 navigationItem.rightBarButtonItems = rightItems
             } else if !show {
                 navigationItem.rightBarButtonItems?.removeAll { $0.tag == tag }
@@ -214,31 +214,27 @@ class GladysViewController: UIViewController {
                 windowButtonLocation = .right
             }
         }
-        
-        let traits = traitCollection
-        let w = windowButtonLocation != .none && traits.userInterfaceIdiom == .pad
-        showWindow(w)
-        
+                
         if doneButtonLocation == .none {
             showDone(false)
-            return
-        }
-        
-        if UIAccessibility.isVoiceOverRunning || isAccessoryWindow {
+
+        } else if UIAccessibility.isVoiceOverRunning || isAccessoryWindow {
             showDone(true)
-            return
-        }
-        
-        let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
-        if s == -1 { // hovering
-            if traits.horizontalSizeClass == .compact {
+            
+        } else if (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1 { // hovering
+            if traitCollection.horizontalSizeClass == .compact {
                 showDone(false)
+
             } else {
-                showDone(traits.verticalSizeClass == .compact)
+                showDone(traitCollection.verticalSizeClass == .compact)
             }
+            
         } else { // full window?
             showDone(popoverPresentationController == nil || phoneMode || isAccessoryWindow)
         }
+        
+        let w = windowButtonLocation != .none && UIApplication.shared.supportsMultipleScenes
+        showWindow(w)
     }
 
     
