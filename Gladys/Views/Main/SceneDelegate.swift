@@ -35,7 +35,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     static weak var latestMainSession: UISceneSession?
-    
+        
     override init() {
         super.init()
         
@@ -77,6 +77,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             handleActivity(session.stateRestorationActivity, in: scene)
         }
+        checkWindowCount()
+    }
+    
+    func sceneDidDisconnect(_ scene: UIScene) {
+        checkWindowCount()
     }
     
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
@@ -231,13 +236,38 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
             
     func sceneWillEnterForeground(_ scene: UIScene) {
-        if PersistedOptions.mirrorFilesToDocuments {
-            Model.scanForMirrorChanges {}
+        SceneDelegate.latestMainSession = scene.session
+        if UIApplication.shared.applicationState == .background {
+            // just launching, or user was in another app
+            if PersistedOptions.mirrorFilesToDocuments {
+                Model.scanForMirrorChanges {}
+            }
+            CloudManager.opportunisticSyncIfNeeded(isStartup: false)
         }
-        CloudManager.opportunisticSyncIfNeeded(isStartup: false)
+        checkWindowCount()
+    }
+    
+    func sceneWillResignActive(_ scene: UIScene) {
+        checkWindowCount()
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        checkWindowCount()
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        SceneDelegate.latestMainSession = scene.session
+        checkWindowCount()
+    }
+    
+    static var openCount = 0
+    private func checkWindowCount() {
+        let count = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.count
+        if SceneDelegate.openCount == 1 && count != 1 {
+            SceneDelegate.openCount = count
+            NotificationCenter.default.post(name: .MultipleWindowModeChange, object: true)
+        } else if SceneDelegate.openCount != 1 && count == 1 {
+            SceneDelegate.openCount = count
+            NotificationCenter.default.post(name: .MultipleWindowModeChange, object: false)
+        }
     }
 }

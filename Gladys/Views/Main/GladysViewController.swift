@@ -15,6 +15,8 @@ class GladysViewController: UIViewController {
 	}
 	var doneButtonLocation = ActionLocation.none
     var windowButtonLocation = ActionLocation.none
+    var dismissOnNewWindow = true
+    var autoConfigureButtons = false
 
 	var initialAccessibilityElement: UIView {
 		return navigationController?.navigationBar ?? view
@@ -30,10 +32,24 @@ class GladysViewController: UIViewController {
 			UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 		}
 	}
+        
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent != nil {
+            updateButtons()
+        }
+    }
 
 	private var popoverPresenter: UIViewController? {
 		return popoverPresentationController?.presentingViewController ?? navigationController?.popoverPresentationController?.presentingViewController
 	}
+    
+    override func viewDidLoad() {
+        autoConfigureButtons = isAccessoryWindow
+        super.viewDidLoad()
+        let n = NotificationCenter.default
+        n.addObserver(self, selector: #selector(updateButtons), name: .MultipleWindowModeChange, object: nil)
+    }
 
 	private weak var vcToFocusAfterDismissal: UIViewController?
 
@@ -65,7 +81,7 @@ class GladysViewController: UIViewController {
 
 	@objc func done() {
         NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
-        if isInStandaloneWindow, let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
+        if (isAccessoryWindow || self is ViewController), let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard
             UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
@@ -74,43 +90,16 @@ class GladysViewController: UIViewController {
         }
 	}
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateButtons(traits: traitCollection)
-
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateButtons()
     }
     
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        updateButtons(traits: newCollection)
-    }
-
-    private func updateButtons(traits: UITraitCollection) {
-        if windowButtonLocation != .none && traits.userInterfaceIdiom == .pad {
-            showWindow(true)
-        }
-        
-        if doneButtonLocation != .none {
-            if UIAccessibility.isVoiceOverRunning || isInStandaloneWindow {
-                showDone(true)
-                return
-            }
-            
-            let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
-            if s == -1 { // hovering
-                if traits.horizontalSizeClass == .compact {
-                    showDone(false)
-                } else {
-                    showDone(traits.verticalSizeClass == .compact)
-                }
-            } else { // full window?
-                showDone(popoverPresentationController == nil || phoneMode || isInStandaloneWindow)
-            }
-        }
-    }
-         
     @objc private func newWindowSelected() {
         let activity = userActivity
-        done()
+        if dismissOnNewWindow {
+            done()
+        }
         let options = UIScene.ActivationRequestOptions()
         options.requestingScene = view.window?.windowScene
         UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
@@ -186,43 +175,94 @@ class GladysViewController: UIViewController {
 	}
     
     private func showWindow(_ show: Bool) {
-        let n1 = UIBarButtonItem(title: "Main Window", style: .plain, target: self, action: #selector(mainWindowSelected))
-        n1.image = UIImage(systemName: "square.grid.2x2")
-        showButton(isInStandaloneWindow, location: windowButtonLocation, button: n1)
-
-        let n2 = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
-        n2.image = UIImage(systemName: "uiwindow.split.2x1")
-        showButton(!isInStandaloneWindow, location: windowButtonLocation, button: n2)
+        showButton(show && isAccessoryWindow, location: windowButtonLocation, button: mainWindowButton)
+        showButton(show && !isAccessoryWindow, location: windowButtonLocation, button: newWindowButton)
     }
 
     private func showButton(_ show: Bool, location: ActionLocation, button: UIBarButtonItem) {
+        let tag = button.tag
         switch location {
         case .left:
             var leftItems = navigationItem.leftBarButtonItems ?? []
-            if show && !leftItems.contains(button) {
+            if show && !leftItems.contains(where: { $0.tag == tag }) {
                 leftItems.insert(button, at: 0)
                 navigationItem.leftBarButtonItems = leftItems
-            } else if !show && leftItems.contains(button) {
-                navigationItem.leftBarButtonItems = leftItems.filter { $0 != button }
+            } else if !show {
+                navigationItem.leftBarButtonItems?.removeAll { $0.tag == tag }
             }
         case .right:
             var rightItems = navigationItem.rightBarButtonItems ?? []
-            if show && !rightItems.contains(button) {
+            if show && !rightItems.contains(where: { $0.tag == tag }) {
                 rightItems.insert(button, at: 0)
                 navigationItem.rightBarButtonItems = rightItems
-            } else if !show && rightItems.contains(button) {
-                navigationItem.rightBarButtonItems = rightItems.filter { $0 != button }
+            } else if !show {
+                navigationItem.rightBarButtonItems?.removeAll { $0.tag == tag }
             }
         case .none:
-            break
+            navigationItem.leftBarButtonItems?.removeAll { $0.tag == tag }
+            navigationItem.rightBarButtonItems?.removeAll { $0.tag == tag }
         }
     }
     
+    @objc private func updateButtons() {
+        if autoConfigureButtons {
+            if SceneDelegate.openCount > 1 {
+                doneButtonLocation = .right
+                windowButtonLocation = .none
+            } else {
+                doneButtonLocation = .none
+                windowButtonLocation = .right
+            }
+        }
+        
+        let traits = traitCollection
+        let w = windowButtonLocation != .none && traits.userInterfaceIdiom == .pad
+        showWindow(w)
+        
+        if doneButtonLocation == .none {
+            showDone(false)
+            return
+        }
+        
+        if UIAccessibility.isVoiceOverRunning || isAccessoryWindow {
+            showDone(true)
+            return
+        }
+        
+        let s = popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0
+        if s == -1 { // hovering
+            if traits.horizontalSizeClass == .compact {
+                showDone(false)
+            } else {
+                showDone(traits.verticalSizeClass == .compact)
+            }
+        } else { // full window?
+            showDone(popoverPresentationController == nil || phoneMode || isAccessoryWindow)
+        }
+    }
+
+    
 	private lazy var doneButton: UIBarButtonItem = {
-        return makeDoneButton(target: self, action: #selector(done))
+        let b = makeDoneButton(target: self, action: #selector(done))
+        b.tag = 10925
+        return b
 	}()
     
-    var isInStandaloneWindow: Bool {
+    private lazy var mainWindowButton: UIBarButtonItem = {
+        let b = UIBarButtonItem(title: "Main Window", style: .plain, target: self, action: #selector(mainWindowSelected))
+        b.image = UIImage(systemName: "square.grid.2x2")
+        b.tag = 10924
+        return b
+    }()
+    
+    private lazy var newWindowButton: UIBarButtonItem = {
+        let b = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
+        b.image = UIImage(systemName: "uiwindow.split.2x1")
+        b.tag = 10923
+        return b
+    }()
+    
+    var isAccessoryWindow: Bool {
         return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isInStandaloneWindow ?? false
     }
 }

@@ -41,7 +41,7 @@ extension UIViewController {
     }
     
     var phoneMode: Bool {
-        guard let t = view.window?.traitCollection else { return false }
+        guard let t = (viewIfLoaded ?? navigationController?.viewIfLoaded)?.window?.traitCollection else { return false }
         return t.horizontalSizeClass == .compact || t.verticalSizeClass == .compact
     }
 }

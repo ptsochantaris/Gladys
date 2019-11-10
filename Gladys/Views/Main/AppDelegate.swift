@@ -28,7 +28,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         log("Initial reachability status: \(reachability.status.name)")
 		return true
 	}
-    
+        
 	func applicationWillTerminate(_ application: UIApplication) {
 		IAPManager.shared.stop()
 	}

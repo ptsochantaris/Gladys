@@ -707,7 +707,7 @@ final class DetailController: GladysViewController,
 			if session.localContext as? String == "typeItem" {
 				componentDropActiveFromDetailView = self
 			}
-            if !isInStandaloneWindow {
+            if !isAccessoryWindow {
                 done()
             }
 		}

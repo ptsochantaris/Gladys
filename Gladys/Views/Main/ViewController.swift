@@ -525,7 +525,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+        
 		collection.reorderingCadence = .fast
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
@@ -590,6 +590,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
         }
+        
+        dismissOnNewWindow = false
+        autoConfigureButtons = true
 	}
         
     override func viewDidAppear(_ animated: Bool) {
@@ -599,7 +602,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             onLoad = nil
         }
     }
-    
+
     @objc private func resetSearchRequest() {
         if searchActive || filter.isFiltering {
             resetSearch(andLabels: true)
