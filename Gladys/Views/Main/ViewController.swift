@@ -240,24 +240,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				collectionView.performBatchUpdates({
 
                     let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                    Model.moveItem(at: sourceIndex, to: modelDestinationIndex)
 
                     // update UI
                     if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
                         // previous item was visible on our collection view
-                        Model.moveItem(at: sourceIndex, to: modelDestinationIndex)
                         if filter.isFiltering {
                             filter.forceUpdateFilter(signalUpdate: false)
                         }
                         let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
                         collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
 
-                    } else { // from another window
-                        if let labels = filter?.enabledLabelsForItems, !labels.isEmpty {
-                            existingItem.labels.append(contentsOf: labels)
-                            needDataSave = true
-                        }
-                        Model.drops.insert(existingItem, at: modelDestinationIndex)
+                    } else { // from another window, since it wasn't in the colelction view
                         if filter.isFiltering {
+                            if let labels = filter?.enabledLabelsForItems, !labels.isEmpty {
+                                existingItem.labels.append(contentsOf: labels)
+                                needDataSave = true
+                            }
                             filter.forceUpdateFilter(signalUpdate: false)
                         }
                         collectionView.insertItems(at: [destinationIndexPath])

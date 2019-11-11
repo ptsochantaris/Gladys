@@ -207,7 +207,6 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		zipContainer.addInteraction(zipDragInteraction)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: .ModelDataUpdated, object: nil)
-		updateUI()
 
 		container.isAccessibilityElement = true
 		container.accessibilityLabel = "Import and export area"
@@ -229,7 +228,14 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 			zipContainer.cover(with: zipButton)
 		}
 	}
-
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent != nil {
+            updateUI()
+        }
+    }
+    
 	@objc private func updateUI() {
 		spinner.stopAnimating()
 		exportOnlyVisibleSwitch.isEnabled = true

@@ -486,6 +486,7 @@ extension Model {
         #endif
 		clearCaches()
 		save()
+        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil) // save will not post that, as it's all deletes
 	}
 
 	static func removeImportedShares() {
