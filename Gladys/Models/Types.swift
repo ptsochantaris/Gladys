@@ -7,10 +7,12 @@ let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
 #endif
 
 #if MAINAPP || MAC
+let kGladysMainListActivity = "build.bru.Gladys.main.list"
 let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
 let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
 let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
 let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
+let kGladysMainViewLabelList = "kGladysMainViewLabelList"
 #endif
 
 enum ArchivedDropItemDisplayType: Int {

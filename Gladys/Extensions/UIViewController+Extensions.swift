@@ -8,12 +8,6 @@
 
 import UIKit
 
-extension UIWindowScene {
-    var isInStandaloneWindow: Bool {
-        return session.stateRestorationActivity != nil
-    }
-}
-
 func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
     let b = UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
     b.accessibilityLabel = "Done"

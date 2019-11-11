@@ -199,6 +199,7 @@
 		167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
 		167CDF9820B62DB400EABC0A /* ArchivedDropItemType+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */; };
 		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
+		16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
@@ -724,6 +725,7 @@
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		167CDF9420B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Preview.swift"; sourceTree = "<group>"; };
 		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
+		16836EA82379598300985EA6 /* UIScene+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScene+Extensions.swift"; sourceTree = "<group>"; };
 		1686E7EF233D0D9C0012BA63 /* TouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBar.swift; sourceTree = "<group>"; };
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
@@ -1022,6 +1024,7 @@
 				166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */,
 				16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */,
 				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
+				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2545,6 +2548,7 @@
 				169763231F156E0700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
 				16559C8A20A4CC55006C281D /* Global.swift in Sources */,
+				16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */,
 				162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */,
 				163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,

@@ -110,7 +110,7 @@ class GladysViewController: UIViewController {
     @objc private func mainWindowSelected() {
         let options = UIScene.ActivationRequestOptions()
         options.requestingScene = view.window?.windowScene
-        let mainWindowSession = UIApplication.shared.openSessions.first { $0.stateRestorationActivity == nil }
+        let mainWindowSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
         UIApplication.shared.requestSceneSessionActivation(mainWindowSession, userActivity: nil, options: options) { error in
             log("Error opening new window: \(error.localizedDescription)")
         }
@@ -267,6 +267,6 @@ class GladysViewController: UIViewController {
     }()
     
     var isAccessoryWindow: Bool {
-        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isInStandaloneWindow ?? false
+        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
     }
 }

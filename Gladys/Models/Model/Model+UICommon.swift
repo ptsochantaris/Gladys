@@ -108,6 +108,15 @@ final class ModelFilterContext {
             return Model.drops.firstIndex(of: closestItem) ?? 0
         }
     }
+    
+    func enableLabelsByName(_ names: Set<String>) {
+        labelToggles = labelToggles.map {
+            var newToggle = $0
+            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
+            newToggle.enabled = names.contains(effectiveName)
+            return newToggle
+        }
+    }
 
     @discardableResult
     func forceUpdateFilter(with newValue: String? = nil, signalUpdate: Bool) -> Bool {
@@ -240,6 +249,9 @@ final class ModelFilterContext {
     var labelToggles = [LabelToggle]()
 
     struct LabelToggle {
+        
+        static let noNameTitle = "Items with no labels"
+        
         let name: String
         let count: Int
         var enabled: Bool
@@ -308,7 +320,7 @@ final class ModelFilterContext {
         if labelToggles.count > 0 {
             labelToggles.sort { $0.name < $1.name }
 
-            let name = "Items with no labels"
+            let name = ModelFilterContext.LabelToggle.noNameTitle
             let previousEnabled = previous.contains { $0.enabled && $0.name == name }
             labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
         }

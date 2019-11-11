@@ -99,7 +99,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showMaster(andHandle activity: NSUserActivity?, in scene: UIScene?) {
-        let masterSession = UIApplication.shared.openSessions.first { $0.stateRestorationActivity == nil }
+        let masterSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
         let options = UIScene.ActivationRequestOptions()
         options.requestingScene = scene
         UIApplication.shared.requestSceneSessionActivation(masterSession, userActivity: activity, options: options, errorHandler: nil)
@@ -154,6 +154,17 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         scene.session.stateRestorationActivity = userActivity
         
         switch userActivity?.activityType {
+        case kGladysMainListActivity:
+            
+            let labelList: Set<String>?
+            if let list = userActivity?.userInfo?[kGladysMainViewLabelList] as? [String], !list.isEmpty {
+                labelList = Set(list)
+            } else {
+                labelList = nil
+            }
+            showCentral(in: scene, restoringLabels: labelList) {}
+            return
+
         case kGladysQuicklookActivity:
             if
                 let userActivity = userActivity,
@@ -220,11 +231,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
     }
     
-    private func showCentral(in scene: UIWindowScene, completion: @escaping ()->Void) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: @escaping ()->Void) {
         let s = scene.session
         let n = s.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
         let v = n.viewControllers.first as! ViewController
-        v.filter = s.associatedFilter
+        let filter = s.associatedFilter
+        if let labels = labels {
+            filter.enableLabelsByName(labels)
+        }
+        v.filter = filter
         v.onLoad = completion
         scene.windows.first?.rootViewController = n
     }

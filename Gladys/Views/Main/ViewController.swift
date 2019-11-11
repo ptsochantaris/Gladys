@@ -582,6 +582,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         Model.checkForUpgrade()
 
+        if filter.isFilteringLabels { // in case we're restored with active labels
+            filter.forceUpdateFilter(signalUpdate: false)
+        }
+
 		didUpdateItems()
 		updateEmptyView(animated: false)
 		emptyView?.alpha = 1
@@ -598,6 +602,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         dismissOnNewWindow = false
         autoConfigureButtons = true
+        
+        userActivity = NSUserActivity(activityType: kGladysMainListActivity)
+        userActivity?.needsSave = true
 	}
         
     override func viewDidAppear(_ animated: Bool) {
@@ -908,6 +915,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@objc private func labelSelectionChanged() {
 	    filter.forceUpdateFilter(signalUpdate: true)
 		updateLabelIcon()
+        userActivity?.needsSave = true
 	}
 
 	private func updateLabelIcon() {
@@ -1485,6 +1493,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private var searchActive: Bool {
 		return navigationItem.searchController?.isActive ?? false
 	}
+    
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        super.updateUserActivityState(activity)
+        activity.title = title
+        activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles]
+    }
 }
 
 final class ShowDetailSegue: UIStoryboardSegue {

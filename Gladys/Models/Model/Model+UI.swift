@@ -155,7 +155,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 }
 
 extension UISceneSession {
-    var associatedFilter: ModelFilterContext? {
+    var associatedFilter: ModelFilterContext {
         if let existing = userInfo?["mainFilter"] as? ModelFilterContext {
             return existing
         }
