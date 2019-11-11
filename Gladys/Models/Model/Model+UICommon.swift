@@ -190,7 +190,7 @@ final class ModelFilterContext {
     
     private var postLabelDrops: [ArchivedDropItem] {
         let enabledToggles = labelToggles.filter { $0.enabled }
-        if enabledToggles.count == 0 { return Model.drops }
+        if enabledToggles.isEmpty { return Model.drops }
 
         if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count

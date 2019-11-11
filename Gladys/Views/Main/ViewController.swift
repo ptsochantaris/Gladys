@@ -240,12 +240,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     else { return }
 
                     // update UI
-                    let filteredDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
-                    let itemToMove = Model.drops.remove(at: modelSourceIndex)
-                    Model.drops.insert(itemToMove, at: filteredDestinationIndex)
 
                     if filter.isFiltering {
                         if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
+                            let filteredDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                            let itemToMove = Model.drops.remove(at: modelSourceIndex)
+                            Model.drops.insert(itemToMove, at: filteredDestinationIndex)
+
                             // previous item was visible on our collection view
                             filter.forceUpdateFilter(signalUpdate: false)
                             let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
@@ -259,8 +260,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                                 needDataSave = true
                             }
                             filter.forceUpdateFilter(signalUpdate: false)
+                            collectionView.insertItems(at: [destinationIndexPath])
                         }
                     } else {
+                        let itemToMove = Model.drops.remove(at: modelSourceIndex)
+                        Model.drops.insert(itemToMove, at: destinationIndexPath.item)
                         let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
                         collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
                     }
