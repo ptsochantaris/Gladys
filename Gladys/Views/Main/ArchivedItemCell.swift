@@ -171,6 +171,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
         image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
+        image.tintColor = .secondaryLabel
 
 		labelStack.setCustomSpacing(3, after: labelsLabel)
 
@@ -182,7 +183,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		container.addGestureRecognizer(p)
         
         let interaction = UIContextMenuInteraction(delegate: self)
-        addInteraction(interaction)
+        container.addInteraction(interaction)
 	}
     
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {

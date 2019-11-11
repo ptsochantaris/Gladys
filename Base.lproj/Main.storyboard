@@ -78,10 +78,10 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="5fb-e0-eeZ" secondAttribute="bottom" id="8tc-ve-tYw"/>
-                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="leading" secondItem="C3W-it-qIn" secondAttribute="leadingMargin" id="BGe-yP-OgC"/>
-                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="trailing" secondItem="C3W-it-qIn" secondAttribute="trailingMargin" id="X8h-Jk-077"/>
-                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="top" secondItem="C3W-it-qIn" secondAttribute="topMargin" id="o7q-cu-mIb"/>
+                                                        <constraint firstAttribute="bottom" secondItem="5fb-e0-eeZ" secondAttribute="bottom" constant="8" id="8tc-ve-tYw"/>
+                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="leading" secondItem="C3W-it-qIn" secondAttribute="leading" constant="8" id="BGe-yP-OgC"/>
+                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="trailing" secondItem="C3W-it-qIn" secondAttribute="trailing" constant="-8" id="X8h-Jk-077"/>
+                                                        <constraint firstItem="5fb-e0-eeZ" firstAttribute="top" secondItem="C3W-it-qIn" secondAttribute="top" constant="8" id="o7q-cu-mIb"/>
                                                     </constraints>
                                                 </view>
                                                 <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" image="lock" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2DN-HK-OAe">
