@@ -45,6 +45,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     @objc private func modelDataUpdate() {
         Model.detectExternalChanges()
+        for session in UIApplication.shared.openSessions where session.scene?.activationState == .background {
+            UIApplication.shared.requestSceneSessionRefresh(session)
+        }
     }
     
     private var ingestRunning = false

@@ -3,9 +3,12 @@ import UIKit
 import MapKit
 
 final class ArchivedItemCell: UICollectionViewCell {
+    
 	@IBOutlet private weak var image: GladysImageView!
 	@IBOutlet private weak var bottomLabel: UILabel!
 	@IBOutlet private weak var labelsLabel: HighlightLabel!
+    
+    @IBOutlet private weak var container: UIView!
 
 	@IBOutlet private weak var topLabel: UILabel!
 	@IBOutlet private weak var topLabelHolder: UIView!
@@ -83,11 +86,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
-				holder.backgroundColor = borderView.backgroundColor
-				holder.layer.maskedCorners = .layerMinXMaxYCorner
+                holder.backgroundColor = container.backgroundColor
+                holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
 				holder.layer.cornerRadius = 20
 				holder.addSubview(img)
-				contentView.addSubview(holder)
+				container.addSubview(holder)
 
 				NSLayoutConstraint.activate([
 					holder.topAnchor.constraint(equalTo: topAnchor),
@@ -125,11 +128,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
-				holder.backgroundColor = borderView.backgroundColor
+                holder.backgroundColor = container.backgroundColor
 				holder.layer.cornerRadius = 20
-				holder.layer.maskedCorners = .layerMaxXMaxYCorner
+                holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
 				holder.addSubview(img)
-                contentView.addSubview(holder)
+                container.addSubview(holder)
 
 				NSLayoutConstraint.activate([
 					holder.topAnchor.constraint(equalTo: topAnchor),
@@ -154,38 +157,29 @@ final class ArchivedItemCell: UICollectionViewCell {
 			shareImage?.tintColor = shareColor
 		}
 	}
-
-	private let borderView = UIView()
-
+    
 	private lazy var wideCell = { return reuseIdentifier == "WideArchivedItemCell" }()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		clipsToBounds = true
-		layer.cornerRadius = 10
+        
+        container.layer.cornerRadius = 10
+        container.layer.shadowColor = UIColor.black.cgColor
+        container.layer.shadowOffset = CGSize(width: 0, height: 0)
+        container.layer.shadowOpacity = 0.06
+        container.layer.shadowRadius = 1.5
 
-		image.clipsToBounds = true
-		image.squircle = !wideCell
+        image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
-		contentView.tintColor = UIColor(named: "colorDarkGray")
-
-		let b = UIView()
-		b.layer.cornerRadius = 10
-		backgroundView = b
 
 		labelStack.setCustomSpacing(3, after: labelsLabel)
-
-		borderView.layer.cornerRadius = 10
-        borderView.backgroundColor = backgroundColor
-		b.cover(with: borderView, insets: UIEdgeInsets(top: 0, left: 0, bottom: 0.5, right: 0))
-        b.backgroundColor = UIColor(named: "colorShadowContrast")
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
 
 		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
-		contentView.addGestureRecognizer(p)
+		container.addGestureRecognizer(p)
         
         let interaction = UIContextMenuInteraction(delegate: self)
         addInteraction(interaction)
@@ -205,7 +199,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 			reDecorate()
 		}
 	}
-
+    
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		progressView.observedProgress = nil
@@ -472,12 +466,12 @@ final class ArchivedItemCell: UICollectionViewCell {
     private var itemSize = CGSize(width: 200, height: 200)
     
 	func flash() {
-        let originalColor = borderView.backgroundColor
+        let originalColor = backgroundColor
 		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-			self.borderView.backgroundColor = UIColor(named: "colorTint")
+			self.backgroundColor = UIColor(named: "colorTint")
 		}) { finished in
 			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
-				self.borderView.backgroundColor = originalColor
+				self.backgroundColor = originalColor
             }, completion: nil)
 		}
 	}
@@ -605,7 +599,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             guard let s = self else { return }
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
-            let request = UIRequest(vc: a, sourceView: s, sourceRect: s.contentView.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
+            let request = UIRequest(vc: a, sourceView: s, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
             NotificationCenter.default.post(name: .UIRequest, object: request)
             
         }, style: [], iconName: "square.and.arrow.up"))

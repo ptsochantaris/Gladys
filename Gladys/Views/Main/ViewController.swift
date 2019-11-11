@@ -146,7 +146,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
 	}
-
+    
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		showDragModeOverlay(false)
 
@@ -467,7 +467,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			} else {
 				selectedItems?.append(item.uuid)
 			}
-			didUpdateItems()
+			updateUI()
 			if let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell {
 				cell.isSelectedForAction = (selectedIndex == nil)
 			}
@@ -558,7 +558,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
             self?.filter.filter = searchController?.searchBar.text
-			self?.didUpdateItems()
+			self?.updateUI()
 		}
 
 		navigationController?.setToolbarHidden(true, animated: false)
@@ -592,7 +592,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             filter.forceUpdateFilter(signalUpdate: false)
         }
 
-		didUpdateItems()
+        forceLayout()
+		updateUI()
 		emptyView?.alpha = 1
         blurb(Greetings.openLine)
 
@@ -767,25 +768,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
         filter.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData(onlyIfPopulated: false)
-		didUpdateItems()
-        if let scene = view.window?.windowScene, scene.activationState == .background {
-            UIApplication.shared.requestSceneSessionRefresh(scene.session)
-        }
-	}
-
-	private func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
-		let colonText = colon && collection.bounds.width > 512 ? ":" : ""
-		itemsCount.title = "\(count) \(text)\(colonText)"
+		updateUI()
 	}
 
 	private var emptyView: UIImageView?
-	@objc private func didUpdateItems() {
+	@objc private func updateUI() {
 		editButton.isEnabled = Model.drops.count > 0
 
-		selectedItems = selectedItems?.filter { uuid in Model.drops.contains(where: { $0.uuid == uuid }) }
+		selectedItems = selectedItems?.filter { uuid in Model.drops.contains { $0.uuid == uuid } }
 
 		let selectedCount = selectedItems?.count ?? 0
 		let someSelected = selectedCount > 0
+
+        func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
+            let colonText = colon && collection.bounds.width > 512 ? ":" : ""
+            itemsCount.title = "\(count) \(text)\(colonText)"
+        }
 
 		let itemCount = filter.filteredDrops.count
 		let c = someSelected ? selectedCount : itemCount
@@ -887,7 +885,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				self.selectedItems?.removeAll()
 				self.collection.reloadData()
-				self.didUpdateItems()
+				self.updateUI()
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
@@ -905,7 +903,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
                 self.selectedItems = self.filter.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
-				self.didUpdateItems()
+				self.updateUI()
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
@@ -1024,13 +1022,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
 		UIView.performWithoutAnimation {
-			didUpdateItems()
+			updateUI()
 			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
 				cell.isEditing = editing
 			}
 		}
 	}
-
     
     private var itemSize: CGSize = .zero {
         didSet {
@@ -1078,11 +1075,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-		if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell, let b = cell.backgroundView {
-			let corner = b.layer.cornerRadius
-			let path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
+		if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
+			let path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
 			let params = UIDragPreviewParameters()
-			params.backgroundColor = .clear
 			params.visiblePath = path
 			return params
 		} else {
@@ -1101,16 +1096,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private var lastSize = CGSize.zero
 	@objc private func forceLayout() {
 		lastSize = .zero
-		view.setNeedsLayout()
+        handleSize(view.bounds.size)
 	}
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        handleSize(size)
+    }
+    
+    private func handleSize(_ size: CGSize) {
 		let font: UIFont
-		let b = collection.bounds.size
-		if b.width > 375 {
+		if size.width > 375 {
 			font = UIFont.preferredFont(forTextStyle: .body)
-		} else if b.width > 320 {
+		} else if size.width > 320 {
 			let bodyFont = UIFont.preferredFont(forTextStyle: .body)
 			font = bodyFont.withSize(bodyFont.pointSize - 2)
 		} else {
@@ -1122,7 +1120,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		let insets = collection.safeAreaInsets
 		let w = insets.left + insets.right
 		let h = insets.top + insets.bottom
-		let boundsSize = CGSize(width: b.width - w, height: b.height - h)
+		let boundsSize = CGSize(width: size.width - w, height: size.height - h)
 		if lastSize == boundsSize { return }
 		lastSize = boundsSize
 
@@ -1133,16 +1131,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		deleteButton.width = deleteButton.image!.size.width + 22
 		sortAscendingButton.width = sortAscendingButton.image!.size.width + 22
 		sortDescendingButton.width = sortDescendingButton.image!.size.width + 22
+        updateUI()
 
-		DispatchQueue.main.async { [weak self] in
-			guard let s = self else { return }
-			s.collection.reloadData()
-			if s.isEditing {
-				s.didUpdateItems()
-			}
-		}
+        collection.collectionViewLayout.invalidateLayout()
 	}
-
+        
 	/////////////////////////////////
 
 	private var selectedItems: [UUID]?
