@@ -239,8 +239,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 				collectionView.performBatchUpdates({
 
+                    let itemToMove = Model.drops.remove(at: sourceIndex) // must be removed before or the next call breaks
                     let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
-                    Model.moveItem(at: sourceIndex, to: modelDestinationIndex)
+                    Model.drops.insert(itemToMove, at: modelDestinationIndex)
 
                     // update UI
                     if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
@@ -253,8 +254,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
                     } else { // from another window, since it wasn't in the colelction view
                         if filter.isFiltering {
-                            if let labels = filter?.enabledLabelsForItems, !labels.isEmpty {
-                                existingItem.labels.append(contentsOf: labels)
+                            if let currentLabels = filter?.enabledLabelsForItems, !currentLabels.isEmpty {
+                                var mergedLabels = existingItem.labels
+                                currentLabels.forEach { if !mergedLabels.contains($0) { mergedLabels.append($0) } }
+                                existingItem.labels = mergedLabels
                                 needDataSave = true
                             }
                             filter.forceUpdateFilter(signalUpdate: false)
