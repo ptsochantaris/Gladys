@@ -94,18 +94,15 @@ final class ModelFilterContext {
             return 0
         }
         let closestItem: ArchivedDropItem
-        if index >= filteredDrops.count {
+        if index >= filteredDrops.count - 1 {
             closestItem = filteredDrops.last!
             if let i = Model.drops.firstIndex(of: closestItem) {
-                return i+1
+                return i
             }
             return 0
-        } else if index > 0 {
-            closestItem = filteredDrops[index-1]
-            return (Model.drops.firstIndex(of: closestItem) ?? 0) + 1
         } else {
-            closestItem = filteredDrops[0]
-            return Model.drops.firstIndex(of: closestItem) ?? 0
+            closestItem = filteredDrops[index]
+            return (Model.drops.firstIndex(of: closestItem) ?? 0)
         }
     }
     

@@ -232,28 +232,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 			if let existingItem = dragItem.localObject as? ArchivedDropItem {
 
+                collectionView.performBatchUpdates({
+
 				guard
 					let destinationIndexPath = coordinator.destinationIndexPath,
-					let sourceIndex = Model.drops.firstIndex(of: existingItem)
-                    else { continue }
-
-				collectionView.performBatchUpdates({
-
-                    let itemToMove = Model.drops.remove(at: sourceIndex) // must be removed before or the next call breaks
-                    let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
-                    Model.drops.insert(itemToMove, at: modelDestinationIndex)
+					let modelSourceIndex = Model.drops.firstIndex(of: existingItem)
+                    else { return }
 
                     // update UI
-                    if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
-                        // previous item was visible on our collection view
-                        if filter.isFiltering {
-                            filter.forceUpdateFilter(signalUpdate: false)
-                        }
-                        let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
-                        collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
+                    let filteredDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                    let itemToMove = Model.drops.remove(at: modelSourceIndex)
+                    Model.drops.insert(itemToMove, at: filteredDestinationIndex)
 
-                    } else { // from another window, since it wasn't in the colelction view
-                        if filter.isFiltering {
+                    if filter.isFiltering {
+                        if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
+                            // previous item was visible on our collection view
+                            filter.forceUpdateFilter(signalUpdate: false)
+                            let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
+                            collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
+
+                        } else { // from another window, since it wasn't in the collection view
                             if let currentLabels = filter?.enabledLabelsForItems, !currentLabels.isEmpty {
                                 var mergedLabels = existingItem.labels
                                 currentLabels.forEach { if !mergedLabels.contains($0) { mergedLabels.append($0) } }
@@ -262,7 +260,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                             }
                             filter.forceUpdateFilter(signalUpdate: false)
                         }
-                        collectionView.insertItems(at: [destinationIndexPath])
+                    } else {
+                        let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
+                        collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
                     }
 
                     coordinator.drop(dragItem, toItemAt: destinationIndexPath)
