@@ -586,7 +586,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
 		didUpdateItems()
-		updateEmptyView(animated: false)
 		emptyView?.alpha = 1
         blurb(Greetings.openLine)
 
@@ -762,7 +761,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         filter.forceUpdateFilter(signalUpdate: false) // will force below
 		reloadData(onlyIfPopulated: false)
 		didUpdateItems()
-		updateEmptyView(animated: true)
         if let scene = view.window?.windowScene, scene.activationState == .background {
             UIApplication.shared.requestSceneSessionRefresh(scene.session)
         }
@@ -810,6 +808,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		updateLabelIcon()
 		currentLabelEditor?.selectedItems = selectedItems
 		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
+        
+        updateEmptyView(animated: false)
 	}
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
