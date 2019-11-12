@@ -215,107 +215,142 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
 		]
 	}
+    
+    private func handleMove(coordinator: UICollectionViewDropCoordinator, dragItem: UIDragItem, existingItem: ArchivedDropItem) -> (IndexPath?, Bool) {
+        guard
+            let destinationIndexPath = coordinator.destinationIndexPath,
+            let modelSourceIndex = Model.drops.firstIndex(of: existingItem)
+            else { return (nil, false) }
+        
+        // update UI
+        var needsFullSave = false
+        
+        if filter.isFiltering {
+
+            if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
+                // item was visible on our filtered list
+                let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                let itemToMove = Model.drops.remove(at: modelSourceIndex)
+                Model.drops.insert(itemToMove, at: modelDestinationIndex)
+
+                let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
+                collection.deleteItems(at: [previousIndexPath])
+                
+            } else {
+                // item was not visible on our filtered list, we should add labels, if any
+                let itemToMove = Model.drops.remove(at: modelSourceIndex)
+                let modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                Model.drops.insert(itemToMove, at: modelDestinationIndex)
+
+                if let currentLabels = filter?.enabledLabelsForItems, !currentLabels.isEmpty {
+                    var mergedLabels = existingItem.labels
+                    currentLabels.forEach { if !mergedLabels.contains($0) { mergedLabels.append($0) } }
+                    existingItem.labels = mergedLabels
+                    needsFullSave = true
+                }
+            }
+            filter.forceUpdateFilter(signalUpdate: false)
+
+        } else {
+            // item is always visible in our unfiltered list, by definition
+            let itemToMove = Model.drops.remove(at: modelSourceIndex)
+            Model.drops.insert(itemToMove, at: destinationIndexPath.item)
+            filter.forceUpdateFilter(signalUpdate: false)
+
+            let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
+            collection.deleteItems(at: [previousIndexPath])
+        }
+        
+        collection.insertItems(at: [destinationIndexPath])
+        return (destinationIndexPath, needsFullSave)
+    }
+    
+    private func handleInsert(coordinator: UICollectionViewDropCoordinator, itemProvider: NSItemProvider) -> IndexPath {
+        var finalDestinationPath = IndexPath(item: 0, section: 0)
+        for item in ArchivedDropItem.importData(providers: [itemProvider], overrides: nil) {
+            var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
+            let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+            
+            if filter.isFiltering {
+                dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+                if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+                    item.labels = filter.enabledLabelsForItems
+                }
+            }
+            
+            Model.drops.insert(item, at: dataIndex)
+            filter.forceUpdateFilter(signalUpdate: false)
+            if filter.filteredDrops.contains(item) {
+                collection.isAccessibilityElement = false
+                collection.insertItems(at: [destinationIndexPath])
+                finalDestinationPath = destinationIndexPath
+                mostRecentIndexPathActioned = destinationIndexPath
+            }
+        }
+        return finalDestinationPath
+    }
 
 	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
 
 		if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
 			return
 		}
+        
+        let group = DispatchGroup()
 
 		coordinator.session.progressIndicatorStyle = .none
+        var needsFullSave = false
+        var needsIndexSave = false
+        var needsPost = false
 
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
             var finalDestinationPath: IndexPath?
 
 			if let existingItem = dragItem.localObject as? ArchivedDropItem {
-
-                var needFullSave = false
+                group.enter()
                 collectionView.performBatchUpdates({
-
-				guard
-					let destinationIndexPath = coordinator.destinationIndexPath,
-					let modelSourceIndex = Model.drops.firstIndex(of: existingItem)
-                    else { return }
-
-                    // update UI
-
-                    if filter.isFiltering {
-                        if let filteredPreviousIndex = filter.filteredDrops.firstIndex(of: existingItem) {
-                            let filteredDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
-                            let itemToMove = Model.drops.remove(at: modelSourceIndex)
-                            Model.drops.insert(itemToMove, at: filteredDestinationIndex)
-
-                            // previous item was visible on our collection view
-                            filter.forceUpdateFilter(signalUpdate: false)
-                            let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
-                            collectionView.deleteItems(at: [previousIndexPath])
-                            collectionView.insertItems(at: [destinationIndexPath])
-
-                        } else { // from another window, since it wasn't in the collection view
-                            if let currentLabels = filter?.enabledLabelsForItems, !currentLabels.isEmpty {
-                                var mergedLabels = existingItem.labels
-                                currentLabels.forEach { if !mergedLabels.contains($0) { mergedLabels.append($0) } }
-                                existingItem.labels = mergedLabels
-                                needFullSave = true
-                            }
-                            filter.forceUpdateFilter(signalUpdate: false)
-                            collectionView.insertItems(at: [destinationIndexPath])
-                        }
-                    } else {
-                        let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
-                        let itemToMove = Model.drops.remove(at: modelSourceIndex)
-                        Model.drops.insert(itemToMove, at: destinationIndexPath.item)
-                        filter.forceUpdateFilter(signalUpdate: false)
-                        collectionView.deleteItems(at: [previousIndexPath])
-                        collectionView.insertItems(at: [destinationIndexPath])
+                    let (indexPath, needsSave) = handleMove(coordinator: coordinator, dragItem: dragItem, existingItem: existingItem)
+                    if let indexPath = indexPath {
+                        finalDestinationPath = indexPath
                     }
-
-                    finalDestinationPath = destinationIndexPath
+                    if needsSave {
+                        needsFullSave = true
+                    } else {
+                        needsIndexSave = true
+                    }
+                }, completion: { _ in
+                    group.leave()
                 })
-                
-                if needFullSave {
-                    Model.save()
-                } else {
-                    Model.saveIndexOnly(from: self)
-                }
 
 			} else {
-
+                group.enter()
                 collectionView.performBatchUpdates({
-                    
-                    for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-                        var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-                        let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
-                        
-                        if filter.isFiltering {
-                            dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-                            if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-                                item.labels = filter.enabledLabelsForItems
-                            }
-                        }
-                        
-                        Model.drops.insert(item, at: dataIndex)
-                        filter.forceUpdateFilter(signalUpdate: false)
-                        if filter.filteredDrops.contains(item) {
-                            collectionView.isAccessibilityElement = false
-                            collectionView.insertItems(at: [destinationIndexPath])
-                            finalDestinationPath = destinationIndexPath
-                            mostRecentIndexPathActioned = destinationIndexPath
-                        }
-                    }
-                    
-                }, completion: { finished in
-                    self.focusInitialAccessibilityElement()
-                    self.updateEmptyView(animated: true)
+                    finalDestinationPath = handleInsert(coordinator: coordinator, itemProvider: dragItem.itemProvider)
+                    needsFullSave = true
+                    needsPost = true
+                }, completion: { _ in
+                    group.leave()
                 })
-
             }
             
             if let finalDestinationPath = finalDestinationPath {
                 coordinator.drop(dragItem, toItemAt: finalDestinationPath)
             }
 		}
+        
+        group.notify(queue: .main) {
+            if needsPost {
+                self.focusInitialAccessibilityElement()
+                self.updateEmptyView(animated: true)
+            }
+            
+            if needsFullSave {
+                Model.save()
+            } else if needsIndexSave {
+                Model.saveIndexOnly(from: self)
+            }
+        }
 	}
     
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {

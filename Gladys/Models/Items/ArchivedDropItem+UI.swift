@@ -137,7 +137,7 @@ extension ArchivedDropItem {
 		return typeItems.contains { $0.canPreview }
 	}
 
-	@discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil) -> Bool {
+    @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
 		var itemToPreview: ArchivedDropItemType?
 		if let childUuid = childUuid {
 			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
@@ -152,7 +152,7 @@ extension ArchivedDropItem {
 			n.sourceItemView = cell
 		}
 
-		if !PersistedOptions.fullScreenPreviews {
+		if !PersistedOptions.fullScreenPreviews && !forceFullscreen {
 			n.modalPresentationStyle = .popover
 		}
         

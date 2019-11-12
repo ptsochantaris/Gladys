@@ -623,7 +623,7 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             animator.preferredCommitStyle = .pop
             animator.addCompletion {
                 NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-                item.tryPreview(in: presenter, from: self)
+                item.tryPreview(in: presenter, from: self, forceFullscreen: true)
             }
         } else {
             animator.preferredCommitStyle = .dismiss
