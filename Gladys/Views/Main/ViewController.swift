@@ -1075,14 +1075,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-		if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
-			let path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
-			let params = UIDragPreviewParameters()
-			params.visiblePath = path
-			return params
-		} else {
-			return nil
-		}
+		let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell
+        return cell?.dragParameters
 	}
 
 	func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {

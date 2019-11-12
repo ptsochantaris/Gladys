@@ -818,13 +818,11 @@ final class DetailController: GladysViewController,
 		if let cell = cell as? DetailCell {
 			let path = UIBezierPath(roundedRect: cell.borderView.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
 			let p = UIDragPreviewParameters()
-			p.backgroundColor = .clear
 			p.visiblePath = path
 			return p
 		} else if let cell = cell as? LabelCell {
 			let path = UIBezierPath(roundedRect: cell.labelHolder.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
 			let p = UIDragPreviewParameters()
-			p.backgroundColor = .clear
 			p.visiblePath = path
 			return p
 		} else {

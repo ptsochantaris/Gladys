@@ -27,6 +27,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var tickHolder: UIView?
 	private var shareImage: UIImageView?
 	private var shareHolder: UIView?
+    
+    var dragParameters: UIDragPreviewParameters {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 8, height: 8))
+        let params = UIDragPreviewParameters()
+        params.visiblePath = path
+        return params
+    }
 
 	@IBAction private func cancelSelected(_ sender: UIButton) {
 		progressView.observedProgress = nil
@@ -183,7 +190,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		container.addGestureRecognizer(p)
         
         let interaction = UIContextMenuInteraction(delegate: self)
-        container.addInteraction(interaction)
+        addInteraction(interaction)
 	}
     
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
@@ -560,16 +567,6 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             }, style: [], iconName: "arrow.up.doc"))
         }
         
-        if item.canPreview {
-            children.append(makeAction(title: "Quick Look", callback: { [weak self] in
-                guard let s = self else { return }
-                if let presenter = s.window?.alertPresenter {
-                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-                    item.tryPreview(in: presenter, from: s)
-                }
-            }, style: [], iconName: "eye"))
-        }
-        
         children.append(makeAction(title: "Info Panel", callback: {
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
             NotificationCenter.default.post(name: .SegueRequest, object: ["name": "showDetail", "sender": item])
@@ -617,6 +614,22 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
     }
     
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return UITargetedPreview(view: container)
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        if let item = archivedDropItem, item.canPreview, let presenter = window?.rootViewController {
+            animator.preferredCommitStyle = .pop
+            animator.addCompletion {
+                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                item.tryPreview(in: presenter, from: self)
+            }
+        } else {
+            animator.preferredCommitStyle = .dismiss
+        }
+    }
+            
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = archivedDropItem else { return nil }
         if item.needsUnlock {

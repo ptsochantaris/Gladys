@@ -118,7 +118,6 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 			let corner = b.layer.cornerRadius
 			let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
 			let params = UIDragPreviewParameters()
-			params.backgroundColor = .clear
 			params.visiblePath = path
 			return params
 		} else {
