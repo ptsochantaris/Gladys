@@ -222,16 +222,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			return
 		}
 
-		var needSave = false
-        var needDataSave = false
-
 		coordinator.session.progressIndicatorStyle = .none
 
 		for coordinatorItem in coordinator.items {
 			let dragItem = coordinatorItem.dragItem
+            var finalDestinationPath: IndexPath?
 
 			if let existingItem = dragItem.localObject as? ArchivedDropItem {
 
+                var needFullSave = false
                 collectionView.performBatchUpdates({
 
 				guard
@@ -250,76 +249,72 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                             // previous item was visible on our collection view
                             filter.forceUpdateFilter(signalUpdate: false)
                             let previousIndexPath = IndexPath(item: filteredPreviousIndex, section: 0)
-                            collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
+                            collectionView.deleteItems(at: [previousIndexPath])
+                            collectionView.insertItems(at: [destinationIndexPath])
 
                         } else { // from another window, since it wasn't in the collection view
                             if let currentLabels = filter?.enabledLabelsForItems, !currentLabels.isEmpty {
                                 var mergedLabels = existingItem.labels
                                 currentLabels.forEach { if !mergedLabels.contains($0) { mergedLabels.append($0) } }
                                 existingItem.labels = mergedLabels
-                                needDataSave = true
+                                needFullSave = true
                             }
                             filter.forceUpdateFilter(signalUpdate: false)
                             collectionView.insertItems(at: [destinationIndexPath])
                         }
                     } else {
+                        let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
                         let itemToMove = Model.drops.remove(at: modelSourceIndex)
                         Model.drops.insert(itemToMove, at: destinationIndexPath.item)
-                        let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
-                        collectionView.moveItem(at: previousIndexPath, to: destinationIndexPath)
+                        filter.forceUpdateFilter(signalUpdate: false)
+                        collectionView.deleteItems(at: [previousIndexPath])
+                        collectionView.insertItems(at: [destinationIndexPath])
                     }
 
-                    coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+                    finalDestinationPath = destinationIndexPath
                 })
-
-				needSave = true
+                
+                if needFullSave {
+                    Model.save()
+                } else {
+                    Model.saveIndexOnly(from: self)
+                }
 
 			} else {
 
-				var firstDestinationPath: IndexPath?
-				for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-					var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-					let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+                collectionView.performBatchUpdates({
+                    
+                    for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
+                        var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
+                        let destinationIndexPath = IndexPath(item: dataIndex, section: 0)
+                        
+                        if filter.isFiltering {
+                            dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
+                            if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+                                item.labels = filter.enabledLabelsForItems
+                            }
+                        }
+                        
+                        Model.drops.insert(item, at: dataIndex)
+                        filter.forceUpdateFilter(signalUpdate: false)
+                        if filter.filteredDrops.contains(item) {
+                            collectionView.isAccessibilityElement = false
+                            collectionView.insertItems(at: [destinationIndexPath])
+                            finalDestinationPath = destinationIndexPath
+                            mostRecentIndexPathActioned = destinationIndexPath
+                        }
+                    }
+                    
+                }, completion: { finished in
+                    self.focusInitialAccessibilityElement()
+                    self.updateEmptyView(animated: true)
+                })
 
-					if filter.isFiltering {
-						dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-						if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-							item.labels = filter.enabledLabelsForItems
-						}
-					}
-
-					var itemVisiblyInserted = false
-					collectionView.performBatchUpdates({
-						Model.drops.insert(item, at: dataIndex)
-						filter.forceUpdateFilter(signalUpdate: false)
-						itemVisiblyInserted = filter.filteredDrops.contains(item)
-						if itemVisiblyInserted {
-							collectionView.isAccessibilityElement = false
-							collectionView.insertItems(at: [destinationIndexPath])
-						}
-					}, completion: { finished in
-						if itemVisiblyInserted {
-							self.mostRecentIndexPathActioned = destinationIndexPath
-						}
-						self.focusInitialAccessibilityElement()
-					})
-
-					if itemVisiblyInserted {
-						firstDestinationPath = destinationIndexPath
-					}
-				}
-				if let firstDestinationPath = firstDestinationPath {
-					coordinator.drop(dragItem, toItemAt: firstDestinationPath)
-				}
-			}
-		}
-
-        if needDataSave {
-            Model.save()
-        } else if needSave {
-            Model.saveIndexOnly(from: self)
-		} else {
-			updateEmptyView(animated: true)
+            }
+            
+            if let finalDestinationPath = finalDestinationPath {
+                coordinator.drop(dragItem, toItemAt: finalDestinationPath)
+            }
 		}
 	}
     
