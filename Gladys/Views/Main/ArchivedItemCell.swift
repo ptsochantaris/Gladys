@@ -171,10 +171,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		super.awakeFromNib()
         
         container.layer.cornerRadius = 10
-        //container.layer.shadowColor = UIColor.black.cgColor
-        //container.layer.shadowOffset = CGSize(width: 0, height: 0)
-        //container.layer.shadowOpacity = 0.06
-        //container.layer.shadowRadius = 1.5
+        container.layer.shadowColor = UIColor.black.cgColor
+        container.layer.shadowOffset = CGSize(width: 0, height: 0)
+        container.layer.shadowOpacity = 0.06
+        container.layer.shadowRadius = 1.5
 
         image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true

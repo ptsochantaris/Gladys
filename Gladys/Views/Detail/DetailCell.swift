@@ -56,7 +56,12 @@ final class DetailCell: UITableViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		borderView.layer.cornerRadius = 10
-		nameHolder.layer.cornerRadius = 5
+        borderView.layer.shadowColor = UIColor.black.cgColor
+        borderView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        borderView.layer.shadowOpacity = 0.06
+        borderView.layer.shadowRadius = 1.5
+
+        nameHolder.layer.cornerRadius = 5
 
 		inspectButton.accessibilityLabel = "Inspect data"
 		viewButton.accessibilityLabel = "Visual item preview"
