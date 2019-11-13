@@ -58,25 +58,10 @@ final class DetailCell: UITableViewCell {
 		borderView.layer.cornerRadius = 10
 		nameHolder.layer.cornerRadius = 5
 
-        //name.shadowColor = UIColor.systemBackground
-        //name.shadowOffset = CGSize(width: 0, height: 1)
-
 		inspectButton.accessibilityLabel = "Inspect data"
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
-
-		let b = UIView()
-		b.translatesAutoresizingMaskIntoConstraints = false
-        b.backgroundColor = UIColor(named: "colorShadow")
-		b.layer.cornerRadius = 10
-		contentView.insertSubview(b, belowSubview: borderView)
-		NSLayoutConstraint.activate([
-			b.topAnchor.constraint(equalTo: borderView.topAnchor),
-			b.leadingAnchor.constraint(equalTo: borderView.leadingAnchor),
-			b.trailingAnchor.constraint(equalTo: borderView.trailingAnchor),
-			b.bottomAnchor.constraint(equalTo: borderView.bottomAnchor, constant: 0.5)
-		])
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
