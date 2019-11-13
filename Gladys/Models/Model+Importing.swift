@@ -26,16 +26,18 @@ extension Model {
         
         let currentFilter = currentWindow?.associatedFilter
 
+        var uuids = Set<UUID>()
         for provider in providers { // separate item for each provider in the pasteboard
             for item in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
                 if let currentFilter = currentFilter, currentFilter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
                 Model.drops.insert(item, at: 0)
+                uuids.insert(item.uuid)
             }
         }
         
-        save()
+        NotificationCenter.default.post(name: .ItemsAdded, object: uuids)
 
         return .success
     }

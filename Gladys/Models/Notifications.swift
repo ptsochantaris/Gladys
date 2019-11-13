@@ -33,6 +33,7 @@ extension Notification.Name {
 	static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
     static let ItemsCreated = Notification.Name("ItemsCreated")
 	static let ItemModified = Notification.Name("ItemModified")
+    static let ItemsAdded = Notification.Name("ItemsAdded")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")
 	static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")

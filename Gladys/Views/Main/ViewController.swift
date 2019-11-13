@@ -604,6 +604,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        n.addObserver(self, selector: #selector(itemsAdded(_:)), name: .ItemsAdded, object: nil)
         n.addObserver(self, selector: #selector(itemsDeleted(_:)), name: .ItemsRemoved, object: nil)
         n.addObserver(self, selector: #selector(noteLastActionedItem(_:)), name: .NoteLastActionedUUID, object: nil)
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
@@ -849,9 +850,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
 		guard let selectedItems = selectedItems else { return }
-		let providers = selectedItems.compactMap { Model.item(uuid: $0)?.itemProviderForSharing }
-		if providers.isEmpty { return }
-		let a = UIActivityViewController(activityItems: providers, applicationActivities: nil)
+		let sources = selectedItems.compactMap { Model.item(uuid: $0)?.sharingActivitySource }
+		if sources.isEmpty { return }
+		let a = UIActivityViewController(activityItems: sources, applicationActivities: nil)
 		a.completionWithItemsHandler = { [weak self] _, done, _, _ in
 			if done {
 				self?.setEditing(false, animated: true)
@@ -903,7 +904,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			sortMethod()
 			filter.forceUpdateFilter(signalUpdate: false)
 			reloadData(onlyIfPopulated: false)
-			Model.save()
+            Model.save()
 		}
 	}
 
@@ -1090,6 +1091,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
 				itemSize = CGSize(width: 300, height: 200)
+            } else if lastSize.width >= 1366 {
+                calculateSizes(for: 5)
 			} else if lastSize.width > 980 {
 				calculateSizes(for: 4)
 			} else if lastSize.width > 438 {
@@ -1245,6 +1248,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
 	}
+
+    @objc private func itemsAdded(_ notification: Notification) {
+        guard let uuids = notification.object as? Set<UUID> else { return }
+        collection.performBatchUpdates({
+            filter.forceUpdateFilter(signalUpdate: false)
+            let indexes = uuids.compactMap { uuid in
+                filter.filteredDrops.firstIndex{ $0.uuid == uuid }
+            }
+            let ipsToInsert = indexes.map { IndexPath(item: $0, section: 0) }
+
+            if !ipsToInsert.isEmpty {
+                collection.insertItems(at: ipsToInsert)
+            }
+        })
+    }
     
     @objc private func itemsDeleted(_ notification: Notification) {
         guard let uuids = notification.object as? Set<UUID> else { return }
@@ -1253,30 +1271,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 filter.filteredDrops.firstIndex{ $0.uuid == uuid }
             }
             let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
-
+            
             if !ipsToRemove.isEmpty {
-				collection.deleteItems(at: ipsToRemove)
+                collection.deleteItems(at: ipsToRemove)
             }
         })
-
-		ensureNoEmptySearchResult()
-
-		if filter.filteredDrops.isEmpty {
-			mostRecentIndexPathActioned = nil
-			updateEmptyView(animated: true)
-			if isEditing {
-				view.layoutIfNeeded()
-				setEditing(false, animated: true)
-			}
-			blurb(Greetings.randomCleanLine)
-		} else {
-			if isEditing {
-				setEditing(false, animated: true)
-			}
-		}
-
-		focusInitialAccessibilityElement()
-	}
+        
+        ensureNoEmptySearchResult()
+        
+        if filter.filteredDrops.isEmpty {
+            mostRecentIndexPathActioned = nil
+            updateEmptyView(animated: true)
+            if isEditing {
+                view.layoutIfNeeded()
+                setEditing(false, animated: true)
+            }
+            blurb(Greetings.randomCleanLine)
+        } else {
+            if isEditing {
+                setEditing(false, animated: true)
+            }
+        }
+        
+        focusInitialAccessibilityElement()
+    }
 
 	private func ensureNoEmptySearchResult() {
 	    filter.forceUpdateFilter(signalUpdate: true)

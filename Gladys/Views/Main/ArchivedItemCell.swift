@@ -596,9 +596,11 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         children.append(makeAction(title: "Share", callback: { [weak self] in
             guard let s = self else { return }
             NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-            let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
+            let a = UIActivityViewController(activityItems: [item.sharingActivitySource], applicationActivities: nil)
             let request = UIRequest(vc: a, sourceView: s, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
-            NotificationCenter.default.post(name: .UIRequest, object: request)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .UIRequest, object: request)
+            }
             
         }, style: [], iconName: "square.and.arrow.up"))
                   

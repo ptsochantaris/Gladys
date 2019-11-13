@@ -287,7 +287,7 @@ final class DetailController: GladysViewController,
 		}
 		sharing = true
 		sizeWindow()
-		let a = UIActivityViewController(activityItems: [item.itemProviderForSharing], applicationActivities: nil)
+		let a = UIActivityViewController(activityItems: [item.sharingActivitySource], applicationActivities: nil)
 		a.completionWithItemsHandler = { _, _, _,_ in
 			self.sharing = false
 			self.sizeWindow()
