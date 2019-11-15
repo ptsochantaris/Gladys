@@ -203,18 +203,6 @@ extension Model {
 	}
 
 	static func saveComplete() {
-		if saveIsDueToSyncFetch {
-			saveIsDueToSyncFetch = false
-			log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
-		} else {
-			log("Will sync up after a local save")
-			CloudManager.sync { error in
-				if let error = error {
-					log("Error in push after save: \(error.finalDescription)")
-				}
-			}
-		}
-
 		saveOverlap -= 1
         if saveOverlap == 0 {
             if PersistedOptions.mirrorFilesToDocuments {
@@ -229,6 +217,19 @@ extension Model {
     
     private static func saveDone() {
         watchDelegate?.updateContext()
+        
+        if saveIsDueToSyncFetch {
+            saveIsDueToSyncFetch = false
+            log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
+        } else {
+            log("Will sync up after a local save")
+            CloudManager.sync { error in
+                if let error = error {
+                    log("Error in push after save: \(error.finalDescription)")
+                }
+            }
+        }
+        
         if registeredForBackground {
             registeredForBackground = false
             BackgroundTask.unregisterForBackground()
@@ -236,7 +237,7 @@ extension Model {
     }
 
 	static func saveIndexComplete() {
-		watchDelegate?.updateContext()
+        saveDone()
 	}
 
 	private static var foregroundObserver: NSObjectProtocol?

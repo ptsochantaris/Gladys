@@ -915,7 +915,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { action in
 				self.selectedItems?.removeAll()
-				self.collection.reloadData()
+                self.collection.reloadSections(IndexSet(integer: 0))
 				self.updateUI()
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -1450,7 +1450,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			return
 		}
 		collection.performBatchUpdates({
-            self.collection.reloadData()
+            self.collection.reloadSections(IndexSet(integer: 0))
 		})
 	}
 
