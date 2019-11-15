@@ -1128,7 +1128,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        handleSize(size)
+        self.handleSize(size)
+        coordinator.animate(alongsideTransition: { _ in
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     private func handleSize(_ size: CGSize) {
@@ -1270,11 +1273,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let indexes = uuids.compactMap { uuid in
                 filter.filteredDrops.firstIndex{ $0.uuid == uuid }
             }
+
+            filter.forceUpdateFilter(signalUpdate: false)
+
             let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
             
             if !ipsToRemove.isEmpty {
                 collection.deleteItems(at: ipsToRemove)
             }
+        }, completion: { finished in
+            log("deletion animation result: \(finished)")
         })
         
         ensureNoEmptySearchResult()
@@ -1438,11 +1446,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private func reloadData(onlyIfPopulated: Bool) {
 		updateLabelIcon()
-		if onlyIfPopulated && filter.filteredDrops.filter({ !$0.isBeingCreatedBySync }).isEmpty {
+        if onlyIfPopulated && !filter.filteredDrops.contains(where: { $0.isBeingCreatedBySync }) {
 			return
 		}
 		collection.performBatchUpdates({
-			self.collection.reloadSections(IndexSet(integer: 0))
+            self.collection.reloadData()
 		})
 	}
 

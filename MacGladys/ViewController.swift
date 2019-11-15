@@ -296,10 +296,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         
         let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
             guard let uuids = notification.object as? Set<UUID> else { return }
-            let indexes = uuids.compactMap { uuid in
-                Model.sharedFilter.filteredDrops.firstIndex{ $0.uuid == uuid }
-            }
-            self?.itemsDeleted(indexes: indexes)
+            self?.itemsDeleted(uuids: uuids)
         }
         
         let a11 = n.addObserver(forName: .IngestComplete, object: nil, queue: .main) { [weak self] notification in
@@ -767,7 +764,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-    private func itemsDeleted(indexes: [Int]) {
+    private func itemsDeleted(uuids: Set<UUID>) {
+        
+        let indexes = uuids.compactMap { uuid in
+            Model.sharedFilter.filteredDrops.firstIndex{ $0.uuid == uuid }
+        }
+        
+        Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
+
         let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
 
 		if !ipsToRemove.isEmpty {

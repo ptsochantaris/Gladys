@@ -21,14 +21,9 @@ final class ModelFilterContext {
     private var currentFilterQuery: CSSearchQuery?
     private var cachedFilteredDrops: [ArchivedDropItem]?
     
-    private var removalObservation: NSObjectProtocol?
     private var reloadObservation: NSObjectProtocol?
     
     init() {
-        removalObservation = NotificationCenter.default.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
-            guard let uuids = notification.object as? Set<UUID> else { return }
-            self?.cachedFilteredDrops?.removeAll { uuids.contains($0.uuid) }
-        }
         reloadObservation = NotificationCenter.default.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
             self?.rebuildLabels()
         }
@@ -36,7 +31,6 @@ final class ModelFilterContext {
     }
     
     deinit {
-        removalObservation = nil
         reloadObservation = nil
     }
 
@@ -537,18 +531,16 @@ extension Model {
     static func delete(items: [ArchivedDropItem]) {
 
         let uuidsToRemove = Set(items.map { $0.uuid })
-        
-		for item in items {
-			if item.shouldDisplayLoading {
-				item.cancelIngest()
-			}
-			item.delete()
-		}
-
         drops.removeAll { uuidsToRemove.contains($0.uuid) }
-        
         NotificationCenter.default.post(name: .ItemsRemoved, object: uuidsToRemove)
         
+        for item in items {
+            if item.shouldDisplayLoading {
+                item.cancelIngest()
+            }
+            item.delete()
+        }
+
         save()
 	}
 
