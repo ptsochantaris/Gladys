@@ -1277,7 +1277,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         vc?.dismiss(animated: true) {
             completion?()
         }
-        if firstPresentedAlertController == nil || vc == nil {
+        if firstPresentedAlertController == nil && vc == nil {
             completion?()
         }
 	}
