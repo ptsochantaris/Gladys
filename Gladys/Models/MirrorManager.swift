@@ -121,7 +121,7 @@ final class MirrorManager {
                     try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
                 }
                 
-                for drop in drops {
+                for drop in drops.filter({ $0.eligibleForExternalUpdateCheck }) {
                     if let examinedPath = try drop.mirrorToFiles(using: f, pathsExamined: pathsExamined) {
                         pathsExamined.insert(examinedPath)
                     }
@@ -209,7 +209,7 @@ extension ArchivedDropItem {
         
     fileprivate func assimilateMirrorChanges() {
 
-        if needsSaving || isTransferring || isDeleting || needsReIngest || typeItems.isEmpty {
+        if needsSaving || isTransferring || needsDeletion || needsReIngest || typeItems.isEmpty {
             return
         }
         

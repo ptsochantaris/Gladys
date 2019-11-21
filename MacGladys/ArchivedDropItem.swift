@@ -64,7 +64,6 @@ final class ArchivedDropItem: Codable {
 	var needsSaving: Bool
 	var needsUnlock: Bool
 	var isBeingCreatedBySync: Bool
-	var isDeleting = false
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -207,7 +206,7 @@ final class ArchivedDropItem: Codable {
 	}
 
 	var goodToSave: Bool {
-		return !isDeleting && !isTransferring
+		return !needsDeletion && !isTransferring
 	}
 
 	func removeIntents() {}
@@ -233,7 +232,7 @@ final class ArchivedDropItem: Codable {
 	}
 
 	var eligibleForExternalUpdateCheck: Bool {
-		return !(isDeleting || needsDeletion || needsReIngest || isBeingCreatedBySync || loadingProgress != nil || shareMode == .elsewhereReadOnly)
+		return !(needsDeletion || needsReIngest || isBeingCreatedBySync || loadingProgress != nil || shareMode == .elsewhereReadOnly)
 	}
 
 	func scanForBlobChanges() -> Bool {

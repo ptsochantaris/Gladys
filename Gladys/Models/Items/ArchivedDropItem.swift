@@ -159,7 +159,6 @@ final class ArchivedDropItem: Codable {
 	}
 
 	var loadCount = 0
-    var isDeleting = false
     var isBeingCreatedBySync = false
 
 	private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
@@ -186,8 +185,12 @@ final class ArchivedDropItem: Codable {
 	}
 
 	var goodToSave: Bool {
-		return !isDeleting && !isTransferring
+		return !needsDeletion && !isTransferring
 	}
+    
+    var eligibleForExternalUpdateCheck: Bool {
+        return !(needsDeletion || needsReIngest || isBeingCreatedBySync || loadingProgress != nil || shareMode == .elsewhereReadOnly)
+    }
 
 	init(from record: CKRecord) {
 		let myUUID = UUID(uuidString: record.recordID.recordName)!

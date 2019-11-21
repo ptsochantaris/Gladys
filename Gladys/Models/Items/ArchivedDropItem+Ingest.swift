@@ -35,7 +35,15 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		loadingProgress = nil
         needsReIngest = false
 
-		NotificationCenter.default.post(name: .IngestComplete, object: self)
+        #if MAINAPP
+        reIndex {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .IngestComplete, object: self)
+            }
+        }
+        #else
+        NotificationCenter.default.post(name: .IngestComplete, object: self)
+        #endif
 	}
 
 	func cancelIngest() {

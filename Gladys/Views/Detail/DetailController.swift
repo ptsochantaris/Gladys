@@ -58,10 +58,9 @@ final class DetailController: GladysViewController,
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
-		n.addObserver(self, selector: #selector(updateUI), name: .ModelDataUpdated, object: nil)
+        n.addObserver(self, selector: #selector(dataUpdate(_:)), name: .ModelDataUpdated, object: nil)
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
-        n.addObserver(self, selector: #selector(checkRemoval(_:)), name: .ItemsRemoved, object: nil)
 	}
 
 	private func updateLockButton() {
@@ -75,10 +74,11 @@ final class DetailController: GladysViewController,
 		lockButton.isEnabled = !item.isImportedShare
 	}
     
-    @objc private func checkRemoval(_ notification: Notification) {
-        guard let uuids = notification.object as? Set<UUID> else { return }
-        if let uuid = item?.uuid, uuids.contains(uuid) {
+    @objc private func dataUpdate(_ notification: Notification) {
+        if let removedUUIDSs = (notification.object as? [AnyHashable: Any])?["removed"] as? [UUID], let uuid = item?.uuid, removedUUIDSs.contains(uuid) {
             done()
+        } else {
+            updateUI()
         }
     }
 

@@ -42,7 +42,7 @@ extension ArchivedDropItem {
 	}
 
 	func delete() {
-		isDeleting = true
+        needsDeletion = true
 		if isImportedShare, let share = cloudKitShareRecord {
 			CloudManager.markAsDeleted(recordName: share.recordID.recordName, cloudKitRecord: share)
 		} else if cloudKitRecord != nil {

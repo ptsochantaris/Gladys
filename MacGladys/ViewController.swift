@@ -254,12 +254,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let n = NotificationCenter.default
 
-		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
+		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
 			Model.detectExternalChanges()
 			Model.sharedFilter.rebuildLabels()
 			Model.sharedFilter.forceUpdateFilter(signalUpdate: false) // refresh filtered items
             self?.updateTitle()
-			self?.reloadData()
+            
+            if let parameters = notification.object as? [AnyHashable: Any], let addedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] {
+                #warning("change to selective update")
+                self?.reloadData()
+            } else {
+                self?.reloadData()
+            }
+
             self?.updateEmptyView()
 		}
 
@@ -293,12 +300,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let a9 = n.addObserver(forName: NSScroller.preferredScrollerStyleDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
 			self?.handleLayout()
 		}
-        
-        let a10 = n.addObserver(forName: .ItemsRemoved, object: nil, queue: .main) { [weak self] notification in
-            guard let uuids = notification.object as? Set<UUID> else { return }
-            self?.itemsDeleted(uuids: uuids)
-        }
-        
+                
         let a11 = n.addObserver(forName: .IngestComplete, object: nil, queue: .main) { [weak self] notification in
             guard let item = notification.object as? ArchivedDropItem else { return }
             self?.itemIngested(item)
@@ -311,7 +313,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12]
+		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -409,24 +411,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
     private func itemIngested(_ item: ArchivedDropItem) {
-		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {
-			loadingError = true
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
-		}
-
-		if Model.sharedFilter.filteredDrops.contains(item) {
-			item.reIndex()
-		} else {
-			item.reIndex {
-				DispatchQueue.main.async { // if item is invisible after re-indexing, let the user know
-					if !Model.sharedFilter.forceUpdateFilter(signalUpdate: true) && !loadingError {
-						if item.createdAt == item.updatedAt && !item.loadingAborted {
-							genericAlert(title: "Item(s) Added", message: nil)
-						}
-					}
-				}
-			}
 		}
 
 		if Model.doneIngesting {
@@ -764,6 +750,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
+    #warning("never called")
     private func itemsDeleted(uuids: Set<UUID>) {
         
         let indexes = uuids.compactMap { uuid in

@@ -55,7 +55,10 @@ final class ModelFilterContext {
     }
 
     var filteredDrops: [ArchivedDropItem] {
-        return cachedFilteredDrops ?? Model.drops
+        if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
+            cachedFilteredDrops = Model.drops
+        }
+        return cachedFilteredDrops!
     }
 
     var filter: String? {
@@ -64,7 +67,7 @@ final class ModelFilterContext {
         }
         set {
             if modelFilter == newValue { return }
-            forceUpdateFilter(with: newValue, signalUpdate: true)
+            updateFilter(with: newValue, signalUpdate: true)
         }
     }
     
@@ -113,7 +116,7 @@ final class ModelFilterContext {
     }
 
     @discardableResult
-    func forceUpdateFilter(with newValue: String? = nil, signalUpdate: Bool) -> Bool {
+    func updateFilter(with newValue: String? = nil, signalUpdate: Bool) -> Bool {
         currentFilterQuery = nil
         modelFilter = newValue ?? modelFilter
 
@@ -480,7 +483,6 @@ extension Model {
         #endif
 		clearCaches()
 		save()
-        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil) // save will not post that, as it's all deletes
 	}
 
 	static func removeImportedShares() {
@@ -529,11 +531,6 @@ extension Model {
 	}
 
     static func delete(items: [ArchivedDropItem]) {
-
-        let uuidsToRemove = Set(items.map { $0.uuid })
-        drops.removeAll { uuidsToRemove.contains($0.uuid) }
-        NotificationCenter.default.post(name: .ItemsRemoved, object: uuidsToRemove)
-        
         for item in items {
             if item.shouldDisplayLoading {
                 item.cancelIngest()
@@ -545,7 +542,7 @@ extension Model {
 	}
 
 	static var doneIngesting: Bool {
-		return !drops.contains { ($0.needsReIngest && !$0.isDeleting) || ($0.loadingProgress != nil && $0.loadingError == nil) }
+		return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
 	}
 
 	static func lockUnlockedItems() {
@@ -606,22 +603,28 @@ extension Model {
 
 	private static func performSave() {
 
-		let itemsToSave = drops.filter { $0.goodToSave }
-        
-        let itemsNeedingSaving = itemsToSave.filter { $0.needsSaving}
+        let removedUuids = drops.filter { $0.needsDeletion }.map { $0.uuid }
+        drops.removeAll { $0.needsDeletion }
 
-		let uuidsToEncode = itemsNeedingSaving.map { i -> UUID in
+		let saveableItems = drops.filter { $0.goodToSave }
+        let itemsToWrite = saveableItems.filter { $0.needsSaving }
+
+		let uuidsToEncode = itemsToWrite.map { i -> UUID in
             i.isBeingCreatedBySync = false
             i.needsSaving = false
             return i.uuid
 		}
+        
+        if !uuidsToEncode.isEmpty || !removedUuids.isEmpty {
+            NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
+        }
         
 		isSaving = true
 		needsAnotherSave = false
         
 		saveQueue.async {
 			do {
-				try coordinatedSave(allItems: itemsToSave, dirtyUuids: uuidsToEncode)
+				try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
 			} catch {
 				log("Saving Error: \(error.finalDescription)")
 			}
@@ -638,9 +641,6 @@ extension Model {
 						nextSaveCallbacks = nil
 					}
 					trimTemporaryDirectory()
-                    if !uuidsToEncode.isEmpty {
-                        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-                    }
 					saveComplete()
 				}
 			}
@@ -672,7 +672,7 @@ extension Model {
             var nextItemUUIDs = [UUID]()
             var itemsToSave = [ArchivedDropItem]()
             DispatchQueue.main.sync {
-                nextItemUUIDs = commitQueue.filter { !$0.isDeleting }.map { $0.uuid }
+                nextItemUUIDs = commitQueue.filter { !$0.needsDeletion }.map { $0.uuid }
                 commitQueue.removeAll()
                 itemsToSave = drops.filter { $0.goodToSave }
             }
@@ -765,7 +765,7 @@ extension Model {
             delete(items: itemsToDelete) // will also save
         }
         
-        drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.isDeleting }.forEach { $0.reIngest() }
+        drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.needsDeletion }.forEach { $0.reIngest() }
     }
     
     static func sendToTop(items: [ArchivedDropItem]) {

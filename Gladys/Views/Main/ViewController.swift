@@ -249,13 +249,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     needsFullSave = true
                 }
             }
-            filter.forceUpdateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: false)
 
         } else {
             // item is always visible in our unfiltered list, by definition
             let itemToMove = Model.drops.remove(at: modelSourceIndex)
             Model.drops.insert(itemToMove, at: destinationIndexPath.item)
-            filter.forceUpdateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: false)
 
             let previousIndexPath = IndexPath(item: modelSourceIndex, section: 0)
             collection.deleteItems(at: [previousIndexPath])
@@ -279,7 +279,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
             Model.drops.insert(item, at: dataIndex)
-            filter.forceUpdateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: false)
             if filter.filteredDrops.contains(item) {
                 collection.isAccessibilityElement = false
                 collection.insertItems(at: [destinationIndexPath])
@@ -597,15 +597,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
         n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(modelDataUpdate(_:)), name: .ModelDataUpdated, object: nil)
-		n.addObserver(self, selector: #selector(detailViewClosing), name: .DetailViewClosing, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(itemsAdded(_:)), name: .ItemsAdded, object: nil)
-        n.addObserver(self, selector: #selector(itemsDeleted(_:)), name: .ItemsRemoved, object: nil)
         n.addObserver(self, selector: #selector(noteLastActionedItem(_:)), name: .NoteLastActionedUUID, object: nil)
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
@@ -620,7 +617,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         Model.checkForUpgrade()
 
         if filter.isFilteringLabels { // in case we're restored with active labels
-            filter.forceUpdateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: false)
         }
 
         forceLayout()
@@ -761,11 +758,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         Model.donatePasteIntent()
         if Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) == .noData {
             genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")
+        } else {
+            Model.save() // to update UI
         }
-	}
-
-	@objc private func detailViewClosing() {
-		ensureNoEmptySearchResult()
 	}
 
 	private var lowMemoryMode = false {
@@ -797,8 +792,55 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
-        filter.forceUpdateFilter(signalUpdate: false) // will force below
-		reloadData(onlyIfPopulated: false)
+
+        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] as? [UUID] {
+            var removedItems = false
+            collection.performBatchUpdates({
+
+                let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+                let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
+                    if let i = oldUUIDs.firstIndex(of: removedUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                collection.deleteItems(at: removedIndexes)
+                if !removedIndexes.isEmpty {
+                    removedItems = true
+                }
+
+                filter.updateFilter(signalUpdate: false) // will force below
+                let newUUIDs = filter.filteredDrops.map { $0.uuid }
+
+                let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
+                let updatedIndexes = updatedUUIDs.compactMap { existingUUID -> IndexPath? in
+                    if let i = newUUIDs.firstIndex(of: existingUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                collection.reloadItems(at: updatedIndexes)
+
+                let insertedUUIDs = savedUUIDs.filter { !oldUUIDs.contains($0) }
+                let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
+                    if let i = newUUIDs.firstIndex(of: newUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                collection.insertItems(at: insertedIndexes)
+
+            }, completion: { _ in
+                if removedItems {
+                    self.itemsDeleted()
+                }
+            })
+            
+        } else { // general update
+            filter.updateFilter(signalUpdate: false) // will force below
+            reloadData(onlyIfPopulated: false)
+        }
+        
 		updateUI()
 	}
 
@@ -902,7 +944,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			let sortMethod = option.handlerForSort(itemsToSort: items, ascending: ascending)
 			sortMethod()
-			filter.forceUpdateFilter(signalUpdate: false)
+			filter.updateFilter(signalUpdate: false)
 			reloadData(onlyIfPopulated: false)
             Model.save()
 		}
@@ -948,7 +990,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	@objc private func labelSelectionChanged() {
-	    filter.forceUpdateFilter(signalUpdate: true)
+	    filter.updateFilter(signalUpdate: true)
 		updateLabelIcon()
         userActivity?.needsSave = true
 	}
@@ -1252,42 +1294,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-    @objc private func itemsAdded(_ notification: Notification) {
-        guard let uuids = notification.object as? Set<UUID> else { return }
-        collection.performBatchUpdates({
-            filter.forceUpdateFilter(signalUpdate: false)
-            let indexes = uuids.compactMap { uuid in
-                filter.filteredDrops.firstIndex{ $0.uuid == uuid }
-            }
-            let ipsToInsert = indexes.map { IndexPath(item: $0, section: 0) }
-
-            if !ipsToInsert.isEmpty {
-                collection.insertItems(at: ipsToInsert)
-            }
-        })
-    }
-    
-    @objc private func itemsDeleted(_ notification: Notification) {
-        guard let uuids = notification.object as? Set<UUID> else { return }
-        collection.performBatchUpdates({
-            let indexes = uuids.compactMap { uuid in
-                filter.filteredDrops.firstIndex{ $0.uuid == uuid }
-            }
-
-            filter.forceUpdateFilter(signalUpdate: false)
-
-            let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
-            
-            if !ipsToRemove.isEmpty {
-                collection.deleteItems(at: ipsToRemove)
-            }
-        }, completion: { finished in
-            log("deletion animation result: \(finished)")
-        })
-        
-        ensureNoEmptySearchResult()
-        
+    private func itemsDeleted() {
         if filter.filteredDrops.isEmpty {
+            
+            if filter.isFiltering {
+                resetSearch(andLabels: true)
+            }
+            
             mostRecentIndexPathActioned = nil
             updateEmptyView(animated: true)
             if isEditing {
@@ -1295,6 +1308,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 setEditing(false, animated: true)
             }
             blurb(Greetings.randomCleanLine)
+
         } else {
             if isEditing {
                 setEditing(false, animated: true)
@@ -1304,37 +1318,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         focusInitialAccessibilityElement()
     }
 
-	private func ensureNoEmptySearchResult() {
-	    filter.forceUpdateFilter(signalUpdate: true)
-		if filter.filteredDrops.count == 0 && filter.isFiltering {
-			resetSearch(andLabels: true)
-		}
-	}
-
     @objc private func itemIngested(_ notification: Notification) {
         guard let item = notification.object as? ArchivedDropItem else { return }
 
-		var loadingError = false
 		if let (errorPrefix, error) = item.loadingError {
-			loadingError = true
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
-		}
+        }
 
 		if let i = filter.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 			if currentDetailView == nil {
 				focusInitialAccessibilityElement()
-			}
-			item.reIndex()
-		} else {
-			item.reIndex {
-				DispatchQueue.main.async { // if item is still invisible after re-indexing, let the user know
-                    if !self.filter.forceUpdateFilter(signalUpdate: true) && !loadingError {
-						if item.createdAt == item.updatedAt && !item.loadingAborted {
-							genericAlert(title: "Item(s) Added", message: nil, buttonTitle: nil)
-						}
-					}
-				}
 			}
 		}
 
@@ -1357,24 +1351,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func resetSearch(andLabels: Bool) {
 		guard let s = navigationItem.searchController else { return }
-		s.searchResultsUpdater = nil
-		s.delegate = nil
 		s.searchBar.text = nil
+
+        s.delegate = nil
 		s.isActive = false
+        s.delegate = self
 
 		if andLabels {
 			filter.disableAllLabels()
 			updateLabelIcon()
 		}
-
-		if filter.filter == nil { // because the next line won't have any effect if it's already nil
-			filter.forceUpdateFilter(signalUpdate: true)
-		} else {
-			filter.filter = nil
-		}
-
-		s.searchResultsUpdater = self
-		s.delegate = self
 	}
 
     @objc private func highlightItem(_ notification: Notification) {
@@ -1440,6 +1426,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadDataRequested(_ notification: Notification) {
+        if self === notification.object as? ViewController { return } // ignore
         let onlyIfPopulated = notification.object as? Bool ?? false
         reloadData(onlyIfPopulated: onlyIfPopulated)
     }
