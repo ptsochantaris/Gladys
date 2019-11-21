@@ -223,13 +223,7 @@ final class ModelFilterContext {
             }
         }
     }
-    
-    func resetEverything() {
-        modelFilter = nil
-        cachedFilteredDrops = nil
-        Model.resetEverything()
-    }
-    
+        
     var enabledLabelsForItems: [String] {
         return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
     }
@@ -475,19 +469,14 @@ extension Model {
 		return terms
 	}
 
-	static fileprivate func resetEverything() {
-		drops.filter { !$0.isImportedShare }.forEach { $0.delete() }
-		drops.removeAll { !$0.isImportedShare }
-        #if MAINAPP
-        deleteMirror {}
-        #endif
-		clearCaches()
-		save()
+	static func resetEverything() {
+        let toDelete = drops.filter { !$0.isImportedShare }
+        Model.delete(items: toDelete)
 	}
 
 	static func removeImportedShares() {
-		drops.removeAll { $0.isImportedShare }
-		save()
+        let toDelete = drops.filter { $0.isImportedShare }
+        Model.delete(items: toDelete)
 	}
 
 	static var threadSafeDrops: [ArchivedDropItem] {
@@ -532,12 +521,8 @@ extension Model {
 
     static func delete(items: [ArchivedDropItem]) {
         for item in items {
-            if item.shouldDisplayLoading {
-                item.cancelIngest()
-            }
             item.delete()
         }
-
         save()
 	}
 

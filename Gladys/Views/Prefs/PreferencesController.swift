@@ -174,8 +174,8 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 
 		let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: actionName, style: .destructive) { [weak self] action in
-            self?.view.associatedFilter?.resetEverything()
+		a.addAction(UIAlertAction(title: actionName, style: .destructive) { _ in
+            Model.resetEverything()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 		present(a, animated: true)

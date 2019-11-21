@@ -549,7 +549,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7y-8b-Uup">
-                                <rect key="frame" x="0.0" y="56" width="320" height="526"/>
+                                <rect key="frame" x="0.0" y="56" width="320" height="575"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
                                         <rect key="frame" x="40" y="351" width="240" height="14.5"/>
@@ -714,7 +714,6 @@ Selecting them will show only items that contain these labels.</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="700"/>
                     <connections>
                         <outlet property="bottomLabel" destination="HiR-cx-G23" id="H70-4h-zjd"/>
