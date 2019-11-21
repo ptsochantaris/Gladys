@@ -242,12 +242,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
         }
 	}
     
-    private var firstAppearance = true
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if firstAppearance {
-            firstAppearance = false
-        } else {
+        if !firstAppearance {
             lastSize = .zero
             preferredContentSize = .zero
             sizeWindow()

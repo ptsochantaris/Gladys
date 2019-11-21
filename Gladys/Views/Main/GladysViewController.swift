@@ -8,7 +8,21 @@
 
 import UIKit
 
-class GladysViewController: UIViewController {
+protocol GladysViewDelegate: class {
+    func movedToWindow()
+}
+
+final class GladysView: UIView {
+    weak var delegate: GladysViewDelegate?
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            delegate?.movedToWindow()
+        }
+    }
+}
+
+class GladysViewController: UIViewController, GladysViewDelegate {
 
 	enum ActionLocation {
 		case none, left, right
@@ -17,6 +31,7 @@ class GladysViewController: UIViewController {
     var windowButtonLocation = ActionLocation.none
     var dismissOnNewWindow = true
     var autoConfigureButtons = false
+    var firstAppearance = true
 
 	var initialAccessibilityElement: UIView {
 		return navigationController?.navigationBar ?? view
@@ -28,18 +43,12 @@ class GladysViewController: UIViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+        firstAppearance = false
 		if popoverPresenter != nil {
 			UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
 		}
 	}
-        
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if parent != nil {
-            updateButtons()
-        }
-    }
-
+    
 	private var popoverPresenter: UIViewController? {
 		return popoverPresentationController?.presentingViewController ?? navigationController?.popoverPresentationController?.presentingViewController
 	}
@@ -49,8 +58,13 @@ class GladysViewController: UIViewController {
         super.viewDidLoad()
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(updateButtons), name: .MultipleWindowModeChange, object: nil)
+        (view as? GladysView)?.delegate = self
     }
-
+    
+    func movedToWindow() {
+        updateButtons(newTraitCollection: view.traitCollection)
+    }
+    
 	private weak var vcToFocusAfterDismissal: UIViewController?
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -89,10 +103,10 @@ class GladysViewController: UIViewController {
             dismiss(animated: true)
         }
 	}
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateButtons()
+        
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+        updateButtons(newTraitCollection: newCollection)
     }
     
     @objc private func newWindowSelected() {
@@ -210,9 +224,10 @@ class GladysViewController: UIViewController {
             navigationItem.leftBarButtonItems?.removeAll { $0.tag == tag }
             navigationItem.rightBarButtonItems?.removeAll { $0.tag == tag }
         }
+        navigationController?.navigationBar.setNeedsLayout()
     }
     
-    @objc private func updateButtons() {
+    @objc private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if SceneDelegate.openCount > 1 {
                 doneButtonLocation = .right
@@ -230,11 +245,11 @@ class GladysViewController: UIViewController {
             showDone(true)
             
         } else if (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1 { // hovering
-            if traitCollection.horizontalSizeClass == .compact {
+            if newTraitCollection.horizontalSizeClass == .compact {
                 showDone(false)
 
             } else {
-                showDone(traitCollection.verticalSizeClass == .compact)
+                showDone(newTraitCollection.verticalSizeClass == .compact)
             }
             
         } else { // full window?

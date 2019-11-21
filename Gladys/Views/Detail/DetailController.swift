@@ -257,13 +257,9 @@ final class DetailController: GladysViewController,
 		preferredContentSize = preferredSize
 	}
 
-    private var firstAppearance = true
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		//log("view showing")
-        if firstAppearance {
-            firstAppearance = false
-        } else { // force resize
+        if !firstAppearance {
             preferredContentSize = .zero
             sizeWindow()
         }

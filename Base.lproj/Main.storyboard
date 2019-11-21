@@ -12,7 +12,7 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -433,7 +433,7 @@
         <scene sceneID="9bS-J2-4TS">
             <objects>
                 <viewController id="XPV-LI-EHc" customClass="LabelSelector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="9l2-YE-hbb">
+                    <view key="view" contentMode="scaleToFill" id="9l2-YE-hbb" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -544,7 +544,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="UOX-0n-X4D">
             <objects>
                 <viewController id="HJT-hG-46H" customClass="PreferencesController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR">
+                    <view key="view" contentMode="scaleToFill" id="JfA-bI-JxR" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -739,7 +739,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="DO8-pZ-FEn">
             <objects>
                 <viewController id="mOB-Wa-q7c" customClass="OptionsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI">
+                    <view key="view" contentMode="scaleToFill" id="6A2-nN-HPI" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="2980"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1508,7 +1508,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="9V7-zs-8tY">
             <objects>
                 <viewController id="PmV-gD-gyX" customClass="iCloudController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tAZ-V3-BEv">
+                    <view key="view" contentMode="scaleToFill" id="tAZ-V3-BEv" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1728,7 +1728,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="mHF-aQ-il8">
             <objects>
                 <viewController id="3Cr-dT-I5Y" customClass="AboutController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6e9-dF-Uv9">
+                    <view key="view" contentMode="scaleToFill" id="6e9-dF-Uv9" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1802,7 +1802,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="QlH-h2-M2Y">
             <objects>
                 <viewController storyboardIdentifier="DetailContentController" automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="o6P-jX-a91">
+                    <view key="view" contentMode="scaleToFill" id="o6P-jX-a91" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2196,7 +2196,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="8x6-3J-YB8">
             <objects>
                 <viewController id="OAS-3C-tPm" customClass="HexEdit" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="FnZ-uz-xIV">
+                    <view key="view" contentMode="scaleToFill" id="FnZ-uz-xIV" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2355,7 +2355,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="rIn-kC-DSK">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="joa-za-Op1" customClass="SiriShortcutsViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="OWD-db-yUR">
+                    <view key="view" contentMode="scaleToFill" id="OWD-db-yUR" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="280" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2501,7 +2501,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="Vh6-0C-4We">
             <objects>
                 <viewController title="Data Inspector" id="FAN-hL-Hea" customClass="DataInspector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="zZA-YO-pgO">
+                    <view key="view" contentMode="scaleToFill" id="zZA-YO-pgO" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2694,7 +2694,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="guN-Qh-8Za">
             <objects>
                 <viewController id="kiZ-3T-dZQ" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Wk5-yt-ach">
+                    <view key="view" contentMode="scaleToFill" id="Wk5-yt-ach" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2788,7 +2788,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="8B6-5S-QZq">
             <objects>
                 <viewController id="LcG-xH-YOk" customClass="AddLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ezE-bm-XGr">
+                    <view key="view" contentMode="scaleToFill" id="ezE-bm-XGr" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2917,7 +2917,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="NU4-RA-yhI">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="0bO-QF-axJ" customClass="TextEditController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="lbp-E8-EMb">
+                    <view key="view" contentMode="scaleToFill" id="lbp-E8-EMb" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -2955,7 +2955,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="sN7-23-jzl">
             <objects>
                 <viewController storyboardIdentifier="PlistEditor" hidesBottomBarWhenPushed="YES" id="JWg-wu-LKR" customClass="PlistEditor" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="MU2-NA-0PP">
+                    <view key="view" contentMode="scaleToFill" id="MU2-NA-0PP" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3092,7 +3092,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="w9e-TV-a0y">
             <objects>
                 <viewController storyboardIdentifier="WebPreview" hidesBottomBarWhenPushed="YES" id="wbd-m0-Cft" customClass="WebPreviewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ndK-jn-u5m">
+                    <view key="view" contentMode="scaleToFill" id="ndK-jn-u5m" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3223,7 +3223,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="Kim-m7-1Mf">
             <objects>
                 <viewController id="QMf-pW-MMr" customClass="LabelEditorController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="onX-EX-zET">
+                    <view key="view" contentMode="scaleToFill" id="onX-EX-zET" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3350,7 +3350,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="vle-W6-jaJ">
             <objects>
                 <viewController id="7B8-TI-m45" customClass="NotesEditorViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="a6B-br-fDc">
+                    <view key="view" contentMode="scaleToFill" id="a6B-br-fDc" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3409,7 +3409,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="Df4-hp-wXm">
             <objects>
                 <viewController id="ps3-Rn-uzy" customClass="HelpController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="B6T-hk-CWz">
+                    <view key="view" contentMode="scaleToFill" id="B6T-hk-CWz" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3484,7 +3484,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="dfc-b7-DGh">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="5x4-nY-GLM" customClass="SiriSettingsViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="xyQ-dS-ghA">
+                    <view key="view" contentMode="scaleToFill" id="xyQ-dS-ghA" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="280" height="280"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -3586,7 +3586,7 @@ Selecting them will show only items that contain these labels.</string>
         <scene sceneID="hYs-qh-kbx">
             <objects>
                 <viewController storyboardIdentifier="LinkPreview" hidesBottomBarWhenPushed="YES" id="hgW-hl-pPi" customClass="LinkViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="URi-sC-MAf">
+                    <view key="view" contentMode="scaleToFill" id="URi-sC-MAf" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

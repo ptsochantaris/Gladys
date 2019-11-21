@@ -229,11 +229,9 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 		}
 	}
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if parent != nil {
-            updateUI()
-        }
+    override func movedToWindow() {
+        super.movedToWindow()
+        updateUI()
     }
     
 	@objc private func updateUI() {
