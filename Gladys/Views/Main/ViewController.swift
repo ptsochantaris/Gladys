@@ -562,7 +562,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		dragModePanel.alpha = 0
 	}
     
-    var onLoad: (()->Void)?
+    var onLoad: ((ViewController)->Void)?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -644,7 +644,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let o = onLoad {
-            o()
+            o(self)
             onLoad = nil
         }
     }
@@ -1383,16 +1383,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		collection.isUserInteractionEnabled = false
 		let ip = IndexPath(item: index, section: 0)
 		collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {
 				cell.flash()
-				if andOpen {
-					self.collectionView(self.collection, didSelectItemAt: ip)
-                    
-                } else if andPreview, let presenter = self.view.window?.alertPresenter {
-                    let item = self.filter.filteredDrops[index]
-					item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
-				}
+                if let item = cell.archivedDropItem, !item.shouldDisplayLoading {
+                    if andOpen {
+                        self.mostRecentIndexPathActioned = ip
+                        self.performSegue(withIdentifier: "showDetail", sender: item)
+
+                    } else if andPreview, let presenter = self.view.window?.alertPresenter {
+                        item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
+                    }
+                }
 			}
 			self.collection.isUserInteractionEnabled = true
 		}

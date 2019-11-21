@@ -72,12 +72,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        if let activity = connectionOptions.userActivities.first { // new scene
-            handleActivity(activity, in: scene)
-            
-        } else {
-            handleActivity(session.stateRestorationActivity, in: scene)
-        }
+        handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, useCentral: false)
         checkWindowCount()
     }
     
@@ -98,7 +93,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        showMaster(andHandle: userActivity, in: scene)
+        handleActivity(userActivity, in: scene, useCentral: true)
     }
     
     private func showMaster(andHandle activity: NSUserActivity?, in scene: UIScene?) {
@@ -151,7 +146,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene) {
+    private func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, useCentral: Bool) {
         guard let scene = scene as? UIWindowScene else { return }
         
         scene.session.stateRestorationActivity = userActivity
@@ -165,7 +160,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 labelList = nil
             }
-            showCentral(in: scene, restoringLabels: labelList) {}
+            showCentral(in: scene, restoringLabels: labelList) { _ in }
             return
 
         case kGladysQuicklookActivity:
@@ -174,20 +169,25 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
                 let item = Model.item(uuid: uuidString) {
-                    
+
                 let child: ArchivedDropItemType?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
                     child = Model.typeItem(uuid: childUuid)
                 } else {
                     child = item.previewableTypeItem
                 }
-                
-                if let child = child {
+                if useCentral {
+                    showCentral(in: scene) { vc in
+                        let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
+                        NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                    }
+                    return
+                    
+                } else if let child = child {
                     guard let q = child.quickLook(in: scene) else { return }
                     let n = PreviewHostingViewController(rootViewController: q)
                     scene.windows.first?.rootViewController = n
                     return
-
                 }
             }
 
@@ -198,53 +198,73 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
                 let item = Model.item(uuid: uuidString) {
 
-                let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
-                let d = n.viewControllers.first as! DetailController
-                d.item = item
-                scene.windows.first?.rootViewController = n
+                if useCentral {
+                    showCentral(in: scene) { vc in
+                        let request = HighlightRequest(uuid: uuidString, open: true)
+                        NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                    }
+                } else {
+                    let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
+                    let d = n.viewControllers.first as! DetailController
+                    d.item = item
+                    scene.windows.first?.rootViewController = n
+                }
                 return
             }
             
         case kGladysStartPasteShortcutActivity:
-            showCentral(in: scene) { NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
+            showCentral(in: scene) { _ in NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
             return
 
         case kGladysStartSearchShortcutActivity:
-            showCentral(in: scene) { NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
+            showCentral(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
             return
 
         case CSSearchableItemActionType:
             if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier)
-                showCentral(in: scene) { NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
+                showCentral(in: scene) { _ in NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
                 return
             }
 
         case CSQueryContinuationActionType:
             if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-                showCentral(in: scene) { NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
+                showCentral(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
                 return
             }
 
         default:
-            showCentral(in: scene) {}
+            showCentral(in: scene) { _ in }
             return
         }
         
         UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
     }
     
-    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: @escaping ()->Void) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: @escaping (ViewController)->Void) {
         let s = scene.session
-        let n = s.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
-        let v = n.viewControllers.first as! ViewController
+        let v: ViewController
+        let replacing: Bool
+        if let n = scene.windows.first?.rootViewController as? UINavigationController, let vc = n.viewControllers.first as? ViewController {
+            v = vc
+            replacing = false
+        } else {
+            let n = s.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
+            v = n.viewControllers.first as! ViewController
+            replacing = true
+        }
+        
         let filter = s.associatedFilter
         if let labels = labels {
             filter.enableLabelsByName(labels)
         }
         v.filter = filter
-        v.onLoad = completion
-        scene.windows.first?.rootViewController = n
+        if replacing {
+            v.onLoad = completion
+            scene.windows.first?.rootViewController = v.navigationController!
+        } else {
+            completion(v)
+        }
     }
     
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
