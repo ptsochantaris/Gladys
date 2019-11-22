@@ -206,31 +206,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let ips = (0 ..< count).map { IndexPath(item: $0, section: 0) }
         collection.animator().insertItems(at: Set(ips))
     }
-
-	private func reloadData(inserting: [IndexPath]? = nil, deleting: [IndexPath]? = nil) {
-		let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
-		if let inserting = inserting {
-			collection.deselectAll(nil)
-			collection.animator().insertItems(at: Set(inserting))
-		} else if let deleting = deleting {
-			collection.deselectAll(nil)
-			collection.animator().deleteItems(at: Set(deleting))
-		} else {
-			collection.animator().reloadData()
-		}
-		var index = 0
-		var indexSet = Set<IndexPath>()
-		for i in Model.sharedFilter.filteredDrops {
-			if selectedUUIDS.contains(i.uuid) {
-				indexSet.insert(IndexPath(item: index, section: 0))
-			}
-			index += 1
-		}
-		if !indexSet.isEmpty {
-			collection.selectItems(at: indexSet, scrollPosition: .centeredHorizontally)
-		}
-        touchBarScrubber?.reloadData()
-	}
     
     var touchBarScrubber: GladysTouchBarScrubber?
 
@@ -257,22 +232,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
 			Model.detectExternalChanges()
 			Model.sharedFilter.rebuildLabels()
-			Model.sharedFilter.forceUpdateFilter(signalUpdate: false) // refresh filtered items
-            self?.updateTitle()
-            
-            if let parameters = notification.object as? [AnyHashable: Any], let addedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] {
-                #warning("change to selective update")
-                self?.reloadData()
-            } else {
-                self?.reloadData()
-            }
-
-            self?.updateEmptyView()
+            self?.modelDataUpdate(notification)
 		}
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
-			self?.reloadData()
+            self?.collection.reloadData()
 		}
 
 		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
@@ -281,7 +246,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.deselectAll(nil)
-			Model.sharedFilter.forceUpdateFilter(signalUpdate: true)
+			Model.sharedFilter.updateFilter(signalUpdate: true)
 			self?.updateTitle()
 		}
 
@@ -514,7 +479,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		if Model.sharedFilter.filter == nil { // because the next line won't have any effect if it's already nil
-			Model.sharedFilter.forceUpdateFilter(signalUpdate: true)
+			Model.sharedFilter.updateFilter(signalUpdate: true)
 		} else {
 			Model.sharedFilter.filter = nil
 		}
@@ -659,7 +624,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				collection.animator().moveItem(at: draggingIndexPath, to: indexPath)
 				collection.deselectAll(nil)
 			}
-			Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
+			Model.sharedFilter.updateFilter(signalUpdate: false)
 			Model.save()
 			return true
 		} else {
@@ -705,7 +670,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return false
 		}
 
-		var insertedUuids = [UUID]()
+		var inserted = false
 		for provider in itemProviders {
 			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
 
@@ -717,23 +682,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					}
 				}
 				Model.drops.insert(newItem, at: modelIndex)
-				Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
-                insertedUuids.append(newItem.uuid)
+                inserted = true
 			}
 		}
 
-        if insertedUuids.count > 0 {
-            let insertedIndexes = insertedUuids.compactMap { uuid in
-                return Model.sharedFilter.filteredDrops.firstIndex { $0.uuid == uuid }
-            }
-            if insertedIndexes.count > 0 {
-                let insertedIndexPaths = insertedIndexes.map { IndexPath(item: $0, section: 0) }
-				reloadData(inserting: insertedIndexPaths)
-			}
-			return true
-		} else {
-			return false
+        if inserted {
+            Model.sharedFilter.updateFilter(signalUpdate: true)
 		}
+        return inserted
 	}
 
 	func importFiles(paths: [String]) {
@@ -750,25 +706,89 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-    #warning("never called")
-    private func itemsDeleted(uuids: Set<UUID>) {
-        
-        let indexes = uuids.compactMap { uuid in
-            Model.sharedFilter.filteredDrops.firstIndex{ $0.uuid == uuid }
+    private func modelDataUpdate(_ notification: Notification) {
+        if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
+
+        let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
+
+        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] as? [UUID] {
+            var removedItems = false
+            collection.performBatchUpdates({
+
+                let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+                let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
+                    if let i = oldUUIDs.firstIndex(of: removedUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                if !removedIndexes.isEmpty {
+                    collection.deleteItems(at: Set(removedIndexes))
+                    removedItems = true
+                }
+
+                Model.sharedFilter.updateFilter(signalUpdate: false)
+                let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+
+                let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
+                let updatedIndexes = updatedUUIDs.compactMap { updatedUUID -> IndexPath? in
+                    if let i = newUUIDs.firstIndex(of: updatedUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                if !updatedIndexes.isEmpty {
+                    collection.reloadItems(at: Set(updatedIndexes))
+                }
+
+                let insertedUUIDs = savedUUIDs.filter { !oldUUIDs.contains($0) }
+                let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
+                    if let i = newUUIDs.firstIndex(of: newUUID) {
+                        return IndexPath(item: i, section: 0)
+                    }
+                    return nil
+                }
+                if !insertedIndexes.isEmpty {
+                    collection.insertItems(at: Set(insertedIndexes))
+                }
+                
+            })
+            if removedItems {
+                self.itemsDeleted()
+            }
+
+        } else { // general update
+            Model.sharedFilter.updateFilter(signalUpdate: false)
+            collection.reloadData()
         }
         
-        Model.sharedFilter.forceUpdateFilter(signalUpdate: false)
+        var index = 0
+        var indexSet = Set<IndexPath>()
+        for i in Model.sharedFilter.filteredDrops {
+            if selectedUUIDS.contains(i.uuid) {
+                indexSet.insert(IndexPath(item: index, section: 0))
+            }
+            index += 1
+        }
+        if !indexSet.isEmpty {
+            collection.selectItems(at: indexSet, scrollPosition: .centeredHorizontally)
+        }
 
-        let ipsToRemove = indexes.map { IndexPath(item: $0, section: 0) }
-
-		if !ipsToRemove.isEmpty {
-			reloadData(deleting: ipsToRemove)
-		}
-
-		if Model.sharedFilter.filteredDrops.count == 0 {
-			blurb(Greetings.randomCleanLine)
-		}
-	}
+        touchBarScrubber?.reloadData()
+        
+        updateTitle()
+    }
+    
+    private func itemsDeleted() {
+        if Model.sharedFilter.filteredDrops.isEmpty {
+            
+            if Model.sharedFilter.isFiltering {
+                resetSearch(andLabels: true)
+            }
+            updateEmptyView()
+            blurb(Greetings.randomCleanLine)
+        }
+    }
 
     @objc func removeLock(_ sender: Any?) {
         let items = removableLockSelectedItems

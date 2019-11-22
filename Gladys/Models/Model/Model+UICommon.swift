@@ -444,8 +444,8 @@ extension Model {
 					let item = actualItemsToSort[pos]
 					Model.drops[itemIndex] = item
 				}
-				//Model.forceUpdateFilter(signalUpdate: false)
-				Model.save()
+                Model.saveIndexOnly(from: nil)
+                CloudManager.sync { _ in } // is this needed?
 			}
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }

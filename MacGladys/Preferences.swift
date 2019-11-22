@@ -226,7 +226,7 @@ final class Preferences: NSViewController {
 
 		confirm(title: title, message: subtitle, action: actionName, cancel: "Cancel") { confirmed in
 			if confirmed {
-                Model.sharedFilter.resetEverything()
+                Model.resetEverything()
 			}
 		}
 	}
@@ -263,7 +263,7 @@ final class Preferences: NSViewController {
 
 	@IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
-		Model.sharedFilter.forceUpdateFilter(signalUpdate: true)
+		Model.sharedFilter.updateFilter(signalUpdate: true)
 	}
     
     @IBAction private func automaticallyConvertUrlsSwitchChanged(_ sender: NSButton) {

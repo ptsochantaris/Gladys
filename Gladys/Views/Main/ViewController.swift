@@ -804,12 +804,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                     return nil
                 }
-                collection.deleteItems(at: removedIndexes)
                 if !removedIndexes.isEmpty {
+                    collection.deleteItems(at: removedIndexes)
                     removedItems = true
                 }
 
-                filter.updateFilter(signalUpdate: false) // will force below
+                filter.updateFilter(signalUpdate: false)
                 let newUUIDs = filter.filteredDrops.map { $0.uuid }
 
                 let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
@@ -819,7 +819,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                     return nil
                 }
-                collection.reloadItems(at: updatedIndexes)
+                if !updatedIndexes.isEmpty {
+                    collection.reloadItems(at: updatedIndexes)
+                }
 
                 let insertedUUIDs = savedUUIDs.filter { !oldUUIDs.contains($0) }
                 let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
@@ -828,8 +830,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                     return nil
                 }
-                collection.insertItems(at: insertedIndexes)
-
+                if !insertedIndexes.isEmpty {
+                    collection.insertItems(at: insertedIndexes)
+                }
+                
             }, completion: { _ in
                 if removedItems {
                     self.itemsDeleted()
