@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,21 +33,21 @@
                                             <rect key="frame" x="0.0" y="0.0" width="120" height="90"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="0vt-xm-z8j">
+                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="0vt-xm-z8j">
                                                     <rect key="frame" x="8" y="6" width="144" height="114"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Line 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZzF-6l-rQY">
-                                                            <rect key="frame" x="0.0" y="0.0" width="104" height="13.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="108" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uoc-c3-lhp">
-                                                            <rect key="frame" x="0.0" y="18.5" width="104" height="37"/>
+                                                            <rect key="frame" x="0.0" y="15.5" width="108" height="53"/>
                                                             <color key="tintColor" name="colorTint"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbY-NC-nGt">
-                                                            <rect key="frame" x="0.0" y="60.5" width="104" height="13.5"/>
+                                                            <rect key="frame" x="0.0" y="70.5" width="108" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -57,10 +57,10 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="0vt-xm-z8j" firstAttribute="leading" secondItem="C1k-e1-Qzy" secondAttribute="leading" constant="8" id="FxF-of-u2l"/>
-                                            <constraint firstItem="0vt-xm-z8j" firstAttribute="top" secondItem="C1k-e1-Qzy" secondAttribute="top" constant="8" id="ITb-cZ-0gL"/>
-                                            <constraint firstAttribute="trailing" secondItem="0vt-xm-z8j" secondAttribute="trailing" constant="8" id="Tmk-FM-GF8"/>
-                                            <constraint firstAttribute="bottom" secondItem="0vt-xm-z8j" secondAttribute="bottom" constant="8" id="xOS-uM-eca"/>
+                                            <constraint firstItem="0vt-xm-z8j" firstAttribute="leading" secondItem="C1k-e1-Qzy" secondAttribute="leading" constant="6" id="FxF-of-u2l"/>
+                                            <constraint firstItem="0vt-xm-z8j" firstAttribute="top" secondItem="C1k-e1-Qzy" secondAttribute="top" constant="4" id="ITb-cZ-0gL"/>
+                                            <constraint firstAttribute="trailing" secondItem="0vt-xm-z8j" secondAttribute="trailing" constant="6" id="Tmk-FM-GF8"/>
+                                            <constraint firstAttribute="bottom" secondItem="0vt-xm-z8j" secondAttribute="bottom" constant="2" id="xOS-uM-eca"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="bottomLabel" destination="rbY-NC-nGt" id="wtO-mI-nZI"/>

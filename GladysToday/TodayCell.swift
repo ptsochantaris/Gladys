@@ -32,12 +32,12 @@ final class TodayCell: UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemThickMaterial))
+		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
 		backgroundEffect.layer.cornerRadius = 10
 		backgroundEffect.clipsToBounds = true
 		backgroundView = backgroundEffect
 
-		let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+        let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
 		imageEffect.layer.cornerRadius = 5
 		imageEffect.clipsToBounds = true
 		imageView.coverUnder(with: imageEffect)
