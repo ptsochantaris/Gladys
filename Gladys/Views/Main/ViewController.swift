@@ -1386,7 +1386,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private func highlightItem(at index: Int, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
 		collection.isUserInteractionEnabled = false
 		let ip = IndexPath(item: index, section: 0)
-		collection.scrollToItem(at: ip, at: [.centeredVertically, .centeredHorizontally], animated: false)
+		collection.scrollToItem(at: ip, at: .centeredVertically, animated: false)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {

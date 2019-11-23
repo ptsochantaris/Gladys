@@ -474,13 +474,20 @@ final class ArchivedItemCell: UICollectionViewCell {
     private var itemSize = CGSize(width: 200, height: 200)
     
 	func flash() {
-        let originalColor = backgroundColor
-		UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-			self.backgroundColor = UIColor(named: "colorTint")
+        let originalColor = container.backgroundColor
+        let topColor = topLabel.textColor
+        let bottomColor = bottomLabel.textColor
+		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+			self.container.backgroundColor = UIColor(named: "colorTint")
+            self.topLabel.textColor = .systemBackground
+            self.bottomLabel.textColor = .systemBackground
 		}) { finished in
-			UIView.animate(withDuration: 0.9, delay: 0, options: .curveEaseIn, animations: {
-				self.backgroundColor = originalColor
-            }, completion: nil)
+            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+				self.container.backgroundColor = originalColor
+            }, completion: { _ in
+                self.topLabel.textColor = topColor
+                self.bottomLabel.textColor = bottomColor
+            })
 		}
 	}
 
