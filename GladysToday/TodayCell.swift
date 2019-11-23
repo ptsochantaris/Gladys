@@ -48,18 +48,11 @@ final class TodayCell: UICollectionViewCell {
 		imageView.layer.cornerRadius = 5
 		isAccessibilityElement = true
 		accessibilityHint = "Select to copy"
-
-		let lp = UILongPressGestureRecognizer(target: self, action: #selector(longPress(_:)))
-		addGestureRecognizer(lp)
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        addInteraction(interaction)
 	}
-
-	@objc private func longPress(_ longPressRecognizer: UILongPressGestureRecognizer) {
-		if longPressRecognizer.state == .began, let uuid = dropItem?.uuid.uuidString, let url = URL(string: "gladys://inspect-item/\(uuid)") {
-			longPressRecognizer.state = .ended
-			NotificationCenter.default.post(name: .OpenParentApp, object: url)
-		}
-	}
-
+ 
 	var dropItem: ArchivedDropItem? {
 		didSet {
 			guard let dropItem = dropItem else { return }
@@ -127,4 +120,48 @@ final class TodayCell: UICollectionViewCell {
 			}
 		}
 	}
+}
+
+extension TodayCell: UIContextMenuInteractionDelegate {
+    private func createShortcutActions() -> UIMenu? {
+        guard let item = dropItem else { return nil }
+        
+        func makeAction(title: String, callback: @escaping () -> Void, style: UIAction.Attributes, iconName: String?) -> UIAction {
+            let a = UIAction(title: title) { _ in callback() }
+            a.attributes = style
+            if let iconName = iconName {
+                a.image = UIImage(systemName: iconName)
+            }
+            return a
+        }
+        
+        return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [
+            
+            makeAction(title: "Copy to Clipboard", callback: {
+                item.copyToPasteboard()
+                if UIAccessibility.isVoiceOverRunning {
+                    UIAccessibility.post(notification: .announcement, argument: "Copied.")
+                }
+            }, style: [], iconName: "doc.on.doc"),
+                        
+            makeAction(title: "Reveal in Gladys", callback: { [weak self] in
+                if let uuid = self?.dropItem?.uuid.uuidString, let url = URL(string: "gladys://inspect-item/\(uuid)") {
+                    NotificationCenter.default.post(name: .OpenParentApp, object: url)
+                }
+                }, style: [], iconName: "list.bullet.below.rectangle")
+        ])
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
+        let params = UIDragPreviewParameters()
+        params.visiblePath = path
+        return UITargetedPreview(view: self, parameters: params)
+    }
+                
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
+            return self?.createShortcutActions()
+        })
+    }
 }
