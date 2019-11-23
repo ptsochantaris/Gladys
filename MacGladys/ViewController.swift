@@ -237,7 +237,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
-            self?.collection.reloadData()
+            self?.collection.animator().reloadData()
 		}
 
 		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
@@ -713,7 +713,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] as? [UUID] {
             var removedItems = false
-            collection.performBatchUpdates({
+            collection.animator().performBatchUpdates({
 
                 let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
                 let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in

@@ -120,7 +120,7 @@ final class ModelFilterContext {
         currentFilterQuery = nil
         modelFilter = newValue ?? modelFilter
 
-        let previouslyVisibleUuids = filteredDrops.map { $0.uuid }
+        let previousFilteredDrops = filteredDrops
         var filtering = false
 
         if let terms = Model.terms(for: filter), !terms.isEmpty {
@@ -164,9 +164,10 @@ final class ModelFilterContext {
             cachedFilteredDrops = postLabelDrops
         }
 
-        let changesToVisibleItems = previouslyVisibleUuids != filteredDrops.map { $0.uuid }
+        let changesToVisibleItems = previousFilteredDrops != filteredDrops
         if signalUpdate && changesToVisibleItems {
 
+            // TODO: should add "updating" and "removing"
             NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
             #if os(iOS)
