@@ -202,15 +202,19 @@ extension Model {
 		}
 	}
 
-	static func saveComplete() {
-		saveOverlap -= 1
-        if saveOverlap == 0 {
-            if PersistedOptions.mirrorFilesToDocuments {
-                updateMirror {
+    static func saveComplete(wasIndexOnly: Bool) {
+        if wasIndexOnly {
+            saveDone()
+        } else {
+            saveOverlap -= 1
+            if saveOverlap == 0 {
+                if PersistedOptions.mirrorFilesToDocuments {
+                    updateMirror {
+                        saveDone()
+                    }
+                } else {
                     saveDone()
                 }
-            } else {
-                saveDone()
             }
         }
 	}
@@ -235,10 +239,6 @@ extension Model {
             BackgroundTask.unregisterForBackground()
         }
     }
-
-	static func saveIndexComplete() {
-        saveDone()
-	}
 
 	private static var foregroundObserver: NSObjectProtocol?
 	private static var backgroundObserver: NSObjectProtocol?

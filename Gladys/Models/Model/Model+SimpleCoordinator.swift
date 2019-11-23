@@ -6,7 +6,6 @@ extension Model {
 	}
 
 	static func prepareToSave() {}
-	static func saveComplete() {}
-	static func saveIndexComplete() {}
+	static func saveComplete(wasIndexOnly: Bool) {}
 	static func startupComplete() {}
 }

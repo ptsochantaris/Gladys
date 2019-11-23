@@ -64,6 +64,7 @@ final class PullState {
 		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
+                Model.saveIsDueToSyncFetch = true
                 Model.saveIndexOnly(from: nil)
 			}
 			if commitTokens {

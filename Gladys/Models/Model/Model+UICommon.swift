@@ -446,7 +446,6 @@ extension Model {
 					Model.drops[itemIndex] = item
 				}
                 Model.saveIndexOnly(from: nil)
-                CloudManager.sync { _ in } // is this needed?
 			}
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }
@@ -627,7 +626,7 @@ extension Model {
 						nextSaveCallbacks = nil
 					}
 					trimTemporaryDirectory()
-					saveComplete()
+                    saveComplete(wasIndexOnly: false)
 				}
 			}
 		}
@@ -644,7 +643,7 @@ extension Model {
 			}
 			DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .ModelDataUpdated, object: requester)
-				saveIndexComplete()
+                saveComplete(wasIndexOnly: true)
 			}
 		}
 	}

@@ -51,7 +51,7 @@ extension Model {
 		}
 	}
 
-	static func saveComplete() {
+    static func saveComplete(wasIndexOnly: Bool) {
 		if saveIsDueToSyncFetch {
 			saveIsDueToSyncFetch = false
 			log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
@@ -64,6 +64,4 @@ extension Model {
 			}
 		}
 	}
-
-	static func saveIndexComplete() {}
 }
