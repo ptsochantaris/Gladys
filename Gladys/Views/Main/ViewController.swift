@@ -290,25 +290,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return finalDestinationPath
     }
 
-	func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-
-		if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
-			return
-		}
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         
-        let group = DispatchGroup()
-
-		coordinator.session.progressIndicatorStyle = .none
+        if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
+            return
+        }
+                
+        coordinator.session.progressIndicatorStyle = .none
         var needsFullSave = false
         var needsIndexSave = false
         var needsPost = false
+        
+        let group = DispatchGroup()
+        
+        for dragItem in coordinator.items.map( { $0.dragItem }) {
+            
+            group.enter()
 
-		for coordinatorItem in coordinator.items {
-			let dragItem = coordinatorItem.dragItem
             var finalDestinationPath: IndexPath?
 
-			if let existingItem = dragItem.localObject as? ArchivedDropItem {
-                group.enter()
+            if let existingItem = dragItem.localObject as? ArchivedDropItem {
+                
+                ArchivedDropItemType.droppedIds?.remove(existingItem.uuid) // do not count this as an external drop
+                
                 collectionView.performBatchUpdates({
                     let (indexPath, needsSave) = handleMove(coordinator: coordinator, dragItem: dragItem, existingItem: existingItem)
                     if let indexPath = indexPath {
@@ -322,9 +326,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }, completion: { _ in
                     group.leave()
                 })
-
-			} else {
-                group.enter()
+                
+            } else {
                 collectionView.performBatchUpdates({
                     finalDestinationPath = handleInsert(coordinator: coordinator, itemProvider: dragItem.itemProvider)
                     needsFullSave = true
@@ -337,7 +340,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let finalDestinationPath = finalDestinationPath {
                 coordinator.drop(dragItem, toItemAt: finalDestinationPath)
             }
-		}
+        }
         
         group.notify(queue: .main) {
             if needsPost {
@@ -351,7 +354,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 Model.saveIndexOnly(from: self)
             }
         }
-	}
+    }
     
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -390,11 +393,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
 		// normal insert
-		return UICollectionViewDropProposal(operation: operation(for: session), intent: .insertAtDestinationIndexPath)
-	}
-
-	private func operation(for session: UIDropSession) -> UIDropOperation {
-		return countInserts(in: session) > 0 ? .copy : .move
+        let operation: UIDropOperation = countInserts(in: session) > 0 ? .copy : .move
+		return UICollectionViewDropProposal(operation: operation, intent: .insertAtDestinationIndexPath)
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
