@@ -609,7 +609,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
         n.addObserver(self, selector: #selector(uiRequest(_:)), name: .UIRequest, object: nil)
         n.addObserver(self, selector: #selector(segueRequest(_:)), name: .SegueRequest, object: nil)
-        n.addObserver(self, selector: #selector(dismissAnyPopOver), name: .DismissPopoversRequest, object: nil)
+        n.addObserver(self, selector: #selector(dismissAnyPopoverRequested), name: .DismissPopoversRequest, object: nil)
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
@@ -1272,7 +1272,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return firstPresentedNavigationController?.viewControllers.first as? LabelSelector
 	}
 
-	@objc private func dismissAnyPopOver(completion: (()->Void)? = nil) {
+    @objc private func dismissAnyPopoverRequested() {
+        dismissAnyPopOver()
+    }
+    
+    private func dismissAnyPopOver(completion: (()->Void)? = nil) {
         let firstPresentedAlertController = (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
         firstPresentedAlertController?.dismiss(animated: true) {
             completion?()
