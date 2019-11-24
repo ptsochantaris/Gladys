@@ -65,7 +65,7 @@ final class PullState {
 			// a position record, most likely?
 			if updatedSequence {
                 Model.saveIsDueToSyncFetch = true
-                Model.saveIndexOnly(from: nil)
+                Model.saveIndexOnly()
 			}
 			if commitTokens {
 				commitNewTokens()

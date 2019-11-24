@@ -9,12 +9,9 @@ extension Model {
 		return NSFileCoordinator(filePresenter: nil)
 	}
 
-	static func prepareToSave() {
-        Model.sharedFilter.rebuildLabels()
-	}
+	static func prepareToSave() {}
 
 	static func startupComplete() {
-		Model.sharedFilter.rebuildLabels()
 		trimTemporaryDirectory()
 	}
 

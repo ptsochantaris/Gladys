@@ -335,7 +335,7 @@ final class ModelFilterContext {
             }
             return nil
         }
-        rebuildLabels()
+        //rebuildLabels() // save's update notification will take care of this
         if !affectedUuids.isEmpty {
             NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
             Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
@@ -445,7 +445,7 @@ extension Model {
 					let item = actualItemsToSort[pos]
 					Model.drops[itemIndex] = item
 				}
-                Model.saveIndexOnly(from: nil)
+                Model.saveIndexOnly()
 			}
 		}
 		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }
@@ -591,9 +591,7 @@ extension Model {
             return i.uuid
 		}
         
-        if !uuidsToEncode.isEmpty || !removedUuids.isEmpty {
-            NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-        }
+        NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
         
 		isSaving = true
 		needsAnotherSave = false
@@ -623,8 +621,9 @@ extension Model {
 		}
 	}
 
-    static func saveIndexOnly(from requester: Any?) {
+    static func saveIndexOnly() {
 		let itemsToSave = drops.filter { $0.goodToSave }
+        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
 		saveQueue.async {
 			do {
 				_ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
@@ -633,7 +632,6 @@ extension Model {
 				log("Warning: Error while committing index to disk: (\(error.finalDescription))")
 			}
 			DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .ModelDataUpdated, object: requester)
                 saveComplete(wasIndexOnly: true)
 			}
 		}
@@ -748,6 +746,6 @@ extension Model {
         drops.removeAll { uuids.contains($0.uuid) }
         drops.insert(contentsOf: cut, at: 0)
 
-        saveIndexOnly(from: nil)
+        saveIndexOnly()
     }
 }

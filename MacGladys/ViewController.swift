@@ -232,7 +232,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
 			Model.detectExternalChanges()
-			Model.sharedFilter.rebuildLabels()
             self?.modelDataUpdate(notification)
 		}
 
@@ -615,10 +614,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				let sourceIndex = Model.drops.firstIndex(of: sourceItem)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
-				collection.animator().moveItem(at: draggingIndexPath, to: indexPath)
 				collection.deselectAll(nil)
 			}
-			Model.sharedFilter.updateFilter(signalUpdate: false)
 			Model.save()
 			return true
 		} else {
@@ -701,62 +698,67 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
     private func modelDataUpdate(_ notification: Notification) {
-        if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
-
+        let parameters = notification.object as? [AnyHashable: Any]
+        let savedUUIDs = parameters?["updated"] as? [UUID] ?? [UUID]()
         let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
 
-        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID] {
-            var removedItems = false
-            collection.animator().performBatchUpdates({
+        var removedItems = false
+        collection.animator().performBatchUpdates({
 
-                let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
-                Model.sharedFilter.updateFilter(signalUpdate: false)
-                let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
-                
-                let removedUUIDs = oldUUIDs.filter { !newUUIDs.contains($0) }
-                let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
-                    if let i = oldUUIDs.firstIndex(of: removedUUID) {
-                        return IndexPath(item: i, section: 0)
-                    }
-                    return nil
-                }
-                if !removedIndexes.isEmpty {
-                    collection.deleteItems(at: Set(removedIndexes))
-                    removedItems = true
-                }
+            let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+            Model.sharedFilter.updateFilter(signalUpdate: false)
+            let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+            var previousMap = oldUUIDs
 
-                let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
-                let updatedIndexes = updatedUUIDs.compactMap { updatedUUID -> IndexPath? in
-                    if let i = newUUIDs.firstIndex(of: updatedUUID) {
-                        return IndexPath(item: i, section: 0)
-                    }
-                    return nil
+            let removedUUIDs = oldUUIDs.filter { !newUUIDs.contains($0) }
+            let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
+                if let i = oldUUIDs.firstIndex(of: removedUUID) {
+                    previousMap.remove(at: i)
+                    return IndexPath(item: i, section: 0)
                 }
-                if !updatedIndexes.isEmpty {
-                    collection.reloadItems(at: Set(updatedIndexes))
-                }
-
-                let insertedUUIDs = newUUIDs.filter { !oldUUIDs.contains($0) }
-                let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
-                    if let i = newUUIDs.firstIndex(of: newUUID) {
-                        return IndexPath(item: i, section: 0)
-                    }
-                    return nil
-                }
-                if !insertedIndexes.isEmpty {
-                    collection.insertItems(at: Set(insertedIndexes))
-                }
-                
-            })
-            if removedItems {
-                self.itemsDeleted()
+                return nil
+            }
+            if !removedIndexes.isEmpty {
+                collection.deleteItems(at: Set(removedIndexes))
+                removedItems = true
             }
 
-        } else { // general update
-            Model.sharedFilter.updateFilter(signalUpdate: false)
-            collection.reloadData()
+            let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
+            let updatedIndexes = updatedUUIDs.compactMap { updatedUUID -> IndexPath? in
+                if let i = newUUIDs.firstIndex(of: updatedUUID) {
+                    return IndexPath(item: i, section: 0)
+                }
+                return nil
+            }
+            if !updatedIndexes.isEmpty {
+                collection.reloadItems(at: Set(updatedIndexes))
+            }
+
+            let insertedUUIDs = newUUIDs.filter { !oldUUIDs.contains($0) }
+            let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
+                if let i = newUUIDs.firstIndex(of: newUUID) {
+                    previousMap.insert(newUUID, at: i)
+                    return IndexPath(item: i, section: 0)
+                }
+                return nil
+            }
+            if !insertedIndexes.isEmpty {
+                collection.insertItems(at: Set(insertedIndexes))
+            }
+            
+            assert(previousMap.count == newUUIDs.count)
+            previousMap.enumerated().forEach { index, p in
+                if p != newUUIDs[index], let oldIndex = oldUUIDs.firstIndex(of: p), let newIndex = newUUIDs.firstIndex(of: p) {
+                    let i1 = IndexPath(item: oldIndex, section: 0)
+                    let i2 = IndexPath(item: newIndex, section: 0)
+                    collection.moveItem(at: i1, to: i2)
+                }
+            }
+        })
+        if removedItems {
+            self.itemsDeleted()
         }
-        
+                
         var index = 0
         var indexSet = Set<IndexPath>()
         for i in Model.sharedFilter.filteredDrops {
