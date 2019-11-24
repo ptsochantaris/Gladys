@@ -160,16 +160,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 labelList = nil
             }
-            showCentral(in: scene, restoringLabels: labelList) { _ in }
+            showCentral(in: scene, restoringLabels: labelList)
             return
 
         case kGladysQuicklookActivity:
             if
                 let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
-                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
-                let item = Model.item(uuid: uuidString) {
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
 
+                guard let item = Model.item(uuid: uuidString) else {
+                    showCentral(in: scene) { _ in
+                        genericAlert(title: "Not Found", message: "This item was not found")
+                    }
+                    return
+                }
+                
                 let child: ArchivedDropItemType?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
                     child = Model.typeItem(uuid: childUuid)
@@ -195,8 +201,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if
                 let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
-                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String,
-                let item = Model.item(uuid: uuidString) {
+                let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
+
+                guard let item = Model.item(uuid: uuidString) else {
+                    showCentral(in: scene) { _ in
+                        genericAlert(title: "Not Found", message: "This item was not found")
+                    }
+                    return
+                }
 
                 if useCentral {
                     showCentral(in: scene) { vc in
@@ -234,14 +246,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
 
         default:
-            showCentral(in: scene) { _ in }
+            showCentral(in: scene)
             return
         }
         
+        log("Could not process current activity, ignoring")
         UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
     }
     
-    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: @escaping (ViewController)->Void) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController)->Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -261,9 +274,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         v.filter = filter
         if replacing {
             v.onLoad = completion
-            scene.windows.first?.rootViewController = v.navigationController!
+            scene.windows.first?.rootViewController = v.navigationController
         } else {
-            completion(v)
+            completion?(v)
         }
     }
     
