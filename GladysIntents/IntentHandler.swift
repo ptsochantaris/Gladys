@@ -52,19 +52,11 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 	/////////////////////////////
 
 	func confirm(intent: CopyItemIntent, completion: @escaping (CopyItemIntentResponse) -> Void) {
-		if Model.legacyModeCheckWithoutLoading() {
-			completion(CopyItemIntentResponse(code: .legacyMode, userActivity: nil))
-		} else {
-			completion(CopyItemIntentResponse(code: .ready, userActivity: nil))
-		}
+        completion(CopyItemIntentResponse(code: .ready, userActivity: nil))
 	}
 
 	func confirm(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
-		if Model.legacyModeCheckWithoutLoading() {
-			completion(CopyComponentIntentResponse(code: .legacyMode, userActivity: nil))
-		} else {
-			completion(CopyComponentIntentResponse(code: .ready, userActivity: nil))
-		}
+        completion(CopyComponentIntentResponse(code: .ready, userActivity: nil))
 	}
 
 	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
@@ -78,11 +70,6 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 
 		newItems.removeAll()
 		intentCompletion = nil
-
-		if Model.legacyModeCheckWithoutLoading() {
-			completion(PasteClipboardIntentResponse(code: .legacyMode, userActivity: nil))
-			return
-		}
 
 		let newTotal = Model.countSavedItemsWithoutLoading() + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
@@ -121,7 +108,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 
 	private func pasteCommit() {
 		Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
-		Model.reIndexWithoutLoading(items: newItems) {
+        Model.reIndexWithoutLoading(items: newItems, in: CSSearchableIndex.default()) {
 			DispatchQueue.main.async { [weak self] in
 				self?.pasteDone()
 			}

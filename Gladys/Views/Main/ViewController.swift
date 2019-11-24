@@ -614,8 +614,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
         
-        Model.checkForUpgrade()
-
         if filter.isFilteringLabels { // in case we're restored with active labels
             filter.updateFilter(signalUpdate: false)
         }

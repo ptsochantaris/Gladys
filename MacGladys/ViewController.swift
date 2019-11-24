@@ -226,6 +226,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateDragOperationIndicators()
 
 		Model.reloadDataIfNeeded()
+        Model.checkForUpgrade()
 
 		let n = NotificationCenter.default
 
@@ -283,8 +284,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
 		}
-
-		Model.checkForUpgrade()
 
 		updateTitle()
         updateEmptyView()

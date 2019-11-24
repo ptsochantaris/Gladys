@@ -25,7 +25,7 @@ extension Model {
 		return IndexProxy()
 	}()
 
-	private static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex = CSSearchableIndex.default(), completion: (()->Void)? = nil) {
+	private static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
 		let searchableItems = items.map { $0.searchableItem }
 		let count = items.count
 		index.indexSearchableItems(searchableItems) { error in

@@ -37,6 +37,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     override init() {
         super.init()
         
+        Model.reloadDataIfNeeded()
+        Model.checkForUpgrade()
+
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)

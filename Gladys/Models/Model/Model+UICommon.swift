@@ -554,18 +554,9 @@ extension Model {
 		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
 			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
 		}
-		if Model.legacyMode {
-			log("Migrating legacy data store")
-			for i in Model.drops {
-				i.needsSaving = true
-			}
-			Model.save()
-			Model.legacyMode = false
-			log("Migration done")
-		}
-		Model.searchableIndex(CSSearchableIndex.default(), reindexAllSearchableItemsWithAcknowledgementHandler: {
+		Model.searchableIndex(CSSearchableIndex.default()) {
 			PersistedOptions.lastRanVersion = currentBuild
-		})
+		}
 	}
 
 	//////////////////////// Saving
@@ -713,10 +704,6 @@ extension Model {
 							}
 						}
 					}
-				}
-
-				if fm.fileExists(atPath: legacyFileUrl.path) {
-					try? fm.removeItem(at: legacyFileUrl)
 				}
 
 				if let dataModified = modificationDate(for: url) {

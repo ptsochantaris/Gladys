@@ -114,7 +114,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 	override func willBecomeActive(with conversation: MSConversation) {
 		super.willBecomeActive(with: conversation)
 		Model.reloadDataIfNeeded()
-		if filePresenter == nil && !Model.legacyMode {
+		if filePresenter == nil {
 			filePresenter = ModelFilePresenter()
 			NSFileCoordinator.addFilePresenter(filePresenter!)
 		}

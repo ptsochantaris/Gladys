@@ -10,18 +10,9 @@ import Foundation
 
 extension Model {
 
-	static func legacyModeCheckWithoutLoading() -> Bool {
-		legacyMode = FileManager.default.fileExists(atPath: legacyFileUrl.path)
-		return legacyMode
-	}
-
 	static func countSavedItemsWithoutLoading() -> Int {
 		if brokenMode {
 			log("Ignoring count, model is broken, app needs restart.")
-			return 0
-		}
-		if legacyMode {
-			log("Ignoring count, model is in legacy mode.")
 			return 0
 		}
 
@@ -66,10 +57,6 @@ extension Model {
 			log("Ignoring locate operation, model is broken, app needs restart.")
 			return nil
 		}
-		if legacyMode {
-			log("Ignoring locate operation, model is in legacy mode.")
-			return nil
-		}
 
 		var item: ArchivedDropItem?
 		var coordinationError: NSError?
@@ -100,10 +87,6 @@ extension Model {
 			log("Ignoring locate component operation, model is broken, app needs restart.")
 			return nil
 		}
-		if legacyMode {
-			log("Ignoring locate component operation, model is in legacy mode.")
-			return nil
-		}
 
 		var result: (ArchivedDropItem, ArchivedDropItemType)?
 		let uuidData = UUID(uuidString: uuid)
@@ -121,10 +104,6 @@ extension Model {
 	private static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedDropItem) -> Bool) {
 		if brokenMode {
 			log("Ignoring search operation, model is broken, app needs restart.")
-			return
-		}
-		if legacyMode {
-			log("Ignoring search operation, model is in legacy mode.")
 			return
 		}
 
@@ -172,10 +151,6 @@ extension Model {
 			log("Ignoring insert operation, model is broken, app needs restart.")
 			return
 		}
-		if legacyMode {
-			log("Ignoring insert operation, model is in legacy mode.")
-			return
-		}
 
 		var closureError: NSError?
 		var coordinationError: NSError?
@@ -218,10 +193,6 @@ extension Model {
 
 		if brokenMode {
 			log("Ignoring commit operation, model is broken, app needs restart.")
-			return
-		}
-		if legacyMode {
-			log("Ignoring commit operation, model is in legacy mode.")
 			return
 		}
 

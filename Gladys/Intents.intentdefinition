@@ -5,13 +5,15 @@
 	<key>INEnums</key>
 	<array/>
 	<key>INIntentDefinitionModelVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
+	<key>INIntentDefinitionNamespace</key>
+	<string>gj9UM0</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>18B75</string>
+	<string>19B88</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>10B61</string>
+	<string>11B500</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>10.1</string>
+	<string>11.2.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -23,8 +25,6 @@
 			<string>Paste current clipboard into Gladys</string>
 			<key>INIntentDescriptionID</key>
 			<string>zUaQxu</string>
-			<key>INIntentLastParameterTag</key>
-			<integer>0</integer>
 			<key>INIntentName</key>
 			<string>PasteClipboard</string>
 			<key>INIntentParameterCombinations</key>
@@ -45,12 +45,16 @@
 					<string>2wlkdj</string>
 				</dict>
 			</dict>
-			<key>INIntentParameters</key>
-			<array/>
 			<key>INIntentResponse</key>
 			<dict>
 				<key>INIntentResponseCodes</key>
 				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
 					<dict>
 						<key>INIntentResponseCodeFormatString</key>
 						<string>Sorry, the operation failed for a techincal reason.</string>
@@ -58,18 +62,6 @@
 						<string>n2jXvD</string>
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string></string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>qdWrJ5</string>
-						<key>INIntentResponseCodeName</key>
-						<string>success</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<true/>
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeFormatString</key>
@@ -78,8 +70,6 @@
 						<string>EfBwsp</string>
 						<key>INIntentResponseCodeName</key>
 						<string>noData</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeFormatString</key>
@@ -88,35 +78,15 @@
 						<string>gUYEgt</string>
 						<key>INIntentResponseCodeName</key>
 						<string>tooManyItems</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>ijKrk2</string>
-						<key>INIntentResponseCodeName</key>
-						<string>legacyMode</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
 					</dict>
 				</array>
-				<key>INIntentResponseLastParameterTag</key>
-				<integer>0</integer>
-				<key>INIntentResponseParameters</key>
-				<array/>
 			</dict>
-			<key>INIntentRestrictions</key>
-			<integer>0</integer>
 			<key>INIntentTitle</key>
 			<string>Paste Clipboard</string>
 			<key>INIntentTitleID</key>
 			<string>2GfbKE</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
-			<key>INIntentUserConfirmationRequired</key>
-			<false/>
 			<key>INIntentVerb</key>
 			<string>Do</string>
 		</dict>
@@ -158,8 +128,6 @@
 					<integer>1</integer>
 					<key>INIntentParameterName</key>
 					<string>item</string>
-					<key>INIntentParameterSupportsMultipleValues</key>
-					<false/>
 					<key>INIntentParameterTag</key>
 					<integer>5</integer>
 					<key>INIntentParameterType</key>
@@ -171,20 +139,6 @@
 				<key>INIntentResponseCodes</key>
 				<array>
 					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string>This item doesn't seem to exist anymore.</string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>noXUS2</string>
-						<key>INIntentResponseCodeName</key>
-						<string>failure</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string></string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>RxqOjy</string>
 						<key>INIntentResponseCodeName</key>
 						<string>success</string>
 						<key>INIntentResponseCodeSuccess</key>
@@ -192,30 +146,20 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
+						<string>This item doesn't seem to exist anymore.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
-						<string>6B9O0I</string>
+						<string>noXUS2</string>
 						<key>INIntentResponseCodeName</key>
-						<string>legacyMode</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
+						<string>failure</string>
 					</dict>
 				</array>
-				<key>INIntentResponseLastParameterTag</key>
-				<integer>0</integer>
-				<key>INIntentResponseParameters</key>
-				<array/>
 			</dict>
-			<key>INIntentRestrictions</key>
-			<integer>0</integer>
 			<key>INIntentTitle</key>
 			<string>Copy Item</string>
 			<key>INIntentTitleID</key>
 			<string>wRutLW</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
-			<key>INIntentUserConfirmationRequired</key>
-			<false/>
 			<key>INIntentVerb</key>
 			<string>Do</string>
 		</dict>
@@ -257,8 +201,6 @@
 					<integer>1</integer>
 					<key>INIntentParameterName</key>
 					<string>component</string>
-					<key>INIntentParameterSupportsMultipleValues</key>
-					<false/>
 					<key>INIntentParameterTag</key>
 					<integer>2</integer>
 					<key>INIntentParameterType</key>
@@ -270,20 +212,6 @@
 				<key>INIntentResponseCodes</key>
 				<array>
 					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string>This item doesn't seem to exist anymore.</string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>IVa6L1</string>
-						<key>INIntentResponseCodeName</key>
-						<string>failure</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string></string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>wNsLTc</string>
 						<key>INIntentResponseCodeName</key>
 						<string>success</string>
 						<key>INIntentResponseCodeSuccess</key>
@@ -291,33 +219,25 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Please run Gladys once after the update, the data store needs to be updated before adding new items.</string>
+						<string>This item doesn't seem to exist anymore.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
-						<string>K9Nokt</string>
+						<string>IVa6L1</string>
 						<key>INIntentResponseCodeName</key>
-						<string>legacyMode</string>
-						<key>INIntentResponseCodeSuccess</key>
-						<false/>
+						<string>failure</string>
 					</dict>
 				</array>
-				<key>INIntentResponseLastParameterTag</key>
-				<integer>0</integer>
-				<key>INIntentResponseParameters</key>
-				<array/>
 			</dict>
-			<key>INIntentRestrictions</key>
-			<integer>0</integer>
 			<key>INIntentTitle</key>
 			<string>Copy Component</string>
 			<key>INIntentTitleID</key>
 			<string>rWhN01</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
-			<key>INIntentUserConfirmationRequired</key>
-			<false/>
 			<key>INIntentVerb</key>
 			<string>Do</string>
 		</dict>
 	</array>
+	<key>INTypes</key>
+	<array/>
 </dict>
 </plist>

@@ -3,43 +3,24 @@ import Foundation
 
 final class Model {
 
-	private static var legacyFileLastModified = Date.distantPast
-	static var legacyMode = true
-
 	static var brokenMode = false
 	static var drops = [ArchivedDropItem]()
 	static var dataFileLastModified = Date.distantPast
 
 	private static var isStarted = false
 
-	static let legacyFileUrl: URL = {
-		return appStorageUrl.appendingPathComponent("items.json", isDirectory: false)
-	}()
-
 	static func reset() {
 		drops.removeAll(keepingCapacity: false)
 		clearCaches()
 		dataFileLastModified = .distantPast
-		legacyFileLastModified = .distantPast
 	}
 
 	static func reloadDataIfNeeded(maximumItems: Int? = nil) {
-		let fm = FileManager.default
-		if fm.fileExists(atPath: itemsDirectoryUrl.path) {
-			load(maximumItems: maximumItems)
-		} else {
-			legacyLoad()
-		}
-	}
-
-	static private func load(maximumItems: Int? = nil) {
 
 		if brokenMode {
 			log("Ignoring load, model is broken, app needs restart.")
 			return
 		}
-
-		legacyMode = false
 
 		var coordinationError: NSError?
 		var loadingError : NSError?
@@ -157,61 +138,7 @@ final class Model {
 		}
 	}
 
-	static private func legacyLoad() {
-
-		if brokenMode {
-			log("Ignoring legacy load, model is broken, app needs restart.")
-			return
-		}
-
-		var didLoad = false
-
-		if !FileManager.default.fileExists(atPath: legacyFileUrl.path) {
-			drops = []
-			legacyMode = false
-			log("Starting fresh store")
-		} else {
-			do {
-				var shouldLoad = true
-				if let dataModified = modificationDate(for: legacyFileUrl) {
-					if dataModified == legacyFileLastModified {
-						shouldLoad = false
-					} else {
-						legacyFileLastModified = dataModified
-					}
-				}
-				if shouldLoad {
-					log("LEGACY: Needed to reload data, new file date: \(legacyFileLastModified)")
-					didLoad = true
-					legacyMode = true
-
-					let data = try Data(contentsOf: legacyFileUrl, options: [.alwaysMapped])
-					drops = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
-				} else {
-					log("LEGACY: No need to reload data")
-				}
-			} catch {
-				log("Error in legacy load: \(error.finalDescription)")
-				abort()
-			}
-		}
-
-		DispatchQueue.main.async {
-			if isStarted {
-				if didLoad {
-                    NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-				}
-			} else {
-				isStarted = true
-				startupComplete()
-			}
-		}
-	}
-
 	static var visibleDrops: [ArchivedDropItem] {
-		if Model.legacyMode {
-			return []
-		}
 		return drops.filter { $0.isVisible }
 	}
 

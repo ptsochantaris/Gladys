@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 final class ActionRequestViewController: UIViewController {
 
@@ -52,11 +53,6 @@ final class ActionRequestViewController: UIViewController {
 		reset()
 
 		Model.reloadDataIfNeeded()
-
-		if Model.legacyMode {
-			statusLabel.text = "Please run Gladys once after the update, the data store needs to be updated before adding new items through this extension."
-			return
-		}
 		
 		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
@@ -173,7 +169,7 @@ final class ActionRequestViewController: UIViewController {
 	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
-		Model.reIndexWithoutLoading(items: newItems) {
+        Model.reIndexWithoutLoading(items: newItems, in: CSSearchableIndex.default()) {
 			DispatchQueue.main.async { [weak self] in
 				self?.save(initialAdd: initialAdd)
 			}
