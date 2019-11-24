@@ -476,12 +476,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if andLabels {
 			Model.sharedFilter.disableAllLabels()
 		}
-
-		if Model.sharedFilter.filter == nil { // because the next line won't have any effect if it's already nil
-			Model.sharedFilter.updateFilter(signalUpdate: true)
-		} else {
-			Model.sharedFilter.filter = nil
-		}
 	}
 
 	@IBAction func findSelected(_ sender: NSMenuItem?) {
@@ -506,6 +500,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	private func updateSearch() {
 		let s = searchBar.stringValue
 		Model.sharedFilter.filter = s.isEmpty ? nil : s
+        updateEmptyView()
 	}
 
     func touchedItem(_ item: ArchivedDropItem) {
@@ -710,11 +705,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
 
-        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] as? [UUID] {
+        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID] {
             var removedItems = false
             collection.animator().performBatchUpdates({
 
                 let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+                Model.sharedFilter.updateFilter(signalUpdate: false)
+                let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+                
+                let removedUUIDs = oldUUIDs.filter { !newUUIDs.contains($0) }
                 let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
                     if let i = oldUUIDs.firstIndex(of: removedUUID) {
                         return IndexPath(item: i, section: 0)
@@ -725,9 +724,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                     collection.deleteItems(at: Set(removedIndexes))
                     removedItems = true
                 }
-
-                Model.sharedFilter.updateFilter(signalUpdate: false)
-                let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
 
                 let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
                 let updatedIndexes = updatedUUIDs.compactMap { updatedUUID -> IndexPath? in
@@ -740,7 +736,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                     collection.reloadItems(at: Set(updatedIndexes))
                 }
 
-                let insertedUUIDs = savedUUIDs.filter { !oldUUIDs.contains($0) }
+                let insertedUUIDs = newUUIDs.filter { !oldUUIDs.contains($0) }
                 let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
                     if let i = newUUIDs.firstIndex(of: newUUID) {
                         return IndexPath(item: i, section: 0)

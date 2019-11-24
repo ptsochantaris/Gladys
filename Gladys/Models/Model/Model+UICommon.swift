@@ -66,8 +66,11 @@ final class ModelFilterContext {
             return modelFilter
         }
         set {
-            if modelFilter == newValue { return }
-            updateFilter(with: newValue, signalUpdate: true)
+            let v = newValue == "" ? nil : newValue
+            if modelFilter != v {
+                modelFilter = v
+                updateFilter(signalUpdate: true)
+            }
         }
     }
     
@@ -116,14 +119,13 @@ final class ModelFilterContext {
     }
 
     @discardableResult
-    func updateFilter(with newValue: String? = nil, signalUpdate: Bool) -> Bool {
+    func updateFilter(signalUpdate: Bool) -> Bool {
         currentFilterQuery = nil
-        modelFilter = newValue ?? modelFilter
 
         let previousFilteredDrops = filteredDrops
         var filtering = false
 
-        if let terms = Model.terms(for: filter), !terms.isEmpty {
+        if let terms = Model.terms(for: modelFilter), !terms.isEmpty {
 
             filtering = true
 
@@ -325,20 +327,18 @@ final class ModelFilterContext {
     }
     
     func removeLabel(_ label : String) {
-        var itemsNeedingReIndex = [ArchivedDropItem]()
-        for i in Model.drops {
+        let affectedUuids = Model.drops.compactMap { i -> String? in
             if i.labels.contains(label) {
-                i.labels = i.labels.filter { $0 != label }
-                itemsNeedingReIndex.append(i)
+                i.labels.removeAll { $0 == label }
+                i.needsCloudPush = true
+                return i.uuid.uuidString
             }
+            return nil
         }
         rebuildLabels()
-        if itemsNeedingReIndex.count > 0 {
+        if !affectedUuids.isEmpty {
             NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-            for i in itemsNeedingReIndex {
-                i.needsCloudPush = true
-            }
-            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: itemsNeedingReIndex.map { $0.uuid.uuidString }) {
+            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
                 DispatchQueue.main.async {
                     Model.save()
                 }

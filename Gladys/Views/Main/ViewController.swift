@@ -624,13 +624,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         blurb(Greetings.openLine)
 
 		cloudStatusChanged()
-		if !PersistedOptions.pasteShortcutAutoDonated {
-            Model.donatePasteIntent()
-		}
-        
-        if PersistedOptions.mirrorFilesToDocuments {
-            MirrorManager.startMirrorMonitoring()
-        }
         
         dismissOnNewWindow = false
         autoConfigureButtons = true
@@ -791,11 +784,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @objc private func modelDataUpdate(_ notification: Notification) {
         if (notification.object as? ViewController) === self { return } // tagged as myself, I've taken care of my own state
 
-        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID], let removedUUIDs = parameters["removed"] as? [UUID] {
+        if let parameters = notification.object as? [AnyHashable: Any], let savedUUIDs = parameters["updated"] as? [UUID] {
             var removedItems = false
             collection.performBatchUpdates({
 
                 let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+                filter.updateFilter(signalUpdate: false)
+                let newUUIDs = filter.filteredDrops.map { $0.uuid }
+
+                let removedUUIDs = oldUUIDs.filter { !newUUIDs.contains($0) }
                 let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
                     if let i = oldUUIDs.firstIndex(of: removedUUID) {
                         return IndexPath(item: i, section: 0)
@@ -807,8 +804,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     removedItems = true
                 }
 
-                filter.updateFilter(signalUpdate: false)
-                let newUUIDs = filter.filteredDrops.map { $0.uuid }
 
                 let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
                 let updatedIndexes = updatedUUIDs.compactMap { existingUUID -> IndexPath? in
@@ -821,7 +816,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     collection.reloadItems(at: updatedIndexes)
                 }
 
-                let insertedUUIDs = savedUUIDs.filter { !oldUUIDs.contains($0) }
+                let insertedUUIDs = newUUIDs.filter { !oldUUIDs.contains($0) }
                 let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
                     if let i = newUUIDs.firstIndex(of: newUUID) {
                         return IndexPath(item: i, section: 0)
@@ -1356,12 +1351,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	func resetSearch(andLabels: Bool) {
+        
+        dismissAnyPopOverOrModal()
+
 		guard let s = navigationItem.searchController else { return }
 		s.searchBar.text = nil
 
         s.delegate = nil
 		s.isActive = false
         s.delegate = self
+
+        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
+            UIView.animate(animations: {
+                var newInsets = layout.sectionInset
+                newInsets.top = 0
+                layout.sectionInset = newInsets
+            })
+        }
 
 		if andLabels {
 			filter.disableAllLabels()
@@ -1376,12 +1382,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
         } else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
-			dismissAnyPopOverOrModal() {
-				self.resetSearch(andLabels: true)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
-				}
-			}
+            self.resetSearch(andLabels: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
+            }
 		}
 	}
 
@@ -1418,13 +1422,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
 	func willDismissSearchController(_ searchController: UISearchController) {
-        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
-            UIView.animate(animations: {
-                var newInsets = layout.sectionInset
-                newInsets.top = 0
-                layout.sectionInset = newInsets
-            })
-        }
 		resetSearch(andLabels: false)
 	}
 
@@ -1463,7 +1460,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	@objc private func forcePaste() {
 		resetSearch(andLabels: true)
-		dismissAnyPopOver()
 		pasteSelected(pasteButton)
 	}
 

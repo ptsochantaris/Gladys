@@ -40,6 +40,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Model.reloadDataIfNeeded()
         Model.checkForUpgrade()
 
+        if !PersistedOptions.pasteShortcutAutoDonated {
+            Model.donatePasteIntent()
+        }
+        
+        if PersistedOptions.mirrorFilesToDocuments {
+            MirrorManager.startMirrorMonitoring()
+        }
+
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
