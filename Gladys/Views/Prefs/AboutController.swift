@@ -12,7 +12,8 @@ import StoreKit
 final class AboutController: GladysViewController {
 
 	@IBOutlet private weak var unlimitedButton: UIButton!
-	@IBOutlet private weak var versionLabel: UIBarButtonItem!
+    @IBOutlet private weak var unlimitedLabel: UILabel!
+    @IBOutlet private weak var versionLabel: UIBarButtonItem!
 	@IBOutlet private weak var logo: UIImageView!
 
 	override func viewDidLoad() {
@@ -21,6 +22,7 @@ final class AboutController: GladysViewController {
 		doneButtonLocation = .right
 
         unlimitedButton.isHidden = infiniteMode
+        unlimitedLabel.isHidden = !infiniteMode
 
 		let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
 		let b = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
