@@ -91,7 +91,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 
 		for item in firstItem ... lastItem {
-			grid.selectItem(at: IndexPath(item: item, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+			grid.selectItem(at: IndexPath(item: item, section: 0), animated: false, scrollPosition: [.centeredHorizontally, .centeredVertically])
 		}
 		inspectorButton.isEnabled = true
 		if let i = inspector {
@@ -203,7 +203,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
         sender.image = UIImage(systemName: asciiMode ? "number.circle" : "a.circle")        
 		grid.reloadData()
 		for i in selectedIndexes ?? [] {
-			grid.selectItem(at: i, animated: false, scrollPosition: .centeredHorizontally)
+			grid.selectItem(at: i, animated: false, scrollPosition: [.centeredHorizontally, .centeredVertically])
 		}
 	}
 

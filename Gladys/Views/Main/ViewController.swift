@@ -717,54 +717,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
             let newUUIDs = filter.filteredDrops.map { $0.uuid }
-            var previousMap = oldUUIDs
 
-            let removedUUIDs = oldUUIDs.filter { !newUUIDs.contains($0) }
-            let removedIndexes = removedUUIDs.compactMap { removedUUID -> IndexPath? in
-                if let i = oldUUIDs.firstIndex(of: removedUUID) {
-                    previousMap.remove(at: i)
-                    return IndexPath(item: i, section: 0)
-                }
-                return nil
-            }
-            if !removedIndexes.isEmpty {
-                collection.deleteItems(at: removedIndexes)
-                removedItems = true
-            }
-
-
-            let updatedUUIDs = savedUUIDs.filter { oldUUIDs.contains($0) }
-            let updatedIndexes = updatedUUIDs.compactMap { updatedUUID -> IndexPath? in
-                if let i = newUUIDs.firstIndex(of: updatedUUID) {
-                    return IndexPath(item: i, section: 0)
-                }
-                return nil
-            }
-            if !updatedIndexes.isEmpty {
-                collection.reloadItems(at: updatedIndexes)
-            }
-            
-            let insertedUUIDs = newUUIDs.filter { !oldUUIDs.contains($0) }
-            let insertedIndexes = insertedUUIDs.compactMap { newUUID -> IndexPath? in
-                if let i = newUUIDs.firstIndex(of: newUUID) {
-                    previousMap.insert(newUUID, at: i)
-                    return IndexPath(item: i, section: 0)
-                }
-                return nil
-            }
-            if !insertedIndexes.isEmpty {
-                collection.insertItems(at: insertedIndexes)
-            }
-            
-            assert(previousMap.count == newUUIDs.count)
-            previousMap.enumerated().forEach { index, p in
-                if p != newUUIDs[index], let oldIndex = oldUUIDs.firstIndex(of: p), let newIndex = newUUIDs.firstIndex(of: p) {
-                    let i1 = IndexPath(item: oldIndex, section: 0)
-                    let i2 = IndexPath(item: newIndex, section: 0)
-                    collection.moveItem(at: i1, to: i2)
+            Set(oldUUIDs).union(newUUIDs).forEach { p in
+                let oldIndex = oldUUIDs.firstIndex(of: p)
+                let newIndex = newUUIDs.firstIndex(of: p)
+                
+                if let oldIndex = oldIndex, let newIndex = newIndex {
+                    if oldIndex == newIndex, savedUUIDs.contains(p) { // update
+                        let n = IndexPath(item: newIndex, section: 0)
+                        collection.reloadItems(at: [n])
+                    } else { // move
+                        let i1 = IndexPath(item: oldIndex, section: 0)
+                        let i2 = IndexPath(item: newIndex, section: 0)
+                        collection.moveItem(at: i1, to: i2)
+                    }
+                } else if let newIndex = newIndex { // insert
+                    let n = IndexPath(item: newIndex, section: 0)
+                    collection.insertItems(at: [n])
+                } else if let oldIndex = oldIndex { // remove
+                    let o = IndexPath(item: oldIndex, section: 0)
+                    collection.deleteItems(at: [o])
+                    removedItems = true
                 }
             }
-
         }, completion: { _ in
             if removedItems {
                 self.itemsDeleted()
