@@ -180,7 +180,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		for uuid in editedUUIDs {
 			if let i = Model.item(uuid: uuid) {
 				i.markUpdated()
-				i.reIndex()
 				hadChanges = true
 			}
 		}

@@ -296,7 +296,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 		item.markUpdated()
 		item.postModified()
-		item.reIndex()
 		Model.save()
 	}
 

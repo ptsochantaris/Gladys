@@ -269,8 +269,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         
-        log("Could not process current activity, ignoring")
-        UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+        if UIApplication.shared.supportsMultipleScenes {
+            log("Could not process current activity, ignoring")
+            UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
+        }
     }
     
     private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController)->Void)? = nil) {

@@ -128,7 +128,6 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		for uuid in editedUUIDs {
 			if let i = Model.item(uuid: uuid) {
 				i.markUpdated()
-				i.reIndex()
 				hadChanges = true
 			}
 		}

@@ -35,9 +35,6 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 		loadingProgress = nil
         needsReIngest = false
 
-        #if MAINAPP || MAC
-        reIndex()
-        #endif
         NotificationCenter.default.post(name: .IngestComplete, object: self)
 	}
 

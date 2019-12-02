@@ -25,28 +25,13 @@ extension Model {
 		return IndexProxy()
 	}()
 
-	private static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
-        DispatchQueue.main.async {
-            let searchableItems = items.map { $0.searchableItem }
-            index.indexSearchableItems(searchableItems) { error in
-                if let error = error {
-                    log("Error indexing items: \(error.finalDescription)")
-                } else {
-                    log("\(searchableItems.count) item(s) indexed")
-                }
-                DispatchQueue.main.async {
-                    completion?()
-                }
-            }
-        }
-	}
-
 	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+        let dropCopy = drops
 		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
 				log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
 			}
-            reIndex(items: drops, in: searchableIndex, completion: acknowledgementHandler)
+            reIndex(items: dropCopy, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 

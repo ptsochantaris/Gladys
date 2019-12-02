@@ -31,10 +31,6 @@ extension ArchivedDropItem {
 		}
 	}
 
-	func reIndex() {
-        Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: [uuid.uuidString], acknowledgementHandler: {})
-	}
-
 	var shareOwnerName: String? {
 		guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
 		let f = PersonNameComponentsFormatter()
@@ -54,11 +50,6 @@ extension ArchivedDropItem {
 			CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
 		} else {
 			log("No cloud record for this item, skipping cloud delete")
-		}
-		CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [uuid.uuidString]) { error in
-			if let error = error {
-				log("Error while deleting an index \(error)")
-			}
 		}
 		removeIntents()
 		clearCacheData(for: uuid)

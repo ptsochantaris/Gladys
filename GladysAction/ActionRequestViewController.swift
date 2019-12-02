@@ -169,10 +169,8 @@ final class ActionRequestViewController: UIViewController {
 	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
-        Model.reIndexWithoutLoading(items: newItems, in: CSSearchableIndex.default()) {
-			DispatchQueue.main.async { [weak self] in
-				self?.save(initialAdd: initialAdd)
-			}
+        Model.reIndex(items: newItems, in: CSSearchableIndex.default()) { [weak self] in
+            self?.save(initialAdd: initialAdd)
 		}
 	}
 

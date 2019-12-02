@@ -110,7 +110,6 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		item.postModified()
 		resizeCallback?(nil, true)
 
-		item.reIndex()
 	    Model.save()
 	}
 

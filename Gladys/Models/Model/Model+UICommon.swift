@@ -577,11 +577,20 @@ extension Model {
 
 	private static func performSave() {
 
+        let index = CSSearchableIndex.default()
+
         let removedUuids = drops.filter { $0.needsDeletion }.map { $0.uuid }
+        index.deleteSearchableItems(withIdentifiers: removedUuids.map { $0.uuidString }) { error in
+            if let error = error {
+                log("Error while deleting search indexes \(error.localizedDescription)")
+            }
+        }
+        
         drops.removeAll { $0.needsDeletion }
 
 		let saveableItems = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.needsSaving }
+        reIndex(items: itemsToWrite, in: index)
 
 		let uuidsToEncode = itemsToWrite.map { i -> UUID in
             i.isBeingCreatedBySync = false
@@ -590,7 +599,7 @@ extension Model {
 		}
         
         NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-        
+                
 		isSaving = true
 		needsAnotherSave = false
         

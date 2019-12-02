@@ -776,7 +776,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                     item.lockHint = nil
                     item.needsUnlock = false
                     item.markUpdated()
-                    item.reIndex()
                 }
             } else {
                 self?.removeLockWithPassword(items: items, label: label, plural: plural)
@@ -804,7 +803,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 					item.lockHint = nil
 					item.needsUnlock = false
 					item.markUpdated()
-					item.reIndex()
 					successCount += 1
 				}
 				if successCount == 0 {
@@ -871,7 +869,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 						item.lockPassword = hashed
 						item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
 						item.markUpdated()
-						item.reIndex()
 					}
 					Model.save()
 				} else {
