@@ -339,9 +339,7 @@ final class ModelFilterContext {
         if !affectedUuids.isEmpty {
             NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
             Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
-                DispatchQueue.main.async {
-                    Model.save()
-                }
+                Model.save()
             }
         }
     }

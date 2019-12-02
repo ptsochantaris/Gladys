@@ -674,7 +674,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
         Model.donatePasteIntent()
         if Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) == .noData {
-            genericAlert(title: "Nothing To Paste", message: "There is currently nothing in the clipboard.")
+            genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
         } else {
             Model.save() // to update UI
         }

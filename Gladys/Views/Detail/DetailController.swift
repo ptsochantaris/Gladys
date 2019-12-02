@@ -240,11 +240,7 @@ final class DetailController: GladysViewController,
 
 	private func sizeWindow() {
 		let preferredSize: CGSize
-		if sharing {
-			//log("share layout")
-			let previousSize = preferredContentSize
-			preferredSize = CGSize(width: initialWidth, height: max(previousSize.height, 500))
-		} else if initialWidth > 0 {
+		if initialWidth > 0 {
 			//log("adapt to table height")
 			preferredSize = CGSize(width: initialWidth, height: table.contentSize.height)
 		} else {
@@ -267,7 +263,7 @@ final class DetailController: GladysViewController,
 
 	override var keyCommands: [UIKeyCommand]? {
 		var a = super.keyCommands ?? []
-        let c = UIKeyCommand.makeCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), title: "Copy Item To Clipboard")
+        let c = UIKeyCommand.makeCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), title: "Copy Item to Clipboard")
         a.append(c)
 		return a
 	}
@@ -276,18 +272,11 @@ final class DetailController: GladysViewController,
 		copySelected(copyButton)
 	}
 
-	var sharing = false
 	@IBAction private func shareSelected(_ sender: UIBarButtonItem) {
 		if let p = presentedViewController {
 			p.dismiss(animated: false, completion: nil)
 		}
-		sharing = true
-		sizeWindow()
 		let a = UIActivityViewController(activityItems: [item.sharingActivitySource], applicationActivities: nil)
-		a.completionWithItemsHandler = { _, _, _,_ in
-			self.sharing = false
-			self.sizeWindow()
-		}
 		present(a, animated: true)
         a.popoverPresentationController?.barButtonItem = sender
 	}

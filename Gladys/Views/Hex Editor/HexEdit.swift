@@ -138,7 +138,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 			grid.deselectItem(at: ip, animated: false)
 		}
 		inspectorButton.isEnabled = false
-		addressButton.setTitle("Jump To Address", for: .normal)
+		addressButton.setTitle("Jump to Address", for: .normal)
 	}
 
 	private var firstSelectedIndexPath: IndexPath?
@@ -208,7 +208,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 	}
 
 	@IBAction private func addressSelected(_ sender: Any) {
-		let a = UIAlertController(title: "Jump To Address", message: nil, preferredStyle: .alert)
+		let a = UIAlertController(title: "Jump to Address", message: nil, preferredStyle: .alert)
 		a.addTextField { field in
 			let ip = self.grid.indexPathsForSelectedItems ?? self.grid.indexPathsForVisibleItems
 			if let f = ip.first {

@@ -108,10 +108,18 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showMaster(andHandle activity: NSUserActivity?, in scene: UIScene?) {
-        let masterSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = scene
-        UIApplication.shared.requestSceneSessionActivation(masterSession, userActivity: activity, options: options, errorHandler: nil)
+        if UIApplication.shared.supportsMultipleScenes {
+            let masterSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
+            let options = UIScene.ActivationRequestOptions()
+            options.requestingScene = scene
+            UIApplication.shared.requestSceneSessionActivation(masterSession, userActivity: activity, options: options) { error in
+                log("Error requesting new scene: \(error)")
+            }
+        } else if let scene = scene {
+            handleActivity(activity, in: scene, useCentral: true)
+        } else {
+            // in theory this should never happen, leave the UI as-is
+        }
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

@@ -26,38 +26,33 @@ extension Model {
 	}()
 
 	private static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
-		let searchableItems = items.map { $0.searchableItem }
-		let count = items.count
-		index.indexSearchableItems(searchableItems) { error in
-			if let error = error {
-				log("Error indexing items: \(error.finalDescription)")
-			} else {
-				log("\(count) item(s) indexed")
-			}
-			completion?()
-		}
+        DispatchQueue.main.async {
+            let searchableItems = items.map { $0.searchableItem }
+            index.indexSearchableItems(searchableItems) { error in
+                if let error = error {
+                    log("Error indexing items: \(error.finalDescription)")
+                } else {
+                    log("\(searchableItems.count) item(s) indexed")
+                }
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            }
+        }
 	}
 
 	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-		let existingItems = drops
 		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
 				log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
 			}
-			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
+            reIndex(items: drops, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 
 	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
 		let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }
-		let currentItemIds = drops.map { $0.uuid.uuidString }
-		let deletedItems = identifiers.filter { currentItemIds.contains($0) }
-		searchableIndex.deleteSearchableItems(withIdentifiers: deletedItems) { error in
-			if let error = error {
-				log("Warning: Error while deleting non-existing item from index: \(error.finalDescription)")
-			}
-			reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
-		}
+        reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 	}
 
 	static func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {

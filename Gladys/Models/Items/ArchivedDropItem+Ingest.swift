@@ -36,14 +36,9 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
         needsReIngest = false
 
         #if MAINAPP || MAC
-        reIndex {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .IngestComplete, object: self)
-            }
-        }
-        #else
-        NotificationCenter.default.post(name: .IngestComplete, object: self)
+        reIndex()
         #endif
+        NotificationCenter.default.post(name: .IngestComplete, object: self)
 	}
 
 	func cancelIngest() {
