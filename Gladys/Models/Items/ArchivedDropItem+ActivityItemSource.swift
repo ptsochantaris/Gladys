@@ -6,7 +6,6 @@
 //  Copyright © 2019 Paul Tsochantaris. All rights reserved.
 //
 
-import UIKit
 import LinkPresentation
 
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
@@ -23,17 +22,33 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     }
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return item.itemProviderForSharing
+        return item.mostRelevantTypeItem?.bytes
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+        return item.trimmedSuggestedName
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: UIActivity.ActivityType?, suggestedSize size: CGSize) -> UIImage? {
+        return item.displayIcon
+    }
+    
+    func activityViewController(_ activityViewController: UIActivityViewController, dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?) -> String {
+        return item.mostRelevantTypeItem?.typeIdentifier ?? "public.data"
     }
 
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
         let metadata = LPLinkMetadata()
-        metadata.title = item.displayText.0
-        metadata.imageProvider = NSItemProvider(object: item.displayIcon)
-        metadata.iconProvider = NSItemProvider(object: item.displayIcon)
+        metadata.title = item.trimmedSuggestedName
+        
+        let icon = item.displayIcon
+        metadata.imageProvider = NSItemProvider(object: icon)
+        metadata.iconProvider = NSItemProvider(object: icon)
+        
         let url = item.associatedWebURL
         metadata.originalURL = url
         metadata.url = url
+        
         return metadata
     }
 }

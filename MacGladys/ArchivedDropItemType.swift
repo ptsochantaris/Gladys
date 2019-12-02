@@ -488,4 +488,26 @@ final class ArchivedDropItemType: Codable {
             FileManager.default.setDateAttribute(ArchivedDropItemType.lastModificationKey, at: bytesPath, to: newValue)
 		}
 	}
+    
+    var itemProviderForSharing: NSItemProvider {
+        let p = NSItemProvider()
+        registerForSharing(with: p)
+        return p
+    }
+
+    func registerForSharing(with provider: NSItemProvider) {
+        if let w = objectForShare as? NSItemProviderWriting {
+            provider.registerObject(w, visibility: .all)
+        } else {
+            provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
+                let p = Progress(totalUnitCount: 1)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let response = self.dataForDropping ?? self.bytes
+                    p.completedUnitCount = 1
+                    completion(response, nil)
+                }
+                return p
+            }
+        }
+    }
 }

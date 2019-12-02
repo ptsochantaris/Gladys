@@ -244,4 +244,13 @@ final class ArchivedDropItem: Codable {
 		}
 		return someHaveChanged
 	}
+    
+    var itemProviderForSharing: NSItemProvider {
+        let p = NSItemProvider()
+        if #available(OSX 10.14, *) {
+            p.suggestedName = trimmedSuggestedName
+        }
+        typeItems.forEach { $0.registerForSharing(with: p) }
+        return p
+    }
 }

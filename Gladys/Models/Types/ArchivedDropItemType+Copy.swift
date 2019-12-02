@@ -18,11 +18,11 @@ extension ArchivedDropItemType {
 			let p = Progress(totalUnitCount: 1)
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block for type: \(t)")
+                let response = self.dataForDropping ?? self.bytes
 				DispatchQueue.main.async {
 					ArchivedDropItemType.droppedIds?.insert(self.parentUuid)
+                    p.completedUnitCount = 1
 				}
-                let response = self.dataForDropping ?? self.bytes
-                p.completedUnitCount = 1
 				completion(response, nil)
 			}
 			return p

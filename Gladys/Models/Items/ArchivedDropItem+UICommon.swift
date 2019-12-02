@@ -87,12 +87,6 @@ extension ArchivedDropItem {
 		return typeItems.max { $0.contentPriority < $1.contentPriority }
 	}
 
-	var itemProviderForSharing: NSItemProvider {
-		let p = NSItemProvider()
-		typeItems.forEach { $0.registerForSharing(with: p) }
-		return p
-	}
-
 	var loadingError: (String, Error)? {
 		for item in typeItems {
 			if let e = item.loadingError {

@@ -115,14 +115,6 @@ extension ArchivedDropItemType {
 
 		Model.trimTemporaryDirectory()
 
-		let bytesToWrite: Data?
-
-		if let s = encodedUrl, !s.isFileURL {
-			bytesToWrite = s.urlFileContent
-		} else {
-			bytesToWrite = dataForDropping
-		}
-
 		let directory = destinationUrl.deletingLastPathComponent()
 
 		let fm = FileManager.default
@@ -131,6 +123,14 @@ extension ArchivedDropItemType {
 		} else if fm.fileExists(atPath: destinationUrl.path) {
 			try fm.removeItem(at: destinationUrl)
 		}
+
+        let bytesToWrite: Data?
+
+        if let s = encodedUrl, !s.isFileURL {
+            bytesToWrite = s.urlFileContent
+        } else {
+            bytesToWrite = dataForDropping
+        }
 
 		if let bytesToWrite = bytesToWrite {
 			try bytesToWrite.write(to: destinationUrl)

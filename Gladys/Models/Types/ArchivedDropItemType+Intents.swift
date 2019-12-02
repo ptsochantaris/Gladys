@@ -20,6 +20,7 @@ extension ArchivedDropItemType {
 	var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = trimmedSuggestedName
+        p.preferredPresentationStyle = .inline
 		register(with: p)
 		return p
 	}
