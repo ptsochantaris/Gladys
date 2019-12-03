@@ -276,7 +276,8 @@ final class DetailController: GladysViewController,
 		if let p = presentedViewController {
 			p.dismiss(animated: false, completion: nil)
 		}
-		let a = UIActivityViewController(activityItems: [item.sharingActivitySource], applicationActivities: nil)
+        guard let m = item.mostRelevantTypeItem else { return }
+		let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
 		present(a, animated: true)
         a.popoverPresentationController?.barButtonItem = sender
 	}

@@ -10,51 +10,55 @@ import LinkPresentation
 
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     
-    private let item: ArchivedDropItem
+    private let component: ArchivedDropItemType
+    private let previewItem: ArchivedDropItemType.PreviewItem
     
-    init(item: ArchivedDropItem) {
-        self.item = item
+    init(component: ArchivedDropItemType) {
+        self.component = component
+        self.previewItem = ArchivedDropItemType.PreviewItem(typeItem: component)
         super.init()
     }
     
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return item.displayIcon
+        return (component.encodedUrl as Any?) ?? (previewItem.previewItemURL as Any?) ?? Data()
     }
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return item.mostRelevantTypeItem?.bytes
+        return component.encodedUrl ?? previewItem.previewItemURL
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
-        return item.trimmedSuggestedName
+        return previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: UIActivity.ActivityType?, suggestedSize size: CGSize) -> UIImage? {
-        return item.displayIcon
+        return component.displayIcon
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?) -> String {
-        return item.mostRelevantTypeItem?.typeIdentifier ?? "public.data"
+        return component.typeIdentifier
     }
 
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
         let metadata = LPLinkMetadata()
-        metadata.title = item.trimmedSuggestedName
+        metadata.title = component.trimmedSuggestedName
         
-        let icon = item.displayIcon
-        metadata.imageProvider = NSItemProvider(object: icon)
-        metadata.iconProvider = NSItemProvider(object: icon)
+        if let icon = component.displayIcon {
+            metadata.imageProvider = NSItemProvider(object: icon)
+            metadata.iconProvider = NSItemProvider(object: icon)
+        }
         
-        let url = item.associatedWebURL
-        metadata.originalURL = url
-        metadata.url = url
+        if let url = component.encodedUrl as URL? {
+            metadata.originalURL = url
+            metadata.url = url
+        }
         
         return metadata
     }
 }
 
-extension ArchivedDropItem {
+extension ArchivedDropItemType {
     var sharingActivitySource: ArchivedDropItemActivitySource {
-        return ArchivedDropItemActivitySource(item: self)
+        return ArchivedDropItemActivitySource(component: self)
     }
 }

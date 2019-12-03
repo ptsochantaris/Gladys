@@ -16,15 +16,17 @@ import Quartz
 
 extension ArchivedDropItemType {
 
-	var previewTempPath: URL {
-		if isWebURL {
-			return Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension("webloc")
-		} else if let f = fileExtension {
-			return Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false).appendingPathExtension(f)
-		} else {
-			return bytesPath
-		}
-	}
+    var previewTempPath: URL {
+        let fileName = oneTitle.truncate(limit: 64).trimmingCharacters(in: .whitespacesAndNewlines)
+        let path = Model.temporaryDirectoryUrl.appendingPathComponent(fileName, isDirectory: false)
+        if isWebURL {
+            return path.appendingPathExtension("webloc")
+        } else if let f = fileExtension {
+            return path.appendingPathExtension(f)
+        } else {
+            return path
+        }
+    }
     
     final class PreviewCheckItem: NSObject, QLPreviewItem {
         let previewItemURL: URL?

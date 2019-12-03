@@ -600,17 +600,18 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             }
             }, style: [], iconName: "arrow.branch"))
         
-        children.append(makeAction(title: "Share", callback: { [weak self] in
-            guard let s = self else { return }
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
-            let a = UIActivityViewController(activityItems: [item.sharingActivitySource], applicationActivities: nil)
-            let request = UIRequest(vc: a, sourceView: s, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .UIRequest, object: request)
-            }
-            
-        }, style: [], iconName: "square.and.arrow.up"))
-                  
+        if let m = item.mostRelevantTypeItem {
+            children.append(makeAction(title: "Share", callback: { [weak self] in
+                guard let s = self else { return }
+                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
+                let request = UIRequest(vc: a, sourceView: s, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .UIRequest, object: request)
+                }
+            }, style: [], iconName: "square.and.arrow.up"))
+        }
+        
         let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm Delete"
         let confirmAction = UIAction(title: confirmTitle) { _ in
             Model.delete(items: [item])

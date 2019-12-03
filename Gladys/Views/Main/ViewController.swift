@@ -797,7 +797,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
 		guard let selectedItems = selectedItems else { return }
-		let sources = selectedItems.compactMap { Model.item(uuid: $0)?.sharingActivitySource }
+        let sources = selectedItems.compactMap { Model.item(uuid: $0)?.mostRelevantTypeItem?.sharingActivitySource }
 		if sources.isEmpty { return }
 		let a = UIActivityViewController(activityItems: sources, applicationActivities: nil)
 		a.completionWithItemsHandler = { [weak self] _, done, _, _ in
