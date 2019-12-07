@@ -188,11 +188,16 @@ extension Model {
 			let contents = try fm.contentsOfDirectory(atPath: temporaryDirectoryUrl.path)
 			let now = Date()
 			for name in contents {
-				let path = temporaryDirectoryUrl.appendingPathComponent(name).path
+                let url = temporaryDirectoryUrl.appendingPathComponent(name)
+                let path = url.path
+                if (ArchivedDropItemType.PreviewItem.previewUrls[url] ?? 0) > 0 {
+                    log("Temporary directory entry is in use, will skip check: \(path)")
+                    continue
+                }
 				let attributes = try fm.attributesOfItem(atPath: path)
 				if let accessDate = (attributes[FileAttributeKey.modificationDate] ?? attributes[FileAttributeKey.creationDate]) as? Date, now.timeIntervalSince(accessDate) > 3600 {
-					log("Temporary directory entry is old, will trim: \(path)")
-					try? fm.removeItem(atPath: path)
+                    log("Temporary directory entry is old, will trim: \(path)")
+                    try? fm.removeItem(atPath: path)
 				}
 			}
 		} catch {

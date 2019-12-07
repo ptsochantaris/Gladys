@@ -107,7 +107,7 @@ extension ArchivedDropItemType {
 		if let canPreviewCache = canPreviewCache {
 			return canPreviewCache
 		}
-		let res = isWebArchive || QLPreviewController.canPreview(PreviewCheckItem(typeItem: self))
+		let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
 		canPreviewCache = res
 		return res
 	}

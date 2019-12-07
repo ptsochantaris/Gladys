@@ -27,48 +27,6 @@ extension ArchivedDropItemType {
             return path
         }
     }
-    
-    final class PreviewCheckItem: NSObject, QLPreviewItem {
-        let previewItemURL: URL?
-        let previewItemTitle: String?
-        let needsCleanup: Bool
-        let parentUuid: UUID
-        let uuid: UUID
-        
-        init(typeItem: ArchivedDropItemType) {
-
-            parentUuid = typeItem.parentUuid
-            uuid = typeItem.uuid
-
-            let blobPath = typeItem.bytesPath
-            let tempPath = typeItem.previewTempPath
-
-            needsCleanup = blobPath != tempPath
-
-            if needsCleanup {
-                let fm = FileManager.default
-                if !fm.fileExists(atPath: tempPath.path) {
-                    try? Data().write(to: tempPath)
-                    log("Placed check placeholder at \(tempPath.path)")
-                }
-                previewItemURL = tempPath
-            } else {
-                previewItemURL = blobPath
-            }
-            
-            previewItemTitle = typeItem.oneTitle
-        }
-        
-        deinit {
-            if needsCleanup, let previewItemURL = previewItemURL {
-                let fm = FileManager.default
-                if fm.fileExists(atPath: previewItemURL.path) {
-                    try? fm.removeItem(at: previewItemURL)
-                    log("Removed check placeholder at \(previewItemURL.path)")
-                }
-            }
-        }
-    }
 
 	final class PreviewItem: NSObject, QLPreviewItem {
 		let previewItemURL: URL?
@@ -76,8 +34,6 @@ extension ArchivedDropItemType {
 		let needsCleanup: Bool
 		let parentUuid: UUID
 		let uuid: UUID
-
-        private static var previewUrls = [URL: Int]()
 
 		init(typeItem: ArchivedDropItemType) {
 
@@ -119,18 +75,23 @@ extension ArchivedDropItemType {
 
 		deinit {
 			if needsCleanup, let previewItemURL = previewItemURL {
-                let currentCount = PreviewItem.previewUrls[previewItemURL] ?? 0
-                if currentCount == 1 {
-                    PreviewItem.previewUrls[previewItemURL] = nil
-                    let fm = FileManager.default
-                    if fm.fileExists(atPath: previewItemURL.path) {
-                        try? fm.removeItem(at: previewItemURL)
-                        log("Removed temporary preview at \(previewItemURL.path)")
-                    }
-                } else {
-                    PreviewItem.previewUrls[previewItemURL] = currentCount - 1
-                }
+                PreviewItem.cleanupUrl(previewItemURL: previewItemURL)
 			}
 		}
+        
+        static var previewUrls = [URL: Int]()
+        fileprivate static func cleanupUrl(previewItemURL: URL) {
+            let currentCount = previewUrls[previewItemURL] ?? 0
+            if currentCount == 1 {
+                previewUrls[previewItemURL] = nil
+                let fm = FileManager.default
+                if fm.fileExists(atPath: previewItemURL.path) {
+                    try? fm.removeItem(at: previewItemURL)
+                    log("Removed temporary preview at \(previewItemURL.path)")
+                }
+            } else {
+                previewUrls[previewItemURL] = currentCount - 1
+            }
+        }
 	}
 }
