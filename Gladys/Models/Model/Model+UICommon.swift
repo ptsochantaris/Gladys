@@ -169,7 +169,6 @@ final class ModelFilterContext {
         let changesToVisibleItems = previousFilteredDrops != filteredDrops
         if signalUpdate && changesToVisibleItems {
 
-            // TODO: should add "updating" and "removing"
             NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
             #if os(iOS)

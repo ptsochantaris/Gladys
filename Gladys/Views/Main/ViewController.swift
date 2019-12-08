@@ -131,8 +131,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	/////////////////////////
 
-    private static var droppedIds = [UUID]()
-
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
 		if PersistedOptions.showCopyMoveSwitchSelector {
 			if session.localDragSession?.localContext as? String != "typeItem" {
@@ -140,13 +138,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
         
-        ViewController.droppedIds = session.items.compactMap { ($0.localObject as? ArchivedDropItem)?.uuid }
+        ArchivedDropItemType.droppedIds.removeAll()
 	}
     
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		showDragModeOverlay(false)
         
-		let items = ViewController.droppedIds.compactMap { Model.item(uuid: $0) }
+		let items = ArchivedDropItemType.droppedIds.compactMap { Model.item(uuid: $0) }
 		if !items.isEmpty {
 			if dragModeMove {
 				Model.delete(items: items)
@@ -155,11 +153,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
         
-        ViewController.droppedIds.removeAll()
+        ArchivedDropItemType.droppedIds.removeAll()
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        ViewController.droppedIds.removeAll()
+        ArchivedDropItemType.droppedIds.removeAll()
 		let item = filter.filteredDrops[indexPath.item]
 		if item.needsUnlock { return [] }
 		return [item.dragItem]
@@ -187,7 +185,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let item = filter.filteredDrops[indexPath.item]
 			cell.archivedDropItem = item
 			cell.isEditing = isEditing
-			cell.isSelectedForAction = selectedItems?.contains(where: { $0 == item.uuid }) ?? false
+			cell.isSelectedForAction = selectedItems?.contains(item.uuid) ?? false
 		}
 		return cell
 	}
@@ -231,7 +229,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             
             if let existingItem = dragItem.localObject as? ArchivedDropItem {
                 
-                ViewController.droppedIds.removeAll { $0 == existingItem.uuid } // do not count this as an external drop
+                ArchivedDropItemType.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.drops.firstIndex(of: existingItem) {
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
@@ -1339,7 +1337,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private func reloadData(onlyIfPopulated: Bool) {
 		updateLabelIcon()
-        if onlyIfPopulated && !filter.filteredDrops.contains(where: { $0.isBeingCreatedBySync }) {
+        if onlyIfPopulated && !filter.filteredDrops.contains(where: { $0.shouldDisplay }) {
 			return
 		}
 		collection.performBatchUpdates({

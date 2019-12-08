@@ -163,6 +163,10 @@ extension ArchivedDropItem {
 		}
 		return true
 	}
+    
+    var shouldDisplay: Bool {
+        return !isBeingCreatedBySync && goodToSave
+    }
 
 	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {
 		let item = mostRelevantTypeItem?.objectForShare
