@@ -605,7 +605,8 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
                 guard let s = self else { return }
                 NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
                 let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
-                let request = UIRequest(vc: a, sourceView: s, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false)
+                let scene = s.window?.windowScene
+                let request = UIRequest(vc: a, sourceView: s.container, sourceRect: s.container.bounds.insetBy(dx: 6, dy: 6), sourceButton: nil, pushInsteadOfPresent: false, sourceScene: scene)
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .UIRequest, object: request)
                 }

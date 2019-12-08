@@ -88,30 +88,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private func showDragModeOverlay(_ show: Bool) {
 		if dragModePanel.superview != nil, !show {
-			UIView.animate(withDuration: 0.2, animations: {
+			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 0
-				self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -300)
 			}, completion: { finished in
 				self.dragModePanel.removeFromSuperview()
-				self.dragModePanel.transform = .identity
 			})
-		} else if dragModePanel.superview == nil, show {
+		} else if dragModePanel.superview == nil, show, let n = navigationController {
 			dragModeReverse = false
 			updateDragModeOverlay()
-			view.addSubview(dragModePanel)
-			let top = dragModePanel.topAnchor.constraint(equalTo: collection.topAnchor)
-			top.constant = -300
+            n.view.addSubview(dragModePanel)
 			NSLayoutConstraint.activate([
 				dragModePanel.centerXAnchor.constraint(equalTo: collection.centerXAnchor),
-				top
+                dragModePanel.topAnchor.constraint(equalTo: n.view.topAnchor)
 				])
-			view.layoutIfNeeded()
-			top.constant = -70
-			UIView.animate(withDuration: 0.2, animations: {
-				self.view.layoutIfNeeded()
+			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 1
-			}, completion: { finished in
-			})
+			}, completion: nil)
 		}
 	}
 
@@ -139,20 +131,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	/////////////////////////
 
+    private static var droppedIds = [UUID]()
+
 	func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
 		if PersistedOptions.showCopyMoveSwitchSelector {
 			if session.localDragSession?.localContext as? String != "typeItem" {
 				showDragModeOverlay(true)
 			}
 		}
+        
+        ViewController.droppedIds = session.items.compactMap { ($0.localObject as? ArchivedDropItem)?.uuid }
 	}
     
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		showDragModeOverlay(false)
-
-		guard let droppedIds = ArchivedDropItemType.droppedIds else { return }
-
-		let items = droppedIds.compactMap { Model.item(uuid: $0) }
+        
+		let items = ViewController.droppedIds.compactMap { Model.item(uuid: $0) }
 		if !items.isEmpty {
 			if dragModeMove {
 				Model.delete(items: items)
@@ -160,11 +154,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				items.forEach { $0.donateCopyIntent() }
 			}
 		}
-		ArchivedDropItemType.droppedIds = nil
+        
+        ViewController.droppedIds.removeAll()
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		ArchivedDropItemType.droppedIds = Set<UUID>()
+        ViewController.droppedIds.removeAll()
 		let item = filter.filteredDrops[indexPath.item]
 		if item.needsUnlock { return [] }
 		return [item.dragItem]
@@ -215,7 +210,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
 		]
 	}
-        
+    
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         
         if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
@@ -236,7 +231,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             
             if let existingItem = dragItem.localObject as? ArchivedDropItem {
                 
-                ArchivedDropItemType.droppedIds?.remove(existingItem.uuid) // do not count this as an external drop
+                ViewController.droppedIds.removeAll { $0 == existingItem.uuid } // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.drops.firstIndex(of: existingItem) {
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
@@ -322,7 +317,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let operation: UIDropOperation = countInserts(in: session) > 0 ? .copy : .move
 		return UICollectionViewDropProposal(operation: operation, intent: .insertAtDestinationIndexPath)
 	}
-
+    
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		switch segue.identifier {
@@ -480,7 +475,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         pasteButton.image = UIImage(systemName: "doc.on.doc", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
         
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
-		dragModePanel.layer.shadowColor = UIColor.black.cgColor
+        dragModePanel.layer.shadowColor = UIColor.label.cgColor
 		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
 		dragModePanel.layer.shadowOpacity = 0.3
 		dragModePanel.layer.shadowRadius = 1
@@ -493,7 +488,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
-		collection.reorderingCadence = .fast
+        collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
 
@@ -582,6 +577,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func uiRequest(_ notification: Notification) {
         guard let request = notification.object as? UIRequest else { return }
+        if request.sourceScene != view.window?.windowScene {
+            return
+        }
+
         if request.pushInsteadOfPresent {
             navigationController?.pushViewController(request.vc, animated: true)
         } else {
@@ -594,14 +593,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
     
-    @objc private func insertedItems(_ notification: Notification) {
-        guard let count = notification.object as? Int, count > 0 else { return }
-        collection.performBatchUpdates({
-            let ips = (0 ..< count).map { IndexPath(item: $0, section: 0) }
-            collection.insertItems(at: ips)
-        }, completion: nil)
-    }
-
 	deinit {
         log("Main VC deinitialised")
 	}

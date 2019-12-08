@@ -193,7 +193,8 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
             a.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
         }
 
-        let request = UIRequest(vc: a, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: false)
+        let scene = currentWindow?.windowScene
+        let request = UIRequest(vc: a, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: false, sourceScene: scene)
         NotificationCenter.default.post(name: .UIRequest, object: request)
     }
     #endif

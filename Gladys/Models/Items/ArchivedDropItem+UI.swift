@@ -176,7 +176,8 @@ extension ArchivedDropItem {
             if let viewController = viewController {
                 viewController.pushViewController(c, animated: true)
             } else {
-                let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true)
+                let scene = currentWindow?.windowScene
+                let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true, sourceScene: scene)
                 NotificationCenter.default.post(name: .UIRequest, object: request)
             }
 			completion(false)

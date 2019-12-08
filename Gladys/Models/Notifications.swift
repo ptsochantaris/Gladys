@@ -56,6 +56,7 @@ struct UIRequest {
     let sourceRect: CGRect?
     let sourceButton: UIBarButtonItem?
     let pushInsteadOfPresent: Bool
+    let sourceScene: UIWindowScene?
 }
 
 extension Notification.Name {
