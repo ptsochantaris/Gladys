@@ -116,7 +116,7 @@ extension CloudManager {
 
 		if deactivatingShares {
 			let myOwnShareIds = Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
-			if myOwnShareIds.count > 0 {
+			if !myOwnShareIds.isEmpty {
 				shutdownShares(ids: myOwnShareIds, force: force, completion: completion)
 				return
 			}

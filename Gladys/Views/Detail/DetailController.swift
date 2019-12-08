@@ -329,7 +329,7 @@ final class DetailController: GladysViewController,
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return (item.typeItems.count > 0 ? 1 : 0) + 3
+        return (item.typeItems.isEmpty ? 0 : 1) + 3
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

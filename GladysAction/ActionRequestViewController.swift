@@ -21,7 +21,6 @@ final class ActionRequestViewController: UIViewController {
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
 	private var loadCount = 0
-	private var ingestCount = 0
 	private var firstAppearance = true
 	private var newItems = [ArchivedDropItem]()
 	private var uploadObservation: NSKeyValueObservation?
@@ -128,8 +127,6 @@ final class ActionRequestViewController: UIViewController {
 				}
 			}
 		}
-
-		ingestCount = newItems.count
     }
 
 	@IBAction private func expandSelected(_ sender: UIButton) {
@@ -160,8 +157,7 @@ final class ActionRequestViewController: UIViewController {
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
-		ingestCount -= 1
-		if ingestCount == 0 {
+        if Model.doneIngesting {
 			commit(initialAdd: true)
 		}
 	}

@@ -300,19 +300,19 @@ final class Preferences: NSViewController {
 				CloudManager.proceedWithDeactivation()
 			}
 		} else {
-			if Model.drops.count > 0 {
-				let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
-				confirm(title: "Upload Existing Items?",
-						message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
-				action: "Proceed", cancel: "Cancel") { confirmed in
-					if confirmed {
-						CloudManager.proceedWithActivation()
-					} else {
-						self.abortActivate()
-					}
-				}
+			if Model.drops.isEmpty {
+                CloudManager.proceedWithActivation()
 			} else {
-				CloudManager.proceedWithActivation()
+                let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
+                confirm(title: "Upload Existing Items?",
+                        message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+                action: "Proceed", cancel: "Cancel") { confirmed in
+                    if confirmed {
+                        CloudManager.proceedWithActivation()
+                    } else {
+                        self.abortActivate()
+                    }
+                }
 			}
 		}
 	}

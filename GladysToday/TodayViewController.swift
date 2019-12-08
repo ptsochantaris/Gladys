@@ -102,7 +102,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	private func updateUI() {
 		Model.reloadDataIfNeeded(maximumItems: 16)
 		copiedLabel.alpha = 0
-		emptyLabel.isHidden = Model.visibleDrops.count > 0
+		emptyLabel.isHidden = !Model.visibleDrops.isEmpty
 		itemsView.reloadData()
 		itemsView.layoutIfNeeded()
 		preferredContentSize = itemsView.contentSize

@@ -59,7 +59,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 				self.componentIngested(typeItem: nil)
 			}
 		} else {
-			if typeItems.count > 1 && typeItems.filter({ $0.order != 0 }).count > 0 { // some type items have an order set, enforce it
+            if typeItems.count > 1 && typeItems.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
 				typeItems.sort { $0.order < $1.order }
 			}
 			typeItems.forEach {

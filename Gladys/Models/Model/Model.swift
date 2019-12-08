@@ -138,6 +138,10 @@ final class Model {
 		}
 	}
 
+    static var doneIngesting: Bool {
+        return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
+    }
+
 	static var visibleDrops: [ArchivedDropItem] {
 		return drops.filter { $0.isVisible }
 	}

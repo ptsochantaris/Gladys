@@ -41,7 +41,7 @@ extension Array where Element == [CKRecord] {
 				newChild.removeAll(keepingCapacity: true)
 			}
 		}
-		if newChild.count > 0 {
+		if !newChild.isEmpty {
 			result.append(newChild)
 		}
 		return result

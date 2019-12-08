@@ -24,7 +24,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	func sessionDidDeactivate(_ session: WCSession) {}
 
 	func sessionReachabilityDidChange(_ session: WCSession) {
-		if session.isReachable && session.applicationContext.count == 0 && Model.drops.count > 0 {
+		if session.isReachable && session.applicationContext.count == 0 && !Model.drops.isEmpty {
 			updateContext()
 		}
 	}

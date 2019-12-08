@@ -44,7 +44,7 @@ final class PushState {
 		}.flatBunch(minSize: 10)
 
 		var newQueue = CloudManager.deletionQueue
-		if idsToPush.count > 0 {
+		if !idsToPush.isEmpty {
 			let previousCount = newQueue.count
 			newQueue = newQueue.filter { !idsToPush.contains($0) }
 			if newQueue.count != previousCount {
@@ -73,7 +73,7 @@ final class PushState {
 				var sequenceToSend: [String]?
 
 				if CloudManager.lastSyncCompletion == .distantPast {
-					if currentUUIDSequence.count > 0 {
+					if !currentUUIDSequence.isEmpty {
 						var mergedSequence = CloudManager.uuidSequence
 						for i in currentUUIDSequence.reversed() {
 							if !mergedSequence.contains(i) {
@@ -89,10 +89,10 @@ final class PushState {
 				if let sequenceToSend = sequenceToSend {
 					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecord.ID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
 					record["positionList"] = sequenceToSend as NSArray
-					if _payloadsToPush.count > 0 {
-						_payloadsToPush[0].insert(record, at: 0)
+					if _payloadsToPush.isEmpty {
+                        _payloadsToPush.append([record])
 					} else {
-						_payloadsToPush.append([record])
+                        _payloadsToPush[0].insert(record, at: 0)
 					}
 				}
 			}
@@ -127,7 +127,7 @@ final class PushState {
 		if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
 		let deletionCount = recordsToDelete.count
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-		CloudManager.syncProgressString = "Sending" + (components.count > 0 ? (" " + components.joined(separator: ", ")) : "")
+        CloudManager.syncProgressString = "Sending" + (components.isEmpty ? "" : (" " + components.joined(separator: ", ")))
 	}
 
 	var progress: Progress {

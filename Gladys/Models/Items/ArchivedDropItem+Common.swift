@@ -93,6 +93,15 @@ extension ArchivedDropItem: Hashable {
 		}
 		return nil
 	}
+    
+    var loadingError: (String, Error)? {
+        for item in typeItems {
+            if let e = item.loadingError {
+                return ("Error processing type \(item.typeIdentifier): ", e)
+            }
+        }
+        return nil
+    }
 
 	var imageCacheKey: NSString {
 		return "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)" as NSString

@@ -22,7 +22,7 @@ final class SwitchHolder: UIView {
 				.sorted { $0.frame.origin.y < $1.frame.origin.y }
 				.compactMap { $0 is UILabel ? $0.accessibilityLabel : nil }
 			
-			return components.count > 0 ? components.joined(separator: ".") : nil
+            return components.isEmpty ? nil : components.joined(separator: ".")
 		}
 	}
 

@@ -153,7 +153,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		guard let droppedIds = ArchivedDropItemType.droppedIds else { return }
 
 		let items = droppedIds.compactMap { Model.item(uuid: $0) }
-		if items.count > 0 {
+		if !items.isEmpty {
 			if dragModeMove {
 				Model.delete(items: items)
 			} else {
@@ -751,7 +751,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var emptyView: UIImageView?
 	@objc private func updateUI() {
-		editButton.isEnabled = Model.drops.count > 0
+		editButton.isEnabled = !Model.drops.isEmpty
 
 		selectedItems = selectedItems?.filter { uuid in Model.drops.contains { $0.uuid == uuid } }
 
@@ -912,9 +912,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			labelsButton.accessibilityValue = "Inactive"
 			title = "Gladys"
 		}
-		labelsButton.isEnabled = Model.drops.count > 0
-		sortAscendingButton.isEnabled = Model.drops.count > 0
-		sortDescendingButton.isEnabled = Model.drops.count > 0
+        let haveDrops = !Model.drops.isEmpty
+		labelsButton.isEnabled = haveDrops
+		sortAscendingButton.isEnabled = haveDrops
+		sortDescendingButton.isEnabled = haveDrops
 	}
 
 	private func blurb(_ message: String) {
@@ -966,7 +967,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				})
 			}
 
-		} else if let e = emptyView, Model.drops.count > 0 {
+		} else if let e = emptyView, !Model.drops.isEmpty {
 			emptyView = nil
 			if animated {
 				UIView.animate(animations: {
@@ -1117,7 +1118,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var selectedItems: [UUID]?
 	@IBAction private func deleteButtonSelected(_ sender: UIBarButtonItem) {
-		guard let candidates = selectedItems, candidates.count > 0 else { return }
+		guard let candidates = selectedItems, !candidates.isEmpty else { return }
 
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
@@ -1135,12 +1136,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func proceedWithDelete() {
-		guard let candidates = selectedItems, candidates.count > 0 else { return }
+		guard let candidates = selectedItems, !candidates.isEmpty else { return }
 
 		let itemsToDelete = Model.drops.filter { item -> Bool in
 			candidates.contains(where: { $0 == item.uuid })
 		}
-		if itemsToDelete.count > 0 {
+		if !itemsToDelete.isEmpty {
 			Model.delete(items: itemsToDelete)
 		}
 

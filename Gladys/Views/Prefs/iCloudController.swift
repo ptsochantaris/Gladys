@@ -128,19 +128,19 @@ final class iCloudController: GladysViewController {
 		if icloudSpinner.isAnimating { return }
 
 		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
-			if Model.drops.count > 0 {
-				let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
-				confirm(title: "Upload Existing Items?",
-						message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
-						action: "Proceed", cancel: "Cancel") { confirmed in
-					if confirmed {
-						CloudManager.proceedWithActivation()
-					} else {
-						self.icloudSwitch.setOn(false, animated: true)
-					}
-				}
+			if Model.drops.isEmpty {
+                CloudManager.proceedWithActivation()
 			} else {
-				CloudManager.proceedWithActivation()
+                let contentSize = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
+                confirm(title: "Upload Existing Items?",
+                        message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+                        action: "Proceed", cancel: "Cancel") { confirmed in
+                    if confirmed {
+                        CloudManager.proceedWithActivation()
+                    } else {
+                        self.icloudSwitch.setOn(false, animated: true)
+                    }
+                }
 			}
 		} else if CloudManager.syncSwitchedOn {
 			let sharingOwn = Model.sharingMyItems

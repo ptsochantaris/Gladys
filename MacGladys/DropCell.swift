@@ -102,7 +102,7 @@ final class TokenTextField: NSTextField {
 		context.translateBy(x: 0, y: dirtyRect.size.height)
 		context.scaleBy(x: 1, y: -1)
 
-		if labels.count > 0 {
+		if !labels.isEmpty {
 
 			let lines = CTFrameGetLines(totalFrame) as NSArray
 			let lineCount = lines.count

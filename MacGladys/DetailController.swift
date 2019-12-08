@@ -264,7 +264,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private func updateLabelButtons() {
-		removeButton.isEnabled = labels.selectedRowIndexes.count > 0 && readOnlyLabel.isHidden
+		removeButton.isEnabled = !labels.selectedRowIndexes.isEmpty && readOnlyLabel.isHidden
 	}
 
 	private var previousText: String?

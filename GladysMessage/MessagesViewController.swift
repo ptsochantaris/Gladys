@@ -100,7 +100,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     }
 
 	@objc private func externalDataUpdated() {
-		emptyLabel.isHidden = Model.visibleDrops.count > 0
+		emptyLabel.isHidden = !Model.visibleDrops.isEmpty
 		updateItemSize(for: view.bounds.size)
 		itemsView.reloadData()
 	}
@@ -118,7 +118,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 			filePresenter = ModelFilePresenter()
 			NSFileCoordinator.addFilePresenter(filePresenter!)
 		}
-		emptyLabel.isHidden = Model.visibleDrops.count > 0
+		emptyLabel.isHidden = !Model.visibleDrops.isEmpty
 		updateItemSize(for: view.bounds.size)
 		searchBar.text = lastFilter
 		itemsView.reloadData()

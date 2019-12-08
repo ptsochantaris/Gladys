@@ -28,7 +28,7 @@ final class PullState {
 		
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
 		
-		if components.count > 0 {
+		if !components.isEmpty {
 			CloudManager.syncProgressString = "Fetched " + components.joined(separator: ", ")
 		} else {
 			CloudManager.syncProgressString = "Fetching"
@@ -41,7 +41,7 @@ final class PullState {
 
 		if updatedSequence || newDropCount > 0 {
 			let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
-			if sequence.count > 0 {
+			if !sequence.isEmpty {
 				Model.drops.sort { i1, i2 in
 					let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
 					let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
@@ -79,7 +79,7 @@ final class PullState {
 	}
 
 	private func commitNewTokens() {
-		if updatedZoneTokens.count > 0 || updatedDatabaseTokens.count > 0 {
+        if !updatedZoneTokens.isEmpty || !updatedDatabaseTokens.isEmpty {
 			log("Committing change tokens")
 		}
 		for (zoneId, zoneToken) in updatedZoneTokens {
@@ -92,7 +92,7 @@ final class PullState {
 
 	private static var legacyZoneChangeToken: CKServerChangeToken? {
 		get {
-			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), data.count > 0 {
+			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), !data.isEmpty {
                 return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
 			} else {
 				return nil

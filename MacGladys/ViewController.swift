@@ -386,7 +386,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-		if collection.selectionIndexPaths.count > 0 && QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
+		if !collection.selectionIndexPaths.isEmpty && QLPreviewPanel.sharedPreviewPanelExists() && QLPreviewPanel.shared().isVisible {
 			QLPreviewPanel.shared().reloadData()
 		}
 		updateTitle()
@@ -1133,7 +1133,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		if Model.drops.count == 0 && emptyView.alphaValue < 1 {
 			emptyView.animator().alphaValue = 1
 
-		} else if emptyView.alphaValue > 0, Model.drops.count > 0 {
+		} else if emptyView.alphaValue > 0, !Model.drops.isEmpty {
 			emptyView.animator().alphaValue = 0
 			emptyLabel.animator().alphaValue = 0
 		}
@@ -1151,7 +1151,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	//////////////////////////////////////////////////// Quicklook
 
 	override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
-		return collection.selectionIndexPaths.count > 0
+		return !collection.selectionIndexPaths.isEmpty
 	}
 
 	private var previewPanel: QLPreviewPanel?

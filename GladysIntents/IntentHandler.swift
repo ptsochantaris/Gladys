@@ -12,7 +12,6 @@ import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
 
-	private var loadCount = 0
 	private var newItems = [ArchivedDropItem]()
 	private var itemProviders = [NSItemProvider]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
@@ -61,7 +60,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 
 	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
 		itemProviders = UIPasteboard.general.itemProviders
-		loadCount = itemProviders.count
+		let loadCount = itemProviders.count
 
 		if loadCount == 0 {
 			completion(PasteClipboardIntentResponse(code: .noData, userActivity: nil))
@@ -100,16 +99,11 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
-		loadCount -= 1
-		if loadCount == 0 {
-			pasteCommit()
-		}
-	}
-
-	private func pasteCommit() {
-		Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
-        Model.reIndex(items: newItems, in: CSSearchableIndex.default()) { [weak self] in
-            self?.pasteDone()
+        if Model.doneIngesting {
+            Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
+            Model.reIndex(items: newItems, in: CSSearchableIndex.default()) { [weak self] in
+                self?.pasteDone()
+            }
 		}
 	}
 
@@ -118,6 +112,5 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 		intentCompletion = nil
 		newItems.removeAll()
 		itemProviders.removeAll()
-		loadCount = 0
 	}
 }

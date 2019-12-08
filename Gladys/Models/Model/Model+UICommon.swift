@@ -311,7 +311,7 @@ final class ModelFilterContext {
             let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
             labelToggles.append(toggle)
         }
-        if labelToggles.count > 0 {
+        if !labelToggles.isEmpty {
             labelToggles.sort { $0.name < $1.name }
 
             let name = ModelFilterContext.LabelToggle.noNameTitle
@@ -524,10 +524,6 @@ extension Model {
         save()
 	}
 
-	static var doneIngesting: Bool {
-		return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
-	}
-
 	static func lockUnlockedItems() {
 		for item in drops where item.isTemporarilyUnlocked {
 			item.needsUnlock = true
@@ -685,7 +681,7 @@ extension Model {
 					try fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 				}
 
-				let e = dirtyUuids.count > 0 ? JSONEncoder() : nil
+                let e = dirtyUuids.isEmpty ? nil : JSONEncoder()
 
 				var uuidData = Data()
 				uuidData.reserveCapacity(allItems.count * 16)
@@ -727,9 +723,11 @@ extension Model {
 	}
     
     static func detectExternalChanges() {
+        // TODO: detect items externally modified by action extension, e.g. adding a note or labels
+        
         for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
             let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
-            if componentsToDelete.count > 0 {
+            if !componentsToDelete.isEmpty {
                 item.typeItems = item.typeItems.filter { !$0.needsDeletion }
                 for c in componentsToDelete {
                     c.deleteFromStorage()
@@ -738,7 +736,7 @@ extension Model {
             }
         }
         let itemsToDelete = drops.filter { $0.needsDeletion }
-        if itemsToDelete.count > 0 {
+        if !itemsToDelete.isEmpty {
             delete(items: itemsToDelete) // will also save
         }
         
