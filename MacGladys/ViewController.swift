@@ -232,6 +232,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
 			Model.detectExternalChanges()
+            self?.updateEmptyView()
             self?.modelDataUpdate(notification)
 		}
 
@@ -422,7 +423,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		var currentWidth = window.frame.size.width
-		let newMinSize = NSSize(width: 190 + scrollbarInset, height: 190)
+		let newMinSize = NSSize(width: 180 + scrollbarInset, height: 180)
 		let previousMinSize = window.minSize
 		if previousMinSize != newMinSize {
 			window.minSize = newMinSize
@@ -432,7 +433,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 		}
 
-		let baseSize: CGFloat = 180
+		let baseSize: CGFloat = 170
 		let w = currentWidth - 10 - scrollbarInset
 		let columns = (w / baseSize).rounded(.down)
 		let leftOver = w.truncatingRemainder(dividingBy: baseSize)

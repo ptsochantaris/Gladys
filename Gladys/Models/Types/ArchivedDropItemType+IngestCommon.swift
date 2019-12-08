@@ -105,118 +105,119 @@ extension ArchivedDropItemType {
 
 		ingestCompletion = completion
 		clearCachedFields()
+        
+        if data.isPlist, let obj = SafeUnarchiver.unarchive(data) {
+            log("      unwrapped keyed object: \(type(of:obj))")
+            classWasWrapped = true
+            
+            if let item = obj as? NSString {
+                log("      received string: \(item)")
+                setTitleInfo(item as String, 10)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                representedClass = .string
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
 
-		let item: Any
-		if data.isPlist, let obj = SafeUnarchiver.unarchive(data) {
-			log("      unwrapped keyed object: \(type(of:obj))")
-			item = obj
-			classWasWrapped = true
+            } else if let item = obj as? NSAttributedString {
+                log("      received attributed string: \(item)")
+                setTitleInfo(item.string, 7)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                representedClass = .attributedString
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
 
-		} else {
-			log("      looks like raw data")
-			item = data
-		}
+            } else if let item = obj as? COLOR {
+                log("      received color: \(item)")
+                setTitleInfo("Color \(item.hexValue)", 0)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
+                representedClass = .color
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
 
-		if let item = item as? NSString {
-			log("      received string: \(item)")
-			setTitleInfo(item as String, 10)
-			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-			representedClass = .string
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
+            } else if let item = obj as? IMAGE {
+                log("      received image: \(item)")
+                setDisplayIcon(item, 50, .fill)
+                if encodeAnyUIImage {
+                    log("      will encode it to JPEG, as it's the only image in this parent item")
+                    representedClass = .data
+                    typeIdentifier = kUTTypeJPEG as String
+                    classWasWrapped = false
+                    if storeBytes {
+                        #if os(iOS)
+                        let b = item.jpegData(compressionQuality: 1)
+                        setBytes(b)
+                        #else
+                        let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
+                        setBytes(b ?? Data())
+                        #endif
+                    }
+                } else {
+                    representedClass = .image
+                    if storeBytes {
+                        setBytes(data)
+                    }
+                }
+                completeIngest()
+                return
 
-		} else if let item = item as? NSAttributedString {
-			log("      received attributed string: \(item)")
-			setTitleInfo(item.string, 7)
-			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-			representedClass = .attributedString
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
+            } else if let item = obj as? MKMapItem {
+                log("      received map item: \(item)")
+                setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
+                representedClass = .mapItem
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
 
-		} else if let item = item as? COLOR {
-			log("      received color: \(item)")
-			setTitleInfo("Color \(item.hexValue)", 0)
-			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
-			representedClass = .color
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
+            } else if let item = obj as? URL {
+                handleUrl(item, data, storeBytes)
+                return
 
-		} else if let item = item as? IMAGE {
-			log("      received image: \(item)")
-			setDisplayIcon(item, 50, .fill)
-			if encodeAnyUIImage {
-				log("      will encode it to JPEG, as it's the only image in this parent item")
-				representedClass = .data
-				typeIdentifier = kUTTypeJPEG as String
-				classWasWrapped = false
-				if storeBytes {
-					#if os(iOS)
-					let b = item.jpegData(compressionQuality: 1)
-					setBytes(b)
-					#else
-					let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
-					setBytes(b ?? Data())
-					#endif
-				}
-			} else {
-				representedClass = .image
-				if storeBytes {
-					setBytes(data)
-				}
-			}
-			completeIngest()
+            } else if let item = obj as? NSArray {
+                log("      received array: \(item)")
+                if item.count == 1 {
+                    setTitleInfo("1 Item", 1)
+                } else {
+                    setTitleInfo("\(item.count) Items", 1)
+                }
+                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                representedClass = .array
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
 
-		} else if let item = item as? MKMapItem {
-			log("      received map item: \(item)")
-			setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
-			representedClass = .mapItem
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
-
-		} else if let item = item as? URL {
-			handleUrl(item, data, storeBytes)
-
-		} else if let item = item as? NSArray {
-			log("      received array: \(item)")
-			if item.count == 1 {
-				setTitleInfo("1 Item", 1)
-			} else {
-				setTitleInfo("\(item.count) Items", 1)
-			}
-			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			representedClass = .array
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
-
-		} else if let item = item as? NSDictionary {
-			log("      received dictionary: \(item)")
-			if item.count == 1 {
-				setTitleInfo("1 Entry", 1)
-			} else {
-				setTitleInfo("\(item.count) Entries", 1)
-			}
-			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-			representedClass = .dictionary
-			if storeBytes {
-				setBytes(data)
-			}
-			completeIngest()
-
-		} else {
-			log("      received data: \(data)")
-			representedClass = .data
-			handleData(data, resolveUrls: true, storeBytes)
-		}
+            } else if let item = obj as? NSDictionary {
+                log("      received dictionary: \(item)")
+                if item.count == 1 {
+                    setTitleInfo("1 Entry", 1)
+                } else {
+                    setTitleInfo("\(item.count) Entries", 1)
+                }
+                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                representedClass = .dictionary
+                if storeBytes {
+                    setBytes(data)
+                }
+                completeIngest()
+                return
+            }
+        }
+        
+        log("      not a known class, storing data: \(data)")
+        representedClass = .data
+        handleData(data, resolveUrls: true, storeBytes)
 	}
 
 	func setTitle(from url: URL) {

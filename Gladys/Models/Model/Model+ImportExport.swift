@@ -41,7 +41,7 @@ extension Model {
 			save()
 		}
 
-		let data = try Data(contentsOf: url.appendingPathComponent("items.json"), options: [.alwaysMapped])
+		let data = try Data(contentsOf: url.appendingPathComponent("items.json"), options: [.mappedIfSafe])
 		let itemsInPackage = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
 
 		for item in itemsInPackage.reversed() {

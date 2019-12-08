@@ -408,7 +408,7 @@ final class DetailController: GladysViewController,
     }
     
 	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
-		if component.bytes?.isPlist == true {
+		if component.isPlist {
 			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
 			a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
 				self.performSegue(withIdentifier: "plistEdit", sender: component)

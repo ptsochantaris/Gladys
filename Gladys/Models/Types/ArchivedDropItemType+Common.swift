@@ -60,7 +60,7 @@ extension ArchivedDropItemType: Equatable {
 
 		if classWasWrapped {
 			return SafeUnarchiver.unarchive(bytes)
-		} else if bytes.isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
+		} else if isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {
 			return bytes
@@ -72,7 +72,7 @@ extension ArchivedDropItemType: Equatable {
 		dataAccessQueue.sync {
 			let byteLocation = bytesPath
 			if FileManager.default.fileExists(atPath: byteLocation.path) {
-				data = try? Data(contentsOf: byteLocation, options: [.alwaysMapped])
+				data = try? Data(contentsOf: byteLocation, options: [.mappedIfSafe])
 			}
 		}
 		return data
@@ -84,6 +84,10 @@ extension ArchivedDropItemType: Equatable {
             exists = FileManager.default.fileExists(atPath: bytesPath.path)
         }
         return exists
+    }
+    
+    var isPlist: Bool {
+        return bytes?.isPlist ?? false
     }
 
 	var encodedUrl: NSURL? {

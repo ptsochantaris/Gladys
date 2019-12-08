@@ -417,17 +417,19 @@ final class ArchivedDropItemType: Codable {
 	}
 
 	func add(to pasteboardItem: NSPasteboardItem) {
-		guard let b = bytes else { return }
+		guard hasBytes else { return }
 
-		if let e = encodedUrl {
-			let tid = NSPasteboard.PasteboardType(typeIdentifier)
-			pasteboardItem.setData(e.dataRepresentation, forType: tid)
-		} else if classWasWrapped, typeConforms(to: kUTTypePlainText), b.isPlist, let s = decode() as? String {
+		if let s = encodedUrl?.absoluteString {
+            let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
+            pasteboardItem.setString(s, forType: tid)
+
+		} else if classWasWrapped, typeConforms(to: kUTTypePlainText), isPlist, let s = decode() as? String {
 			let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
 			pasteboardItem.setString(s, forType: tid)
+            
 		} else {
 			let tid = NSPasteboard.PasteboardType(typeIdentifier)
-			pasteboardItem.setData(b, forType: tid)
+			pasteboardItem.setData(bytes ?? Data(), forType: tid)
 		}
 	}
 
