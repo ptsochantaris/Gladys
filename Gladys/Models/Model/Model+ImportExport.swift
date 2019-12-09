@@ -89,8 +89,9 @@ extension Model {
 	static private func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedDropItem], completion: @escaping (URL?, Error?) -> Void) throws {
 		let fm = FileManager()
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
-		if fm.fileExists(atPath: tempPath.path) {
-			try fm.removeItem(at: tempPath)
+        let path = tempPath.path
+		if fm.fileExists(atPath: path) {
+			try fm.removeItem(atPath: path)
 		}
 
 		let delegate = FileManagerFilter()
@@ -139,8 +140,9 @@ extension Model {
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
 		let fm = FileManager.default
-		if fm.fileExists(atPath: tempPath.path) {
-			try fm.removeItem(at: tempPath)
+        let path = tempPath.path
+		if fm.fileExists(atPath: path) {
+			try fm.removeItem(atPath: path)
 		}
 
 		p.completedUnitCount += 1

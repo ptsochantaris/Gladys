@@ -115,8 +115,8 @@ final class ArchivedDropItemType: Codable {
 
 	var displayIcon: UIImage? {
 		set {
-			dataAccessQueue.sync {
-				let ipath = imagePath
+			dataAccessQueue.async {
+				let ipath = self.imagePath
 				if let n = newValue {
 					if let data = n.pngData() {
 						try? data.write(to: ipath)

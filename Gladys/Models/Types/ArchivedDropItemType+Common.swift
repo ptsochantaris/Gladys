@@ -18,12 +18,13 @@ import GladysFramework
 extension ArchivedDropItemType: Equatable {
 
 	func setBytes(_ data: Data?) {
-		dataAccessQueue.sync {
-			let byteLocation = bytesPath
-			if data == nil || loadingAborted {
+		dataAccessQueue.async {
+			let byteLocation = self.bytesPath
+			if data == nil || self.loadingAborted {
 				let f = FileManager.default
-				if f.fileExists(atPath: byteLocation.path) {
-					try? f.removeItem(at: byteLocation)
+                let path = byteLocation.path
+				if f.fileExists(atPath: path) {
+					try? f.removeItem(atPath: path)
 				}
 			} else {
 				try? data?.write(to: byteLocation)

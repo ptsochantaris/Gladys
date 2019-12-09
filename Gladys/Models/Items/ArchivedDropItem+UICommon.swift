@@ -56,10 +56,11 @@ extension ArchivedDropItem {
 		for item in typeItems {
 			clearCacheData(for: item.uuid)
 		}
-		dataAccessQueue.sync {
+		dataAccessQueue.async {
+            let p = self.folderUrl.path
 			let f = FileManager.default
-			if f.fileExists(atPath: folderUrl.path) {
-				try? f.removeItem(at: folderUrl)
+			if f.fileExists(atPath: p) {
+                try? f.removeItem(atPath: p)
 			}
 		}
         #if MAINAPP

@@ -271,8 +271,9 @@ final class CloudManager {
 				try? coder.encodedData.write(to: recordLocation, options: .atomic)
 			} else {
 				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
+                let p = recordLocation.path
+				if f.fileExists(atPath: p) {
+					try? f.removeItem(atPath: p)
 				}
 			}
 		}

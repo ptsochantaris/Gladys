@@ -677,8 +677,9 @@ extension Model {
 			log("Saving: \(allItems.count) uuids, \(dirtyUuids.count) updated data files")
 			do {
 				let fm = FileManager.default
-				if !fm.fileExists(atPath: url.path) {
-					try fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+                let p = url.path
+				if !fm.fileExists(atPath: p) {
+					try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
 				}
 
                 let e = dirtyUuids.isEmpty ? nil : JSONEncoder()
@@ -723,8 +724,6 @@ extension Model {
 	}
     
     static func detectExternalChanges() {
-        // TODO: detect items externally modified by action extension, e.g. adding a note or labels
-        
         for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
             let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
             if !componentsToDelete.isEmpty {

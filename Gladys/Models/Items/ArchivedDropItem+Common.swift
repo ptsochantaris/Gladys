@@ -144,8 +144,9 @@ extension ArchivedDropItem: Hashable {
 
 		let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
 		let f = FileManager.default
-		if !f.fileExists(atPath: url.path) {
-			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        let path = url.path
+		if !f.fileExists(atPath: path) {
+			try! f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
 		}
 		folderUrlCache.setObject(url as NSURL, forKey: nsuuiud)
 		return url
@@ -174,6 +175,11 @@ extension ArchivedDropItem: Hashable {
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
 	var needsCloudPush: Bool {
 		set {
+            if newValue == true {
+                print("x")
+                print("y")
+                print("z")
+            }
             FileManager.default.setBoolAttribute(ArchivedDropItem.needsCloudPushKey, at: cloudKitDataPath, to: newValue)
 		}
 		get {
@@ -259,8 +265,9 @@ extension ArchivedDropItem: Hashable {
 			} else {
 				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
 				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
+                let path = recordLocation.path
+				if f.fileExists(atPath: path) {
+					try? f.removeItem(atPath: path)
 				}
 			}
 		}
@@ -298,8 +305,9 @@ extension ArchivedDropItem: Hashable {
 			} else {
 				cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
 				let f = FileManager.default
-				if f.fileExists(atPath: recordLocation.path) {
-					try? f.removeItem(at: recordLocation)
+                let path = recordLocation.path
+				if f.fileExists(atPath: path) {
+					try? f.removeItem(atPath: path)
 				}
 			}
 		}

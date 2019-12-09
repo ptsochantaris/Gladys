@@ -134,8 +134,8 @@ final class ArchivedDropItemType: Codable {
 
 	var displayIcon: NSImage? {
 		set {
-			dataAccessQueue.sync {
-				let ipath = imagePath
+			dataAccessQueue.async {
+                let ipath = self.imagePath
 				if let n = newValue, let data = n.tiffRepresentation {
 					try? data.write(to: ipath)
 				} else if FileManager.default.fileExists(atPath: ipath.path) {

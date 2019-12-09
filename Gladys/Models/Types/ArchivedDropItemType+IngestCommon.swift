@@ -21,8 +21,6 @@ import GladysFramework
 
 extension ArchivedDropItemType {
 
-	static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
-
 	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool, createWebArchive: Bool) -> Progress {
 		self.delegate = delegate
 		let overallProgress = Progress(totalUnitCount: 20)
@@ -44,12 +42,10 @@ extension ArchivedDropItemType {
 				}
 
 				if let url = url {
-					ArchivedDropItemType.ingestQueue.async {
-						log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
-						s.ingest(from: url) {
-							overallProgress.completedUnitCount += 10
-						}
-					}
+                    log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
+                    s.ingest(from: url) {
+                        overallProgress.completedUnitCount += 10
+                    }
 				} else {
 					overallProgress.completedUnitCount += 10
 					s.ingestFailed(error: error)
@@ -60,12 +56,10 @@ extension ArchivedDropItemType {
 				guard let s = self, s.loadingAborted == false else { return }
 				s.isTransferring = false
 				if let data = data {
-					ArchivedDropItemType.ingestQueue.async {
-						log(">> Received type: [\(s.typeIdentifier)]")
-						s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) {
-							overallProgress.completedUnitCount += 10
-						}
-					}
+                    log(">> Received type: [\(s.typeIdentifier)]")
+                    s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) {
+                        overallProgress.completedUnitCount += 10
+                    }
 				} else {
 					overallProgress.completedUnitCount += 10
 					s.ingestFailed(error: error)
@@ -85,7 +79,15 @@ extension ArchivedDropItemType {
 		completeIngest()
 	}
 
-	private func ingest(from url: URL, completion: @escaping ()->Void) {
+    private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
+
+    private func ingest(from url: URL, completion: @escaping ()->Void) {
+        ArchivedDropItemType.ingestQueue.async {
+            self._ingest(from: url, completion: completion)
+        }
+    }
+    
+	private func _ingest(from url: URL, completion: @escaping ()->Void) {
 		ingestCompletion = completion
 		clearCachedFields()
 		representedClass = .data
@@ -514,11 +516,9 @@ extension ArchivedDropItemType {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if loadingError == nil, let bytesCopy = bytes {
-			ArchivedDropItemType.ingestQueue.async { [weak self] in
-				self?.ingest(data: bytesCopy, storeBytes: false) {
-					overallProgress.completedUnitCount += 1
-				}
-			}
+            ingest(data: bytesCopy, storeBytes: false) {
+                overallProgress.completedUnitCount += 1
+            }
 		} else {
 			overallProgress.completedUnitCount += 1
 			completeIngest()

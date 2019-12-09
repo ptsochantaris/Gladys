@@ -153,8 +153,9 @@ final class Model {
 	static let temporaryDirectoryUrl: URL = {
 		let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
 		let fm = FileManager.default
-		if fm.fileExists(atPath: url.path) {
-			try? fm.removeItem(at: url)
+        let p = url.path
+		if fm.fileExists(atPath: p) {
+			try? fm.removeItem(atPath: p)
 		}
 		try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
 		return url
