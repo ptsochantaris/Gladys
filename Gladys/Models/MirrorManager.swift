@@ -52,6 +52,7 @@ final class MirrorManager {
     }
     
     static func removeItems(items: [ArchivedDropItem]) {
+        if items.isEmpty { return }
         let paths = items.map { $0.fileMirrorPath }
         coordinateWrite(types: [.forDeleting]) {
             let f = FileManager.default

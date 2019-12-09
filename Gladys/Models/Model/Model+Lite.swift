@@ -171,7 +171,7 @@ extension Model {
 					item.needsSaving = false
 					let u = item.uuid
 					let t = u.uuid
-					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
+					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: [])
 					uuidData.insert(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15], at: 0)
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
@@ -204,7 +204,7 @@ extension Model {
 				for item in items {
 					item.needsSaving = false
 					item.isBeingCreatedBySync = false
-					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: .atomic)
+					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: [])
 				}
 			} catch {
 				closureError = error as NSError

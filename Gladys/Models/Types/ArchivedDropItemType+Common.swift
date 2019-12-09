@@ -459,7 +459,7 @@ extension ArchivedDropItemType: Equatable {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: .atomic)
+                    try? coder.encodedData.write(to: recordLocation, options: [])
                 } else {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
                     let f = FileManager.default

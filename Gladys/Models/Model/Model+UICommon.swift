@@ -468,12 +468,12 @@ extension Model {
 
 	static func resetEverything() {
         let toDelete = drops.filter { !$0.isImportedShare }
-        Model.delete(items: toDelete)
+        delete(items: toDelete)
 	}
 
 	static func removeImportedShares() {
         let toDelete = drops.filter { $0.isImportedShare }
-        Model.delete(items: toDelete)
+        delete(items: toDelete)
 	}
 
 	static var threadSafeDrops: [ArchivedDropItem] {
@@ -570,7 +570,12 @@ extension Model {
 
         let index = CSSearchableIndex.default()
 
-        let removedUuids = drops.filter { $0.needsDeletion }.map { $0.uuid }
+        let itemsToDelete = drops.filter { $0.needsDeletion }
+        #if MAINAPP
+        MirrorManager.removeItems(items: itemsToDelete)
+        #endif
+
+        let removedUuids = itemsToDelete.map { $0.uuid }
         index.deleteSearchableItems(withIdentifiers: removedUuids.map { $0.uuidString }) { error in
             if let error = error {
                 log("Error while deleting search indexes \(error.localizedDescription)")
@@ -581,6 +586,8 @@ extension Model {
 
 		let saveableItems = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.needsSaving }
+        let searchableItems = itemsToWrite.map { $0.searchableItem }
+        reIndex(items: searchableItems, in: index)
 
 		let uuidsToEncode = itemsToWrite.map { i -> UUID in
             i.isBeingCreatedBySync = false
@@ -592,9 +599,6 @@ extension Model {
         needsAnotherSave = false
 
         NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-
-        let searchableItems = itemsToWrite.map { $0.searchableItem }
-        reIndex(items: searchableItems, in: index)
 
 		saveQueue.async {
 			do {
@@ -691,7 +695,7 @@ extension Model {
 					let t = u.uuid
 					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
 					if let e = e, dirtyUuids.contains(u) {
-                        try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: .atomic)
+                        try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: [])
 					}
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)

@@ -268,7 +268,7 @@ final class CloudManager {
 			if let newValue = newValue {
 				let coder = NSKeyedArchiver(requiringSecureCoding: true)
 				newValue.encodeSystemFields(with: coder)
-				try? coder.encodedData.write(to: recordLocation, options: .atomic)
+				try? coder.encodedData.write(to: recordLocation, options: [])
 			} else {
 				let f = FileManager.default
                 let p = recordLocation.path
@@ -294,7 +294,7 @@ final class CloudManager {
 			}
 		}
 		set {
-            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath, options: .atomic)
+            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath, options: [])
 		}
 	}
 

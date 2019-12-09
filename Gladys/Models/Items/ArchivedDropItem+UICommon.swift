@@ -52,10 +52,6 @@ extension ArchivedDropItem {
 			log("No cloud record for this item, skipping cloud delete")
 		}
 		removeIntents()
-		clearCacheData(for: uuid)
-		for item in typeItems {
-			clearCacheData(for: item.uuid)
-		}
         let p = folderUrl.path
 		dataAccessQueue.async {
 			let f = FileManager.default
@@ -63,9 +59,10 @@ extension ArchivedDropItem {
                 try? f.removeItem(atPath: p)
 			}
 		}
-        #if MAINAPP
-        MirrorManager.removeItems(items: [self])
-        #endif
+        clearCacheData(for: uuid) // this must be last since we use URLs above
+        for item in typeItems {
+            clearCacheData(for: item.uuid)
+        }
 	}
 
 	func renumberTypeItems() {

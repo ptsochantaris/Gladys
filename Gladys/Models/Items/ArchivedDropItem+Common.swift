@@ -182,7 +182,7 @@ extension ArchivedDropItem: Hashable {
 		}
 		get {
             return dataAccessQueue.sync {
-                return FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+                FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
             }
 		}
 	}
@@ -262,7 +262,7 @@ extension ArchivedDropItem: Hashable {
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: .atomic)
+                    try? coder.encodedData.write(to: recordLocation, options: [])
 
                     self.needsCloudPush = false
                 } else {
@@ -308,7 +308,7 @@ extension ArchivedDropItem: Hashable {
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: .atomic)
+                    try? coder.encodedData.write(to: recordLocation, options: [])
                 } else {
                     cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
                     let f = FileManager.default

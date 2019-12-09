@@ -659,7 +659,7 @@ extension CloudManager {
 		operation.recordChangedBlock = { record in
 			recordChanged(record: record, stats: stats)
 		}
-		operation.recordZoneFetchCompletionBlock = { (zoneId, token, _, _, error) in
+		operation.recordZoneFetchCompletionBlock = { zoneId, token, _, _, error in
 			needsRetry = zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)
 		}
 		operation.fetchRecordZoneChangesCompletionBlock = { error in
