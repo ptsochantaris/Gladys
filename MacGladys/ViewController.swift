@@ -225,8 +225,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		updateDragOperationIndicators()
 
-		Model.reloadDataIfNeeded()
-        Model.checkForUpgrade()
+        Model.setup()
 
 		let n = NotificationCenter.default
 

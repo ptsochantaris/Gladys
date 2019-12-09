@@ -165,7 +165,8 @@ final class ActionRequestViewController: UIViewController {
 	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
 		statusLabel.text = "Indexing..."
-        Model.reIndex(items: newItems, in: CSSearchableIndex.default()) { [weak self] in
+        let searchableItems = newItems.map { $0.searchableItem }
+        Model.reIndex(items: searchableItems, in: CSSearchableIndex.default()) { [weak self] in
             self?.save(initialAdd: initialAdd)
 		}
 	}

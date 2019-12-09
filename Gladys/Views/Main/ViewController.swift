@@ -1,6 +1,5 @@
 
 import UIKit
-import CoreSpotlight
 import GladysFramework
 import Intents
 
@@ -489,8 +488,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
-
-		CSSearchableIndex.default().indexDelegate = Model.indexDelegate
 
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor(named: "colorLightGray")!

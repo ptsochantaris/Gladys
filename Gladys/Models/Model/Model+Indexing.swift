@@ -3,7 +3,7 @@ import CoreSpotlight
 
 extension Model {
 
-	private class IndexProxy: NSObject, CSSearchableIndexDelegate {
+	private final class IndexProxy: NSObject, CSSearchableIndexDelegate {
 		func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
 			Model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
 		}
@@ -21,22 +21,24 @@ extension Model {
 		}
 	}
 
-	static var indexDelegate: CSSearchableIndexDelegate = {
-		return IndexProxy()
-	}()
+    private static let indexDelegate = IndexProxy()
 
+    static func setupIndexDelegate() {
+        CSSearchableIndex.default().indexDelegate = indexDelegate
+    }
+    
 	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-        let dropCopy = drops
+        let items = drops.map { $0.searchableItem }
 		searchableIndex.deleteAllSearchableItems { error in
 			if let error = error {
 				log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
 			}
-            reIndex(items: dropCopy, in: searchableIndex, completion: acknowledgementHandler)
+            reIndex(items: items, in: searchableIndex, completion: acknowledgementHandler)
 		}
 	}
 
 	static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-		let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }
+        let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }.map { $0.searchableItem }
         reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
 	}
 

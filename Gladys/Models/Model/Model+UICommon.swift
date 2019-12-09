@@ -532,23 +532,19 @@ extension Model {
 
 	///////////////////////// Migrating
 
-	static func checkForUpgrade() {
+	static func setup() {
+        reloadDataIfNeeded()
+        setupIndexDelegate()
+        
+        // migrate if needed
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-		#if DEBUG
-		migration(to: currentBuild)
-		#else
 		if PersistedOptions.lastRanVersion != currentBuild {
-			migration(to: currentBuild)
-		}
-		#endif
-	}
-
-	private static func migration(to currentBuild: String) {
-		if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
-			CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-		}
-		Model.searchableIndex(CSSearchableIndex.default()) {
-			PersistedOptions.lastRanVersion = currentBuild
+            if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
+                CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+            }
+            Model.searchableIndex(CSSearchableIndex.default()) {
+                PersistedOptions.lastRanVersion = currentBuild
+            }
 		}
 	}
 
@@ -585,7 +581,6 @@ extension Model {
 
 		let saveableItems = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.needsSaving }
-        reIndex(items: itemsToWrite, in: index)
 
 		let uuidsToEncode = itemsToWrite.map { i -> UUID in
             i.isBeingCreatedBySync = false
@@ -593,11 +588,14 @@ extension Model {
             return i.uuid
 		}
         
+        isSaving = true
+        needsAnotherSave = false
+
         NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-                
-		isSaving = true
-		needsAnotherSave = false
-        
+
+        let searchableItems = itemsToWrite.map { $0.searchableItem }
+        reIndex(items: searchableItems, in: index)
+
 		saveQueue.async {
 			do {
 				try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
@@ -644,7 +642,10 @@ extension Model {
 		item.isBeingCreatedBySync = false
 		item.needsSaving = false
         commitQueue.append(item)
-		saveQueue.async {
+        
+        reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
+		
+        saveQueue.async {
             var nextItemUUIDs = [UUID]()
             var itemsToSave = [ArchivedDropItem]()
             DispatchQueue.main.sync {

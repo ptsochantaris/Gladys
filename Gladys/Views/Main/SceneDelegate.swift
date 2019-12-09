@@ -37,8 +37,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     override init() {
         super.init()
         
-        Model.reloadDataIfNeeded()
-        Model.checkForUpgrade()
+        Model.setup()
 
         if !PersistedOptions.pasteShortcutAutoDonated {
             Model.donatePasteIntent()

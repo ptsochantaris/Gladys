@@ -10,13 +10,12 @@ import Foundation
 import CoreSpotlight
 
 extension Model {
-    static func reIndex(items: [ArchivedDropItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
-        let searchableItems = items.map { $0.searchableItem }
-        index.indexSearchableItems(searchableItems) { error in
+    static func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
+        index.indexSearchableItems(items) { error in
             if let error = error {
                 log("Error indexing items: \(error.finalDescription)")
             } else {
-                log("\(searchableItems.count) item(s) indexed")
+                log("\(items.count) item(s) indexed")
             }
             DispatchQueue.main.async {
                 completion?()
