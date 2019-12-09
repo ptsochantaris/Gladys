@@ -29,7 +29,7 @@ extension ArchivedDropItemType: Equatable {
 			} else {
 				try? data?.write(to: byteLocation)
 				#if os(OSX)
-				lastGladysBlobUpdate = Date()
+                self.lastGladysBlobUpdate = Date()
 				#endif
 			}
 		}
