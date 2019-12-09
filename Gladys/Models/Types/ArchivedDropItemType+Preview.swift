@@ -17,7 +17,7 @@ import Quartz
 extension ArchivedDropItemType {
 
     var previewTempPath: URL {
-        let fileName = oneTitle.truncate(limit: 64).trimmingCharacters(in: .whitespacesAndNewlines)
+        let fileName = oneTitle.truncate(limit: 100).trimmingCharacters(in: .whitespacesAndNewlines).filenameSafe
         let path = Model.temporaryDirectoryUrl.appendingPathComponent(fileName, isDirectory: false)
         if isWebURL {
             return path.appendingPathExtension("webloc")
