@@ -233,43 +233,47 @@ extension ArchivedDropItem: Hashable {
 
 	var cloudKitRecord: CKRecord? {
 		get {
-			let nsuuid = uuid as NSUUID
-			if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
-				return cachedValue.record
-			}
+            return dataAccessQueue.sync {
+                let nsuuid = uuid as NSUUID
+                if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
+                    return cachedValue.record
+                }
 
-			let recordLocation = cloudKitDataPath
-			let record: CKRecord?
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
-				record = CKRecord(coder: coder)
-				coder.finishDecoding()
-			} else {
-				record = nil
-			}
-			cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
-			return record
+                let recordLocation = cloudKitDataPath
+                let record: CKRecord?
+                if FileManager.default.fileExists(atPath: recordLocation.path) {
+                    let data = try! Data(contentsOf: recordLocation, options: [])
+                    let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
+                    record = CKRecord(coder: coder)
+                    coder.finishDecoding()
+                } else {
+                    record = nil
+                }
+                cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
+                return record
+            }
 		}
 		set {
-			let recordLocation = cloudKitDataPath
-			let nsuuid = uuid as NSUUID
-			if let newValue = newValue {
-				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
+            let recordLocation = cloudKitDataPath
+            let nsuuid = uuid as NSUUID
+            dataAccessQueue.async {
+                if let newValue = newValue {
+                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
 
-				let coder = NSKeyedArchiver(requiringSecureCoding: true)
-				newValue.encodeSystemFields(with: coder)
-				try? coder.encodedData.write(to: recordLocation, options: .atomic)
+                    let coder = NSKeyedArchiver(requiringSecureCoding: true)
+                    newValue.encodeSystemFields(with: coder)
+                    try? coder.encodedData.write(to: recordLocation, options: .atomic)
 
-				needsCloudPush = false
-			} else {
-				cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
-				let f = FileManager.default
-                let path = recordLocation.path
-				if f.fileExists(atPath: path) {
-					try? f.removeItem(atPath: path)
-				}
-			}
+                    self.needsCloudPush = false
+                } else {
+                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
+                    let f = FileManager.default
+                    let path = recordLocation.path
+                    if f.fileExists(atPath: path) {
+                        try? f.removeItem(atPath: path)
+                    }
+                }
+            }
 		}
 	}
 
