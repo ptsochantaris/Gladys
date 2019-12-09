@@ -115,8 +115,8 @@ final class ArchivedDropItemType: Codable {
 
 	var displayIcon: UIImage? {
 		set {
+            let ipath = imagePath
 			dataAccessQueue.async {
-				let ipath = self.imagePath
 				if let n = newValue {
 					if let data = n.pngData() {
 						try? data.write(to: ipath)
@@ -127,16 +127,16 @@ final class ArchivedDropItemType: Codable {
 			}
 		}
 		get {
-			var i: UIImage?
-			dataAccessQueue.sync {
+			return dataAccessQueue.sync {
+                var i: UIImage?
 				if let data = (try? Data(contentsOf: imagePath)) {
 					i = UIImage(data: data, scale: displayIconScale)
 				}
 				if displayIconTemplate {
 					i = i?.withRenderingMode(.alwaysTemplate)
 				}
+                return i
 			}
-			return i
 		}
 	}
 

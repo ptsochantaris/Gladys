@@ -103,7 +103,13 @@ extension ArchivedDropItemType {
 		}
 	}
 
-	private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) { // in thread!
+    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) {
+        ArchivedDropItemType.ingestQueue.async {
+            self._ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: storeBytes, completion: completion)
+        }
+    }
+    
+	private func _ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) { // in thread!
 
 		ingestCompletion = completion
 		clearCachedFields()

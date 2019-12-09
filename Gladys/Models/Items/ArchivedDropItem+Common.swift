@@ -175,15 +175,15 @@ extension ArchivedDropItem: Hashable {
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
 	var needsCloudPush: Bool {
 		set {
-            if newValue == true {
-                print("x")
-                print("y")
-                print("z")
+            let path = cloudKitDataPath
+            dataAccessQueue.async {
+                FileManager.default.setBoolAttribute(ArchivedDropItem.needsCloudPushKey, at: path, to: newValue)
             }
-            FileManager.default.setBoolAttribute(ArchivedDropItem.needsCloudPushKey, at: cloudKitDataPath, to: newValue)
 		}
 		get {
-            return FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+            return dataAccessQueue.sync {
+                return FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+            }
 		}
 	}
 
@@ -275,41 +275,45 @@ extension ArchivedDropItem: Hashable {
 
 	var cloudKitShareRecord: CKShare? {
 		get {
-			let nsuuid = uuid as NSUUID
-			if let cachedValue = cloudKitShareCache.object(forKey: nsuuid) {
-				return cachedValue.share
-			}
+            return dataAccessQueue.sync {
+                let nsuuid = uuid as NSUUID
+                if let cachedValue = cloudKitShareCache.object(forKey: nsuuid) {
+                    return cachedValue.share
+                }
 
-			let recordLocation = cloudKitShareDataPath
-			let share: CKShare?
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
-				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
-				share = CKShare(coder: coder)
-				coder.finishDecoding()
-			} else {
-				share = nil
-			}
-			cloudKitShareCache.setObject(CKShareCacheEntry(share: share), forKey: nsuuid)
-			return share
+                let recordLocation = cloudKitShareDataPath
+                let share: CKShare?
+                if FileManager.default.fileExists(atPath: recordLocation.path) {
+                    let data = try! Data(contentsOf: recordLocation, options: [])
+                    let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
+                    share = CKShare(coder: coder)
+                    coder.finishDecoding()
+                } else {
+                    share = nil
+                }
+                cloudKitShareCache.setObject(CKShareCacheEntry(share: share), forKey: nsuuid)
+                return share
+            }
 		}
 		set {
-			let recordLocation = cloudKitShareDataPath
-			let nsuuid = uuid as NSUUID
-			if let newValue = newValue {
-				cloudKitShareCache.setObject(CKShareCacheEntry(share: newValue), forKey: nsuuid)
+            let recordLocation = cloudKitShareDataPath
+            let nsuuid = uuid as NSUUID
+            dataAccessQueue.async {
+                if let newValue = newValue {
+                    cloudKitShareCache.setObject(CKShareCacheEntry(share: newValue), forKey: nsuuid)
 
-				let coder = NSKeyedArchiver(requiringSecureCoding: true)
-				newValue.encodeSystemFields(with: coder)
-				try? coder.encodedData.write(to: recordLocation, options: .atomic)
-			} else {
-				cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
-				let f = FileManager.default
-                let path = recordLocation.path
-				if f.fileExists(atPath: path) {
-					try? f.removeItem(atPath: path)
-				}
-			}
+                    let coder = NSKeyedArchiver(requiringSecureCoding: true)
+                    newValue.encodeSystemFields(with: coder)
+                    try? coder.encodedData.write(to: recordLocation, options: .atomic)
+                } else {
+                    cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
+                    let f = FileManager.default
+                    let path = recordLocation.path
+                    if f.fileExists(atPath: path) {
+                        try? f.removeItem(atPath: path)
+                    }
+                }
+            }
 		}
 	}
 }
