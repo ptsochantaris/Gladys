@@ -311,7 +311,7 @@ final class ModelFilterContext {
             labelToggles.append(toggle)
         }
         if !labelToggles.isEmpty {
-            labelToggles.sort { $0.name < $1.name }
+            labelToggles.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
             let name = ModelFilterContext.LabelToggle.noNameTitle
             let previousEnabled = previous.contains { $0.enabled && $0.name == name }
@@ -324,6 +324,37 @@ final class ModelFilterContext {
             labelToggles[i] = label
         }
     }
+
+    func renameLabel(_ label : String, to newLabel: String) {
+        let wasEnabled = labelToggles.first { $0.name == label }?.enabled ?? false
+        let affectedUuids = Model.drops.compactMap { i -> String? in
+            if let index = i.labels.firstIndex(of: label) {
+                if i.labels.contains(newLabel) {
+                    i.labels.remove(at: index)
+                } else {
+                    i.labels[index] = newLabel
+                }
+                i.needsCloudPush = true
+                return i.uuid.uuidString
+            }
+            return nil
+        }
+
+        rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
+        
+        if wasEnabled, let i = labelToggles.firstIndex(where: { $0.name == newLabel }) {
+            var l = labelToggles[i]
+            l.enabled = true
+            labelToggles[i] = l
+        }
+        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+
+        if !affectedUuids.isEmpty {
+            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
+                Model.save()
+            }
+        }
+    }
     
     func removeLabel(_ label : String) {
         let affectedUuids = Model.drops.compactMap { i -> String? in
@@ -334,9 +365,11 @@ final class ModelFilterContext {
             }
             return nil
         }
-        //rebuildLabels() // save's update notification will take care of this
+        
+        rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
+        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+
         if !affectedUuids.isEmpty {
-            NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
             Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
                 Model.save()
             }

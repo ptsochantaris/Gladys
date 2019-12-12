@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -3436,14 +3436,15 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G0I-PF-ZY6">
-                                                    <rect key="frame" x="15" y="21" width="345" height="29"/>
+                                                    <rect key="frame" x="15" y="11" width="345" height="39"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xwC-1s-uX9">
-                                                    <rect key="frame" x="15" y="11" width="345" height="0.5"/>
-                                                    <color key="backgroundColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="0.5"/>
+                                                    <color key="backgroundColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="zWi-1O-8Ht"/>
                                                     </constraints>
@@ -3455,9 +3456,9 @@ Selecting them will show only items that contain these labels.</string>
                                                 <constraint firstItem="G0I-PF-ZY6" firstAttribute="leading" secondItem="OdO-dC-Exf" secondAttribute="leadingMargin" id="Ouf-Qv-65p"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="G0I-PF-ZY6" secondAttribute="trailing" id="b09-Lj-HSe"/>
                                                 <constraint firstItem="xwC-1s-uX9" firstAttribute="leading" secondItem="OdO-dC-Exf" secondAttribute="leadingMargin" id="ghi-IT-XPK"/>
-                                                <constraint firstAttribute="topMargin" secondItem="xwC-1s-uX9" secondAttribute="top" id="pg3-68-hI8"/>
+                                                <constraint firstAttribute="top" secondItem="xwC-1s-uX9" secondAttribute="top" id="pg3-68-hI8"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="xwC-1s-uX9" secondAttribute="trailing" id="vsW-9i-IyM"/>
-                                                <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" constant="10" id="xh6-eD-FRw"/>
+                                                <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" id="xh6-eD-FRw"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="2" left="10" bottom="8" right="10"/>
                                         </tableViewCellContentView>

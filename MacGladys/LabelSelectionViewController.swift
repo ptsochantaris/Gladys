@@ -83,4 +83,55 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	func controlTextDidChange(_ obj: Notification) {
 		tableView.reloadData()
 	}
+    
+    @IBAction func renameLabelSelected(_ sender: NSMenuItem) {
+        let index = tableView.clickedRow
+        let toggle = filteredLabels[index]
+        
+        let a = NSAlert()
+        a.messageText = "Rename '\(toggle.name)'?"
+        a.informativeText = "This will change it on all items that contain it."
+        a.addButton(withTitle: "Rename")
+        a.addButton(withTitle: "Cancel")
+        let label = NSTextField(frame: NSRect(x: 0, y: 32, width: 290, height: 24))
+        label.stringValue = toggle.name
+        a.accessoryView = label
+        a.window.initialFirstResponder = label
+        a.beginSheetModal(for: view.window!) { [weak self] response in
+            if response.rawValue == 1000 {
+                let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !text.isEmpty {
+                    Model.sharedFilter.renameLabel(toggle.name, to: text)
+                    self?.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    @IBAction func deleteLabelSelected(_ sender: NSMenuItem) {
+        let index = tableView.clickedRow
+        let toggle = filteredLabels[index]
+        
+        confirm(
+            title: "Are you sure?",
+            message: "This will remove the label '\(toggle.name)' from any item that contains it.",
+            action: "Remove From All Items",
+            cancel: "Cancel") { [weak self] confirmed in
+                if confirmed {
+                    Model.sharedFilter.removeLabel(toggle.name)
+                    self?.tableView.reloadData()
+                }
+        }
+    }
+    
+    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
+        let a = NSAlert()
+        a.messageText = title
+        a.informativeText = message
+        a.addButton(withTitle: action)
+        a.addButton(withTitle: cancel)
+        a.beginSheetModal(for: view.window!) { response in
+            completion(response == .alertFirstButtonReturn)
+        }
+    }
 }

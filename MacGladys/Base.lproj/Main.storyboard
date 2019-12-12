@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -586,7 +586,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="oQJ-9f-FjU">
                                                     <rect key="frame" x="-2" y="433" width="219" height="11"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show any added notes for items in the main view" id="8ji-yi-r5J">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -610,7 +610,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="lSI-dW-7Od">
                                                     <rect key="frame" x="-2" y="391" width="190" height="11"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show any labels for items in the main view" id="Chu-9A-MNz">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -634,7 +634,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Fzu-Q5-uql">
                                                     <rect key="frame" x="-2" y="338" width="419" height="22"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Import items with multiple data components as multiple items: One for each component of the original" id="DnH-zC-MSG">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -658,7 +658,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ngA-YI-GOt">
                                                     <rect key="frame" x="-2" y="296" width="361" height="11"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Prevent new items from being automatically tagged by the currently active labels" id="Vxg-fi-xNV">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -682,7 +682,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="jNt-At-qaj">
                                                     <rect key="frame" x="-2" y="243" width="419" height="22"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="When muliple labels are selected, show only items that contain all of the selected labels, rather than any of them" id="UN1-4v-uKj">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -706,7 +706,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="GsB-XY-U8G">
                                                     <rect key="frame" x="-2" y="190" width="419" height="22"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="When an item is first created and contains a URL data component, automatically download and archive the target of that URL" id="ee5-Aj-RNg">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -730,7 +730,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="JnZ-by-hMs">
                                                     <rect key="frame" x="-2" y="148" width="415" height="11"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Make results match any of the search terms provided, instead of having to contain all of them" id="rOw-2Z-i3f">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -754,7 +754,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="qy1-2C-V3m">
                                                     <rect key="frame" x="-2" y="106" width="376" height="11"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to automatically convert shared or imported text URLs to actual link components" id="WLI-0m-eaI">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -778,7 +778,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ZlQ-HS-J6w">
                                                     <rect key="frame" x="-2" y="53" width="419" height="22"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="For environents with locked-down security, you may want to ensure Gladys does not respond to any URL requests" id="jbb-3Q-xwF">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -802,7 +802,7 @@ CA
                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="sDn-wH-NcE">
                                                     <rect key="frame" x="-2" y="0.0" width="419" height="22"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="wGz-pY-zHS">
-                                                        <font key="font" metaFont="miniSystem"/>
+                                                        <font key="font" metaFont="menu" size="9"/>
                                                         <string key="title">Convert Finder tags to labels when dragging items into Gladys, and write an item's labels as Finder tags when dragging items to the Finder</string>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -976,7 +976,7 @@ CA
                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Ec-A6-WCp">
                                             <rect key="frame" x="8" y="8" width="129" height="44"/>
                                             <textFieldCell key="cell" selectable="YES" alignment="center" title="You can always open an item's info window with Cmd-I, its context menu, or the menubar." id="Zi6-5v-dNh">
-                                                <font key="font" metaFont="miniSystem"/>
+                                                <font key="font" metaFont="menu" size="9"/>
                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1031,7 +1031,7 @@ CA
                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="n4b-5k-1ek">
                                             <rect key="frame" x="8" y="8" width="129" height="33"/>
                                             <textFieldCell key="cell" selectable="YES" alignment="center" title="Select what happens when an item is selected in the TouchBar." id="7nF-lL-uvv">
-                                                <font key="font" metaFont="miniSystem"/>
+                                                <font key="font" metaFont="menu" size="9"/>
                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1214,6 +1214,9 @@ CA
                                     <rect key="frame" x="224" y="17" width="15" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
+                                <connections>
+                                    <outlet property="menu" destination="WZd-Xx-dSf" id="9Uw-hS-TNL"/>
+                                </connections>
                             </scrollView>
                             <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNH-xY-GXq">
                                 <rect key="frame" x="8" y="149" width="117" height="22"/>
@@ -1257,6 +1260,22 @@ CA
                     </connections>
                 </viewController>
                 <customObject id="N0x-qJ-m8v" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <menu id="WZd-Xx-dSf">
+                    <items>
+                        <menuItem title="Rename" id="PTW-oi-p6T">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="renameLabelSelected:" target="VWp-gh-Zmf" id="akG-ci-Oc5"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Delete" id="PDE-7W-cXP">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="deleteLabelSelected:" target="VWp-gh-Zmf" id="0D4-Jj-Whm"/>
+                            </connections>
+                        </menuItem>
+                    </items>
+                </menu>
             </objects>
             <point key="canvasLocation" x="844" y="627"/>
         </scene>
