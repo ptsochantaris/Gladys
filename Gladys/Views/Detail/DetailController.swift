@@ -341,7 +341,7 @@ final class DetailController: GladysViewController,
 			return "Components"
 		}
 	}
-
+    
 	private func cellNeedsResize(caretRect: CGRect?, section: Int, heightChange: Bool) {
 		if heightChange {
 			UIView.performWithoutAnimation {
@@ -630,22 +630,18 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section == 0 {
-			return 10
-		} else if section == 1 {
-			return CGFloat.leastNonzeroMagnitude
+		if section < 2 {
+			return 17
 		} else {
-			return 33
+			return 38
 		}
 	}
 
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		if section == 3 {
-			return 6
-		} else if section < 2 {
-			return CGFloat.leastNonzeroMagnitude
+		if section == numberOfSections(in: tableView) - 1 {
+			return 17
 		} else {
-			return 0
+			return CGFloat.leastNonzeroMagnitude
 		}
 	}
 
@@ -799,20 +795,11 @@ final class DetailController: GladysViewController,
 	}
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-		let cell = table.cellForRow(at: indexPath)
-		if let cell = cell as? DetailCell {
-			let path = UIBezierPath(roundedRect: cell.borderView.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
-			let p = UIDragPreviewParameters()
-			p.visiblePath = path
-			return p
-		} else if let cell = cell as? LabelCell {
-			let path = UIBezierPath(roundedRect: cell.labelHolder.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
-			let p = UIDragPreviewParameters()
-			p.visiblePath = path
-			return p
-		} else {
-			return nil
-		}
+		let cell = table.cellForRow(at: indexPath)!
+        let path = UIBezierPath(roundedRect: cell.contentView.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 10, height: 10))
+        let p = UIDragPreviewParameters()
+        p.visiblePath = path
+        return p
 	}
 
 	func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {

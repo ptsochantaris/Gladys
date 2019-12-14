@@ -342,6 +342,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			d.item = item
 
 			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: myNavView)
+            p.backgroundColor = UIColor(named: "colorPaper")
 			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.down, .left, .right]
 			p.sourceView = navigationController!.view
 			p.sourceRect = cellRect

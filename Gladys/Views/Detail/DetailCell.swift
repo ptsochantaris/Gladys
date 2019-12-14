@@ -5,7 +5,6 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet private weak var name: UILabel!
 	@IBOutlet private weak var size: UILabel!
 	@IBOutlet private weak var desc: UILabel!
-	@IBOutlet weak var borderView: UIView!
 	@IBOutlet private weak var nameHolder: UIView!
 	@IBOutlet weak var inspectButton: UIButton!
 	@IBOutlet private weak var viewButton: UIButton!
@@ -55,11 +54,6 @@ final class DetailCell: UITableViewCell {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		borderView.layer.cornerRadius = 10
-        borderView.layer.shadowColor = UIColor.black.cgColor
-        borderView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        borderView.layer.shadowOpacity = 0.06
-        borderView.layer.shadowRadius = 1.5
 
         nameHolder.layer.cornerRadius = 5
 
