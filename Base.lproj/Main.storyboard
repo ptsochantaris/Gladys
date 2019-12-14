@@ -330,14 +330,9 @@
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="UtX-Oo-KuH"/>
-                        <barButtonItem title="Sort Ascending" image="iconSortAscendingSmall" id="bEM-HJ-RRy" userLabel="Sort Button">
+                        <barButtonItem title="Sort Ascending" image="arrow.up.arrow.down.circle" catalog="system" style="plain" id="bEM-HJ-RRy" userLabel="Sort Button">
                             <connections>
                                 <action selector="sortAscendingButtonSelected" destination="BYZ-38-t0r" id="yQv-ax-DIp"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem title="Sort Descending" image="iconSortDescendingSmall" id="cRy-CM-Yqa" userLabel="Sort Button">
-                            <connections>
-                                <action selector="sortDescendingButtonSelected" destination="BYZ-38-t0r" id="a8F-qS-aSS"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -387,7 +382,6 @@
                         <outlet property="settingsButton" destination="8HU-04-Ir2" id="0ws-81-FdL"/>
                         <outlet property="shareButton" destination="fec-eA-o3L" id="cYh-xg-QbD"/>
                         <outlet property="sortAscendingButton" destination="bEM-HJ-RRy" id="9gA-Bf-6pM"/>
-                        <outlet property="sortDescendingButton" destination="cRy-CM-Yqa" id="mpJ-GZ-Ff5"/>
                         <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
                         <segue destination="Oc1-Re-hdt" kind="popoverPresentation" identifier="showDetail" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorView="90w-Xn-bmO" id="OWZ-Tj-VMX">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -3601,8 +3595,6 @@ Selecting them will show only items that contain these labels.</string>
         <image name="eye" catalog="system" width="64" height="40"/>
         <image name="gladysImage" width="1024" height="1024"/>
         <image name="icloud" catalog="system" width="64" height="44"/>
-        <image name="iconSortAscendingSmall" width="22" height="22"/>
-        <image name="iconSortDescendingSmall" width="22" height="22"/>
         <image name="info.circle" catalog="system" width="64" height="60"/>
         <image name="line.horizontal.3.decrease.circle" catalog="system" width="64" height="60"/>
         <image name="list.bullet" catalog="system" width="64" height="44"/>

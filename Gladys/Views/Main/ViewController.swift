@@ -65,7 +65,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private weak var deleteButton: UIBarButtonItem!
 	@IBOutlet private weak var editLabelsButton: UIBarButtonItem!
 	@IBOutlet private weak var sortAscendingButton: UIBarButtonItem!
-	@IBOutlet private weak var sortDescendingButton: UIBarButtonItem!
 	@IBOutlet private weak var labelsButton: UIBarButtonItem!
 	@IBOutlet private weak var settingsButton: UIBarButtonItem!
 	@IBOutlet private weak var itemsCount: UIBarButtonItem!
@@ -535,8 +534,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             filter.updateFilter(signalUpdate: false)
         }
 
-        forceLayout()
-		updateUI()
+        updateUI()
 		emptyView?.alpha = 1
         blurb(Greetings.openLine)
 
@@ -799,20 +797,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBAction private func sortAscendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
+            a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
+                self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
+            })
 			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default) { _ in
-				self.sortRequested(sortOption, ascending: true, button: self.sortDescendingButton)
-			})
-		}
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(a, animated: true)
-		a.popoverPresentationController?.barButtonItem = sortAscendingButton
-	}
-
-	@IBAction private func sortDescendingButtonSelected() {
-		let a = UIAlertController(title: "Sort", message: "Please select your preferred order. This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
-		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
-				self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
+				self.sortRequested(sortOption, ascending: true, button: self.sortAscendingButton)
 			})
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -902,7 +891,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let haveDrops = !Model.drops.isEmpty
 		labelsButton.isEnabled = haveDrops
 		sortAscendingButton.isEnabled = haveDrops
-		sortDescendingButton.isEnabled = haveDrops
 	}
 
 	private func blurb(_ message: String) {
@@ -995,49 +983,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    private var itemSize: CGSize = .zero {
-        didSet {
-            viewIfLoaded?.window?.windowScene?.session.userInfo?["ItemSize"] = itemSize
-        }
-    }
+    private var itemSize: CGSize = .zero
     
-	private func calculateItemSize() {
-
-		func calculateSizes(for columnCount: CGFloat) {
-			let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
-			let extras = (layout.minimumInteritemSpacing * (columnCount - 1.0)) + layout.sectionInset.left + layout.sectionInset.right
-			let side = ((lastSize.width - extras) / columnCount).rounded(.down)
-			itemSize = CGSize(width: side, height: side)
-		}
-
-		func calculateWideSizes(for columnCount: CGFloat) {
-			let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
-			let extras = (layout.minimumInteritemSpacing * (columnCount - 1.0)) + layout.sectionInset.left + layout.sectionInset.right
-			let side = ((lastSize.width - extras) / columnCount).rounded(.down)
-			itemSize = CGSize(width: side, height: 80)
-		}
-
-		if PersistedOptions.wideMode {
-			if lastSize.width >= 768 {
-				calculateWideSizes(for: 2)
-			} else {
-				itemSize = CGSize(width: lastSize.width - 20, height: 80)
-			}
-		} else {
-			if lastSize.width <= 320 && !PersistedOptions.forceTwoColumnPreference {
-				itemSize = CGSize(width: 300, height: 200)
-            } else if lastSize.width >= 1366 {
-                calculateSizes(for: 5)
-			} else if lastSize.width > 980 {
-				calculateSizes(for: 4)
-			} else if lastSize.width > 438 {
-				calculateSizes(for: 3)
-			} else {
-				calculateSizes(for: 2)
-			}
-		}
-	}
-
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return itemSize
 	}
@@ -1055,50 +1002,75 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return dragParameters(for: indexPath)
 	}
 
-	private var lastSize = CGSize.zero
 	@objc private func forceLayout() {
-		lastSize = .zero
-        handleSize(view.bounds.size)
+        view.setNeedsLayout()
 	}
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        self.handleSize(size)
-        coordinator.animate(alongsideTransition: { _ in
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-    }
-    
-    private func handleSize(_ size: CGSize) {
-		let font: UIFont
-		if size.width > 375 {
-			font = UIFont.preferredFont(forTextStyle: .body)
-		} else if size.width > 320 {
-			let bodyFont = UIFont.preferredFont(forTextStyle: .body)
-			font = bodyFont.withSize(bodyFont.pointSize - 2)
-		} else {
-			font = UIFont.preferredFont(forTextStyle: .caption1)
-		}
-		itemsCount.setTitleTextAttributes([.font: font], for: .normal)
-		totalSizeLabel.setTitleTextAttributes([.font: font], for: .normal)
 
-		let insets = collection.safeAreaInsets
-		let w = insets.left + insets.right
-		let h = insets.top + insets.bottom
-		let boundsSize = CGSize(width: size.width - w, height: size.height - h)
-		if lastSize == boundsSize { return }
-		lastSize = boundsSize
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
 
-		calculateItemSize()
+        let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
+        let sinset = layout.sectionInset
+        let insets = collection.safeAreaInsets
+        let width = collection.bounds.size.width - insets.left - insets.right - sinset.left - sinset.right
 
+        ////////////////////////////////////////
+        
+        func calculateSizes(for columnCount: CGFloat) {
+            let extras = layout.minimumInteritemSpacing * (columnCount - 1)
+            let side = ((width - extras) / columnCount).rounded(.down)
+            itemSize = CGSize(width: side, height: side)
+        }
+
+        func calculateWideSizes(for columnCount: CGFloat) {
+            let extras = layout.minimumInteritemSpacing * (columnCount - 1)
+            let side = ((width - extras) / columnCount).rounded(.down)
+            itemSize = CGSize(width: side, height: 80)
+        }
+
+        if PersistedOptions.wideMode {
+            if width >= 768 {
+                calculateWideSizes(for: 2)
+            } else {
+                itemSize = CGSize(width: width, height: 80)
+            }
+        } else {
+            if width <= 320 && !PersistedOptions.forceTwoColumnPreference {
+                itemSize = CGSize(width: 300, height: 200)
+            } else if width >= 1366 {
+                calculateSizes(for: 5)
+            } else if width > 980 {
+                calculateSizes(for: 4)
+            } else if width > 438 {
+                calculateSizes(for: 3)
+            } else {
+                calculateSizes(for: 2)
+            }
+        }
+        
+        view.window?.windowScene?.session.userInfo?["ItemSize"] = itemSize
+        layout.invalidateLayout()
+
+        log("Handlesize for: \(width), width: \(itemSize.width)")
+
+        ///////////////////////////////
+        
+        let font: UIFont
+        if width > 375 {
+            font = UIFont.preferredFont(forTextStyle: .body)
+        } else if width > 320 {
+            let bodyFont = UIFont.preferredFont(forTextStyle: .body)
+            font = bodyFont.withSize(bodyFont.pointSize - 2)
+        } else {
+            font = UIFont.preferredFont(forTextStyle: .caption1)
+        }
+        itemsCount.setTitleTextAttributes([.font: font], for: .normal)
+        totalSizeLabel.setTitleTextAttributes([.font: font], for: .normal)
+        
 		shareButton.width = shareButton.image!.size.width + 22
 		editLabelsButton.width = editLabelsButton.image!.size.width + 22
 		deleteButton.width = deleteButton.image!.size.width + 22
 		sortAscendingButton.width = sortAscendingButton.image!.size.width + 22
-		sortDescendingButton.width = sortDescendingButton.image!.size.width + 22
-        updateUI()
-
-        collection.collectionViewLayout.invalidateLayout()
 	}
         
 	/////////////////////////////////
