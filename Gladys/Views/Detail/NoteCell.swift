@@ -100,7 +100,6 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		item.note = newText
 		item.markUpdated()
 
-		item.postModified()
 		resizeCallback?(nil, true)
 
 	    Model.save()

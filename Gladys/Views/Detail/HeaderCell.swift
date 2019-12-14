@@ -107,7 +107,6 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		item.markUpdated()
 		setLabelText()
 
-		item.postModified()
 		resizeCallback?(nil, true)
 
 	    Model.save()
@@ -118,7 +117,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 			label.text = text
 			label.alpha = 1
 		} else {
-			label.text = "Add Title"
+			label.text = "Title"
 			label.alpha = 0.4
 		}
 	}

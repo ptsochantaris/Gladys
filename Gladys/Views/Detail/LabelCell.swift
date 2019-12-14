@@ -12,23 +12,21 @@ final class LabelCell: UITableViewCell {
 	
 	@IBOutlet private weak var labelText: UILabel!
 
-	override func tintColorDidChange() {
-		labelText.tintColor = tintColor
-		let t = tintColor.withAlphaComponent(0.6)
-		labelText.highlightedTextColor = t
-	}
-
-	var label: String? {
-		didSet {
-			if let l = label {
-				labelText.text = l
-				labelText.isHighlighted = false
-			} else {
-				labelText.text = "Add Label"
-				labelText.isHighlighted = true
-			}
-		}
-	}
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        let b = UIView()
+        b.backgroundColor = UIColor(named: "colorTint")?.withAlphaComponent(0.1)
+        selectedBackgroundView = b
+    }
+    
+    var label: String? {
+        didSet {
+            labelText.text = label ?? "Add…"
+            labelText.textColor = label == nil
+                ? selectedBackgroundView?.backgroundColor?.withAlphaComponent(0.8)
+                : .secondaryLabel
+        }
+    }
     
 	/////////////////////////////////////
 
@@ -42,7 +40,7 @@ final class LabelCell: UITableViewCell {
 	override var accessibilityHint: String? {
 		set {}
 		get {
-			return labelText.isHighlighted ? "Select to add a new label" : "Select to edit"
+			return label == nil ? "Select to add a new label" : "Select to edit"
 		}
 	}
 

@@ -141,9 +141,6 @@ final class DetailController: GladysViewController,
 			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
 				if success, let s = self {
 					s.passwordUpdate(nil, hint: nil)
-					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						genericAlert(title: "Lock Removed", message: nil, buttonTitle: nil)
-					}
 				}
 			}
 		} else {
@@ -165,7 +162,6 @@ final class DetailController: GladysViewController,
 		updateLockButton()
 		updateInviteButton()
 		makeIndexAndSaveItem()
-		item.postModified()
 		if item.needsUnlock {
 			done()
 		}
@@ -543,24 +539,29 @@ final class DetailController: GladysViewController,
 	}
 
 	private func removeLabel(at indexPath: IndexPath) {
-		item.labels.remove(at: indexPath.row)
-		table.deleteRows(at: [indexPath], with: .automatic)
-		makeIndexAndSaveItem()
-		item.postModified()
+        table.performBatchUpdates({
+            item.labels.remove(at: indexPath.row)
+            table.deleteRows(at: [indexPath], with: .automatic)
+        }, completion: { _ in
+            self.makeIndexAndSaveItem()
+        })
 	}
 
 	private func removeTypeItem(at indexPath: IndexPath) {
 		let typeItem = item.typeItems[indexPath.row]
-		item.typeItems.remove(at: indexPath.row)
-		typeItem.deleteFromStorage()
-		if item.typeItems.count == 0 {
-			table.deleteSections(IndexSet(integer: 3), with: .automatic)
-		} else {
-			table.deleteRows(at: [indexPath], with: .automatic)
-		}
-		item.renumberTypeItems()
-		item.needsReIngest = true
-		makeIndexAndSaveItem()
+        typeItem.deleteFromStorage()
+        table.performBatchUpdates({
+            item.typeItems.remove(at: indexPath.row)
+            if item.typeItems.count == 0 {
+                table.deleteSections(IndexSet(integer: 3), with: .automatic)
+            } else {
+                table.deleteRows(at: [indexPath], with: .automatic)
+            }
+            item.renumberTypeItems()
+            item.needsReIngest = true
+        }, completion: { _ in
+            self.makeIndexAndSaveItem()
+        })
 	}
 
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -630,10 +631,12 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section < 2 {
+		if section == 0 {
 			return 17
+        } else if section == 1 {
+            return 16
 		} else {
-			return 38
+			return 48
 		}
 	}
 
@@ -719,16 +722,14 @@ final class DetailController: GladysViewController,
 				if destinationIndexPath.section == 2 {
 					let existingLabel = localObject as? String
 					if previousIndex.section == 2 {
-						item.labels.remove(at: previousIndex.row)
-						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
-						item.postModified()
 						tableView.performBatchUpdates({
-							tableView.reloadData()
+                            item.labels.remove(at: previousIndex.row)
+                            item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+                            tableView.moveRow(at: previousIndex, to: destinationIndexPath)
 						})
 					} else {
-						item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
-						item.postModified()
 						tableView.performBatchUpdates({
+                            item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
 							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 						})
 					}
@@ -754,10 +755,10 @@ final class DetailController: GladysViewController,
 					// moving internal type item
 					let destinationIndex = destinationIndexPath.row
 					let sourceItem = item.typeItems[previousIndex.row]
-					item.typeItems.remove(at: previousIndex.row)
-					item.typeItems.insert(sourceItem, at: destinationIndex)
-					item.renumberTypeItems()
 					table.performBatchUpdates({
+                        item.typeItems.remove(at: previousIndex.row)
+                        item.typeItems.insert(sourceItem, at: destinationIndex)
+                        item.renumberTypeItems()
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
 					}, completion: { _ in
 						self.handleNewTypeItem()
@@ -768,9 +769,8 @@ final class DetailController: GladysViewController,
 				if destinationIndexPath.section == 2 {
 					// dropping external type item into labels
 					if let text = candidate.displayTitle {
-						item.labels.insert(text, at: destinationIndexPath.row)
-						item.postModified()
 						tableView.performBatchUpdates({
+                            item.labels.insert(text, at: destinationIndexPath.row)
 							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 						}, completion: { _ in
 							self.makeIndexAndSaveItem()
@@ -779,10 +779,10 @@ final class DetailController: GladysViewController,
 
 				} else if destinationIndexPath.section == 3 {
 					// dropping external type item into type items
-					let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
-					item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
-					item.renumberTypeItems()
 					tableView.performBatchUpdates({
+                        let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
+                        item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
+                        item.renumberTypeItems()
 						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 					}, completion: { _ in
 						self.handleNewTypeItem()
@@ -853,7 +853,6 @@ final class DetailController: GladysViewController,
 			table.insertRows(at: [indexPath], with: .automatic)
 		}
 		makeIndexAndSaveItem()
-		item.postModified()
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -900,8 +899,6 @@ final class DetailController: GladysViewController,
 		item.needsReIngest = true
 		makeIndexAndSaveItem()
 		updateUI()
-		item.postModified()
-		item.reIngest()
 		if let newCell = table.cellForRow(at: IndexPath(row: 0, section: table.numberOfSections-1)) {
 			UIAccessibility.post(notification: .layoutChanged, argument: newCell)
 		}

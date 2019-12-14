@@ -148,7 +148,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		titleField.placeholderString = item.nonOverridenText.0 ?? "Add Title"
 		titleField.stringValue = item.titleOverride
 		notesField.stringValue = item.note
-		notesField.placeholderString = "Add Note"
+		notesField.placeholderString = "Note"
 		labels.reloadData()
 		updateLabelButtons()
 		components.animator().reloadData()
@@ -295,7 +295,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			return
 		}
 		item.markUpdated()
-		item.postModified()
 		Model.save()
 	}
 
