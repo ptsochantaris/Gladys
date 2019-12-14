@@ -553,7 +553,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7y-8b-Uup">
-                                <rect key="frame" x="0.0" y="56" width="320" height="575"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="631"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
                                         <rect key="frame" x="40" y="351" width="240" height="14.5"/>
@@ -703,10 +703,10 @@ Selecting them will show only items that contain these labels.</string>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="d7y-8b-Uup" firstAttribute="leading" secondItem="wBp-li-D4L" secondAttribute="leading" id="2zq-Pr-LSh"/>
-                            <constraint firstItem="wBp-li-D4L" firstAttribute="trailing" secondItem="d7y-8b-Uup" secondAttribute="trailing" id="6ir-tI-QnT"/>
-                            <constraint firstItem="d7y-8b-Uup" firstAttribute="top" secondItem="wBp-li-D4L" secondAttribute="top" id="Erg-8Z-ezK"/>
-                            <constraint firstItem="wBp-li-D4L" firstAttribute="bottom" secondItem="d7y-8b-Uup" secondAttribute="bottom" id="Qiv-et-RXv"/>
+                            <constraint firstItem="d7y-8b-Uup" firstAttribute="leading" secondItem="JfA-bI-JxR" secondAttribute="leading" id="2zq-Pr-LSh"/>
+                            <constraint firstAttribute="trailing" secondItem="d7y-8b-Uup" secondAttribute="trailing" id="6ir-tI-QnT"/>
+                            <constraint firstItem="d7y-8b-Uup" firstAttribute="top" secondItem="JfA-bI-JxR" secondAttribute="top" id="Erg-8Z-ezK"/>
+                            <constraint firstAttribute="bottom" secondItem="d7y-8b-Uup" secondAttribute="bottom" constant="49" id="Qiv-et-RXv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wBp-li-D4L"/>
                     </view>
@@ -748,7 +748,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quQ-d6-kah">
-                                <rect key="frame" x="0.0" y="56" width="320" height="2826"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="2980"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="RSx-tB-L4n">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="2584.5"/>
@@ -1464,10 +1464,10 @@ Selecting them will show only items that contain these labels.</string>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="wOj-7s-Sqp" firstAttribute="trailing" secondItem="quQ-d6-kah" secondAttribute="trailing" id="3HD-Br-6Ua"/>
-                            <constraint firstItem="wOj-7s-Sqp" firstAttribute="bottom" secondItem="quQ-d6-kah" secondAttribute="bottom" id="C7B-pa-NDj"/>
-                            <constraint firstItem="quQ-d6-kah" firstAttribute="leading" secondItem="wOj-7s-Sqp" secondAttribute="leading" id="SWb-nd-jgm"/>
-                            <constraint firstItem="quQ-d6-kah" firstAttribute="top" secondItem="wOj-7s-Sqp" secondAttribute="top" id="osd-UJ-cma"/>
+                            <constraint firstAttribute="trailing" secondItem="quQ-d6-kah" secondAttribute="trailing" id="3HD-Br-6Ua"/>
+                            <constraint firstAttribute="bottom" secondItem="quQ-d6-kah" secondAttribute="bottom" id="C7B-pa-NDj"/>
+                            <constraint firstItem="quQ-d6-kah" firstAttribute="leading" secondItem="6A2-nN-HPI" secondAttribute="leading" id="SWb-nd-jgm"/>
+                            <constraint firstItem="quQ-d6-kah" firstAttribute="top" secondItem="6A2-nN-HPI" secondAttribute="top" id="osd-UJ-cma"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wOj-7s-Sqp"/>
                     </view>
@@ -1517,7 +1517,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XAu-Zj-d4Q">
-                                <rect key="frame" x="0.0" y="56" width="320" height="575"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ia5-kr-4dD">
                                         <rect key="frame" x="0.0" y="20" width="320" height="500"/>
@@ -1699,10 +1699,10 @@ Selecting them will show only items that contain these labels.</string>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="XAu-Zj-d4Q" firstAttribute="leading" secondItem="xdt-ru-gMc" secondAttribute="leading" id="7ok-Ng-FxU"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="bottom" secondItem="XAu-Zj-d4Q" secondAttribute="bottom" id="ggt-10-oSP"/>
-                            <constraint firstItem="XAu-Zj-d4Q" firstAttribute="top" secondItem="xdt-ru-gMc" secondAttribute="top" id="j8e-as-lPf"/>
-                            <constraint firstItem="xdt-ru-gMc" firstAttribute="trailing" secondItem="XAu-Zj-d4Q" secondAttribute="trailing" id="l6z-u6-Jbe"/>
+                            <constraint firstItem="XAu-Zj-d4Q" firstAttribute="leading" secondItem="tAZ-V3-BEv" secondAttribute="leading" id="7ok-Ng-FxU"/>
+                            <constraint firstAttribute="bottom" secondItem="XAu-Zj-d4Q" secondAttribute="bottom" id="ggt-10-oSP"/>
+                            <constraint firstItem="XAu-Zj-d4Q" firstAttribute="top" secondItem="tAZ-V3-BEv" secondAttribute="top" id="j8e-as-lPf"/>
+                            <constraint firstAttribute="trailing" secondItem="XAu-Zj-d4Q" secondAttribute="trailing" id="l6z-u6-Jbe"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xdt-ru-gMc"/>
                     </view>
@@ -1737,7 +1737,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGD-oM-cWh">
-                                <rect key="frame" x="0.0" y="56" width="375" height="542"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="598"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="JQU-c7-D51">
                                         <rect key="frame" x="40" y="40" width="295" height="388"/>
@@ -1788,10 +1788,10 @@ Selecting them will show only items that contain these labels.</string>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="vGD-oM-cWh" firstAttribute="top" secondItem="J9I-Dy-W9t" secondAttribute="top" id="Jpj-9q-eeY"/>
-                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="bottom" secondItem="vGD-oM-cWh" secondAttribute="bottom" id="W8E-q4-DHD"/>
-                            <constraint firstItem="J9I-Dy-W9t" firstAttribute="trailing" secondItem="vGD-oM-cWh" secondAttribute="trailing" id="baC-dk-bB4"/>
-                            <constraint firstItem="vGD-oM-cWh" firstAttribute="leading" secondItem="J9I-Dy-W9t" secondAttribute="leading" id="kkN-Pb-w0S"/>
+                            <constraint firstItem="vGD-oM-cWh" firstAttribute="top" secondItem="6e9-dF-Uv9" secondAttribute="top" id="Jpj-9q-eeY"/>
+                            <constraint firstAttribute="bottom" secondItem="vGD-oM-cWh" secondAttribute="bottom" constant="49" id="W8E-q4-DHD"/>
+                            <constraint firstAttribute="trailing" secondItem="vGD-oM-cWh" secondAttribute="trailing" id="baC-dk-bB4"/>
+                            <constraint firstItem="vGD-oM-cWh" firstAttribute="leading" secondItem="6e9-dF-Uv9" secondAttribute="leading" id="kkN-Pb-w0S"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="J9I-Dy-W9t"/>
                     </view>
@@ -3424,45 +3424,33 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="dVc-qJ-l47">
-                                <rect key="frame" x="0.0" y="56" width="375" height="542"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="dVc-qJ-l47">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HelpControllerCell" rowHeight="61" id="UUj-6Y-btf" customClass="HelpControllerCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="61"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UUj-6Y-btf" id="OdO-dC-Exf">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="61"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="61"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G0I-PF-ZY6">
-                                                    <rect key="frame" x="15" y="11" width="345" height="39"/>
+                                                    <rect key="frame" x="15" y="11" width="315" height="39"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                    <color key="textColor" name="colorDarkGray"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xwC-1s-uX9">
-                                                    <rect key="frame" x="15" y="0.0" width="345" height="0.5"/>
-                                                    <color key="backgroundColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="0.5" id="zWi-1O-8Ht"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="G0I-PF-ZY6" secondAttribute="bottom" id="9LJ-wz-M6v"/>
                                                 <constraint firstItem="G0I-PF-ZY6" firstAttribute="leading" secondItem="OdO-dC-Exf" secondAttribute="leadingMargin" id="Ouf-Qv-65p"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="G0I-PF-ZY6" secondAttribute="trailing" id="b09-Lj-HSe"/>
-                                                <constraint firstItem="xwC-1s-uX9" firstAttribute="leading" secondItem="OdO-dC-Exf" secondAttribute="leadingMargin" id="ghi-IT-XPK"/>
-                                                <constraint firstAttribute="top" secondItem="xwC-1s-uX9" secondAttribute="top" id="pg3-68-hI8"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="xwC-1s-uX9" secondAttribute="trailing" id="vsW-9i-IyM"/>
                                                 <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" id="xh6-eD-FRw"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="2" left="10" bottom="8" right="10"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="quaternarySystemFillColor" red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <outlet property="label" destination="G0I-PF-ZY6" id="Nfs-jt-ZD1"/>
                                         </connections>
@@ -3476,10 +3464,10 @@ Selecting them will show only items that contain these labels.</string>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
-                            <constraint firstItem="iAy-ee-hjf" firstAttribute="trailing" secondItem="dVc-qJ-l47" secondAttribute="trailing" id="8ql-uU-o1F"/>
-                            <constraint firstItem="iAy-ee-hjf" firstAttribute="bottom" secondItem="dVc-qJ-l47" secondAttribute="bottom" id="XYB-6v-JYw"/>
-                            <constraint firstItem="dVc-qJ-l47" firstAttribute="top" secondItem="iAy-ee-hjf" secondAttribute="top" id="aYA-LK-c5W"/>
-                            <constraint firstItem="dVc-qJ-l47" firstAttribute="leading" secondItem="iAy-ee-hjf" secondAttribute="leading" id="hdx-aw-U86"/>
+                            <constraint firstAttribute="trailing" secondItem="dVc-qJ-l47" secondAttribute="trailing" id="8ql-uU-o1F"/>
+                            <constraint firstAttribute="bottom" secondItem="dVc-qJ-l47" secondAttribute="bottom" id="XYB-6v-JYw"/>
+                            <constraint firstItem="dVc-qJ-l47" firstAttribute="top" secondItem="B6T-hk-CWz" secondAttribute="top" id="aYA-LK-c5W"/>
+                            <constraint firstItem="dVc-qJ-l47" firstAttribute="leading" secondItem="B6T-hk-CWz" secondAttribute="leading" id="hdx-aw-U86"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iAy-ee-hjf"/>
                     </view>
