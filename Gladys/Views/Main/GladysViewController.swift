@@ -57,8 +57,12 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         autoConfigureButtons = isAccessoryWindow
         super.viewDidLoad()
         let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(updateButtons), name: .MultipleWindowModeChange, object: nil)
+        n.addObserver(self, selector: #selector(multipleWindowModeChange), name: .MultipleWindowModeChange, object: nil)
         (view as? GladysView)?.delegate = self
+    }
+    
+    @objc private func multipleWindowModeChange() {
+        updateButtons(newTraitCollection: view.traitCollection)
     }
     
     func movedToWindow() {
@@ -227,7 +231,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         navigationController?.navigationBar.setNeedsLayout()
     }
     
-    @objc private func updateButtons(newTraitCollection: UITraitCollection) {
+    private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if SceneDelegate.openCount > 1 {
                 doneButtonLocation = .right
