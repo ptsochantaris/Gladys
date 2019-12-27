@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14460.31" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
-    <device id="watch38" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15702" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+    <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14460.16"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
     </dependencies>
     <scenes>
         <!--StartupController-->
@@ -25,31 +23,18 @@
         <!--ItemController-->
         <scene sceneID="eeI-Hk-j9C">
             <objects>
-                <controller identifier="ItemController" id="mJP-ds-eku" customClass="ItemController" customModule="GladysWatch" customModuleProvider="target">
+                <controller identifier="ItemController" alwaysBounce="YES" fullBounds="YES" id="mJP-ds-eku" customClass="ItemController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
                         <button alignment="center" verticalAlignment="center" id="29O-lL-WJR">
-                            <group key="contentGroup" width="1" height="1" alignment="left" layout="overlap" id="D3x-gM-hNW">
+                            <group key="contentGroup" width="1" height="1" alignment="left" layout="overlap" radius="34" id="D3x-gM-hNW">
                                 <items>
-                                    <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" radius="5" id="if9-pT-VGa">
+                                    <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" radius="0.0" id="if9-pT-VGa">
                                         <items>
                                             <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
                                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </imageView>
                                         </items>
                                         <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </group>
-                                    <group width="1" alignment="center" verticalAlignment="bottom" layout="overlap" radius="0.0" id="bSZ-GK-Zhg">
-                                        <items>
-                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="veG-bS-Gax">
-                                                <string key="text">Label
-Label
-Label
-Label</string>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="font" type="system" pointSize="12"/>
-                                            </label>
-                                        </items>
-                                        <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
                                     </group>
                                     <group width="1" alignment="center" layout="overlap" radius="0.0" id="z6C-zg-Pzx">
                                         <items>
@@ -63,6 +48,19 @@ Label</string>
                                             </label>
                                         </items>
                                         <edgeInsets key="margins" left="2" right="2" top="2" bottom="10"/>
+                                    </group>
+                                    <group width="1" alignment="center" verticalAlignment="bottom" layout="overlap" radius="0.0" id="bSZ-GK-Zhg">
+                                        <items>
+                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="veG-bS-Gax">
+                                                <string key="text">Label
+Label
+Label
+Label</string>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="font" type="system" pointSize="12"/>
+                                            </label>
+                                        </items>
+                                        <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
                                     </group>
                                     <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -100,12 +98,12 @@ Label</string>
                     </menu>
                     <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                     <connections>
-                        <outlet property="bottomGroup" destination="z6C-zg-Pzx" id="1eX-MG-MVR"/>
+                        <outlet property="bottomGroup" destination="bSZ-GK-Zhg" id="gY8-2L-wM6"/>
                         <outlet property="copyLabel" destination="BFr-jH-zmC" id="s3j-1S-XMq"/>
                         <outlet property="date" destination="veG-bS-Gax" id="11B-hx-sv3"/>
                         <outlet property="image" destination="yIB-Vg-Pav" id="1MP-Uk-6tp"/>
                         <outlet property="label" destination="Hpo-D8-PYh" id="Gia-eZ-tWi"/>
-                        <outlet property="topGroup" destination="bSZ-GK-Zhg" id="SFv-k8-aTU"/>
+                        <outlet property="topGroup" destination="z6C-zg-Pzx" id="fGq-x0-zS5"/>
                     </connections>
                 </controller>
             </objects>
@@ -125,4 +123,9 @@ Label</string>
             <point key="canvasLocation" x="-5" y="501"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Copy" width="20" height="27"/>
+        <image name="List" width="23" height="19"/>
+        <image name="View" width="27" height="21"/>
+    </resources>
 </document>

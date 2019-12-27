@@ -88,9 +88,9 @@ final class ItemController: WKInterfaceController {
 		ExtensionDelegate.currentUUID = ""
 	}
 
-	private static let topShade = makeGradient(up: false)
+	private static let topShade = makeGradient(up: true)
 
-	private static let bottomShade = makeGradient(up: true)
+	private static let bottomShade = makeGradient(up: false)
 
 	private static func makeGradient(up: Bool) -> UIImage {
 
