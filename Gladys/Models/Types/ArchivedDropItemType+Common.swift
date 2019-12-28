@@ -9,7 +9,6 @@
 
 import Foundation
 import CloudKit
-import SafeUnarchiver
 #if os(iOS)
 import MobileCoreServices
 #endif

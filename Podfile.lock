@@ -7,7 +7,7 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
-  - ZIPFoundation (0.9.9)
+  - ZIPFoundation (0.9.10)
 
 DEPENDENCIES:
   - CallbackURLKit
@@ -29,7 +29,7 @@ SPEC CHECKSUMS:
   Fuzi: bcc5694488dd6e672e126cbf3c5471d7a79506d1
   HotKey: ad59450195936c10992438c4210f673de5aee43e
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
-  ZIPFoundation: 89df685c971926b0323087952320bdfee9f0b6ef
+  ZIPFoundation: 249fa8890597086cd536bb2df5c9804d84e122b0
 
 PODFILE CHECKSUM: 8613c17b17f76411442b3180cd391c4c17e1d8e8
 

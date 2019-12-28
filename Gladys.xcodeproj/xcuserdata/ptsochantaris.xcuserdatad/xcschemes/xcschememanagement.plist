@@ -4,80 +4,70 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Gladys.xcscheme</key>
+		<key>Gladys.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>GladysAction.xcscheme</key>
+		<key>GladysAction.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
-		<key>GladysFiles.xcscheme</key>
+		<key>GladysFiles.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>GladysFrameworkMac.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>28</integer>
-		</dict>
-		<key>GladysIndex.xcscheme</key>
+		<key>GladysIndex.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>GladysIntents.xcscheme</key>
+		<key>GladysIntents.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
-		<key>GladysMessage.xcscheme</key>
+		<key>GladysMessage.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
-		<key>GladysToday.xcscheme</key>
+		<key>GladysToday.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>GladysWatch.xcscheme</key>
+		<key>GladysWatch.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>MacGladys.xcscheme</key>
+		<key>MacGladys.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
-		<key>MacGladysHelper.xcscheme</key>
+		<key>MacGladysHelper.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>10</integer>
 		</dict>
-		<key>MacGladysShare.xcscheme</key>
+		<key>MacGladysShare.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>9</integer>
-		</dict>
-		<key>SafeUnarchiver.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>26</integer>
-		</dict>
-		<key>SafeUnarchiverMac.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>27</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>1611484F209FA1B6008BB332</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>16118D1B2364775A00454326</key>
 		<dict>
 			<key>primary</key>
 			<true/>

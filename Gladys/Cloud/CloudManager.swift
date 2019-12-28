@@ -12,7 +12,7 @@ import UIKit
 import Cocoa
 #endif
 import CloudKit
-import SafeUnarchiver
+import GladysFramework
 
 let diskSizeFormatter = ByteCountFormatter()
 

@@ -8,7 +8,7 @@
 
 import UIKit
 import MobileCoreServices
-import SafeUnarchiver
+import GladysFramework
 
 protocol TextEditControllerDelegate: class {
 	func textEditControllerMadeChanges(_ textEditController: TextEditController)

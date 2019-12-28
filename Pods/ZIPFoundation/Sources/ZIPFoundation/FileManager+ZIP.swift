@@ -31,10 +31,11 @@ extension FileManager {
     public func zipItem(at sourceURL: URL, to destinationURL: URL,
                         shouldKeepParent: Bool = true, compressionMethod: CompressionMethod = .none,
                         progress: Progress? = nil) throws {
-        guard self.fileExists(atPath: sourceURL.path) else {
+        let fileManager = FileManager()
+        guard fileManager.itemExists(at: sourceURL) else {
             throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: sourceURL.path])
         }
-        guard !self.fileExists(atPath: destinationURL.path) else {
+        guard !fileManager.itemExists(at: destinationURL) else {
             throw CocoaError(.fileWriteFileExists, userInfo: [NSFilePathErrorKey: destinationURL.path])
         }
         guard let archive = Archive(url: destinationURL, accessMode: .create) else {
@@ -83,11 +84,13 @@ extension FileManager {
     /// - Parameters:
     ///   - sourceURL: The file URL pointing to an existing ZIP file.
     ///   - destinationURL: The file URL that identifies the destination directory of the unzip operation.
+    ///   - skipCRC32: Optional flag to skip calculation of the CRC32 checksum to speed up performance.
     ///   - progress: A progress object that can be used to track or cancel the unzip operation.
     /// - Throws: Throws an error if the source item does not exist or the destination URL is not writable.
-    public func unzipItem(at sourceURL: URL, to destinationURL: URL,
+    public func unzipItem(at sourceURL: URL, to destinationURL: URL, skipCRC32: Bool = false,
                           progress: Progress? = nil, preferredEncoding: String.Encoding? = nil) throws {
-        guard self.fileExists(atPath: sourceURL.path) else {
+        let fileManager = FileManager()
+        guard fileManager.itemExists(at: sourceURL) else {
             throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: sourceURL.path])
         }
         guard let archive = Archive(url: sourceURL, accessMode: .read, preferredEncoding: preferredEncoding) else {
@@ -119,20 +122,28 @@ extension FileManager {
             if let progress = progress {
                 let entryProgress = archive.makeProgressForReading(entry)
                 progress.addChild(entryProgress, withPendingUnitCount: entryProgress.totalUnitCount)
-                _ = try archive.extract(entry, to: destinationEntryURL, progress: entryProgress)
+                _ = try archive.extract(entry, to: destinationEntryURL, skipCRC32: skipCRC32, progress: entryProgress)
             } else {
-                _ = try archive.extract(entry, to: destinationEntryURL)
+                _ = try archive.extract(entry, to: destinationEntryURL, skipCRC32: skipCRC32)
             }
         }
     }
 
     // MARK: - Helpers
 
+    func itemExists(at url: URL) -> Bool {
+        // Use `URL.checkResourceIsReachable()` instead of `FileManager.fileExists()` here
+        // because we don't want implicit symlink resolution.
+        // As per documentation, `FileManager.fileExists()` traverses symlinks and therefore a broken symlink
+        // would throw a `.fileReadNoSuchFile` false positive error.
+        // For ZIP files it may be intended to archive "broken" symlinks because they might be
+        // resolvable again when extracting the archive to a different destination.
+        return (try? url.checkResourceIsReachable()) == true
+    }
+
     func createParentDirectoryStructure(for url: URL) throws {
         let parentDirectoryURL = url.deletingLastPathComponent()
-        if !self.fileExists(atPath: parentDirectoryURL.path) {
-            try self.createDirectory(at: parentDirectoryURL, withIntermediateDirectories: true, attributes: nil)
-        }
+        try self.createDirectory(at: parentDirectoryURL, withIntermediateDirectories: true, attributes: nil)
     }
 
     class func attributes(from entry: Entry) -> [FileAttributeKey: Any] {
@@ -193,7 +204,7 @@ extension FileManager {
 
     class func fileModificationDateTimeForItem(at url: URL) throws -> Date {
         let fileManager = FileManager()
-        guard fileManager.fileExists(atPath: url.path) else {
+        guard fileManager.itemExists(at: url) else {
             throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: url.path])
         }
         let entryFileSystemRepresentation = fileManager.fileSystemRepresentation(withPath: url.path)
@@ -212,7 +223,7 @@ extension FileManager {
 
     class func fileSizeForItem(at url: URL) throws -> UInt32 {
         let fileManager = FileManager()
-        guard fileManager.fileExists(atPath: url.path) else {
+        guard fileManager.itemExists(at: url) else {
             throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: url.path])
         }
         let entryFileSystemRepresentation = fileManager.fileSystemRepresentation(withPath: url.path)
@@ -223,7 +234,7 @@ extension FileManager {
 
     class func typeForItem(at url: URL) throws -> Entry.EntryType {
         let fileManager = FileManager()
-        guard url.isFileURL, fileManager.fileExists(atPath: url.path) else {
+        guard url.isFileURL, fileManager.itemExists(at: url) else {
             throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: url.path])
         }
         let entryFileSystemRepresentation = fileManager.fileSystemRepresentation(withPath: url.path)

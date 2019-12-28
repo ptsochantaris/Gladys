@@ -58,10 +58,6 @@
 		16114840209F95C3008BB332 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16118D28236478E200454326 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16118D1C2364775A00454326 /* GladysFramework.framework */; };
 		16118D29236478E200454326 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16118D1C2364775A00454326 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		16118D2C236478E200454326 /* SafeUnarchiver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16118D07236476C100454326 /* SafeUnarchiver.framework */; };
-		16118D2D236478E200454326 /* SafeUnarchiver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16118D07236476C100454326 /* SafeUnarchiver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		16118D302364897400454326 /* SafeUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 166EEC77236443A9000BE78A /* SafeUnarchiver.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		16118D312364897800454326 /* SafeUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 166EEC8123644476000BE78A /* SafeUnarchiver.m */; };
 		16118D32236489C700454326 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		16118D34236489D600454326 /* VerifyReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = 167A18D41F128A9300B7F0AF /* VerifyReceipt.m */; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
@@ -178,13 +174,6 @@
 		166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72F920BEDCC600DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		166E72FA20BEE61B00DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
-		166EEC79236443A9000BE78A /* SafeUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 166EEC77236443A9000BE78A /* SafeUnarchiver.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		166EEC7C236443A9000BE78A /* SafeUnarchiver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */; };
-		166EEC7D236443A9000BE78A /* SafeUnarchiver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		166EEC8423644476000BE78A /* SafeUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 166EEC8123644476000BE78A /* SafeUnarchiver.m */; };
-		166EEC8A2364451A000BE78A /* SafeUnarchiver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */; };
-		166EEC8F2364452E000BE78A /* SafeUnarchiver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */; };
-		166EEC94236445DB000BE78A /* SafeUnarchiver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */; };
 		166EEC9A23645391000BE78A /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 166EEC9923645391000BE78A /* Media.xcassets */; };
 		1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619E8161EFF3745000087DD /* MirrorManager.swift */; };
 		167574031F12C22500385079 /* GladysFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 167574011F12C22500385079 /* GladysFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -413,13 +402,6 @@
 			remoteGlobalIDString = 16118D1B2364775A00454326;
 			remoteInfo = GladysFrameworkMac;
 		};
-		16118D2E236478E200454326 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 16118D06236476C100454326;
-			remoteInfo = SafeUnarchiverMac;
-		};
 		16287AEC1EFB03FD007188AE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
@@ -447,34 +429,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1657B8AA1FD41C1B00EC480D;
 			remoteInfo = GladysMessage;
-		};
-		166EEC7A236443A9000BE78A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 166EEC74236443A9000BE78A;
-			remoteInfo = SafeUnarchiver;
-		};
-		166EEC8C2364451A000BE78A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 166EEC74236443A9000BE78A;
-			remoteInfo = SafeUnarchiver;
-		};
-		166EEC912364452E000BE78A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 166EEC74236443A9000BE78A;
-			remoteInfo = SafeUnarchiver;
-		};
-		166EEC96236445DB000BE78A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 166EEC74236443A9000BE78A;
-			remoteInfo = SafeUnarchiver;
 		};
 		168DFB1520B88559002C603D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -534,7 +488,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				16118D2D236478E200454326 /* SafeUnarchiver.framework in Embed Frameworks */,
 				16118D29236478E200454326 /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -572,7 +525,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				166EEC7D236443A9000BE78A /* SafeUnarchiver.framework in Embed Frameworks */,
 				16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -642,7 +594,6 @@
 		16114862209FA440008BB332 /* libboringssl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libboringssl.tbd; path = usr/lib/libboringssl.tbd; sourceTree = SDKROOT; };
 		16114864209FA58D008BB332 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libssl.a; sourceTree = "<group>"; };
 		16114866209FA5A0008BB332 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libcrypto.a; sourceTree = "<group>"; };
-		16118D07236476C100454326 /* SafeUnarchiver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SafeUnarchiver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16118D1C2364775A00454326 /* GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		161718C42094D333005ABD6C /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161718C62094D333005ABD6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -708,10 +659,6 @@
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
 		166B638F236A451F00115AC3 /* FileMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
-		166EEC75236443A9000BE78A /* SafeUnarchiver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SafeUnarchiver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		166EEC77236443A9000BE78A /* SafeUnarchiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafeUnarchiver.h; sourceTree = "<group>"; };
-		166EEC78236443A9000BE78A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		166EEC8123644476000BE78A /* SafeUnarchiver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafeUnarchiver.m; sourceTree = "<group>"; };
 		166EEC9923645391000BE78A /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		167573FF1F12C22500385079 /* GladysFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GladysFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		167574011F12C22500385079 /* GladysFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GladysFramework.h; sourceTree = "<group>"; };
@@ -884,13 +831,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		16118D04236476C100454326 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16118D192364775A00454326 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -904,7 +844,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
-				16118D2C236478E200454326 /* SafeUnarchiver.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				3D460DDEC55C43A37987D82B /* libPods-macOS-MacGladys.a in Frameworks */,
 				16118D28236478E200454326 /* GladysFramework.framework in Frameworks */,
@@ -915,7 +854,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				166EEC8A2364451A000BE78A /* SafeUnarchiver.framework in Frameworks */,
 				1643C04223253C3D005D7BF3 /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -926,7 +864,6 @@
 			files = (
 				16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */,
 				16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */,
-				166EEC94236445DB000BE78A /* SafeUnarchiver.framework in Frameworks */,
 				CADFFF4B6A87B4CD99501128 /* libPods-iOS-GladysAction.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -947,13 +884,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		166EEC72236443A9000BE78A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		167573FB1F12C22500385079 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -967,7 +897,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
-				166EEC7C236443A9000BE78A /* SafeUnarchiver.framework in Frameworks */,
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 				EBAC6D9F121606E633EA4BB0 /* libPods-iOS-Gladys.a in Frameworks */,
@@ -987,7 +916,6 @@
 			files = (
 				1643C04123253C24005D7BF3 /* GladysFramework.framework in Frameworks */,
 				16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */,
-				166EEC8F2364452E000BE78A /* SafeUnarchiver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,16 +1157,6 @@
 			path = GladysMessage;
 			sourceTree = "<group>";
 		};
-		166EEC76236443A9000BE78A /* SafeUnarchiver */ = {
-			isa = PBXGroup;
-			children = (
-				166EEC77236443A9000BE78A /* SafeUnarchiver.h */,
-				166EEC8123644476000BE78A /* SafeUnarchiver.m */,
-				166EEC78236443A9000BE78A /* Info.plist */,
-			);
-			path = SafeUnarchiver;
-			sourceTree = "<group>";
-		};
 		167574001F12C22500385079 /* GladysFramework */ = {
 			isa = PBXGroup;
 			children = (
@@ -1265,7 +1183,6 @@
 				161718C52094D333005ABD6C /* MacGladys */,
 				168DFAFF20B85F3D002C603D /* MacGladysHelper */,
 				164947CD20BEAA6200BD1BEB /* MacGladysShare */,
-				166EEC76236443A9000BE78A /* SafeUnarchiver */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				F997D53C5E7A383D99BD35DB /* Pods */,
@@ -1287,8 +1204,6 @@
 				168DFAFE20B85F3D002C603D /* MacGladysHelper.app */,
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
 				16D984932160C5A000D9D51C /* GladysIntents.appex */,
-				166EEC75236443A9000BE78A /* SafeUnarchiver.framework */,
-				16118D07236476C100454326 /* SafeUnarchiver.framework */,
 				16118D1C2364775A00454326 /* GladysFramework.framework */,
 			);
 			name = Products;
@@ -1527,27 +1442,11 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		16118D02236476C100454326 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				16118D302364897400454326 /* SafeUnarchiver.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16118D172364775A00454326 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				16118D32236489C700454326 /* GladysFramework.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		166EEC70236443A9000BE78A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				166EEC79236443A9000BE78A /* SafeUnarchiver.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1562,24 +1461,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		16118D06236476C100454326 /* SafeUnarchiverMac */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 16118D12236476C100454326 /* Build configuration list for PBXNativeTarget "SafeUnarchiverMac" */;
-			buildPhases = (
-				16118D02236476C100454326 /* Headers */,
-				16118D03236476C100454326 /* Sources */,
-				16118D04236476C100454326 /* Frameworks */,
-				16118D05236476C100454326 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SafeUnarchiverMac;
-			productName = SafeUnarchiverMac;
-			productReference = 16118D07236476C100454326 /* SafeUnarchiver.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		16118D1B2364775A00454326 /* GladysFrameworkMac */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16118D252364775A00454326 /* Build configuration list for PBXNativeTarget "GladysFrameworkMac" */;
@@ -1617,7 +1498,6 @@
 				168DFB1620B88559002C603D /* PBXTargetDependency */,
 				164947D820BEAA6200BD1BEB /* PBXTargetDependency */,
 				16118D2B236478E200454326 /* PBXTargetDependency */,
-				16118D2F236478E200454326 /* PBXTargetDependency */,
 			);
 			name = MacGladys;
 			productName = MacGladys;
@@ -1635,7 +1515,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				166EEC8D2364451A000BE78A /* PBXTargetDependency */,
 			);
 			name = GladysIndex;
 			productName = GladysIndex;
@@ -1655,7 +1534,6 @@
 			);
 			dependencies = (
 				169426481F12D2F800F3A0A4 /* PBXTargetDependency */,
-				166EEC97236445DB000BE78A /* PBXTargetDependency */,
 			);
 			name = GladysAction;
 			productName = GladysAction;
@@ -1696,24 +1574,6 @@
 			productReference = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */;
 			productType = "com.apple.product-type.app-extension.messages";
 		};
-		166EEC74236443A9000BE78A /* SafeUnarchiver */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 166EEC7E236443A9000BE78A /* Build configuration list for PBXNativeTarget "SafeUnarchiver" */;
-			buildPhases = (
-				166EEC70236443A9000BE78A /* Headers */,
-				166EEC71236443A9000BE78A /* Sources */,
-				166EEC72236443A9000BE78A /* Frameworks */,
-				166EEC73236443A9000BE78A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SafeUnarchiver;
-			productName = SafeUnarchiver;
-			productReference = 166EEC75236443A9000BE78A /* SafeUnarchiver.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		167573FE1F12C22500385079 /* GladysFramework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 167574091F12C22500385079 /* Build configuration list for PBXNativeTarget "GladysFramework" */;
@@ -1748,7 +1608,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				166EEC7B236443A9000BE78A /* PBXTargetDependency */,
 				16287AED1EFB03FD007188AE /* PBXTargetDependency */,
 				164136951F09195000B34574 /* PBXTargetDependency */,
 				16B552831F12E5C200641009 /* PBXTargetDependency */,
@@ -1790,7 +1649,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				166EEC922364452E000BE78A /* PBXTargetDependency */,
 			);
 			name = GladysToday;
 			productName = GladysToday;
@@ -1860,9 +1718,6 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
-					16118D06236476C100454326 = {
-						CreatedOnToolsVersion = 11.1;
-					};
 					16118D1B2364775A00454326 = {
 						CreatedOnToolsVersion = 11.1;
 					};
@@ -1924,9 +1779,6 @@
 								enabled = 1;
 							};
 						};
-					};
-					166EEC74236443A9000BE78A = {
-						CreatedOnToolsVersion = 11.1;
 					};
 					167573FE1F12C22500385079 = {
 						CreatedOnToolsVersion = 9.0;
@@ -2025,8 +1877,6 @@
 				161718C32094D333005ABD6C /* MacGladys */,
 				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 				164947CB20BEAA6200BD1BEB /* MacGladysShare */,
-				166EEC74236443A9000BE78A /* SafeUnarchiver */,
-				16118D06236476C100454326 /* SafeUnarchiverMac */,
 				167573FE1F12C22500385079 /* GladysFramework */,
 				16118D1B2364775A00454326 /* GladysFrameworkMac */,
 			);
@@ -2034,13 +1884,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		16118D05236476C100454326 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16118D1A2364775A00454326 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2093,13 +1936,6 @@
 			files = (
 				16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */,
 				1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		166EEC73236443A9000BE78A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2291,14 +2127,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		16118D03236476C100454326 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				16118D312364897800454326 /* SafeUnarchiver.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16118D182364775A00454326 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2493,14 +2321,6 @@
 				1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */,
 				16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				1657B8D21FD4494D00EC480D /* ArchivedDropItemType+Copy.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		166EEC71236443A9000BE78A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				166EEC8423644476000BE78A /* SafeUnarchiver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2724,11 +2544,6 @@
 			target = 16118D1B2364775A00454326 /* GladysFrameworkMac */;
 			targetProxy = 16118D2A236478E200454326 /* PBXContainerItemProxy */;
 		};
-		16118D2F236478E200454326 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 16118D06236476C100454326 /* SafeUnarchiverMac */;
-			targetProxy = 16118D2E236478E200454326 /* PBXContainerItemProxy */;
-		};
 		16287AED1EFB03FD007188AE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 16287AE61EFB03FD007188AE /* GladysIndex */;
@@ -2748,26 +2563,6 @@
 			isa = PBXTargetDependency;
 			target = 1657B8AA1FD41C1B00EC480D /* GladysMessage */;
 			targetProxy = 1657B8B71FD41C1C00EC480D /* PBXContainerItemProxy */;
-		};
-		166EEC7B236443A9000BE78A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 166EEC74236443A9000BE78A /* SafeUnarchiver */;
-			targetProxy = 166EEC7A236443A9000BE78A /* PBXContainerItemProxy */;
-		};
-		166EEC8D2364451A000BE78A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 166EEC74236443A9000BE78A /* SafeUnarchiver */;
-			targetProxy = 166EEC8C2364451A000BE78A /* PBXContainerItemProxy */;
-		};
-		166EEC922364452E000BE78A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 166EEC74236443A9000BE78A /* SafeUnarchiver */;
-			targetProxy = 166EEC912364452E000BE78A /* PBXContainerItemProxy */;
-		};
-		166EEC97236445DB000BE78A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 166EEC74236443A9000BE78A /* SafeUnarchiver */;
-			targetProxy = 166EEC96236445DB000BE78A /* PBXContainerItemProxy */;
 		};
 		168DFB1620B88559002C603D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2866,65 +2661,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		16118D10236476C100454326 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = SafeUnarchiver/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.SafeUnarchiverMac;
-				PRODUCT_NAME = SafeUnarchiver;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		16118D11236476C100454326 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = SafeUnarchiver/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.SafeUnarchiverMac;
-				PRODUCT_NAME = SafeUnarchiver;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		16118D262364775A00454326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AFE4D514CF4A82C62F09CE81 /* Pods-macOS-GladysFrameworkMac.debug.xcconfig */;
@@ -3149,63 +2885,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		166EEC7F236443A9000BE78A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = SafeUnarchiver/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.SafeUnarchiver;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		166EEC80236443A9000BE78A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = SafeUnarchiver/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.SafeUnarchiver;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -3791,15 +3470,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		16118D12236476C100454326 /* Build configuration list for PBXNativeTarget "SafeUnarchiverMac" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				16118D10236476C100454326 /* Debug */,
-				16118D11236476C100454326 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		16118D252364775A00454326 /* Build configuration list for PBXNativeTarget "GladysFrameworkMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3850,15 +3520,6 @@
 			buildConfigurations = (
 				1657B8BA1FD41C1C00EC480D /* Debug */,
 				1657B8BB1FD41C1C00EC480D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		166EEC7E236443A9000BE78A /* Build configuration list for PBXNativeTarget "SafeUnarchiver" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				166EEC7F236443A9000BE78A /* Debug */,
-				166EEC80236443A9000BE78A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -24,3 +24,11 @@ NSString *bundleId = @"build.bru.MacGladys.Framework";
 NSString *receiptId = @"build.bru.MacGladys";
 NSString *infiniteId = @"MACINFINITE";
 #endif
+
+@interface SafeArchiver: NSKeyedArchiver
++ (NSData *)archive:(id)object;
+@end
+
+@interface SafeUnarchiver: NSKeyedUnarchiver
++ (id)unarchive:(NSData *)data;
+@end

@@ -4,7 +4,7 @@ import WatchConnectivity
 import CloudKit
 import UIKit
 import MapKit
-import SafeUnarchiver
+import GladysFramework
 
 private class WatchDelegate: NSObject, WCSessionDelegate {
 

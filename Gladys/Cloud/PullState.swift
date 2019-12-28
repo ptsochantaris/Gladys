@@ -1,5 +1,5 @@
 import CloudKit
-import SafeUnarchiver
+import GladysFramework
 
 final class PullState {
 	var updatedSequence = false

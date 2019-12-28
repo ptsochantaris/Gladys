@@ -10,7 +10,6 @@ import Foundation
 import AVFoundation
 import Contacts
 import MapKit
-import SafeUnarchiver
 #if os(iOS)
 import UIKit
 import MobileCoreServices
