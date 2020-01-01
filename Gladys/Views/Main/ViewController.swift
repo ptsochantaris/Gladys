@@ -797,12 +797,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBAction private func sortAscendingButtonSelected() {
 		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
 		for sortOption in Model.SortOption.options {
-            a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
-                self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
-            })
 			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default) { _ in
 				self.sortRequested(sortOption, ascending: true, button: self.sortAscendingButton)
 			})
+            a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
+                self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
+            })
 		}
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
