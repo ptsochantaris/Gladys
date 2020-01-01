@@ -24,7 +24,7 @@ extension ArchivedDropItem {
 		return i
 	}
 
-	private func getPassword(from: UIViewController, title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?)->Void) {
+	private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?)->Void) {
 		let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		a.addTextField { textField in
 			textField.placeholder = "Password"
@@ -45,7 +45,7 @@ extension ArchivedDropItem {
 
 			let password = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 			if password.isEmpty {
-				self?.getPassword(from: from, title: title, action: action, requestHint: requestHint, message: message, completion: completion)
+				self?.getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
 			} else {
 				completion(password, hint)
 			}
@@ -53,17 +53,17 @@ extension ArchivedDropItem {
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { ac in
 			completion(nil, nil)
 		})
-		from.present(a, animated: true)
+        currentWindow?.alertPresenter?.present(a, animated: true)
 	}
 
-	func lock(from: UIViewController, completion: @escaping (Data?, String?)->Void) {
+	func lock(completion: @escaping (Data?, String?)->Void) {
 		let message: String
         if LocalAuth.canUseLocalAuth {
 			message = "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
 		} else {
 			message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
 		}
-		getPassword(from: from, title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
+		getPassword(title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
 			guard let password = password else {
 				completion(nil, nil)
 				return
@@ -74,7 +74,7 @@ extension ArchivedDropItem {
 	}
 
     private static var unlockingItemsBlock = Set<UUID>()
-	func unlock(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
+	func unlock(label: String, action: String, completion: @escaping (Bool)->Void) {
         if ArchivedDropItem.unlockingItemsBlock.contains(uuid) {
             return
         }
@@ -88,13 +88,13 @@ extension ArchivedDropItem {
                 self?.needsUnlock = false
                 completion(true)
             } else {
-                self?.unlockWithPassword(from: from, label: label, action: action, completion: completion)
+                self?.unlockWithPassword(label: label, action: action, completion: completion)
             }
         }
 	}
 
-	private func unlockWithPassword(from: UIViewController, label: String, action: String, completion: @escaping (Bool)->Void) {
-		getPassword(from: from, title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, hint in
+	private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool)->Void) {
+		getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, hint in
 			guard let password = password else {
 				completion(false)
 				return

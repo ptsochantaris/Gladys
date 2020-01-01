@@ -15,12 +15,7 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	@IBOutlet private weak var copyItemContainer: UIView!
 	@IBOutlet private weak var quickLookItemContainer: UIView!
 	@IBOutlet private weak var backgroundView: UIImageView!
-	@IBOutlet private weak var stackHolder: UIView!
-	@IBOutlet private weak var scrollView: UIScrollView!
-	@IBOutlet private var headers: [UILabel]!
-	@IBOutlet private var footers: [UILabel]!
-
-	var detailActivity: NSUserActivity?
+    
 	var sourceItem: ArchivedDropItem?
 
 	override func viewDidLoad() {
@@ -31,8 +26,10 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
         let style = INUIAddVoiceShortcutButtonStyle.black
 
 		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
-		if let detailActivity = detailActivity {
-			detailShortcutButton.shortcut = INShortcut(userActivity: detailActivity)
+		if let sourceItem = sourceItem {
+            let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
+            ArchivedDropItem.updateUserActivity(activity, from: sourceItem, child: nil, titled: "Info of")
+			detailShortcutButton.shortcut = INShortcut(userActivity: activity)
 		}
 		detailShortcutButton.place(in: openItemDetailContainer, buttonDelegate: self)
 
@@ -49,19 +46,11 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
 		}
 		quickLookShortcutButton.place(in: quickLookItemContainer, buttonDelegate: self)
-
-        stackHolder.layoutIfNeeded()
-		preferredContentSize = stackHolder.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .fittingSizeLevel)
+        
+		preferredContentSize = view.systemLayoutSizeFitting(CGSize(width: 240, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
 	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		if stackHolder.frame.height > view.bounds.height {
-			scrollView.flashScrollIndicators()
-		}
-	}
-
-	func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
+    
+    func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
 		addVoiceShortcutViewController.delegate = self
 		addVoiceShortcutViewController.modalPresentationStyle = .formSheet
 		addVoiceShortcutViewController.modalTransitionStyle = .crossDissolve

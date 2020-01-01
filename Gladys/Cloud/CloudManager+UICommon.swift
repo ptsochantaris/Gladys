@@ -763,7 +763,8 @@ extension CloudManager {
 			return
 		}
 		if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
-			genericAlert(title: "Could not accept shared item", message: "An item called \"\(existingItem.displayTitleOrUuid)\" already exists in your collection which has the same unique ID.\n\nPlease delete this version of the item if you want to accept this other version.")
+            let request = HighlightRequest(uuid: existingItem.uuid.uuidString)
+            NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			return
 		}
 		NotificationCenter.default.post(name: .AcceptStarting, object: nil)

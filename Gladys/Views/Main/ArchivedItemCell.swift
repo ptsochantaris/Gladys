@@ -1,8 +1,9 @@
 
 import UIKit
 import MapKit
+import CloudKit
 
-final class ArchivedItemCell: UICollectionViewCell {
+final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDelegate, UICloudSharingControllerDelegate {
     
 	@IBOutlet private weak var image: GladysImageView!
 	@IBOutlet private weak var bottomLabel: UILabel!
@@ -136,8 +137,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
                 holder.backgroundColor = container.backgroundColor
+                holder.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner]
 				holder.layer.cornerRadius = 20
-                holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
 				holder.addSubview(img)
                 container.addSubview(holder)
 
@@ -491,7 +492,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	/////////////////////////////////////////
+	// MARK - Menu
 
 	override func accessibilityActivate() -> Bool {
 		if shouldDisplayLoading {
@@ -550,9 +551,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 	private var shouldDisplayLoading: Bool {
 		return archivedDropItem?.shouldDisplayLoading ?? false
 	}
-}
-
-extension ArchivedItemCell: UIContextMenuInteractionDelegate {
+    
+    private func passwordUpdate(_ newPassword: Data?, hint: String?) {
+        guard let item = archivedDropItem else { return }
+        item.lockPassword = newPassword
+        if let hint = hint, !hint.isEmpty {
+            item.lockHint = hint
+        } else {
+            item.lockHint = nil
+        }
+        item.markUpdated()
+        item.postModified()
+        Model.save()
+    }
+    
     private func createShortcutActions() -> UIMenu? {
         guard let item = archivedDropItem else { return nil }
         
@@ -600,6 +612,54 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
             }
             }, style: [], iconName: "arrow.branch"))
         
+        if !item.isImportedShare {
+            if item.isLocked {
+                children.append(makeAction(title: "Remove Lock", callback: {
+                    item.unlock(label: "Remove Lock", action: "Remove") { [weak self] success in
+                        if success {
+                            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                            self?.passwordUpdate(nil, hint: nil)
+                        }
+                    }
+                }, style: [], iconName: "lock.slash"))
+            } else {
+                children.append(makeAction(title: "Add Lock", callback: {
+                    item.lock { [weak self] passwordData, passwordHint in
+                        if let d = passwordData {
+                            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                            self?.passwordUpdate(d, hint: passwordHint)
+                        }
+                    }
+                }, style: [], iconName: "lock"))
+            }
+        }
+
+        children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
+            DispatchQueue.main.async {
+                guard let master = (self?.window?.rootViewController as? UINavigationController)?.viewControllers.first else { return }
+                master.performSegue(withIdentifier: "toSiriShortcuts", sender: self)
+            }
+        }, style: [], iconName: "mic"))
+        
+        if CloudManager.syncSwitchedOn {
+            if item.shareMode == .none {
+                children.append(makeAction(title: "Collaborate", callback: { [weak self] in
+                    self?.addInvites()
+                }, style: [], iconName: "person.crop.circle.badge.plus"))
+                
+            } else {
+                children.append(makeAction(title: "Collaboration...", callback: { [weak self] in
+                    if item.isPrivateShareWithOnlyOwner {
+                        self?.shareOptionsPrivate()
+                    } else if item.isShareWithOnlyOwner {
+                        self?.shareOptionsPublic()
+                    } else {
+                        self?.editInvites()
+                    }
+                }, style: [], iconName: "person.crop.circle"))
+            }
+        }
+
         if let m = item.mostRelevantTypeItem {
             children.append(makeAction(title: "Share", callback: { [weak self] in
                 guard let s = self else { return }
@@ -645,13 +705,11 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         guard let item = archivedDropItem else { return nil }
         if item.needsUnlock {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
-                let unlockAction = UIAction(title: "Unlock") { [weak self] _ in
-                    if let presenter = self?.window?.alertPresenter {
-                        item.unlock(from: presenter, label: "Unlock Item", action: "Unlock") { success in
-                            if success {
-                                item.needsUnlock = false
-                                item.postModified()
-                            }
+                let unlockAction = UIAction(title: "Unlock") { _ in
+                    item.unlock(label: "Unlock Item", action: "Unlock") { success in
+                        if success {
+                            item.needsUnlock = false
+                            item.postModified()
                         }
                     }
                 }
@@ -677,5 +735,105 @@ extension ArchivedItemCell: UIContextMenuInteractionDelegate {
         }, actionProvider: { [weak self] _ in
             return self?.createShortcutActions()
         })
-    }    
+    }
+    
+    // MARK - Sharing
+    
+    func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+        guard let item = archivedDropItem else { return }
+        item.cloudKitShareRecord = csc.share
+        item.postModified()
+    }
+
+    func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+        guard let i = archivedDropItem else { return }
+        let wasImported = i.isImportedShare
+        i.cloudKitShareRecord = nil
+        if wasImported {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                Model.delete(items: [i])
+            }
+        } else {
+            i.postModified()
+        }
+    }
+
+    func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
+        var data: Data?
+        if let ip = archivedDropItem?.imagePath {
+            dataAccessQueue.sync {
+                data = try? Data(contentsOf: ip)
+            }
+        }
+        return data
+    }
+
+    private func shareOptionsPrivate() {
+        let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
+        a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
+            self?.editInvites()
+        })
+        a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
+            self?.deleteShare()
+        })
+        a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        window?.alertPresenter?.present(a, animated: true)
+        a.popoverPresentationController?.sourceView = self
+        a.popoverPresentationController?.sourceRect = self.bounds
+    }
+
+    private func shareOptionsPublic() {
+        let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
+        a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
+            self?.editInvites()
+        })
+        a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
+            self?.deleteShare()
+        })
+        a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        window?.alertPresenter?.present(a, animated: true)
+        a.popoverPresentationController?.sourceView = self
+        a.popoverPresentationController?.sourceRect = self.bounds
+    }
+
+    private func deleteShare() {
+        guard let item = archivedDropItem else { return }
+        //sender.isEnabled = false
+        CloudManager.deleteShare(item) { _ in
+            //sender.isEnabled = true
+        }
+    }
+    
+    private func addInvites() {
+        guard let item = archivedDropItem, let rootRecord = archivedDropItem?.cloudKitRecord else { return }
+
+        let cloudSharingController = UICloudSharingController { controller, completion in
+            CloudManager.share(item: item, rootRecord: rootRecord, completion: completion)
+        }
+        presentCloudController(cloudSharingController)
+    }
+
+    private func editInvites() {
+        guard let item = archivedDropItem, let shareRecord = item.cloudKitShareRecord else { return }
+        let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
+        presentCloudController(cloudSharingController)
+    }
+
+    private func presentCloudController(_ cloudSharingController: UICloudSharingController) {
+        cloudSharingController.delegate = self
+        cloudSharingController.view.tintColor = tintColor
+        window?.alertPresenter?.present(cloudSharingController, animated: true)
+        if let popover = cloudSharingController.popoverPresentationController {
+            popover.sourceView = self
+            popover.sourceRect = self.bounds
+        }
+    }
+
+    func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+        genericAlert(title: "Could not share this item", message: error.finalDescription)
+    }
+
+    func itemTitle(for csc: UICloudSharingController) -> String? {
+        return archivedDropItem?.trimmedSuggestedName
+    }
 }

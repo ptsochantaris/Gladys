@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreSpotlight
+import CloudKit
 
 extension UIWindow {
     var alertPresenter: UIViewController? {
@@ -336,6 +337,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if SceneDelegate.openCount != 1 && count == 1 {
             SceneDelegate.openCount = count
             NotificationCenter.default.post(name: .MultipleWindowModeChange, object: false)
+        }
+    }
+    
+    func windowScene(_ windowScene: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+        DispatchQueue.main.async { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
+            CloudManager.acceptShare(cloudKitShareMetadata)
         }
     }
 }

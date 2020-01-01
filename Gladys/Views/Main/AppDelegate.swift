@@ -17,9 +17,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.applicationIconBadgeNumber = 0
         Model.beginMonitoringChanges() // will reload data as well
 		PullState.checkMigrations()
-		if CloudManager.syncSwitchedOn {
-			UIApplication.shared.registerForRemoteNotifications()
-		}
 		CallbackSupport.setupCallbackSupport()
 		IAPManager.shared.start()
         Model.detectExternalChanges()
@@ -45,11 +42,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		CloudManager.received(notificationInfo: userInfo, fetchCompletionHandler: completionHandler)
-	}
-
-	func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-		DispatchQueue.main.async { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
-			CloudManager.acceptShare(cloudKitShareMetadata)
-		}
 	}
 }

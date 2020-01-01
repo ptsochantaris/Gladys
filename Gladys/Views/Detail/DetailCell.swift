@@ -1,7 +1,8 @@
 
 import UIKit
 
-final class DetailCell: UITableViewCell {
+final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
+        
 	@IBOutlet private weak var name: UILabel!
 	@IBOutlet private weak var size: UILabel!
 	@IBOutlet private weak var desc: UILabel!
@@ -61,6 +62,9 @@ final class DetailCell: UITableViewCell {
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
+                
+        let menu = UIContextMenuInteraction(delegate: self)
+        addInteraction(menu)
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
@@ -121,13 +125,20 @@ final class DetailCell: UITableViewCell {
         d.timeStyle = .short
         return d
     }()
+    
+    private weak var component: ArchivedDropItemType?
+    private weak var parent: DetailController?
 
-    func configure(with typeEntry: ArchivedDropItemType, showTypeDetails: Bool, darkMode: Bool) -> Bool {
+    func configure(with typeEntry: ArchivedDropItemType, showTypeDetails: Bool, parent: DetailController) -> Bool {
+        self.parent = parent
+        component = typeEntry
+
         imageHolder.image = nil
 
         var hasImage = false
         if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
             hasImage = true
+            let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
             icon.desaturated(darkMode: darkMode) { [weak self] img in
                 self?.imageHolder.image = img
             }
@@ -226,4 +237,33 @@ final class DetailCell: UITableViewCell {
 			return true
 		}
 	}
+        
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        if let v = interaction.view {
+            return UITargetedPreview(view: v)
+        } else {
+            return nil
+        }
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            var children = [
+                UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
+                    self?.component?.copyToPasteboard()
+                    genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                }
+            ]
+            
+            if self?.component?.parent?.shareMode != .elsewhereReadOnly {
+                children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                    if let s = self, let component = s.component, let p = s.parent {
+                        p.removeComponent(component)
+                    }
+                })
+            }
+            
+            return UIMenu(title: self?.component?.oneTitle ?? "", image: nil, identifier: nil, options: [], children: children)
+        }
+    }
 }

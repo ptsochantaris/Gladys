@@ -11,11 +11,11 @@ import CoreSpotlight
 
 extension ArchivedDropItem {
 
-	private static let mediumFormatter: DateFormatter = {
+	private static let dateFormatter: DateFormatter = {
 		let d = DateFormatter()
 		d.doesRelativeDateFormatting = true
-		d.dateStyle = .medium
-		d.timeStyle = .medium
+		d.dateStyle = .short
+		d.timeStyle = .short
 		return d
 	}()
 
@@ -78,7 +78,7 @@ extension ArchivedDropItem {
 	}
 
 	var addedString: String {
-		return ArchivedDropItem.mediumFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+		return ArchivedDropItem.dateFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}
 
 	var mostRelevantTypeItem: ArchivedDropItemType? {

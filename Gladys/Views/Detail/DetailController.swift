@@ -5,8 +5,7 @@ import MobileCoreServices
 
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate,
-	UICloudSharingControllerDelegate {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
 
 	var item: ArchivedDropItem!
 
@@ -14,15 +13,8 @@ final class DetailController: GladysViewController,
 
 	@IBOutlet private weak var table: UITableView!
 	@IBOutlet private weak var openButton: UIBarButtonItem!
-	@IBOutlet private weak var dateItem: UIBarButtonItem!
 	@IBOutlet private weak var dateLabel: UILabel!
 	@IBOutlet private weak var dateLabelHolder: UIView!
-	@IBOutlet private weak var deleteButton: UIBarButtonItem!
-	@IBOutlet private weak var copyButton: UIBarButtonItem!
-	@IBOutlet private weak var shareButton: UIBarButtonItem!
-	@IBOutlet private weak var lockButton: UIBarButtonItem!
-	@IBOutlet private weak var invitesButton: UIBarButtonItem?
-	@IBOutlet private weak var siriButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -37,22 +29,15 @@ final class DetailController: GladysViewController,
 		table.dropDelegate = self
 		table.dragInteractionEnabled = true
 
-		deleteButton.accessibilityLabel = "Delete item"
-		copyButton.accessibilityLabel = "Copy item to clipboard"
-		shareButton.accessibilityLabel = "Share"
-		siriButton.accessibilityLabel = "Siri shortcuts"
-		updateLockButton()
-		updateInviteButton()
-
 		openButton.isEnabled = item.canOpen
+        
+        let readWrite = item.shareMode != .elsewhereReadOnly
+        table.allowsSelection = readWrite
+        table.dragInteractionEnabled = readWrite
 
-		dateLabel.text = item.addedString
-		dateItem.customView = dateLabelHolder
+        dateLabel.text = readWrite ? item.addedString : "Read Only"
+        navigationItem.titleView = dateLabelHolder
 
-		if !CloudManager.syncSwitchedOn {
-			navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems?.filter { $0 != invitesButton }
-		}
-        		
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
@@ -62,17 +47,6 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
-
-	private func updateLockButton() {
-		if item.isLocked {
-			lockButton.accessibilityLabel = "Remove Lock"
-			lockButton.image = UIImage(systemName: "lock.fill")
-		} else {
-			lockButton.accessibilityLabel = "Lock Item"
-			lockButton.image = UIImage(systemName: "lock.open")
-		}
-		lockButton.isEnabled = !item.isImportedShare
-	}
     
     @objc private func dataUpdate(_ notification: Notification) {
         if let removedUUIDSs = (notification.object as? [AnyHashable: Any])?["removed"] as? [UUID], let uuid = item?.uuid, removedUUIDSs.contains(uuid) {
@@ -81,91 +55,6 @@ final class DetailController: GladysViewController,
             updateUI()
         }
     }
-
-	private func updateInviteButton() {
-		if let invitesButton = invitesButton {
-			invitesButton.isEnabled = CloudManager.syncSwitchedOn
-
-			switch item.shareMode {
-			case .none:
-				invitesButton.image = UIImage(systemName: "person.crop.circle.badge.plus")
-				invitesButton.accessibilityLabel = "Share With Others"
-                invitesButton.tintColor = UIColor(named: "colorTint")
-			case .elsewhereReadOnly, .elsewhereReadWrite:
-				invitesButton.image = UIImage(systemName: "person.crop.circle.fill.badge.checkmark")
-				invitesButton.accessibilityLabel = "Imported Share Options"
-                invitesButton.tintColor = UIColor(named: "colorGray")
-			case .sharing:
-				invitesButton.image = UIImage(systemName: "person.crop.circle.fill.badge.checkmark")
-				invitesButton.accessibilityLabel = "Exported Share Options"
-				invitesButton.tintColor = UIColor(named: "colorTint")
-			}
-		}
-
-		let readWrite = item.shareMode != .elsewhereReadOnly
-		table.allowsSelection = readWrite
-		table.dragInteractionEnabled = readWrite
-
-		title = readWrite ? nil : "Read Only"
-
-		var titleView: UILabel?
-		if let title = title {
-			titleView = navigationItem.titleView as? UILabel
-			if titleView == nil {
-				titleView = UILabel()
-				titleView!.font = UIFont.preferredFont(forTextStyle: .caption1)
-				titleView!.textColor = UIColor(named: "colorTint")
-			}
-			titleView!.text = title
-		}
-		navigationItem.titleView = titleView
-	}
-
-	@IBAction private func inviteButtonSelected(_ sender: UIBarButtonItem) {
-		if item.shareMode == .none {
-			addInvites(sender)
-		} else if item.isPrivateShareWithOnlyOwner {
-			shareOptionsPrivate(sender)
-		} else if item.isShareWithOnlyOwner {
-			shareOptionsPublic(sender)
-		} else {
-			editInvites(sender)
-		}
-	}
-
-	@IBAction private func lockButtonSelected(_ sender: UIBarButtonItem) {
-		if let p = presentedViewController {
-			p.dismiss(animated: false, completion: nil)
-		}
-		if item.isLocked {
-			item.unlock(from: self, label: "Remove Lock", action: "Remove") { [weak self] success in
-				if success, let s = self {
-					s.passwordUpdate(nil, hint: nil)
-				}
-			}
-		} else {
-			item.lock(from: self) { [weak self] passwordData, passwordHint in
-				if let d = passwordData, let s = self {
-					s.passwordUpdate(d, hint: passwordHint)
-				}
-			}
-		}
-	}
-
-	private func passwordUpdate(_ newPassword: Data?, hint: String?) {
-		item.lockPassword = newPassword
-		if let hint = hint, !hint.isEmpty {
-			item.lockHint = hint
-		} else {
-			item.lockHint = nil
-		}
-		updateLockButton()
-		updateInviteButton()
-		makeIndexAndSaveItem()
-		if item.needsUnlock {
-			done()
-		}
-	}
 
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
@@ -187,8 +76,6 @@ final class DetailController: GladysViewController,
 			done()
 		} else {
 			table.reloadData()
-			updateLockButton()
-			updateInviteButton()
 			sizeWindow()
 		}
 	}
@@ -257,61 +144,12 @@ final class DetailController: GladysViewController,
         }
 	}
 
-	override var keyCommands: [UIKeyCommand]? {
-		var a = super.keyCommands ?? []
-        let c = UIKeyCommand.makeCommand(input: "c", modifierFlags: .command, action: #selector(copyPressed), title: "Copy Item to Clipboard")
-        a.append(c)
-		return a
-	}
-
-	@objc private func copyPressed() {
-		copySelected(copyButton)
-	}
-
-	@IBAction private func shareSelected(_ sender: UIBarButtonItem) {
-		if let p = presentedViewController {
-			p.dismiss(animated: false, completion: nil)
-		}
-        guard let m = item.mostRelevantTypeItem else { return }
-		let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
-		present(a, animated: true)
-        a.popoverPresentationController?.barButtonItem = sender
-	}
-
-	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
-		item.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-	}
-
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
 		item.tryOpen(in: navigationController!) { shouldClose in
 			if shouldClose {
 				self.done()
 			}
 		}
-	}
-
-	@IBAction private func deleteSelected(_ sender: UIBarButtonItem) {
-		if let p = presentedViewController {
-			p.dismiss(animated: false, completion: nil)
-		}
-		var title, message: String?
-		if item.shareMode == .sharing {
-			title = "You are sharing this item"
-			message = "Deleting it will remove it from others' collections too."
-		}
-		let a = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Delete Item", style: .destructive) { action in
-			self.done()
-			if let item = self.item {
-				DispatchQueue.main.async {
-                    Model.delete(items: [item])
-				}
-			}
-		})
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(a, animated: true)
-        a.popoverPresentationController?.barButtonItem = sender
 	}
     
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -388,21 +226,13 @@ final class DetailController: GladysViewController,
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 			let typeEntry = item.typeItems[indexPath.row]
-            if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, darkMode: darkMode) {
+            if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, parent: self) {
                 setCallbacks(for: cell, for: typeEntry)
             }
 			return cell
 		}
 	}
-    
-    private lazy var darkMode = {
-        view.traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
-    }()
-
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        darkMode = newCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
-    }
-    
+        
 	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
 		if component.isPlist {
 			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
@@ -493,68 +323,40 @@ final class DetailController: GladysViewController,
 			}
 		}
 	}
-
-	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		if indexPath.section != 3 { return UISwipeActionsConfiguration(actions: []) }
-		let copy = UIContextualAction(style: .normal, title: "Copy") { [weak self] action, view, handler in
-			self?.copyRowSelected(at: indexPath)
-			handler(true)
-		}
-		return UISwipeActionsConfiguration(actions: [copy])
-	}
-
-	func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		if indexPath.section < 2 { return UISwipeActionsConfiguration(actions: []) }
-		if indexPath.section == 2 && indexPath.row == item.labels.count { return UISwipeActionsConfiguration(actions: []) }
-		if item.shareMode == .elsewhereReadOnly { return UISwipeActionsConfiguration(actions: []) }
-		let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, handler in
-			let ok = self?.deleteRowSelected(at: indexPath) ?? false
-			handler(ok)
-		}
-		return UISwipeActionsConfiguration(actions: [delete])
-	}
+    
+    private func blockedDueToSync() -> Bool {
+        if CloudManager.syncing || item.needsReIngest || item.isTransferring {
+            genericAlert(title: "Syncing", message: "Please try again in a moment.", buttonTitle: nil)
+            return true
+        }
+        return false
+    }
 
 	private func deleteRowSelected(at indexPath: IndexPath) -> Bool {
-		if CloudManager.syncing || item.needsReIngest || item.isTransferring {
-			genericAlert(title: "Syncing", message: "Please try again in a moment.", buttonTitle: nil)
-			return false
-		}
+        if blockedDueToSync() {
+            return false
+        }
 		table.performBatchUpdates({
-			if indexPath.section == 2 {
-				self.removeLabel(at: indexPath)
-			} else {
-				self.removeTypeItem(at: indexPath)
-			}
+            item.labels.remove(at: indexPath.row)
+            table.deleteRows(at: [indexPath], with: .automatic)
 		}, completion: { _ in
-			self.sizeWindow()
+            self.makeIndexAndSaveItem()
 			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
 		})
 		return true
 	}
 
-	private func copyRowSelected(at indexPath: IndexPath) {
-		let typeItem = item.typeItems[indexPath.row]
-		typeItem.copyToPasteboard()
-		genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-	}
-
-	private func removeLabel(at indexPath: IndexPath) {
+	func removeComponent(_ component: ArchivedDropItemType) {
+        guard !blockedDueToSync(), let index = item.typeItems.firstIndex(of: component) else {
+            return
+        }
         table.performBatchUpdates({
-            item.labels.remove(at: indexPath.row)
-            table.deleteRows(at: [indexPath], with: .automatic)
-        }, completion: { _ in
-            self.makeIndexAndSaveItem()
-        })
-	}
-
-	private func removeTypeItem(at indexPath: IndexPath) {
-		let typeItem = item.typeItems[indexPath.row]
-        typeItem.deleteFromStorage()
-        table.performBatchUpdates({
-            item.typeItems.remove(at: indexPath.row)
-            if item.typeItems.count == 0 {
+            component.deleteFromStorage()
+            item.typeItems.remove(at: index)
+            if item.typeItems.isEmpty {
                 table.deleteSections(IndexSet(integer: 3), with: .automatic)
             } else {
+                let indexPath = IndexPath(row: index, section: 3)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
             item.renumberTypeItems()
@@ -562,13 +364,6 @@ final class DetailController: GladysViewController,
         }, completion: { _ in
             self.makeIndexAndSaveItem()
         })
-	}
-
-	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-		if identifier == "toSiriShortcuts" {
-			return view.endEditing(false)
-		}
-		return true
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -597,15 +392,6 @@ final class DetailController: GladysViewController,
 
 			e.title = typeEntry.trimmedName
 			e.propertyList = propertyList
-
-		} else if segue.identifier == "toSiriShortcuts" {
-            if let d = segue.destination as? SiriShortcutsViewController {
-                d.detailActivity = userActivity
-                d.sourceItem = item
-                if let p = d.popoverPresentationController {
-                    p.delegate = self
-                }
-            }
 
 		} else if segue.identifier == "addLabel",
 			let indexPath = sender as? IndexPath,
@@ -937,104 +723,5 @@ final class DetailController: GladysViewController,
 	func textEditControllerMadeChanges(_ textEditController: TextEditController) {
 		guard let component = textEditController.typeEntry else { return }
 		refreshComponent(component)
-	}
-
-	//////////////////////////////// Sharing
-
-	private func addInvites(_ sender: Any) {
-		guard let barButtonItem = sender as? UIBarButtonItem, let rootRecord = item.cloudKitRecord else { return }
-
-		let cloudSharingController = UICloudSharingController { [weak self] (controller, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-			guard let s = self else { return }
-			CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
-		}
-		presentCloudController(cloudSharingController, from: barButtonItem)
-	}
-
-	private func editInvites(_ sender: Any) {
-		guard let barButtonItem = sender as? UIBarButtonItem, let shareRecord = item.cloudKitShareRecord else { return }
-		let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
-		presentCloudController(cloudSharingController, from: barButtonItem)
-	}
-
-	private func presentCloudController(_ cloudSharingController: UICloudSharingController, from barButtonItem: UIBarButtonItem) {
-		if let popover = cloudSharingController.popoverPresentationController {
-			popover.barButtonItem = barButtonItem
-		}
-		cloudSharingController.delegate = self
-		present(cloudSharingController, animated: true)
-	}
-
-	func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-		genericAlert(title: "Could not share this item", message: error.finalDescription)
-	}
-
-	func itemTitle(for csc: UICloudSharingController) -> String? {
-		return item.trimmedSuggestedName
-	}
-
-	func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
-		item.cloudKitShareRecord = csc.share
-		item.postModified()
-		updateInviteButton()
-	}
-
-	func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
-		guard let i = item else { return }
-		let wasImported = i.isImportedShare
-		i.cloudKitShareRecord = nil
-		updateInviteButton()
-		if wasImported {
-			DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-				self?.done()
-                Model.delete(items: [i])
-			}
-		} else {
-			item.postModified()
-			updateInviteButton()
-		}
-	}
-
-	func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
-		var data: Data?
-		if let ip = item.imagePath {
-			dataAccessQueue.sync {
-				data = try? Data(contentsOf: ip)
-			}
-		}
-		return data
-	}
-
-	private func shareOptionsPrivate(_ sender: UIBarButtonItem) {
-		let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
-			self?.editInvites(sender)
-		})
-		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
-			self?.deleteShare(sender)
-		})
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(a, animated: true)
-		a.popoverPresentationController?.barButtonItem = sender
-	}
-
-	private func shareOptionsPublic(_ sender: UIBarButtonItem) {
-		let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
-			self?.editInvites(sender)
-		})
-		a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { [weak self] _ in
-			self?.deleteShare(sender)
-		})
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(a, animated: true)
-		a.popoverPresentationController?.barButtonItem = sender
-	}
-
-	private func deleteShare(_ sender: UIBarButtonItem) {
-		sender.isEnabled = false
-		CloudManager.deleteShare(item) { _ in
-			sender.isEnabled = true
-		}
 	}
 }

@@ -376,7 +376,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 					self?.setEditing(false, animated: true)
 				}
 			}
-
+            
+        case "toSiriShortcuts":
+            guard let d = segue.destination as? SiriShortcutsViewController,
+                let cell = sender as? ArchivedItemCell,
+                let item = cell.archivedDropItem
+                else { return }
+            
+            d.sourceItem = item
+            if let p = d.popoverPresentationController {
+                p.sourceView = cell
+                p.delegate = self
+            }
+        
 		default: break
 		}
 	}
@@ -422,12 +434,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		} else if item.needsUnlock {
 			mostRecentIndexPathActioned = indexPath
-            if let presenter = view.window?.alertPresenter {
-                item.unlock(from: presenter, label: "Unlock Item", action: "Unlock") { success in
-                    if success {
-                        item.needsUnlock = false
-                        item.postModified()
-                    }
+            item.unlock(label: "Unlock Item", action: "Unlock") { success in
+                if success {
+                    item.needsUnlock = false
+                    item.postModified()
                 }
             }
             
