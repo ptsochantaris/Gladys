@@ -171,25 +171,25 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 			readOnlyLabel.isHidden = true
             if #available(OSX 10.14, *) {
                 inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
-                inviteButton.contentTintColor = NSColor.systemGray
+                inviteButton.contentTintColor = .systemGray
             } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd").template(with: NSColor.systemGray)
+                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd").template(with: .systemGray)
             }
 		case .elsewhereReadOnly:
 			readOnlyLabel.isHidden = false
             if #available(OSX 10.14, *) {
                 inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-                inviteButton.contentTintColor = NSColor.systemGray
+                inviteButton.contentTintColor = .systemGray
             } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.systemGray)
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: .systemGray)
             }
 		case .elsewhereReadWrite:
 			readOnlyLabel.isHidden = true
             if #available(OSX 10.14, *) {
                 inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-                inviteButton.contentTintColor = NSColor.systemGray
+                inviteButton.contentTintColor = .systemGray
             } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor.systemGray)
+                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: .systemGray)
             }
 		case .sharing:
 			readOnlyLabel.isHidden = true

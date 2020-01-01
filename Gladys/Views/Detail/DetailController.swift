@@ -313,7 +313,7 @@ final class DetailController: GladysViewController,
 		present(a, animated: true)
         a.popoverPresentationController?.barButtonItem = sender
 	}
-
+    
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 2 {
 			return item.labels.count + 1

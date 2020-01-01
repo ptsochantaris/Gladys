@@ -24,7 +24,7 @@ final class LabelCell: UITableViewCell {
             labelText.text = label ?? "Add…"
             labelText.textColor = label == nil
                 ? selectedBackgroundView?.backgroundColor?.withAlphaComponent(0.8)
-                : .secondaryLabel
+                : UIColor(named: "colorComponentLabel")
         }
     }
     
