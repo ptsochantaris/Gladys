@@ -8,15 +8,20 @@
 
 import UIKit
 
-final class LabelCell: UITableViewCell {
+final class LabelCell: UITableViewCell, UIContextMenuInteractionDelegate {
 	
 	@IBOutlet private weak var labelText: UILabel!
+    
+    weak var parent: DetailController?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         let b = UIView()
         b.backgroundColor = UIColor(named: "colorTint")?.withAlphaComponent(0.1)
         selectedBackgroundView = b
+        
+        let contextMenu = UIContextMenuInteraction(delegate: self)
+        addInteraction(contextMenu)
     }
     
     var label: String? {
@@ -50,4 +55,25 @@ final class LabelCell: UITableViewCell {
 			return true
 		}
 	}
+        
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            guard let text = self?.label else { return nil }
+            
+            var children = [
+                UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
+                    UIPasteboard.general.string = text
+                    genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                }
+            ]
+            
+            if let p = self?.parent, p.isReadWrite {
+                children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                    p.removeLabel(text)
+                })
+            }
+            
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+        }
+    }
 }

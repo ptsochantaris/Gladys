@@ -21,6 +21,8 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	var resizeCallback: ((CGRect?, Bool)->Void)?
 
 	override func awakeFromNib() {
+        super.awakeFromNib()
+        label.textContainerInset = .zero
 		label.addObserver(self, forKeyPath: "selectedTextRange", options: .new, context: nil)
 	}
 

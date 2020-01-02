@@ -34,8 +34,8 @@ final class DetailController: GladysViewController,
         dateLabel.text = item.addedString
         navigationItem.titleView = dateLabelHolder
         
-        checkSharing()
-        
+        isReadWrite = item.shareMode != .elsewhereReadOnly
+
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
@@ -73,20 +73,21 @@ final class DetailController: GladysViewController,
 		if item == nil {
 			done()
 		} else {
-            checkSharing()
+            isReadWrite = item.shareMode != .elsewhereReadOnly
 			table.reloadData()
 			sizeWindow()
 		}
 	}
     
-    private func checkSharing() {
-        let readWrite = item.shareMode != .elsewhereReadOnly
-        table.allowsSelection = readWrite
-        table.dragInteractionEnabled = readWrite
-        navigationController?.isToolbarHidden = readWrite
-        hidesBottomBarWhenPushed = readWrite
+    var isReadWrite: Bool = false {
+        didSet {
+            table.allowsSelection = isReadWrite
+            table.dragInteractionEnabled = isReadWrite
+            navigationController?.isToolbarHidden = isReadWrite
+            hidesBottomBarWhenPushed = isReadWrite
+        }
     }
-
+    
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)
@@ -142,7 +143,7 @@ final class DetailController: GladysViewController,
 		//log("set preferred size to \(preferredSize)")
 		preferredContentSize = preferredSize
 	}
-
+    
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
         if !firstAppearance {
@@ -160,27 +161,24 @@ final class DetailController: GladysViewController,
 	}
     
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if section == 2 {
-			return item.labels.count + 1
-		}
-		if section == 3 {
-			return item.typeItems.count
-		}
-		return 1
+        switch section {
+        case 0: return 2
+        case 1: return item.labels.count + 1
+        case 2: return item.typeItems.count
+        default: return 0 // WTF :)
+        }
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-        return (item.typeItems.isEmpty ? 0 : 1) + 3
+        return item.typeItems.isEmpty ? 2 : 3
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if section < 2 {
-			return nil
-		} else if section == 2 {
-			return "Labels"
-		} else {
-			return "Components"
-		}
+        switch section {
+        case 1: return "Labels"
+        case 2: return "Components"
+        default: return nil
+        }
 	}
     
 	private func cellNeedsResize(caretRect: CGRect?, section: Int, heightChange: Bool) {
@@ -203,25 +201,27 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		if indexPath.section == 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
-			cell.item = item
-			cell.isUserInteractionEnabled = item.shareMode != .elsewhereReadOnly
-			cell.resizeCallback = { [weak self] caretRect, heightChange in
-				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
-			}
-			return cell
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
+                cell.item = item
+                cell.isUserInteractionEnabled = isReadWrite
+                cell.resizeCallback = { [weak self] caretRect, heightChange in
+                    self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
+                cell.item = item
+                cell.isUserInteractionEnabled = isReadWrite
+                cell.resizeCallback = { [weak self] caretRect, heightChange in
+                    self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
+                }
+                return cell
+            }
 
-		} else if indexPath.section == 1 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
-			cell.item = item
-			cell.isUserInteractionEnabled = item.shareMode != .elsewhereReadOnly
-			cell.resizeCallback = { [weak self] caretRect, heightChange in
-				self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
-			}
-			return cell
-
-		} else if indexPath.section == 2 {
+        } else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "LabelCell", for: indexPath) as! LabelCell
+            cell.parent = self
 			if indexPath.row < item.labels.count {
 				cell.label = item.labels[indexPath.row]
 			} else {
@@ -230,7 +230,6 @@ final class DetailController: GladysViewController,
 			return cell
 
 		} else {
-
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
 			let typeEntry = item.typeItems[indexPath.row]
             if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, parent: self) {
@@ -268,10 +267,8 @@ final class DetailController: GladysViewController,
 			}
 		}
 
-		let readWrite = item.shareMode != .elsewhereReadOnly
-
 		let itemURL = typeEntry.encodedUrl
-		if readWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
+		if isReadWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
 			cell.archiveCallback = { [weak self, weak cell] in
 				if let s = self, let c = cell {
 					s.archiveWebComponent(cell: c, url: i as URL)
@@ -281,11 +278,11 @@ final class DetailController: GladysViewController,
 			cell.archiveCallback = nil
 		}
 
-		if readWrite, itemURL != nil {
+		if isReadWrite, itemURL != nil {
 			cell.editCallback = { [weak self] in
 				self?.editURL(typeEntry, existingEdit: nil)
 			}
-		} else if readWrite, typeEntry.isText {
+		} else if isReadWrite, typeEntry.isText {
 			cell.editCallback = { [weak self] in
 				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
 			}
@@ -339,19 +336,19 @@ final class DetailController: GladysViewController,
         return false
     }
 
-	private func deleteRowSelected(at indexPath: IndexPath) -> Bool {
-        if blockedDueToSync() {
-            return false
+    func removeLabel(_ label: String) {
+        guard !blockedDueToSync(), let index = item.labels.firstIndex(of: label) else {
+            return
         }
-		table.performBatchUpdates({
-            item.labels.remove(at: indexPath.row)
+        table.performBatchUpdates({
+            item.labels.remove(at: index)
+            let indexPath = IndexPath(row: index, section: 1)
             table.deleteRows(at: [indexPath], with: .automatic)
-		}, completion: { _ in
+        }, completion: { _ in
             self.makeIndexAndSaveItem()
-			UIAccessibility.post(notification: .layoutChanged, argument: self.table)
-		})
-		return true
-	}
+            UIAccessibility.post(notification: .layoutChanged, argument: self.table)
+        })
+    }
 
 	func removeComponent(_ component: ArchivedDropItemType) {
         guard !blockedDueToSync(), let index = item.typeItems.firstIndex(of: component) else {
@@ -361,9 +358,9 @@ final class DetailController: GladysViewController,
             component.deleteFromStorage()
             item.typeItems.remove(at: index)
             if item.typeItems.isEmpty {
-                table.deleteSections(IndexSet(integer: 3), with: .automatic)
+                table.deleteSections(IndexSet(integer: 2), with: .automatic)
             } else {
-                let indexPath = IndexPath(row: index, section: 3)
+                let indexPath = IndexPath(row: index, section: 2)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
             item.renumberTypeItems()
@@ -424,13 +421,10 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section == 0 {
-			return 17
-        } else if section == 1 {
-            return 16
-		} else {
-			return 44
-		}
+        switch section {
+        case 0: return 16
+        default: return 44
+        }
 	}
 
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -442,31 +436,33 @@ final class DetailController: GladysViewController,
 	}
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		if indexPath.section < 2 {
-			return []
-		} else if indexPath.section == 2 {
-			if let i = item.dragItem(forLabelIndex: indexPath.row) {
-				session.localContext = "label"
-				return [i]
-			} else {
-				return []
-			}
-		} else {
-			let typeItem = item.typeItems[indexPath.row]
-			session.localContext = "typeItem"
-			return [typeItem.dragItem]
-		}
+        switch indexPath.section {
+        case 1:
+            if let i = item.dragItem(forLabelIndex: indexPath.row) {
+                session.localContext = "label"
+                return [i]
+            } else {
+                return []
+            }
+            
+        case 2:
+            let typeItem = item.typeItems[indexPath.row]
+            session.localContext = "typeItem"
+            return [typeItem.dragItem]
+            
+        default: return []
+        }
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
-		if let d = destinationIndexPath, let s = session.localDragSession, item.shareMode != .elsewhereReadOnly && !item.shouldDisplayLoading {
-			if d.section == 2, d.row < item.labels.count, s.canLoadObjects(ofClass: String.self) {
+		if let d = destinationIndexPath, let s = session.localDragSession, isReadWrite && !item.shouldDisplayLoading {
+			if d.section == 1, d.row < item.labels.count, s.canLoadObjects(ofClass: String.self) {
 				if let simpleString = s.items.first?.localObject as? String, item.labels.contains(simpleString) {
 					return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
 				}
 				return UITableViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 			}
-			if d.section == 3, let candidate = s.items.first?.localObject as? ArchivedDropItemType {
+			if d.section == 2, let candidate = s.items.first?.localObject as? ArchivedDropItemType {
 				let operationType: UIDropOperation = item.typeItems.contains(candidate) ? .move : .copy
 				return UITableViewDropProposal(operation: operationType, intent: .insertAtDestinationIndexPath)
 			}
@@ -512,9 +508,9 @@ final class DetailController: GladysViewController,
 
 			if let previousIndex = coordinatorItem.sourceIndexPath { // from this table
 
-				if destinationIndexPath.section == 2 {
+				if destinationIndexPath.section == 1 {
 					let existingLabel = localObject as? String
-					if previousIndex.section == 2 {
+					if previousIndex.section == 1 {
 						tableView.performBatchUpdates({
                             item.labels.remove(at: previousIndex.row)
                             item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
@@ -543,7 +539,7 @@ final class DetailController: GladysViewController,
 						makeIndexAndSaveItem()
 					}
 
-				} else if destinationIndexPath.section == 3, previousIndex.section == 3 {
+				} else if destinationIndexPath.section == 2, previousIndex.section == 2 {
 
 					// moving internal type item
 					let destinationIndex = destinationIndexPath.row
@@ -559,7 +555,7 @@ final class DetailController: GladysViewController,
 				}
 
 			} else if let candidate = dragItem.localObject as? ArchivedDropItemType {
-				if destinationIndexPath.section == 2 {
+				if destinationIndexPath.section == 1 {
 					// dropping external type item into labels
 					if let text = candidate.displayTitle {
 						tableView.performBatchUpdates({
@@ -570,7 +566,7 @@ final class DetailController: GladysViewController,
 						})
 					}
 
-				} else if destinationIndexPath.section == 3 {
+				} else if destinationIndexPath.section == 2 {
 					// dropping external type item into type items
 					tableView.performBatchUpdates({
                         let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
@@ -606,12 +602,12 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		view.endEditing(false)
 
-		if indexPath.section == 3 {
+		if indexPath.section == 2 {
 			showTypeDetails = !showTypeDetails
 			table.reloadData()
 		}
 
-		guard indexPath.section == 2 else {
+		guard indexPath.section == 1 else {
 			tableView.deselectRow(at: indexPath, animated: false)
 			return
 		}
@@ -720,9 +716,9 @@ final class DetailController: GladysViewController,
 
 	private func refreshComponent(_ component: ArchivedDropItemType) {
 		if let indexOfComponent = item.typeItems.firstIndex(of: component) {
-			let totalRows = tableView(table, numberOfRowsInSection: 3)
+			let totalRows = tableView(table, numberOfRowsInSection: 2)
 			if indexOfComponent >= totalRows { return }
-			let ip = IndexPath(row: indexOfComponent, section: 3)
+			let ip = IndexPath(row: indexOfComponent, section: 2)
 			table.reloadRows(at: [ip], with: .none)
 		}
 	}

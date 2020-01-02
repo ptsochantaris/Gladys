@@ -17,6 +17,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	var resizeCallback: ((CGRect?, Bool)->Void)?
 
 	override func awakeFromNib() {
+        super.awakeFromNib()
+        textView.textContainerInset = .zero
+
 		let c = UIColor(named: "colorTint")
 		textView.textColor = c
 		placeholder.textColor = c

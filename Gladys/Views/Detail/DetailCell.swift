@@ -237,14 +237,6 @@ final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
 			return true
 		}
 	}
-        
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        if let v = interaction.view {
-            return UITargetedPreview(view: v)
-        } else {
-            return nil
-        }
-    }
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in

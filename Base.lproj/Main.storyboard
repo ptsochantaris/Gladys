@@ -1848,7 +1848,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" text="Title text" textAlignment="center" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1hY-R9-9dr">
-                                                    <rect key="frame" x="15" y="0.0" width="260" height="80"/>
+                                                    <rect key="frame" x="15" y="11" width="260" height="58"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1859,10 +1859,10 @@ Selecting them will show only items that contain these labels.</string>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="1hY-R9-9dr" secondAttribute="bottom" id="1DJ-gq-5oH"/>
-                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="top" secondItem="2po-Br-7Vd" secondAttribute="top" id="aH9-bv-R2a"/>
-                                                <constraint firstAttribute="trailing" secondItem="1hY-R9-9dr" secondAttribute="trailing" constant="15" id="hTP-YF-VvG"/>
-                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leading" constant="15" id="mAJ-2f-oGX"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1hY-R9-9dr" secondAttribute="bottom" id="1DJ-gq-5oH"/>
+                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="top" secondItem="2po-Br-7Vd" secondAttribute="topMargin" id="aH9-bv-R2a"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1hY-R9-9dr" secondAttribute="trailing" id="hTP-YF-VvG"/>
+                                                <constraint firstItem="1hY-R9-9dr" firstAttribute="leading" secondItem="2po-Br-7Vd" secondAttribute="leadingMargin" id="mAJ-2f-oGX"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="quaternarySystemFillColor" red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1878,7 +1878,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" text="Notes text" textAlignment="center" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crv-5h-2hZ">
-                                                    <rect key="frame" x="15" y="0.0" width="260" height="80"/>
+                                                    <rect key="frame" x="15" y="11" width="260" height="58"/>
                                                     <color key="textColor" name="colorTint"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1896,11 +1896,11 @@ Selecting them will show only items that contain these labels.</string>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="ORD-vD-01W" firstAttribute="centerX" secondItem="lkd-RA-F4O" secondAttribute="centerX" id="EJc-5u-vls"/>
-                                                <constraint firstAttribute="trailing" secondItem="crv-5h-2hZ" secondAttribute="trailing" constant="15" id="LfU-nc-u10"/>
-                                                <constraint firstAttribute="bottom" secondItem="crv-5h-2hZ" secondAttribute="bottom" id="UF8-QU-ud3"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="crv-5h-2hZ" secondAttribute="trailing" id="LfU-nc-u10"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="crv-5h-2hZ" secondAttribute="bottom" id="UF8-QU-ud3"/>
                                                 <constraint firstItem="ORD-vD-01W" firstAttribute="centerY" secondItem="lkd-RA-F4O" secondAttribute="centerY" id="W1N-Kh-epj"/>
-                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="leading" secondItem="lkd-RA-F4O" secondAttribute="leading" constant="15" id="e8l-qL-odU"/>
-                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="top" secondItem="lkd-RA-F4O" secondAttribute="top" id="hoA-9d-Zzv"/>
+                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="leading" secondItem="lkd-RA-F4O" secondAttribute="leadingMargin" id="e8l-qL-odU"/>
+                                                <constraint firstItem="crv-5h-2hZ" firstAttribute="top" secondItem="lkd-RA-F4O" secondAttribute="topMargin" id="hoA-9d-Zzv"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="quaternarySystemFillColor" red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1909,15 +1909,15 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="textView" destination="crv-5h-2hZ" id="hgE-Ob-kH8"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" rowHeight="60" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="15" y="215.5" width="290" height="60"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
+                                        <rect key="frame" x="15" y="215.5" width="290" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ksg-vx-bYr" id="gmt-hK-Po0">
-                                            <rect key="frame" x="0.0" y="0.0" width="290" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="290" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FVY-cq-wvt">
-                                                    <rect key="frame" x="15" y="11" width="260" height="38"/>
+                                                    <rect key="frame" x="15" y="11" width="260" height="58"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <color key="highlightedColor" name="colorTint"/>
@@ -1930,7 +1930,6 @@ Selecting them will show only items that contain these labels.</string>
                                                 <constraint firstAttribute="bottomMargin" secondItem="FVY-cq-wvt" secondAttribute="bottom" id="Hbv-Kp-oyU"/>
                                                 <constraint firstItem="FVY-cq-wvt" firstAttribute="leading" secondItem="gmt-hK-Po0" secondAttribute="leadingMargin" id="Opq-F1-2ym"/>
                                             </constraints>
-                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="quaternarySystemFillColor" red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
@@ -1938,7 +1937,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="15" y="275.5" width="290" height="225"/>
+                                        <rect key="frame" x="15" y="295.5" width="290" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
                                             <rect key="frame" x="0.0" y="0.0" width="290" height="225"/>
