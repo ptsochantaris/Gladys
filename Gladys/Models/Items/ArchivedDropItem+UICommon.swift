@@ -78,7 +78,7 @@ extension ArchivedDropItem {
 	}
 
 	var addedString: String {
-		return ArchivedDropItem.dateFormatter.string(from: createdAt) + "\n" + diskSizeFormatter.string(fromByteCount: sizeInBytes)
+		return diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + ArchivedDropItem.dateFormatter.string(from: createdAt)
 	}
 
 	var mostRelevantTypeItem: ArchivedDropItemType? {

@@ -1830,7 +1830,7 @@ Selecting them will show only items that contain these labels.</string>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
             <objects>
-                <viewController storyboardIdentifier="DetailContentController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailContentController" automaticallyAdjustsScrollViewInsets="NO" id="Ftr-GB-y6U" customClass="DetailController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o6P-jX-a91" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2103,7 +2103,11 @@ Selecting them will show only items that contain these labels.</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kBf-EA-UxQ"/>
                     </view>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem systemItem="flexibleSpace" id="ISD-pz-o7l"/>
+                        <barButtonItem enabled="NO" title="Item is Read Only" id="Esa-ao-y20"/>
+                        <barButtonItem systemItem="flexibleSpace" id="UkM-JP-kyv"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="NnH-CH-Cw9">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Open" id="qFs-2B-sKz">

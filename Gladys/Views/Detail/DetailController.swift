@@ -31,13 +31,11 @@ final class DetailController: GladysViewController,
 
 		openButton.isEnabled = item.canOpen
         
-        let readWrite = item.shareMode != .elsewhereReadOnly
-        table.allowsSelection = readWrite
-        table.dragInteractionEnabled = readWrite
-
-        dateLabel.text = readWrite ? item.addedString : "Read Only"
+        dateLabel.text = item.addedString
         navigationItem.titleView = dateLabelHolder
-
+        
+        checkSharing()
+        
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
 
 		let n = NotificationCenter.default
@@ -69,16 +67,25 @@ final class DetailController: GladysViewController,
 			done()
 			return
 		}
-
+        
 		// second pass, ensure item is fresh
 		item = Model.item(uuid: item.uuid)
 		if item == nil {
 			done()
 		} else {
+            checkSharing()
 			table.reloadData()
 			sizeWindow()
 		}
 	}
+    
+    private func checkSharing() {
+        let readWrite = item.shareMode != .elsewhereReadOnly
+        table.allowsSelection = readWrite
+        table.dragInteractionEnabled = readWrite
+        navigationController?.isToolbarHidden = readWrite
+        hidesBottomBarWhenPushed = readWrite
+    }
 
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
