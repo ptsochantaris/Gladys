@@ -429,7 +429,7 @@ final class DetailController: GladysViewController,
         } else if section == 1 {
             return 16
 		} else {
-			return 48
+			return 44
 		}
 	}
 
