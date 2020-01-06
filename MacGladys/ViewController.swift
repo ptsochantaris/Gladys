@@ -699,7 +699,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     private func modelDataUpdate(_ notification: Notification) {
         let parameters = notification.object as? [AnyHashable: Any]
-        let savedUUIDs = parameters?["updated"] as? [UUID] ?? [UUID]()
+        let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
         let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
 
         var removedItems = false

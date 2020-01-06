@@ -70,8 +70,7 @@ extension Model {
 
 			let dataPath = url.appendingPathComponent(uuid)
 			if let data = try? Data(contentsOf: dataPath) {
-				let jsonDecoder = JSONDecoder()
-				item = try? jsonDecoder.decode(ArchivedDropItem.self, from: data)
+				item = try? loadDecoder.decode(ArchivedDropItem.self, from: data)
 			}
 		}
 
@@ -117,7 +116,6 @@ extension Model {
 			}
 
 			do {
-				let jsonDecoder = JSONDecoder()
 				let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
 				var c = 0
 				var go = true
@@ -128,7 +126,7 @@ extension Model {
 											d[c+12], d[c+13], d[c+14], d[c+15]))
 						c += 16
 						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? jsonDecoder.decode(ArchivedDropItem.self, from: data) {
+						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedDropItem.self, from: data) {
 							go = perItemCallback(item)
 						}
 					}
@@ -165,13 +163,13 @@ extension Model {
 					uuidData = Data()
 				}
 
-				let jsonEncoder = JSONEncoder()
 				for item in items {
 					item.isBeingCreatedBySync = false
 					item.needsSaving = false
 					let u = item.uuid
 					let t = u.uuid
-					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: [])
+                    let finalPath = url.appendingPathComponent(u.uuidString)
+					try saveEncoder.encode(item).write(to: finalPath, options: [])
 					uuidData.insert(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15], at: 0)
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
@@ -199,12 +197,12 @@ extension Model {
 		var closureError: NSError?
 		var coordinationError: NSError?
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
-			let jsonEncoder = JSONEncoder()
 			do {
 				for item in items {
 					item.needsSaving = false
 					item.isBeingCreatedBySync = false
-					try jsonEncoder.encode(item).write(to: url.appendingPathComponent(item.uuid.uuidString), options: [])
+                    let finalPath = url.appendingPathComponent(item.uuid.uuidString)
+					try saveEncoder.encode(item).write(to: finalPath, options: [])
 				}
 			} catch {
 				closureError = error as NSError

@@ -11,7 +11,7 @@ final class ArchivedDropItem: Codable {
 	let uuid: UUID
 	let createdAt:  Date
 
-	var typeItems: [ArchivedDropItemType] {
+	var typeItems: ContiguousArray<ArchivedDropItemType> {
 		didSet {
 			needsSaving = true
 		}
@@ -103,7 +103,7 @@ final class ArchivedDropItem: Codable {
 		createdAt = c
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 		uuid = try v.decode(UUID.self, forKey: .uuid)
-		typeItems = try v.decode(Array<ArchivedDropItemType>.self, forKey: .typeItems)
+		typeItems = try v.decode(ContiguousArray<ArchivedDropItemType>.self, forKey: .typeItems)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
@@ -135,14 +135,14 @@ final class ArchivedDropItem: Codable {
 		suggestedName = item.suggestedName
 		labels = item.labels
 
-		typeItems = item.typeItems.map {
+		typeItems = ContiguousArray(item.typeItems.map {
 			ArchivedDropItemType(cloning: $0, newParentUUID: myUUID)
-		}
+		})
 	}
 
-	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> [ArchivedDropItem] {
+	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedDropItem> {
 		if PersistedOptions.separateItemPreference {
-			var res = [ArchivedDropItem]()
+			var res = ContiguousArray<ArchivedDropItem>()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
 					res.append(ArchivedDropItem(providers: [p], limitToType: t, overrides: overrides))
@@ -168,7 +168,7 @@ final class ArchivedDropItem: Codable {
 		titleOverride = overrides?.title ?? ""
 		note = overrides?.note ?? ""
 		labels = overrides?.labels ?? []
-		typeItems = [ArchivedDropItemType]()
+		typeItems = ContiguousArray<ArchivedDropItemType>()
 		needsSaving = true
 		needsUnlock = false
 		isBeingCreatedBySync = false

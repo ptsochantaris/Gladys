@@ -45,7 +45,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 		f.invalidateLayout()
 	}
 
-	private var filteredDrops: [ArchivedDropItem] {
+	private var filteredDrops: ContiguousArray<ArchivedDropItem> {
 		if let t = searchBar.text, !t.isEmpty {
 			return Model.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
 		} else {

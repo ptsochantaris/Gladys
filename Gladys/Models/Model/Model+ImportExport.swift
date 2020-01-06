@@ -41,8 +41,9 @@ extension Model {
 			save()
 		}
 
-		let data = try Data(contentsOf: url.appendingPathComponent("items.json"), options: [.mappedIfSafe])
-		let itemsInPackage = try JSONDecoder().decode(Array<ArchivedDropItem>.self, from: data)
+        let finalPath = url.appendingPathComponent("items.json")
+		let data = try Data(contentsOf: finalPath, options: [.mappedIfSafe])
+		let itemsInPackage = try loadDecoder.decode(Array<ArchivedDropItem>.self, from: data)
 
 		for item in itemsInPackage.reversed() {
 			if let i = drops.firstIndex(of: item) {
@@ -71,7 +72,7 @@ extension Model {
 
 	@discardableResult
     static func createArchive(using filter: ModelFilterContext, completion: @escaping (URL?, Error?) -> Void) -> Progress {
-        let eligibleItems = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
+        let eligibleItems: ContiguousArray = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
 		let count = 2 + eligibleItems.count
 		let p = Progress(totalUnitCount: Int64(count))
 
@@ -86,7 +87,7 @@ extension Model {
 		return p
 	}
 
-	static private func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedDropItem], completion: @escaping (URL?, Error?) -> Void) throws {
+	static private func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedDropItem>, completion: @escaping (URL?, Error?) -> Void) throws {
 		let fm = FileManager()
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -108,8 +109,9 @@ extension Model {
 			p.completedUnitCount += 1
 		}
 
-		let data = try JSONEncoder().encode(eligibleItems)
-		try data.write(to: tempPath.appendingPathComponent("items.json"))
+		let data = try saveEncoder.encode(eligibleItems)
+        let finalPath = tempPath.appendingPathComponent("items.json")
+		try data.write(to: finalPath)
 		p.completedUnitCount += 1
 
 		completion(tempPath, nil)
@@ -135,7 +137,7 @@ extension Model {
 		return p
 	}
 
-	static func createZipThread(dropsCopy: [ArchivedDropItem], progress p: Progress, completion: @escaping (URL?, Error?)->Void) throws {
+	static func createZipThread(dropsCopy: ContiguousArray<ArchivedDropItem>, progress p: Progress, completion: @escaping (URL?, Error?)->Void) throws {
 
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 

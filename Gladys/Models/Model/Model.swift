@@ -4,7 +4,7 @@ import Foundation
 final class Model {
 
 	static var brokenMode = false
-	static var drops = [ArchivedDropItem]()
+	static var drops = ContiguousArray<ArchivedDropItem>()
 	static var dataFileLastModified = Date.distantPast
 
 	private static var isStarted = false
@@ -14,6 +14,18 @@ final class Model {
 		clearCaches()
 		dataFileLastModified = .distantPast
 	}
+    
+    static let loadDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+        return decoder
+    }()
+    
+    static let saveEncoder: JSONEncoder = {
+        let e = JSONEncoder()
+        e.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+        return e
+    }()
 
 	static func reloadDataIfNeeded(maximumItems: Int? = nil) {
 
@@ -58,17 +70,16 @@ final class Model {
 					} else {
 						itemCount = totalItemsInStore
 					}
-					var newDrops = [ArchivedDropItem]()
+					var newDrops = ContiguousArray<ArchivedDropItem>()
 					newDrops.reserveCapacity(itemCount)
 					var c = 0
-					let decoder = JSONDecoder()
 					while c < d.count {
 						let u = UUID(uuid: (d[c], d[c+1], d[c+2], d[c+3], d[c+4], d[c+5],
 											d[c+6], d[c+7], d[c+8], d[c+9], d[c+10], d[c+11],
 											d[c+12], d[c+13], d[c+14], d[c+15]))
 						c += 16
 						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedDropItem.self, from: data) {
+						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedDropItem.self, from: data) {
 							newDrops.append(item)
 						}
 					}
@@ -142,7 +153,7 @@ final class Model {
         return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
     }
 
-	static var visibleDrops: [ArchivedDropItem] {
+	static var visibleDrops: ContiguousArray<ArchivedDropItem> {
 		return drops.filter { $0.isVisible }
 	}
 

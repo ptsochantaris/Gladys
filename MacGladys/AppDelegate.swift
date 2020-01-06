@@ -527,7 +527,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	@objc private func sortOptionSelected(_ sender: NSMenu) {
-		let selectedItems = ViewController.shared.selectedItems
+        let selectedItems = ContiguousArray(ViewController.shared.selectedItems)
 		if selectedItems.count < 2 {
 			proceedWithSort(sender: sender, items: [])
 		} else {
@@ -550,7 +550,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		}
 	}
 
-	private func proceedWithSort(sender: NSMenu, items: [ArchivedDropItem]) {
+	private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedDropItem>) {
 		if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
 			let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)
 			sortMethod()

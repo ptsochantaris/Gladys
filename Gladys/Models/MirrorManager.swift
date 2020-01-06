@@ -51,7 +51,7 @@ final class MirrorManager {
         }
     }
     
-    static func removeItems(items: [ArchivedDropItem]) {
+    static func removeItems(items: Set<ArchivedDropItem>) {
         if items.isEmpty { return }
         let paths = items.map { $0.fileMirrorPath }
         coordinateWrite(types: [.forDeleting]) {
@@ -84,7 +84,7 @@ final class MirrorManager {
         }
     }
     
-    static func scanForMirrorChanges(items: [ArchivedDropItem], completion: @escaping ()->Void) {
+    static func scanForMirrorChanges(items: ContiguousArray<ArchivedDropItem>, completion: @escaping ()->Void) {
         coordinateRead(type: []) {
             let start = Date()
             for item in items {
@@ -106,7 +106,7 @@ final class MirrorManager {
         }
     }
     
-    static func mirrorToFiles(from drops: [ArchivedDropItem], andPruneOthers: Bool, completion: @escaping ()->Void) {
+    static func mirrorToFiles(from drops: ContiguousArray<ArchivedDropItem>, andPruneOthers: Bool, completion: @escaping ()->Void) {
         coordinateWrite(types: [.forDeleting, .forMerging]) {
             
             do {

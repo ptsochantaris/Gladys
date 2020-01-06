@@ -704,7 +704,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let parameters = notification.object as? [AnyHashable: Any]
-        let savedUUIDs = parameters?["updated"] as? [UUID] ?? [UUID]()
+        let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
         
         var removedItems = false
         collection.performBatchUpdates({
@@ -833,7 +833,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			present(a, animated: true)
 			a.popoverPresentationController?.barButtonItem = button
 		} else {
-			let sortMethod = option.handlerForSort(itemsToSort: items, ascending: ascending)
+			let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
 			sortMethod()
 			filter.updateFilter(signalUpdate: false)
 			reloadData(onlyIfPopulated: false)

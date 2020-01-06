@@ -277,7 +277,7 @@ extension Model {
     }
 
     private static func runMirror(completion: @escaping ()->Void) {
-        let itemsToMirror = drops.filter { $0.goodToSave }
+        let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         BackgroundTask.registerForBackground()
         MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true) {
             completion()
@@ -287,7 +287,7 @@ extension Model {
     
     static func scanForMirrorChanges(completion: @escaping ()->Void) {
         BackgroundTask.registerForBackground()
-        let itemsToMirror = drops.filter { $0.goodToSave }
+        let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         MirrorManager.scanForMirrorChanges(items: itemsToMirror) {
             completion()
             BackgroundTask.unregisterForBackground()

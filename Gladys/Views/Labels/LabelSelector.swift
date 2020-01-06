@@ -100,14 +100,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelToggleCell") as! LabelToggleCell
-		let toggle = filteredToggles[indexPath.row]
-		cell.labelName.text = toggle.name
-		let c = toggle.count
-		if c == 1 {
-			cell.labelCount.text = "1 item"
-		} else {
-			cell.labelCount.text = "\(c) items"
-		}
+        cell.toggle = filteredToggles[indexPath.row]
+        cell.parent = self
 		return cell
 	}
 
@@ -138,32 +132,12 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		updates()
 	}
     
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let toggle = filteredToggles[indexPath.row]
-        if toggle.emptyChecker { return nil }
-        let action = UIContextualAction(style: .normal, title: "Rename") { [weak self] _, _, completion in
-            self?.rename(toggle: toggle, at: indexPath)
-            completion(true)
-        }
-        return UISwipeActionsConfiguration(actions: [action])
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let toggle = filteredToggles[indexPath.row]
-        if toggle.emptyChecker { return nil }
-        let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
-            self?.delete(toggle: toggle, at: indexPath)
-            completion(true)
-        }
-        return UISwipeActionsConfiguration(actions: [action])
-    }
-
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		let toggle = filteredToggles[indexPath.row]
 		return toggle.emptyChecker ? .none : .delete
 	}
 
-    private func rename(toggle: ModelFilterContext.LabelToggle, at indexPath: IndexPath) {
+    func rename(toggle: ModelFilterContext.LabelToggle) {
         let a = UIAlertController(title: "Rename '\(toggle.name)'?", message: "This will change it on all items that contain it.", preferredStyle: .alert)
         var textField: UITextField?
         a.addTextField { field in
@@ -184,18 +158,19 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    private func delete(toggle: ModelFilterContext.LabelToggle, at indexPath: IndexPath) {
+    func delete(toggle: ModelFilterContext.LabelToggle) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
 			guard let s = self else { return }
             s.filter.removeLabel(toggle.name)
-            if s.filter.labelToggles.count == 0 {
+            if s.filter.labelToggles.isEmpty {
                 s.table.isHidden = true
 				s.emptyLabel.isHidden = false
 				s.clearAllButton.isEnabled = false
 				s.navigationController?.setNavigationBarHidden(true, animated: false)
 				UIAccessibility.post(notification: .layoutChanged, argument: s.emptyLabel)
-			} else {
+			} else if let i = s.filteredToggles.firstIndex(of: toggle) {
+                let indexPath = IndexPath(row: i, section: 0)
                 s.table.deleteRows(at: [indexPath], with: .automatic)
 			}
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

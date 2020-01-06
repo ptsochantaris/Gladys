@@ -19,7 +19,7 @@ final class ModelFilterContext {
 
     private var modelFilter: String?
     private var currentFilterQuery: CSSearchQuery?
-    private var cachedFilteredDrops: [ArchivedDropItem]?
+    private var cachedFilteredDrops: ContiguousArray<ArchivedDropItem>?
     
     private var reloadObservation: NSObjectProtocol?
     
@@ -54,7 +54,7 @@ final class ModelFilterContext {
         return isFilteringText || isFilteringLabels
     }
 
-    var filteredDrops: [ArchivedDropItem] {
+    var filteredDrops: ContiguousArray<ArchivedDropItem> {
         if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
             cachedFilteredDrops = Model.drops
         }
@@ -74,11 +74,11 @@ final class ModelFilterContext {
         }
     }
     
-    var threadSafeFilteredDrops: [ArchivedDropItem] {
+    var threadSafeFilteredDrops: ContiguousArray<ArchivedDropItem> {
         if Thread.isMainThread {
             return filteredDrops
         } else {
-            var dropsClone = [ArchivedDropItem]()
+            var dropsClone = ContiguousArray<ArchivedDropItem>()
             DispatchQueue.main.sync {
                 dropsClone = filteredDrops
             }
@@ -190,7 +190,7 @@ final class ModelFilterContext {
         return changesToVisibleItems
     }
     
-    private var postLabelDrops: [ArchivedDropItem] {
+    private var postLabelDrops: ContiguousArray<ArchivedDropItem> {
         let enabledToggles = labelToggles.filter { $0.enabled }
         if enabledToggles.isEmpty { return Model.drops }
 
@@ -234,14 +234,14 @@ final class ModelFilterContext {
         return labelToggles.compactMap { $0.enabled ? $0.name : nil }
     }
     
-    var eligibleDropsForExport: [ArchivedDropItem] {
+    var eligibleDropsForExport: ContiguousArray<ArchivedDropItem> {
         let items = PersistedOptions.exportOnlyVisibleItems ? threadSafeFilteredDrops : Model.threadSafeDrops
         return items.filter { $0.goodToSave }
     }
     
     var labelToggles = [LabelToggle]()
 
-    struct LabelToggle {
+    struct LabelToggle: Hashable {
         
         static let noNameTitle = "Items with no labels"
         
@@ -415,7 +415,7 @@ extension Model {
 			case .size: return "Largest First"
 			}
 		}
-		private func sortElements(itemsToSort: [ArchivedDropItem]) -> ([ArchivedDropItem], [Int]) {
+		private func sortElements(itemsToSort: ContiguousArray<ArchivedDropItem>) -> (ContiguousArray<ArchivedDropItem>, [Int]) {
 			var itemIndexes = [Int]()
 			let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
 			let actualItemsToSort = toCheck.compactMap { item -> ArchivedDropItem? in
@@ -426,9 +426,9 @@ extension Model {
 				return nil
 			}
 			assert(actualItemsToSort.count == itemIndexes.count)
-			return (actualItemsToSort, itemIndexes.sorted())
+			return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
 		}
-		func handlerForSort(itemsToSort: [ArchivedDropItem], ascending: Bool) -> ()->Void {
+		func handlerForSort(itemsToSort: ContiguousArray<ArchivedDropItem>, ascending: Bool) -> ()->Void {
 			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
 			let sortType = self
 			return {
@@ -509,11 +509,11 @@ extension Model {
         delete(items: toDelete)
 	}
 
-	static var threadSafeDrops: [ArchivedDropItem] {
+	static var threadSafeDrops: ContiguousArray<ArchivedDropItem> {
 		if Thread.isMainThread {
 			return drops
 		} else {
-			var dropsClone = [ArchivedDropItem]()
+			var dropsClone = ContiguousArray<ArchivedDropItem>()
 			DispatchQueue.main.sync {
 				dropsClone = drops
 			}
@@ -537,7 +537,7 @@ extension Model {
 		return drops.contains { $0.isImportedShare }
 	}
 
-	static var itemsIAmSharing: [ArchivedDropItem] {
+	static var itemsIAmSharing: ContiguousArray<ArchivedDropItem> {
 		return drops.filter { $0.shareMode == .sharing }
 	}
 
@@ -603,7 +603,7 @@ extension Model {
 
         let index = CSSearchableIndex.default()
 
-        let itemsToDelete = drops.filter { $0.needsDeletion }
+        let itemsToDelete = Set(drops.filter { $0.needsDeletion })
         #if MAINAPP
         MirrorManager.removeItems(items: itemsToDelete)
         #endif
@@ -617,16 +617,16 @@ extension Model {
         
         drops.removeAll { $0.needsDeletion }
 
-		let saveableItems = drops.filter { $0.goodToSave }
+        let saveableItems: ContiguousArray = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.needsSaving }
         let searchableItems = itemsToWrite.map { $0.searchableItem }
         reIndex(items: searchableItems, in: index)
 
-		let uuidsToEncode = itemsToWrite.map { i -> UUID in
+		let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
             i.isBeingCreatedBySync = false
             i.needsSaving = false
             return i.uuid
-		}
+		})
         
         isSaving = true
         needsAnotherSave = false
@@ -659,7 +659,7 @@ extension Model {
 	}
 
     static func saveIndexOnly() {
-		let itemsToSave = drops.filter { $0.goodToSave }
+        let itemsToSave: ContiguousArray = drops.filter { $0.goodToSave }
         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
 		saveQueue.async {
 			do {
@@ -674,7 +674,7 @@ extension Model {
 		}
 	}
 
-    private static var commitQueue = [ArchivedDropItem]()
+    private static var commitQueue = ContiguousArray<ArchivedDropItem>()
 	static func commitItem(item: ArchivedDropItem) {
 		item.isBeingCreatedBySync = false
 		item.needsSaving = false
@@ -683,10 +683,10 @@ extension Model {
         reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
 		
         saveQueue.async {
-            var nextItemUUIDs = [UUID]()
-            var itemsToSave = [ArchivedDropItem]()
+            var nextItemUUIDs = Set<UUID>()
+            var itemsToSave = ContiguousArray<ArchivedDropItem>()
             DispatchQueue.main.sync {
-                nextItemUUIDs = commitQueue.filter { !$0.needsDeletion }.map { $0.uuid }
+                nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map { $0.uuid })
                 commitQueue.removeAll()
                 itemsToSave = drops.filter { $0.goodToSave }
             }
@@ -701,8 +701,8 @@ extension Model {
             }
 		}
 	}
-
-	private static func coordinatedSave(allItems: [ArchivedDropItem], dirtyUuids: [UUID]) throws {
+    
+	private static func coordinatedSave(allItems: ContiguousArray<ArchivedDropItem>, dirtyUuids: Set<UUID>) throws {
 		if brokenMode {
 			log("Ignoring save, model is broken, app needs restart.")
 			return
@@ -719,30 +719,26 @@ extension Model {
 					try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
 				}
 
-                let e = dirtyUuids.isEmpty ? nil : JSONEncoder()
-
 				var uuidData = Data()
 				uuidData.reserveCapacity(allItems.count * 16)
 				for item in allItems {
 					let u = item.uuid
 					let t = u.uuid
 					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
-					if let e = e, dirtyUuids.contains(u) {
-                        try e.encode(item).write(to: url.appendingPathComponent(u.uuidString), options: [])
+					if dirtyUuids.contains(u) {
+                        let finalPath = url.appendingPathComponent(u.uuidString)
+                        try saveEncoder.encode(item).write(to: finalPath, options: [])
 					}
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
-				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String] {
-					if (filesInDir.count - 1) > allItems.count { // old file exists, let's find it
-						let uuidStrings = allItems.map { $0.uuid.uuidString }
-						for file in filesInDir {
-							if !uuidStrings.contains(file) && file != "uuids" { // old file
-								log("Removing save file for non-existent item: \(file)")
-								try? fm.removeItem(atPath: url.appendingPathComponent(file).path)
-							}
-						}
-					}
+				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allItems.count { // at least one old file exists, let's find it
+                    let uuidStrings = Set(allItems.map { $0.uuid.uuidString })
+                    for file in filesInDir where !uuidStrings.contains(file) && file != "uuids" { // old file
+                        log("Removing save file for non-existent item: \(file)")
+                        let finalPath = url.appendingPathComponent(file)
+                        try? fm.removeItem(at: finalPath)
+                    }
 				}
 
 				if let dataModified = modificationDate(for: url) {

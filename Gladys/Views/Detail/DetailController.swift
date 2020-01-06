@@ -47,7 +47,7 @@ final class DetailController: GladysViewController,
 	}
     
     @objc private func dataUpdate(_ notification: Notification) {
-        if let removedUUIDSs = (notification.object as? [AnyHashable: Any])?["removed"] as? [UUID], let uuid = item?.uuid, removedUUIDSs.contains(uuid) {
+        if let uuid = item?.uuid, let removedUUIDs = (notification.object as? [AnyHashable: Any])?["removed"] as? Set<UUID>, removedUUIDs.contains(uuid) {
             done()
         } else {
             updateUI()
