@@ -8,6 +8,7 @@
 
 import Foundation
 import Cocoa
+import Carbon.HIToolbox
 
 final class Preferences: NSViewController {
 	@IBOutlet private weak var syncSwitch: NSButton!
@@ -43,7 +44,40 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var hotkeyShift: NSButton!
 	@IBOutlet private weak var hotkeyChar: NSPopUpButton!
 	@IBOutlet private weak var hotkeyCtrl: NSButton!
-	private let keyMap = [0, 11, 8, 2, 14, 3, 5, 4, 34, 38, 40, 37, 46, 45, 31, 35, 12, 15, 1, 17, 32, 9, 13, 7, 16, 6]
+    
+	private let keyMap = [
+        kVK_ANSI_A, kVK_ANSI_B, kVK_ANSI_C, kVK_ANSI_D, kVK_ANSI_E, kVK_ANSI_F, kVK_ANSI_G, kVK_ANSI_H,
+        kVK_ANSI_I, kVK_ANSI_J, kVK_ANSI_K, kVK_ANSI_L, kVK_ANSI_M, kVK_ANSI_N, kVK_ANSI_O, kVK_ANSI_P,
+        kVK_ANSI_Q, kVK_ANSI_R, kVK_ANSI_S, kVK_ANSI_T, kVK_ANSI_U, kVK_ANSI_V, kVK_ANSI_W, kVK_ANSI_X,
+        kVK_ANSI_Y, kVK_ANSI_Z
+    ]
+    
+    private func createStringForKey(keyCode: CGKeyCode) -> String? {
+        let source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource().takeRetainedValue()
+        let layoutData = TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData)
+        let dataRef = unsafeBitCast(layoutData, to: CFData.self)
+        let keyboardLayout = unsafeBitCast(CFDataGetBytePtr(dataRef), to: UnsafePointer<UCKeyboardLayout>.self)
+        
+        var realLength: Int = 0
+        var keysDown: UInt32 = 0
+        var chars = [UniChar](repeating: 0, count: 4)
+
+        UCKeyTranslate(keyboardLayout,
+                       keyCode,
+                       UInt16(kUCKeyActionDisplay),
+                       0,
+                       UInt32(LMGetKbdType()),
+                       UInt32(kUCKeyTranslateNoDeadKeysBit),
+                       &keysDown,
+                       chars.count,
+                       &realLength,
+                       &chars)
+
+        if realLength == 0 {
+            return nil
+        }
+        return (CFStringCreateWithCharacters(nil, chars, realLength) as String).uppercased()
+    }
 
 	@IBAction private func doneSelected(_ sender: NSButton) {
 		dismiss(nil)
@@ -78,8 +112,15 @@ final class Preferences: NSViewController {
 		if let m = hotkeyChar.menu {
 			m.removeAllItems()
 			m.addItem(withTitle: "None", action: #selector(hotkeyCharChanged), keyEquivalent: "")
-			for char in "abcdefghijklmnopqrstuvwxyz".uppercased() {
-				m.addItem(withTitle: "\(char)", action: #selector(hotkeyCharChanged), keyEquivalent: "")
+            var count = 0
+            for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" {
+                let code = keyMap[count]
+                if let char = createStringForKey(keyCode: CGKeyCode(code)) {
+                    m.addItem(withTitle: char, action: #selector(hotkeyCharChanged), keyEquivalent: "")
+                } else {
+                    m.addItem(withTitle: "\(char)", action: #selector(hotkeyCharChanged), keyEquivalent: "")
+                }
+                count += 1
 			}
 		}
 		hotkeyCmd.integerValue = PersistedOptions.hotkeyCmd ? 1 : 0
