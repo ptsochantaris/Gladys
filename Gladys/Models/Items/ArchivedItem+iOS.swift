@@ -134,13 +134,13 @@ extension ArchivedItem {
 	}
 
 	var canPreview: Bool {
-		return typeItems.contains { $0.canPreview }
+		return components.contains { $0.canPreview }
 	}
 
     @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
 		var itemToPreview: Component?
 		if let childUuid = childUuid {
-			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
+			itemToPreview = components.first { $0.uuid.uuidString == childUuid }
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
 

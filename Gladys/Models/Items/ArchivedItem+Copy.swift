@@ -16,7 +16,7 @@ extension ArchivedItem {
 		let p = NSItemProvider()
 		p.suggestedName = trimmedSuggestedName
         p.preferredPresentationStyle = .inline
-		typeItems.forEach { $0.register(with: p) }
+		components.forEach { $0.register(with: p) }
 		return p
 	}
 
@@ -68,7 +68,7 @@ extension ArchivedItem {
                 log("Copy intent removed")
             }
         }
-        for item in typeItems {
+        for item in components {
             item.removeIntents()
         }
 		#endif

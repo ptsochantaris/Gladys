@@ -8,7 +8,7 @@ final class ArchivedItem: Codable {
 	let uuid: UUID
 	let createdAt:  Date
 
-	var typeItems: ContiguousArray<Component> {
+	var components: ContiguousArray<Component> {
 		didSet {
 			needsSaving = true
 		}
@@ -66,7 +66,7 @@ final class ArchivedItem: Codable {
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
-		case typeItems
+		case components = "typeItems"
 		case createdAt
 		case updatedAt
 		case uuid
@@ -85,7 +85,7 @@ final class ArchivedItem: Codable {
 		try v.encode(createdAt, forKey: .createdAt)
 		try v.encode(updatedAt, forKey: .updatedAt)
 		try v.encode(uuid, forKey: .uuid)
-		try v.encode(typeItems, forKey: .typeItems)
+		try v.encode(components, forKey: .components)
 		try v.encode(needsReIngest, forKey: .needsReIngest)
 		try v.encode(note, forKey: .note)
 		try v.encode(titleOverride, forKey: .titleOverride)
@@ -102,7 +102,7 @@ final class ArchivedItem: Codable {
 		createdAt = c
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 		uuid = try v.decode(UUID.self, forKey: .uuid)
-		typeItems = try v.decode(ContiguousArray<Component>.self, forKey: .typeItems)
+		components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
@@ -137,7 +137,7 @@ final class ArchivedItem: Codable {
 		suggestedName = item.suggestedName
 		labels = item.labels
 
-		typeItems = ContiguousArray(item.typeItems.map {
+		components = ContiguousArray(item.components.map {
 			Component(cloning: $0, newParentUUID: myUUID)
 		})
 	}
@@ -168,7 +168,11 @@ final class ArchivedItem: Codable {
 		createdAt = Date()
 		updatedAt = createdAt
         #if MAC
-        suggestedName = nil
+        if #available(OSX 10.14, *) {
+            suggestedName = providers.first!.suggestedName
+        } else {
+            suggestedName = nil
+        }
         #else
 		suggestedName = providers.first!.suggestedName
         #endif
@@ -177,7 +181,7 @@ final class ArchivedItem: Codable {
 		titleOverride = overrides?.title ?? ""
 		note = overrides?.note ?? ""
 		labels = overrides?.labels ?? []
-		typeItems = ContiguousArray<Component>()
+		components = ContiguousArray<Component>()
 		needsSaving = true
 		needsUnlock = false
         skipMirrorAtNextSave = false
@@ -187,7 +191,7 @@ final class ArchivedItem: Codable {
 	}
 
 	var isTransferring: Bool {
-		return typeItems.contains { $0.isTransferring }
+		return components.contains { $0.isTransferring }
 	}
 
 	var goodToSave: Bool {
@@ -217,7 +221,7 @@ final class ArchivedItem: Codable {
 
 		needsSaving = true
 		needsDeletion = false
-		typeItems = []
+		components = []
 		isBeingCreatedBySync = true
         skipMirrorAtNextSave = false
 

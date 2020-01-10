@@ -342,13 +342,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-		return item.typeItems.count
+		return item.components.count
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
 		let i = collectionView.makeItem(withIdentifier: componentCellId, for: indexPath) as! ComponentCell
 		i.delegate = self
-		i.representedObject = item.typeItems[indexPath.item]
+		i.representedObject = item.components[indexPath.item]
 		return i
 	}
 
@@ -359,8 +359,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private func delete(at index: Int) {
-		let component = item.typeItems[index]
-		item.typeItems.remove(at: index)
+		let component = item.components[index]
+		item.components.remove(at: index)
 		component.deleteFromStorage()
 		item.renumberTypeItems()
 		item.needsReIngest = true
@@ -369,7 +369,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action) {
-		guard let i = componentCell.representedObject as? Component, let index = item.typeItems.firstIndex(of: i) else { return }
+		guard let i = componentCell.representedObject as? Component, let index = item.components.firstIndex(of: i) else { return }
 
 		components.deselectAll(nil)
 		components.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
@@ -398,7 +398,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	private var selectedItem: Component? {
 		if let index = components.selectionIndexes.first {
-			return item.typeItems[index]
+			return item.components[index]
 		}
 		return nil
 	}
@@ -411,10 +411,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		switch menuItem.action {
 
 		case #selector(archivePage(_:)), #selector(archiveThumbnail(_:)):
-			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isArchivable }.count == count
+			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.components[$0.item].isArchivable }.count == count
 
 		case #selector(editCurrent(_:)):
-			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.typeItems[$0.item].isURL }.count == count
+			return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.components[$0.item].isURL }.count == count
 
 		case #selector(delete(_:)):
 			return item.shareMode != .elsewhereReadOnly
@@ -506,7 +506,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	@objc func archivePage(_ sender: Any?) {
 		guard let i = components.selectionIndexes.first else { return }
-		let component = item.typeItems[i]
+		let component = item.components[i]
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
 		cell.animateArchiving = true
 
@@ -518,9 +518,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 					}
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
-				let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+				let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
 				DispatchQueue.main.async {
-					self.item.typeItems.append(newTypeItem)
+					self.item.components.append(newTypeItem)
 					self.saveItem()
 				}
 			}
@@ -532,15 +532,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	@objc func archiveThumbnail(_ sender: Any?) {
 		guard let i = components.selectionIndexes.first else { return }
-		let component = item.typeItems[i]
+		let component = item.components[i]
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
 		cell.animateArchiving = true
 
 		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
 				DispatchQueue.main.async {
-					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.typeItems.count)
-					self.item.typeItems.append(newTypeItem)
+					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
+					self.item.components.append(newTypeItem)
 					self.saveItem()
 				}
 			} else {
@@ -564,7 +564,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return item.typeItems[indexPath.item].pasteboardItem(forDrag: true)
+		return item.components[indexPath.item].pasteboardItem(forDrag: true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
@@ -600,10 +600,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 			let destinationIndex = indexPath.item
 			if s == collectionView, let draggingIndexPath = draggingIndexPaths?.first {
-				let sourceItem = item.typeItems[draggingIndexPath.item]
+				let sourceItem = item.components[draggingIndexPath.item]
 				let sourceIndex = draggingIndexPath.item
-				item.typeItems.remove(at: sourceIndex)
-				item.typeItems.insert(sourceItem, at: destinationIndex)
+				item.components.remove(at: sourceIndex)
+				item.components.insert(sourceItem, at: destinationIndex)
 				item.renumberTypeItems()
 				components.animator().moveItem(at: draggingIndexPath, to: indexPath)
 				components.deselectAll(nil)
@@ -612,7 +612,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 			} else if let pasteboardItem = draggingInfo.draggingPasteboard.pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
 				let typeItem = Component(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
-				item.typeItems.insert(typeItem, at: destinationIndex)
+				item.components.insert(typeItem, at: destinationIndex)
 				item.needsReIngest = true
 				item.renumberTypeItems()
 				components.animator().insertItems(at: [indexPath])

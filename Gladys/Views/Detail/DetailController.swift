@@ -164,13 +164,13 @@ final class DetailController: GladysViewController,
         switch section {
         case 0: return 2
         case 1: return item.labels.count + 1
-        case 2: return item.typeItems.count
+        case 2: return item.components.count
         default: return 0 // WTF :)
         }
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-        return item.typeItems.isEmpty ? 2 : 3
+        return item.components.isEmpty ? 2 : 3
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -231,7 +231,7 @@ final class DetailController: GladysViewController,
 
 		} else {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-			let typeEntry = item.typeItems[indexPath.row]
+			let typeEntry = item.components[indexPath.row]
             if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, parent: self) {
                 setCallbacks(for: cell, for: typeEntry)
             }
@@ -351,13 +351,13 @@ final class DetailController: GladysViewController,
     }
 
 	func removeComponent(_ component: Component) {
-        guard !blockedDueToSync(), let index = item.typeItems.firstIndex(of: component) else {
+        guard !blockedDueToSync(), let index = item.components.firstIndex(of: component) else {
             return
         }
         table.performBatchUpdates({
             component.deleteFromStorage()
-            item.typeItems.remove(at: index)
-            if item.typeItems.isEmpty {
+            item.components.remove(at: index)
+            if item.components.isEmpty {
                 table.deleteSections(IndexSet(integer: 2), with: .automatic)
             } else {
                 let indexPath = IndexPath(row: index, section: 2)
@@ -446,7 +446,7 @@ final class DetailController: GladysViewController,
             }
             
         case 2:
-            let typeItem = item.typeItems[indexPath.row]
+            let typeItem = item.components[indexPath.row]
             session.localContext = "typeItem"
             return [typeItem.dragItem]
             
@@ -463,7 +463,7 @@ final class DetailController: GladysViewController,
 				return UITableViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 			}
 			if d.section == 2, let candidate = s.items.first?.localObject as? Component {
-				let operationType: UIDropOperation = item.typeItems.contains(candidate) ? .move : .copy
+				let operationType: UIDropOperation = item.components.contains(candidate) ? .move : .copy
 				return UITableViewDropProposal(operation: operationType, intent: .insertAtDestinationIndexPath)
 			}
 		}
@@ -543,10 +543,10 @@ final class DetailController: GladysViewController,
 
 					// moving internal type item
 					let destinationIndex = destinationIndexPath.row
-					let sourceItem = item.typeItems[previousIndex.row]
+					let sourceItem = item.components[previousIndex.row]
 					table.performBatchUpdates({
-                        item.typeItems.remove(at: previousIndex.row)
-                        item.typeItems.insert(sourceItem, at: destinationIndex)
+                        item.components.remove(at: previousIndex.row)
+                        item.components.insert(sourceItem, at: destinationIndex)
                         item.renumberTypeItems()
 						table.moveRow(at: previousIndex, to: destinationIndexPath)
 					}, completion: { _ in
@@ -570,7 +570,7 @@ final class DetailController: GladysViewController,
 					// dropping external type item into type items
 					tableView.performBatchUpdates({
                         let itemCopy = Component(from: candidate, newParent: item)
-                        item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
+                        item.components.insert(itemCopy, at: destinationIndexPath.item)
                         item.renumberTypeItems()
 						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 					}, completion: { _ in
@@ -669,8 +669,8 @@ final class DetailController: GladysViewController,
 		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let data = image.jpegData(compressionQuality: 1) {
 				DispatchQueue.main.async {
-					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
-					self.item.typeItems.append(newTypeItem)
+					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+					self.item.components.append(newTypeItem)
 					self.handleNewTypeItem()
 				}
 			} else {
@@ -703,8 +703,8 @@ final class DetailController: GladysViewController,
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
 				DispatchQueue.main.async {
-					let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
-					self.item.typeItems.append(newTypeItem)
+					let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+					self.item.components.append(newTypeItem)
 					self.handleNewTypeItem()
 				}
 			}
@@ -715,7 +715,7 @@ final class DetailController: GladysViewController,
 	}
 
 	private func refreshComponent(_ component: Component) {
-		if let indexOfComponent = item.typeItems.firstIndex(of: component) {
+		if let indexOfComponent = item.components.firstIndex(of: component) {
 			let totalRows = tableView(table, numberOfRowsInSection: 2)
 			if indexOfComponent >= totalRows { return }
 			let ip = IndexPath(row: indexOfComponent, section: 2)

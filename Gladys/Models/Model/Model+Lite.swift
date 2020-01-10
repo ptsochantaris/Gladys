@@ -91,7 +91,7 @@ extension Model {
 		let uuidData = UUID(uuidString: uuid)
 
 		iterateThroughSavedItemsWithoutLoading { item in
-			if let component = item.typeItems.first(where: { $0.uuid == uuidData }) {
+			if let component = item.components.first(where: { $0.uuid == uuidData }) {
 				result = (item, component)
 				return false
 			}

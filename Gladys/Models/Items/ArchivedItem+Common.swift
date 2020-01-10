@@ -45,26 +45,26 @@ extension ArchivedItem: Hashable {
 	}
 	
 	var sizeInBytes: Int64 {
-		return typeItems.reduce(0, { $0 + $1.sizeInBytes })
+		return components.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
 	var imagePath: URL? {
-		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
+		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.imagePath
 	}
 
 	var displayIcon: IMAGE {
-		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
+		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 	}
 
 	var dominantTypeDescription: String? {
-		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
+		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.typeDescription
 	}
 
 	var displayMode: ArchivedDropItemDisplayType {
-		let highestPriorityIconItem = typeItems.max { $0.displayIconPriority < $1.displayIconPriority }
+		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
 		return highestPriorityIconItem?.displayIconContentMode ?? .center
 	}
 
@@ -86,7 +86,7 @@ extension ArchivedItem: Hashable {
 	}
 
 	var associatedWebURL: URL? {
-		for i in typeItems {
+		for i in components {
 			if let u = i.encodedUrl, !u.isFileURL {
 				return u as URL
 			}
@@ -95,7 +95,7 @@ extension ArchivedItem: Hashable {
 	}
     
     var loadingError: (String, Error)? {
-        for item in typeItems {
+        for item in components {
             if let e = item.loadingError {
                 return ("Error processing type \(item.typeIdentifier): ", e)
             }
@@ -108,9 +108,9 @@ extension ArchivedItem: Hashable {
 	}
 
 	var nonOverridenText: (String?, NSTextAlignment) {
-		if let a = typeItems.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
+		if let a = components.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
-		let highestPriorityItem = typeItems.max { $0.displayTitlePriority < $1.displayTitlePriority }
+		let highestPriorityItem = components.max { $0.displayTitlePriority < $1.displayTitlePriority }
 		if let title = highestPriorityItem?.displayTitle {
 			let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
 			return (title, alignment)
@@ -120,11 +120,11 @@ extension ArchivedItem: Hashable {
 	}
 
 	func bytes(for type: String) -> Data? {
-		return typeItems.first { $0.typeIdentifier == type }?.bytes
+		return components.first { $0.typeIdentifier == type }?.bytes
 	}
 
 	func url(for type: String) -> NSURL? {
-		return typeItems.first { $0.typeIdentifier == type }?.encodedUrl
+		return components.first { $0.typeIdentifier == type }?.encodedUrl
 	}
 
 	var isVisible: Bool {

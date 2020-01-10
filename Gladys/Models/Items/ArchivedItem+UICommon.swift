@@ -26,7 +26,7 @@ extension ArchivedItem {
 	func removeFromCloudkit() {
 		cloudKitRecord = nil
 		cloudKitShareRecord = nil
-		for typeItem in typeItems {
+		for typeItem in components {
 			typeItem.cloudKitRecord = nil
 		}
 	}
@@ -60,14 +60,14 @@ extension ArchivedItem {
 			}
 		}
         clearCacheData(for: uuid) // this must be last since we use URLs above
-        for item in typeItems {
+        for item in components {
             clearCacheData(for: item.uuid)
         }
 	}
 
 	func renumberTypeItems() {
 		var count = 0
-		for i in typeItems {
+		for i in components {
 			i.order = count
 			count += 1
 		}
@@ -82,11 +82,11 @@ extension ArchivedItem {
 	}
 
 	var mostRelevantTypeItem: Component? {
-		return typeItems.max { $0.contentPriority < $1.contentPriority }
+		return components.max { $0.contentPriority < $1.contentPriority }
 	}
 
 	var previewableTypeItem: Component? {
-		return typeItems.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }
+		return components.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }
 	}
 
 	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {

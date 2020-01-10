@@ -160,7 +160,7 @@ final class MirrorManager {
 extension ArchivedItem {
     fileprivate var fileMirrorPath: String {
         var base = MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)).path
-        if typeItems.count == 1, let item = typeItems.first {
+        if components.count == 1, let item = components.first {
             if let ext = item.fileExtension, !base.hasSuffix("." + ext) {
                 base += "." + ext
             }
@@ -170,15 +170,15 @@ extension ArchivedItem {
     
     fileprivate func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
         let mirrorPath = fileMirrorPath
-        if skipMirrorAtNextSave || typeItems.count == 0 {
+        if skipMirrorAtNextSave || components.count == 0 {
             return mirrorPath
         }
         if pathsExamined.contains(mirrorPath) { // some other drop has claimed this path
             return nil
         }
         let res: Bool
-        if typeItems.count == 1 {
-            res = try typeItems.first!.mirror(to: mirrorPath, using: f)
+        if components.count == 1 {
+            res = try components.first!.mirror(to: mirrorPath, using: f)
         } else {
             res = try mirrorFolder(to: mirrorPath, using: f)
         }
@@ -195,7 +195,7 @@ extension ArchivedItem {
         }
         
         var mirrored = false
-        for child in typeItems {
+        for child in components {
             var childPath = path + "/" + child.filenameTypeIdentifier
             if let ext = child.fileExtension {
                 childPath += "." + ext
@@ -210,7 +210,7 @@ extension ArchivedItem {
         
     fileprivate func assimilateMirrorChanges() {
 
-        if needsSaving || isTransferring || needsDeletion || needsReIngest || typeItems.isEmpty {
+        if needsSaving || isTransferring || needsDeletion || needsReIngest || components.isEmpty {
             return
         }
         
@@ -222,7 +222,7 @@ extension ArchivedItem {
 
         var assimilated = false
 
-        if typeItems.count == 1, let child = typeItems.first {
+        if components.count == 1, let child = components.first {
                         
             let itemUrl = URL(fileURLWithPath: fmp)
             if let fileDate = try? MirrorManager.modificationDate(for: itemUrl, using: f), fileDate <= updatedAt {
@@ -235,7 +235,7 @@ extension ArchivedItem {
             assimilated = true
             
         } else { // multiple items
-            for child in typeItems {
+            for child in components {
                 
                 let path: String
                 let t = child.filenameTypeIdentifier

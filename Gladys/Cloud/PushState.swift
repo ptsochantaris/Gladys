@@ -29,16 +29,16 @@ final class PushState {
 			if itemRecord.recordID.zoneID != zoneId {
 				return nil
 			}
-			_dataItemsToPush += item.typeItems.count
+			_dataItemsToPush += item.components.count
 			_dropsToPush += 1
-			var payload = item.typeItems.compactMap { $0.populatedCloudKitRecord }
+			var payload = item.components.compactMap { $0.populatedCloudKitRecord }
 			payload.append(itemRecord)
 
 			let itemId = item.uuid.uuidString
 			idsToPush.append(itemId)
-			idsToPush.append(contentsOf: item.typeItems.map { $0.uuid.uuidString } )
+			idsToPush.append(contentsOf: item.components.map { $0.uuid.uuidString } )
 			_uuid2progress[itemId] = Progress(totalUnitCount: 100)
-			item.typeItems.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
+			item.components.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
 
 			return payload
 		}.flatBunch(minSize: 10)

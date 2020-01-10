@@ -758,9 +758,9 @@ extension Model {
     
     static func detectExternalChanges() {
         for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
-            let componentsToDelete = item.typeItems.filter { $0.needsDeletion }
+            let componentsToDelete = item.components.filter { $0.needsDeletion }
             if !componentsToDelete.isEmpty {
-                item.typeItems = item.typeItems.filter { !$0.needsDeletion }
+                item.components = item.components.filter { !$0.needsDeletion }
                 for c in componentsToDelete {
                     c.deleteFromStorage()
                 }

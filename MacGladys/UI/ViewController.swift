@@ -119,7 +119,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 		var sendTypes = Set<NSPasteboard.PasteboardType>()
 
 		for item in actionableSelectedItems {
-			for t in item.typeItems.map({ NSPasteboard.PasteboardType($0.typeIdentifier) }) {
+			for t in item.components.map({ NSPasteboard.PasteboardType($0.typeIdentifier) }) {
 				sendTypes.insert(t)
 			}
 		}

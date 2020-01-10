@@ -348,7 +348,7 @@ extension CloudManager {
 					}
 					if !newTypeItemRecords.isEmpty {
 						let uuid = newItem.uuid
-						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
+						newItem.components.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
 						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
 						log("  Hooked \(newTypeItemRecords.count) pending type items")
 					}
@@ -379,7 +379,7 @@ extension CloudManager {
 						log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
 					} else {
 						log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
-						existingParent.typeItems.append(Component(from: record, parentUuid: existingParent.uuid))
+						existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
 						existingParent.needsReIngest = true
 						stats.newTypeItemCount += 1
 					}
@@ -747,8 +747,8 @@ extension CloudManager {
 		#else
 		shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
 		#endif
-		let typeItemsThatNeedMigrating = item.typeItems.filter { $0.cloudKitRecord?.parent == nil }
-		let recordsToSave = [rootRecord, shareRecord] + typeItemsThatNeedMigrating.compactMap { $0.populatedCloudKitRecord }
+		let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap { $0.populatedCloudKitRecord }
+		let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
 		let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
 		operation.savePolicy = .allKeys
 		operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in

@@ -39,30 +39,30 @@ extension ArchivedItem: ComponentIngestionDelegate {
 	}
 
 	func cancelIngest() {
-		typeItems.forEach { $0.cancelIngest() }
+		components.forEach { $0.cancelIngest() }
 	}
 
 	var loadingAborted: Bool {
-		return typeItems.contains { $0.loadingAborted }
+		return components.contains { $0.loadingAborted }
 	}
 
 	func reIngest() {
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
-		loadCount = typeItems.count
+		loadCount = components.count
 		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
 		needsUnlock = lockPassword != nil && !wasExplicitlyUnlocked
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
-		if typeItems.count == 0 { // can happen for example when all components are removed
+		if components.count == 0 { // can happen for example when all components are removed
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 				self.componentIngested(typeItem: nil)
 			}
 		} else {
-            if typeItems.count > 1 && typeItems.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
-				typeItems.sort { $0.order < $1.order }
+            if components.count > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
+				components.sort { $0.order < $1.order }
 			}
-			typeItems.forEach {
+			components.forEach {
 				let cp = $0.reIngest(delegate: self)
 				p.addChild(cp, withPendingUnitCount: 100)
 			}
@@ -131,7 +131,7 @@ extension ArchivedItem: ComponentIngestionDelegate {
                 let i = Component(typeIdentifier: finalType, parentUuid: uuid, delegate: self, order: order)
 				let p = i.startIngest(provider: finalProvider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
 				progressChildren.append(p)
-				typeItems.append(i)
+				components.append(i)
 			}
 
 			var order = 0

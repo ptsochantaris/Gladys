@@ -187,7 +187,7 @@ final class Model {
 
 	static func typeItem(uuid: String) -> Component? {
 		let uuidData = UUID(uuidString: uuid)
-		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
+		return drops.compactMap { $0.components.first { $0.uuid == uuidData } }.first
 	}
 
 	static func modificationDate(for url: URL) -> Date? {

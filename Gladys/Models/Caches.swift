@@ -40,7 +40,7 @@ let cloudKitShareCache = NSCache<NSUUID, CKShareCacheEntry>()
 
 func clearCaches() {
 	for drop in Model.drops {
-		for component in drop.typeItems {
+		for component in drop.components {
 			component.clearCachedFields()
 		}
 	}

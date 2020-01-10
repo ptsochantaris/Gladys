@@ -153,12 +153,12 @@ extension Model {
 			for item in dropsCopy {
 				let dir = item.displayTitleOrUuid.filenameSafe
 
-				if item.typeItems.count == 1 {
-					let typeItem = item.typeItems.first!
+				if item.components.count == 1 {
+					let typeItem = item.components.first!
 					try addZipItem(typeItem, directory: nil, name: dir, in: archive)
 
 				} else {
-					for typeItem in item.typeItems {
+					for typeItem in item.components {
 						try addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
 					}
 				}

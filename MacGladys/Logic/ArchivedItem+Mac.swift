@@ -5,19 +5,19 @@ extension ArchivedItem {
     func removeIntents() {}
 
 	func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting? {
-		if typeItems.isEmpty { return nil }
+		if components.isEmpty { return nil }
 
 		if forDrag, let t = typeItemForFileDrop {
-            return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: typeItems, tags: labels)
+            return GladysFilePromiseProvider.provider(for: t, with: displayTitleOrUuid, extraItems: components, tags: labels)
 		} else {
 			let pi = NSPasteboardItem()
-			typeItems.forEach { $0.add(to: pi) }
+			components.forEach { $0.add(to: pi) }
 			return pi
 		}
 	}
 
 	var typeItemForFileDrop: Component? {
-		return mostRelevantTypeItem ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first
+		return mostRelevantTypeItem ?? components.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? components.first
 	}
 
 	func tryOpen(from viewController: NSViewController) {
@@ -26,7 +26,7 @@ extension ArchivedItem {
 
 	func scanForBlobChanges() -> Bool {
 		var someHaveChanged = false
-		for component in typeItems { // intended: iterate over all over them, not just until the first one
+		for component in components { // intended: iterate over all over them, not just until the first one
 			if component.scanForBlobChanges() {
 				someHaveChanged = true
 			}
@@ -39,7 +39,7 @@ extension ArchivedItem {
         if #available(OSX 10.14, *) {
             p.suggestedName = trimmedSuggestedName
         }
-        typeItems.forEach { $0.registerForSharing(with: p) }
+        components.forEach { $0.registerForSharing(with: p) }
         return p
     }
 }

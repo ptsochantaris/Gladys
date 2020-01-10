@@ -18,7 +18,7 @@ extension ArchivedItem {
 		}
 		if !labels.isEmpty { attributes.keywords = labels }
 		attributes.thumbnailURL = imagePath
-		attributes.providerDataTypeIdentifiers = typeItems.map { $0.typeIdentifier }
+		attributes.providerDataTypeIdentifiers = components.map { $0.typeIdentifier }
 		attributes.userCurated = true
 		attributes.addedDate = createdAt
 		attributes.contentModificationDate = updatedAt

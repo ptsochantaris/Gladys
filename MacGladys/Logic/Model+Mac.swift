@@ -29,7 +29,7 @@ extension Model {
 				else { return }
 
 			log("Examining potential external update for component \(potentialComponentUUID)")
-			if let parent = item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.typeItems.first(where: { $0.uuid == potentialComponentUUID}), component.scanForBlobChanges() {
+			if let parent = item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.components.first(where: { $0.uuid == potentialComponentUUID}), component.scanForBlobChanges() {
 				parent.needsReIngest = true
 				parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID)")
