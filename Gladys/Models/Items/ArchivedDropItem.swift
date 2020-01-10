@@ -1,5 +1,5 @@
 
-import UIKit
+import Foundation
 import CloudKit
 
 final class ArchivedDropItem: Codable {
@@ -60,7 +60,9 @@ final class ArchivedDropItem: Codable {
 	var loadingProgress: Progress?
 	var needsSaving: Bool
 	var needsUnlock: Bool
+    var isBeingCreatedBySync: Bool
     var skipMirrorAtNextSave: Bool
+    var loadCount = 0
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -111,9 +113,10 @@ final class ArchivedDropItem: Codable {
 		needsSaving = false
 		needsUnlock = lockPassword != nil
         skipMirrorAtNextSave = false
+        isBeingCreatedBySync = false
 	}
 
-	#if MAINAPP
+	#if MAINAPP || MAC
 	init(cloning item: ArchivedDropItem) {
 		let myUUID = UUID()
 		uuid = myUUID
@@ -127,6 +130,7 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsDeletion = false
         skipMirrorAtNextSave = false
+        isBeingCreatedBySync = false
 
 		titleOverride = item.titleOverride
 		note = item.note
@@ -139,7 +143,7 @@ final class ArchivedDropItem: Codable {
 	}
 	#endif
 
-	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
+	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
 
 	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedDropItem> {
 		if PersistedOptions.separateItemPreference {
@@ -158,15 +162,16 @@ final class ArchivedDropItem: Codable {
 		}
 	}
 
-	var loadCount = 0
-    var isBeingCreatedBySync = false
-
 	private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
 
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
+        #if MAC
+        suggestedName = nil
+        #else
 		suggestedName = providers.first!.suggestedName
+        #endif
 		needsReIngest = false // original ingest, not re-ingest, show "cancel"
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""
@@ -176,6 +181,7 @@ final class ArchivedDropItem: Codable {
 		needsSaving = true
 		needsUnlock = false
         skipMirrorAtNextSave = false
+        isBeingCreatedBySync = false
 
 		loadingProgress = startNewItemIngest(providers: providers, limitToType: limitToType)
 	}
