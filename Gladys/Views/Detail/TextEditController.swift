@@ -114,7 +114,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		}
 	}
 
-	func componentIngested(typeItem: Component?) {
+	func componentIngested(_ component: Component?) {
 		Model.save()
 		delegate?.textEditControllerMadeChanges(self)
 	}

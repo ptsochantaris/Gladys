@@ -292,7 +292,7 @@ extension CloudManager {
 					log("Received delete for non-existent item record \(itemUUID), ignoring")
 				}
 			case RecordType.component:
-				if let component = Model.typeItem(uuid: itemUUID) {
+				if let component = Model.component(uuid: itemUUID) {
 					if component.parentZone != recordId.zoneID {
 						log("Ignoring delete for component \(itemUUID) from a different zone")
 					} else {
@@ -364,7 +364,7 @@ extension CloudManager {
 				}
 
 			case RecordType.component:
-				if let typeItem = Model.typeItem(uuid: recordUUID) {
+				if let typeItem = Model.component(uuid: recordUUID) {
 					if typeItem.parentZone != zoneID {
 						log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
 					} else if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {

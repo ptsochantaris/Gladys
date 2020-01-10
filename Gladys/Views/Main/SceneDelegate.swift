@@ -197,7 +197,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 
                 let child: Component?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                    child = Model.typeItem(uuid: childUuid)
+                    child = Model.component(uuid: childUuid)
                 } else {
                     child = item.previewableTypeItem
                 }

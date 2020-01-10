@@ -270,7 +270,7 @@ extension Component {
 		let callback = ingestCompletion
 		ingestCompletion = nil
 		DispatchQueue.main.async {
-			self.delegate?.componentIngested(typeItem: self)
+			self.delegate?.componentIngested(self)
 			self.delegate = nil
 			callback?()
 		}

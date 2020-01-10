@@ -201,7 +201,7 @@ final class PushState {
 						} else if let item = Model.item(uuid: itemUUID) {
 							item.cloudKitRecord = record
 							self.dropsToPush -= 1
-						} else if let typeItem = Model.typeItem(uuid: itemUUID) {
+						} else if let typeItem = Model.component(uuid: itemUUID) {
 							typeItem.cloudKitRecord = record
 							self.dataItemsToPush -= 1
 						}

@@ -185,7 +185,7 @@ final class Model {
 		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
-	static func typeItem(uuid: String) -> Component? {
+	static func component(uuid: String) -> Component? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.compactMap { $0.components.first { $0.uuid == uuidData } }.first
 	}

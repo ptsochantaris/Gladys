@@ -21,15 +21,15 @@ extension ArchivedItem: ComponentIngestionDelegate {
         return identifiers
 	}
 
-	func componentIngested(typeItem: Component?) {
+	func componentIngested(_ component: Component?) {
 		loadCount = loadCount - 1
 		if loadCount > 0 { return } // more to go
 
-		if let contributedLabels = typeItem?.contributedLabels {
+		if let contributedLabels = component?.contributedLabels {
 			for candidate in contributedLabels where !labels.contains(candidate) {
 				labels.append(candidate)
 			}
-			typeItem?.contributedLabels = nil
+			component?.contributedLabels = nil
 		}
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
@@ -56,7 +56,7 @@ extension ArchivedItem: ComponentIngestionDelegate {
 		loadingProgress = p
 		if components.count == 0 { // can happen for example when all components are removed
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-				self.componentIngested(typeItem: nil)
+				self.componentIngested(nil)
 			}
 		} else {
             if components.count > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it

@@ -312,17 +312,17 @@ final class DetailController: GladysViewController,
 		}
 	}
     
-	private func editURL(_ typeItem: Component, existingEdit: String?) {
-		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
+	private func editURL(_ component: Component, existingEdit: String?) {
+		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }
 			if let newValue = newValue, let newURL = NSURL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
-				typeItem.replaceURL(newURL)
+				component.replaceURL(newURL)
 				s.item.needsReIngest = true
 				s.makeIndexAndSaveItem()
-				s.refreshComponent(typeItem)
+				s.refreshComponent(component)
 			} else if let newValue = newValue {
 				genericAlert(title: "This is not a valid URL", message: newValue) {
-					s.editURL(typeItem, existingEdit: newValue)
+					s.editURL(component, existingEdit: newValue)
 				}
 			}
 		}
