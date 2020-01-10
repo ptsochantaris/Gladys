@@ -35,7 +35,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: false)
 
-		let h: CGFloat = modelFilter.labelToggles.count == 0 ? 67 : 320
+		let h: CGFloat = modelFilter.labelToggles.isEmpty ? 67 : 320
 		preferredContentSize = CGSize(width: preferredContentSize.width, height: h)
 	}
 
@@ -53,7 +53,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		if modelFilter.labelToggles.count == 0 {
+		if modelFilter.labelToggles.isEmpty {
 			return 0
 		} else {
 			return 1

@@ -326,7 +326,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     private var firstKey = true
 	func isKey() {
-		if Model.sharedFilter.filteredDrops.count == 0 {
+		if Model.sharedFilter.filteredDrops.isEmpty {
             if firstKey {
                 firstKey = false
                 blurb(Greetings.openLine)
@@ -1130,7 +1130,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func updateEmptyView() {
-		if Model.drops.count == 0 && emptyView.alphaValue < 1 {
+		if Model.drops.isEmpty && emptyView.alphaValue < 1 {
 			emptyView.animator().alphaValue = 1
 
 		} else if emptyView.alphaValue > 0, !Model.drops.isEmpty {

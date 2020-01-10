@@ -62,7 +62,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
         asciiModeButton.image = UIImage(systemName: asciiMode ? "number.circle" : "a.circle")
 		clearSelection()
 
-		if bytes.count == 0 {
+		if bytes.isEmpty {
 			addressButton.isEnabled = false
 			ascii.isEnabled = false
 		}

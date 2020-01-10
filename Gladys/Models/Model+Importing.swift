@@ -16,7 +16,7 @@ extension Model {
     @discardableResult
     static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
         
-        if providers.count == 0 {
+        if providers.isEmpty {
             return .noData
         }
 

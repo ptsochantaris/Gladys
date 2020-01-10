@@ -934,7 +934,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func updateEmptyView(animated: Bool) {
-		if Model.drops.count == 0 && emptyView == nil {
+		if Model.drops.isEmpty && emptyView == nil {
             let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
 			e.isAccessibilityElement = false
             e.contentMode = .scaleAspectFit

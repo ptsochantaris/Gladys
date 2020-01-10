@@ -90,7 +90,7 @@ final class ModelFilterContext {
         guard isFiltering else {
             return index
         }
-        if filteredDrops.count == 0 {
+        if filteredDrops.isEmpty {
             return 0
         }
         let closestItem: ArchivedItem
@@ -200,7 +200,7 @@ final class ModelFilterContext {
                 var matchCount = 0
                 for toggle in enabledToggles {
                     if toggle.emptyChecker {
-                        if item.labels.count == 0 {
+                        if item.labels.isEmpty {
                             matchCount += 1
                         }
                     } else if item.labels.contains(toggle.name) {
@@ -214,7 +214,7 @@ final class ModelFilterContext {
             return Model.drops.filter { item in
                 for toggle in enabledToggles {
                     if toggle.emptyChecker {
-                        if item.labels.count == 0 {
+                        if item.labels.isEmpty {
                             return true
                         }
                     } else if item.labels.contains(toggle.name) {
@@ -298,7 +298,7 @@ final class ModelFilterContext {
                     counts[$0] = 1
                 }
             }
-            if item.labels.count == 0 {
+            if item.labels.isEmpty {
                 noLabelCount += 1
             }
         }

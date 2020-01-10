@@ -28,7 +28,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			count += 1
 		}
 		clearAllButton.isEnabled = filter.isFilteringLabels
-		if filteredToggles.count == 0 {
+		if filteredToggles.isEmpty {
 			table.isHidden = true
 			navigationController?.setNavigationBarHidden(true, animated: false)
 
@@ -77,7 +77,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	}
 
 	override var initialAccessibilityElement: UIView {
-		return filteredToggles.count == 0 ? emptyLabel : table
+		return filteredToggles.isEmpty ? emptyLabel : table
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

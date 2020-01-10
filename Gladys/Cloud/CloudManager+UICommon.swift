@@ -491,7 +491,7 @@ extension CloudManager {
 			}
 		}
 
-		if fetchGroups.count == 0 {
+		if fetchGroups.isEmpty {
 			completion(nil)
 			return
 		}

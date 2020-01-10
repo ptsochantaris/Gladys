@@ -170,7 +170,7 @@ extension ArchivedItem {
     
     fileprivate func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
         let mirrorPath = fileMirrorPath
-        if skipMirrorAtNextSave || components.count == 0 {
+        if skipMirrorAtNextSave || components.isEmpty {
             return mirrorPath
         }
         if pathsExamined.contains(mirrorPath) { // some other drop has claimed this path

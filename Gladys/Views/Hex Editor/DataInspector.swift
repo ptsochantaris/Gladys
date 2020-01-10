@@ -119,7 +119,7 @@ final class DataInspector: GladysViewController {
 
 	@objc private func updateBytes() {
 
-		if bytes.count == 0 {
+		if bytes.isEmpty {
 			done()
 			return
 		}
