@@ -16,7 +16,7 @@ extension UIColor {
 
 extension Component {
 
-	func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
+    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ group: DispatchGroup, _ andCall: (()->Void)?) {
 
 		if storeBytes {
 			setBytes(data)
@@ -27,9 +27,9 @@ extension Component {
 		if url.isFileURL {
 			log("      received local file url: \(url.path)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-			completeIngest()
+            completeIngest(group: group, andCall: andCall)
 		} else {
-			handleRemoteUrl(url, data, storeBytes)
+            handleRemoteUrl(url, data, storeBytes, group, andCall)
 		}
 	}
 }

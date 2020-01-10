@@ -62,7 +62,6 @@ final class ArchivedItem: Codable {
 	var needsUnlock: Bool
     var isBeingCreatedBySync: Bool
     var skipMirrorAtNextSave: Bool
-    var loadCount = 0
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName

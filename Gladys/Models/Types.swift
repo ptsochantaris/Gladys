@@ -19,10 +19,6 @@ enum ArchivedDropItemDisplayType: Int {
 	case fit, fill, center, circle
 }
 
-protocol ComponentIngestionDelegate: class {
-	func componentIngested(_ component: Component?)
-}
-
 extension Error {
 	var finalDescription: String {
 		let err = self as NSError

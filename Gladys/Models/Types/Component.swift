@@ -96,7 +96,6 @@ final class Component: Codable {
 	var order: Int
 
 	// transient / ui
-	weak var delegate: ComponentIngestionDelegate?
 	var displayIconScale: CGFloat
 	var displayIconWidth: CGFloat
 	var displayIconHeight: CGFloat
@@ -107,7 +106,6 @@ final class Component: Codable {
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
-	var ingestCompletion: (()->Void)?
 	var isTransferring: Bool
 	var contributedLabels: [String]?
 
@@ -137,7 +135,6 @@ final class Component: Codable {
 		createdAt = Date()
 		updatedAt = createdAt
 		representedClass = .data
-		delegate = nil
 		setBytes(data)
 	}
 
@@ -147,7 +144,6 @@ final class Component: Codable {
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
-		delegate = nil
 
 		typeIdentifier = item.typeIdentifier
 		parentUuid = newParentUUID
@@ -167,10 +163,9 @@ final class Component: Codable {
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
-	init(typeIdentifier: String, parentUuid: UUID, delegate: ComponentIngestionDelegate, order: Int) {
+	init(typeIdentifier: String, parentUuid: UUID, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
-		self.delegate = delegate
 		self.parentUuid = parentUuid
 		self.order = order
 
@@ -238,7 +233,6 @@ final class Component: Codable {
 		isTransferring = false
 		needsDeletion = false
 		order = Int.max
-		delegate = nil
 
 		uuid = UUID()
 		createdAt = Date()

@@ -4,7 +4,7 @@ import Foundation
 import MobileCoreServices
 #endif
 
-extension ArchivedItem: ComponentIngestionDelegate {
+extension ArchivedItem {
 
 	static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
@@ -21,16 +21,15 @@ extension ArchivedItem: ComponentIngestionDelegate {
         return identifiers
 	}
 
-	func componentIngested(_ component: Component?) {
-		loadCount = loadCount - 1
-		if loadCount > 0 { return } // more to go
-
-		if let contributedLabels = component?.contributedLabels {
-			for candidate in contributedLabels where !labels.contains(candidate) {
-				labels.append(candidate)
-			}
-			component?.contributedLabels = nil
-		}
+	private func componentsIngested() {
+        for component in components {
+            if let contributedLabels = component.contributedLabels {
+                for candidate in contributedLabels where !labels.contains(candidate) {
+                    labels.append(candidate)
+                }
+                component.contributedLabels = nil
+            }
+        }
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
         needsReIngest = false
@@ -47,26 +46,33 @@ extension ArchivedItem: ComponentIngestionDelegate {
 	}
 
 	func reIngest() {
+        let group = DispatchGroup()
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
-		loadCount = components.count
+		let loadCount = components.count
 		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
 		needsUnlock = lockPassword != nil && !wasExplicitlyUnlocked
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
-		if components.count == 0 { // can happen for example when all components are removed
+        
+		if loadCount == 0 { // can happen for example when all components are removed
+            group.enter()
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-				self.componentIngested(nil)
+                group.leave()
 			}
 		} else {
-            if components.count > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
+            if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
 				components.sort { $0.order < $1.order }
 			}
 			components.forEach {
-				let cp = $0.reIngest(delegate: self)
+				let cp = $0.reIngest(group: group)
 				p.addChild(cp, withPendingUnitCount: 100)
 			}
 		}
+        
+        group.notify(queue: .main) {
+            self.componentsIngested()
+        }
 	}
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
@@ -93,7 +99,7 @@ extension ArchivedItem: ComponentIngestionDelegate {
     }
 
 	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) -> Progress {
-        
+        let group = DispatchGroup()
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
 		var progressChildren = [Progress]()
@@ -127,9 +133,8 @@ extension ArchivedItem: ComponentIngestionDelegate {
                     }
                 }
 
-                loadCount += 1
-                let i = Component(typeIdentifier: finalType, parentUuid: uuid, delegate: self, order: order)
-				let p = i.startIngest(provider: finalProvider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
+                let i = Component(typeIdentifier: finalType, parentUuid: uuid, order: order)
+				let p = i.startIngest(provider: finalProvider, group: group, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive, andCall: nil)
 				progressChildren.append(p)
 				components.append(i)
 			}
@@ -154,6 +159,11 @@ extension ArchivedItem: ComponentIngestionDelegate {
 		for c in progressChildren {
 			p.addChild(c, withPendingUnitCount: 100)
 		}
+        
+        group.notify(queue: .main) {
+            self.componentsIngested()
+        }
+        
 		return p
 	}
 }

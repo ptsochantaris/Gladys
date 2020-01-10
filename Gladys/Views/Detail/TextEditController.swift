@@ -14,7 +14,7 @@ protocol TextEditControllerDelegate: class {
 	func textEditControllerMadeChanges(_ textEditController: TextEditController)
 }
 
-final class TextEditController: GladysViewController, UITextViewDelegate, ComponentIngestionDelegate {
+final class TextEditController: GladysViewController, UITextViewDelegate {
 
 	weak var delegate: TextEditControllerDelegate?
 
@@ -114,16 +114,16 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		}
 	}
 
-	func componentIngested(_ component: Component?) {
-		Model.save()
-		delegate?.textEditControllerMadeChanges(self)
-	}
-
 	private func saveDone() {
 		typeEntry.markUpdated()
 		item.markUpdated()
 		item.needsReIngest = true
-		_ = typeEntry.reIngest(delegate: self)
+        let group = DispatchGroup()
+		_ = typeEntry.reIngest(group: group)
+        group.notify(queue: .main) {
+            Model.save()
+            self.delegate?.textEditControllerMadeChanges(self)
+        }
 	}
 
 	override var keyCommands: [UIKeyCommand]? {

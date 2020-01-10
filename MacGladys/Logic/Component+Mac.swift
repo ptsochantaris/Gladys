@@ -58,7 +58,7 @@ extension Component {
 		}
 	}
 
-	private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) {
+    private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool, _ group: DispatchGroup, _ andCall: (()->Void)?) {
         if PersistedOptions.readAndStoreFinderTagsAsLabels {
             let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
             contributedLabels = resourceValues?.tagNames
@@ -86,7 +86,7 @@ extension Component {
 					}
 					try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
 					log("      zipped files at url: \(item.absoluteString)")
-					completeIngest()
+                    completeIngest(group: group, andCall: andCall)
 
 				} else {
 					let ext = item.pathExtension
@@ -98,7 +98,7 @@ extension Component {
 					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
 					let data = (try? Data(contentsOf: item, options: .mappedIfSafe)) ?? Data()
-					handleData(data, resolveUrls: false, storeBytes)
+                    handleData(data, resolveUrls: false, storeBytes: storeBytes, group: group, andCall: andCall)
 				}
 
 			} catch {
@@ -108,7 +108,7 @@ extension Component {
 				representedClass = .url
 				log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
 				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-				completeIngest()
+                completeIngest(group: group, andCall: andCall)
 			}
 		} else {
 			if storeBytes {
@@ -117,23 +117,23 @@ extension Component {
 			representedClass = .url
 			log("      received local file url for non-existent file: \(item.absoluteString)")
 			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-			completeIngest()
+			completeIngest(group: group, andCall: andCall)
 		}
 	}
 
-	func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
+    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ group: DispatchGroup, _ andCall: (()->Void)?) {
 
 		setTitle(from: url)
 
 		if url.isFileURL {
-			handleFileUrl(url, data, storeBytes)
+			handleFileUrl(url, data, storeBytes, group, andCall)
 
 		} else {
 			if storeBytes {
 				setBytes(data)
 			}
 			representedClass = .url
-			handleRemoteUrl(url, data, storeBytes)
+            handleRemoteUrl(url, data, storeBytes, group, andCall)
 		}
 	}
 
