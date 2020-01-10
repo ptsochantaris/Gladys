@@ -1085,33 +1085,10 @@
 		161718C52094D333005ABD6C /* MacGladys */ = {
 			isa = PBXGroup;
 			children = (
-				161718C62094D333005ABD6C /* AppDelegate.swift */,
-				161718C82094D333005ABD6C /* ViewController.swift */,
-				161718DC2094D7F7005ABD6C /* Model+Mac.swift */,
-				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
-				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
+				16906A9D23C8C9D700D6C177 /* Boot */,
+				16906A9C23C8C9CA00D6C177 /* Logic */,
+				16906A9B23C8C9BB00D6C177 /* UI */,
 				16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */,
-				161718CF2094D334005ABD6C /* Info.plist */,
-				161718D02094D334005ABD6C /* MacGladys.entitlements */,
-				161718CC2094D334005ABD6C /* Main.storyboard */,
-				168FE05C20952E4D00E740E9 /* DropCell.xib */,
-				168D2CAE209E0770005041CF /* ComponentCell.xib */,
-				168FE0602095B3C900E740E9 /* DropCell.swift */,
-				168FE0622095D16800E740E9 /* Preferences.swift */,
-				167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */,
-				16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */,
-				168D2CAA209DADF3005041CF /* DetailController.swift */,
-				168D2CAC209DCC53005041CF /* NewLabelController.swift */,
-				168D2CB0209E0988005041CF /* ComponentCell.swift */,
-				1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */,
-				168C940E20B0572700F4139D /* NSColor+Extensions.swift */,
-				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
-				16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */,
-				16C8166A20CB4EF1001C12DF /* Application.swift */,
-				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
-				16EC3D082145286F0015714A /* main.swift */,
-				161D357721BA6A4200CADA41 /* NotesEditor.swift */,
-				1686E7EF233D0D9C0012BA63 /* TouchBar.swift */,
 				166EEC9923645391000BE78A /* Media.xcassets */,
 			);
 			path = MacGladys;
@@ -1241,6 +1218,53 @@
 				16F063FB20B895CD00ABF32A /* main.swift */,
 			);
 			path = MacGladysHelper;
+			sourceTree = "<group>";
+		};
+		16906A9B23C8C9BB00D6C177 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				161718CC2094D334005ABD6C /* Main.storyboard */,
+				168FE05C20952E4D00E740E9 /* DropCell.xib */,
+				168D2CAE209E0770005041CF /* ComponentCell.xib */,
+				168FE0602095B3C900E740E9 /* DropCell.swift */,
+				168FE0622095D16800E740E9 /* Preferences.swift */,
+				167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */,
+				16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */,
+				168D2CAA209DADF3005041CF /* DetailController.swift */,
+				168D2CAC209DCC53005041CF /* NewLabelController.swift */,
+				168D2CB0209E0988005041CF /* ComponentCell.swift */,
+				168C940E20B0572700F4139D /* NSColor+Extensions.swift */,
+				16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */,
+				161D357721BA6A4200CADA41 /* NotesEditor.swift */,
+				1686E7EF233D0D9C0012BA63 /* TouchBar.swift */,
+				161718C82094D333005ABD6C /* ViewController.swift */,
+				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		16906A9C23C8C9CA00D6C177 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				16C8166A20CB4EF1001C12DF /* Application.swift */,
+				161718C62094D333005ABD6C /* AppDelegate.swift */,
+				161718DC2094D7F7005ABD6C /* Model+Mac.swift */,
+				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
+				1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */,
+				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
+				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+		16906A9D23C8C9D700D6C177 /* Boot */ = {
+			isa = PBXGroup;
+			children = (
+				161718CF2094D334005ABD6C /* Info.plist */,
+				161718D02094D334005ABD6C /* MacGladys.entitlements */,
+				16EC3D082145286F0015714A /* main.swift */,
+			);
+			path = Boot;
 			sourceTree = "<group>";
 		};
 		16969B9E1FB0E41E007B2F77 /* GladysToday */ = {
