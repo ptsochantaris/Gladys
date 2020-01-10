@@ -63,7 +63,7 @@
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
 		161718CE2094D334005ABD6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161718CC2094D334005ABD6C /* Main.storyboard */; };
-		161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */; };
+		161718D72094D6B8005ABD6C /* ArchivedDropItemType+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D62094D6B8005ABD6C /* ArchivedDropItemType+Mac.swift */; };
 		161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
 		161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
@@ -216,6 +216,13 @@
 		168FE0632095D16800E740E9 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0622095D16800E740E9 /* Preferences.swift */; };
 		16906A9123C8BD8C00D6C177 /* ArchivedDropItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedDropItem.swift */; };
 		16906A9223C8BDC600D6C177 /* ArchivedDropItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D42094D6AC005ABD6C /* ArchivedDropItem+Mac.swift */; };
+		16906A9423C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9523C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9623C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9723C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9823C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9923C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */; };
+		16906A9A23C8C18E00D6C177 /* ArchivedDropItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* ArchivedDropItemType.swift */; };
 		1695218920A23B5200FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
 		1695218A20A240A000FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
@@ -603,7 +610,7 @@
 		161718CF2094D334005ABD6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		161718D02094D334005ABD6C /* MacGladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladys.entitlements; sourceTree = "<group>"; };
 		161718D42094D6AC005ABD6C /* ArchivedDropItem+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItem+Mac.swift"; sourceTree = "<group>"; };
-		161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedDropItemType.swift; sourceTree = "<group>"; };
+		161718D62094D6B8005ABD6C /* ArchivedDropItemType+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+Mac.swift"; sourceTree = "<group>"; };
 		161718DC2094D7F7005ABD6C /* Model+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Mac.swift"; sourceTree = "<group>"; };
 		161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mac.swift"; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
@@ -702,6 +709,7 @@
 		168FE05E2095363900E740E9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedDropItemType+iOS.swift"; sourceTree = "<group>"; };
 		1695218820A23B5200FFE817 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
@@ -1067,6 +1075,7 @@
 				169E5E051FE0851A00CCE984 /* ArchivedDropItemType+Sharing.swift */,
 				16C3A2D520AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift */,
 				1651117D2163DEE300C5C874 /* ArchivedDropItemType+Intents.swift */,
+				16906A9323C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1077,7 +1086,7 @@
 				161718C62094D333005ABD6C /* AppDelegate.swift */,
 				161718C82094D333005ABD6C /* ViewController.swift */,
 				161718D42094D6AC005ABD6C /* ArchivedDropItem+Mac.swift */,
-				161718D62094D6B8005ABD6C /* ArchivedDropItemType.swift */,
+				161718D62094D6B8005ABD6C /* ArchivedDropItemType+Mac.swift */,
 				161718DC2094D7F7005ABD6C /* Model+Mac.swift */,
 				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
@@ -2161,6 +2170,7 @@
 				16CD7D7520A0FF570039E6C2 /* ArchivedDropItemType+IngestCommon.swift in Sources */,
 				1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */,
 				16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */,
+				16906A9A23C8C18E00D6C177 /* ArchivedDropItemType.swift in Sources */,
 				161718E52094DFD4005ABD6C /* ArchivedDropItemType+Cloud.swift in Sources */,
 				16CD7D9E20A117BA0039E6C2 /* CloudManager+UICommon.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedDropItem+Indexing.swift in Sources */,
@@ -2179,7 +2189,7 @@
 				162594D820D5548F00A65E06 /* Caches.swift in Sources */,
 				168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */,
 				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
-				161718D72094D6B8005ABD6C /* ArchivedDropItemType.swift in Sources */,
+				161718D72094D6B8005ABD6C /* ArchivedDropItemType+Mac.swift in Sources */,
 				16ED386320C08FAA00B9BFDA /* Model.swift in Sources */,
 				16CD7D9020A111340039E6C2 /* ArchivedDropItemType+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* ArchivedDropItemType+Preview.swift in Sources */,
@@ -2222,6 +2232,7 @@
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedDropItem+Indexing.swift in Sources */,
 				162BDD75220F020700A3C17B /* Logging.swift in Sources */,
+				16906A9523C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F3262030E5E10036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */,
@@ -2243,6 +2254,7 @@
 				16AECA611F94B83900981B29 /* ArchivedDropItem+Indexing.swift in Sources */,
 				168A0CE91FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16F2990820CBEF30005DE3AD /* PushState.swift in Sources */,
+				16906A9623C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
 				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
@@ -2299,6 +2311,7 @@
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
 				1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */,
 				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
+				16906A9923C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				1657B8BF1FD41E6B00EC480D /* ArchivedDropItemType.swift in Sources */,
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16C3A2D820AF76A600A04F10 /* ArchivedDropItemType+BackgroundInfoObject.swift in Sources */,
@@ -2348,6 +2361,7 @@
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
+				16906A9423C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedDropItem+UI.swift in Sources */,
 				16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
@@ -2474,6 +2488,7 @@
 				16C3A2D220AF765000A04F10 /* ArchivedDropItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedDropItem+Copy.swift in Sources */,
 				166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
+				16906A9723C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				1602F3292030E5FA0036E2B0 /* UIImage+Extensions.swift in Sources */,
 				162594D620D5548F00A65E06 /* Caches.swift in Sources */,
 				16CD7D8320A10AF10039E6C2 /* ArchivedDropItemType+Common.swift in Sources */,
@@ -2531,6 +2546,7 @@
 				1651117B2163D71E00C5C874 /* ArchivedDropItem+Copy.swift in Sources */,
 				16D984AE2160D31C00D9D51C /* ArchivedDropItem+Ingest.swift in Sources */,
 				1651117C2163D73700C5C874 /* ArchivedDropItemType+Copy.swift in Sources */,
+				16906A9823C8C0C700D6C177 /* ArchivedDropItemType+iOS.swift in Sources */,
 				16D984B12160D51B00D9D51C /* ArchivedDropItemType+Ingest.swift in Sources */,
 				165847072376D4BB00666B7B /* Notifications.swift in Sources */,
 				16D9849F2160CBFE00D9D51C /* Global.swift in Sources */,

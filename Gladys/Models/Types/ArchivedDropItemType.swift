@@ -1,6 +1,8 @@
-
+#if MAC
+import Cocoa
+#else
 import UIKit
-import MobileCoreServices
+#endif
 import CloudKit
 
 final class ArchivedDropItemType: Codable {
@@ -113,34 +115,7 @@ final class ArchivedDropItemType: Codable {
 	var encodedURLCache: (Bool, NSURL?)?
 	var canPreviewCache: Bool?
 
-	var displayIcon: UIImage? {
-		set {
-            let ipath = imagePath
-			dataAccessQueue.async {
-				if let n = newValue {
-					if let data = n.pngData() {
-						try? data.write(to: ipath)
-					}
-				} else if FileManager.default.fileExists(atPath: ipath.path) {
-					try? FileManager.default.removeItem(at: ipath)
-				}
-			}
-		}
-		get {
-			return dataAccessQueue.sync {
-                var i: UIImage?
-				if let data = (try? Data(contentsOf: imagePath)) {
-					i = UIImage(data: data, scale: displayIconScale)
-				}
-				if displayIconTemplate {
-					i = i?.withRenderingMode(.alwaysTemplate)
-				}
-                return i
-			}
-		}
-	}
-
-	#if MAINAPP
+	#if MAINAPP || MAC
 	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
@@ -191,7 +166,7 @@ final class ArchivedDropItemType: Codable {
 	}
 	#endif
 
-	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
+	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
 	init(typeIdentifier: String, parentUuid: UUID, delegate: ComponentIngestionDelegate, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
