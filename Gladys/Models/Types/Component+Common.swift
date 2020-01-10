@@ -21,13 +21,12 @@ extension Component: Equatable {
 		dataAccessQueue.async {
             if data == nil || self.flags.contains(.loadingAborted) {
 				let f = FileManager.default
-                let path = byteLocation.path
-				if f.fileExists(atPath: path) {
-					try? f.removeItem(atPath: path)
+				if f.fileExists(atPath: byteLocation.path) {
+                    try? f.removeItem(at: byteLocation)
 				}
 			} else {
 				try? data?.write(to: byteLocation)
-				#if os(OSX)
+				#if MAC
                 self.lastGladysBlobUpdate = Date()
 				#endif
 			}

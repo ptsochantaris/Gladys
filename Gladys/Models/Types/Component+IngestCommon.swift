@@ -27,11 +27,14 @@ extension Component {
 		let p: Progress
 		if createWebArchive {
 			p = provider.loadDataRepresentation(forTypeIdentifier: "public.url") { [weak self] data, error in
-                guard let s = self, !s.flags.contains(.loadingAborted) else { return }
+                guard let s = self else { return }
                 s.flags.remove(.isTransferring)
+                if s.flags.contains(.loadingAborted) {
+                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    return
+                }
 
 				var url: URL?
-
 				if let data = data, let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
 					if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
 						url = u
@@ -54,8 +57,12 @@ extension Component {
 			}
 		} else {
 			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
-				guard let s = self, !s.flags.contains(.loadingAborted) else { return }
+				guard let s = self else { return }
                 s.flags.remove(.isTransferring)
+                if s.flags.contains(.loadingAborted) {
+                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    return
+                }
 				if let data = data {
                     log(">> Received type: [\(s.typeIdentifier)]")
                     s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true, group: group) {
@@ -99,7 +106,11 @@ extension Component {
 		classWasWrapped = false
 
 		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
-			guard let s = self, !s.flags.contains(.loadingAborted) else { return }
+			guard let s = self else { return }
+            if s.flags.contains(.loadingAborted) {
+                s.ingestFailed(error: nil, group: group, andCall: completion)
+                return
+            }
 			if let data = data {
                 s.handleData(data, resolveUrls: false, storeBytes: true, group: group, andCall: completion)
 			} else {
@@ -395,14 +406,16 @@ extension Component {
 		if let s = url.scheme, s.hasPrefix("http") {
 			WebArchiver.fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
 				guard let s = self else { return }
-                if !s.flags.contains(.loadingAborted) {
-                    s.accessoryTitle = title ?? s.accessoryTitle
-                    if let image = image {
-                        if image.size.height > 100 || image.size.width > 200 {
-                            s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
-                        } else {
-                            s.setDisplayIcon(image, 30, .center)
-                        }
+                if s.flags.contains(.loadingAborted) {
+                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    return
+                }
+                s.accessoryTitle = title ?? s.accessoryTitle
+                if let image = image {
+                    if image.size.height > 100 || image.size.width > 200 {
+                        s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
+                    } else {
+                        s.setDisplayIcon(image, 30, .center)
                     }
                 }
                 s.completeIngest(group: group, andCall: andCall)
