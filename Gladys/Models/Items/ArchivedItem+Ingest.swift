@@ -54,7 +54,7 @@ extension ArchivedItem {
 		let loadCount = components.count
         if isTemporarilyUnlocked {
             flags.remove(.needsUnlock)
-        } else {
+        } else if isLocked {
             flags.insert(.needsUnlock)
         }
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
