@@ -14,7 +14,7 @@ import MobileCoreServices
 #endif
 import GladysFramework
 
-extension ArchivedDropItemType: Equatable {
+extension Component: Equatable {
 
 	func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
@@ -34,7 +34,7 @@ extension ArchivedDropItemType: Equatable {
 		}
 	}
 
-	static func == (lhs: ArchivedDropItemType, rhs: ArchivedDropItemType) -> Bool {
+	static func == (lhs: Component, rhs: Component) -> Bool {
 		return lhs.uuid == rhs.uuid
 	}
 
@@ -475,7 +475,7 @@ extension ArchivedDropItemType: Equatable {
 		canPreviewCache = nil
 	}
 
-	var parent: ArchivedDropItem? {
+	var parent: ArchivedItem? {
 		return Model.item(uuid: parentUuid)
 	}
 }

@@ -30,7 +30,7 @@ final class MessageCell: UICollectionViewCell {
 		accessibilityHint = "Select to send"
 	}
 
-	var dropItem: ArchivedDropItem? {
+	var dropItem: ArchivedItem? {
 		didSet {
 			guard let dropItem = dropItem else { return }
 			topLabel.text = dropItem.displayText.0

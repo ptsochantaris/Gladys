@@ -20,7 +20,7 @@ enum ArchivedDropItemDisplayType: Int {
 }
 
 protocol ComponentIngestionDelegate: class {
-	func componentIngested(typeItem: ArchivedDropItemType?)
+	func componentIngested(typeItem: Component?)
 }
 
 extension Error {

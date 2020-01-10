@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+UICommon.swift
+//  Component+UICommon.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 07/05/2018.
@@ -13,7 +13,7 @@ import MapKit
 import MobileCoreServices
 #endif
 
-extension ArchivedDropItemType {
+extension Component {
 
 	var dataExists: Bool {
 		return FileManager.default.fileExists(atPath: bytesPath.path)

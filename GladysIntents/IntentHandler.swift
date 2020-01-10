@@ -12,7 +12,7 @@ import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
 
-	private var newItems = [ArchivedDropItem]()
+	private var newItems = [ArchivedItem]()
 	private var itemProviders = [NSItemProvider]()
 	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
 
@@ -92,7 +92,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
 
         for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: nil) {
+			for newItem in ArchivedItem.importData(providers: [provider], overrides: nil) {
 				newItems.append(newItem)
 			}
 		}

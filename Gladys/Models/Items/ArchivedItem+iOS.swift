@@ -8,7 +8,7 @@ import CoreSpotlight
 import MobileCoreServices
 import GladysFramework
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
 
@@ -75,12 +75,12 @@ extension ArchivedDropItem {
 
     private static var unlockingItemsBlock = Set<UUID>()
 	func unlock(label: String, action: String, completion: @escaping (Bool)->Void) {
-        if ArchivedDropItem.unlockingItemsBlock.contains(uuid) {
+        if ArchivedItem.unlockingItemsBlock.contains(uuid) {
             return
         }
-        ArchivedDropItem.unlockingItemsBlock.insert(uuid)
+        ArchivedItem.unlockingItemsBlock.insert(uuid)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            ArchivedDropItem.unlockingItemsBlock.remove(self.uuid)
+            ArchivedItem.unlockingItemsBlock.remove(self.uuid)
         }
         
         LocalAuth.attempt(label: label) { [weak self] success in
@@ -138,7 +138,7 @@ extension ArchivedDropItem {
 	}
 
     @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
-		var itemToPreview: ArchivedDropItemType?
+		var itemToPreview: Component?
 		if let childUuid = childUuid {
 			itemToPreview = typeItems.first { $0.uuid.uuidString == childUuid }
 		}

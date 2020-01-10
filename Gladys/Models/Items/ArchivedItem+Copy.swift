@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+Copy.swift
+//  ArchivedItem+Copy.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 06/11/2017.
@@ -11,7 +11,7 @@ import UIKit
 import Intents
 #endif
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = trimmedSuggestedName

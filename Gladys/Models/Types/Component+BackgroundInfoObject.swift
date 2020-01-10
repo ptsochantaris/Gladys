@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+BackgroundInfoObject.swift
+//  Component+BackgroundInfoObject.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 18/05/2018.
@@ -13,7 +13,7 @@ import Cocoa
 #endif
 import MapKit
 
-extension ArchivedDropItemType {
+extension Component {
 	var backgroundInfoObject: (Any?, Int) {
 		switch representedClass {
 		case .mapItem: return (decode() as? MKMapItem, 30)

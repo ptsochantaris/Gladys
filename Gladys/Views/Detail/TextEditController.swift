@@ -18,8 +18,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 
 	weak var delegate: TextEditControllerDelegate?
 
-	var item: ArchivedDropItem!
-	var typeEntry: ArchivedDropItemType!
+	var item: ArchivedItem!
+	var typeEntry: Component!
 	var hasChanges = false
 	var isAttributed = false
 
@@ -114,7 +114,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate, Compon
 		}
 	}
 
-	func componentIngested(typeItem: ArchivedDropItemType?) {
+	func componentIngested(typeItem: Component?) {
 		Model.save()
 		delegate?.textEditControllerMadeChanges(self)
 	}

@@ -4,7 +4,7 @@ import Foundation
 final class Model {
 
 	static var brokenMode = false
-	static var drops = ContiguousArray<ArchivedDropItem>()
+	static var drops = ContiguousArray<ArchivedItem>()
 	static var dataFileLastModified = Date.distantPast
 
 	private static var isStarted = false
@@ -70,7 +70,7 @@ final class Model {
 					} else {
 						itemCount = totalItemsInStore
 					}
-					var newDrops = ContiguousArray<ArchivedDropItem>()
+					var newDrops = ContiguousArray<ArchivedItem>()
 					newDrops.reserveCapacity(itemCount)
 					var c = 0
 					while c < d.count {
@@ -79,7 +79,7 @@ final class Model {
 											d[c+12], d[c+13], d[c+14], d[c+15]))
 						c += 16
 						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedDropItem.self, from: data) {
+						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
 							newDrops.append(item)
 						}
 					}
@@ -153,7 +153,7 @@ final class Model {
         return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
     }
 
-	static var visibleDrops: ContiguousArray<ArchivedDropItem> {
+	static var visibleDrops: ContiguousArray<ArchivedItem> {
 		return drops.filter { $0.isVisible }
 	}
 
@@ -172,20 +172,20 @@ final class Model {
 		return url
 	}()
 
-	static func item(uuid: String) -> ArchivedDropItem? {
+	static func item(uuid: String) -> ArchivedItem? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.first { $0.uuid == uuidData }
 	}
 
-	static func item(uuid: UUID) -> ArchivedDropItem? {
+	static func item(uuid: UUID) -> ArchivedItem? {
 		return drops.first { $0.uuid == uuid }
 	}
 
-	static func item(shareId: String) -> ArchivedDropItem? {
+	static func item(shareId: String) -> ArchivedItem? {
 		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
-	static func typeItem(uuid: String) -> ArchivedDropItemType? {
+	static func typeItem(uuid: String) -> Component? {
 		let uuidData = UUID(uuidString: uuid)
 		return drops.compactMap { $0.typeItems.first { $0.uuid == uuidData } }.first
 	}

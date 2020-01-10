@@ -76,7 +76,7 @@ final class GladysThumbnailItemView: NSScrubberItemView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func decorate(with item: ArchivedDropItem) {
+    func decorate(with item: ArchivedItem) {
         imageView.image = item.displayIcon
     }
 }

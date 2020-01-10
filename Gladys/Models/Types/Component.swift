@@ -5,7 +5,7 @@ import UIKit
 #endif
 import CloudKit
 
-final class ArchivedDropItemType: Codable {
+final class Component: Codable {
 
 	private enum CodingKeys : String, CodingKey {
 		case typeIdentifier
@@ -141,7 +141,7 @@ final class ArchivedDropItemType: Codable {
 		setBytes(data)
 	}
 
-	init(cloning item: ArchivedDropItemType, newParentUUID: UUID) {
+	init(cloning item: Component, newParentUUID: UUID) {
 		uuid = UUID()
 		isTransferring = false
 		needsDeletion = false
@@ -224,7 +224,7 @@ final class ArchivedDropItemType: Codable {
 		cloudKitRecord = record
 	}
 
-	init(from typeItem: ArchivedDropItemType, newParent: ArchivedDropItem) {
+	init(from typeItem: Component, newParent: ArchivedItem) {
 		parentUuid = newParent.uuid
 
 		displayIconPriority = 0

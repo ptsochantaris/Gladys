@@ -11,7 +11,7 @@ import ZIPFoundation
 
 extension Model {
 
-	private static func bringInItem(_ item: ArchivedDropItem, from url: URL, using fm: FileManager, moveItem: Bool) throws -> Bool {
+	private static func bringInItem(_ item: ArchivedItem, from url: URL, using fm: FileManager, moveItem: Bool) throws -> Bool {
 
 		let remotePath = url.appendingPathComponent(item.uuid.uuidString)
 		if !fm.fileExists(atPath: remotePath.path) {
@@ -43,7 +43,7 @@ extension Model {
 
         let finalPath = url.appendingPathComponent("items.json")
 		let data = try Data(contentsOf: finalPath, options: [.mappedIfSafe])
-		let itemsInPackage = try loadDecoder.decode(Array<ArchivedDropItem>.self, from: data)
+		let itemsInPackage = try loadDecoder.decode(Array<ArchivedItem>.self, from: data)
 
 		for item in itemsInPackage.reversed() {
 			if let i = drops.firstIndex(of: item) {
@@ -87,7 +87,7 @@ extension Model {
 		return p
 	}
 
-	static private func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedDropItem>, completion: @escaping (URL?, Error?) -> Void) throws {
+	static private func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>, completion: @escaping (URL?, Error?) -> Void) throws {
 		let fm = FileManager()
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -137,7 +137,7 @@ extension Model {
 		return p
 	}
 
-	static func createZipThread(dropsCopy: ContiguousArray<ArchivedDropItem>, progress p: Progress, completion: @escaping (URL?, Error?)->Void) throws {
+	static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress, completion: @escaping (URL?, Error?)->Void) throws {
 
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
@@ -169,7 +169,7 @@ extension Model {
 		completion(tempPath, nil)
 	}
 
-	static private func addZipItem(_ typeItem: ArchivedDropItemType, directory: String?, name: String, in archive: Archive) throws {
+	static private func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) throws {
 
 		var bytes: Data?
 		if typeItem.isWebURL, let url = typeItem.encodedUrl, let data = url.urlFileContent {
@@ -194,7 +194,7 @@ extension Model {
 			for name in contents {
                 let url = temporaryDirectoryUrl.appendingPathComponent(name)
                 let path = url.path
-                if (ArchivedDropItemType.PreviewItem.previewUrls[url] ?? 0) > 0 {
+                if (Component.PreviewItem.previewUrls[url] ?? 0) > 0 {
                     log("Temporary directory entry is in use, will skip check: \(path)")
                     continue
                 }

@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+Common.swift
+//  ArchivedItem+Common.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 07/05/2018.
@@ -26,9 +26,9 @@ struct ImportOverrides {
 
 let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
-extension ArchivedDropItem: Hashable {
+extension ArchivedItem: Hashable {
 
-	static func == (lhs: ArchivedDropItem, rhs: ArchivedDropItem) -> Bool {
+	static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
 		return lhs.uuid == rhs.uuid
 	}
 
@@ -177,12 +177,12 @@ extension ArchivedDropItem: Hashable {
 		set {
             let path = cloudKitDataPath
             dataAccessQueue.async {
-                FileManager.default.setBoolAttribute(ArchivedDropItem.needsCloudPushKey, at: path, to: newValue)
+                FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
             }
 		}
 		get {
             return dataAccessQueue.sync {
-                FileManager.default.getBoolAttribute(ArchivedDropItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
             }
 		}
 	}

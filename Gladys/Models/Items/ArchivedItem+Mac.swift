@@ -1,6 +1,6 @@
 import Cocoa
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 
     func removeIntents() {}
 
@@ -16,7 +16,7 @@ extension ArchivedDropItem {
 		}
 	}
 
-	var typeItemForFileDrop: ArchivedDropItemType? {
+	var typeItemForFileDrop: Component? {
 		return mostRelevantTypeItem ?? typeItems.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? typeItems.first
 	}
 

@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+CopyCommon.swift
+//  Component+CopyCommon.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 08/05/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension ArchivedDropItemType {
+extension Component {
 	var dataForDropping: Data? {
 		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
 			let decoded = decode()

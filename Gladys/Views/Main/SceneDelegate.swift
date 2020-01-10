@@ -70,7 +70,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @objc private func ingestComplete(_ notification: Notification) {
-        guard let item = notification.object as? ArchivedDropItem else { return }
+        guard let item = notification.object as? ArchivedItem else { return }
         if Model.doneIngesting {
             Model.save()
             if ingestRunning {
@@ -195,7 +195,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     return
                 }
                 
-                let child: ArchivedDropItemType?
+                let child: Component?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
                     child = Model.typeItem(uuid: childUuid)
                 } else {

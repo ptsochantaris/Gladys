@@ -342,13 +342,13 @@ extension CloudManager {
 					}
 				} else {
 					log("Will create new local item for cloud record (\(recordUUID))")
-					let newItem = ArchivedDropItem(from: record)
+					let newItem = ArchivedItem(from: record)
 					let newTypeItemRecords = stats.pendingTypeItemRecords.filter {
 						$0.parent?.recordID == recordID // takes zone into account
 					}
 					if !newTypeItemRecords.isEmpty {
 						let uuid = newItem.uuid
-						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { ArchivedDropItemType(from: $0, parentUuid: uuid) })
+						newItem.typeItems.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
 						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
 						log("  Hooked \(newTypeItemRecords.count) pending type items")
 					}
@@ -379,7 +379,7 @@ extension CloudManager {
 						log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
 					} else {
 						log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
-						existingParent.typeItems.append(ArchivedDropItemType(from: record, parentUuid: existingParent.uuid))
+						existingParent.typeItems.append(Component(from: record, parentUuid: existingParent.uuid))
 						existingParent.needsReIngest = true
 						stats.newTypeItemCount += 1
 					}
@@ -534,7 +534,7 @@ extension CloudManager {
 		OperationQueue.main.addOperation(doneOperation)
 	}
 
-	private static func fetchCloudRecord(for item: ArchivedDropItem?, completion: ((Error?) -> Void)?) {
+	private static func fetchCloudRecord(for item: ArchivedItem?, completion: ((Error?) -> Void)?) {
 		guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
 		let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
 		fetch.perRecordCompletionBlock = { record, _, error in
@@ -737,7 +737,7 @@ extension CloudManager {
 		}
 	}
 
-	static func share(item: ArchivedDropItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+	static func share(item: ArchivedItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
 		let shareRecord = CKShare(rootRecord: rootRecord)
 		shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
 		let icon = item.displayIcon
@@ -789,7 +789,7 @@ extension CloudManager {
 		}
 	}
 
-	static func deleteShare(_ item: ArchivedDropItem, completion: @escaping (Error?)->Void) {
+	static func deleteShare(_ item: ArchivedItem, completion: @escaping (Error?)->Void) {
 		guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
 			completion(nil)
 			return

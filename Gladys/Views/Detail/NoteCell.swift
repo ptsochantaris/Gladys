@@ -49,7 +49,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		previousHeight = 0
 	}
 
-	var item: ArchivedDropItem! {
+	var item: ArchivedItem! {
 		didSet {
 			textView.text = item.note
 			placeholder.isHidden = textView.hasText

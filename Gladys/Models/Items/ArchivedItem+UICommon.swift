@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+UICommon.swift
+//  ArchivedItem+UICommon.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 07/05/2018.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreSpotlight
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 
 	private static let dateFormatter: DateFormatter = {
 		let d = DateFormatter()
@@ -78,18 +78,18 @@ extension ArchivedDropItem {
 	}
 
 	var addedString: String {
-		return diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + ArchivedDropItem.dateFormatter.string(from: createdAt)
+		return diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + ArchivedItem.dateFormatter.string(from: createdAt)
 	}
 
-	var mostRelevantTypeItem: ArchivedDropItemType? {
+	var mostRelevantTypeItem: Component? {
 		return typeItems.max { $0.contentPriority < $1.contentPriority }
 	}
 
-	var previewableTypeItem: ArchivedDropItemType? {
+	var previewableTypeItem: Component? {
 		return typeItems.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }
 	}
 
-	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedDropItem, child: ArchivedDropItemType?, titled: String) {
+	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {
 		let uuidString = item.uuid.uuidString
 		activity.title = titled + " \"" + item.trimmedName + "\""
 

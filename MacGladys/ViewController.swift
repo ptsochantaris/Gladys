@@ -99,7 +99,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 		}
 	}
 
-	var actionableSelectedItems: [ArchivedDropItem] {
+	var actionableSelectedItems: [ArchivedItem] {
 		return selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return item.needsUnlock ? nil : item
@@ -267,7 +267,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
                 
         let a11 = n.addObserver(forName: .IngestComplete, object: nil, queue: .main) { [weak self] notification in
-            guard let item = notification.object as? ArchivedDropItem else { return }
+            guard let item = notification.object as? ArchivedItem else { return }
             self?.itemIngested(item)
         }
         
@@ -373,7 +373,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		updateScrollviewInsets()
 	}
 
-    private func itemIngested(_ item: ArchivedDropItem) {
+    private func itemIngested(_ item: ArchivedItem) {
 		if let (errorPrefix, error) = item.loadingError {
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
 		}
@@ -502,7 +502,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         updateEmptyView()
 	}
 
-    func touchedItem(_ item: ArchivedDropItem) {
+    func touchedItem(_ item: ArchivedItem) {
         if let index = Model.sharedFilter.filteredDrops.firstIndex(of: item) {
             let ip = IndexPath(item: index, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
@@ -663,7 +663,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		var inserted = false
 		for provider in itemProviders {
-			for newItem in ArchivedDropItem.importData(providers: [provider], overrides: overrides) {
+			for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
 
 				var modelIndex = indexPath.item
 				if Model.sharedFilter.isFiltering {
@@ -700,7 +700,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func modelDataUpdate(_ notification: Notification) {
         let parameters = notification.object as? [AnyHashable: Any]
         let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
-        let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedDropItem }.map { $0.uuid }
+        let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedItem }.map { $0.uuid }
 
         var removedItems = false
         collection.animator().performBatchUpdates({
@@ -783,7 +783,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
     
-    private func removeLockWithPassword(items: [ArchivedDropItem], label: String, plural: Bool) {
+    private func removeLockWithPassword(items: [ArchivedItem], label: String, plural: Bool) {
 		let a = NSAlert()
 		a.messageText = label
 		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
@@ -815,7 +815,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func addCellToSelection(_ sender: DropCell) {
-		if let cellItem = sender.representedObject as? ArchivedDropItem, let index = Model.sharedFilter.filteredDrops.firstIndex(of: cellItem) {
+		if let cellItem = sender.representedObject as? ArchivedItem, let index = Model.sharedFilter.filteredDrops.firstIndex(of: cellItem) {
 			let newIp = IndexPath(item: index, section: 0)
 			if !collection.selectionIndexPaths.contains(newIp) {
 				collection.selectionIndexPaths = [newIp]
@@ -895,7 +895,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-    private func unlockWithPassword(items: [ArchivedDropItem], label: String, plural: Bool) {
+    private func unlockWithPassword(items: [ArchivedItem], label: String, plural: Bool) {
 		let a = NSAlert()
         a.messageText = label
 		a.informativeText = plural ? "Please enter the password you provided when locking these items." : "Please enter the password you provided when locking this item."
@@ -1020,7 +1020,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
-	var lockableSelectedItems: [ArchivedDropItem] {
+	var lockableSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
 			let isLocked = item.isLocked
@@ -1029,20 +1029,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	var selectedItems: [ArchivedDropItem] {
+	var selectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.map {
 			Model.sharedFilter.filteredDrops[$0.item]
 		}
 	}
 
-	var removableLockSelectedItems: [ArchivedDropItem] {
+	var removableLockSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return (!item.isLocked || item.isImportedShare) ? nil : item
 		}
 	}
 
-	var unlockableSelectedItems: [ArchivedDropItem] {
+	var unlockableSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
 			return (!item.needsUnlock || item.isImportedShare) ? nil : item
@@ -1103,7 +1103,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		super.prepare(for: segue, sender: nil)
 		switch segue.identifier {
 		case "showDetail":
-			if let item = sender as? ArchivedDropItem,
+			if let item = sender as? ArchivedItem,
 				let window = segue.destinationController as? NSWindowController,
 				let d = window.contentViewController as? DetailController {
 				d.representedObject = item
@@ -1183,7 +1183,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
-		guard let qlItem = item as? ArchivedDropItemType.PreviewItem else { return .zero }
+		guard let qlItem = item as? Component.PreviewItem else { return .zero }
 		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.sharedFilter.filteredDrops.firstIndex(of: drop) {
 			let frameRealativeToCollection = collection.frameForItem(at: index)
 			let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
@@ -1195,9 +1195,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect: UnsafeMutablePointer<NSRect>!) -> Any! {
 		let visibleCells = collection.visibleItems()
-		if let qlItem = item as? ArchivedDropItemType.PreviewItem,
+		if let qlItem = item as? Component.PreviewItem,
 			let parentUuid = Model.typeItem(uuid: qlItem.uuid.uuidString)?.parentUuid,
-			let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedDropItem)?.uuid == parentUuid }) {
+			let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == parentUuid }) {
 			return (visibleCells[cellIndex] as? DropCell)?.previewImage
 		}
 		return nil

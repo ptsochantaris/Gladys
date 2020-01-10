@@ -50,7 +50,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	}
 
 	private var shortcutMenu: NSMenu? {
-		guard let item = representedObject as? ArchivedDropItemType else { return nil }
+		guard let item = representedObject as? Component else { return nil }
 		let m = NSMenu(title: item.displayTitle ?? "")
 		m.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
 		m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
@@ -119,7 +119,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 	}
 
 	private func decorate() {
-		guard let typeEntry = representedObject as? ArchivedDropItemType else { return }
+		guard let typeEntry = representedObject as? Component else { return }
 
 		sizeLabel.stringValue = typeEntry.sizeDescription ?? ""
 		descriptionLabel.stringValue = "\(typeEntry.typeDescription.uppercased()) (\(typeEntry.typeIdentifier.uppercased()))"

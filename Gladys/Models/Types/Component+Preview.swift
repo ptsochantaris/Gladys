@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+Preview.swift
+//  Component+Preview.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 03/12/2017.
@@ -14,7 +14,7 @@ import QuickLook
 import Quartz
 #endif
 
-extension ArchivedDropItemType {
+extension Component {
 
     var previewTempPath: URL {
         let fileName = oneTitle.truncate(limit: 100).trimmingCharacters(in: .whitespacesAndNewlines).filenameSafe
@@ -35,7 +35,7 @@ extension ArchivedDropItemType {
 		let parentUuid: UUID
 		let uuid: UUID
 
-		init(typeItem: ArchivedDropItemType) {
+		init(typeItem: Component) {
 
 			parentUuid = typeItem.parentUuid
 			uuid = typeItem.uuid

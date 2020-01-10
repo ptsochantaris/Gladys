@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+Intents.swift
+//  Component+Intents.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 02/10/2018.
@@ -9,7 +9,7 @@
 import UIKit
 import Intents
 
-extension ArchivedDropItemType {
+extension Component {
 	func copyToPasteboard(donateShortcut: Bool = true) {
 		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
 		if donateShortcut {

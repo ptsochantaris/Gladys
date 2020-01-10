@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+WebPreview.swift
+//  Component+WebPreview.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 07/05/2018.
@@ -18,7 +18,7 @@ import Cocoa
 #endif
 import GladysFramework
 
-extension ArchivedDropItemType {
+extension Component {
 
 	func startIngest(provider: NSItemProvider, delegate: ComponentIngestionDelegate, encodeAnyUIImage: Bool, createWebArchive: Bool) -> Progress {
 		self.delegate = delegate
@@ -81,7 +81,7 @@ extension ArchivedDropItemType {
     private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
 
     private func ingest(from url: URL, completion: @escaping ()->Void) {
-        ArchivedDropItemType.ingestQueue.async {
+        Component.ingestQueue.async {
             self._ingest(from: url, completion: completion)
         }
     }
@@ -103,7 +103,7 @@ extension ArchivedDropItemType {
 	}
 
     private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping ()->Void) {
-        ArchivedDropItemType.ingestQueue.async {
+        Component.ingestQueue.async {
             self._ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: storeBytes, completion: completion)
         }
     }

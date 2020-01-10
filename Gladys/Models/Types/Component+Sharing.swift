@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+Sharing.swift
+//  Component+Sharing.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 12/12/2017.
@@ -9,7 +9,7 @@
 import Foundation
 import MobileCoreServices
 
-extension ArchivedDropItemType {
+extension Component {
 
 	var attachPriority: Int {
 		if fileExtension == nil {

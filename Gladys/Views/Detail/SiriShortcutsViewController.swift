@@ -16,7 +16,7 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	@IBOutlet private weak var quickLookItemContainer: UIView!
 	@IBOutlet private weak var backgroundView: UIImageView!
     
-	var sourceItem: ArchivedDropItem?
+	var sourceItem: ArchivedItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -28,7 +28,7 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
 		if let sourceItem = sourceItem {
             let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-            ArchivedDropItem.updateUserActivity(activity, from: sourceItem, child: nil, titled: "Info of")
+            ArchivedItem.updateUserActivity(activity, from: sourceItem, child: nil, titled: "Info of")
 			detailShortcutButton.shortcut = INShortcut(userActivity: activity)
 		}
 		detailShortcutButton.place(in: openItemDetailContainer, buttonDelegate: self)
@@ -42,7 +42,7 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 		let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: style)
 		if let sourceItem = sourceItem {
 			let previewActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-			ArchivedDropItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
+			ArchivedItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
 			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
 		}
 		quickLookShortcutButton.place(in: quickLookItemContainer, buttonDelegate: self)

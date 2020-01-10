@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+Copy.swift
+//  Component+Copy.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 06/11/2017.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension ArchivedDropItemType {
+extension Component {
 
 	static var droppedIds = Set<UUID>()
 
@@ -20,7 +20,7 @@ extension ArchivedDropItemType {
 				log("Responding with data block for type: \(t)")
                 let response = self.dataForDropping ?? self.bytes
 				DispatchQueue.main.async {
-					ArchivedDropItemType.droppedIds.insert(self.parentUuid)
+					Component.droppedIds.insert(self.parentUuid)
                     p.completedUnitCount = 1
 				}
 				completion(response, nil)

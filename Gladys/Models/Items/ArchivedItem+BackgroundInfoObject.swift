@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+BackgroundInfoObject.swift
+//  ArchivedItem+BackgroundInfoObject.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 18/05/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 	var backgroundInfoObject: Any? {
 		var currentItem: Any?
 		var currentPriority = -1

@@ -4,7 +4,7 @@ import Foundation
 import MobileCoreServices
 #endif
 
-extension ArchivedDropItem: ComponentIngestionDelegate {
+extension ArchivedItem: ComponentIngestionDelegate {
 
 	static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
@@ -21,7 +21,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
         return identifiers
 	}
 
-	func componentIngested(typeItem: ArchivedDropItemType?) {
+	func componentIngested(typeItem: Component?) {
 		loadCount = loadCount - 1
 		if loadCount > 0 { return } // more to go
 
@@ -100,7 +100,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
 
 		for provider in providers {
 
-			var identifiers = ArchivedDropItem.sanitised(provider.registeredTypeIdentifiers)
+			var identifiers = ArchivedItem.sanitised(provider.registeredTypeIdentifiers)
 			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
 			let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
             let alreadyHasUrl = identifiers.contains("public.url")
@@ -128,7 +128,7 @@ extension ArchivedDropItem: ComponentIngestionDelegate {
                 }
 
                 loadCount += 1
-                let i = ArchivedDropItemType(typeIdentifier: finalType, parentUuid: uuid, delegate: self, order: order)
+                let i = Component(typeIdentifier: finalType, parentUuid: uuid, delegate: self, order: order)
 				let p = i.startIngest(provider: finalProvider, delegate: self, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive)
 				progressChildren.append(p)
 				typeItems.append(i)

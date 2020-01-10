@@ -260,14 +260,14 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	}
 
 	@objc private func itemModified(_ notification: Notification) {
-		if (notification.object as? ArchivedDropItem) == archivedDropItem {
+		if (notification.object as? ArchivedItem) == archivedDropItem {
 			representedObject = notification.object
 			reDecorate()
 		}
 	}
 
-	private var archivedDropItem: ArchivedDropItem? {
-		return representedObject as? ArchivedDropItem
+	private var archivedDropItem: ArchivedItem? {
+		return representedObject as? ArchivedItem
 	}
 
 	override var representedObject: Any? {
@@ -308,7 +308,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		var hideImage = true
 		var hideLock = true
 		var hideLabels = true
-		var share = ArchivedDropItem.ShareMode.none
+		var share = ArchivedItem.ShareMode.none
 
 		var topLabelText = ""
 		var topLabelAlignment = NSTextAlignment.center

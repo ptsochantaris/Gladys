@@ -91,7 +91,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	private var lastUpdate = Date.distantPast
-	private var lastShareMode = ArchivedDropItem.ShareMode.none
+	private var lastShareMode = ArchivedItem.ShareMode.none
 
 	@objc private func foreground(_ notification: Notification) {
 		if let uuid = notification.object as? UUID, item.uuid == uuid {
@@ -125,8 +125,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		DetailController.showingUUIDs.remove(item.uuid)
 	}
 
-	private var item: ArchivedDropItem {
-		return representedObject as! ArchivedDropItem
+	private var item: ArchivedItem {
+		return representedObject as! ArchivedItem
 	}
 
 	override func viewWillAppear() {
@@ -338,7 +338,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func updateUserActivityState(_ userActivity: NSUserActivity) {
 		super.updateUserActivityState(userActivity)
-		ArchivedDropItem.updateUserActivity(userActivity, from: item, child: nil, titled: "Info of")
+		ArchivedItem.updateUserActivity(userActivity, from: item, child: nil, titled: "Info of")
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -352,7 +352,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		return i
 	}
 
-	private func copy(item: ArchivedDropItemType) {
+	private func copy(item: Component) {
 		let p = NSPasteboard.general
 		p.clearContents()
 		p.writeObjects([item.pasteboardItem(forDrag: false)])
@@ -369,7 +369,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	}
 
 	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action) {
-		guard let i = componentCell.representedObject as? ArchivedDropItemType, let index = item.typeItems.firstIndex(of: i) else { return }
+		guard let i = componentCell.representedObject as? Component, let index = item.typeItems.firstIndex(of: i) else { return }
 
 		components.deselectAll(nil)
 		components.selectItems(at: [IndexPath(item: index, section: 0)], scrollPosition: [])
@@ -396,7 +396,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		}
 	}
 
-	private var selectedItem: ArchivedDropItemType? {
+	private var selectedItem: Component? {
 		if let index = components.selectionIndexes.first {
 			return item.typeItems[index]
 		}
@@ -454,7 +454,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@objc func shareSelected(_ sender: Any?) {
 		guard let i = components.selectionIndexes.first,
 			let cell = components.item(at: IndexPath(item: i, section: 0)),
-			let itemToShare = cell.representedObject as? ArchivedDropItemType
+			let itemToShare = cell.representedObject as? Component
 			else { return }
 
 		let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
@@ -518,7 +518,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 					}
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
-				let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+				let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 				DispatchQueue.main.async {
 					self.item.typeItems.append(newTypeItem)
 					self.saveItem()
@@ -539,7 +539,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
 				DispatchQueue.main.async {
-					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.typeItems.count)
+					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.typeItems.count)
 					self.item.typeItems.append(newTypeItem)
 					self.saveItem()
 				}
@@ -611,7 +611,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 				return true
 
 			} else if let pasteboardItem = draggingInfo.draggingPasteboard.pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
-				let typeItem = ArchivedDropItemType(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
+				let typeItem = Component(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
 				item.typeItems.insert(typeItem, at: destinationIndex)
 				item.needsReIngest = true
 				item.renumberTypeItems()

@@ -19,7 +19,7 @@ final class ModelFilterContext {
 
     private var modelFilter: String?
     private var currentFilterQuery: CSSearchQuery?
-    private var cachedFilteredDrops: ContiguousArray<ArchivedDropItem>?
+    private var cachedFilteredDrops: ContiguousArray<ArchivedItem>?
     
     private var reloadObservation: NSObjectProtocol?
     
@@ -54,7 +54,7 @@ final class ModelFilterContext {
         return isFilteringText || isFilteringLabels
     }
 
-    var filteredDrops: ContiguousArray<ArchivedDropItem> {
+    var filteredDrops: ContiguousArray<ArchivedItem> {
         if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
             cachedFilteredDrops = Model.drops
         }
@@ -74,11 +74,11 @@ final class ModelFilterContext {
         }
     }
     
-    var threadSafeFilteredDrops: ContiguousArray<ArchivedDropItem> {
+    var threadSafeFilteredDrops: ContiguousArray<ArchivedItem> {
         if Thread.isMainThread {
             return filteredDrops
         } else {
-            var dropsClone = ContiguousArray<ArchivedDropItem>()
+            var dropsClone = ContiguousArray<ArchivedItem>()
             DispatchQueue.main.sync {
                 dropsClone = filteredDrops
             }
@@ -93,7 +93,7 @@ final class ModelFilterContext {
         if filteredDrops.count == 0 {
             return 0
         }
-        let closestItem: ArchivedDropItem
+        let closestItem: ArchivedItem
         if index >= filteredDrops.count {
             closestItem = filteredDrops.last!
             if let i = Model.drops.firstIndex(of: closestItem) {
@@ -190,7 +190,7 @@ final class ModelFilterContext {
         return changesToVisibleItems
     }
     
-    private var postLabelDrops: ContiguousArray<ArchivedDropItem> {
+    private var postLabelDrops: ContiguousArray<ArchivedItem> {
         let enabledToggles = labelToggles.filter { $0.enabled }
         if enabledToggles.isEmpty { return Model.drops }
 
@@ -234,7 +234,7 @@ final class ModelFilterContext {
         return labelToggles.compactMap { $0.enabled ? $0.name : nil }
     }
     
-    var eligibleDropsForExport: ContiguousArray<ArchivedDropItem> {
+    var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
         let items = PersistedOptions.exportOnlyVisibleItems ? threadSafeFilteredDrops : Model.threadSafeDrops
         return items.filter { $0.goodToSave }
     }
@@ -415,10 +415,10 @@ extension Model {
 			case .size: return "Largest First"
 			}
 		}
-		private func sortElements(itemsToSort: ContiguousArray<ArchivedDropItem>) -> (ContiguousArray<ArchivedDropItem>, [Int]) {
+		private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
 			var itemIndexes = [Int]()
 			let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
-			let actualItemsToSort = toCheck.compactMap { item -> ArchivedDropItem? in
+			let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
 				if let index = Model.drops.firstIndex(of: item) {
 					itemIndexes.append(index)
 					return item
@@ -428,7 +428,7 @@ extension Model {
 			assert(actualItemsToSort.count == itemIndexes.count)
 			return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
 		}
-		func handlerForSort(itemsToSort: ContiguousArray<ArchivedDropItem>, ascending: Bool) -> ()->Void {
+		func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> ()->Void {
 			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
 			let sortType = self
 			return {
@@ -509,11 +509,11 @@ extension Model {
         delete(items: toDelete)
 	}
 
-	static var threadSafeDrops: ContiguousArray<ArchivedDropItem> {
+	static var threadSafeDrops: ContiguousArray<ArchivedItem> {
 		if Thread.isMainThread {
 			return drops
 		} else {
-			var dropsClone = ContiguousArray<ArchivedDropItem>()
+			var dropsClone = ContiguousArray<ArchivedItem>()
 			DispatchQueue.main.sync {
 				dropsClone = drops
 			}
@@ -537,19 +537,19 @@ extension Model {
 		return drops.contains { $0.isImportedShare }
 	}
 
-	static var itemsIAmSharing: ContiguousArray<ArchivedDropItem> {
+	static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
 		return drops.filter { $0.shareMode == .sharing }
 	}
 
-	static func duplicate(item: ArchivedDropItem) {
+	static func duplicate(item: ArchivedItem) {
 		if let previousIndex = drops.firstIndex(of: item) {
-			let newItem = ArchivedDropItem(cloning: item)
+			let newItem = ArchivedItem(cloning: item)
 			drops.insert(newItem, at: previousIndex+1)
             save()
 		}
 	}
 
-    static func delete(items: [ArchivedDropItem]) {
+    static func delete(items: [ArchivedItem]) {
         for item in items {
             item.delete()
         }
@@ -674,8 +674,8 @@ extension Model {
 		}
 	}
 
-    private static var commitQueue = ContiguousArray<ArchivedDropItem>()
-	static func commitItem(item: ArchivedDropItem) {
+    private static var commitQueue = ContiguousArray<ArchivedItem>()
+	static func commitItem(item: ArchivedItem) {
 		item.isBeingCreatedBySync = false
 		item.needsSaving = false
         commitQueue.append(item)
@@ -684,7 +684,7 @@ extension Model {
 		
         saveQueue.async {
             var nextItemUUIDs = Set<UUID>()
-            var itemsToSave = ContiguousArray<ArchivedDropItem>()
+            var itemsToSave = ContiguousArray<ArchivedItem>()
             DispatchQueue.main.sync {
                 nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map { $0.uuid })
                 commitQueue.removeAll()
@@ -702,7 +702,7 @@ extension Model {
 		}
 	}
     
-	private static func coordinatedSave(allItems: ContiguousArray<ArchivedDropItem>, dirtyUuids: Set<UUID>) throws {
+	private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
 		if brokenMode {
 			log("Ignoring save, model is broken, app needs restart.")
 			return
@@ -775,7 +775,7 @@ extension Model {
         drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.needsDeletion }.forEach { $0.reIngest() }
     }
     
-    static func sendToTop(items: [ArchivedDropItem]) {
+    static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map { $0.uuid })
         let cut = drops.filter { uuids.contains($0.uuid) }
         if cut.isEmpty { return }

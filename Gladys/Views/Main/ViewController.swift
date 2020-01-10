@@ -136,13 +136,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
         
-        ArchivedDropItemType.droppedIds.removeAll()
+        Component.droppedIds.removeAll()
 	}
     
 	func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
 		showDragModeOverlay(false)
         
-		let items = ArchivedDropItemType.droppedIds.compactMap { Model.item(uuid: $0) }
+		let items = Component.droppedIds.compactMap { Model.item(uuid: $0) }
 		if !items.isEmpty {
 			if dragModeMove {
 				Model.delete(items: items)
@@ -151,11 +151,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
         
-        ArchivedDropItemType.droppedIds.removeAll()
+        Component.droppedIds.removeAll()
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        ArchivedDropItemType.droppedIds.removeAll()
+        Component.droppedIds.removeAll()
 		let item = filter.filteredDrops[indexPath.item]
 		if item.needsUnlock { return [] }
 		return [item.dragItem]
@@ -225,9 +225,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         for dragItem in dropItems {
             
-            if let existingItem = dragItem.localObject as? ArchivedDropItem {
+            if let existingItem = dragItem.localObject as? ArchivedItem {
                 
-                ArchivedDropItemType.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
+                Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.drops.firstIndex(of: existingItem) {
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
@@ -237,7 +237,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
             } else {
                 
-                for item in ArchivedDropItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
+                for item in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
                     var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
                     
                     if filter.isFiltering {
@@ -329,7 +329,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			p.delegate = self
 
 		case "showDetail":
-			guard let item = sender as? ArchivedDropItem,
+			guard let item = sender as? ArchivedItem,
 				let indexPath = mostRecentIndexPathActioned,
 				let n = segue.destination as? UINavigationController,
 				let d = n.topViewController as? DetailController,
@@ -1198,7 +1198,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     @objc private func itemIngested(_ notification: Notification) {
-        guard let item = notification.object as? ArchivedDropItem else { return }
+        guard let item = notification.object as? ArchivedItem else { return }
 
 		if let (errorPrefix, error) = item.loadingError {
 			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)

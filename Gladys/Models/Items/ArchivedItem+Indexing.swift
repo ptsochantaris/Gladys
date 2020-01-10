@@ -1,7 +1,7 @@
 
 import CoreSpotlight
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 
 	var searchAttributes: CSSearchableItemAttributeSet {
 		let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")

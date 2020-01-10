@@ -51,7 +51,7 @@ final class MirrorManager {
         }
     }
     
-    static func removeItems(items: Set<ArchivedDropItem>) {
+    static func removeItems(items: Set<ArchivedItem>) {
         if items.isEmpty { return }
         let paths = items.map { $0.fileMirrorPath }
         coordinateWrite(types: [.forDeleting]) {
@@ -84,7 +84,7 @@ final class MirrorManager {
         }
     }
     
-    static func scanForMirrorChanges(items: ContiguousArray<ArchivedDropItem>, completion: @escaping ()->Void) {
+    static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>, completion: @escaping ()->Void) {
         coordinateRead(type: []) {
             let start = Date()
             for item in items {
@@ -106,7 +106,7 @@ final class MirrorManager {
         }
     }
     
-    static func mirrorToFiles(from drops: ContiguousArray<ArchivedDropItem>, andPruneOthers: Bool, completion: @escaping ()->Void) {
+    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool, completion: @escaping ()->Void) {
         coordinateWrite(types: [.forDeleting, .forMerging]) {
             
             do {
@@ -157,7 +157,7 @@ final class MirrorManager {
     }
 }
 
-extension ArchivedDropItem {
+extension ArchivedItem {
     fileprivate var fileMirrorPath: String {
         var base = MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)).path
         if typeItems.count == 1, let item = typeItems.first {
@@ -274,7 +274,7 @@ extension ArchivedDropItem {
     }
 }
 
-extension ArchivedDropItemType {
+extension Component {
     
     fileprivate func mirror(to path: String, using f: FileManager) throws -> Bool {
                 

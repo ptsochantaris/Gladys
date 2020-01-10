@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+ActivityItemSource.swift
+//  ArchivedItem+ActivityItemSource.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 13/11/2019.
@@ -10,12 +10,12 @@ import LinkPresentation
 
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     
-    private let component: ArchivedDropItemType
-    private let previewItem: ArchivedDropItemType.PreviewItem
+    private let component: Component
+    private let previewItem: Component.PreviewItem
     
-    init(component: ArchivedDropItemType) {
+    init(component: Component) {
         self.component = component
-        self.previewItem = ArchivedDropItemType.PreviewItem(typeItem: component)
+        self.previewItem = Component.PreviewItem(typeItem: component)
         super.init()
     }
     
@@ -57,7 +57,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     }
 }
 
-extension ArchivedDropItemType {
+extension Component {
     var sharingActivitySource: ArchivedDropItemActivitySource {
         return ArchivedDropItemActivitySource(component: self)
     }

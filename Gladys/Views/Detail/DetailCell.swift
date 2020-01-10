@@ -126,10 +126,10 @@ final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
         return d
     }()
     
-    private weak var component: ArchivedDropItemType?
+    private weak var component: Component?
     private weak var parent: DetailController?
 
-    func configure(with typeEntry: ArchivedDropItemType, showTypeDetails: Bool, parent: DetailController) -> Bool {
+    func configure(with typeEntry: Component, showTypeDetails: Bool, parent: DetailController) -> Bool {
         self.parent = parent
         component = typeEntry
 

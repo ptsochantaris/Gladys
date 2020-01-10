@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+Cloud.swift
+//  ArchivedItem+Cloud.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 27/10/2017.
@@ -8,7 +8,7 @@
 
 import CloudKit
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 	func cloudKitUpdate(from record: CKRecord) {
 
 		updatedAt = record["updatedAt"] as? Date ?? .distantPast

@@ -52,13 +52,13 @@ extension Model {
 		return count
 	}
 
-	static func locateItemWithoutLoading(uuid: String) -> ArchivedDropItem? {
+	static func locateItemWithoutLoading(uuid: String) -> ArchivedItem? {
 		if brokenMode {
 			log("Ignoring locate operation, model is broken, app needs restart.")
 			return nil
 		}
 
-		var item: ArchivedDropItem?
+		var item: ArchivedItem?
 		var coordinationError: NSError?
 
 		coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
@@ -70,7 +70,7 @@ extension Model {
 
 			let dataPath = url.appendingPathComponent(uuid)
 			if let data = try? Data(contentsOf: dataPath) {
-				item = try? loadDecoder.decode(ArchivedDropItem.self, from: data)
+				item = try? loadDecoder.decode(ArchivedItem.self, from: data)
 			}
 		}
 
@@ -81,13 +81,13 @@ extension Model {
 		return item
 	}
 
-	static func locateComponentWithoutLoading(uuid: String) -> (ArchivedDropItem, ArchivedDropItemType)? {
+	static func locateComponentWithoutLoading(uuid: String) -> (ArchivedItem, Component)? {
 		if brokenMode {
 			log("Ignoring locate component operation, model is broken, app needs restart.")
 			return nil
 		}
 
-		var result: (ArchivedDropItem, ArchivedDropItemType)?
+		var result: (ArchivedItem, Component)?
 		let uuidData = UUID(uuidString: uuid)
 
 		iterateThroughSavedItemsWithoutLoading { item in
@@ -100,7 +100,7 @@ extension Model {
 		return result
 	}
 
-	private static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedDropItem) -> Bool) {
+	private static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
 		if brokenMode {
 			log("Ignoring search operation, model is broken, app needs restart.")
 			return
@@ -126,7 +126,7 @@ extension Model {
 											d[c+12], d[c+13], d[c+14], d[c+15]))
 						c += 16
 						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedDropItem.self, from: data) {
+						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
 							go = perItemCallback(item)
 						}
 					}
@@ -142,7 +142,7 @@ extension Model {
 		}
 	}
 
-	static func insertNewItemsWithoutLoading(items: [ArchivedDropItem], addToDrops: Bool) {
+	static func insertNewItemsWithoutLoading(items: [ArchivedItem], addToDrops: Bool) {
 		if items.isEmpty { return }
 
 		if brokenMode {
@@ -186,7 +186,7 @@ extension Model {
 		}
 	}
 
-	static func commitExistingItemsWithoutLoading(_ items: [ArchivedDropItem]) {
+	static func commitExistingItemsWithoutLoading(_ items: [ArchivedItem]) {
 		if items.isEmpty { return }
 
 		if brokenMode {

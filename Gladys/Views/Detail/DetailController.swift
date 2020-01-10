@@ -7,7 +7,7 @@ final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
 	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
 
-	var item: ArchivedDropItem!
+	var item: ArchivedItem!
 
 	private var showTypeDetails = false
 
@@ -57,7 +57,7 @@ final class DetailController: GladysViewController,
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
 		if let item = item { // check for very weird corner case where item may be nil
-			ArchivedDropItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
+			ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
 		}
 	}
         
@@ -239,7 +239,7 @@ final class DetailController: GladysViewController,
 		}
 	}
         
-	private func checkInspection(for component: ArchivedDropItemType, in cell: DetailCell) {
+	private func checkInspection(for component: Component, in cell: DetailCell) {
 		if component.isPlist {
 			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
 			a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
@@ -259,7 +259,7 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private func setCallbacks(for cell: DetailCell, for typeEntry: ArchivedDropItemType) {
+	private func setCallbacks(for cell: DetailCell, for typeEntry: Component) {
 
 		cell.inspectionCallback = { [weak cell, weak self] in
 			if let s = self, let c = cell {
@@ -312,7 +312,7 @@ final class DetailController: GladysViewController,
 		}
 	}
     
-	private func editURL(_ typeItem: ArchivedDropItemType, existingEdit: String?) {
+	private func editURL(_ typeItem: Component, existingEdit: String?) {
 		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? typeItem.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }
 			if let newValue = newValue, let newURL = NSURL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
@@ -350,7 +350,7 @@ final class DetailController: GladysViewController,
         })
     }
 
-	func removeComponent(_ component: ArchivedDropItemType) {
+	func removeComponent(_ component: Component) {
         guard !blockedDueToSync(), let index = item.typeItems.firstIndex(of: component) else {
             return
         }
@@ -372,14 +372,14 @@ final class DetailController: GladysViewController,
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "textEdit",
-			let typeEntry = sender as? ArchivedDropItemType,
+			let typeEntry = sender as? Component,
 			let e = segue.destination as? TextEditController {
 			e.item = item
 			e.typeEntry = typeEntry
 			e.delegate = self
 
 		} else if segue.identifier == "hexEdit",
-			let typeEntry = sender as? ArchivedDropItemType,
+			let typeEntry = sender as? Component,
 			let e = segue.destination as? HexEdit {
 			
 			e.bytes = typeEntry.bytes ?? Data()
@@ -389,7 +389,7 @@ final class DetailController: GladysViewController,
 			e.title = typeEntry.typeDescription + " (\(size))"
 
 		} else if segue.identifier == "plistEdit",
-			let typeEntry = sender as? ArchivedDropItemType,
+			let typeEntry = sender as? Component,
 			let e = segue.destination as? PlistEditor,
 			let b = typeEntry.bytes,
 			let propertyList = try? PropertyListSerialization.propertyList(from: b, options: [], format: nil) {
@@ -462,7 +462,7 @@ final class DetailController: GladysViewController,
 				}
 				return UITableViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
 			}
-			if d.section == 2, let candidate = s.items.first?.localObject as? ArchivedDropItemType {
+			if d.section == 2, let candidate = s.items.first?.localObject as? Component {
 				let operationType: UIDropOperation = item.typeItems.contains(candidate) ? .move : .copy
 				return UITableViewDropProposal(operation: operationType, intent: .insertAtDestinationIndexPath)
 			}
@@ -554,7 +554,7 @@ final class DetailController: GladysViewController,
 					})
 				}
 
-			} else if let candidate = dragItem.localObject as? ArchivedDropItemType {
+			} else if let candidate = dragItem.localObject as? Component {
 				if destinationIndexPath.section == 1 {
 					// dropping external type item into labels
 					if let text = candidate.displayTitle {
@@ -569,7 +569,7 @@ final class DetailController: GladysViewController,
 				} else if destinationIndexPath.section == 2 {
 					// dropping external type item into type items
 					tableView.performBatchUpdates({
-                        let itemCopy = ArchivedDropItemType(from: candidate, newParent: item)
+                        let itemCopy = Component(from: candidate, newParent: item)
                         item.typeItems.insert(itemCopy, at: destinationIndexPath.item)
                         item.renumberTypeItems()
 						tableView.insertRows(at: [destinationIndexPath], with: .automatic)
@@ -669,7 +669,7 @@ final class DetailController: GladysViewController,
 		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
 			if let image = image, let data = image.jpegData(compressionQuality: 1) {
 				DispatchQueue.main.async {
-					let newTypeItem = ArchivedDropItemType(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 					self.item.typeItems.append(newTypeItem)
 					self.handleNewTypeItem()
 				}
@@ -703,7 +703,7 @@ final class DetailController: GladysViewController,
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
 				DispatchQueue.main.async {
-					let newTypeItem = ArchivedDropItemType(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
+					let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.typeItems.count)
 					self.item.typeItems.append(newTypeItem)
 					self.handleNewTypeItem()
 				}
@@ -714,7 +714,7 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private func refreshComponent(_ component: ArchivedDropItemType) {
+	private func refreshComponent(_ component: Component) {
 		if let indexOfComponent = item.typeItems.firstIndex(of: component) {
 			let totalRows = tableView(table, numberOfRowsInSection: 2)
 			if indexOfComponent >= totalRows { return }

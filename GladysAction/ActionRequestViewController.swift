@@ -22,7 +22,7 @@ final class ActionRequestViewController: UIViewController {
 
 	private var loadCount = 0
 	private var firstAppearance = true
-	private var newItems = [ArchivedDropItem]()
+	private var newItems = [ArchivedItem]()
 	private var uploadObservation: NSKeyValueObservation?
 	private var uploadProgress: Progress?
 
@@ -117,12 +117,12 @@ final class ActionRequestViewController: UIViewController {
 		}
 
 		if allDifferentTypes { // posibly this is a composite item, leave it up to the user's settings
-			for newItem in ArchivedDropItem.importData(providers: providerList, overrides: nil) {
+			for newItem in ArchivedItem.importData(providers: providerList, overrides: nil) {
 				newItems.append(newItem)
 			}
 		} else { // list of items shares common types, let's assume they are multiple items per provider
 			for provider in providerList {
-				for newItem in ArchivedDropItem.importData(providers: [provider], overrides: nil) {
+				for newItem in ArchivedItem.importData(providers: [provider], overrides: nil) {
 					newItems.append(newItem)
 				}
 			}

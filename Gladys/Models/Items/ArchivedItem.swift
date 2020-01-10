@@ -2,13 +2,13 @@
 import Foundation
 import CloudKit
 
-final class ArchivedDropItem: Codable {
+final class ArchivedItem: Codable {
 
 	let suggestedName: String?
 	let uuid: UUID
 	let createdAt:  Date
 
-	var typeItems: ContiguousArray<ArchivedDropItemType> {
+	var typeItems: ContiguousArray<Component> {
 		didSet {
 			needsSaving = true
 		}
@@ -102,7 +102,7 @@ final class ArchivedDropItem: Codable {
 		createdAt = c
 		updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
 		uuid = try v.decode(UUID.self, forKey: .uuid)
-		typeItems = try v.decode(ContiguousArray<ArchivedDropItemType>.self, forKey: .typeItems)
+		typeItems = try v.decode(ContiguousArray<Component>.self, forKey: .typeItems)
 		needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
 		note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
@@ -117,7 +117,7 @@ final class ArchivedDropItem: Codable {
 	}
 
 	#if MAINAPP || MAC
-	init(cloning item: ArchivedDropItem) {
+	init(cloning item: ArchivedItem) {
 		let myUUID = UUID()
 		uuid = myUUID
 
@@ -138,26 +138,26 @@ final class ArchivedDropItem: Codable {
 		labels = item.labels
 
 		typeItems = ContiguousArray(item.typeItems.map {
-			ArchivedDropItemType(cloning: $0, newParentUUID: myUUID)
+			Component(cloning: $0, newParentUUID: myUUID)
 		})
 	}
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
 
-	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedDropItem> {
+	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedItem> {
 		if PersistedOptions.separateItemPreference {
-			var res = ContiguousArray<ArchivedDropItem>()
+			var res = ContiguousArray<ArchivedItem>()
 			for p in providers {
 				for t in sanitised(p.registeredTypeIdentifiers) {
-					let item = ArchivedDropItem(providers: [p], limitToType: t, overrides: overrides)
+					let item = ArchivedItem(providers: [p], limitToType: t, overrides: overrides)
 					res.append(item)
 				}
 			}
 			return res
 
 		} else {
-			let item = ArchivedDropItem(providers: providers, limitToType: nil, overrides: overrides)
+			let item = ArchivedItem(providers: providers, limitToType: nil, overrides: overrides)
 			return [item]
 		}
 	}
@@ -177,7 +177,7 @@ final class ArchivedDropItem: Codable {
 		titleOverride = overrides?.title ?? ""
 		note = overrides?.note ?? ""
 		labels = overrides?.labels ?? []
-		typeItems = ContiguousArray<ArchivedDropItemType>()
+		typeItems = ContiguousArray<Component>()
 		needsSaving = true
 		needsUnlock = false
         skipMirrorAtNextSave = false

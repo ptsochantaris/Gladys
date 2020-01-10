@@ -10,7 +10,7 @@ import Cocoa
 
 final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
-    static func provider(for component: ArchivedDropItemType, with title: String, extraItems: ContiguousArray<ArchivedDropItemType>, tags: [String]?) -> GladysFilePromiseProvider {
+    static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
 		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
 
@@ -25,9 +25,9 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 		return p
 	}
 
-	private var extraItems: ContiguousArray<ArchivedDropItemType>?
+	private var extraItems: ContiguousArray<Component>?
 	private var strongDelegate: GladysFileProviderDelegate?
-	private var component: ArchivedDropItemType?
+	private var component: Component?
 	private var tempPath: URL?
     private var tags: [String]?
 
@@ -75,12 +75,12 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 
 final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate {
 
-	private weak var typeItem: ArchivedDropItemType?
+	private weak var typeItem: Component?
 	private let title: String
 	private let tempPath: URL
     private let tags: [String]?
 
-    init(item: ArchivedDropItemType, title: String, tempPath: URL, tags: [String]?) {
+    init(item: Component, title: String, tempPath: URL, tags: [String]?) {
 		typeItem = item
         self.tags = tags
 		self.title = title
@@ -110,7 +110,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 	}
 }
 
-extension ArchivedDropItemType {
+extension Component {
     fileprivate func writeBytes(to destinationUrl: URL, tags: [String]?) throws {
 
 		Model.trimTemporaryDirectory()

@@ -4,7 +4,7 @@ import MapKit
 import Contacts
 import ContactsUI
 
-extension ArchivedDropItemType {
+extension Component {
 
 	var isArchivable: Bool {
 		if let e = encodedUrl, !e.isFileURL, e.host != nil, let s = e.scheme, s.hasPrefix("http") {
@@ -233,10 +233,10 @@ extension ArchivedDropItemType {
 	private static let lastModificationKey = "build.bru.Gladys.lastGladysModification"
 	var lastGladysBlobUpdate: Date? { // be sure to protect with dataAccessQueue
 		get {
-            return FileManager.default.getDateAttribute(ArchivedDropItemType.lastModificationKey, from: bytesPath)
+            return FileManager.default.getDateAttribute(Component.lastModificationKey, from: bytesPath)
 		}
 		set {
-            FileManager.default.setDateAttribute(ArchivedDropItemType.lastModificationKey, at: bytesPath, to: newValue)
+            FileManager.default.setDateAttribute(Component.lastModificationKey, at: bytesPath, to: newValue)
 		}
 	}
     

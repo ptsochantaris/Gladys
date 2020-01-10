@@ -16,10 +16,10 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	var address: URL?
-	var webArchive: ArchivedDropItemType.PreviewItem?
+	var webArchive: Component.PreviewItem?
 
-	var relatedItem: ArchivedDropItem?
-	var relatedChildItem: ArchivedDropItemType?
+	var relatedItem: ArchivedItem?
+	var relatedChildItem: Component?
 
 	private var loadCheck1: NSKeyValueObservation!
 	private var loadCheck2: NSKeyValueObservation!
@@ -63,7 +63,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	override func updateUserActivityState(_ activity: NSUserActivity) {
 		super.updateUserActivityState(activity)
 		if let relatedItem = relatedItem {
-			ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Web preview of")
+			ArchivedItem.updateUserActivity(activity, from: relatedItem, child: relatedChildItem, titled: "Web preview of")
 		}
 	}
 

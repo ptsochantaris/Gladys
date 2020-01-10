@@ -14,7 +14,7 @@ extension UIColor {
 	}
 }
 
-extension ArchivedDropItemType {
+extension Component {
 
 	func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) {
 

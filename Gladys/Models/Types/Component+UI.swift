@@ -34,9 +34,9 @@ final class LinkViewController: UIViewController {
 }
 
 final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource {
-    private var typeItem: ArchivedDropItemType
+    private var typeItem: Component
         
-    init(item: ArchivedDropItemType) {
+    init(item: Component) {
         self.typeItem = item
         super.init(nibName: nil, bundle: nil)
         title = item.oneTitle
@@ -57,7 +57,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         if let relatedItem = typeItem.parent {
-            ArchivedDropItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
+            ArchivedItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
         }
     }
     
@@ -66,11 +66,11 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     }
 
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        return ArchivedDropItemType.PreviewItem(typeItem: typeItem)
+        return Component.PreviewItem(typeItem: typeItem)
     }
 }
 
-extension ArchivedDropItemType {
+extension Component {
 
 	var dragItem: UIDragItem {
 		let i = UIDragItem(itemProvider: itemProvider)

@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItemType+iOS.swift
+//  Component+iOS.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 10/01/2020.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension ArchivedDropItemType {
+extension Component {
     var displayIcon: UIImage? {
         set {
             let ipath = imagePath

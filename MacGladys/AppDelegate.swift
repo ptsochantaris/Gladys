@@ -550,7 +550,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		}
 	}
 
-	private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedDropItem>) {
+	private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedItem>) {
 		if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
 			let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)
 			sortMethod()

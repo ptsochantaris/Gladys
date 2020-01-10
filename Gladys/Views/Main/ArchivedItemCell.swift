@@ -122,7 +122,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		}
 	}
 
-	var shareMode: ArchivedDropItem.ShareMode = ArchivedDropItem.ShareMode.none {
+	var shareMode: ArchivedItem.ShareMode = .none {
 		didSet {
 			if oldValue == shareMode { return }
 			let shouldShow = shareMode != .none
@@ -203,7 +203,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		}
 	}
 
-	var archivedDropItem: ArchivedDropItem? {
+	var archivedDropItem: ArchivedItem? {
 		didSet {
 			reDecorate()
 		}
@@ -228,7 +228,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 	var lowMemoryMode = false
 
 	@objc private func itemModified(_ notification: Notification) {
-        guard (notification.object as? ArchivedDropItem) == archivedDropItem else { return }
+        guard (notification.object as? ArchivedItem) == archivedDropItem else { return }
         if !lowMemoryMode, viewWithTag(82646) == nil, let snap = snapshotView(afterScreenUpdates: true) {
 			snap.tag = 82646
             addSubview(snap)
@@ -251,7 +251,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		}
 	}
 
-	static func warmUp(for item: ArchivedDropItem) {
+	static func warmUp(for item: ArchivedItem) {
 		imageProcessingQueue.async {
 			let cacheKey = item.imageCacheKey
 			if imageCache.object(forKey: cacheKey) == nil {
@@ -260,7 +260,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		}
 	}
 
-	private func decorate(with item: ArchivedDropItem?) {
+	private func decorate(with item: ArchivedItem?) {
 
 		var wantColourView = false
 		var wantMapView = false
@@ -268,7 +268,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		var hideProgress = true
 		var hideSpinner = true
 		var hideLock = true
-		var shared = ArchivedDropItem.ShareMode.none
+		var shared = ArchivedItem.ShareMode.none
 
 		var topLabelText: String?
 		var topLabelAlignment: NSTextAlignment?

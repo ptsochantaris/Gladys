@@ -1,5 +1,5 @@
 //
-//  ArchivedDropItem+Share.swift
+//  ArchivedItem+Share.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 03/12/2017.
@@ -9,7 +9,7 @@
 import Foundation
 import MobileCoreServices
 
-extension ArchivedDropItem {
+extension ArchivedItem {
 
 	var attachmentForMessage: URL? {
 		for t in typeItems {
@@ -38,7 +38,7 @@ extension ArchivedDropItem {
 		return (tile, nil)
 	}
 
-	var attachableTypeItem: ArchivedDropItemType? {
+	var attachableTypeItem: Component? {
 		if let i = typeItems.max(by: { $0.attachPriority < $1.attachPriority }), i.attachPriority > 0 {
 			return i
 		} else {
