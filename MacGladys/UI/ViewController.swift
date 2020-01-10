@@ -102,7 +102,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 	var actionableSelectedItems: [ArchivedItem] {
 		return selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
-			return item.needsUnlock ? nil : item
+            return item.flags.contains(.needsUnlock) ? nil : item
 		}
 	}
 
@@ -565,7 +565,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-		return !indexPaths.map { Model.sharedFilter.filteredDrops[$0.item].needsUnlock }.contains(true)
+        return !indexPaths.contains { Model.sharedFilter.filteredDrops[$0.item].flags.contains(.needsUnlock) }
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
@@ -774,7 +774,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 for item in items {
                     item.lockPassword = nil
                     item.lockHint = nil
-                    item.needsUnlock = false
+                    item.flags.remove(.needsUnlock)
                     item.markUpdated()
                 }
             } else {
@@ -801,7 +801,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				for item in items where item.lockPassword == hash {
 					item.lockPassword = nil
 					item.lockHint = nil
-					item.needsUnlock = false
+                    item.flags.remove(.needsUnlock)
 					item.markUpdated()
 					successCount += 1
 				}
@@ -825,9 +825,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func createLock(_ sender: Any?) {
 
-		let instaLock = lockableSelectedItems.filter { $0.isLocked && !$0.needsUnlock }
+		let instaLock = lockableSelectedItems.filter { $0.isLocked && !$0.flags.contains(.needsUnlock) }
 		for item in instaLock {
-			item.needsUnlock = true
+            item.flags.insert(.needsUnlock)
 			item.postModified()
 		}
 
@@ -865,7 +865,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				if !text.isEmpty {
 					let hashed = sha1(text)
 					for item in items {
-						item.needsUnlock = true
+                        item.flags.insert(.needsUnlock)
 						item.lockPassword = hashed
 						item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
 						item.markUpdated()
@@ -886,7 +886,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         LocalAuth.attempt(label: label) { [weak self] success in
             if success {
                 for item in items {
-                    item.needsUnlock = false
+                    item.flags.remove(.needsUnlock)
                     item.postModified()
                 }
             } else {
@@ -911,7 +911,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				var successCount = 0
 				let hashed = sha1(text)
 				for item in items where item.lockPassword == hashed {
-					item.needsUnlock = false
+                    item.flags.remove(.needsUnlock)
 					item.postModified()
 					successCount += 1
 				}
@@ -1024,7 +1024,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
 			let isLocked = item.isLocked
-			let canBeLocked = !isLocked || (isLocked && !item.needsUnlock)
+			let canBeLocked = !isLocked || (isLocked && !item.flags.contains(.needsUnlock))
 			return (!canBeLocked || item.isImportedShare) ? nil : item
 		}
 	}
@@ -1045,7 +1045,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	var unlockableSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
 			let item = Model.sharedFilter.filteredDrops[$0.item]
-			return (!item.needsUnlock || item.isImportedShare) ? nil : item
+			return (!item.flags.contains(.needsUnlock) || item.isImportedShare) ? nil : item
 		}
 	}
 

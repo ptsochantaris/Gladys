@@ -195,7 +195,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 	}
     
 	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
-		if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.needsUnlock {
+        if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.flags.contains(.needsUnlock) {
 			pinchRecognizer.state = .ended
             if let presenter = window?.alertPresenter {
                 item.tryPreview(in: presenter, from: self)
@@ -290,7 +290,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 					progressView.observedProgress = item.loadingProgress
 				}
 
-			} else if item.needsUnlock {
+			} else if item.flags.contains(.needsUnlock) {
 				hideLock = false
 				bottomLabelAlignment = .center
 				bottomLabelText = item.lockHint
@@ -703,12 +703,12 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
             
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = archivedDropItem else { return nil }
-        if item.needsUnlock {
+        if item.flags.contains(.needsUnlock) {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
                 let unlockAction = UIAction(title: "Unlock") { _ in
                     item.unlock(label: "Unlock Item", action: "Unlock") { success in
                         if success {
-                            item.needsUnlock = false
+                            item.flags.remove(.needsUnlock)
                             item.postModified()
                         }
                     }

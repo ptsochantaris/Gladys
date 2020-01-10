@@ -20,7 +20,11 @@ extension ArchivedItem {
 		labels = (record["labels"] as? [String]) ?? []
 
 		needsReIngest = true
-		needsUnlock = lockPassword != nil
+        if isLocked {
+            flags.insert(.needsUnlock)
+        } else {
+            flags.remove(.needsUnlock)
+        }
 
 		cloudKitRecord = record
 	}

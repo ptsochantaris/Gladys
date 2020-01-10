@@ -68,7 +68,7 @@ extension ArchivedItem {
 				completion(nil, nil)
 				return
 			}
-			self?.needsUnlock = true
+            self?.flags.insert(.needsUnlock)
 			completion(sha1(password), hint)
 		}
 	}
@@ -85,7 +85,7 @@ extension ArchivedItem {
         
         LocalAuth.attempt(label: label) { [weak self] success in
             if success {
-                self?.needsUnlock = false
+                self?.flags.remove(.needsUnlock)
                 completion(true)
             } else {
                 self?.unlockWithPassword(label: label, action: action, completion: completion)
@@ -100,7 +100,7 @@ extension ArchivedItem {
 				return
 			}
 			if self?.lockPassword == sha1(password) {
-				self?.needsUnlock = false
+                self?.flags.remove(.needsUnlock)
 				completion(true)
 			} else {
 				genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
@@ -165,7 +165,7 @@ extension ArchivedItem {
 	}
     
     var shouldDisplay: Bool {
-        return !isBeingCreatedBySync && goodToSave
+        return !flags.contains(.isBeingCreatedBySync) && goodToSave
     }
 
 	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {

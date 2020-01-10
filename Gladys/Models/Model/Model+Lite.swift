@@ -164,8 +164,8 @@ extension Model {
 				}
 
 				for item in items {
-					item.isBeingCreatedBySync = false
-					item.needsSaving = false
+                    item.flags.remove(.isBeingCreatedBySync)
+                    item.flags.remove(.needsSaving)
 					let u = item.uuid
 					let t = u.uuid
                     let finalPath = url.appendingPathComponent(u.uuidString)
@@ -199,8 +199,8 @@ extension Model {
 		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
 			do {
 				for item in items {
-					item.needsSaving = false
-					item.isBeingCreatedBySync = false
+                    item.flags.remove(.isBeingCreatedBySync)
+                    item.flags.remove(.needsSaving)
                     let finalPath = url.appendingPathComponent(item.uuid.uuidString)
 					try saveEncoder.encode(item).write(to: finalPath, options: [])
 				}

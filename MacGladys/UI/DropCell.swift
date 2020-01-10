@@ -331,7 +331,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 				hideSpinner = false
 				image.flatColor()
 
-			} else if item.needsUnlock {
+            } else if item.flags.contains(.needsUnlock) {
 				hideLock = false
 				image.flatColor()
 				bottomLabelAlignment = .center
@@ -589,7 +589,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			lockItems.append(m)
 		}
 
-		if !item.needsUnlock {
+		if !item.flags.contains(.needsUnlock) {
 			menu.title =  item.displayTitleOrUuid
 			menu.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
 			menu.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
@@ -607,7 +607,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			}
 		}
 
-		if !item.needsUnlock {
+		if !item.flags.contains(.needsUnlock) {
 			menu.addItem(NSMenuItem.separator())
 			menu.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
 		}
@@ -639,7 +639,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             return
         }
 
-        if let a = archivedDropItem, a.needsUnlock {
+        if let a = archivedDropItem, a.flags.contains(.needsUnlock) {
             ViewController.shared.unlock(self)
         } else {
             switch action {

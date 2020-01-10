@@ -1,5 +1,5 @@
 //
-//  Component+Sharing.swift
+//  Component+Messages.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 12/12/2017.

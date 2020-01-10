@@ -200,7 +200,7 @@ extension Component {
 		if let canPreviewCache = canPreviewCache {
 			return canPreviewCache
 		}
-		let res = fileExtension != nil && !(parent?.needsUnlock ?? true)
+        let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
 		canPreviewCache = res
 		return res
 	}

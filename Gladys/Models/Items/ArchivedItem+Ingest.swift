@@ -50,8 +50,11 @@ extension ArchivedItem {
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
 		let loadCount = components.count
-		let wasExplicitlyUnlocked = lockPassword != nil && !needsUnlock
-		needsUnlock = lockPassword != nil && !wasExplicitlyUnlocked
+        if isTemporarilyUnlocked {
+            flags.remove(.needsUnlock)
+        } else {
+            flags.insert(.needsUnlock)
+        }
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
         

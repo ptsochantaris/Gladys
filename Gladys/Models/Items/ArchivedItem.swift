@@ -10,58 +10,61 @@ final class ArchivedItem: Codable {
 
 	var components: ContiguousArray<Component> {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var updatedAt: Date {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var needsReIngest: Bool {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var needsDeletion: Bool {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var note: String {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var titleOverride: String {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 	var labels: [String] {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
-
 	var lockPassword: Data? {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
-
 	var lockHint: String? {
 		didSet {
-			needsSaving = true
+            flags.insert(.needsSaving)
 		}
 	}
 
 	// Transient
+    struct Flags: OptionSet {
+        let rawValue: UInt8
+        static let needsSaving          = Flags(rawValue: 1 << 0)
+        static let needsUnlock          = Flags(rawValue: 1 << 1)
+        static let isBeingCreatedBySync = Flags(rawValue: 1 << 2)
+        static let skipMirrorAtNextSave = Flags(rawValue: 1 << 3)
+    }
+
+    var flags: Flags
 	var loadingProgress: Progress?
-	var needsSaving: Bool
-	var needsUnlock: Bool
-    var isBeingCreatedBySync: Bool
-    var skipMirrorAtNextSave: Bool
 
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
@@ -107,12 +110,9 @@ final class ArchivedItem: Codable {
 		titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
 		labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
-		lockPassword = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
 		lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
-		needsSaving = false
-		needsUnlock = lockPassword != nil
-        skipMirrorAtNextSave = false
-        isBeingCreatedBySync = false
+        lockPassword = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+        flags = lockPassword == nil ? [] : .needsUnlock
 	}
 
 	#if MAINAPP || MAC
@@ -125,11 +125,8 @@ final class ArchivedItem: Codable {
 		lockPassword = nil
 		lockHint = nil
 		needsReIngest = true
-		needsUnlock = false
-		needsSaving = true
 		needsDeletion = false
-        skipMirrorAtNextSave = false
-        isBeingCreatedBySync = false
+        flags = .needsSaving
 
 		titleOverride = item.titleOverride
 		note = item.note
@@ -181,10 +178,7 @@ final class ArchivedItem: Codable {
 		note = overrides?.note ?? ""
 		labels = overrides?.labels ?? []
 		components = ContiguousArray<Component>()
-		needsSaving = true
-		needsUnlock = false
-        skipMirrorAtNextSave = false
-        isBeingCreatedBySync = false
+        flags = .needsSaving
 
 		loadingProgress = startNewItemIngest(providers: providers, limitToType: limitToType)
 	}
@@ -198,7 +192,7 @@ final class ArchivedItem: Codable {
 	}
     
     var eligibleForExternalUpdateCheck: Bool {
-        return !(needsDeletion || needsReIngest || isBeingCreatedBySync || loadingProgress != nil || shareMode == .elsewhereReadOnly)
+        return !(needsDeletion || needsReIngest || flags.contains(.isBeingCreatedBySync) || loadingProgress != nil || shareMode == .elsewhereReadOnly)
     }
 
 	init(from record: CKRecord) {
@@ -216,13 +210,15 @@ final class ArchivedItem: Codable {
 		labels = (record["labels"] as? [String]) ?? []
 
 		needsReIngest = true
-		needsUnlock = lockPassword != nil
+        needsDeletion = false
 
-		needsSaving = true
-		needsDeletion = false
-		components = []
-		isBeingCreatedBySync = true
-        skipMirrorAtNextSave = false
+        components = []
+
+        if lockPassword == nil {
+            flags = [.isBeingCreatedBySync, .needsSaving]
+        } else {
+            flags = [.isBeingCreatedBySync, .needsSaving, .needsUnlock]
+        }
 
 		cloudKitRecord = record
 	}

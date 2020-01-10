@@ -157,14 +157,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         Component.droppedIds.removeAll()
 		let item = filter.filteredDrops[indexPath.item]
-		if item.needsUnlock { return [] }
+        if item.flags.contains(.needsUnlock) { return [] }
 		return [item.dragItem]
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
 		let item = filter.filteredDrops[indexPath.item]
 		let dragItem = item.dragItem
-		if session.localContext as? String == "typeItem" || session.items.contains(dragItem) || item.needsUnlock {
+        if session.localContext as? String == "typeItem" || session.items.contains(dragItem) || item.flags.contains(.needsUnlock) {
 			return []
 		} else {
 			return [dragItem]
@@ -432,11 +432,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				cell.isSelectedForAction = (selectedIndex == nil)
 			}
 
-		} else if item.needsUnlock {
+		} else if item.flags.contains(.needsUnlock) {
 			mostRecentIndexPathActioned = indexPath
             item.unlock(label: "Unlock Item", action: "Unlock") { success in
                 if success {
-                    item.needsUnlock = false
+                    item.flags.remove(.needsUnlock)
                     item.postModified()
                 }
             }

@@ -82,7 +82,7 @@ extension ArchivedItem: Hashable {
 	}
 
 	var isTemporarilyUnlocked: Bool {
-		return isLocked && !needsUnlock
+        return isLocked && !flags.contains(.needsUnlock)
 	}
 
 	var associatedWebURL: URL? {

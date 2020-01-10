@@ -558,7 +558,7 @@ extension Model {
 
 	static func lockUnlockedItems() {
 		for item in drops where item.isTemporarilyUnlocked {
-			item.needsUnlock = true
+            item.flags.insert(.needsUnlock)
 			item.postModified()
 		}
 	}
@@ -618,13 +618,13 @@ extension Model {
         drops.removeAll { $0.needsDeletion }
 
         let saveableItems: ContiguousArray = drops.filter { $0.goodToSave }
-        let itemsToWrite = saveableItems.filter { $0.needsSaving }
+        let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         let searchableItems = itemsToWrite.map { $0.searchableItem }
         reIndex(items: searchableItems, in: index)
 
 		let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
-            i.isBeingCreatedBySync = false
-            i.needsSaving = false
+            i.flags.remove(.isBeingCreatedBySync)
+            i.flags.remove(.needsSaving)
             return i.uuid
 		})
         
@@ -676,8 +676,8 @@ extension Model {
 
     private static var commitQueue = ContiguousArray<ArchivedItem>()
 	static func commitItem(item: ArchivedItem) {
-		item.isBeingCreatedBySync = false
-		item.needsSaving = false
+        item.flags.remove(.isBeingCreatedBySync)
+        item.flags.remove(.needsSaving)
         commitQueue.append(item)
         
         reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())

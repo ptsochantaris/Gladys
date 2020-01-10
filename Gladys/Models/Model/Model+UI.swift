@@ -267,7 +267,7 @@ extension Model {
     
     static func createMirror(completion: @escaping ()->Void) {
         log("Creating file mirror")
-        drops.forEach { $0.skipMirrorAtNextSave = false }
+        drops.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
         runMirror(completion: completion)
     }
 

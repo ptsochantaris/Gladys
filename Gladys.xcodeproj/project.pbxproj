@@ -239,15 +239,15 @@
 		16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		16969BBB1FB10A58007B2F77 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
-		169763141F15669000537776 /* Component+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest.swift */; };
+		169763141F15669000537776 /* Component+Ingest+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest+iOS.swift */; };
 		169763151F15669000537776 /* Component+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763131F15669000537776 /* Component+UI.swift */; };
-		169763161F15669700537776 /* Component+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest.swift */; };
+		169763161F15669700537776 /* Component+Ingest+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest+iOS.swift */; };
 		169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763201F156CBE00537776 /* ArchivedItem+iOS.swift */; };
 		169763231F156E0700537776 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		169763251F1573D700537776 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
 		169A52DD2163FCE5006A0234 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
-		169E5E071FE0851A00CCE984 /* Component+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Sharing.swift */; };
+		169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A278AA222AAFA4007B810C /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
@@ -353,7 +353,7 @@
 		16D984AE2160D31C00D9D51C /* ArchivedItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */; };
 		16D984AF2160D32900D9D51C /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		16D984B02160D35B00D9D51C /* Component+IngestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7220A0FF570039E6C2 /* Component+IngestCommon.swift */; };
-		16D984B12160D51B00D9D51C /* Component+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest.swift */; };
+		16D984B12160D51B00D9D51C /* Component+Ingest+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763121F15669000537776 /* Component+Ingest+iOS.swift */; };
 		16D984B32160D56500D9D51C /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
 		16D984B42160D57600D9D51C /* Component+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */; };
 		16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
@@ -720,13 +720,13 @@
 		16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysToday.entitlements; sourceTree = "<group>"; };
 		16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Copy.swift"; sourceTree = "<group>"; };
 		16969BB91FB10A58007B2F77 /* Component+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Copy.swift"; sourceTree = "<group>"; };
-		169763121F15669000537776 /* Component+Ingest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Component+Ingest.swift"; sourceTree = "<group>"; };
+		169763121F15669000537776 /* Component+Ingest+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Component+Ingest+iOS.swift"; sourceTree = "<group>"; };
 		169763131F15669000537776 /* Component+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Component+UI.swift"; sourceTree = "<group>"; };
 		169763201F156CBE00537776 /* ArchivedItem+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+iOS.swift"; sourceTree = "<group>"; };
 		169763221F156E0700537776 /* ArchivedItem+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Indexing.swift"; sourceTree = "<group>"; };
 		169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFilePresenter.swift; sourceTree = "<group>"; };
 		169D54B320B85026004E518E /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/ServiceManagement.framework; sourceTree = DEVELOPER_DIR; };
-		169E5E051FE0851A00CCE984 /* Component+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Sharing.swift"; sourceTree = "<group>"; };
+		169E5E051FE0851A00CCE984 /* Component+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Messages.swift"; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16A4E7E01FBB844A00D60596 /* GladysWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GladysWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1052,7 +1052,6 @@
 				16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */,
 				1610899A1FA322260095FE34 /* ArchivedItem+Cloud.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
-				1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */,
 				16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */,
 				16B534BC237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift */,
 			);
@@ -1066,13 +1065,12 @@
 				16CD7D7E20A10AF10039E6C2 /* Component+Common.swift */,
 				169763131F15669000537776 /* Component+UI.swift */,
 				16CD7D8E20A111340039E6C2 /* Component+UICommon.swift */,
-				169763121F15669000537776 /* Component+Ingest.swift */,
+				169763121F15669000537776 /* Component+Ingest+iOS.swift */,
 				16CD7D7220A0FF570039E6C2 /* Component+IngestCommon.swift */,
 				1610899F1FA322A90095FE34 /* Component+Cloud.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */,
 				167CDF9420B62B3E00EABC0A /* Component+Preview.swift */,
-				169E5E051FE0851A00CCE984 /* Component+Sharing.swift */,
 				16C3A2D520AF76A600A04F10 /* Component+BackgroundInfoObject.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
 				16906A9323C8C0C700D6C177 /* Component+iOS.swift */,
@@ -1136,6 +1134,8 @@
 				1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */,
 				1657B8C31FD4329300EC480D /* MessageCell.swift */,
 				1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */,
+				1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */,
+				169E5E051FE0851A00CCE984 /* Component+Messages.swift */,
 				1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */,
 				1657B8B61FD41C1C00EC480D /* Info.plist */,
 			);
@@ -2298,7 +2298,7 @@
 				161089981FA320280095FE34 /* CloudManager+iOS.swift in Sources */,
 				166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */,
-				169763161F15669700537776 /* Component+Ingest.swift in Sources */,
+				169763161F15669700537776 /* Component+Ingest+iOS.swift in Sources */,
 				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */,
@@ -2339,7 +2339,7 @@
 				1657B8BF1FD41E6B00EC480D /* Component.swift in Sources */,
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16C3A2D820AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
-				169E5E071FE0851A00CCE984 /* Component+Sharing.swift in Sources */,
+				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
 				162BDD7A220F020F00A3C17B /* Logging.swift in Sources */,
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
 				16C3A2D320AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
@@ -2456,7 +2456,7 @@
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
 				16B534BD237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
-				169763141F15669000537776 /* Component+Ingest.swift in Sources */,
+				169763141F15669000537776 /* Component+Ingest+iOS.swift in Sources */,
 				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
@@ -2571,7 +2571,7 @@
 				16D984AE2160D31C00D9D51C /* ArchivedItem+Ingest.swift in Sources */,
 				1651117C2163D73700C5C874 /* Component+Copy.swift in Sources */,
 				16906A9823C8C0C700D6C177 /* Component+iOS.swift in Sources */,
-				16D984B12160D51B00D9D51C /* Component+Ingest.swift in Sources */,
+				16D984B12160D51B00D9D51C /* Component+Ingest+iOS.swift in Sources */,
 				165847072376D4BB00666B7B /* Notifications.swift in Sources */,
 				16D9849F2160CBFE00D9D51C /* Global.swift in Sources */,
 				16D984A02160CC0200D9D51C /* Types.swift in Sources */,

@@ -146,7 +146,9 @@ final class MirrorManager {
             }
 
             DispatchQueue.main.async {
-                drops.filter { $0.skipMirrorAtNextSave }.forEach { $0.skipMirrorAtNextSave = false }
+                for drop in drops where drop.flags.contains(.skipMirrorAtNextSave) {
+                    drop.flags.remove(.skipMirrorAtNextSave)
+                }
                 completion()
             }
         }
@@ -170,7 +172,7 @@ extension ArchivedItem {
     
     fileprivate func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
         let mirrorPath = fileMirrorPath
-        if skipMirrorAtNextSave || components.isEmpty {
+        if components.isEmpty || flags.contains(.skipMirrorAtNextSave) {
             return mirrorPath
         }
         if pathsExamined.contains(mirrorPath) { // some other drop has claimed this path
@@ -210,7 +212,7 @@ extension ArchivedItem {
         
     fileprivate func assimilateMirrorChanges() {
 
-        if needsSaving || isTransferring || needsDeletion || needsReIngest || components.isEmpty {
+        if flags.contains(.needsSaving) || isTransferring || needsDeletion || needsReIngest || components.isEmpty {
             return
         }
         
@@ -268,7 +270,7 @@ extension ArchivedItem {
         DispatchQueue.main.async {
             self.markUpdated()
             self.needsReIngest = true
-            self.skipMirrorAtNextSave = true
+            self.flags.insert(.skipMirrorAtNextSave)
             self.reIngest()
         }
     }
