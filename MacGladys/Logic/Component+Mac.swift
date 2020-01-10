@@ -38,7 +38,7 @@ extension Component {
 		let joinedChain = chain.joined(separator: "/")
 		let dirURL = baseURL.appendingPathComponent(joinedChain)
 		for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
-			if loadingAborted {
+            if flags.contains(.loadingAborted) {
 				log("      Interrupted zip operation since ingest was aborted")
 				break
 			}
@@ -80,7 +80,7 @@ extension Component {
 					let dirName = item.lastPathComponent
 					let item = item.deletingLastPathComponent()
 					try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
-					if loadingAborted {
+                    if flags.contains(.loadingAborted) {
 						log("      Cancelled zip operation since ingest was aborted")
 						return
 					}

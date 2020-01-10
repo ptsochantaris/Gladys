@@ -6,11 +6,7 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-#if os(iOS)
-import UIKit
-#else
-import Cocoa
-#endif
+import Foundation
 import CloudKit
 
 final class CKRecordCacheEntry {
