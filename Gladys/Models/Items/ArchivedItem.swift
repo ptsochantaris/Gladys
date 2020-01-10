@@ -184,7 +184,7 @@ final class ArchivedItem: Codable {
 	}
 
 	var isTransferring: Bool {
-		return components.contains { $0.isTransferring }
+        return components.contains { $0.flags.contains(.isTransferring) }
 	}
 
 	var goodToSave: Bool {

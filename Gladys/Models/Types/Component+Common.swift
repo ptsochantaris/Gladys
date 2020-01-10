@@ -19,7 +19,7 @@ extension Component: Equatable {
 	func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
 		dataAccessQueue.async {
-			if data == nil || self.loadingAborted {
+            if data == nil || self.flags.contains(.loadingAborted) {
 				let f = FileManager.default
                 let path = byteLocation.path
 				if f.fileExists(atPath: path) {

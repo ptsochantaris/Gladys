@@ -22,6 +22,7 @@ extension ArchivedItem {
 	}
 
 	private func componentsIngested() {
+        #if MAC
         for component in components {
             if let contributedLabels = component.contributedLabels {
                 for candidate in contributedLabels where !labels.contains(candidate) {
@@ -30,6 +31,7 @@ extension ArchivedItem {
                 component.contributedLabels = nil
             }
         }
+        #endif
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
         needsReIngest = false
@@ -42,7 +44,7 @@ extension ArchivedItem {
 	}
 
 	var loadingAborted: Bool {
-		return components.contains { $0.loadingAborted }
+        return components.contains { $0.flags.contains(.loadingAborted) }
 	}
 
 	func reIngest() {

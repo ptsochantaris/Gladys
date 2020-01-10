@@ -80,7 +80,7 @@ final class Component: Codable {
 		let m = try v.decode(Int.self, forKey: .displayIconContentMode)
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
-		isTransferring = false
+        flags = []
 	}
 
 	var typeIdentifier: String
@@ -95,19 +95,30 @@ final class Component: Codable {
 	var needsDeletion: Bool
 	var order: Int
 
-	// transient / ui
+	// ui
 	var displayIconScale: CGFloat
 	var displayIconWidth: CGFloat
 	var displayIconHeight: CGFloat
-	var loadingAborted = false
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
 	var displayIconTemplate: Bool
 	var displayTitle: String?
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
-	var isTransferring: Bool
-	var contributedLabels: [String]?
+
+    // transient
+    
+    struct Flags: OptionSet {
+        let rawValue: UInt8
+        static let isTransferring = Flags(rawValue: 1 << 0)
+        static let loadingAborted = Flags(rawValue: 1 << 1)
+    }
+
+    var flags: Flags
+
+    #if MAC
+    var contributedLabels: [String]?
+    #endif
 
 	// Caches
 	var encodedURLCache: (Bool, NSURL?)?
@@ -129,9 +140,9 @@ final class Component: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
-		isTransferring = false
 		classWasWrapped = false
 		needsDeletion = false
+        flags = []
 		createdAt = Date()
 		updatedAt = createdAt
 		representedClass = .data
@@ -140,10 +151,10 @@ final class Component: Codable {
 
 	init(cloning item: Component, newParentUUID: UUID) {
 		uuid = UUID()
-		isTransferring = false
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
+        flags = []
 
 		typeIdentifier = item.typeIdentifier
 		parentUuid = newParentUUID
@@ -178,12 +189,12 @@ final class Component: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
-		isTransferring = true
 		classWasWrapped = false
 		needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
 		representedClass = .unknown(name: "")
+        flags = [.isTransferring]
 	}
 	#endif
 
@@ -199,8 +210,8 @@ final class Component: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
-		isTransferring = false
 		needsDeletion = false
+        flags = []
 
 		let myUUID = record.recordID.recordName
 		uuid = UUID(uuidString: myUUID)!
@@ -230,10 +241,11 @@ final class Component: Codable {
 		displayIconWidth = 0
 		displayIconHeight = 0
 		displayIconTemplate = false
-		isTransferring = false
 		needsDeletion = false
 		order = Int.max
 
+        flags = []
+        
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = Date()

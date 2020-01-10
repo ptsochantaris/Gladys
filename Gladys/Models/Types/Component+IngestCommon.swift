@@ -27,8 +27,8 @@ extension Component {
 		let p: Progress
 		if createWebArchive {
 			p = provider.loadDataRepresentation(forTypeIdentifier: "public.url") { [weak self] data, error in
-				guard let s = self, s.loadingAborted == false else { return }
-				s.isTransferring = false
+                guard let s = self, !s.flags.contains(.loadingAborted) else { return }
+                s.flags.remove(.isTransferring)
 
 				var url: URL?
 
@@ -54,8 +54,8 @@ extension Component {
 			}
 		} else {
 			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
-				guard let s = self, s.loadingAborted == false else { return }
-				s.isTransferring = false
+				guard let s = self, !s.flags.contains(.loadingAborted) else { return }
+                s.flags.remove(.isTransferring)
 				if let data = data {
                     log(">> Received type: [\(s.typeIdentifier)]")
                     s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true, group: group) {
@@ -88,7 +88,7 @@ extension Component {
     }
 
     func cancelIngest() {
-        loadingAborted = true
+        flags.insert(.loadingAborted)
     }
 
     private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
@@ -99,7 +99,7 @@ extension Component {
 		classWasWrapped = false
 
 		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
-			guard let s = self, s.loadingAborted == false else { return }
+			guard let s = self, !s.flags.contains(.loadingAborted) else { return }
 			if let data = data {
                 s.handleData(data, resolveUrls: false, storeBytes: true, group: group, andCall: completion)
 			} else {
@@ -395,7 +395,7 @@ extension Component {
 		if let s = url.scheme, s.hasPrefix("http") {
 			WebArchiver.fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
 				guard let s = self else { return }
-                if !s.loadingAborted {
+                if !s.flags.contains(.loadingAborted) {
                     s.accessoryTitle = title ?? s.accessoryTitle
                     if let image = image {
                         if image.size.height > 100 || image.size.width > 200 {
