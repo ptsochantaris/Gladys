@@ -57,8 +57,8 @@ extension Component: Equatable {
 		//return bytes
 		//}
 
-		if classWasWrapped {
-			return SafeUnarchiver.unarchive(bytes)
+		if classWasWrapped, let unarchived = SafeUnarchiver.unarchive(bytes) {
+			return unarchived
 		} else if isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
 			return propertyList
 		} else {
