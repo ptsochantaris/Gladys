@@ -179,7 +179,6 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 
         image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
-        image.tintColor = .secondaryLabel
 
 		labelStack.setCustomSpacing(3, after: labelsLabel)
 

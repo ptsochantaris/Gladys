@@ -24,14 +24,16 @@ extension Component {
         }
         get {
             return dataAccessQueue.sync {
-                var i: UIImage?
-                if let data = (try? Data(contentsOf: imagePath)) {
-                    i = UIImage(data: data, scale: displayIconScale)
+                if let data = try? Data(contentsOf: imagePath) {
+                    let i = UIImage(data: data, scale: displayIconScale)
+                    if displayIconTemplate {
+                        return i?.withRenderingMode(.alwaysTemplate)
+                    } else {
+                        return i
+                    }
+                } else {
+                    return nil
                 }
-                if displayIconTemplate {
-                    i = i?.withRenderingMode(.alwaysTemplate)
-                }
-                return i
             }
         }
     }
