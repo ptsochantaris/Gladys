@@ -19,9 +19,6 @@ final class Component: Codable {
 		case displayTitlePriority
 		case displayIconPriority
 		case displayIconContentMode
-		case displayIconScale
-		case displayIconWidth
-		case displayIconHeight
 		case displayIconTemplate
 		case createdAt
 		case updatedAt
@@ -42,9 +39,6 @@ final class Component: Codable {
 		try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
 		try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
 		try v.encode(displayIconPriority, forKey: .displayIconPriority)
-		try v.encode(displayIconScale, forKey: .displayIconScale)
-		try v.encode(displayIconWidth, forKey: .displayIconWidth)
-		try v.encode(displayIconHeight, forKey: .displayIconHeight)
 		try v.encode(createdAt, forKey: .createdAt)
 		try v.encode(updatedAt, forKey: .updatedAt)
 		try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
@@ -63,9 +57,6 @@ final class Component: Codable {
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
 		displayIconPriority = try v.decode(Int.self, forKey: .displayIconPriority)
-		displayIconScale = try v.decode(CGFloat.self, forKey: .displayIconScale)
-		displayIconWidth = try v.decode(CGFloat.self, forKey: .displayIconWidth)
-		displayIconHeight = try v.decode(CGFloat.self, forKey: .displayIconHeight)
 		displayIconTemplate = try v.decodeIfPresent(Bool.self, forKey: .displayIconTemplate) ?? false
 		needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
 		order = try v.decodeIfPresent(Int.self, forKey: .order) ?? 0
@@ -96,9 +87,6 @@ final class Component: Codable {
 	var order: Int
 
 	// ui
-	var displayIconScale: CGFloat
-	var displayIconWidth: CGFloat
-	var displayIconHeight: CGFloat
 	var displayIconPriority: Int
 	var displayIconContentMode: ArchivedDropItemDisplayType
 	var displayIconTemplate: Bool
@@ -136,9 +124,6 @@ final class Component: Codable {
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
-		displayIconScale = 1
-		displayIconWidth = 0
-		displayIconHeight = 0
 		displayIconTemplate = false
 		classWasWrapped = false
 		needsDeletion = false
@@ -163,9 +148,6 @@ final class Component: Codable {
 		displayIconContentMode = item.displayIconContentMode
 		displayTitlePriority = item.displayTitlePriority
 		displayTitleAlignment = item.displayTitleAlignment
-		displayIconScale = item.displayIconScale
-		displayIconWidth = item.displayIconWidth
-		displayIconHeight = item.displayIconHeight
 		displayIconTemplate = item.displayIconTemplate
 		classWasWrapped = item.classWasWrapped
 		representedClass = item.representedClass
@@ -185,9 +167,6 @@ final class Component: Codable {
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
-		displayIconScale = 1
-		displayIconWidth = 0
-		displayIconHeight = 0
 		displayIconTemplate = false
 		classWasWrapped = false
 		needsDeletion = false
@@ -206,17 +185,16 @@ final class Component: Codable {
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
-		displayIconScale = 1
-		displayIconWidth = 0
-		displayIconHeight = 0
 		displayIconTemplate = false
 		needsDeletion = false
         flags = []
 
-		let myUUID = record.recordID.recordName
-		uuid = UUID(uuidString: myUUID)!
+		uuid = UUID(uuidString: record.recordID.recordName)!
 
 		createdAt = record["createdAt"] as? Date ?? .distantPast
+        
+        // this should be identical to cloudKitUpdate(from record: CKRecord)
+        // duplicated because of Swift constructor requirements
 		updatedAt = record["updatedAt"] as? Date ?? .distantPast
 		typeIdentifier = record["typeIdentifier"] as? String ?? "public.data"
 		representedClass = RepresentedClass(name: record["representedClass"] as? String ?? "")
@@ -237,9 +215,6 @@ final class Component: Codable {
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
-		displayIconScale = 1
-		displayIconWidth = 0
-		displayIconHeight = 0
 		displayIconTemplate = false
 		needsDeletion = false
 		order = Int.max

@@ -545,13 +545,6 @@ extension Component {
 		} else {
 			result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
 		}
-		#if os(iOS)
-		displayIconScale = result.scale
-		#else
-		displayIconScale = 1
-		#endif
-		displayIconWidth = result.size.width
-		displayIconHeight = result.size.height
 		displayIconPriority = priority
 		displayIconContentMode = contentMode
 		#if os(iOS)

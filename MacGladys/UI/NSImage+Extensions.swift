@@ -44,8 +44,7 @@ extension NSImage {
 
 		let imageRef = cgImage(forProposedRect: nil, context: nil, hints: nil)!
 		c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
-		let i = NSImage(cgImage: c.makeImage()!, size: NSSize(width: outputImagePixelWidth, height: outputImagePixelHeight))
-		return i
+		return NSImage(cgImage: c.makeImage()!, size: targetSize)
 	}
 
 	func template(with tint: NSColor) -> NSImage {

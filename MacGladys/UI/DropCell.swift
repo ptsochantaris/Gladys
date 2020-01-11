@@ -644,11 +644,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             switch action {
             case .copy:
                 copySelected()
-                copiedLabel.wantsLayer = true
-                copiedLabel.layer?.cornerRadius = 5
-                copiedLabel.animator().alphaValue = 1
+                copiedLabel.animator().isHidden = false
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) { [weak self] in
-                    self?.copiedLabel.animator().alphaValue = 0
+                    self?.copiedLabel.animator().isHidden = true
                 }
             case .infoPanel:
                 infoSelected()

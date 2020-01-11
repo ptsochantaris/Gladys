@@ -12,28 +12,24 @@ extension Component {
     var displayIcon: UIImage? {
         set {
             let ipath = imagePath
-            dataAccessQueue.async {
-                if let n = newValue {
-                    if let data = n.pngData() {
-                        try? data.write(to: ipath)
-                    }
-                } else if FileManager.default.fileExists(atPath: ipath.path) {
-                    try? FileManager.default.removeItem(at: ipath)
+            if let n = newValue {
+                if let data = n.pngData() {
+                    try? data.write(to: ipath)
                 }
+            } else if FileManager.default.fileExists(atPath: ipath.path) {
+                try? FileManager.default.removeItem(at: ipath)
             }
         }
         get {
-            return dataAccessQueue.sync {
-                if let data = try? Data(contentsOf: imagePath) {
-                    let i = UIImage(data: data, scale: displayIconScale)
-                    if displayIconTemplate {
-                        return i?.withRenderingMode(.alwaysTemplate)
-                    } else {
-                        return i
-                    }
+            if let data = try? Data(contentsOf: imagePath) {
+                if displayIconTemplate {
+                    let i = UIImage(data: data, scale: UIScreen.main.scale)
+                    return i?.withRenderingMode(.alwaysTemplate)
                 } else {
-                    return nil
+                    return UIImage(data: data)
                 }
+            } else {
+                return nil
             }
         }
     }

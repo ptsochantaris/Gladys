@@ -17,20 +17,22 @@ extension Component {
 	var displayIcon: NSImage? {
 		set {
             let ipath = imagePath
-			dataAccessQueue.async {
-				if let n = newValue, let data = n.tiffRepresentation {
-					try? data.write(to: ipath)
-				} else if FileManager.default.fileExists(atPath: ipath.path) {
-					try? FileManager.default.removeItem(at: ipath)
-				}
-			}
+            if let n = newValue, let data = n.tiffRepresentation {
+                try? data.write(to: ipath)
+            } else if FileManager.default.fileExists(atPath: ipath.path) {
+                try? FileManager.default.removeItem(at: ipath)
+            }
 		}
 		get {
-			return dataAccessQueue.sync {
-				let i = NSImage(contentsOf: imagePath)
-				i?.isTemplate = displayIconTemplate
-                return i
-			}
+            let i = NSImage(contentsOf: imagePath)
+            if let i = i, displayIconTemplate {
+                i.isTemplate = true
+                let w = i.size.width
+                let h = i.size.height
+                let scale = min(32.0 / h, 32.0 / w)
+                i.size = NSSize(width: w * scale, height: h * scale)
+            }
+            return i
 		}
 	}
 
