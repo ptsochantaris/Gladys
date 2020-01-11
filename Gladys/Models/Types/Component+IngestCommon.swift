@@ -6,7 +6,6 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
 import Contacts
 import MapKit
@@ -19,6 +18,8 @@ import Cocoa
 import GladysFramework
 
 extension Component {
+
+    static let iconPointSize = CGSize(width: 256, height: 256)
 
     func startIngest(provider: NSItemProvider, group: DispatchGroup, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: (()->Void)?) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 20)
@@ -540,9 +541,9 @@ extension Component {
 		if contentMode == .center || contentMode == .circle {
 			result = icon
 		} else if contentMode == .fit {
-			result = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 0.75, useScreenScale: true)
+			result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
 		} else {
-			result = icon.limited(to: CGSize(width: 256, height: 256), useScreenScale: true)
+			result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
 		}
 		#if os(iOS)
 		displayIconScale = result.scale

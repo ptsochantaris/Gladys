@@ -6,10 +6,10 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import CoreSpotlight
 import CloudKit
 #if os(iOS)
+import Foundation
 import CoreAudioKit
 #else
 import Cocoa

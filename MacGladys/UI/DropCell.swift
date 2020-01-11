@@ -6,7 +6,6 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import Cocoa
 import MapKit
 

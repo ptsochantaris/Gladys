@@ -6,7 +6,6 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import CloudKit
 #if os(iOS)
 import UIKit
@@ -741,7 +740,7 @@ extension CloudManager {
 		let shareRecord = CKShare(rootRecord: rootRecord)
 		shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
 		let icon = item.displayIcon
-		let scaledIcon = icon.limited(to: CGSize(width: 256, height: 256), limitTo: 1, useScreenScale: false, singleScale: true)
+        let scaledIcon = icon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
 		#if os(iOS)
 		shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
 		#else

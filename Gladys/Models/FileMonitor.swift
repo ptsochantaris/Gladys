@@ -6,9 +6,10 @@
 //  Copyright © 2019 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 #if os(iOS)
 import UIKit
+#else
+import Foundation
 #endif
 
 final class FileMonitor: NSObject, NSFilePresenter {

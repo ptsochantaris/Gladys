@@ -6,9 +6,7 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import Cocoa
-import CoreGraphics
 
 extension NSImage {
 	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> NSImage {
