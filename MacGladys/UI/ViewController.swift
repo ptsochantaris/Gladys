@@ -374,10 +374,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
     private func itemIngested(_ item: ArchivedItem) {
-		if let (errorPrefix, error) = item.loadingError {
-			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
-		}
-
 		if Model.doneIngesting {
 			Model.save()
 		} else {
