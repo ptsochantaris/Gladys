@@ -36,7 +36,7 @@ final class PullState {
 	}
 
 	func processChanges(commitTokens: Bool) {
-		CloudManager.syncProgressString = "Updating..."
+		CloudManager.syncProgressString = "Updating…"
 		log("Changes fetch complete, processing")
 
 		if updatedSequence || newDropCount > 0 {

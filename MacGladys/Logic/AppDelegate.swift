@@ -379,7 +379,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	private func proceedWithImport(from url: URL) {
-		ViewController.shared.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment...")
+		ViewController.shared.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
 		DispatchQueue.main.async { // give UI a chance to update
 			do {
 				try Model.importArchive(from: url, removingOriginal: false)

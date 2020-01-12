@@ -251,7 +251,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		let a6 = n.addObserver(forName: .AcceptStarting, object: nil, queue: .main) { [weak self] _ in
-			self?.startProgress(for: nil, titleOverride: "Accepting Share...")
+			self?.startProgress(for: nil, titleOverride: "Accepting Share…")
 		}
 
 		let a7 = n.addObserver(forName: .AcceptEnding, object: nil, queue: .main) { [weak self] _ in

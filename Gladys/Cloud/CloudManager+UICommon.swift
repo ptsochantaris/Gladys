@@ -423,7 +423,7 @@ extension CloudManager {
 		if (error as? CKError)?.code == .changeTokenExpired {
 			DispatchQueue.main.async {
 				PullState.setZoneToken(nil, for: zoneId)
-				syncProgressString = "Fetching Full Update..."
+				syncProgressString = "Fetching Full Update…"
 			}
 			log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
 			return true

@@ -82,7 +82,7 @@ extension Component {
         
 		if isWebURL, let url = encodedUrl {
             let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-            d.title = "Loading..."
+            d.title = "Loading…"
             d.address = url as URL
             d.relatedItem = Model.item(uuid: parentUuid)
             d.relatedChildItem = self
@@ -90,7 +90,7 @@ extension Component {
 
 		} else if isWebArchive {
 			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-			d.title = "Loading..."
+			d.title = "Loading…"
 			d.webArchive = PreviewItem(typeItem: self)
 			d.relatedItem = Model.item(uuid: parentUuid)
 			d.relatedChildItem = self

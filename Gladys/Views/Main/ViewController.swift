@@ -604,7 +604,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private var acceptAlert: UIAlertController?
 
 	@objc private func acceptStarted() {
-		acceptAlert = genericAlert(title: "Accepting Share...", message: nil, autoDismiss: false, buttonTitle: nil, completion: nil)
+		acceptAlert = genericAlert(title: "Accepting Share…", message: nil, autoDismiss: false, buttonTitle: nil, completion: nil)
 	}
 
 	@objc private func acceptEnded() {

@@ -12,7 +12,7 @@
             <objects>
                 <controller identifier="StartupController" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
-                        <label alignment="center" verticalAlignment="center" text="Loading..." textAlignment="center" numberOfLines="0" id="mnL-YR-CrQ">
+                        <label alignment="center" verticalAlignment="center" text="Loading…" textAlignment="center" numberOfLines="0" id="mnL-YR-CrQ">
                             <fontDescription key="font" style="UICTFontTextStyleBody"/>
                         </label>
                     </items>
@@ -62,7 +62,7 @@ Label</string>
                                         </items>
                                         <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
                                     </group>
-                                    <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying..." textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
+                                    <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying…" textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     </label>
                                 </items>

@@ -36,20 +36,18 @@ extension Component {
 
 		let parentId = CKRecord.ID(recordName: parentUuid.uuidString, zoneID: record.recordID.zoneID)
 		record.parent = CKRecord.Reference(recordID: parentId, action: .none)
-		record["parent"] = CKRecord.Reference(recordID: parentId, action: .deleteSelf)
+        record.setValuesForKeys([
+            "parent": CKRecord.Reference(recordID: parentId, action: .deleteSelf),
+            "createdAt": createdAt,
+            "updatedAt": updatedAt,
+            "typeIdentifier": typeIdentifier,
+            "representedClass": representedClass.name,
+            "classWasWrapped": classWasWrapped ? 1 : 0,
+            "order": order
+        ])
 
-		if hasBytes {
-			record["bytes"] = CKAsset(fileURL: bytesPath)
-		}
-
-		record["createdAt"] = createdAt as NSDate
-		record["updatedAt"] = updatedAt as NSDate
-		record["typeIdentifier"] = typeIdentifier as NSString
-		record["representedClass"] = representedClass.name as NSString
-		record["classWasWrapped"] = NSNumber(value: classWasWrapped ? 1 : 0)
-		record["accessoryTitle"] = accessoryTitle as NSString?
-		record["order"] = order as NSNumber
-
+        record["accessoryTitle"] = accessoryTitle
+        record["bytes"] = hasBytes ? CKAsset(fileURL: bytesPath) : nil
 		return record
 	}
 

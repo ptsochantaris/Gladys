@@ -22,7 +22,7 @@
                                                 <action selector="aboutSelected:" target="Voe-Tx-rLC" id="hsb-tO-Wfq"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Unlimited Mode..." id="AN3-Zt-BA7">
+                                        <menuItem title="Unlimited Mode…" id="AN3-Zt-BA7">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="infiniteModeSelected:" target="Voe-Tx-rLC" id="6QJ-2h-jF9"/>
@@ -70,19 +70,19 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="zin-Ce-zvK">
                                     <items>
-                                        <menuItem title="Import Archive..." id="cM4-ss-B6A">
+                                        <menuItem title="Import Archive…" id="cM4-ss-B6A">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="importSelected:" target="Voe-Tx-rLC" id="6pQ-jH-dNj"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Export Archive..." id="CF4-cu-qSI">
+                                        <menuItem title="Export Archive…" id="CF4-cu-qSI">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="exportSelected:" target="Voe-Tx-rLC" id="ZPv-e0-dzp"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Create ZIP..." id="Q3Q-zK-YJY">
+                                        <menuItem title="Create ZIP…" id="Q3Q-zK-YJY">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="zipSelected:" target="Voe-Tx-rLC" id="9Dl-mY-FH6"/>
@@ -184,13 +184,13 @@ CA
                                                 <action selector="revealCurrent:" target="Ady-hI-5gd" id="sBc-Qf-Z40"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Labels..." keyEquivalent="l" id="dJv-KY-93J">
+                                        <menuItem title="Labels…" keyEquivalent="l" id="dJv-KY-93J">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="editLabels:" target="Ady-hI-5gd" id="IUF-M0-waJ"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Notes..." keyEquivalent="n" id="t4G-VB-KWD">
+                                        <menuItem title="Notes…" keyEquivalent="n" id="t4G-VB-KWD">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="editNotes:" target="Ady-hI-5gd" id="PZg-Iy-4f8"/>
@@ -287,7 +287,7 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="API-3Y-b90">
                                     <items>
-                                        <menuItem title="Gladys Web Site..." id="7cq-xg-8be">
+                                        <menuItem title="Gladys Web Site…" id="7cq-xg-8be">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="openWebSite:" target="Voe-Tx-rLC" id="WHc-LY-m83"/>
@@ -333,7 +333,7 @@ CA
                             </progressIndicator>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="URt-Q6-6hF">
                                 <rect key="frame" x="18" y="47" width="279" height="16"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Please Wait..." id="JKf-71-7ZN">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Please Wait…" id="JKf-71-7ZN">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1743,7 +1743,7 @@ Only</string>
                             </visualEffectView>
                             <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="0yl-hH-17A">
                                 <rect key="frame" x="253" y="132" width="164" height="14"/>
-                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec..." id="KT6-PW-u6g">
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Just a sec…" id="KT6-PW-u6g">
                                     <font key="font" metaFont="message" size="11"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

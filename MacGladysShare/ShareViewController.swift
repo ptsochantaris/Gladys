@@ -41,7 +41,7 @@ final class ShareViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		status.stringValue = "Loading data..."
+		status.stringValue = "Loading data…"
 		spinner.startAnimation(nil)
 		pasteboardItems.removeAll()
 
@@ -66,7 +66,7 @@ final class ShareViewController: NSViewController {
                     attachments.removeAll { $0.registeredTypeIdentifiers == ["com.adobe.pdf"] }
                 }
 
-                log("Ingesting inputItem with \(attachments.count) attachment(s)...")
+                log("Ingesting inputItem with \(attachments.count) attachment(s)…")
 				for attachment in attachments {
 					let newItem = NSPasteboardItem()
 					pasteboardItems.append(newItem)
@@ -107,11 +107,11 @@ final class ShareViewController: NSViewController {
 				return
 			}
 
-			log("Writing data to parent app...")
+			log("Writing data to parent app…")
 			s.cancelButton.isHidden = true
 			s.pasteboard.clearContents()
 			s.pasteboard.writeObjects(s.pasteboardItems)
-			s.status.stringValue = "Saving..."
+			s.status.stringValue = "Saving…"
 			if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
 				log("Main app could not be opened")
 				let error = NSError(domain: GladysErrorDomain, code: 88, userInfo: [ NSLocalizedDescriptionKey: "Main app could not be opened" ])

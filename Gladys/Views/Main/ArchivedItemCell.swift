@@ -647,7 +647,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
                 
             } else {
-                children.append(makeAction(title: "Collaboration...", callback: { [weak self] in
+                children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
                     if item.isPrivateShareWithOnlyOwner {
                         self?.shareOptionsPrivate()
                     } else if item.isShareWithOnlyOwner {

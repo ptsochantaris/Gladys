@@ -164,7 +164,7 @@ final class ActionRequestViewController: UIViewController {
 
 	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
-		statusLabel.text = "Indexing..."
+		statusLabel.text = "Indexing…"
         let searchableItems = newItems.map { $0.searchableItem }
         Model.reIndex(items: searchableItems, in: CSSearchableIndex.default()) { [weak self] in
             self?.save(initialAdd: initialAdd)
@@ -172,7 +172,7 @@ final class ActionRequestViewController: UIViewController {
 	}
 
 	private func save(initialAdd: Bool) {
-		statusLabel.text = "Saving..."
+		statusLabel.text = "Saving…"
 
 		let uploadAfterSave = CloudManager.shareActionShouldUpload
 		let newItemIds = newItems.map { $0.uuid.uuidString }
@@ -213,7 +213,7 @@ final class ActionRequestViewController: UIViewController {
 		}
 
 		if let p = uploadProgress {
-			statusLabel.text = "Uploading..."
+			statusLabel.text = "Uploading…"
 			uploadObservation = p.observe(\Progress.completedUnitCount) { [weak self] progress, change in
 				let complete = Int((progress.fractionCompleted * 100).rounded())
 				self?.statusLabel.text = "\(complete)% Uploaded"

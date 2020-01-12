@@ -154,7 +154,7 @@ final class ItemController: WKInterfaceController {
 			topGroup.setHidden(ItemController.hidden)
 			bottomGroup.setHidden(ItemController.hidden)
 			image.setHidden(false)
-			copyLabel.setText("...")
+			copyLabel.setText("…")
 			copyLabel.setHidden(!fetchingImage)
 		}
 	}

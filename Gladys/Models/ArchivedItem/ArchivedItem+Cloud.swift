@@ -52,14 +52,17 @@ extension ArchivedItem {
 			CKRecord(recordType: CloudManager.RecordType.item,
 			         recordID: CKRecord.ID(recordName: uuid.uuidString, zoneID: privateZoneId))
 
-		record["suggestedName"] = suggestedName as NSString?
-		record["createdAt"] = createdAt as NSDate
-		record["updatedAt"] = updatedAt as NSDate
-		record["note"] = note as NSString
-		record["titleOverride"] = titleOverride as NSString
-		record["lockPassword"] = lockPassword as NSData?
-		record["lockHint"] = lockHint as NSString?
-		record["labels"] = labels.isEmpty ? nil : labels as NSArray
+        record.setValuesForKeys([
+            "createdAt": createdAt,
+            "updatedAt": updatedAt,
+            "note": note,
+            "titleOverride": titleOverride,
+        ])
+        
+        record["labels"] = labels.isEmpty ? nil : labels
+		record["suggestedName"] = suggestedName
+        record["lockPassword"] = lockPassword
+        record["lockHint"] = lockHint
 		return record
 	}
 }

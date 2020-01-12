@@ -513,12 +513,12 @@ final class DetailController: GladysViewController,
 					if previousIndex.section == 1 {
 						tableView.performBatchUpdates({
                             item.labels.remove(at: previousIndex.row)
-                            item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+                            item.labels.insert(existingLabel ?? "…", at: destinationIndexPath.row)
                             tableView.moveRow(at: previousIndex, to: destinationIndexPath)
 						})
 					} else {
 						tableView.performBatchUpdates({
-                            item.labels.insert(existingLabel ?? "...", at: destinationIndexPath.row)
+                            item.labels.insert(existingLabel ?? "…", at: destinationIndexPath.row)
 							tableView.insertRows(at: [destinationIndexPath], with: .automatic)
 						})
 					}
