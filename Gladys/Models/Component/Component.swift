@@ -82,7 +82,6 @@ final class Component: Codable {
 	var updatedAt: Date
 	var representedClass: RepresentedClass
 	var classWasWrapped: Bool
-	var loadingError: Error?
 	var needsDeletion: Bool
 	var order: Int
 
@@ -94,8 +93,6 @@ final class Component: Codable {
 	var displayTitlePriority: Int
 	var displayTitleAlignment: NSTextAlignment
 
-    // transient
-    
     struct Flags: OptionSet {
         let rawValue: UInt8
         static let isTransferring = Flags(rawValue: 1 << 0)

@@ -757,10 +757,10 @@ extension Model {
 	}
     
     static func detectExternalChanges() {
-        for item in drops.filter({ !$0.needsDeletion }) { // partial deletes
+        for item in drops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter { $0.needsDeletion }
             if !componentsToDelete.isEmpty {
-                item.components = item.components.filter { !$0.needsDeletion }
+                item.components.removeAll { $0.needsDeletion }
                 for c in componentsToDelete {
                     c.deleteFromStorage()
                 }
@@ -772,7 +772,9 @@ extension Model {
             delete(items: itemsToDelete) // will also save
         }
         
-        drops.filter { $0.needsReIngest && $0.loadingProgress == nil && !$0.needsDeletion }.forEach { $0.reIngest() }
+        for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+            drop.reIngest()
+        }
     }
     
     static func sendToTop(items: [ArchivedItem]) {

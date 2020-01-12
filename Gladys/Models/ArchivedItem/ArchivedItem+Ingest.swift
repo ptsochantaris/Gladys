@@ -21,7 +21,7 @@ extension ArchivedItem {
         return identifiers
 	}
 
-	private func componentsIngested() {
+    private func componentsIngested(error: (Component, Error)?) {
         #if MAC
         for component in components {
             if let contributedLabels = component.contributedLabels {
@@ -35,6 +35,12 @@ extension ArchivedItem {
 		imageCache.removeObject(forKey: imageCacheKey)
 		loadingProgress = nil
         needsReIngest = false
+        
+        #if MAINAPP || MAC
+        if let error = error {
+            genericAlert(title: "Some data from \(displayTitleOrUuid) could not be imported", message: "Error processing type " + error.0.typeIdentifier + error.1.finalDescription)
+        }
+        #endif
 
         NotificationCenter.default.post(name: .IngestComplete, object: self)
 	}
@@ -60,6 +66,8 @@ extension ArchivedItem {
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
         
+        var loadingError: (Component, Error)?
+
 		if loadCount == 0 { // can happen for example when all components are removed
             group.enter()
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -69,14 +77,20 @@ extension ArchivedItem {
             if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
 				components.sort { $0.order < $1.order }
 			}
-			components.forEach {
-				let cp = $0.reIngest(group: group)
+			components.forEach { i in
+                group.enter()
+                let cp = i.reIngest { error in
+                    if let error = error {
+                        loadingError = (i, error)
+                    }
+                    group.leave()
+                }
 				p.addChild(cp, withPendingUnitCount: 100)
 			}
 		}
         
         group.notify(queue: .main) {
-            self.componentsIngested()
+            self.componentsIngested(error: loadingError)
         }
 	}
     
@@ -103,12 +117,13 @@ extension ArchivedItem {
         return extractedData
     }
 
-	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) -> Progress {
+	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let group = DispatchGroup()
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
 		var progressChildren = [Progress]()
-
+        var loadingError: (Component, Error)?
+        
 		for provider in providers {
 
 			var identifiers = ArchivedItem.sanitised(provider.registeredTypeIdentifiers)
@@ -139,7 +154,13 @@ extension ArchivedItem {
                 }
 
                 let i = Component(typeIdentifier: finalType, parentUuid: uuid, order: order)
-				let p = i.startIngest(provider: finalProvider, group: group, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive, andCall: nil)
+                group.enter()
+                let p = i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive) { error in
+                    if let error = error {
+                        loadingError = (i, error)
+                    }
+                    group.leave()
+                }
 				progressChildren.append(p)
 				components.append(i)
 			}
@@ -164,11 +185,10 @@ extension ArchivedItem {
 		for c in progressChildren {
 			p.addChild(c, withPendingUnitCount: 100)
 		}
+        loadingProgress = p
         
         group.notify(queue: .main) {
-            self.componentsIngested()
+            self.componentsIngested(error: loadingError)
         }
-        
-		return p
 	}
 }

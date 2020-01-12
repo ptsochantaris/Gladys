@@ -21,9 +21,8 @@ extension Component {
 
     static let iconPointSize = CGSize(width: 256, height: 256)
 
-    func startIngest(provider: NSItemProvider, group: DispatchGroup, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: (()->Void)?) -> Progress {
+    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: ((Error?)->Void)?) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 20)
-        group.enter()
 
 		let p: Progress
 		if createWebArchive {
@@ -31,48 +30,59 @@ extension Component {
                 guard let s = self else { return }
                 s.flags.remove(.isTransferring)
                 if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    s.ingestFailed(error: nil, andCall: andCall)
                     return
                 }
 
-				var url: URL?
+				var assignedUrl: URL?
 				if let data = data, let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
 					if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
-						url = u
+						assignedUrl = u
 					} else if let array = propertyList as? [Any], let urlString = array.first as? String, let u = URL(string: urlString) { // usually on iOS
-						url = u
+						assignedUrl = u
 					}
 				}
+                
+                guard let url = assignedUrl else {
+                    overallProgress.completedUnitCount += 10
+                    s.ingestFailed(error: error, andCall: andCall)
+                    return
+                }
 
-				if let url = url {
-                    log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
-                    Component.ingestQueue.async {
-                        s.ingest(from: url, group: group) {
-                            overallProgress.completedUnitCount += 10
-                        }
+                log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
+                Component.ingestQueue.async {
+                    s.ingest(from: url) { error in
+                        overallProgress.completedUnitCount += 10
+                        s.ingestFailed(error: error, andCall: andCall)
                     }
-				} else {
-					overallProgress.completedUnitCount += 10
-                    s.ingestFailed(error: error, group: group, andCall: andCall)
-				}
+                }
 			}
 		} else {
 			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
 				guard let s = self else { return }
                 s.flags.remove(.isTransferring)
                 if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    s.ingestFailed(error: nil, andCall: andCall)
                     return
                 }
-				if let data = data {
-                    log(">> Received type: [\(s.typeIdentifier)]")
-                    s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true, group: group) {
+                
+                guard let data = data else {
+                    overallProgress.completedUnitCount += 10
+                    s.ingestFailed(error: error, andCall: andCall)
+                    return
+                }
+                
+                log(">> Received type: [\(s.typeIdentifier)]")
+                Component.ingestQueue.async {
+                    s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) { [weak self] error in
                         overallProgress.completedUnitCount += 10
+                        if let s = self, let error = error {
+                            s.ingestFailed(error: error, andCall: andCall)
+                        } else {
+                            s.completeIngest(andCall: andCall)
+                        }
                     }
-				} else {
-					overallProgress.completedUnitCount += 10
-					s.ingestFailed(error: error, group: group, andCall: andCall)
-				}
+                }
 			}
 		}
 
@@ -80,18 +90,18 @@ extension Component {
 		return overallProgress
 	}
 
-    private func ingestFailed(error: Error?, group: DispatchGroup, andCall: (()->Void)?) {
+    private func ingestFailed(error: Error?, andCall: ((Error?)->Void)?) {
 		let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
 		log(">> Error receiving item: \(error.finalDescription)")
-		loadingError = error
 		setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-        completeIngest(group: group, andCall: andCall)
+        DispatchQueue.main.async {
+            andCall?(error)
+        }
 	}
 
-    func completeIngest(group: DispatchGroup, andCall: (()->Void)?) {
+    func completeIngest(andCall: ((Error?)->Void)?) {
         DispatchQueue.main.async {
-            andCall?()
-            group.leave()
+            andCall?(nil)
         }
     }
 
@@ -101,7 +111,9 @@ extension Component {
 
     private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
     
-    private func ingest(from url: URL, group: DispatchGroup, completion: @escaping ()->Void) {
+    private func ingest(from url: URL, completion: @escaping (Error?)->Void) {
+        // in thread!
+        
 		clearCachedFields()
 		representedClass = .data
 		classWasWrapped = false
@@ -109,24 +121,19 @@ extension Component {
 		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
 			guard let s = self else { return }
             if s.flags.contains(.loadingAborted) {
-                s.ingestFailed(error: nil, group: group, andCall: completion)
+                s.ingestFailed(error: nil, andCall: completion)
                 return
             }
 			if let data = data {
-                s.handleData(data, resolveUrls: false, storeBytes: true, group: group, andCall: completion)
+                s.handleData(data, resolveUrls: false, storeBytes: true, andCall: completion)
 			} else {
-                s.ingestFailed(error: error, group: group, andCall: completion)
+                s.ingestFailed(error: error, andCall: completion)
 			}
 		}
 	}
 
-    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, group: DispatchGroup, completion: @escaping ()->Void) {
-        Component.ingestQueue.async {
-            self._ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: storeBytes, group: group, completion: completion)
-        }
-    }
-    
-    private func _ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, group: DispatchGroup, completion: @escaping ()->Void) { // in thread!
+    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping (Error?)->Void) {
+        // in thread!
 
 		clearCachedFields()
         
@@ -142,7 +149,7 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? NSAttributedString {
@@ -153,7 +160,7 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? COLOR {
@@ -164,7 +171,7 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? IMAGE {
@@ -190,7 +197,7 @@ extension Component {
                         setBytes(data)
                     }
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? MKMapItem {
@@ -200,11 +207,11 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? URL {
-                handleUrl(item, data, storeBytes, group, completion)
+                handleUrl(item, data, storeBytes, completion)
                 return
 
             } else if let item = obj as? NSArray {
@@ -219,7 +226,7 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
 
             } else if let item = obj as? NSDictionary {
@@ -234,14 +241,14 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(group: group, andCall: completion)
+                completeIngest(andCall: completion)
                 return
             }
         }
         
         log("      not a known class, storing data: \(data)")
         representedClass = .data
-        handleData(data, resolveUrls: true, storeBytes: storeBytes, group: group, andCall: completion)
+        handleData(data, resolveUrls: true, storeBytes: storeBytes, andCall: completion)
 	}
 
 	func setTitle(from url: URL) {
@@ -276,18 +283,6 @@ extension Component {
 		encodedURLCache = (true, newUrl)
 		setTitle(from: newUrl as URL)
 		markUpdated()
-	}
-
-	private func copyLocal(_ url: URL) -> URL {
-
-		let newUrl = folderUrl.appendingPathComponent(url.lastPathComponent)
-		do {
-			try FileManager.default.copyAndReplaceItem(at: url, to: newUrl)
-		} catch {
-			log("Error while copying item: \(error.finalDescription)")
-			loadingError = error
-		}
-		return newUrl
 	}
 
 	func setTitleInfo(_ text: String?, _ priority: Int) {
@@ -401,14 +396,14 @@ extension Component {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ group: DispatchGroup, _ andCall: (()->Void)?) {
+    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?)->Void)?) {
 		log("      received remote url: \(url.absoluteString)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 		if let s = url.scheme, s.hasPrefix("http") {
 			WebArchiver.fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
 				guard let s = self else { return }
                 if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, group: group, andCall: andCall)
+                    s.ingestFailed(error: nil, andCall: andCall)
                     return
                 }
                 s.accessoryTitle = title ?? s.accessoryTitle
@@ -419,14 +414,14 @@ extension Component {
                         s.setDisplayIcon(image, 30, .center)
                     }
                 }
-                s.completeIngest(group: group, andCall: andCall)
+                s.completeIngest(andCall: andCall)
 			}
 		} else {
-			completeIngest(group: group, andCall: andCall)
+			completeIngest(andCall: andCall)
 		}
 	}
 
-    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, group: DispatchGroup, andCall: (()->Void)?) {
+    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, andCall: ((Error?)->Void)?) {
 		if storeBytes {
 			setBytes(data)
 		}
@@ -476,7 +471,7 @@ extension Component {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if resolveUrls, let url = encodedUrl {
-            handleUrl(url as URL, data, storeBytes, group, andCall)
+            handleUrl(url as URL, data, storeBytes, andCall)
 			return // important
 
 		} else if typeConforms(to: kUTTypeText as CFString) {
@@ -514,20 +509,24 @@ extension Component {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}
 
-		completeIngest(group: group, andCall: andCall)
+		completeIngest(andCall: andCall)
 	}
 
-	func reIngest(group: DispatchGroup) -> Progress {
-        group.enter()
+    func reIngest(andCall: @escaping (Error?)->Void) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
-		if loadingError == nil, let bytesCopy = bytes {
-            ingest(data: bytesCopy, storeBytes: false, group: group) {
+		if let bytesCopy = bytes {
+            ingest(data: bytesCopy, storeBytes: false) { error in
                 overallProgress.completedUnitCount += 1
+                if let error = error {
+                    self.ingestFailed(error: error, andCall: andCall)
+                } else {
+                    self.completeIngest(andCall: andCall)
+                }
             }
 		} else {
 			overallProgress.completedUnitCount += 1
-			completeIngest(group: group, andCall: nil)
+			completeIngest(andCall: andCall)
 		}
 		return overallProgress
 	}

@@ -118,9 +118,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
 		typeEntry.markUpdated()
 		item.markUpdated()
 		item.needsReIngest = true
-        let group = DispatchGroup()
-		_ = typeEntry.reIngest(group: group)
-        group.notify(queue: .main) {
+        _ = typeEntry.reIngest { _ in
             Model.save()
             self.delegate?.textEditControllerMadeChanges(self)
         }

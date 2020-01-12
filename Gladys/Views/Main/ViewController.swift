@@ -1200,10 +1200,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @objc private func itemIngested(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
 
-		if let (errorPrefix, error) = item.loadingError {
-			genericAlert(title: "Some data from \(item.displayTitleOrUuid) could not be imported", message: errorPrefix + error.finalDescription)
-        }
-
 		if let i = filter.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 			if currentDetailView == nil {

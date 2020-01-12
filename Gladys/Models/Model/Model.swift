@@ -150,7 +150,7 @@ final class Model {
 	}
 
     static var doneIngesting: Bool {
-        return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || ($0.loadingProgress != nil && $0.loadingError == nil) }
+        return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
     }
 
 	static var visibleDrops: ContiguousArray<ArchivedItem> {

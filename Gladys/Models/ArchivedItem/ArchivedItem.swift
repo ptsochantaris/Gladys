@@ -65,7 +65,7 @@ final class ArchivedItem: Codable {
 
     var flags: Flags
 	var loadingProgress: Progress?
-
+    
 	private enum CodingKeys : String, CodingKey {
 		case suggestedName
 		case components = "typeItems"
@@ -180,7 +180,7 @@ final class ArchivedItem: Codable {
 		components = ContiguousArray<Component>()
         flags = .needsSaving
 
-		loadingProgress = startNewItemIngest(providers: providers, limitToType: limitToType)
+		startNewItemIngest(providers: providers, limitToType: limitToType)
 	}
 
 	var isTransferring: Bool {
