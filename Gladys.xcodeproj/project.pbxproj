@@ -1006,8 +1006,8 @@
 			isa = PBXGroup;
 			children = (
 				16CD7DC820A12B770039E6C2 /* Model */,
-				1610899D1FA322580095FE34 /* Items */,
-				1610899E1FA3225C0095FE34 /* Types */,
+				1610899D1FA322580095FE34 /* ArchivedItem */,
+				1610899E1FA3225C0095FE34 /* Component */,
 				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
@@ -1041,7 +1041,7 @@
 			path = Cloud;
 			sourceTree = "<group>";
 		};
-		1610899D1FA322580095FE34 /* Items */ = {
+		1610899D1FA322580095FE34 /* ArchivedItem */ = {
 			isa = PBXGroup;
 			children = (
 				16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */,
@@ -1055,10 +1055,10 @@
 				16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */,
 				16B534BC237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift */,
 			);
-			path = Items;
+			path = ArchivedItem;
 			sourceTree = "<group>";
 		};
-		1610899E1FA3225C0095FE34 /* Types */ = {
+		1610899E1FA3225C0095FE34 /* Component */ = {
 			isa = PBXGroup;
 			children = (
 				16101E891EF5A1A000CCBD3C /* Component.swift */,
@@ -1075,7 +1075,7 @@
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
 				16906A9323C8C0C700D6C177 /* Component+iOS.swift */,
 			);
-			path = Types;
+			path = Component;
 			sourceTree = "<group>";
 		};
 		161718C52094D333005ABD6C /* MacGladys */ = {
