@@ -727,7 +727,7 @@ extension Model {
 					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
 					if dirtyUuids.contains(u) {
                         let finalPath = url.appendingPathComponent(u.uuidString)
-                        try saveEncoder.encode(item).write(to: finalPath, options: [])
+                        try saveEncoder.encode(item).write(to: finalPath)
 					}
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)

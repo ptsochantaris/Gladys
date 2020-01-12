@@ -234,7 +234,7 @@ final class CloudManager {
 	static var uuidSequence: [String] {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
-                return (try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as? [String]) ?? []
+                return SafeUnarchiver.unarchive(data) as? [String] ?? []
 			} else {
 				return []
 			}
@@ -254,7 +254,7 @@ final class CloudManager {
 		get {
 			let recordLocation = uuidSequenceRecordPath
 			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
+				let data = try! Data(contentsOf: recordLocation)
 				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
 				let record = CKRecord(coder: coder)
 				coder.finishDecoding()
@@ -268,7 +268,7 @@ final class CloudManager {
 			if let newValue = newValue {
 				let coder = NSKeyedArchiver(requiringSecureCoding: true)
 				newValue.encodeSystemFields(with: coder)
-				try? coder.encodedData.write(to: recordLocation, options: [])
+				try? coder.encodedData.write(to: recordLocation)
 			} else {
 				let f = FileManager.default
                 let p = recordLocation.path
@@ -285,16 +285,14 @@ final class CloudManager {
 
 	static var deletionQueue: Set<String> {
 		get {
-			let recordLocation = deleteQueuePath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation, options: [])
-                return (try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSSet.self, from: data) as? Set<String>) ?? []
+			if let data = try? Data(contentsOf: deleteQueuePath) {
+                return SafeUnarchiver.unarchive(data) as? Set<String> ?? []
 			} else {
 				return []
 			}
 		}
 		set {
-            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath, options: [])
+            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath)
 		}
 	}
 

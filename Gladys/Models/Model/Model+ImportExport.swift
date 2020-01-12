@@ -42,7 +42,7 @@ extension Model {
 		}
 
         let finalPath = url.appendingPathComponent("items.json")
-		let data = try Data(contentsOf: finalPath, options: [.mappedIfSafe])
+        let data = try Data(contentsOf: finalPath, options: .alwaysMapped)
 		let itemsInPackage = try loadDecoder.decode(Array<ArchivedItem>.self, from: data)
 
 		for item in itemsInPackage.reversed() {

@@ -93,7 +93,7 @@ final class PullState {
 	private static var legacyZoneChangeToken: CKServerChangeToken? {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), !data.isEmpty {
-                return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
+                return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
 			} else {
 				return nil
 			}
@@ -120,9 +120,8 @@ final class PullState {
 
 	static func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
 		if let lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data],
-			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName],
-            let token = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data) {
-			return token
+			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName] {
+            return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}
@@ -148,9 +147,8 @@ final class PullState {
 	static func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
 		let key = database.keyName
 		if let lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data],
-			let data = lookup[key],
-            let token = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data) {
-			return token
+			let data = lookup[key] {
+            return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}

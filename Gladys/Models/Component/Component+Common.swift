@@ -67,22 +67,16 @@ extension Component: Equatable {
 	}
 
 	var bytes: Data? {
-		var data: Data?
-		dataAccessQueue.sync {
+		return dataAccessQueue.sync {
 			let byteLocation = bytesPath
-			if FileManager.default.fileExists(atPath: byteLocation.path) {
-				data = try? Data(contentsOf: byteLocation, options: [.mappedIfSafe])
-			}
+            return try? Data(contentsOf: byteLocation, options: .alwaysMapped)
 		}
-		return data
 	}
     
     var hasBytes: Bool {
-        var exists = false
-        dataAccessQueue.sync {
-            exists = FileManager.default.fileExists(atPath: bytesPath.path)
+        return dataAccessQueue.sync {
+            return FileManager.default.fileExists(atPath: bytesPath.path)
         }
-        return exists
     }
     
     var isPlist: Bool {
@@ -438,7 +432,7 @@ extension Component: Equatable {
                 let recordLocation = cloudKitDataPath
                 let record: CKRecord?
                 if FileManager.default.fileExists(atPath: recordLocation.path) {
-                    let data = try! Data(contentsOf: recordLocation, options: [])
+                    let data = try! Data(contentsOf: recordLocation)
                     let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
                     record = CKRecord(coder: coder)
                     coder.finishDecoding()
@@ -457,7 +451,7 @@ extension Component: Equatable {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: [])
+                    try? coder.encodedData.write(to: recordLocation)
                 } else {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
                     let f = FileManager.default

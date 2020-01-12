@@ -3,6 +3,7 @@ import Foundation
 #if os(iOS)
 import MobileCoreServices
 #endif
+import GladysFramework
 
 extension ArchivedItem {
 
@@ -101,7 +102,7 @@ extension ArchivedItem {
         provider.loadDataRepresentation(forTypeIdentifier: type) { data, error in
             if let data = data, data.count < 16384 {
                 var extractedText: String?
-                if data.isPlist, let text = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? String {
+                if data.isPlist, let text = SafeUnarchiver.unarchive(data) as? String {
                     extractedText = text
                     
                 } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {

@@ -99,7 +99,7 @@ extension Component {
 					}
 					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-					let data = (try? Data(contentsOf: item, options: .mappedIfSafe)) ?? Data()
+					let data = (try? Data(contentsOf: item, options: .alwaysMapped)) ?? Data()
                     handleData(data, resolveUrls: false, storeBytes: storeBytes, andCall: andCall)
 				}
 

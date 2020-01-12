@@ -32,7 +32,7 @@ final class ImageCache {
 			v.contentModificationDate = now
 			v.contentAccessDate = now
 			try? imageUrl.setResourceValues(v)
-			return try? Data(contentsOf: imageUrl)
+            return try? Data(contentsOf: imageUrl, options: .alwaysMapped)
 		}
 		return nil
 	}

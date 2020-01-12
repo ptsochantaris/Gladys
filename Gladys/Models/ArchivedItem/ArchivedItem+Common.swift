@@ -232,7 +232,7 @@ extension ArchivedItem: Hashable {
                 let recordLocation = cloudKitDataPath
                 let record: CKRecord?
                 if FileManager.default.fileExists(atPath: recordLocation.path) {
-                    let data = try! Data(contentsOf: recordLocation, options: [])
+                    let data = try! Data(contentsOf: recordLocation)
                     let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
                     record = CKRecord(coder: coder)
                     coder.finishDecoding()
@@ -252,7 +252,7 @@ extension ArchivedItem: Hashable {
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: [])
+                    try? coder.encodedData.write(to: recordLocation)
 
                     self.needsCloudPush = false
                 } else {
@@ -278,7 +278,7 @@ extension ArchivedItem: Hashable {
                 let recordLocation = cloudKitShareDataPath
                 let share: CKShare?
                 if FileManager.default.fileExists(atPath: recordLocation.path) {
-                    let data = try! Data(contentsOf: recordLocation, options: [])
+                    let data = try! Data(contentsOf: recordLocation)
                     let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
                     share = CKShare(coder: coder)
                     coder.finishDecoding()
@@ -298,7 +298,7 @@ extension ArchivedItem: Hashable {
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation, options: [])
+                    try? coder.encodedData.write(to: recordLocation)
                 } else {
                     cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
                     let f = FileManager.default
