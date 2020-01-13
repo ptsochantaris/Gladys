@@ -135,7 +135,7 @@ extension Component {
 		if let bytesToWrite = bytesToWrite {
 			try bytesToWrite.write(to: destinationUrl)
 		} else {
-			try fm.linkItem(at: bytesPath, to: destinationUrl)
+            try fm.copyItem(at: bytesPath, to: destinationUrl)
 		}
         
         if let tags = tags, !tags.isEmpty, PersistedOptions.readAndStoreFinderTagsAsLabels {
