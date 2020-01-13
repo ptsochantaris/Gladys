@@ -758,13 +758,13 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
     }
 
     func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
-        var data: Data?
         if let ip = archivedDropItem?.imagePath {
-            dataAccessQueue.sync {
-                data = try? Data(contentsOf: ip)
+            return dataAccessQueue.sync {
+                return try? Data(contentsOf: ip)
             }
+        } else {
+            return nil
         }
-        return data
     }
 
     private func shareOptionsPrivate() {

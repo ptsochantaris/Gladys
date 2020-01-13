@@ -252,10 +252,7 @@ final class CloudManager {
 
 	static var uuidSequenceRecord: CKRecord? {
 		get {
-			let recordLocation = uuidSequenceRecordPath
-			if FileManager.default.fileExists(atPath: recordLocation.path) {
-				let data = try! Data(contentsOf: recordLocation)
-				let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
+			if let data = try? Data(contentsOf: uuidSequenceRecordPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
 				let record = CKRecord(coder: coder)
 				coder.finishDecoding()
 				return record

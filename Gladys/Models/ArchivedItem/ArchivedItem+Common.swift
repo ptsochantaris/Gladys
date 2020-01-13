@@ -227,20 +227,17 @@ extension ArchivedItem: Hashable {
                 let nsuuid = uuid as NSUUID
                 if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
                     return cachedValue.record
-                }
-
-                let recordLocation = cloudKitDataPath
-                let record: CKRecord?
-                if FileManager.default.fileExists(atPath: recordLocation.path) {
-                    let data = try! Data(contentsOf: recordLocation)
-                    let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
-                    record = CKRecord(coder: coder)
+                    
+                } else if let data = try? Data(contentsOf: cloudKitDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                    let record = CKRecord(coder: coder)
                     coder.finishDecoding()
+                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
+                    return record
+                    
                 } else {
-                    record = nil
+                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
+                    return nil
                 }
-                cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
-                return record
             }
 		}
 		set {
@@ -273,20 +270,17 @@ extension ArchivedItem: Hashable {
                 let nsuuid = uuid as NSUUID
                 if let cachedValue = cloudKitShareCache.object(forKey: nsuuid) {
                     return cachedValue.share
-                }
-
-                let recordLocation = cloudKitShareDataPath
-                let share: CKShare?
-                if FileManager.default.fileExists(atPath: recordLocation.path) {
-                    let data = try! Data(contentsOf: recordLocation)
-                    let coder = try! NSKeyedUnarchiver(forReadingFrom: data)
-                    share = CKShare(coder: coder)
+                    
+                } else if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                    let share = CKShare(coder: coder)
                     coder.finishDecoding()
+                    cloudKitShareCache.setObject(CKShareCacheEntry(share: share), forKey: nsuuid)
+                    return share
+                    
                 } else {
-                    share = nil
+                    cloudKitShareCache.setObject(CKShareCacheEntry(share: nil), forKey: nsuuid)
+                    return nil
                 }
-                cloudKitShareCache.setObject(CKShareCacheEntry(share: share), forKey: nsuuid)
-                return share
             }
 		}
 		set {
