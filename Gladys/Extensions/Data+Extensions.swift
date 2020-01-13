@@ -30,4 +30,34 @@ extension Data {
 				&& ((x[2] == 3 && x[3] == 4) || (x[2] == 5 && x[3] == 6) || (x[2] == 7 && x[3] == 8))
 		}
 	}
+    static func forceMemoryMapped(contentsOf url: URL) -> Data? {
+        guard let cPath = url.absoluteURL.path.cString(using: .utf8) else {
+            log("Warning, could not resolve \(url.absoluteURL.path)")
+            return nil
+        }
+        
+        var st = stat()
+        if stat(cPath, &st) != 0 {
+            log("Warning, could not size \(url.absoluteURL.path)")
+            return nil
+        }
+        let count = Int(st.st_size)
+
+        let fd = open(cPath, O_RDONLY)
+        if fd < 0 {
+            log("Warning, could not open \(url.absoluteURL.path)")
+            return nil
+        }
+        
+        guard let mappedBuffer = mmap(nil, count, PROT_READ, MAP_PRIVATE|MAP_FILE, fd, 0) else {
+            log("Warning, could not memory map \(url.absoluteURL.path)")
+            return nil
+        }
+        
+        if close(fd) != 0 {
+            log("Warning, error when closing \(url.absoluteURL.path)")
+        }
+        
+        return Data(bytesNoCopy: mappedBuffer, count: count, deallocator: .unmap)
+    }
 }

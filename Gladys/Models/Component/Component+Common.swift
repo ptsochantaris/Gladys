@@ -68,7 +68,7 @@ extension Component: Equatable {
 
 	var bytes: Data? {
 		return dataAccessQueue.sync {
-            return try? Data(contentsOf: bytesPath, options: .alwaysMapped)
+            return Data.forceMemoryMapped(contentsOf: bytesPath)
 		}
 	}
     

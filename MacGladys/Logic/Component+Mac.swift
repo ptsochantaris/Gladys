@@ -24,8 +24,10 @@ extension Component {
             }
 		}
 		get {
-            let i = NSImage(contentsOf: imagePath)
-            if let i = i, displayIconTemplate {
+            guard let d = Data.forceMemoryMapped(contentsOf: imagePath), let i = NSImage(data: d) else {
+                return nil
+            }
+            if displayIconTemplate {
                 i.isTemplate = true
                 let w = i.size.width
                 let h = i.size.height
@@ -99,7 +101,7 @@ extension Component {
 					}
 					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-					let data = (try? Data(contentsOf: item, options: .alwaysMapped)) ?? Data()
+                    let data = Data.forceMemoryMapped(contentsOf: item) ?? Data()
                     handleData(data, resolveUrls: false, storeBytes: storeBytes, andCall: andCall)
 				}
 

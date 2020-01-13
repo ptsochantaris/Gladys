@@ -760,7 +760,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
     func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
         if let ip = archivedDropItem?.imagePath {
             return dataAccessQueue.sync {
-                return try? Data(contentsOf: ip)
+                return Data.forceMemoryMapped(contentsOf: ip)
             }
         } else {
             return nil
