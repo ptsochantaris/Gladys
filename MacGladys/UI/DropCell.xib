@@ -154,9 +154,6 @@ Gw
                 <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="10" id="iCR-Wi-2Nr"/>
                 <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="10" id="tDq-GB-o82"/>
             </constraints>
-            <shadow key="shadow" blurRadius="2">
-                <color key="color" white="0.0" alpha="0.3006742294520548" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-            </shadow>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                     <color key="value" name="colorMacCard"/>

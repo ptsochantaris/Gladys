@@ -172,10 +172,8 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		super.awakeFromNib()
         
         container.layer.cornerRadius = 10
-        container.layer.shadowColor = UIColor.black.cgColor
-        container.layer.shadowOffset = CGSize(width: 0, height: 0)
-        container.layer.shadowOpacity = 0.06
-        container.layer.shadowRadius = 1.5
+        container.layer.borderWidth = 1.0 / UIScreen.main.scale
+        container.layer.borderColor = UIColor.opaqueSeparator.cgColor
 
         image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
@@ -760,7 +758,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
     func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
         if let ip = archivedDropItem?.imagePath {
             return dataAccessQueue.sync {
-                return Data.forceMemoryMapped(contentsOf: ip)
+                return try? Data(contentsOf: ip)
             }
         } else {
             return nil

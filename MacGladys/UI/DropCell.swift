@@ -248,6 +248,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 		view.menu = NSMenu()
 		view.menu?.delegate = self
+        
+        isSelected = false
 	}
 
 	override func viewDidLoad() {
@@ -617,10 +619,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			guard let l = view.layer else { return }
 			if isSelected {
 				l.borderColor = NSColor(named: "colorTint")!.cgColor
-				l.borderWidth = 2
+				l.borderWidth = 3
 			} else {
-				l.borderColor = NSColor.clear.cgColor
-				l.borderWidth = 0
+                l.borderColor = NSColor.labelColor.withAlphaComponent(0.2).cgColor
+                l.borderWidth = 1.0 / (NSScreen.main?.backingScaleFactor ?? 1)
 			}
 		}
 	}

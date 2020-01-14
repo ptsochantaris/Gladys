@@ -24,7 +24,7 @@ extension Component {
             }
 		}
 		get {
-            guard let d = Data.forceMemoryMapped(contentsOf: imagePath), let i = NSImage(data: d) else {
+            guard let d = try? Data(contentsOf: imagePath), let i = NSImage(data: d) else {
                 return nil
             }
             if displayIconTemplate {

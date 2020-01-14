@@ -21,7 +21,7 @@ extension Component {
             }
         }
         get {
-            if let data = Data.forceMemoryMapped(contentsOf: imagePath) {
+            if let data = try? Data(contentsOf: imagePath) {
                 if displayIconTemplate {
                     let i = UIImage(data: data, scale: UIScreen.main.scale)
                     return i?.withRenderingMode(.alwaysTemplate)
