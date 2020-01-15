@@ -37,7 +37,7 @@ final class LabelToggleCell: UITableViewCell, UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
             
-            let children = [
+            var children = [
                 UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { _ in
                     if let s = self, let toggle = s.toggle {
                         s.parent?.rename(toggle: toggle)
@@ -49,6 +49,14 @@ final class LabelToggleCell: UITableViewCell, UIContextMenuInteractionDelegate {
                     }
                 }
             ]
+            
+            if UIApplication.shared.supportsMultipleScenes {
+                children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                    if let s = self, let toggle = s.toggle {
+                        s.parent?.createWindow(for: toggle)
+                    }
+                }, at: 1)
+            }
             
             return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
         }

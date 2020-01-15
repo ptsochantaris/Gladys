@@ -8,20 +8,29 @@ import CoreSpotlight
 import MobileCoreServices
 import GladysFramework
 
+extension String {
+    var labelDragItem: UIDragItem? {
+        let activity = NSUserActivity(activityType: kGladysMainListActivity)
+        activity.title = self
+        activity.userInfo = [kGladysMainViewLabelList: [self]]
+        
+        let p = NSItemProvider(item: self as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
+        p.registerObject(activity, visibility: .all)
+        
+        let i = UIDragItem(itemProvider: p)
+        i.localObject = self
+        return i
+    }
+}
+
 extension ArchivedItem {
 
 	func dragItem(forLabelIndex index: Int) -> UIDragItem? {
-
 		guard index < labels.count else {
 			return nil
 		}
 
-		let label = labels[index]
-
-		let p = NSItemProvider(item: label as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
-		let i = UIDragItem(itemProvider: p)
-		i.localObject = label
-		return i
+        return labels[index].labelDragItem
 	}
 
 	private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?)->Void) {

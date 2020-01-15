@@ -8,7 +8,8 @@
 
 import UIKit
 
-final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating {
+final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate,
+UISearchResultsUpdating, UITableViewDragDelegate {
 
 	@IBOutlet private weak var table: UITableView!
 	@IBOutlet private weak var clearAllButton: UIBarButtonItem!
@@ -53,6 +54,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		}
 
 		table.tableFooterView = UIView()
+        table.dragInteractionEnabled = true
+        table.dragDelegate = self
 
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
@@ -158,6 +161,19 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    func createWindow(for toggle: ModelFilterContext.LabelToggle) {
+        let activity = NSUserActivity(activityType: kGladysMainListActivity)
+        activity.title = toggle.name
+        activity.userInfo = [kGladysMainViewLabelList: [toggle.name]]
+
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = view.window?.windowScene
+        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
+            log("Error opening new window: \(error.localizedDescription)")
+        }
+
+    }
+    
     func delete(toggle: ModelFilterContext.LabelToggle) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
@@ -184,6 +200,15 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 			present(a, animated: true)
 		}
 	}
+        
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let toggle = filteredToggles[indexPath.row]
+        if let d = toggle.name.labelDragItem {
+            return [d]
+        } else {
+            return []
+        }
+    }
 
 	override func done() {
 		if let s = navigationItem.searchController, s.isActive {

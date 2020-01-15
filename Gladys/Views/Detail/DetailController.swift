@@ -27,7 +27,6 @@ final class DetailController: GladysViewController,
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
-		table.dragInteractionEnabled = true
 
 		openButton.isEnabled = item.canOpen
         
@@ -486,7 +485,7 @@ final class DetailController: GladysViewController,
             }
 		}
 	}
-
+    
 	func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
 		if session.localDragSession == nil {
 			done()
