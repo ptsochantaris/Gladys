@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -37,7 +37,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C3W-it-qIn" userLabel="Container">
                                                     <rect key="frame" x="0.0" y="0.0" width="466" height="384"/>
                                                     <subviews>
-                                                        <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-e0-eeZ">
+                                                        <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-e0-eeZ">
                                                             <rect key="frame" x="8" y="8" width="450" height="368"/>
                                                             <subviews>
                                                                 <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q51-pA-xfS" userLabel="Top Label Holder">
@@ -58,11 +58,11 @@
                                                                     </constraints>
                                                                 </view>
                                                                 <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="284" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="20.5" width="450" height="306.5"/>
+                                                                    <rect key="frame" x="0.0" y="21.5" width="450" height="303.5"/>
                                                                     <color key="backgroundColor" name="colorFill"/>
                                                                 </imageView>
                                                                 <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Axq-ka-HoY" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="334" width="450" height="13.5"/>
+                                                                    <rect key="frame" x="0.0" y="333" width="450" height="13.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" name="colorComponentLabel"/>
                                                                     <nil key="highlightedColor"/>
@@ -76,7 +76,7 @@
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <color key="backgroundColor" name="colorMacCard"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="5fb-e0-eeZ" secondAttribute="bottom" constant="8" id="8tc-ve-tYw"/>
                                                         <constraint firstItem="5fb-e0-eeZ" firstAttribute="leading" secondItem="C3W-it-qIn" secondAttribute="leading" constant="8" id="BGe-yP-OgC"/>
@@ -216,7 +216,7 @@
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <color key="backgroundColor" name="colorMacCard"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="f1S-fj-ABq" secondAttribute="bottom" id="5cT-if-IoS"/>
                                                         <constraint firstAttribute="trailing" secondItem="f1S-fj-ABq" secondAttribute="trailing" id="8z7-Cu-GUC"/>
@@ -2072,7 +2072,7 @@ Selecting them will show only items that contain these labels.</string>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="0.0" left="10" bottom="0.0" right="0.0"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                        <color key="backgroundColor" name="colorMacCard"/>
                                         <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
@@ -3556,6 +3556,9 @@ Selecting them will show only items that contain these labels.</string>
         </namedColor>
         <namedColor name="colorFill">
             <color red="0.84299999475479126" green="0.83099997043609619" blue="0.80800002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorMacCard">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorPaper">
             <color red="0.90196078431372551" green="0.89803921568627454" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
