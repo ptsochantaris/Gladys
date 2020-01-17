@@ -523,6 +523,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
         n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(modelDataUpdate(_:)), name: .ModelDataUpdated, object: nil)
+        n.addObserver(self, selector: #selector(itemCreated(_:)), name: .ItemAddedBySync, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
@@ -702,6 +703,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
+    @objc private func itemCreated(_ notification: Notification) {
+        guard let item = notification.object as? ArchivedItem else { return }
+        collection.performBatchUpdates({
+            filter.updateFilter(signalUpdate: false)
+            if let index = filter.filteredDrops.firstIndex(of: item) {
+                let n = IndexPath(item: index, section: 0)
+                collection.insertItems(at: [n])
+                updateEmptyView(animated: false)
+            }
+        }, completion: nil)
+    }
+    
     @objc private func modelDataUpdate(_ notification: Notification) {
         let parameters = notification.object as? [AnyHashable: Any]
         let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
@@ -711,6 +724,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
+            if !Model.drops.contains(where: { !$0.shouldDisplayLoading }) {
+                collection.reloadSections(IndexSet(integer: 0))
+                return
+            }
             let newUUIDs = filter.filteredDrops.map { $0.uuid }
 
             Set(oldUUIDs).union(newUUIDs).forEach { p in
@@ -1313,7 +1330,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private func reloadData(onlyIfPopulated: Bool) {
 		updateLabelIcon()
-        if onlyIfPopulated && !filter.filteredDrops.contains(where: { $0.shouldDisplay }) {
+        if onlyIfPopulated && filter.filteredDrops.isEmpty {
 			return
 		}
 		collection.performBatchUpdates({

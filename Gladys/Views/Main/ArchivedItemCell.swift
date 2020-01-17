@@ -280,7 +280,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 		if let item = item {
 
 			if item.shouldDisplayLoading {
-				if item.needsReIngest {
+                if item.needsReIngest || item.flags.contains(.isBeingCreatedBySync) {
 					hideSpinner = false
 				} else {
 					hideProgress = false
@@ -492,7 +492,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 	// MARK - Menu
 
 	override func accessibilityActivate() -> Bool {
-		if shouldDisplayLoading {
+        if !cancelButton.isHidden {
 			cancelSelected(cancelButton)
 			return true
 		} else {
@@ -546,7 +546,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
 	}
 
 	private var shouldDisplayLoading: Bool {
-		return archivedDropItem?.shouldDisplayLoading ?? false
+		return archivedDropItem?.loadingProgress != nil
 	}
     
     private func passwordUpdate(_ newPassword: Data?, hint: String?) {

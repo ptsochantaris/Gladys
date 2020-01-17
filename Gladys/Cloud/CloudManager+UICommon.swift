@@ -274,150 +274,147 @@ extension CloudManager {
 
 	static private func recordDeleted(recordId: CKRecord.ID, recordType: String, stats: PullState) {
 		let itemUUID = recordId.recordName
-		DispatchQueue.main.async {
-			switch recordType {
-			case RecordType.item:
-				if let item = Model.item(uuid: itemUUID) {
-					if item.parentZone != recordId.zoneID {
-						log("Ignoring delete for item \(itemUUID) from a different zone")
-					} else {
-						log("Drop \(recordType) deletion: \(itemUUID)")
-						item.needsDeletion = true
-						item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-						item.cloudKitShareRecord = nil // get rid of useless file
-						stats.deletionCount += 1
-					}
-				} else {
-					log("Received delete for non-existent item record \(itemUUID), ignoring")
-				}
-			case RecordType.component:
-				if let component = Model.component(uuid: itemUUID) {
-					if component.parentZone != recordId.zoneID {
-						log("Ignoring delete for component \(itemUUID) from a different zone")
-					} else {
-						log("Component \(recordType) deletion: \(itemUUID)")
-						component.needsDeletion = true
-						component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-						stats.deletionCount += 1
-					}
-				} else {
-					log("Received delete for non-existent component record \(itemUUID), ignoring")
-				}
-			case RecordType.share:
-				if let associatedItem = Model.item(shareId: itemUUID) {
-					if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
-						log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
-					} else {
-						log("Share record deleted for item \(associatedItem.uuid)")
-						associatedItem.cloudKitShareRecord = nil
-						stats.deletionCount += 1
-					}
-				} else {
-					log("Received delete for non-existent share record \(itemUUID), ignoring")
-				}
-			default:
-				log("Warning: Received deletion for unknown record type: \(recordType)")
-			}
-		}
+        switch recordType {
+        case RecordType.item:
+            if let item = Model.item(uuid: itemUUID) {
+                if item.parentZone != recordId.zoneID {
+                    log("Ignoring delete for item \(itemUUID) from a different zone")
+                } else {
+                    log("Drop \(recordType) deletion: \(itemUUID)")
+                    item.needsDeletion = true
+                    item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+                    item.cloudKitShareRecord = nil // get rid of useless file
+                    stats.deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent item record \(itemUUID), ignoring")
+            }
+        case RecordType.component:
+            if let component = Model.component(uuid: itemUUID) {
+                if component.parentZone != recordId.zoneID {
+                    log("Ignoring delete for component \(itemUUID) from a different zone")
+                } else {
+                    log("Component \(recordType) deletion: \(itemUUID)")
+                    component.needsDeletion = true
+                    component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+                    stats.deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent component record \(itemUUID), ignoring")
+            }
+        case RecordType.share:
+            if let associatedItem = Model.item(shareId: itemUUID) {
+                if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+                    log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
+                } else {
+                    log("Share record deleted for item \(associatedItem.uuid)")
+                    associatedItem.cloudKitShareRecord = nil
+                    stats.deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent share record \(itemUUID), ignoring")
+            }
+        default:
+            log("Warning: Received deletion for unknown record type: \(recordType)")
+        }
 	}
 
-	static private func recordChanged(record: CKRecord, stats: PullState) {
-		let recordID = record.recordID
-		let zoneID = recordID.zoneID
-		let recordType = record.recordType
-		let recordUUID = recordID.recordName
-		DispatchQueue.main.async {
-			switch recordType {
-			case RecordType.item:
-				if let item = Model.item(uuid: recordUUID) {
-					if item.parentZone != zoneID {
-						log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
-					} else if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item record (\(recordUUID))")
-					} else {
-						log("Will update existing local item for cloud record \(recordUUID)")
-						item.cloudKitUpdate(from: record)
-						stats.updateCount += 1
-					}
-				} else {
-					log("Will create new local item for cloud record (\(recordUUID))")
-					let newItem = ArchivedItem(from: record)
-					let newTypeItemRecords = stats.pendingTypeItemRecords.filter {
-						$0.parent?.recordID == recordID // takes zone into account
-					}
-					if !newTypeItemRecords.isEmpty {
-						let uuid = newItem.uuid
-						newItem.components.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
-						stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
-						log("  Hooked \(newTypeItemRecords.count) pending type items")
-					}
-					if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.firstIndex(where: {
-						$0.recordID == existingShareId // takes zone into account
-					}) {
-						newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
-						stats.pendingShareRecords.remove(at: pendingShareIndex)
-						log("  Hooked onto pending share \((existingShareId.recordName))")
-					}
-					Model.drops.insert(newItem, at: 0)
-					stats.newDropCount += 1
-				}
-
-			case RecordType.component:
-				if let typeItem = Model.component(uuid: recordUUID) {
-					if typeItem.parentZone != zoneID {
-						log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
-					} else if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
-						log("Update but no changes to item type data record (\(recordUUID))")
-					} else {
-						log("Will update existing local type data: (\(recordUUID))")
-						typeItem.cloudKitUpdate(from: record)
-						stats.typeUpdateCount += 1
-					}
-				} else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
-					if existingParent.parentZone != zoneID {
-						log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
-					} else {
-						log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
-						existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
-						existingParent.needsReIngest = true
-						stats.newTypeItemCount += 1
-					}
-				} else {
-					stats.pendingTypeItemRecords.append(record)
-					log("Received new type item (\(recordUUID)) to link to upcoming new item")
-				}
-
-			case RecordType.positionList:
-				if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
-					log("Received an updated position list record")
-					uuidSequence = (record["positionList"] as? [String]) ?? []
-					stats.updatedSequence = true
-					uuidSequenceRecord = record
-				} else {
-					log("Received non-updated position list record")
-				}
-
-			case RecordType.share:
-				if let share = record as? CKShare {
-					if let associatedItem = Model.item(shareId: recordUUID) {
-						if associatedItem.parentZone != zoneID {
-							log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
-						} else {
-							log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
-							associatedItem.cloudKitShareRecord = share
-							stats.updateCount += 1
-						}
-					} else {
-						stats.pendingShareRecords.append(share)
-						log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
-					}
-				}
-				
-			default:
-				log("Warning: Received record update for unkown type: \(recordType)")
-			}
-		}
-	}
+    static private func recordChanged(record: CKRecord, stats: PullState) {
+        let recordID = record.recordID
+        let zoneID = recordID.zoneID
+        let recordUUID = recordID.recordName
+        switch record.recordType {
+        case RecordType.item:
+            if let item = Model.item(uuid: recordUUID) {
+                if item.parentZone != zoneID {
+                    log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
+                } else if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
+                    log("Update but no changes to item record (\(recordUUID))")
+                } else {
+                    log("Will update existing local item for cloud record \(recordUUID)")
+                    item.cloudKitUpdate(from: record)
+                    item.needsReIngest = true
+                    item.postModified()
+                    stats.updateCount += 1
+                }
+            } else {
+                log("Will create new local item for cloud record (\(recordUUID))")
+                let newItem = ArchivedItem(from: record)
+                let newTypeItemRecords = stats.pendingTypeItemRecords.filter {
+                    $0.parent?.recordID == recordID // takes zone into account
+                }
+                if !newTypeItemRecords.isEmpty {
+                    let uuid = newItem.uuid
+                    newItem.components.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
+                    stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
+                    log("  Hooked \(newTypeItemRecords.count) pending type items")
+                }
+                if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.firstIndex(where: {
+                    $0.recordID == existingShareId // takes zone into account
+                }) {
+                    newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
+                    stats.pendingShareRecords.remove(at: pendingShareIndex)
+                    log("  Hooked onto pending share \((existingShareId.recordName))")
+                }
+                Model.drops.append(newItem)
+                NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
+                stats.newDropCount += 1
+            }
+            
+        case RecordType.component:
+            if let typeItem = Model.component(uuid: recordUUID) {
+                if typeItem.parentZone != zoneID {
+                    log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
+                } else if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
+                    log("Update but no changes to item type data record (\(recordUUID))")
+                } else {
+                    log("Will update existing local type data: (\(recordUUID))")
+                    typeItem.cloudKitUpdate(from: record)
+                    stats.typeUpdateCount += 1
+                }
+            } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
+                if existingParent.parentZone != zoneID {
+                    log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
+                } else {
+                    log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
+                    existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
+                    stats.newTypeItemCount += 1
+                }
+            } else {
+                stats.pendingTypeItemRecords.append(record)
+                log("Received new type item (\(recordUUID)) to link to upcoming new item")
+            }
+            
+        case RecordType.positionList:
+            if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
+                log("Received an updated position list record")
+                uuidSequence = (record["positionList"] as? [String]) ?? []
+                stats.updatedSequence = true
+                uuidSequenceRecord = record
+            } else {
+                log("Received non-updated position list record")
+            }
+            
+        case RecordType.share:
+            if let share = record as? CKShare {
+                if let associatedItem = Model.item(shareId: recordUUID) {
+                    if associatedItem.parentZone != zoneID {
+                        log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
+                    } else {
+                        log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
+                        associatedItem.cloudKitShareRecord = share
+                        stats.updateCount += 1
+                    }
+                } else {
+                    stats.pendingShareRecords.append(share)
+                    log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
+                }
+            }
+            
+        default:
+            log("Warning: Received record update for unkown type: \(record.recordType)")
+        }
+    }
 
 	static private func zoneFetchDone(zoneId: CKRecordZone.ID, token: CKServerChangeToken?, error: Error?, stats: PullState) -> Bool {
 		if (error as? CKError)?.code == .changeTokenExpired {
@@ -653,10 +650,14 @@ extension CloudManager {
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: configurationsByRecordZoneID)
         #endif
 		operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-			recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
+            DispatchQueue.main.sync {
+                recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
+            }
 		}
 		operation.recordChangedBlock = { record in
-			recordChanged(record: record, stats: stats)
+            DispatchQueue.main.sync {
+                recordChanged(record: record, stats: stats)
+            }
 		}
 		operation.recordZoneFetchCompletionBlock = { zoneId, token, _, _, error in
 			needsRetry = zoneFetchDone(zoneId: zoneId, token: token, error: error, stats: stats)

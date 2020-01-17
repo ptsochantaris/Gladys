@@ -173,10 +173,6 @@ extension ArchivedItem {
 		return true
 	}
     
-    var shouldDisplay: Bool {
-        return !flags.contains(.isBeingCreatedBySync) && goodToSave
-    }
-
 	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {
 		let item = mostRelevantTypeItem?.objectForShare
 		if let item = item as? MKMapItem {

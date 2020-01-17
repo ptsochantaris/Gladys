@@ -516,12 +516,11 @@ extension Component {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if let bytesCopy = bytes {
-            ingest(data: bytesCopy, storeBytes: false) { error in
-                overallProgress.completedUnitCount += 1
-                if let error = error {
-                    self.ingestFailed(error: error, andCall: andCall)
-                } else {
-                    self.completeIngest(andCall: andCall)
+            Component.ingestQueue.async {
+                self.ingest(data: bytesCopy, storeBytes: false) { error in
+                    assert(Thread.isMainThread)
+                    overallProgress.completedUnitCount += 1
+                    andCall(error)
                 }
             }
 		} else {

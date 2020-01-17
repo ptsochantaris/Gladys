@@ -31,6 +31,7 @@ struct PasteRequest {
 extension Notification.Name {
 	static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
 	static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
+    static let ItemAddedBySync = Notification.Name("ItemAddedBySync")
 	static let ItemModified = Notification.Name("ItemModified")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
 	static let LabelsUpdated = Notification.Name("LabelsUpdated")

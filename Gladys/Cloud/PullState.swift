@@ -3,7 +3,7 @@ import GladysFramework
 
 final class PullState {
 	var updatedSequence = false
-	var newDropCount = 0 { didSet { updateProgress() } }
+    var newDropCount = 0 { didSet { updateProgress() } }
 	var newTypeItemCount = 0 { didSet { updateProgress() } }
 
 	var typeUpdateCount = 0 { didSet { updateProgress() } }
@@ -13,25 +13,22 @@ final class PullState {
 	
 	var updatedDatabaseTokens = [CKDatabase.Scope : CKServerChangeToken]()
 	var updatedZoneTokens = [CKRecordZone.ID : CKServerChangeToken]()
-	var pendingShareRecords = [CKShare]()
-	var pendingTypeItemRecords = [CKRecord]()
+	var pendingShareRecords = ContiguousArray<CKShare>()
+	var pendingTypeItemRecords = ContiguousArray<CKRecord>()
 
 	private func updateProgress() {
 		var components = [String]()
 		
 		if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
-		if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
-		
+        if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
 		if newTypeItemCount > 0 { components.append(newTypeItemCount == 1 ? "1 Component" : "\(newTypeItemCount) Components") }
-		
 		if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
-		
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
 		
-		if !components.isEmpty {
-			CloudManager.syncProgressString = "Fetched " + components.joined(separator: ", ")
+		if components.isEmpty {
+            CloudManager.syncProgressString = "Fetching"
 		} else {
-			CloudManager.syncProgressString = "Fetching"
+            CloudManager.syncProgressString = "Fetched " + components.joined(separator: ", ")
 		}
 	}
 
@@ -39,7 +36,7 @@ final class PullState {
 		CloudManager.syncProgressString = "Updating…"
 		log("Changes fetch complete, processing")
 
-		if updatedSequence || newDropCount > 0 {
+        if updatedSequence || newDropCount > 0 {
 			let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
 			if !sequence.isEmpty {
 				Model.drops.sort { i1, i2 in

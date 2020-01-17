@@ -20,7 +20,7 @@ extension ArchivedItem {
 	}()
 
 	var shouldDisplayLoading: Bool {
-		return needsReIngest || loadingProgress != nil
+        return flags.contains(.isBeingCreatedBySync) || needsReIngest || loadingProgress != nil
 	}
 
 	func removeFromCloudkit() {

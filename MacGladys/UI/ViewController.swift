@@ -276,9 +276,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             self?.highlightItem(with: request)
         }
         
+        let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] notification in
+            guard let s = self, let item = notification.object as? ArchivedItem else { return }
+            s.collection.animator().performBatchUpdates({
+                Model.sharedFilter.updateFilter(signalUpdate: false)
+                if let index = Model.sharedFilter.filteredDrops.firstIndex(of: item) {
+                    let n = IndexPath(item: index, section: 0)
+                    s.collection.insertItems(at: [n])
+                    s.updateEmptyView()
+                }
+            })
+        }
+        
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12]
+		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -703,6 +715,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
             let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
             Model.sharedFilter.updateFilter(signalUpdate: false)
+            if !Model.drops.contains(where: { !$0.shouldDisplayLoading }) {
+                collection.reloadSections(IndexSet(integer: 0))
+                return
+            }
             let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
 
             Set(oldUUIDs).union(newUUIDs).forEach { p in
