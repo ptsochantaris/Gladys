@@ -340,11 +340,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 			d.item = item
 
-			let cellRect = cell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: myNavView)
-            p.backgroundColor = UIColor(named: "colorPaper")
-			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.down, .left, .right]
+            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
+			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.any]
 			p.sourceView = navigationController!.view
-			p.sourceRect = cellRect
+            p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3), to: myNavView)
 			p.delegate = self
 
 			if componentDropActiveFromDetailView != nil {

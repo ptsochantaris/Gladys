@@ -107,7 +107,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             dismiss(animated: true)
         }
 	}
-        
+            
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updateButtons(newTraitCollection: newCollection)
@@ -231,6 +231,10 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         navigationController?.navigationBar.setNeedsLayout()
     }
     
+    var isHovering: Bool {
+        return (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1
+    }
+    
     private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if SceneDelegate.openCount > 1 {
@@ -248,7 +252,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         } else if UIAccessibility.isVoiceOverRunning || isAccessoryWindow {
             showDone(true)
             
-        } else if (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1 { // hovering
+        } else if isHovering { // hovering
             if newTraitCollection.horizontalSizeClass == .compact {
                 showDone(false)
 

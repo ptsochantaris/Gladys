@@ -168,6 +168,11 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
     
 	private lazy var wideCell = { return reuseIdentifier == "WideArchivedItemCell" }()
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        container.layer.borderColor = UIColor.opaqueSeparator.cgColor
+    }
+    
 	override func awakeFromNib() {
 		super.awakeFromNib()
         
@@ -775,8 +780,10 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         window?.alertPresenter?.present(a, animated: true)
-        a.popoverPresentationController?.sourceView = self
-        a.popoverPresentationController?.sourceRect = self.bounds
+        if let p = a.popoverPresentationController {
+            p.sourceView = self
+            p.sourceRect = bounds
+        }
     }
 
     private func shareOptionsPublic() {
@@ -789,8 +796,10 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         window?.alertPresenter?.present(a, animated: true)
-        a.popoverPresentationController?.sourceView = self
-        a.popoverPresentationController?.sourceRect = self.bounds
+        if let p = a.popoverPresentationController {
+            p.sourceView = self
+            p.sourceRect = bounds
+        }
     }
 
     private func deleteShare() {
@@ -822,7 +831,7 @@ final class ArchivedItemCell: UICollectionViewCell, UIContextMenuInteractionDele
         window?.alertPresenter?.present(cloudSharingController, animated: true)
         if let popover = cloudSharingController.popoverPresentationController {
             popover.sourceView = self
-            popover.sourceRect = self.bounds
+            popover.sourceRect = bounds
         }
     }
 

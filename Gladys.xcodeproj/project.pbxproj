@@ -390,6 +390,7 @@
 		16F2990720CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F2990820CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F2990920CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
+		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
@@ -801,6 +802,7 @@
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Ingest.swift"; sourceTree = "<group>"; };
 		16F2990620CBEF30005DE3AD /* PushState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushState.swift; sourceTree = "<group>"; };
+		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
 		1A4CB68D92CDE793E646F364 /* Pods-iOS-GladysIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysIntents/Pods-iOS-GladysIntents.release.xcconfig"; sourceTree = "<group>"; };
 		256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys.release.xcconfig"; sourceTree = "<group>"; };
@@ -1331,6 +1333,7 @@
 				1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */,
 				16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */,
 				16CA7AA0236F880C00F96699 /* SceneDelegate.swift */,
+				16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2461,6 +2464,7 @@
 				16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16CD7D8720A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
+				16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */,
 				1602F31F2030E5550036E2B0 /* Notifications.swift in Sources */,
 				166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16CD7D8F20A111340039E6C2 /* Component+UICommon.swift in Sources */,
