@@ -249,7 +249,7 @@ extension CloudManager {
 					}
 					syncSwitchedOn = true
 					lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-					sync(force: true, overridingWiFiPreference: true, completion: completion)
+                    completion(nil)
 				}
 			}
 		}
@@ -825,7 +825,13 @@ extension CloudManager {
 			DispatchQueue.main.async {
 				if let error = error {
 					genericAlert(title: "Could not change state", message: error.finalDescription)
-				}
+                } else {
+                    sync(force: true, overridingWiFiPreference: true) { error in
+                        if let error = error {
+                            genericAlert(title: "Initial sync failed", message: error.finalDescription)
+                        }
+                    }
+                }
 			}
 		}
 	}
