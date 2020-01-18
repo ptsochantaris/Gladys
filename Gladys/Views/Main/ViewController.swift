@@ -1037,7 +1037,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let item = filter.filteredDrops[indexPath.item]
 
         if item.flags.contains(.needsUnlock) {
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+            return UIContextMenuConfiguration(identifier: item.uuid as NSCopying, previewProvider: nil, actionProvider: { _ in
                 let unlockAction = UIAction(title: "Unlock") { _ in
                     item.unlock(label: "Unlock Item", action: "Unlock") { success in
                         if success {

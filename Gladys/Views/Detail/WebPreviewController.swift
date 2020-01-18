@@ -96,7 +96,13 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	override var preferredContentSize: CGSize {
 		get {
             let s = mainWindow.bounds.size
-            return CGSize(width: min(s.width, s.height), height: max(s.width, s.height))
+            let w = min(s.width, s.height)
+            let h = max(s.width, s.height)
+            if h / w > 1.4 {
+                return CGSize(width: w, height: h / 1.4)
+            } else {
+                return CGSize(width: w, height: h)
+            }
 		}
 		set {}
 	}
