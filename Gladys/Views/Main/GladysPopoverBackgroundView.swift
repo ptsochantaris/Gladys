@@ -89,7 +89,7 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
     
     private func updateColors() {
         let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
-        layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.8 : 0.3).cgColor
+        layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.8 : 0.25).cgColor
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

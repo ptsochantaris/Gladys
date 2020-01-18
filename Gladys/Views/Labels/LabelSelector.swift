@@ -112,6 +112,29 @@ UISearchResultsUpdating, UITableViewDragDelegate {
 		let toggle = filteredToggles[indexPath.row]
 		cell.setSelected(toggle.enabled, animated: false)
 	}
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let toggle = filteredToggles[indexPath.row]
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            
+            var children = [
+                UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { _ in
+                    self.rename(toggle: toggle)
+                },
+                UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                    self.delete(toggle: toggle)
+                }
+            ]
+            
+            if UIApplication.shared.supportsMultipleScenes {
+                children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                    self.createWindow(for: toggle)
+                }, at: 1)
+            }
+            
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+        }
+    }
 
 	@IBAction private func clearAllSelected(_ sender: UIBarButtonItem) {
 	    filter.disableAllLabels()
@@ -140,7 +163,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
 		return toggle.emptyChecker ? .none : .delete
 	}
 
-    func rename(toggle: ModelFilterContext.LabelToggle) {
+    private func rename(toggle: ModelFilterContext.LabelToggle) {
         let a = UIAlertController(title: "Rename '\(toggle.name)'?", message: "This will change it on all items that contain it.", preferredStyle: .alert)
         var textField: UITextField?
         a.addTextField { field in
@@ -161,7 +184,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
         }
     }
     
-    func createWindow(for toggle: ModelFilterContext.LabelToggle) {
+    private func createWindow(for toggle: ModelFilterContext.LabelToggle) {
         let activity = NSUserActivity(activityType: kGladysMainListActivity)
         activity.title = toggle.name
         activity.userInfo = [kGladysMainViewLabelList: [toggle.name]]
@@ -174,7 +197,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
 
     }
     
-    func delete(toggle: ModelFilterContext.LabelToggle) {
+    private func delete(toggle: ModelFilterContext.LabelToggle) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
 			guard let s = self else { return }

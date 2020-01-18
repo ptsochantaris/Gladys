@@ -321,7 +321,7 @@
                         </barButtonItem>
                         <barButtonItem enabled="NO" title="Labels" image="list.bullet" catalog="system" id="MZc-J5-Dyp">
                             <connections>
-                                <segue destination="xcJ-8p-bxv" kind="popoverPresentation" identifier="showLabelEditor" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="MZc-J5-Dyp" id="TqB-9J-NBk">
+                                <segue destination="xcJ-8p-bxv" kind="popoverPresentation" identifier="showLabelEditor" popoverAnchorBarButtonItem="MZc-J5-Dyp" id="TqB-9J-NBk">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
@@ -359,7 +359,7 @@
                             </barButtonItem>
                             <barButtonItem title="Labels" image="line.horizontal.3.decrease.circle" catalog="system" id="rde-vn-hL8">
                                 <connections>
-                                    <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
+                                    <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
                                 </connections>
@@ -383,7 +383,7 @@
                         <outlet property="shareButton" destination="fec-eA-o3L" id="cYh-xg-QbD"/>
                         <outlet property="sortAscendingButton" destination="bEM-HJ-RRy" id="9gA-Bf-6pM"/>
                         <outlet property="totalSizeLabel" destination="1qG-Qk-AnU" id="4IZ-va-CJj"/>
-                        <segue destination="Oc1-Re-hdt" kind="popoverPresentation" identifier="showDetail" customClass="ShowDetailSegue" customModule="Gladys" customModuleProvider="target" popoverAnchorView="90w-Xn-bmO" id="OWZ-Tj-VMX">
+                        <segue destination="Oc1-Re-hdt" kind="popoverPresentation" identifier="showDetail" popoverAnchorView="90w-Xn-bmO" id="OWZ-Tj-VMX">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="joa-za-Op1" kind="popoverPresentation" identifier="toSiriShortcuts" popoverAnchorView="90w-Xn-bmO" id="j8r-Hv-OpL">

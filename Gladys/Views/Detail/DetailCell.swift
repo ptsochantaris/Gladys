@@ -1,7 +1,7 @@
 
 import UIKit
 
-final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
+final class DetailCell: UITableViewCell {
         
 	@IBOutlet private weak var name: UILabel!
 	@IBOutlet private weak var size: UILabel!
@@ -62,9 +62,6 @@ final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
 		viewButton.accessibilityLabel = "Visual item preview"
 		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
-                
-        let menu = UIContextMenuInteraction(delegate: self)
-        addInteraction(menu)
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
@@ -237,27 +234,4 @@ final class DetailCell: UITableViewCell, UIContextMenuInteractionDelegate {
 			return true
 		}
 	}
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
-            guard let component = self?.component else { return nil }
-            
-            var children = [
-                UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
-                    component.copyToPasteboard()
-                    genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-                }
-            ]
-            
-            if component.parent?.shareMode != .elsewhereReadOnly {
-                children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
-                    if let s = self, let p = s.parent {
-                        p.removeComponent(component)
-                    }
-                })
-            }
-            
-            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
-        }
-    }
 }

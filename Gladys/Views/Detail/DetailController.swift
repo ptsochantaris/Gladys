@@ -220,7 +220,6 @@ final class DetailController: GladysViewController,
 
         } else if indexPath.section == 1 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "LabelCell", for: indexPath) as! LabelCell
-            cell.parent = self
 			if indexPath.row < item.labels.count {
 				cell.label = item.labels[indexPath.row]
 			} else {
@@ -237,6 +236,54 @@ final class DetailController: GladysViewController,
 			return cell
 		}
 	}
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        if indexPath.section == 1 {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+                if indexPath.row >= self.item.labels.count { return nil }
+                let text = self.item.labels[indexPath.row]
+                
+                var children = [
+                    UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
+                        UIPasteboard.general.string = text
+                        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                    }
+                ]
+                
+                if self.isReadWrite {
+                    children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                        self.removeLabel(text)
+                    })
+                }
+                
+                return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+            }
+            
+        } else if indexPath.section == 2 {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+                let component = self.item.components[indexPath.row]
+                
+                var children = [
+                    UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
+                        component.copyToPasteboard()
+                        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                    }
+                ]
+                
+                if component.parent?.shareMode != .elsewhereReadOnly {
+                    children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                        self.removeComponent(component)
+                    })
+                }
+                
+                return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+            }
+            
+        } else {
+            return nil
+        }
+    }
+
         
 	private func checkInspection(for component: Component, in cell: DetailCell) {
 		if component.isPlist {
@@ -335,7 +382,7 @@ final class DetailController: GladysViewController,
         return false
     }
 
-    func removeLabel(_ label: String) {
+    private func removeLabel(_ label: String) {
         guard !blockedDueToSync(), let index = item.labels.firstIndex(of: label) else {
             return
         }
@@ -349,7 +396,7 @@ final class DetailController: GladysViewController,
         })
     }
 
-	func removeComponent(_ component: Component) {
+	private func removeComponent(_ component: Component) {
         guard !blockedDueToSync(), let index = item.components.firstIndex(of: component) else {
             return
         }

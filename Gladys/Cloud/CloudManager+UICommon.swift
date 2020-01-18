@@ -795,17 +795,17 @@ extension CloudManager {
 			return
 		}
 		let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
-		deleteOperation.perRecordCompletionBlock = { _, error in
-			DispatchQueue.main.async {
-				if let error = error, !error.itemDoesNotExistOnServer {
-					genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
-					completion(error)
-				} else { // our local record must be stale, let's refresh it just in case
-					item.cloudKitShareRecord = nil
-					fetchCloudRecord(for: item, completion: completion)
-				}
-			}
-		}
+        deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
+            DispatchQueue.main.async {
+                if let error = error, !error.itemDoesNotExistOnServer {
+                    genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                    completion(error)
+                } else { // our local record must be stale, let's refresh it just in case
+                    item.cloudKitShareRecord = nil
+                    fetchCloudRecord(for: item, completion: completion)
+                }
+            }
+        }
 		let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
 		perform(deleteOperation, on: database, type: "delete share")
 	}
