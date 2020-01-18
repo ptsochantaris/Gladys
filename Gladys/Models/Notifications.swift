@@ -62,7 +62,6 @@ struct UIRequest {
 
 extension Notification.Name {
     static let UIRequest = Notification.Name("UIRequest")
-    static let SegueRequest = Notification.Name("SegueRequest")
     static let DismissPopoversRequest = Notification.Name("DismissPopoversRequest")
     static let ForceLayoutRequested = Notification.Name("ForceLayoutRequested")
     static let ResetSearchRequest = Notification.Name("ResetSearchRequest")

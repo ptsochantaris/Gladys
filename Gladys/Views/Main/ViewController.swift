@@ -534,7 +534,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
         n.addObserver(self, selector: #selector(uiRequest(_:)), name: .UIRequest, object: nil)
-        n.addObserver(self, selector: #selector(segueRequest(_:)), name: .SegueRequest, object: nil)
         n.addObserver(self, selector: #selector(dismissAnyPopoverRequested), name: .DismissPopoversRequest, object: nil)
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
@@ -570,15 +569,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             resetSearch(andLabels: true)
         }
     }
-    
-    @objc private func segueRequest(_ notification: Notification) {
-        guard
-            let info = notification.object as? [AnyHashable: Any],
-            let name = info["name"] as? String
-            else { return }
-        performSegue(withIdentifier: name, sender: info["sender"])
-    }
-    
+        
     @objc private func uiRequest(_ notification: Notification) {
         guard let request = notification.object as? UIRequest else { return }
         if request.sourceScene != view.window?.windowScene {
@@ -1112,7 +1103,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         children.append(makeAction(title: "Info Panel", callback: { [weak self] in
             self?.noteLastActioned(item: item)
-            NotificationCenter.default.post(name: .SegueRequest, object: ["name": "showDetail", "sender": item])
+            self?.performSegue(withIdentifier: "showDetail", sender: item)
         }, style: [], iconName: "list.bullet.below.rectangle"))
         
         children.append(makeAction(title: "Move to Top", callback: { [weak self] in
@@ -1198,7 +1189,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 s.present(a, animated: true)
                 if let p = a.popoverPresentationController {
                     p.sourceView = cell
-                    p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3)
+                    p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
                 }
             }, style: [], iconName: "square.and.arrow.up"))
         }
