@@ -86,7 +86,7 @@ extension ArchivedItem {
 	}
 
 	var previewableTypeItem: Component? {
-		return components.sorted { $0.contentPriority > $1.contentPriority }.first { $0.canPreview }
+        return components.filter { $0.canPreview }.max { $0.contentPriority < $1.contentPriority }
 	}
 
 	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {

@@ -6,7 +6,7 @@
 //  Copyright © 2019 Paul Tsochantaris. All rights reserved.
 //
 
-import LinkPresentation
+import UIKit
 
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     
@@ -39,6 +39,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
         return component.typeIdentifier
     }
 
+    /*
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
         let metadata = LPLinkMetadata()
         metadata.title = component.trimmedSuggestedName
@@ -55,6 +56,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
         
         return metadata
     }
+     */
 }
 
 extension Component {

@@ -4,8 +4,9 @@ import MapKit
 import Contacts
 import CloudKit
 import QuickLook
-import LinkPresentation
 
+/*
+import LinkPresentation
 final class LinkViewController: UIViewController {
     var url: URL!
     
@@ -30,8 +31,8 @@ final class LinkViewController: UIViewController {
         super.viewDidAppear(animated)
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: view)
     }
-    
 }
+*/
 
 final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource {
     private var typeItem: Component
