@@ -121,6 +121,10 @@ UISearchResultsUpdating, UITableViewDragDelegate {
                 UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { _ in
                     self.rename(toggle: toggle)
                 },
+                UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
+                    UIPasteboard.general.string = toggle.name
+                    genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                },
                 UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
                     self.delete(toggle: toggle)
                 }
@@ -128,7 +132,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
             
             if UIApplication.shared.supportsMultipleScenes {
                 children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
-                    self.createWindow(for: toggle)
+                    toggle.name.openInWindow(from: self.view.window?.windowScene)
                 }, at: 1)
             }
             
@@ -183,20 +187,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
             present(a, animated: true)
         }
     }
-    
-    private func createWindow(for toggle: ModelFilterContext.LabelToggle) {
-        let activity = NSUserActivity(activityType: kGladysMainListActivity)
-        activity.title = toggle.name
-        activity.userInfo = [kGladysMainViewLabelList: [toggle.name]]
-
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = view.window?.windowScene
-        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
-            log("Error opening new window: \(error.localizedDescription)")
-        }
-
-    }
-    
+        
     private func delete(toggle: ModelFilterContext.LabelToggle) {
 		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in

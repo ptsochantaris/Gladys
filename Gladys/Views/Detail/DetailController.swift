@@ -250,8 +250,14 @@ final class DetailController: GladysViewController,
                     }
                 ]
                 
+                if UIApplication.shared.supportsMultipleScenes {
+                    children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                        text.openInWindow(from: self.view.window?.windowScene)
+                    }, at: 1)
+                }
+
                 if self.isReadWrite {
-                    children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                    children.append(UIAction(title: "Remove", image: UIImage(systemName: "xmark"), attributes: .destructive) { _ in
                         self.removeLabel(text)
                     })
                 }

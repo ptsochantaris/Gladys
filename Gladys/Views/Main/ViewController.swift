@@ -530,7 +530,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(noteLastActionedItem(_:)), name: .NoteLastActionedUUID, object: nil)
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
@@ -1034,15 +1033,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             animator.preferredCommitStyle = .dismiss
             return
         }
+        noteLastActioned(item: item)
         animator.preferredCommitStyle = .pop
-        animator.addCompletion {
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+        animator.addAnimations {
             if let index = self.filter.filteredDrops.firstIndex(of: item), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
-                item.tryPreview(in: self, from: cell, forceFullscreen: true)
+                item.tryPreview(in: self, from: cell, forceFullscreen: false)
             }
         }
     }
-            
+
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let item = filter.filteredDrops[indexPath.item]
 
@@ -1105,32 +1104,32 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var children = [UIMenuElement]()
         
         if item.canOpen {
-            children.append(makeAction(title: "Open", callback: {
-                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+            children.append(makeAction(title: "Open", callback: { [weak self] in
+                self?.noteLastActioned(item: item)
                 item.tryOpen(in: nil) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
         
-        children.append(makeAction(title: "Info Panel", callback: {
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+        children.append(makeAction(title: "Info Panel", callback: { [weak self] in
+            self?.noteLastActioned(item: item)
             NotificationCenter.default.post(name: .SegueRequest, object: ["name": "showDetail", "sender": item])
         }, style: [], iconName: "list.bullet.below.rectangle"))
         
-        children.append(makeAction(title: "Move to Top", callback: {
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+        children.append(makeAction(title: "Move to Top", callback: { [weak self] in
+            self?.noteLastActioned(item: item)
             Model.sendToTop(items: [item])
         }, style: [], iconName: "arrow.turn.left.up"))
         
-        children.append(makeAction(title: "Copy to Clipboard", callback: {
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+        children.append(makeAction(title: "Copy to Clipboard", callback: { [weak self] in
+            self?.noteLastActioned(item: item)
             item.copyToPasteboard()
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Copied.")
             }
         }, style: [], iconName: "doc.on.doc"))
         
-        children.append(makeAction(title: "Duplicate", callback: {
-            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+        children.append(makeAction(title: "Duplicate", callback: { [weak self] in
+            self?.noteLastActioned(item: item)
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
@@ -1142,7 +1141,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 children.append(makeAction(title: "Remove Lock", callback: {
                     item.unlock(label: "Remove Lock", action: "Remove") { [weak self] success in
                         if success {
-                            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                            self?.noteLastActioned(item: item)
                             self?.passwordUpdate(nil, hint: nil, for: item)
                         }
                     }
@@ -1151,7 +1150,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 children.append(makeAction(title: "Add Lock", callback: {
                     item.lock { [weak self] passwordData, passwordHint in
                         if let d = passwordData {
-                            NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                            self?.noteLastActioned(item: item)
                             self?.passwordUpdate(d, hint: passwordHint, for: item)
                         }
                     }
@@ -1194,7 +1193,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         return
                 }
                 
-                NotificationCenter.default.post(name: .NoteLastActionedUUID, object: item.uuid)
+                s.noteLastActioned(item: item)
                 let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
                 s.present(a, animated: true)
                 if let p = a.popoverPresentationController {
@@ -1564,9 +1563,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var mostRecentIndexPathActioned: IndexPath?
 
-    @objc private func noteLastActionedItem(_ notification: Notification) {
-        guard let uuid = notification.object as? UUID else { return }
-        if let i = filter.filteredDrops.firstIndex(where: { $0.uuid == uuid }) {
+    private func noteLastActioned(item: ArchivedItem) {
+        if let i = filter.filteredDrops.firstIndex(of: item) {
 			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
 		}
 	}

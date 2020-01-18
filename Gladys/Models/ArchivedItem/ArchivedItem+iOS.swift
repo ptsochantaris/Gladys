@@ -10,16 +10,37 @@ import GladysFramework
 
 extension String {
     var labelDragItem: UIDragItem? {
-        let activity = NSUserActivity(activityType: kGladysMainListActivity)
-        activity.title = self
-        activity.userInfo = [kGladysMainViewLabelList: [self]]
-        
         let p = NSItemProvider(item: self as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
-        p.registerObject(activity, visibility: .all)
+        p.registerObject(labelActivity, visibility: .all)
         
         let i = UIDragItem(itemProvider: p)
         i.localObject = self
         return i
+    }
+    
+    private var labelActivity: NSUserActivity {
+        let activity = NSUserActivity(activityType: kGladysMainListActivity)
+        activity.title = self
+        activity.userInfo = [kGladysMainViewLabelList: [self]]
+        return activity
+    }
+    
+    private var suggestedLabelSession: UISceneSession? {
+        return UIApplication.shared.openSessions.first {
+            if let f = ($0.userInfo?[kGladysMainFilter] as? ModelFilterContext) {
+                return f.enabledLabelsForTitles == [self]
+            } else {
+                return false
+            }
+        }
+    }
+    
+    func openInWindow(from scene: UIScene?) {
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = scene
+        UIApplication.shared.requestSceneSessionActivation(suggestedLabelSession, userActivity: labelActivity, options: options) { error in
+            log("Error opening new window: \(error.localizedDescription)")
+        }
     }
 }
 
@@ -165,6 +186,10 @@ extension ArchivedItem {
 			n.modalPresentationStyle = .popover
 		}
         
+        if let p = n.popoverPresentationController, let cell = cell {
+            p.sourceView = cell
+            p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
+        }
 		viewController.present(n, animated: true)
 		if let p = n.popoverPresentationController, let cell = cell {
 			p.sourceView = cell

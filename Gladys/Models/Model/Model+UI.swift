@@ -156,14 +156,14 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 
 extension UISceneSession {
     var associatedFilter: ModelFilterContext {
-        if let existing = userInfo?["mainFilter"] as? ModelFilterContext {
+        if let existing = userInfo?[kGladysMainFilter] as? ModelFilterContext {
             return existing
         }
         let newFilter = ModelFilterContext()
         if userInfo == nil {
             userInfo = [String: Any]()
         }
-        userInfo!["mainFilter"] = newFilter
+        userInfo![kGladysMainFilter] = newFilter
         return newFilter
     }
 }
