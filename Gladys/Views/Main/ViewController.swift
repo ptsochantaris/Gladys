@@ -410,7 +410,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 		}
 	}
-
+    
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
 		if collectionView.hasActiveDrop && componentDropActiveFromDetailView == nil { return }
@@ -1211,15 +1211,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        if UIAccessibility.isVoiceOverRunning,
+            let uuid = configuration.identifier as? UUID,
+            let item = Model.item(uuid: uuid),
+            let index = filter.filteredDrops.firstIndex(of: item),
+            let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                UIAccessibility.post(notification: .layoutChanged, argument: cell)
+            }
+        }
         return previewForContextMenu(of: configuration)
     }
-    
+                
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if
             let uuid = configuration.identifier as? UUID,
             let item = Model.item(uuid: uuid),
             let index = filter.filteredDrops.firstIndex(of: item),
             let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+            noteLastActioned(item: item)
             return cell.targetedPreviewItem
         }
         return nil

@@ -494,11 +494,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 	// MARK - Menu
 
 	override func accessibilityActivate() -> Bool {
-        if !cancelButton.isHidden {
-			cancelSelected(cancelButton)
-			return true
+        if progressViewHolder.isHidden {
+            return super.accessibilityActivate()
 		} else {
-			return super.accessibilityActivate()
+            cancelSelected(cancelButton)
+            return true
 		}
 	}
 

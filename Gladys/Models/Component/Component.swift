@@ -138,8 +138,9 @@ final class Component: Codable {
 		updatedAt = createdAt
         flags = []
 
+        parentUuid = newParentUUID
 		typeIdentifier = item.typeIdentifier
-		parentUuid = newParentUUID
+        accessoryTitle = item.accessoryTitle
 		order = item.order
 		displayIconPriority = item.displayIconPriority
 		displayIconContentMode = item.displayIconContentMode

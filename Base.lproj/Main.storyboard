@@ -71,7 +71,6 @@
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="trailing" secondItem="Axq-ka-HoY" secondAttribute="trailing" constant="4" id="7wa-FP-aS4"/>
                                                                         <constraint firstItem="Axq-ka-HoY" firstAttribute="top" secondItem="pHP-5f-yvY" secondAttribute="top" id="McX-HF-YT7"/>

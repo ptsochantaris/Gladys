@@ -282,7 +282,7 @@ final class DetailController: GladysViewController,
                     })
                 }
                 
-                return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+                return UIMenu(title: component.typeIdentifier, image: nil, identifier: nil, options: [], children: children)
             }
             
         } else {

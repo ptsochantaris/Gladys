@@ -87,8 +87,11 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
         updateColors()
     }
     
+    private var darkMode: Bool {
+        return traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
+    }
+    
     private func updateColors() {
-        let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
         layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.8 : 0.25).cgColor
     }
     
@@ -137,7 +140,7 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
         containerRectangle.frame = backgroundFrame
 
         if arrowRectangle.center.y < 44 {
-            arrowRectangle.tintColor = UIColor.white
+            arrowRectangle.tintColor = darkMode ? UIColor(white: 0.175, alpha: 1) : UIColor.white
         } else {
             arrowRectangle.tintColor = UIColor(named: "colorPaper")
         }
