@@ -91,12 +91,10 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 
 		for item in firstItem ... lastItem {
-			grid.selectItem(at: IndexPath(item: item, section: 0), animated: false, scrollPosition: [.centeredHorizontally, .centeredVertically])
+			grid.selectItem(at: IndexPath(item: item, section: 0), animated: false, scrollPosition: [.centeredHorizontally])
 		}
 		inspectorButton.isEnabled = true
-		if let i = inspector {
-			i.bytes = selectedBytes
-		}
+        inspector?.bytes = selectedBytes
 
 		if !animated {
 			UIView.setAnimationsEnabled(false)
@@ -127,9 +125,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
 	func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		clearSelection()
-		if let i = inspector {
-			i.bytes = selectedBytes
-		}
+        inspector?.bytes = selectedBytes
 	}
 
 	private func clearSelection() {

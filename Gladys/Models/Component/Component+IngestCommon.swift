@@ -121,6 +121,11 @@ extension Component {
 		clearCachedFields()
 		representedClass = .data
 		classWasWrapped = false
+        
+        if let scheme = url.scheme, !scheme.hasPrefix("http") {
+            handleData(Data(), resolveUrls: false, storeBytes: true, andCall: completion)
+            return
+        }
 
 		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
 			guard let s = self else { return }

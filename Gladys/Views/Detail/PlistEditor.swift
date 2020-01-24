@@ -26,8 +26,6 @@ final class PlistEditorCell: UITableViewCell {
 				topDistance.constant = 2
 				bottomDistance.constant = 2
 			}
-            titleLabel.textColor = UIColor.darkText
-            subtitleLabel.textColor = UIColor(named: "colorDarkGray")
 		}
 	}
 }

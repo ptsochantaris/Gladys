@@ -18,7 +18,7 @@ final class DataInspector: GladysViewController {
 		return UserDefaults.standard.bool(forKey: name)
 	}
 
-	static var signedSwitchOn: Bool {
+	private static var signedSwitchOn: Bool {
 		get {
 			return getBool("Hex-signedSwitchOn")
 		}
@@ -27,7 +27,7 @@ final class DataInspector: GladysViewController {
 		}
 	}
 
-	static var littleEndianSwitchOn: Bool {
+	private static var littleEndianSwitchOn: Bool {
 		get {
 			return getBool("Hex-littleEndianSwitchOn")
 		}
@@ -36,7 +36,7 @@ final class DataInspector: GladysViewController {
 		}
 	}
 
-	static var decimalSwitchOn: Bool {
+	private static var decimalSwitchOn: Bool {
 		get {
 			return getBool("Hex-decimalSwitchOn")
 		}
@@ -44,7 +44,7 @@ final class DataInspector: GladysViewController {
 			setBool("Hex-decimalSwitchOn", newValue)
 		}
 	}
-
+    
 	var bytes: [UInt8]! {
 		didSet {
 			if isViewLoaded {
@@ -53,58 +53,43 @@ final class DataInspector: GladysViewController {
 		}
 	}
 
+    @IBOutlet private weak var mainStack: UIStackView!
+
 	@IBOutlet private weak var bit16: UILabel!
 	@IBOutlet private weak var bit32: UILabel!
 	@IBOutlet private weak var bit64: UILabel!
 
-	@IBOutlet private weak var scrollView: UIScrollView!
+	@IBOutlet private weak var signedSwitch: UISegmentedControl!
+	@IBOutlet private weak var littleEndianSwitch: UISegmentedControl!
+	@IBOutlet private weak var decimalSwitch: UISegmentedControl!
 
-	@IBOutlet private weak var signedSwitch: UISwitch!
-	@IBOutlet private weak var littleEndianSwitch: UISwitch!
-	@IBOutlet private weak var decimalSwitch: UISwitch!
-	@IBOutlet private weak var decimalLabel: UILabel!
-	@IBOutlet private weak var hexadecimalLabel: UILabel!
-	@IBOutlet private weak var bigEndian: UILabel!
-	@IBOutlet private weak var littleEndian: UILabel!
-	@IBOutlet private weak var signedLabel: UILabel!
-	@IBOutlet private weak var unsignedLabel: UILabel!
-
-	var signedAccessibility: UIAccessibilityElement!
-	var endianAccessibility: UIAccessibilityElement!
-	var decimalAccessibility: UIAccessibilityElement!
+	private var signedAccessibility: UIAccessibilityElement!
+	private var endianAccessibility: UIAccessibilityElement!
+	private var decimalAccessibility: UIAccessibilityElement!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		signedSwitch.isOn = DataInspector.signedSwitchOn
+        signedSwitch.selectedSegmentIndex = DataInspector.signedSwitchOn ? 1 : 0
 		signedSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
-		signedSwitch.onTintColor = view.tintColor
 
-		littleEndianSwitch.isOn = DataInspector.littleEndianSwitchOn
+        littleEndianSwitch.selectedSegmentIndex = DataInspector.littleEndianSwitchOn ? 1 : 0
 		littleEndianSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
-		littleEndianSwitch.onTintColor = view.tintColor
 
-		decimalSwitch.isOn = DataInspector.decimalSwitchOn
+        decimalSwitch.selectedSegmentIndex = DataInspector.decimalSwitchOn ? 1 : 0
 		decimalSwitch.addTarget(self, action: #selector(switchesChanged), for: .valueChanged)
-		decimalSwitch.onTintColor = view.tintColor
 
 		signedAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		signedAccessibility.accessibilityTraits = .button
-		signedAccessibility.accessibilityFrameInContainerSpace = [signedLabel, unsignedLabel].reduce(signedSwitch.frame) { frame, view -> CGRect in
-			return frame.union(view.frame)
-		}
+		signedAccessibility.accessibilityFrameInContainerSpace = signedSwitch.frame
 
 		endianAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		endianAccessibility.accessibilityTraits = .button
-		endianAccessibility.accessibilityFrameInContainerSpace = [littleEndian, bigEndian].reduce(littleEndianSwitch.frame) { frame, view -> CGRect in
-			return frame.union(view.frame)
-		}
+		endianAccessibility.accessibilityFrameInContainerSpace = littleEndianSwitch.frame
 
 		decimalAccessibility = UIAccessibilityElement(accessibilityContainer: view!)
 		decimalAccessibility.accessibilityTraits = .button
-		decimalAccessibility.accessibilityFrameInContainerSpace = [decimalLabel, hexadecimalLabel].reduce(decimalSwitch.frame) { frame, view -> CGRect in
-			return frame.union(view.frame)
-		}
+		decimalAccessibility.accessibilityFrameInContainerSpace = decimalSwitch.frame
 
 		view.accessibilityElements = [bit16!, bit32!, bit64!, signedAccessibility!, endianAccessibility!, decimalAccessibility!]
 		switchesChanged()
@@ -116,6 +101,14 @@ final class DataInspector: GladysViewController {
 		endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: mainWindow)
 		decimalAccessibility.accessibilityActivationPoint = view.convert(decimalSwitch.center, to: mainWindow)
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        var s = mainStack.systemLayoutSizeFitting(.zero, withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .fittingSizeLevel)
+        s.width += 40
+        s.height += 40
+        preferredContentSize = s
+    }
 
 	@objc private func updateBytes() {
 
@@ -128,7 +121,7 @@ final class DataInspector: GladysViewController {
 			bit16.text = "Select Less"
 			bit16.alpha = 0.3
 		} else {
-            bit16.text = signedSwitch.isOn ? calculate(UInt16.self) : calculate(Int16.self)
+            bit16.text = signedSwitch.selectedSegmentIndex == 1 ? calculate(UInt16.self) : calculate(Int16.self)
 			bit16.alpha = 1
 		}
 
@@ -136,7 +129,7 @@ final class DataInspector: GladysViewController {
 			bit32.text = "Select Less"
 			bit32.alpha = 0.3
 		} else {
-            bit32.text = signedSwitch.isOn ? calculate(UInt32.self) : calculate(Int32.self)
+            bit32.text = signedSwitch.selectedSegmentIndex == 1 ? calculate(UInt32.self) : calculate(Int32.self)
 			bit32.alpha = 1
 		}
 
@@ -144,7 +137,7 @@ final class DataInspector: GladysViewController {
 			bit64.text = "Select Less"
 			bit64.alpha = 0.3
 		} else {
-            bit64.text = signedSwitch.isOn ? calculate(UInt64.self) : calculate(Int64.self)
+            bit64.text = signedSwitch.selectedSegmentIndex == 1 ? calculate(UInt64.self) : calculate(Int64.self)
 			bit64.alpha = 1
 		}
 
@@ -158,22 +151,16 @@ final class DataInspector: GladysViewController {
 
 	@objc private func switchesChanged() {
 		updateBytes()
-		signedAccessibility.accessibilityValue = signedSwitch.isOn ? "Un-signed" : "Signed"
-		endianAccessibility.accessibilityValue = littleEndianSwitch.isOn ? "Big-endian" : "Little-endian"
-		decimalAccessibility.accessibilityValue = decimalSwitch.isOn ? "Hexadecimal" : "Decimal"
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		scrollView.layoutIfNeeded()
-		preferredContentSize = scrollView.contentSize
+		signedAccessibility.accessibilityValue = signedSwitch.selectedSegmentIndex == 1 ? "Un-signed" : "Signed"
+		endianAccessibility.accessibilityValue = littleEndianSwitch.selectedSegmentIndex == 1 ? "Big-endian" : "Little-endian"
+		decimalAccessibility.accessibilityValue = decimalSwitch.selectedSegmentIndex == 1 ? "Hexadecimal" : "Decimal"
 	}
 
 	private func resultToText<T: FixedWidthInteger>(resultType: T.Type, buffer: [UInt8]) -> String {
 
 		let value = UnsafePointer(buffer)!.withMemoryRebound(to: resultType, capacity: 1) { $0.pointee }
         
-		if decimalSwitch.isOn {
+		if decimalSwitch.selectedSegmentIndex == 1 {
             return String(format: "0x%llX", value as! CVarArg)
 		} else {
 			return "\(value)"
@@ -182,16 +169,16 @@ final class DataInspector: GladysViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        DataInspector.signedSwitchOn = signedSwitch.isOn
-        DataInspector.decimalSwitchOn = decimalSwitch.isOn
-        DataInspector.littleEndianSwitchOn = littleEndianSwitch.isOn
+        DataInspector.signedSwitchOn = signedSwitch.selectedSegmentIndex == 1
+        DataInspector.decimalSwitchOn = decimalSwitch.selectedSegmentIndex == 1
+        DataInspector.littleEndianSwitchOn = littleEndianSwitch.selectedSegmentIndex == 1
     }
-        
+    
     private func calculate<T: FixedWidthInteger>(_ type: T.Type) -> String {
         let byteCount = type.bitWidth / 8
 		let maxLength = min(byteCount, bytes.count)
 		var buffer = Array(bytes[..<maxLength])
-		if littleEndianSwitch.isOn {
+		if littleEndianSwitch.selectedSegmentIndex == 1 {
             buffer.reverse()
 		}
         while buffer.count < byteCount {
