@@ -51,9 +51,13 @@ extension Component {
 
                 log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
                 Component.ingestQueue.async {
-                    s.ingest(from: url) { error in
+                    s.ingest(from: url) { [weak self] error in
                         overallProgress.completedUnitCount += 10
-                        s.ingestFailed(error: error, andCall: andCall)
+                        if let s = self, let error = error {
+                            s.ingestFailed(error: error, andCall: andCall)
+                        } else {
+                            s.completeIngest(andCall: andCall)
+                        }
                     }
                 }
 			}

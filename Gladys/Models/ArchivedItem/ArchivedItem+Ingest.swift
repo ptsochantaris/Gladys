@@ -39,7 +39,7 @@ extension ArchivedItem {
         
         #if MAINAPP || MAC
         if let error = error {
-            genericAlert(title: "Some data from \(displayTitleOrUuid) could not be imported", message: "Error processing type " + error.0.typeIdentifier + error.1.finalDescription)
+            genericAlert(title: "Some data from \(displayTitleOrUuid) could not be imported", message: "Error processing type " + error.0.typeIdentifier + ": " + error.1.finalDescription)
         }
         #endif
 
