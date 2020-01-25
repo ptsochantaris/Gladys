@@ -65,17 +65,17 @@
                                                                     <rect key="frame" x="0.0" y="333" width="450" height="13.5"/>
                                                                     <subviews>
                                                                         <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Axq-ka-HoY" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
-                                                                            <rect key="frame" x="4" y="0.0" width="442" height="13.5"/>
+                                                                            <rect key="frame" x="8" y="0.0" width="434" height="13.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                             <color key="textColor" name="colorComponentLabel"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="trailing" secondItem="Axq-ka-HoY" secondAttribute="trailing" constant="4" id="7wa-FP-aS4"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="Axq-ka-HoY" secondAttribute="trailing" constant="8" id="7wa-FP-aS4"/>
                                                                         <constraint firstItem="Axq-ka-HoY" firstAttribute="top" secondItem="pHP-5f-yvY" secondAttribute="top" id="McX-HF-YT7"/>
                                                                         <constraint firstAttribute="bottom" secondItem="Axq-ka-HoY" secondAttribute="bottom" id="NRQ-gT-Wm9"/>
-                                                                        <constraint firstItem="Axq-ka-HoY" firstAttribute="leading" secondItem="pHP-5f-yvY" secondAttribute="leading" constant="4" id="pst-9Y-iIU"/>
+                                                                        <constraint firstItem="Axq-ka-HoY" firstAttribute="leading" secondItem="pHP-5f-yvY" secondAttribute="leading" constant="8" id="pst-9Y-iIU"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3H-LC-FOH">
@@ -2649,20 +2649,20 @@ Selecting them will show only items that contain these labels.</string>
         <!--Add Label-->
         <scene sceneID="8B6-5S-QZq">
             <objects>
-                <viewController id="LcG-xH-YOk" customClass="AddLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="LcG-xH-YOk" customClass="AddLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ezE-bm-XGr" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4al-cC-IGv">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="1" sectionFooterHeight="9" translatesAutoresizingMaskIntoConstraints="NO" id="4al-cC-IGv">
                                 <rect key="frame" x="0.0" y="44" width="240" height="196"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Mic-z7-bJ0">
-                                    <rect key="frame" x="0.0" y="0.0" width="240" height="65"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="240" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GVu-Zi-Qac">
-                                            <rect key="frame" x="20" y="15.5" width="200" height="34"/>
+                                            <rect key="frame" x="16" y="16" width="208" height="34"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
@@ -2673,14 +2673,14 @@ Selecting them will show only items that contain these labels.</string>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="GVu-Zi-Qac" secondAttribute="trailing" constant="20" id="cQM-bz-4jY"/>
-                                        <constraint firstItem="GVu-Zi-Qac" firstAttribute="leading" secondItem="Mic-z7-bJ0" secondAttribute="leading" constant="20" id="nJ4-Wq-b7b"/>
-                                        <constraint firstItem="GVu-Zi-Qac" firstAttribute="centerY" secondItem="Mic-z7-bJ0" secondAttribute="centerY" id="zqc-B8-zlS"/>
+                                        <constraint firstAttribute="bottom" secondItem="GVu-Zi-Qac" secondAttribute="bottom" id="6Ta-It-afn"/>
+                                        <constraint firstAttribute="trailing" secondItem="GVu-Zi-Qac" secondAttribute="trailing" constant="16" id="cQM-bz-4jY"/>
+                                        <constraint firstItem="GVu-Zi-Qac" firstAttribute="leading" secondItem="Mic-z7-bJ0" secondAttribute="leading" constant="16" id="nJ4-Wq-b7b"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelListCell" rowHeight="70" id="tYg-kK-YJK" customClass="LabelListCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="93" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="105.5" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tYg-kK-YJK" id="vaV-Ip-Y59">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
@@ -2727,32 +2727,11 @@ Selecting them will show only items that contain these labels.</string>
                     <value key="contentSizeForViewInPopover" type="size" width="240" height="380"/>
                     <size key="freeformSize" width="240" height="240"/>
                     <connections>
-                        <outlet property="headerLabel" destination="AtT-St-LNd" id="RVI-Yq-1Zi"/>
-                        <outlet property="headerView" destination="zEp-E7-r97" id="b8M-d8-5WA"/>
                         <outlet property="labelText" destination="GVu-Zi-Qac" id="ev5-OV-ycK"/>
                         <outlet property="table" destination="4al-cC-IGv" id="HDn-ja-4tW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X48-NN-Ja9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="zEp-E7-r97">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Existing Labels" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AtT-St-LNd">
-                            <rect key="frame" x="16" y="13" width="208" height="18"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="AtT-St-LNd" firstAttribute="centerY" secondItem="zEp-E7-r97" secondAttribute="centerY" id="7DB-cq-5Pz"/>
-                        <constraint firstItem="rij-Sw-Lt9" firstAttribute="trailing" secondItem="AtT-St-LNd" secondAttribute="trailing" constant="16" id="Ksc-zh-osX"/>
-                        <constraint firstItem="AtT-St-LNd" firstAttribute="leading" secondItem="rij-Sw-Lt9" secondAttribute="leading" constant="16" id="moz-LK-2hx"/>
-                    </constraints>
-                    <viewLayoutGuide key="safeArea" id="rij-Sw-Lt9"/>
-                </view>
             </objects>
             <point key="canvasLocation" x="4389" y="1998"/>
         </scene>
@@ -3005,7 +2984,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="96y-tG-0db" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3273" y="2410"/>
+            <point key="canvasLocation" x="3273" y="2122"/>
         </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
@@ -3099,7 +3078,7 @@ Selecting them will show only items that contain these labels.</string>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0hU-SI-8eo">
-                                            <rect key="frame" x="20" y="15.5" width="200" height="34"/>
+                                            <rect key="frame" x="16" y="15.5" width="208" height="34"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
@@ -3110,9 +3089,9 @@ Selecting them will show only items that contain these labels.</string>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="0hU-SI-8eo" secondAttribute="trailing" constant="20" id="enS-4Z-LIU"/>
+                                        <constraint firstAttribute="trailing" secondItem="0hU-SI-8eo" secondAttribute="trailing" constant="16" id="enS-4Z-LIU"/>
                                         <constraint firstItem="0hU-SI-8eo" firstAttribute="centerY" secondItem="gto-xm-PNG" secondAttribute="centerY" id="nYq-fM-bYR"/>
-                                        <constraint firstItem="0hU-SI-8eo" firstAttribute="leading" secondItem="gto-xm-PNG" secondAttribute="leading" constant="20" id="xGq-oA-kds"/>
+                                        <constraint firstItem="0hU-SI-8eo" firstAttribute="leading" secondItem="gto-xm-PNG" secondAttribute="leading" constant="16" id="xGq-oA-kds"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
@@ -3195,7 +3174,7 @@ Selecting them will show only items that contain these labels.</string>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Existing Labels" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OzW-Qz-ZYJ">
                             <rect key="frame" x="16" y="13" width="208" height="18"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -3248,7 +3227,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vd9-3o-eh8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2421" y="2378"/>
+            <point key="canvasLocation" x="2421" y="2342"/>
         </scene>
         <!--Tips-->
         <scene sceneID="hix-fp-OiX">
@@ -3467,7 +3446,7 @@ Selecting them will show only items that contain these labels.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jeU-kC-QFD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4207" y="2410"/>
+            <point key="canvasLocation" x="3273" y="1675"/>
         </scene>
     </scenes>
     <resources>

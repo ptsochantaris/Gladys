@@ -461,6 +461,7 @@ final class DetailController: GladysViewController,
 			}
 			p.permittedArrowDirections = [.left, .right]
 			d.delegate = self
+            d.exclude = Set(item.labels)
             d.modelFilter = view.associatedFilter
 			p.delegate = self
 			if indexPath.row < item.labels.count {
