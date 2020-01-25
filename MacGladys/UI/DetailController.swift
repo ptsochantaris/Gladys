@@ -57,7 +57,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	@IBOutlet private weak var notesField: FocusableTextField!
 
 	@IBOutlet private weak var labels: NSTableView!
-	@IBOutlet private weak var labelAdd: NSButton!
+    @IBOutlet private weak var labelsScrollView: NSScrollView!
+    @IBOutlet private weak var labelAdd: NSButton!
 	@IBOutlet private weak var labelRemove: NSButton!
 
 	@IBOutlet private weak var inviteButton: NSButton!
@@ -85,6 +86,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
 		labels.setDraggingSourceOperationMask(.move, forLocal: true)
 		labels.setDraggingSourceOperationMask(.copy, forLocal: false)
+        labelsScrollView.layer?.cornerRadius = 2.5
 
 		titleField.focusDelegate = self
 		notesField.focusDelegate = self
@@ -225,7 +227,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	func tableViewSelectionDidChange(_ notification: Notification) {
 		updateLabelButtons()
 	}
-
+    
 	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 		let p = NSPasteboardItem()
 		p.setString(item.labels[row], forType: NSPasteboard.PasteboardType(kUTTypeText as String))
@@ -326,6 +328,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
 		if let d = segue.destinationController as? NewLabelController {
 			d.delegate = self
+            d.exclude = Set(item.labels)
 		}
 	}
 
