@@ -1100,25 +1100,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 item.tryOpen(in: nil) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
-        
-        children.append(makeAction(title: "Info Panel", callback: { [weak self] in
-            self?.noteLastActioned(item: item)
-            self?.performSegue(withIdentifier: "showDetail", sender: item)
-        }, style: [], iconName: "list.bullet.below.rectangle"))
-        
-        children.append(makeAction(title: "Move to Top", callback: { [weak self] in
-            self?.noteLastActioned(item: item)
-            Model.sendToTop(items: [item])
-        }, style: [], iconName: "arrow.turn.left.up"))
-        
-        children.append(makeAction(title: "Copy to Clipboard", callback: { [weak self] in
-            self?.noteLastActioned(item: item)
-            item.copyToPasteboard()
-            if UIAccessibility.isVoiceOverRunning {
-                UIAccessibility.post(notification: .announcement, argument: "Copied.")
-            }
-        }, style: [], iconName: "doc.on.doc"))
-        
+
+        let topElements = [
+            makeAction(title: "Info Panel", callback: { [weak self] in
+                self?.noteLastActioned(item: item)
+                self?.performSegue(withIdentifier: "showDetail", sender: item)
+            }, style: [], iconName: "list.bullet.below.rectangle"),
+            
+            makeAction(title: "Move to Top", callback: { [weak self] in
+                self?.noteLastActioned(item: item)
+                Model.sendToTop(items: [item])
+            }, style: [], iconName: "arrow.turn.left.up"),
+            
+            makeAction(title: "Copy to Clipboard", callback: { [weak self] in
+                self?.noteLastActioned(item: item)
+                item.copyToPasteboard()
+                if UIAccessibility.isVoiceOverRunning {
+                    UIAccessibility.post(notification: .announcement, argument: "Copied.")
+                }
+            }, style: [], iconName: "doc.on.doc")
+        ]
+
+        let topHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: topElements)
+        children.append(topHolder)
+
         children.append(makeAction(title: "Duplicate", callback: { [weak self] in
             self?.noteLastActioned(item: item)
             Model.duplicate(item: item)
@@ -1201,7 +1206,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         confirmAction.attributes = .destructive
         confirmAction.image = UIImage(systemName: "bin.xmark")
         let deleteMenu = UIMenu(title: "Delete", image: confirmAction.image, identifier: nil, options: .destructive, children: [confirmAction])
-        children.append(deleteMenu)
+        let deleteHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [deleteMenu])
+        children.append(deleteHolder)
         
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
     }
