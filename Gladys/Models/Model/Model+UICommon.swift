@@ -243,6 +243,34 @@ final class ModelFilterContext {
 
     struct LabelToggle: Hashable {
         
+        enum Section {
+            case recent(labels: [String], title: String)
+            case filtered(labels: [String], title: String)
+            
+            static var latestLabels: [String] {
+                get {
+                    return UserDefaults.standard.object(forKey: "latestLabels") as? [String] ?? []
+                }
+                set {
+                    UserDefaults.standard.set(newValue, forKey: "latestLabels")
+                }
+            }
+
+            var labels: [String] {
+                switch self {
+                case .filtered(let labels, _), .recent(let labels, _):
+                    return labels
+                }
+            }
+
+            var title: String {
+                switch self {
+                case .filtered(_, let title), .recent(_, let title):
+                    return title
+                }
+            }
+        }
+
         static let noNameTitle = "Items with no labels"
         
         let name: String

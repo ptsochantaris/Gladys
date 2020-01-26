@@ -1455,7 +1455,7 @@ CA
                                     <rect key="frame" x="3" y="3" width="265" height="164"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p9h-Ny-8aO">
+                                        <button verticalHuggingPriority="750" id="p9h-Ny-8aO">
                                             <rect key="frame" x="227" y="9" width="28" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ECL-9D-jAQ">
@@ -1466,7 +1466,7 @@ CA
                                                 <action selector="removeSelected:" target="Rwu-fi-fru" id="ftL-OX-B9A"/>
                                             </connections>
                                         </button>
-                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E0S-5Z-qMJ">
+                                        <button verticalHuggingPriority="750" id="E0S-5Z-qMJ">
                                             <rect key="frame" x="191" y="9" width="28" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="W4I-Cr-avK">
@@ -1653,11 +1653,11 @@ Only</string>
             <objects>
                 <viewController id="gNv-h2-b4E" customClass="NewLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="Gsn-Jo-TRL">
-                        <rect key="frame" x="0.0" y="0.0" width="200" height="255"/>
+                        <rect key="frame" x="0.0" y="0.0" width="164" height="265"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qlZ-aM-jH6">
-                                <rect key="frame" x="17" y="217" width="166" height="21"/>
+                                <rect key="frame" x="17" y="227" width="130" height="21"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="New Label" drawsBackground="YES" id="vZG-ok-ZJa">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1667,20 +1667,20 @@ Only</string>
                                     <outlet property="delegate" destination="gNv-h2-b4E" id="zep-sr-UPA"/>
                                 </connections>
                             </textField>
-                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="CCQ-ZH-Svz">
-                                <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="CCQ-ZH-Svz">
+                                <rect key="frame" x="0.0" y="0.0" width="164" height="210"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="4PC-K5-z9n">
-                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="164" height="210"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="3kn-eL-Prc" id="oI8-zK-gGx">
-                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="3kn-eL-Prc" id="oI8-zK-gGx">
+                                            <rect key="frame" x="0.0" y="0.0" width="164" height="210"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="gridColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <tableColumns>
-                                                <tableColumn identifier="LabelColumn" editable="NO" width="197" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
+                                                <tableColumn identifier="LabelColumn" editable="NO" width="161" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <font key="font" metaFont="message" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1694,11 +1694,11 @@ Only</string>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="LabelCell" id="1yt-oK-y0c">
-                                                            <rect key="frame" x="1" y="1" width="197" height="24"/>
+                                                            <rect key="frame" x="1" y="1" width="161" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ap7-Xp-ise">
-                                                                    <rect key="frame" x="2" y="4" width="193" height="16"/>
+                                                                    <rect key="frame" x="2" y="4" width="157" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="R7b-3H-mkY">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1728,7 +1728,7 @@ Only</string>
                                     <nil key="backgroundColor"/>
                                 </clipView>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="Vwu-vD-atZ"/>
+                                    <constraint firstAttribute="height" constant="210" id="Vwu-vD-atZ"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="yHj-5j-zNS">
                                     <rect key="frame" x="-100" y="-100" width="198" height="16"/>
@@ -1757,7 +1757,7 @@ Only</string>
                 </viewController>
                 <customObject id="cAS-pQ-QjR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2735" y="59"/>
+            <point key="canvasLocation" x="2706" y="60"/>
         </scene>
         <!--Gladys-->
         <scene sceneID="hIz-AP-VOD">

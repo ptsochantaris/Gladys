@@ -21,13 +21,8 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
     var exclude = Set<String>()
 
 	weak var delegate: AddLabelControllerDelegate?
-    
-    private enum Section {
-        case recent(labels: [String], title: String)
-        case filtered(labels: [String], title: String)
-    }
-    
-    private var sections = [Section]()
+        
+    private var sections = [ModelFilterContext.LabelToggle.Section]()
 
     private var dirty = false
 
@@ -51,15 +46,15 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         sections.removeAll()
         
         if filter.isEmpty {
-            let recent = latestLabels.filter { !exclude.contains($0) }.prefix(3)
+            let recent = ModelFilterContext.LabelToggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
             if !recent.isEmpty {
-                sections.append(Section.filtered(labels: Array(recent), title: "Recent Labels"))
+                sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent Labels"))
             }
             let s = modelFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
-            sections.append(Section.filtered(labels: s, title: "All Labels"))
+            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "All Labels"))
         } else {
             let s = modelFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
-            sections.append(Section.filtered(labels: s, title: "Suggested Labels"))
+            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "Suggested Labels"))
         }
     }
     
@@ -81,36 +76,24 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch sections[section] {
-        case .filtered(let labels, _), .recent(let labels, _):
-            return labels.count
-        }
+        return sections[section].labels.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelListCell") as! LabelListCell
-        switch sections[indexPath.section] {
-        case .filtered(let labels, _), .recent(let labels, _):
-            cell.labelName.text = labels[indexPath.row]
-        }
+        cell.labelName.text = sections[indexPath.section].labels[indexPath.row]
 		return cell
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch sections[indexPath.section] {
-        case .filtered(let labels, _), .recent(let labels, _):
-            let l = labels[indexPath.row]
-            labelText.text = l
-            dirty = true
-            dismiss(animated: true, completion: nil)
-        }
+        let l = sections[indexPath.section].labels[indexPath.row]
+        labelText.text = l
+        dirty = true
+        dismiss(animated: true, completion: nil)
 	}
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch sections[section] {
-        case .filtered(_, let title), .recent(_, let title):
-            return title
-        }
+        return sections[section].title
     }
         
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -129,13 +112,13 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
-        if let result = result {
-            var latest = latestLabels
+        if let result = result, !result.isEmpty {
+            var latest = ModelFilterContext.LabelToggle.Section.latestLabels
             if let i = latest.firstIndex(of: result) {
                 latest.remove(at: i)
             }
             latest.insert(result, at: 0)
-            latestLabels = Array(latest.prefix(10))
+            ModelFilterContext.LabelToggle.Section.latestLabels = Array(latest.prefix(10))
         }
 		dirty = false
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -151,11 +134,5 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 				scrollView.contentOffset = CGPoint(x: left, y: top)
 			}
 		}
-	}
-    
-    private var latestLabels = UserDefaults.standard.object(forKey: "latestLabels") as? [String] ?? [] {
-        didSet {
-            UserDefaults.standard.set(latestLabels, forKey: "latestLabels")
-        }
-    }
+	}    
 }

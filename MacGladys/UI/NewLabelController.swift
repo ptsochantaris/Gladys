@@ -18,13 +18,8 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     @IBOutlet private weak var labelList: NSOutlineView!
     
 	weak var delegate: NewLabelControllerDelegate?
-
-    private enum Section {
-        case recent(labels: [String], title: String)
-        case filtered(labels: [String], title: String)
-    }
     
-    private var sections = [Section]()
+    private var sections = [ModelFilterContext.LabelToggle.Section]()
     
     var exclude = Set<String>()
     
@@ -38,15 +33,15 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
         
         let filter = labelField.stringValue
         if filter.isEmpty {
-            let recent = latestLabels.filter { !exclude.contains($0) }.prefix(3)
+            let recent = ModelFilterContext.LabelToggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
             if !recent.isEmpty {
-                sections.append(Section.filtered(labels: Array(recent), title: "Recent Labels"))
+                sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent Labels"))
             }
             let s = Model.sharedFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
-            sections.append(Section.filtered(labels: s, title: "All Labels"))
+            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "All Labels"))
         } else {
             let s = Model.sharedFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
-            sections.append(Section.filtered(labels: s, title: "Suggested Labels"))
+            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "Suggested Labels"))
         }
         
         labelList.reloadData()
@@ -72,50 +67,29 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
 		delegate?.newLabelController(self, selectedLabel: label)
 		dismiss(nil)
 	}
-    
-    private var latestLabels = UserDefaults.standard.object(forKey: "latestLabels") as? [String] ?? [] {
-        didSet {
-            UserDefaults.standard.set(latestLabels, forKey: "latestLabels")
-        }
-    }
-    
+        
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        if let s = item as? Section {
-            switch s {
-            case .filtered(let labels, _), .recent(let labels, _):
-                return labels.count
-            }
+        if let s = item as? ModelFilterContext.LabelToggle.Section {
+            return s.labels.count
         }
         return sections.count
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        if let s = item as? Section {
-            switch s {
-            case .filtered(let labels, _), .recent(let labels, _):
-                return labels[index]
-            }
+        if let s = item as? ModelFilterContext.LabelToggle.Section {
+            return s.labels[index]
         }
         return sections[index]
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        if let s = item as? Section {
-            switch s {
-            case .filtered(let labels, _), .recent(let labels, _):
-                return !labels.isEmpty
-            }
-        }
-        return false
+        return item is ModelFilterContext.LabelToggle.Section
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "LabelCell"), owner: self) as! NSTableCellView
-        if let section = item as? Section {
-            switch section {
-            case .filtered(_, let title), .recent(_, let title):
-                view.textField?.stringValue = title
-            }
+        if let section = item as? ModelFilterContext.LabelToggle.Section {
+            view.textField?.stringValue = section.title
         } else {
             view.textField?.stringValue = item as? String ?? ""
         }
@@ -124,17 +98,17 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     }
     
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        return !(item is Section)
+        return !(item is ModelFilterContext.LabelToggle.Section)
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        if let label = labelList.item(atRow: labelList.selectedRow) as? String {
-            var latest = latestLabels
+        if let label = labelList.item(atRow: labelList.selectedRow) as? String, !label.isEmpty {
+            var latest = ModelFilterContext.LabelToggle.Section.latestLabels
             if let i = latest.firstIndex(of: label) {
                 latest.remove(at: i)
             }
             latest.insert(label, at: 0)
-            latestLabels = Array(latest.prefix(10))
+            ModelFilterContext.LabelToggle.Section.latestLabels = Array(latest.prefix(10))
             done(label)
         }
     }
