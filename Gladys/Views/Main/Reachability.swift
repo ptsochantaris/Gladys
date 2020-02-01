@@ -13,47 +13,53 @@ final class Reachability {
 		zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
 		zeroAddress.sin_family = sa_family_t(AF_INET)
 
-		reachability = withUnsafePointer(to: &zeroAddress) { pointer in
-			let p = UnsafePointer<sockaddr>(OpaquePointer(pointer))
-			return SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, p)!
-		}
-
+        reachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, $0)!
+            }
+        }
+        
 		var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
 
-		if (SCNetworkReachabilitySetCallback(reachability, { target, flags, info in
-			let newStatus = Reachability.status(from: flags)
-			log("Rechability changed: \(newStatus.name)")
-			NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
-		}, &context)) {
-			if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.commonModes.rawValue)) {
-				log("Reachability monitoring active")
-				return
-			}
-		}
-		log("Reachability monitoring start failed")
+        let changeCallback: SCNetworkReachabilityCallBack = { _, flags, _ in
+            let newStatus = Reachability.status(from: flags)
+            log("Rechability changed: \(newStatus.name)")
+            NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
+        }
+        
+		if SCNetworkReachabilitySetCallback(reachability, changeCallback, &context) && SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue) {
+            log("Reachability monitoring active")
+        } else {
+            log("Reachability monitoring start failed")
+        }
 	}
 
 	enum NetworkStatus: Int {
-		case NotReachable, ReachableViaWiFi, ReachableViaWWAN
-		static let descriptions = ["Down", "WiFi", "Cellular"]
-		var name: String { return NetworkStatus.descriptions[rawValue] }
+		case notReachable, reachableViaWiFi, reachableViaWWAN
+        var name: String {
+            switch self {
+            case .notReachable: return "Down"
+            case .reachableViaWiFi: return "WiFi"
+            case .reachableViaWWAN: return "Cellular"
+            }
+        }
 	}
 
 	deinit {
-		SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.commonModes.rawValue)
+		SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
 	}
 
 	private static func status(from flags: SCNetworkReachabilityFlags) -> NetworkStatus {
-		var returnValue = NetworkStatus.NotReachable
+		var returnValue = NetworkStatus.notReachable
 		if flags.contains(.reachable) {
 
-			if !flags.contains(.connectionRequired) { returnValue = .ReachableViaWiFi }
+			if !flags.contains(.connectionRequired) { returnValue = .reachableViaWiFi }
 
 			if flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic) {
-				if !flags.contains(.interventionRequired) { returnValue = .ReachableViaWiFi }
+				if !flags.contains(.interventionRequired) { returnValue = .reachableViaWiFi }
 			}
 
-			if flags.contains(.isWWAN) { returnValue = .ReachableViaWWAN }
+			if flags.contains(.isWWAN) { returnValue = .reachableViaWWAN }
 		}
 		return returnValue
 	}
@@ -63,7 +69,7 @@ final class Reachability {
 		if SCNetworkReachabilityGetFlags(reachability, &flags) {
 			return Reachability.status(from: flags)
 		} else {
-			return NetworkStatus.NotReachable
+			return NetworkStatus.notReachable
 		}
 	}
 }

@@ -843,7 +843,7 @@ extension CloudManager {
 		}
 
 		#if os(iOS)
-		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .ReachableViaWiFi {
+		if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .reachableViaWiFi {
 			log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
 			completion(nil)
 			return
