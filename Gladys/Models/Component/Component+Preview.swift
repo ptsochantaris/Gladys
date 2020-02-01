@@ -17,8 +17,7 @@ import Quartz
 extension Component {
 
     var previewTempPath: URL {
-        let fileName = oneTitle.truncate(limit: 100).trimmingCharacters(in: .whitespacesAndNewlines).filenameSafe
-        let path = Model.temporaryDirectoryUrl.appendingPathComponent(fileName, isDirectory: false)
+        let path = Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false)
         if isWebURL {
             return path.appendingPathExtension("webloc")
         } else if let f = fileExtension {

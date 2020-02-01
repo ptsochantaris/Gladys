@@ -83,6 +83,7 @@
 		<string>PasteClipboardIntent</string>
 		<string>build.bru.Gladys.item.quicklook</string>
 		<string>build.bru.Gladys.item.view</string>
+		<string>build.bru.Gladys.main.list</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
