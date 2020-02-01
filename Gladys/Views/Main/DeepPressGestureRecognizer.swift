@@ -1,7 +1,6 @@
 import UIKit
 
-final class DeepPressGestureRecognizer: UIGestureRecognizer
-{
+final class DeepPressGestureRecognizer: UIGestureRecognizer {
 	private let threshold: CGFloat
 	private var pressed = false
 
@@ -49,4 +48,3 @@ final class DeepPressGestureRecognizer: UIGestureRecognizer
 		}
 	}
 }
-

@@ -1,4 +1,3 @@
-
 import UIKit
 import MapKit
 import CloudKit
@@ -108,7 +107,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 					holder.heightAnchor.constraint(equalToConstant: 41),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
-					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor)
 				])
 
 				tickImage = img
@@ -150,7 +149,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 					holder.heightAnchor.constraint(equalToConstant: 41),
 
 					img.centerXAnchor.constraint(equalTo: holder.centerXAnchor, constant: -3),
-					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+					img.centerYAnchor.constraint(equalTo: holder.centerYAnchor)
 				])
 
 				shareImage = img
@@ -234,9 +233,9 @@ final class ArchivedItemCell: UICollectionViewCell {
             reDecorate()
             UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
                 snap.alpha = 0
-            }) { _ in
+            }, completion: { _ in
                 snap.removeFromSuperview()
-            }
+            })
         } else {
             reDecorate()
         }
@@ -481,17 +480,17 @@ final class ArchivedItemCell: UICollectionViewCell {
 			self.container.backgroundColor = UIColor(named: "colorTint")
             self.topLabel.textColor = .systemBackground
             self.bottomLabel.textColor = .systemBackground
-		}) { finished in
+        }, completion: { _ in
             UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
 				self.container.backgroundColor = originalColor
             }, completion: { _ in
                 self.topLabel.textColor = topColor
                 self.bottomLabel.textColor = bottomColor
             })
-		}
+		})
 	}
 
-	// MARK - Menu
+	// MARK: - Menu
 
 	override func accessibilityActivate() -> Bool {
         if progressViewHolder.isHidden {

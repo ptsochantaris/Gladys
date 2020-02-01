@@ -12,7 +12,7 @@ import CoreImage
 extension NSColor {
 	var hexValue: String {
 		guard let convertedColor = usingColorSpaceName(.calibratedRGB) else { return "#000000"}
-		var redFloatValue:CGFloat = 0.0, greenFloatValue:CGFloat = 0.0, blueFloatValue:CGFloat = 0.0
+		var redFloatValue: CGFloat = 0, greenFloatValue: CGFloat = 0, blueFloatValue: CGFloat = 0
 		convertedColor.getRed(&redFloatValue, green: &greenFloatValue, blue: &blueFloatValue, alpha: nil)
 		let r = Int(redFloatValue * 255.99999)
 		let g = Int(greenFloatValue * 255.99999)

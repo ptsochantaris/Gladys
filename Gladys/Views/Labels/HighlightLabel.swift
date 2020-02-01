@@ -54,13 +54,13 @@ final class HighlightLabel: UILabel {
 			.font: font,
 			.foregroundColor: tintColor,
 			.paragraphStyle: p,
-			.baselineOffset: 1,
+			.baselineOffset: 1
 			])
 
 		var start = 0
 		for label in labels {
 			let len = label.count
-			string.addAttribute(HighlightLabel.highlightTextKey, value: 1, range: NSMakeRange(start, len))
+			string.addAttribute(HighlightLabel.highlightTextKey, value: 1, range: NSRange(location: start, length: len))
 			start += len + separator.count
 		}
 		attributedText = string

@@ -241,7 +241,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		IAPManager.shared.stop()
 	}
 
-	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String : Any]) {
+	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
 		CloudManager.received(notificationInfo: userInfo)
 	}
 
@@ -323,7 +323,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
 			.font: font,
 			.foregroundColor: NSColor.controlTextColor,
-			.paragraphStyle: p,
+			.paragraphStyle: p
 			])
 
 		let windowsBefore = NSApplication.shared.windows

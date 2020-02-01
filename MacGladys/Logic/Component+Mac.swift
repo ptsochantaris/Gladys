@@ -62,7 +62,7 @@ extension Component {
 		}
 	}
 
-    private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?)->Void)?) {
+    private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
         if PersistedOptions.readAndStoreFinderTagsAsLabels {
             let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
             contributedLabels = resourceValues?.tagNames
@@ -125,7 +125,7 @@ extension Component {
 		}
 	}
 
-    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?)->Void)?) {
+    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
 
 		setTitle(from: url)
 
@@ -266,4 +266,3 @@ extension Component {
         }
     }
 }
-

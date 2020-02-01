@@ -1,4 +1,3 @@
-
 #if os(iOS)
 let groupName = "group.build.bru.Gladys"
 #else

@@ -1,4 +1,3 @@
-
 import CoreSpotlight
 
 extension ArchivedItem {

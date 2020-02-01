@@ -54,13 +54,12 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
 			self.copiedLabel.alpha = 1
 			self.itemsView.alpha = 0
-		}) { finished in
+        }, completion: { _ in
 			UIView.animate(withDuration: 0.15, delay: 1, options: .curveEaseIn, animations: {
 				self.copiedLabel.alpha = 0
 				self.itemsView.alpha = 1
-			}) { finished in
-			}
-		}
+			}, completion: nil)
+		})
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {

@@ -1,0 +1,18 @@
+disabled_rules:
+  - identifier_name
+  - line_length
+  - trailing_whitespace
+  - force_cast
+  - file_length
+  - function_body_length
+  - nesting
+  - notification_center_detachment
+  - unused_setter_value
+  - cyclomatic_complexity
+  - type_name
+  - type_body_length
+  - force_try
+
+excluded:
+  - Pods
+

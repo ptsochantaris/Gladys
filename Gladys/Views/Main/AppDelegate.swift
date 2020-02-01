@@ -13,7 +13,7 @@ import CloudKit
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
 		UIApplication.shared.applicationIconBadgeNumber = 0
         Model.beginMonitoringChanges() // will reload data as well
 		PullState.checkMigrations()
@@ -40,7 +40,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		CloudManager.apnsUpdate(nil)
 	}
 
-	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		CloudManager.received(notificationInfo: userInfo, fetchCompletionHandler: completionHandler)
 	}
 }

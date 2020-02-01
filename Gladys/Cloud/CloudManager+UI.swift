@@ -11,7 +11,7 @@ import UIKit
 
 extension CloudManager {
 
-	static func received(notificationInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		if !syncSwitchedOn { return }
 

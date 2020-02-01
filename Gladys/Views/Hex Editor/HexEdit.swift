@@ -211,7 +211,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 				field.text = String(f.item, radix: 16, uppercase: true)
 			}
 		}
-		a.addAction(UIAlertAction(title: "OK", style: .default) { action in
+		a.addAction(UIAlertAction(title: "OK", style: .default) { _ in
 			if let address = Int(a.textFields?.first?.text ?? "", radix: 16) {
 				let finalAddress = min(address, self.bytes.count-1)
 				let newIP = IndexPath(item: finalAddress, section: 0)

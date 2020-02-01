@@ -1,8 +1,7 @@
-
 import UIKit
 import MobileCoreServices
 
-final class PreferencesController : GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
+final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
 	@IBOutlet private weak var exportOnlyVisibleSwitch: UISwitch!
 
@@ -275,10 +274,10 @@ final class PreferencesController : GladysViewController, UIDragInteractionDeleg
 
 	@objc private func importExportSelected() {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { action in
+		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { _ in
 			self.importSelected()
 		})
-		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { action in
+		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { _ in
 			self.exportSelected()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

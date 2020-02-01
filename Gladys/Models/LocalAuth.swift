@@ -13,7 +13,7 @@ final class LocalAuth {
         return LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
 
-    static func attempt(label: String, completion: @escaping (Bool)->Void) {
+    static func attempt(label: String, completion: @escaping (Bool) -> Void) {
         let auth = LAContext()
         if !auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
             completion(false)

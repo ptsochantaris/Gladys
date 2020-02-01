@@ -11,7 +11,7 @@ import Fuzi
 final class WebArchiver {
 
 	/// Archive completion handler block
-	typealias ArchiveCompletionHandler = (Data?, String?, ArchiveErrorType?) -> ()
+	typealias ArchiveCompletionHandler = (Data?, String?, ArchiveErrorType?) -> Void
 
 	/// Error type
 	enum ArchiveErrorType: Error {
@@ -60,7 +60,7 @@ final class WebArchiver {
 				continue
 			}
 			downloadGroup.enter()
-			fetch(resourceUrl) { data, response, error in
+			fetch(resourceUrl) { data, response, _ in
 
 				guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
 					log("Download failed: \(path)")
@@ -157,7 +157,7 @@ final class WebArchiver {
 
 	/////////////////////////////////////////
 
-	static func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, String?, IMAGE?, Bool)->Void) {
+	static func fetchWebPreview(for url: URL, testing: Bool = true, completion: @escaping (String?, String?, IMAGE?, Bool) -> Void) {
 
 		// in thread!!
 
@@ -165,7 +165,7 @@ final class WebArchiver {
 
 			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
 
-			fetch(url, method: "HEAD") { data, response, error in
+			fetch(url, method: "HEAD") { _, response, error in
 				if let response = response as? HTTPURLResponse {
 					if let type = response.mimeType, type.hasPrefix("text/html") {
 						log("Content for this is HTML, will try to fetch title")
@@ -185,7 +185,7 @@ final class WebArchiver {
 
 			log("Fetching HTML from URL: \(url.absoluteString)")
 
-			fetch(url) { data, response, error in
+			fetch(url) { data, _, error in
                 
 				if let data = data, let htmlDoc = try? HTMLDocument(data: data) {
                     
@@ -344,9 +344,9 @@ final class WebArchiver {
 
 	////////////////////////////////////////////
 
-	static func fetchImage(url: URL?, completion: @escaping (IMAGE?)->Void) {
+	static func fetchImage(url: URL?, completion: @escaping (IMAGE?) -> Void) {
 		guard let url = url else { completion(nil); return }
-		fetch(url) { data, response, error in
+		fetch(url) { data, _, _ in
 			if let data = data {
 				log("Image fetched for \(url)")
 				completion(IMAGE(data: data))
@@ -391,4 +391,3 @@ final class WebArchiver {
 		}
 	}
 }
-

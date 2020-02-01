@@ -1,4 +1,3 @@
-
 import UIKit
 import GladysFramework
 import Intents
@@ -16,7 +15,7 @@ var currentWindow: UIWindow? {
 }
 
 @discardableResult
-func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (()->Void)? = nil) -> UIAlertController {
+func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (() -> Void)? = nil) -> UIAlertController {
         
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if let buttonTitle = buttonTitle {
@@ -36,17 +35,17 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
 	return a
 }
 
-func getInput(from: UIViewController, title: String, action: String, previousValue: String?, completion: @escaping (String?)->Void) {
+func getInput(from: UIViewController, title: String, action: String, previousValue: String?, completion: @escaping (String?) -> Void) {
 	let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
 	a.addTextField { textField in
 		textField.placeholder = title
 		textField.text = previousValue
 	}
-	a.addAction(UIAlertAction(title: action, style: .default) { ac in
+	a.addAction(UIAlertAction(title: action, style: .default) { _ in
 		let result = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 		completion(result)
 	})
-	a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { ac in
+	a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 		completion(nil)
 	})
 	from.present(a, animated: true)
@@ -89,7 +88,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		if dragModePanel.superview != nil, !show {
 			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 0
-			}, completion: { finished in
+			}, completion: { _ in
 				self.dragModePanel.removeFromSuperview()
 			})
 		} else if dragModePanel.superview == nil, show, let n = navigationController {
@@ -222,7 +221,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: filter.filteredDrops.count, section: 0)
         
-        let dropItems = coordinator.items.map( { $0.dragItem })
+        let dropItems = coordinator.items.map({ $0.dragItem })
         
         for dragItem in dropItems {
             
@@ -317,9 +316,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-		switch segue.identifier {
+        switch segue.identifier {
 
-		case "showPreferences":
+        case "showPreferences":
 			guard let t = segue.destination as? UITabBarController,
 				let p = t.popoverPresentationController
 				else { return }
@@ -329,7 +328,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			p.sourceView = navigationController!.view
 			p.delegate = self
 
-		case "showDetail":
+        case "showDetail":
 			guard let item = sender as? ArchivedItem,
 				let indexPath = mostRecentIndexPathActioned,
 				let n = segue.destination as? UINavigationController,
@@ -351,7 +350,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				trackCellForAWhile(cell, for: p, in: myNavView)
 			}
 
-		case "showLabels":
+        case "showLabels":
 			guard let n = segue.destination as? UINavigationController,
 				let p = n.popoverPresentationController
 				else { return }
@@ -362,7 +361,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
             (n.viewControllers.first as? LabelSelector)?.filter = filter
 
-		case "showLabelEditor":
+        case "showLabelEditor":
 			guard let n = segue.destination as? UINavigationController,
 				let e = n.topViewController as? LabelEditorController,
 				let p = n.popoverPresentationController
@@ -389,13 +388,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 p.delegate = self
             }
         
-		default: break
+        default: break
 		}
 	}
 
 	private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
 		var observation: NSKeyValueObservation?
-		observation = cell.observe(\.center, options: NSKeyValueObservingOptions.new) { strongCell, change in
+		observation = cell.observe(\.center, options: .new) { strongCell, _ in
 			let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
 			popOver.sourceRect = cellRect
 			popOver.containerView?.setNeedsLayout()
@@ -441,34 +440,35 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
             }
             
-		} else {
-			mostRecentIndexPathActioned = indexPath
-
-			switch PersistedOptions.actionOnTap {
-
-			case .infoPanel:
-				performSegue(withIdentifier: "showDetail", sender: item)
-
-			case .copy:
-				item.copyToPasteboard()
-				genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-
-			case .open:
-				item.tryOpen(in: nil) { [weak self] success in
-					if !success {
-						self?.performSegue(withIdentifier: "showDetail", sender: item)
-					}
-				}
-
-			case .preview:
-				let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
+        } else {
+            mostRecentIndexPathActioned = indexPath
+            
+            switch PersistedOptions.actionOnTap {
+                
+            case .infoPanel:
+                performSegue(withIdentifier: "showDetail", sender: item)
+                
+            case .copy:
+                item.copyToPasteboard()
+                genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                
+            case .open:
+                item.tryOpen(in: nil) { [weak self] success in
+                    if !success {
+                        self?.performSegue(withIdentifier: "showDetail", sender: item)
+                    }
+                }
+                
+            case .preview:
+                let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
                 if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
                     performSegue(withIdentifier: "showDetail", sender: item)
                 }
+                
             case .none:
                 break
-			}
-		}
+            }
+        }
 	}
 
 	override func awakeFromNib() {
@@ -490,7 +490,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		dragModePanel.alpha = 0
 	}
     
-    var onLoad: ((ViewController)->Void)?
+    var onLoad: ((ViewController) -> Void)?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -853,7 +853,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		if selectedCount > 0 {
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
-			a.addAction(UIAlertAction(title: msg, style: .default) { action in
+			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
 				self.selectedItems?.removeAll()
                 self.collection.reloadSections(IndexSet(integer: 0))
 				self.updateUI()
@@ -871,7 +871,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			guard itemCount > 0 else { return }
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
-			a.addAction(UIAlertAction(title: msg, style: .default) { action in
+			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
                 self.selectedItems = self.filter.filteredDrops.map { $0.uuid }
 				self.collection.reloadData()
 				self.updateUI()
@@ -927,13 +927,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			NSLayoutConstraint.activate([
 				l.topAnchor.constraint(equalTo: e.bottomAnchor, constant: 8),
 				l.centerXAnchor.constraint(equalTo: e.centerXAnchor),
-				l.widthAnchor.constraint(equalTo: e.widthAnchor),
+				l.widthAnchor.constraint(equalTo: e.widthAnchor)
 			])
 
 			DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
 				UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {
 					l.alpha = 0
-				}, completion: { finished in
+				}, completion: { _ in
 					l.removeFromSuperview()
 				})
 			}
@@ -964,9 +964,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			if animated {
 				UIView.animate(animations: {
 					e.alpha = 0
-				}) { finished in
+				}, completion: { _ in
 					e.removeFromSuperview()
-				}
+				})
 			} else {
 				e.removeFromSuperview()
 			}
@@ -1320,7 +1320,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
-		a.addAction(UIAlertAction(title: msg, style: .destructive) { action in
+		a.addAction(UIAlertAction(title: msg, style: .destructive) { _ in
 			self.proceedWithDelete()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -1376,7 +1376,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         dismissAnyPopOver()
     }
     
-    private func dismissAnyPopOver(completion: (()->Void)? = nil) {
+    private func dismissAnyPopOver(completion: (() -> Void)? = nil) {
         let firstPresentedAlertController = (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
         firstPresentedAlertController?.dismiss(animated: true) {
             completion?()
@@ -1390,8 +1390,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 	}
 
-	func dismissAnyPopOverOrModal(completion: (()->Void)? = nil) {
-		dismissAnyPopOver() {
+	func dismissAnyPopOverOrModal(completion: (() -> Void)? = nil) {
+		dismissAnyPopOver {
 			if let p = self.navigationItem.searchController?.presentedViewController ?? self.navigationController?.presentedViewController {
 				p.dismiss(animated: true) {
 					completion?()
@@ -1481,7 +1481,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @objc private func highlightItem(_ notification: Notification) {
         guard let request = notification.object as? HighlightRequest else { return }
         if let index = filter.filteredDrops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
-			dismissAnyPopOverOrModal() {
+			dismissAnyPopOverOrModal {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
         } else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
@@ -1643,7 +1643,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles]
     }
     
-    // MARK:
+    // MARK: 
 
     private weak var itemToBeShared: ArchivedItem?
     
@@ -1709,7 +1709,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func addInvites(to item: ArchivedItem) {
         guard let rootRecord = item.cloudKitRecord else { return }
-        let cloudSharingController = UICloudSharingController { controller, completion in
+        let cloudSharingController = UICloudSharingController { _, completion in
             CloudManager.share(item: item, rootRecord: rootRecord, completion: completion)
         }
         presentCloudController(cloudSharingController, for: item)

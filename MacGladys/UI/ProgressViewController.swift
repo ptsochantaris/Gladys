@@ -13,11 +13,14 @@ final class ProgressViewController: NSViewController {
 	@IBOutlet private weak var progressIndicator: NSProgressIndicator!
 
 	private var monitoredProgress: Progress?
+    private var observer: NSKeyValueObservation?
 
 	func startMonitoring(progress: Progress?, titleOverride: String?) {
 		monitoredProgress = progress
 		if let monitoredProgress = monitoredProgress {
-			monitoredProgress.addObserver(self, forKeyPath: "completedUnitCount", options: .new, context: nil)
+            observer = monitoredProgress.observe(\Progress.completedUnitCount, options: .new) { [weak self] p, _ in
+                self?.update(from: p)
+            }
 			update(from: monitoredProgress)
 		} else {
 			progressIndicator.isIndeterminate = true
@@ -29,12 +32,6 @@ final class ProgressViewController: NSViewController {
 
 	func endMonitoring() {
 		monitoredProgress?.removeObserver(self, forKeyPath: "completedUnitCount")
-	}
-
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if let p = object as? Progress, p === monitoredProgress {
-			update(from: p)
-		}
 	}
 
 	private func update(from p: Progress) {

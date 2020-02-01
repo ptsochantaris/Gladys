@@ -302,7 +302,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	private func done(notesCheck: Bool = false, titleCheck: Bool = false) {
 		var dirty = false
-		if notesCheck{
+		if notesCheck {
 			let newText = notesField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
 			if newText != previousText {
 				item.note = newText
@@ -482,7 +482,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		textField.maximumNumberOfLines = 1
 		textField.lineBreakMode = .byTruncatingTail
 		textField.stringValue = urlString
-		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 400, height: 24))
+		let input = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 24))
 		input.addSubview(textField)
 		a.accessoryView = input
 		a.window.initialFirstResponder = textField

@@ -19,7 +19,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	var selectedItems: [UUID]?
 	var editedUUIDs = Set<UUID>()
 
-	var endCallback: ((Bool)->Void)?
+	var endCallback: ((Bool) -> Void)?
     
     var currentFilter: ModelFilterContext!
 

@@ -53,7 +53,7 @@ final class iCloudController: GladysViewController {
 			genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
 		} else {
 			let a = UIAlertController(title: "Are you sure?", message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.", preferredStyle: .alert)
-			a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive) { [weak self] action in
+			a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive) { [weak self] _ in
 				self?.eraseiCloudData()
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -171,12 +171,12 @@ final class iCloudController: GladysViewController {
 		updateiCloudControls()
 	}
 
-	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
+	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
 		let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		a.addAction(UIAlertAction(title: action, style: .default) { action in
+		a.addAction(UIAlertAction(title: action, style: .default) { _ in
 			completion(true)
 		})
-		a.addAction(UIAlertAction(title: cancel, style: .cancel) { action in
+		a.addAction(UIAlertAction(title: cancel, style: .cancel) { _ in
 			completion(false)
 		})
 		present(a, animated: true)

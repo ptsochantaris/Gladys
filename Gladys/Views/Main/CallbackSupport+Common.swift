@@ -2,7 +2,7 @@ import Foundation
 import CallbackURLKit
 
 extension CallbackSupport {
-	static func createOverrides(from parameters: [String : String]) -> ImportOverrides {
+	static func createOverrides(from parameters: [String: String]) -> ImportOverrides {
 		let title = parameters["title"]
 		let labels = parameters["labels"]
 		let note = parameters["note"]

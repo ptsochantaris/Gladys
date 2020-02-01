@@ -43,7 +43,7 @@ extension CloudManager {
 		}
 	}
 
-	static func activate(completion: @escaping (Error?)->Void) {
+	static func activate(completion: @escaping (Error?) -> Void) {
 
 		if syncSwitchedOn {
 			completion(nil)
@@ -73,7 +73,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func activationFailure(error: Error?, reason: String, completion: (Error?)->Void) {
+	static private func activationFailure(error: Error?, reason: String, completion: (Error?) -> Void) {
 		syncTransitioning = false
 		log("Activation failure, reason: \(reason)")
 		if let error = error {
@@ -83,7 +83,7 @@ extension CloudManager {
 		}
 	}
 
-	static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?)->Void) {
+	static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
 		let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
 		modifyOperation.savePolicy = .allKeys
 		modifyOperation.perRecordCompletionBlock = { record, error in
@@ -110,7 +110,7 @@ extension CloudManager {
 		perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
 	}
 
-	static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?)->Void) {
+	static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
 		syncTransitioning = true
 
 		if deactivatingShares {
@@ -186,7 +186,7 @@ extension CloudManager {
 		return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
 	}
 
-	private static func proceedWithActivation(completion: @escaping (Error?)->Void) {
+	private static func proceedWithActivation(completion: @escaping (Error?) -> Void) {
 
 		let zone = CKRecordZone(zoneID: privateZoneId)
 		let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
@@ -207,7 +207,7 @@ extension CloudManager {
 		perform(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
 	}
 
-	private static func updateSubscriptions(completion: @escaping (Error?)->Void) {
+	private static func updateSubscriptions(completion: @escaping (Error?) -> Void) {
 		let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
 		subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
 			if error != nil {
@@ -223,14 +223,14 @@ extension CloudManager {
 		perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
 	}
 
-	static private func abortActivation(_ error: Error, completion: @escaping (Error?)->Void) {
+	static private func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
 		DispatchQueue.main.async {
 			completion(error)
 			deactivate(force: true, completion: { _ in })
 		}
 	}
 
-	static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?)->Void) {
+	static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?) -> Void) {
 		let positionListId = CKRecord.ID(recordName: RecordType.positionList, zoneID: zone.zoneID)
 		let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
 		fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
@@ -257,9 +257,9 @@ extension CloudManager {
 		perform(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
 	}
 
-	static func eraseZoneIfNeeded(completion: @escaping (Error?)->Void) {
+	static func eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
 		showNetwork = true
-		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave:nil, recordZoneIDsToDelete: [privateZoneId])
+		let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: [privateZoneId])
 		deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
 			if let error = error {
 				log("Error while deleting zone: \(error.finalDescription)")
@@ -471,7 +471,7 @@ extension CloudManager {
 		}
 	}
 
-	private static func fetchMissingShareRecords(completion: @escaping (Error?)->Void) {
+	private static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
 
 		var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
@@ -675,7 +675,7 @@ extension CloudManager {
 		perform(operation, on: database, type: "fetch zone changes")
 	}
 
-	static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?)->Void) {
+	static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?) -> Void) {
 
 		if let l = lastiCloudAccount {
 			let newToken = FileManager.default.ubiquityIdentityToken
@@ -702,7 +702,7 @@ extension CloudManager {
 		}
 	}
 
-	private static func reactToCkError(_ ckError: CKError, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
+	private static func reactToCkError(_ ckError: CKError, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?) -> Void) {
 		switch ckError.code {
 
 		case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
@@ -789,7 +789,7 @@ extension CloudManager {
 		}
 	}
 
-	static func deleteShare(_ item: ArchivedItem, completion: @escaping (Error?)->Void) {
+	static func deleteShare(_ item: ArchivedItem, completion: @escaping (Error?) -> Void) {
 		guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
 			completion(nil)
 			return
@@ -836,7 +836,7 @@ extension CloudManager {
 		}
 	}
 
-	private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?)->Void) {
+	private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?) -> Void) {
 		if !syncSwitchedOn {
 			completion(nil)
 			return

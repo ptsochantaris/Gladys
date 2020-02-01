@@ -98,7 +98,7 @@ final class CloudManager {
 	}
 
 	@discardableResult
-	static func sendUpdatesUp(completion: @escaping (Error?)->Void) -> Progress? {
+	static func sendUpdatesUp(completion: @escaping (Error?) -> Void) -> Progress? {
 		if !syncSwitchedOn {
 			#if MAINAPP || ACTIONEXTENSION
 			CloudManager.shareActionIsActioningIds = []

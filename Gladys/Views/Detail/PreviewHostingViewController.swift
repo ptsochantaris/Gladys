@@ -146,11 +146,11 @@ final class PreviewHostingViewController: UINavigationController, UIViewControll
                     snapInfo.0.frame = finalFrame
                     snapInfo.0.alpha = 0
                 }
-            }) { _ in
+            }, completion: { _ in
                 vcSnap.removeFromSuperview()
                 container.addSubview(vc.view)
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            }
+            })
 
         } else {
             guard let vc = transitionContext.viewController(forKey: .from) else { return }
@@ -176,10 +176,10 @@ final class PreviewHostingViewController: UINavigationController, UIViewControll
                     snapInfo.0.frame = finalFrame
                     snapInfo.0.alpha = 1
                 }
-            }) { _ in
+            }, completion: { _ in
                 vcSnap.removeFromSuperview()
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            }
+            })
         }
     }
 }

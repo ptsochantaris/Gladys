@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class GladysFilePromiseProvider : NSFilePromiseProvider {
+final class GladysFilePromiseProvider: NSFilePromiseProvider {
 
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
 		let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
@@ -19,14 +19,14 @@ final class GladysFilePromiseProvider : NSFilePromiseProvider {
 		let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate)
 		p.component = component
 		p.tempPath = tempPath
-		p.strongDelegate = delegate
+		p.strongReference = delegate
         p.tags = tags
 		p.extraItems = extraItems.filter { $0.typeIdentifier != "public.file-url" }
 		return p
 	}
 
 	private var extraItems: ContiguousArray<Component>?
-	private var strongDelegate: GladysFileProviderDelegate?
+	private var strongReference: GladysFileProviderDelegate?
 	private var component: Component?
 	private var tempPath: URL?
     private var tags: [String]?
@@ -103,8 +103,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 			}
 			try fm.moveItem(at: tempPath, to: url)
 			completionHandler(nil)
-		}
-		catch {
+		} catch {
 			completionHandler(error)
 		}
 	}

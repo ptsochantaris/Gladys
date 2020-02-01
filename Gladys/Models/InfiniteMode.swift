@@ -1,8 +1,7 @@
-
 #if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION
 import UIKit
 
-fileprivate func getDeviceId() -> Data {
+private func getDeviceId() -> Data {
 	guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return Data() }
 	var uuidBytes: [UInt8] = [UInt8](repeating: 0, count: 16)
 	identifier.getBytes(&uuidBytes)
@@ -15,7 +14,7 @@ import GladysFramework
 #if MAC
 import Foundation
 
-fileprivate func getDeviceId() -> Data {
+private func getDeviceId() -> Data {
 
 	var master_port = mach_port_t()
 	var kernResult = IOMasterPort(mach_port_t(MACH_PORT_NULL), &master_port)
@@ -45,7 +44,7 @@ fileprivate func getDeviceId() -> Data {
 
 		var parentService = io_object_t()
 		kernResult = IORegistryEntryGetParentEntry(service, kIOServicePlane, &parentService)
-		if (kernResult == KERN_SUCCESS) {
+		if kernResult == KERN_SUCCESS {
 			let m = IORegistryEntryCreateCFProperty(parentService, "IOMACAddress" as CFString, kCFAllocatorDefault, 0).takeUnretainedValue()
 			macAddress = (m as! CFData)
 			IOObjectRelease(parentService)

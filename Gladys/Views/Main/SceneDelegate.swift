@@ -202,7 +202,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     child = item.previewableTypeItem
                 }
                 if useCentral {
-                    showCentral(in: scene) { vc in
+                    showCentral(in: scene) { _ in
                         let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
                         NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
                     }
@@ -230,7 +230,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
 
                 if useCentral {
-                    showCentral(in: scene) { vc in
+                    showCentral(in: scene) { _ in
                         let request = HighlightRequest(uuid: uuidString, open: true)
                         NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
                     }
@@ -275,7 +275,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController)->Void)? = nil) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool

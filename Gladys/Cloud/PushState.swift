@@ -36,7 +36,7 @@ final class PushState {
 
 			let itemId = item.uuid.uuidString
 			idsToPush.append(itemId)
-			idsToPush.append(contentsOf: item.components.map { $0.uuid.uuidString } )
+			idsToPush.append(contentsOf: item.components.map { $0.uuid.uuidString })
 			_uuid2progress[itemId] = Progress(totalUnitCount: 100)
 			item.components.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
 
@@ -151,7 +151,7 @@ final class PushState {
 			operation.savePolicy = .allKeys
 			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
 
-				let requestedDeletionUUIDs = recordIdList.map{ $0.recordName }
+				let requestedDeletionUUIDs = recordIdList.map { $0.recordName }
 				let deletedUUIDs = deletedRecordIds?.map { $0.recordName } ?? []
 				for uuid in requestedDeletionUUIDs {
 					if deletedUUIDs.contains(uuid) {

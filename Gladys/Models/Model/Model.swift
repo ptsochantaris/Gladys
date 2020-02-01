@@ -1,4 +1,3 @@
-
 import Foundation
 
 final class Model {
@@ -35,7 +34,7 @@ final class Model {
 		}
 
 		var coordinationError: NSError?
-		var loadingError : NSError?
+		var loadingError: NSError?
 		var didLoad = false
 
 		// withoutChanges because we only signal the provider after we have saved
@@ -206,4 +205,3 @@ final class Model {
 		#endif
 	}()
 }
-

@@ -140,7 +140,7 @@ final class ItemController: WKInterfaceController {
 					self.gotImage = true
 				}
 			}
-		}, errorHandler: { error in
+		}, errorHandler: { _ in
 			DispatchQueue.main.async {
 				self.image.setImage(nil)
 				self.fetchingImage = false

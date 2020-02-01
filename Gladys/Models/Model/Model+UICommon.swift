@@ -179,7 +179,7 @@ final class ModelFilterContext {
                     resultString = "No results"
                 } else if c == 1 {
                     resultString = "One result"
-                } else  {
+                } else {
                     resultString = "\(filteredDrops.count) results"
                 }
                 UIAccessibility.post(notification: .announcement, argument: resultString)
@@ -316,7 +316,7 @@ final class ModelFilterContext {
     }
 
     func rebuildLabels() {
-        var counts = [String:Int]()
+        var counts = [String: Int]()
         var noLabelCount = 0
         for item in Model.drops {
             item.labels.forEach {
@@ -353,7 +353,7 @@ final class ModelFilterContext {
         }
     }
 
-    func renameLabel(_ label : String, to newLabel: String) {
+    func renameLabel(_ label: String, to newLabel: String) {
         let wasEnabled = labelToggles.first { $0.name == label }?.enabled ?? false
         let affectedUuids = Model.drops.compactMap { i -> String? in
             if let index = i.labels.firstIndex(of: label) {
@@ -384,7 +384,7 @@ final class ModelFilterContext {
         }
     }
     
-    func removeLabel(_ label : String) {
+    func removeLabel(_ label: String) {
         let affectedUuids = Model.drops.compactMap { i -> String? in
             if i.labels.contains(label) {
                 i.labels.removeAll { $0 == label }
@@ -411,7 +411,7 @@ extension Model {
 	static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
 	private static var needsAnotherSave = false
 	private static var isSaving = false
-	private static var nextSaveCallbacks: [()->Void]?
+	private static var nextSaveCallbacks: [() -> Void]?
 
 	static var sizeInBytes: Int64 {
 		return drops.reduce(0, { $0 + $1.sizeInBytes })
@@ -456,7 +456,7 @@ extension Model {
 			assert(actualItemsToSort.count == itemIndexes.count)
 			return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
 		}
-		func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> ()->Void {
+		func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
 			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
 			let sortType = self
 			return {
@@ -611,7 +611,7 @@ extension Model {
 
 	//////////////////////// Saving
 
-	static func queueNextSaveCallback(_ callback: @escaping ()->Void) {
+	static func queueNextSaveCallback(_ callback: @escaping () -> Void) {
 		if nextSaveCallbacks == nil {
 			nextSaveCallbacks = [()->Void]()
 		}

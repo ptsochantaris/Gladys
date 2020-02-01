@@ -30,20 +30,18 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
         doneButtonLocation = .right
         windowButtonLocation = .right
         
-		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { w, v in
-			if let n = v.newValue {
-				if n > 0.85 {
-					self.spinner.stopAnimating()
-					self.loadCheck1 = nil
-				}
+		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { [weak self] _, v in
+			if let n = v.newValue, n > 0.85 {
+                self?.spinner.stopAnimating()
+                self?.loadCheck1 = nil
 			}
 		}
 
-		loadCheck2 = web.observe(\.title, options: .new) { w, v in
+		loadCheck2 = web.observe(\.title, options: .new) { [weak self] _, v in
 			assert(Thread.isMainThread)
 			if let n = v.newValue {
-				self.title = n
-				self.loadCheck2 = nil
+				self?.title = n
+				self?.loadCheck2 = nil
 			}
 		}
 

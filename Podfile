@@ -10,6 +10,7 @@ abstract_target 'iOS' do
     pod 'Fuzi'
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
+    pod 'SwiftLint'
   end
 
   target 'GladysAction' do

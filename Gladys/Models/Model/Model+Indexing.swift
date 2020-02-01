@@ -1,4 +1,3 @@
-
 import CoreSpotlight
 
 extension Model {
@@ -53,7 +52,6 @@ extension Model {
 		if let item = drops.filter({ $0.uuid.uuidString == itemIdentifier }).first, let url = item.url(for: typeIdentifier) {
 			return url as URL
 		}
-		return URL(string:"file://")!
+		return URL(string: "file://")!
 	}
 }
-

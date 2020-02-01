@@ -1,4 +1,3 @@
-
 import UIKit
 import MapKit
 import CloudKit
@@ -54,7 +53,7 @@ extension ArchivedItem {
         return labels[index].labelDragItem
 	}
 
-	private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?)->Void) {
+	private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?) -> Void) {
 		let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		a.addTextField { textField in
 			textField.placeholder = "Password"
@@ -66,7 +65,7 @@ extension ArchivedItem {
 				textField.text = self?.displayText.0
 			}
 		}
-		a.addAction(UIAlertAction(title: action, style: .default) { [weak self] ac in
+		a.addAction(UIAlertAction(title: action, style: .default) { [weak self] _ in
 
 			var hint: String?
 			if a.textFields!.count > 1 {
@@ -80,13 +79,13 @@ extension ArchivedItem {
 				completion(password, hint)
 			}
 		})
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { ac in
+		a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
 			completion(nil, nil)
 		})
         currentWindow?.alertPresenter?.present(a, animated: true)
 	}
 
-	func lock(completion: @escaping (Data?, String?)->Void) {
+	func lock(completion: @escaping (Data?, String?) -> Void) {
 		let message: String
         if LocalAuth.canUseLocalAuth {
 			message = "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
@@ -104,7 +103,7 @@ extension ArchivedItem {
 	}
 
     private static var unlockingItemsBlock = Set<UUID>()
-	func unlock(label: String, action: String, completion: @escaping (Bool)->Void) {
+	func unlock(label: String, action: String, completion: @escaping (Bool) -> Void) {
         if ArchivedItem.unlockingItemsBlock.contains(uuid) {
             return
         }
@@ -123,8 +122,8 @@ extension ArchivedItem {
         }
 	}
 
-	private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool)->Void) {
-		getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, hint in
+	private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool) -> Void) {
+		getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
 			guard let password = password else {
 				completion(false)
 				return
@@ -198,7 +197,7 @@ extension ArchivedItem {
 		return true
 	}
     
-	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool)->Void) {
+	func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool) -> Void) {
 		let item = mostRelevantTypeItem?.objectForShare
 		if let item = item as? MKMapItem {
 			item.openInMaps(launchOptions: [:])

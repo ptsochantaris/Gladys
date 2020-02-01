@@ -21,7 +21,7 @@ extension Component {
 
     static let iconPointSize = CGSize(width: 256, height: 256)
 
-    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: ((Error?)->Void)?) -> Progress {
+    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: ((Error?) -> Void)?) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 20)
 
 		let p: Progress
@@ -94,7 +94,7 @@ extension Component {
 		return overallProgress
 	}
 
-    private func ingestFailed(error: Error?, andCall: ((Error?)->Void)?) {
+    private func ingestFailed(error: Error?, andCall: ((Error?) -> Void)?) {
 		let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
 		log(">> Error receiving item: \(error.finalDescription)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
@@ -103,7 +103,7 @@ extension Component {
         }
 	}
 
-    func completeIngest(andCall: ((Error?)->Void)?) {
+    func completeIngest(andCall: ((Error?) -> Void)?) {
         DispatchQueue.main.async {
             andCall?(nil)
         }
@@ -115,7 +115,7 @@ extension Component {
 
     private static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
     
-    private func ingest(from url: URL, completion: @escaping (Error?)->Void) {
+    private func ingest(from url: URL, completion: @escaping (Error?) -> Void) {
         // in thread!
         
 		clearCachedFields()
@@ -141,13 +141,13 @@ extension Component {
 		}
 	}
 
-    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping (Error?)->Void) {
+    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping (Error?) -> Void) {
         // in thread!
 
 		clearCachedFields()
         
         if data.isPlist, let obj = SafeUnarchiver.unarchive(data) {
-            log("      unwrapped keyed object: \(type(of:obj))")
+            log("      unwrapped keyed object: \(type(of: obj))")
             classWasWrapped = true
             
             if let item = obj as? NSString {
@@ -330,8 +330,8 @@ extension Component {
 		var pageRect = firstPage.getBoxRect(.cropBox)
 		let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
 		pageRect.origin = .zero
-		pageRect.size.width = pageRect.size.width * pdfScale
-		pageRect.size.height = pageRect.size.height * pdfScale
+		pageRect.size.width *= pdfScale
+		pageRect.size.height *= pdfScale
 
 		let c = CGContext(data: nil,
 						  width: Int(pageRect.size.width),
@@ -372,7 +372,7 @@ extension Component {
 
 			try fm.linkItem(at: bytesPath, to: tempPath)
 
-			let asset = AVURLAsset(url: tempPath , options: nil)
+			let asset = AVURLAsset(url: tempPath, options: nil)
 			let imgGenerator = AVAssetImageGenerator(asset: asset)
 			imgGenerator.appliesPreferredTrackTransform = true
 			let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
@@ -405,11 +405,11 @@ extension Component {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?)->Void)?) {
+    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
 		log("      received remote url: \(url.absoluteString)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 		if let s = url.scheme, s.hasPrefix("http") {
-			WebArchiver.fetchWebPreview(for: url) { [weak self] title, description, image, isThumbnail in
+			WebArchiver.fetchWebPreview(for: url) { [weak self] title, _, image, isThumbnail in
 				guard let s = self else { return }
                 if s.flags.contains(.loadingAborted) {
                     s.ingestFailed(error: nil, andCall: andCall)
@@ -430,7 +430,7 @@ extension Component {
 		}
 	}
 
-    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, andCall: ((Error?)->Void)?) {
+    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, andCall: ((Error?) -> Void)?) {
 		if storeBytes {
 			setBytes(data)
 		}
@@ -521,7 +521,7 @@ extension Component {
 		completeIngest(andCall: andCall)
 	}
 
-    func reIngest(andCall: @escaping (Error?)->Void) -> Progress {
+    func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 2
 		if let bytesCopy = bytes {

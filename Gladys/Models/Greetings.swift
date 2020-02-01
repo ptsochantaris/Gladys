@@ -55,6 +55,6 @@ final class Greetings {
 		"Greetings.",
 		"You called?",
 		"Namaste.",
-        "All set.",
+        "All set."
 	]
 }

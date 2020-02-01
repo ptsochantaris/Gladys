@@ -1,4 +1,3 @@
-
 import UIKit
 import CloudKit
 import MobileCoreServices
@@ -289,7 +288,6 @@ final class DetailController: GladysViewController,
             return nil
         }
     }
-
         
 	private func checkInspection(for component: Component, in cell: DetailCell) {
 		if component.isPlist {
@@ -577,7 +575,7 @@ final class DetailController: GladysViewController,
 					}
 
 					if existingLabel == nil {
-						_ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, error in
+						_ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, _ in
 							if let newLabel = newLabel {
 								DispatchQueue.main.async {
 									self.item.labels[destinationIndexPath.row] = newLabel

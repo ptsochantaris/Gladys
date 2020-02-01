@@ -1,4 +1,3 @@
-
 import Foundation
 import CloudKit
 
@@ -6,7 +5,7 @@ final class ArchivedItem: Codable {
 
 	let suggestedName: String?
 	let uuid: UUID
-	let createdAt:  Date
+	let createdAt: Date
 
 	var components: ContiguousArray<Component> {
 		didSet {
@@ -66,7 +65,7 @@ final class ArchivedItem: Codable {
     var flags: Flags
 	var loadingProgress: Progress?
     
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case suggestedName
 		case components = "typeItems"
 		case createdAt

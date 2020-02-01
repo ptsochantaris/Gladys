@@ -78,7 +78,7 @@ final class ShareViewController: NSViewController {
 					log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
 					for type in identifiers {
 						importGroup.enter()
-						let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, error in
+						let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
 							guard let s = self else { return }
 							if let data = data {
 								newItem.setData(data, forType: NSPasteboard.PasteboardType(type))

@@ -1,4 +1,3 @@
-
 import UIKit
 
 final class DetailCell: UITableViewCell {
@@ -13,25 +12,25 @@ final class DetailCell: UITableViewCell {
 	@IBOutlet private weak var editButton: UIButton!
     @IBOutlet private weak var imageHolder: UIImageView!
     
-	var inspectionCallback: (()->Void)? {
+	var inspectionCallback: (() -> Void)? {
 		didSet {
 			setNeedsUpdateConstraints()
 		}
 	}
 
-	var viewCallback: (()->Void)? {
+	var viewCallback: (() -> Void)? {
 		didSet {
 			setNeedsUpdateConstraints()
 		}
 	}
 
-	var archiveCallback: (()->Void)? {
+	var archiveCallback: (() -> Void)? {
 		didSet {
 			setNeedsUpdateConstraints()
 		}
 	}
 
-	var editCallback: (()->Void)? {
+	var editCallback: (() -> Void)? {
 		didSet {
 			setNeedsUpdateConstraints()
 		}

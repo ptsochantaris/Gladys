@@ -1,11 +1,10 @@
-
 import Contacts
 import MobileCoreServices
 import UIKit
 
 extension UIColor {
 	var hexValue: String {
-		var redFloatValue:CGFloat = 0.0, greenFloatValue:CGFloat = 0.0, blueFloatValue:CGFloat = 0.0
+		var redFloatValue: CGFloat = 0, greenFloatValue: CGFloat = 0, blueFloatValue: CGFloat = 0
 		getRed(&redFloatValue, green: &greenFloatValue, blue: &blueFloatValue, alpha: nil)
 		let r = Int(redFloatValue * 255.99999)
 		let g = Int(greenFloatValue * 255.99999)
@@ -15,7 +14,7 @@ extension UIColor {
 }
 
 extension Component {
-    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?)->Void)?) {
+    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
 
 		if storeBytes {
 			setBytes(data)

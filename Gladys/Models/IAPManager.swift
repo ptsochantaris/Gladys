@@ -175,9 +175,9 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
     
     #if MAINAPP
     private func showIAPPrompt(title: String, subtitle: String,
-                       actionTitle: String? = nil, actionAction: (()->Void)? = nil,
-                       destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
-                       cancelTitle: String? = nil) {
+                               actionTitle: String? = nil, actionAction: (() -> Void)? = nil,
+                               destructiveTitle: String? = nil, destructiveAction: (() -> Void)? = nil,
+                               cancelTitle: String? = nil) {
 
         NotificationCenter.default.post(name: .DismissPopoversRequest, object: nil)
         NotificationCenter.default.post(name: .ResetSearchRequest, object: nil)
@@ -201,8 +201,8 @@ final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactio
 
     #if MAC
     func showIAPPrompt(title: String, subtitle: String,
-                       actionTitle: String? = nil, actionAction: (()->Void)? = nil,
-                       destructiveTitle: String? = nil, destructiveAction: (()->Void)? = nil,
+                       actionTitle: String? = nil, actionAction: (() -> Void)? = nil,
+                       destructiveTitle: String? = nil, destructiveAction: (() -> Void)? = nil,
                        cancelTitle: String? = nil) {
 
         assert(Thread.isMainThread)

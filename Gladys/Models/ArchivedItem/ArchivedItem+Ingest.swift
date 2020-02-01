@@ -1,4 +1,3 @@
-
 import Foundation
 #if os(iOS)
 import MobileCoreServices
@@ -99,7 +98,7 @@ extension ArchivedItem {
         var extractedData: Data?
         let g = DispatchGroup()
         g.enter()
-        provider.loadDataRepresentation(forTypeIdentifier: type) { data, error in
+        provider.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
             if let data = data, data.count < 16384 {
                 var extractedText: String?
                 if data.isPlist, let text = SafeUnarchiver.unarchive(data) as? String {

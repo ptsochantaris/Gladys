@@ -11,8 +11,8 @@ final class PullState {
 	var updateCount = 0 { didSet { updateProgress() } }
 	var newTypesAppended = 0
 	
-	var updatedDatabaseTokens = [CKDatabase.Scope : CKServerChangeToken]()
-	var updatedZoneTokens = [CKRecordZone.ID : CKServerChangeToken]()
+	var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
+	var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
 	var pendingShareRecords = ContiguousArray<CKShare>()
 	var pendingTypeItemRecords = ContiguousArray<CKRecord>()
 
@@ -116,7 +116,7 @@ final class PullState {
 	///////////////////////////////////////
 
 	static func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
-		if let lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data],
+		if let lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String: Data],
 			let data = lookup[zoneId.ownerName + ":" + zoneId.zoneName] {
             return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
 		}
@@ -124,7 +124,7 @@ final class PullState {
 	}
 
 	static func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
-		var lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String : Data] ?? [String : Data]()
+		var lookup = PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String: Data] ?? [String: Data]()
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
 			lookup[key] = SafeArchiver.archive(n)
@@ -143,7 +143,7 @@ final class PullState {
 
 	static func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
 		let key = database.keyName
-		if let lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data],
+		if let lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String: Data],
 			let data = lookup[key] {
             return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
 		}
@@ -152,7 +152,7 @@ final class PullState {
 
 	private static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
 		let key = database.keyName
-		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String : Data] ?? [String : Data]()
+		var lookup = PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String: Data] ?? [String: Data]()
 		if let n = token {
             lookup[key] = SafeArchiver.archive(n)
 		} else {

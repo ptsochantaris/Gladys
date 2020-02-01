@@ -10,7 +10,7 @@ import Cocoa
 import Quartz
 import GladysFramework
 
-func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (()->Void)? = nil) {
+func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (() -> Void)? = nil) {
 
 	var finalVC: NSViewController = ViewController.shared
 	while let newVC = finalVC.presentedViewControllers?.first(where: { $0.view.window != nil }) {
@@ -864,7 +864,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let hint = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 24))
 		hint.placeholderString = "Hint or description"
 		hint.stringValue = hintText ?? ""
-		let input = NSView(frame:  NSRect(x: 0, y: 0, width: 290, height: 56))
+		let input = NSView(frame: NSRect(x: 0, y: 0, width: 290, height: 56))
 		input.addSubview(password)
 		input.addSubview(hint)
 		password.nextKeyView = hint

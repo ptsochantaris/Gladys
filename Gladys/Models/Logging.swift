@@ -10,7 +10,7 @@
 import os.log
 #endif
 
-func log(_ line: @autoclosure ()->String) {
+func log(_ line: @autoclosure () -> String) {
 	#if DEBUG
 	os_log("%{public}@", line())
 	#endif

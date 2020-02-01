@@ -1,4 +1,3 @@
-
 import Foundation
 import SystemConfiguration
 
@@ -19,14 +18,13 @@ final class Reachability {
             }
         }
         
-		var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-
         let changeCallback: SCNetworkReachabilityCallBack = { _, flags, _ in
             let newStatus = Reachability.status(from: flags)
             log("Rechability changed: \(newStatus.name)")
             NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
         }
         
+        var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
 		if SCNetworkReachabilitySetCallback(reachability, changeCallback, &context) && SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue) {
             log("Reachability monitoring active")
         } else {

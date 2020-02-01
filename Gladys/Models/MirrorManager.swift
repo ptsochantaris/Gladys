@@ -15,7 +15,7 @@ final class MirrorManager {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
     }()
     
-    private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping ()->Void) {
+    private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         let intents = types.map { NSFileAccessIntent.writingIntent(with: mirrorBase, options: $0) }
         coordinator.coordinate(with: intents, queue: mirrorQueue) { error in
@@ -27,7 +27,7 @@ final class MirrorManager {
         }
     }
     
-    private static func coordinateRead(type: NSFileCoordinator.ReadingOptions, perform: @escaping ()->Void) {
+    private static func coordinateRead(type: NSFileCoordinator.ReadingOptions, perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         coordinator.coordinate(with: [.readingIntent(with: mirrorBase, options: type)], queue: mirrorQueue) { error in
             if let error = error {
@@ -38,7 +38,7 @@ final class MirrorManager {
         }
     }
     
-    static func removeMirrorIfNeeded(completion: @escaping ()->Void) {
+    static func removeMirrorIfNeeded(completion: @escaping () -> Void) {
         coordinateWrite(types: [.forDeleting]) {
             log("Deleting file mirror")
             let f = FileManager.default
@@ -84,7 +84,7 @@ final class MirrorManager {
         }
     }
     
-    static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>, completion: @escaping ()->Void) {
+    static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>, completion: @escaping () -> Void) {
         coordinateRead(type: []) {
             let start = Date()
             for item in items {
@@ -106,7 +106,7 @@ final class MirrorManager {
         }
     }
     
-    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool, completion: @escaping ()->Void) {
+    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool, completion: @escaping () -> Void) {
         coordinateWrite(types: [.forDeleting, .forMerging]) {
             
             do {

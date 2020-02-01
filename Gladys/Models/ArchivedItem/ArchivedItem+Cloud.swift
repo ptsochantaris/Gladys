@@ -56,7 +56,7 @@ extension ArchivedItem {
             "createdAt": createdAt,
             "updatedAt": updatedAt,
             "note": note,
-            "titleOverride": titleOverride,
+            "titleOverride": titleOverride
         ])
         
         record["labels"] = labels.isEmpty ? nil : labels

@@ -278,7 +278,7 @@ final class Preferences: NSViewController {
 				a.alertStyle = .warning
 				a.messageText = "Sync Failed"
 				a.informativeText = error.finalDescription
-				a.beginSheetModal(for: s.view.window!) { response in }
+				a.beginSheetModal(for: s.view.window!) { _ in }
 			}
 		}
 	}
@@ -382,7 +382,7 @@ final class Preferences: NSViewController {
 		}
 	}
 
-	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
+	private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
 		let a = NSAlert()
 		a.messageText = title
 		a.informativeText = message
@@ -410,6 +410,5 @@ final class Preferences: NSViewController {
 			}
 		}
 	}
-
 
 }

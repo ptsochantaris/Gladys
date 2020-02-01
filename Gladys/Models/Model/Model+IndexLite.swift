@@ -10,7 +10,7 @@ import Foundation
 import CoreSpotlight
 
 extension Model {
-    static func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex, completion: (()->Void)? = nil) {
+    static func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex, completion: (() -> Void)? = nil) {
         index.indexSearchableItems(items) { error in
             if let error = error {
                 log("Error indexing items: \(error.finalDescription)")

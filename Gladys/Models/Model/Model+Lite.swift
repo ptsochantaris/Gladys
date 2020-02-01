@@ -18,7 +18,7 @@ extension Model {
 
 		var count = 0
 		var coordinationError: NSError?
-		var loadingError : NSError?
+		var loadingError: NSError?
 
 		coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 
@@ -107,7 +107,7 @@ extension Model {
 		}
 
 		var coordinationError: NSError?
-		var loadingError : NSError?
+		var loadingError: NSError?
 
 		coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 

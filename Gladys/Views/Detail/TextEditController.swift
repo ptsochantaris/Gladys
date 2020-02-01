@@ -91,15 +91,15 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
 
 		} else if isAttributed, let a = textView.attributedText {
 			if typeEntry.typeIdentifier == (kUTTypeRTF as String) {
-				let b = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
+				let b = try? a.data(from: NSRange(location: 0, length: a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
 				typeEntry.setBytes(b)
 				saveDone()
 			} else if typeEntry.typeIdentifier == (kUTTypeRTFD as String) {
-				let b = try? a.data(from: NSMakeRange(0, a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
+				let b = try? a.data(from: NSRange(location: 0, length: a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
 				typeEntry.setBytes(b)
 				saveDone()
 			} else {
-				a.loadData(withTypeIdentifier: typeEntry.typeIdentifier) { data, error in
+				a.loadData(withTypeIdentifier: typeEntry.typeIdentifier) { data, _ in
 					DispatchQueue.main.async { [weak self] in
 						self?.typeEntry.setBytes(data)
 						self?.saveDone()

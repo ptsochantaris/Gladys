@@ -1522,6 +1522,7 @@
 			buildConfigurationList = 161718D32094D334005ABD6C /* Build configuration list for PBXNativeTarget "MacGladys" */;
 			buildPhases = (
 				D7ED05F9740E57E438CB0ADC /* [CP] Check Pods Manifest.lock */,
+				16CFDC4C23E5E59000FA4F00 /* Lint */,
 				161718C02094D333005ABD6C /* Sources */,
 				161718C12094D333005ABD6C /* Frameworks */,
 				161718C22094D333005ABD6C /* Resources */,
@@ -1635,6 +1636,7 @@
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
 			buildPhases = (
 				DF4A5BA8C7CAA5EA03717D45 /* [CP] Check Pods Manifest.lock */,
+				16CFDC4B23E5CD9A00FA4F00 /* Link */,
 				1678F9C91EF475FE005697CB /* Sources */,
 				1678F9CA1EF475FE005697CB /* Frameworks */,
 				1678F9CB1EF475FE005697CB /* Resources */,
@@ -2041,6 +2043,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		16CFDC4B23E5CD9A00FA4F00 /* Link */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Link;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
+		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Lint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
 		342B5AB228E9E5C15669DB0F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3019,7 +3057,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 778;
+				CURRENT_PROJECT_VERSION = 779;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_FAST_MATH = YES;
@@ -3176,7 +3214,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 778;
+				CURRENT_PROJECT_VERSION = 779;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;

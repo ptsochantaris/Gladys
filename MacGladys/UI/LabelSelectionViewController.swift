@@ -43,12 +43,12 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		let cell = tableColumn?.dataCell as? NSButtonCell
 		let title = NSMutableAttributedString(string: item.name + "\n", attributes: [
 			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
-			.foregroundColor: NSColor.labelColor,
+			.foregroundColor: NSColor.labelColor
 			])
 		let itemCount = item.count == 1 ? "1 item" : "\(item.count) items"
 		let subtitle = NSAttributedString(string: itemCount, attributes: [
 			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .mini)),
-			.foregroundColor: NSColor.secondaryLabelColor,
+			.foregroundColor: NSColor.secondaryLabelColor
 			])
 		title.append(subtitle)
 		cell?.attributedTitle = title
@@ -123,7 +123,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         }
     }
     
-    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool)->Void) {
+    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
         let a = NSAlert()
         a.messageText = title
         a.informativeText = message

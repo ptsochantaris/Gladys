@@ -108,7 +108,7 @@ final class ActionRequestViewController: UIViewController {
 		var typeSet = Set<String>()
 		for p in providerList {
 			let currentTypes = Set(p.registeredTypeIdentifiers)
-			if typeSet.intersection(currentTypes).isEmpty {
+			if typeSet.isDisjoint(with: currentTypes) {
 				typeSet.formUnion(currentTypes)
 			} else {
 				allDifferentTypes = false
@@ -214,7 +214,7 @@ final class ActionRequestViewController: UIViewController {
 
 		if let p = uploadProgress {
 			statusLabel.text = "Uploading…"
-			uploadObservation = p.observe(\Progress.completedUnitCount) { [weak self] progress, change in
+            uploadObservation = p.observe(\.completedUnitCount, options: .new) { [weak self] progress, _ in
 				let complete = Int((progress.fractionCompleted * 100).rounded())
 				self?.statusLabel.text = "\(complete)% Uploaded"
 			}

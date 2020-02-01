@@ -9,7 +9,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 	@IBOutlet private weak var headerLabel: UILabel!
 
 	var selectedLabels = [String]()
-	var completion: (([String], String)->Void)?
+	var completion: (([String], String) -> Void)?
 
 	var note = ""
 
@@ -147,4 +147,3 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 		}
 	}
 }
-

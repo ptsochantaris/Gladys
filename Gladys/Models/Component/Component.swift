@@ -7,7 +7,7 @@ import CloudKit
 
 final class Component: Codable {
 
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case typeIdentifier
 		case representedClass
 		case classWasWrapped

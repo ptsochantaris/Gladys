@@ -11,4 +11,3 @@ import UIKit
 final class LabelListCell: UITableViewCell {
 	@IBOutlet weak var labelName: UILabel!
 }
-

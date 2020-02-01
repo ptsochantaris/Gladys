@@ -18,23 +18,18 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		}
 	}
 
-	var resizeCallback: ((CGRect?, Bool)->Void)?
+	var resizeCallback: ((CGRect?, Bool) -> Void)?
+    private var observer: NSKeyValueObservation?
 
 	override func awakeFromNib() {
         super.awakeFromNib()
         label.textContainerInset = .zero
-		label.addObserver(self, forKeyPath: "selectedTextRange", options: .new, context: nil)
+        observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
+            self?.caretMoved()
+        }
 	}
 
-	deinit {
-		label.removeObserver(self, forKeyPath: "selectedTextRange")
-	}
-
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		caretMoved()
-	}
-
-	private func caretMoved() {
+    private func caretMoved() {
 		if let r = label.selectedTextRange, let s = superview {
 			var caretRect = label.caretRect(for: r.start)
 			caretRect = label.convert(caretRect, to: s)

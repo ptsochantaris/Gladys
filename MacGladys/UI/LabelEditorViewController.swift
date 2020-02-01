@@ -33,7 +33,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 
 		let title = NSMutableAttributedString(string: item.name, attributes: [
 			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
-			.foregroundColor: NSColor.labelColor,
+			.foregroundColor: NSColor.labelColor
 			])
 		cell?.attributedTitle = title
 

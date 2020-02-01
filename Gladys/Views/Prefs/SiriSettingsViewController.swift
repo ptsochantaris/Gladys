@@ -21,7 +21,7 @@ extension INUIAddVoiceShortcutButton {
 			topAnchor.constraint(equalTo: holder.topAnchor),
 			bottomAnchor.constraint(equalTo: holder.bottomAnchor),
 			leadingAnchor.constraint(equalTo: holder.leadingAnchor),
-			trailingAnchor.constraint(equalTo: holder.trailingAnchor),
+			trailingAnchor.constraint(equalTo: holder.trailingAnchor)
 			])
 	}
 }

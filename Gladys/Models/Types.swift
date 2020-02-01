@@ -1,4 +1,3 @@
-
 import Foundation
 
 #if MAINAPP

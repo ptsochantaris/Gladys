@@ -1,4 +1,3 @@
-
 import CoreSpotlight
 import WatchConnectivity
 import CloudKit
@@ -29,13 +28,13 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 
-	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+	func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
 		DispatchQueue.main.async {
 			self.handle(message: message, replyHandler: replyHandler)
 		}
 	}
 
-	private func handle(message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+	private func handle(message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
 
 		if let uuid = message["view"] as? String {
             let request = HighlightRequest(uuid: uuid, open: true)
@@ -94,7 +93,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 
-	private func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage, replyHandler: @escaping ([String : Any]) -> Void) {
+	private func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage, replyHandler: @escaping ([String: Any]) -> Void) {
 		let O = MKMapSnapshotter.Options()
 		O.region = MKCoordinateRegion(center: mapItem.placemark.coordinate, latitudinalMeters: 150.0, longitudinalMeters: 150.0)
 		O.size = size
@@ -113,7 +112,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 
-	private func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType, replyHandler: @escaping ([String : Any]) -> Void) {
+	private func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType, replyHandler: @escaping ([String: Any]) -> Void) {
 		imageProcessingQueue.async {
 			let data: Data
 			if let size = size {
@@ -265,18 +264,18 @@ extension Model {
 		NSFileCoordinator.removeFilePresenter(filePresenter)
 	}
     
-    static func createMirror(completion: @escaping ()->Void) {
+    static func createMirror(completion: @escaping () -> Void) {
         log("Creating file mirror")
         drops.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
         runMirror(completion: completion)
     }
 
-    static func updateMirror(completion: @escaping ()->Void) {
+    static func updateMirror(completion: @escaping () -> Void) {
         log("Updating file mirror")
         runMirror(completion: completion)
     }
 
-    private static func runMirror(completion: @escaping ()->Void) {
+    private static func runMirror(completion: @escaping () -> Void) {
         let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         BackgroundTask.registerForBackground()
         MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true) {
@@ -285,7 +284,7 @@ extension Model {
         }
     }
     
-    static func scanForMirrorChanges(completion: @escaping ()->Void) {
+    static func scanForMirrorChanges(completion: @escaping () -> Void) {
         BackgroundTask.registerForBackground()
         let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         MirrorManager.scanForMirrorChanges(items: itemsToMirror) {
@@ -294,7 +293,7 @@ extension Model {
         }
     }
     
-    static func deleteMirror(completion: @escaping ()->Void) {
+    static func deleteMirror(completion: @escaping () -> Void) {
         MirrorManager.removeMirrorIfNeeded(completion: completion)
     }    
 }

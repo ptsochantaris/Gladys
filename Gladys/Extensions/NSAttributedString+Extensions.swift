@@ -10,7 +10,7 @@ import Foundation
 
 extension NSAttributedString {
 	var toData: Data? {
-		return try? data(from: NSMakeRange(0, string.count), documentAttributes: [:])
+		return try? data(from: NSRange(location: 0, length: string.count), documentAttributes: [:])
 	}
 }
 

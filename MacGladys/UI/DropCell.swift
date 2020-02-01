@@ -64,13 +64,13 @@ final class TokenTextField: NSTextField {
 				.font: font!,
 				.foregroundColor: NSColor(named: "colorTint")!,
 				.paragraphStyle: p,
-				.baselineOffset: -2,
+				.baselineOffset: -2
 				])
 
 			var start = 0
 			for label in labels {
 				let len = label.count
-				string.addAttribute(TokenTextField.highlightTextKey, value: 1, range: NSMakeRange(start, len))
+				string.addAttribute(TokenTextField.highlightTextKey, value: 1, range: NSRange(location: start, length: len))
 				start += len + separator.count
 			}
 			attributedStringValue = string

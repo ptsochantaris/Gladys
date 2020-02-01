@@ -122,7 +122,7 @@ extension Model {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@discardableResult
-    static func createZip(using filter: ModelFilterContext, completion: @escaping (URL?, Error?)->Void) -> Progress {
+    static func createZip(using filter: ModelFilterContext, completion: @escaping (URL?, Error?) -> Void) -> Progress {
 
         let dropsCopy = filter.eligibleDropsForExport
 		let itemCount = Int64(1 + dropsCopy.count)
@@ -139,7 +139,7 @@ extension Model {
 		return p
 	}
 
-	static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress, completion: @escaping (URL?, Error?)->Void) throws {
+	static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress, completion: @escaping (URL?, Error?) -> Void) throws {
 
 		let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 

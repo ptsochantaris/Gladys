@@ -141,7 +141,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 	override var keyCommands: [UIKeyCommand]? {
 		var a = [
 			UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow),
-			UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow),
+			UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow)
 		]
 		if self.popoverPresenter != nil {
             let w = UIKeyCommand.makeCommand(input: "w", modifierFlags: .command, action: #selector(done), title: "Close This View")
@@ -267,7 +267,6 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         let w = windowButtonLocation != .none && UIApplication.shared.supportsMultipleScenes
         showWindow(w)
     }
-
     
 	private lazy var doneButton: UIBarButtonItem = {
         let b = makeDoneButton(target: self, action: #selector(done))
