@@ -9,7 +9,7 @@ extension ArchivedItem {
 	static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
 		var identifiers = ids.filter { typeIdentifier in
-			#if os(OSX) // TODO: perhaps do this on iOS too?
+			#if os(OSX)
 			let cfid = typeIdentifier as CFString
 			if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
 			#endif

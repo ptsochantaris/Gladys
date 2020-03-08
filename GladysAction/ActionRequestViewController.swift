@@ -15,36 +15,39 @@ final class ActionRequestViewController: UIViewController {
 	@IBOutlet private weak var cancelButton: UIBarButtonItem!
 	@IBOutlet private weak var imageHeight: NSLayoutConstraint!
 	@IBOutlet private weak var expandButton: UIButton!
-	@IBOutlet private weak var background: UIImageView!
 	@IBOutlet private weak var image: UIImageView!
 	@IBOutlet private weak var labelsButton: UIButton!
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
 	private var loadCount = 0
-	private var firstAppearance = true
+	private var ingestOnNextAppearance = true
 	private var newItems = [ArchivedItem]()
 	private var uploadObservation: NSKeyValueObservation?
 	private var uploadProgress: Progress?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+        ingest()
+    }
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+        if ingestOnNextAppearance {
+            ingest()
+        }
+    }
+    
+    private func ingest() {
+        ingestOnNextAppearance = false
 
-		if firstAppearance {
-			firstAppearance = false
-			// and proceed with setup
-            
-            let n = NotificationCenter.default
-            n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
-
-		} else {
-			return
-		}
-
+        statusLabel.text = "Adding…"
+        statusLabel.isHidden = false
 		expandButton.isHidden = true
 		loadCount = extensionContext?.inputItems.count ?? 0
 
 		if loadCount == 0 {
-			statusLabel.text = "There don't seem to be any items offered by this app."
+			statusLabel.text = "There don't seem to be any importable items offered by this app."
 			showDone()
 			return
 		}
@@ -243,7 +246,7 @@ final class ActionRequestViewController: UIViewController {
 	}
 
 	private func shutdownExtension() {
-		firstAppearance = true
+		ingestOnNextAppearance = true
 		reset()
 	}
 
