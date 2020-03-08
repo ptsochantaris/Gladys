@@ -48,7 +48,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         if filter.isEmpty {
             let recent = ModelFilterContext.LabelToggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
             if !recent.isEmpty {
-                sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent Labels"))
+                sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
             let s = modelFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
             sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "All Labels"))

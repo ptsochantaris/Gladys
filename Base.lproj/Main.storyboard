@@ -37,7 +37,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C3W-it-qIn" userLabel="Container">
                                                     <rect key="frame" x="0.0" y="0.0" width="466" height="384"/>
                                                     <subviews>
-                                                        <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-e0-eeZ">
+                                                        <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-e0-eeZ">
                                                             <rect key="frame" x="8" y="8" width="450" height="368"/>
                                                             <subviews>
                                                                 <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q51-pA-xfS" userLabel="Top Label Holder">
@@ -58,11 +58,11 @@
                                                                     </constraints>
                                                                 </view>
                                                                 <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="284" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="g2k-cT-VHS" customClass="GladysImageView" customModule="Gladys" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="21.5" width="450" height="303.5"/>
+                                                                    <rect key="frame" x="0.0" y="19.5" width="450" height="309.5"/>
                                                                     <color key="backgroundColor" name="colorFill"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pHP-5f-yvY">
-                                                                    <rect key="frame" x="0.0" y="333" width="450" height="13.5"/>
+                                                                    <rect key="frame" x="0.0" y="335" width="450" height="13.5"/>
                                                                     <subviews>
                                                                         <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Axq-ka-HoY" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
                                                                             <rect key="frame" x="8" y="0.0" width="434" height="13.5"/>
