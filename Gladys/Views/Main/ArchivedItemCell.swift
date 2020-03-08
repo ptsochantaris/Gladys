@@ -7,6 +7,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 	@IBOutlet private weak var image: GladysImageView!
 	@IBOutlet private weak var bottomLabel: UILabel!
 	@IBOutlet private weak var labelsLabel: HighlightLabel!
+    @IBOutlet private weak var labelsHolder: UIView!
     
     @IBOutlet private weak var container: UIView!
 
@@ -182,7 +183,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
 
-		labelStack.setCustomSpacing(3, after: labelsLabel)
+		labelStack.setCustomSpacing(4, after: labelsHolder)
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
@@ -454,7 +455,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		let newLabels = labels ?? []
 		labelsLabel.labels = newLabels
-		labelsLabel.isHidden = newLabels.isEmpty
+		labelsHolder.isHidden = newLabels.isEmpty
 
 		image.alpha = hideImage ? 0 : 1
 		lockImage.isHidden = hideLock

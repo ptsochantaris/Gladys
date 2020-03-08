@@ -148,6 +148,7 @@
                                             <outlet property="container" destination="C3W-it-qIn" id="ZfB-MF-ggz"/>
                                             <outlet property="image" destination="g2k-cT-VHS" id="lrO-SR-Pk8"/>
                                             <outlet property="labelStack" destination="5fb-e0-eeZ" id="qd1-Ry-oFZ"/>
+                                            <outlet property="labelsHolder" destination="pHP-5f-yvY" id="X7H-II-hNt"/>
                                             <outlet property="labelsLabel" destination="Axq-ka-HoY" id="nJn-ab-giS"/>
                                             <outlet property="lockImage" destination="2DN-HK-OAe" id="thp-hn-MyS"/>
                                             <outlet property="progressView" destination="vTy-88-2LK" id="bnp-p2-i6Z"/>
@@ -207,12 +208,24 @@
                                                                                     <color key="textColor" name="colorComponentLabel"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTq-O5-Bon">
                                                                                     <rect key="frame" x="0.0" y="31" width="368" height="13.5"/>
-                                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                                                    <color key="textColor" name="colorComponentLabel"/>
-                                                                                    <nil key="highlightedColor"/>
-                                                                                </label>
+                                                                                    <subviews>
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7VR-SN-Vi4" customClass="HighlightLabel" customModule="Gladys" customModuleProvider="target">
+                                                                                            <rect key="frame" x="0.0" y="0.0" width="368" height="13.5"/>
+                                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                                                            <color key="textColor" name="colorComponentLabel"/>
+                                                                                            <nil key="highlightedColor"/>
+                                                                                        </label>
+                                                                                    </subviews>
+                                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="bottom" secondItem="7VR-SN-Vi4" secondAttribute="bottom" id="8ba-Dz-VCq"/>
+                                                                                        <constraint firstItem="7VR-SN-Vi4" firstAttribute="top" secondItem="LTq-O5-Bon" secondAttribute="top" id="XG9-0F-dAu"/>
+                                                                                        <constraint firstAttribute="trailing" secondItem="7VR-SN-Vi4" secondAttribute="trailing" id="k8h-uE-YDV"/>
+                                                                                        <constraint firstItem="7VR-SN-Vi4" firstAttribute="leading" secondItem="LTq-O5-Bon" secondAttribute="leading" id="vgT-Wm-75g"/>
+                                                                                    </constraints>
+                                                                                </view>
                                                                             </subviews>
                                                                         </stackView>
                                                                     </subviews>
@@ -291,6 +304,7 @@
                                             <outlet property="container" destination="skV-TW-Oen" id="WB9-s1-veS"/>
                                             <outlet property="image" destination="Gkt-dy-9AE" id="hea-sM-f8m"/>
                                             <outlet property="labelStack" destination="FSI-ng-CKW" id="g6t-4E-Sl8"/>
+                                            <outlet property="labelsHolder" destination="LTq-O5-Bon" id="Hwx-r1-A4E"/>
                                             <outlet property="labelsLabel" destination="7VR-SN-Vi4" id="WIY-sj-Moe"/>
                                             <outlet property="lockImage" destination="PgL-nd-XcQ" id="Men-Ej-oCG"/>
                                             <outlet property="progressView" destination="8qU-wy-3p4" id="NSg-og-qtq"/>
