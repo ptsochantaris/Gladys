@@ -4,22 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CallbackURLKit-iOS.xcscheme</key>
+		<key>CallbackURLKit-framework.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>CallbackURLKit-macOS.xcscheme</key>
+		<key>CallbackURLKit-library.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Fuzi-iOS.xcscheme</key>
+		<key>Fuzi-framework.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Fuzi-macOS.xcscheme</key>
+		<key>Fuzi-library.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -29,12 +29,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>OpenSSL-Universal-iOS.xcscheme</key>
+		<key>OpenSSL-Universal-framework.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>OpenSSL-Universal-macOS.xcscheme</key>
+		<key>OpenSSL-Universal-library.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -74,12 +74,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ZIPFoundation-iOS.xcscheme</key>
+		<key>ZIPFoundation-framework.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ZIPFoundation-macOS.xcscheme</key>
+		<key>ZIPFoundation-library.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

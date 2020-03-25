@@ -1,4 +1,4 @@
-module Pods_iOS_GladysAction {
+framework module Pods_iOS_GladysAction {
   umbrella header "Pods-iOS-GladysAction-umbrella.h"
 
   export *

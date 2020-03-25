@@ -714,11 +714,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
-            if !Model.drops.contains(where: { !$0.shouldDisplayLoading }) {
+            if Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
+            
             let newUUIDs = filter.filteredDrops.map { $0.uuid }
+            var ipsToReload = [IndexPath]()
+            var ipsToRemove = [IndexPath]()
+            var ipsToInsert = [IndexPath]()
+            var moveList = [(IndexPath, IndexPath)]()
 
             Set(oldUUIDs).union(newUUIDs).forEach { p in
                 let oldIndex = oldUUIDs.firstIndex(of: p)
@@ -726,22 +731,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 if let oldIndex = oldIndex, let newIndex = newIndex {
                     if oldIndex == newIndex, savedUUIDs.contains(p) { // update
-                        let n = IndexPath(item: newIndex, section: 0)
-                        collection.reloadItems(at: [n])
+                        let n = IndexPath(item: oldIndex, section: 0)
+                        ipsToReload.append(n)
                     } else { // move
                         let i1 = IndexPath(item: oldIndex, section: 0)
                         let i2 = IndexPath(item: newIndex, section: 0)
-                        collection.moveItem(at: i1, to: i2)
+                        moveList.append((i1, i2))
                     }
                 } else if let newIndex = newIndex { // insert
                     let n = IndexPath(item: newIndex, section: 0)
-                    collection.insertItems(at: [n])
+                    ipsToInsert.append(n)
                 } else if let oldIndex = oldIndex { // remove
                     let o = IndexPath(item: oldIndex, section: 0)
-                    collection.deleteItems(at: [o])
+                    ipsToRemove.append(o)
                     removedItems = true
                 }
             }
+            
+            collection.reloadItems(at: ipsToReload)
+            collection.deleteItems(at: ipsToRemove)
+            collection.insertItems(at: ipsToInsert)
+            for move in moveList {
+                collection.moveItem(at: move.0, to: move.1)
+            }
+            
         }, completion: { _ in
             if removedItems {
                 self.itemsDeleted()

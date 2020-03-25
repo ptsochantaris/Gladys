@@ -7,7 +7,7 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
-  - SwiftLint (0.38.2)
+  - SwiftLint (0.39.1)
   - ZIPFoundation (0.9.10)
 
 DEPENDENCIES:
@@ -32,9 +32,9 @@ SPEC CHECKSUMS:
   Fuzi: bcc5694488dd6e672e126cbf3c5471d7a79506d1
   HotKey: ad59450195936c10992438c4210f673de5aee43e
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
-  SwiftLint: 8f5d2f903e1c9bcbc832fd16771e80a263ac6cbb
+  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
   ZIPFoundation: 249fa8890597086cd536bb2df5c9804d84e122b0
 
-PODFILE CHECKSUM: a713019125b2b845196c0ff7dea892f0d7c85fca
+PODFILE CHECKSUM: 99351d83f2c0f46b81d62d295a7649ced79e0500
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

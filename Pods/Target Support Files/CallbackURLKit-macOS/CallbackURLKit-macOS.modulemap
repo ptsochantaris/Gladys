@@ -1,7 +1,0 @@
-module CallbackURLKit {
-  umbrella header "CallbackURLKit-macOS-umbrella.h"
-  exclude header "CallbackURLKit-iOS-umbrella.h"
-
-  export *
-  module * { export * }
-}

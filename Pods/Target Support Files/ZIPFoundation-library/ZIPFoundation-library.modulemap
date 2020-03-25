@@ -1,0 +1,6 @@
+module ZIPFoundation {
+  umbrella header "ZIPFoundation-library-umbrella.h"
+
+  export *
+  module * { export * }
+}

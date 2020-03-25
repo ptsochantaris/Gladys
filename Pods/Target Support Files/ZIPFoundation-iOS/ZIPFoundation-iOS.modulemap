@@ -1,7 +1,0 @@
-module ZIPFoundation {
-  umbrella header "ZIPFoundation-iOS-umbrella.h"
-  exclude header "ZIPFoundation-macOS-umbrella.h"
-
-  export *
-  module * { export * }
-}

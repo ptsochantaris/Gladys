@@ -1,13 +1,12 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-framework" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-framework"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" $(SDKROOT)/usr/include/libxml2
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-iOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-iOS" "${PODS_ROOT}/OpenSSL-Universal/ios/lib"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-iOS/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-iOS/ZIPFoundation.modulemap" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-iOS" -l"Fuzi-iOS" -l"ZIPFoundation-iOS" -l"crypto" -l"ssl" -l"xml2"
-OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-iOS/CallbackURLKit.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS/Fuzi.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-iOS/ZIPFoundation.modulemap"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-framework/CallbackURLKit.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework/Fuzi.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-framework/ZIPFoundation.framework/Headers" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" $(SDKROOT)/usr/include/libxml2
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-framework/CallbackURLKit.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework/Fuzi.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-framework/ZIPFoundation.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-framework" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-framework"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"xml2" -framework "CallbackURLKit" -framework "Fuzi" -framework "ZIPFoundation"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
-SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-iOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-iOS"
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

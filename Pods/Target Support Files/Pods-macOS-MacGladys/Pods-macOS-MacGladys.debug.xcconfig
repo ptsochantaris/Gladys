@@ -1,13 +1,13 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" $(SDKROOT)/usr/include/libxml2
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS" "${PODS_ROOT}/OpenSSL-Universal/macos/lib"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.modulemap" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-macOS" -l"Fuzi-macOS" -l"HotKey" -l"ZIPFoundation-macOS" -l"crypto" -l"ssl" -l"xml2" -framework "AppKit" -framework "Carbon"
-OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.modulemap"
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library" "${PODS_ROOT}/OpenSSL-Universal/macos/lib"
+OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-library" -l"Fuzi-library" -l"HotKey" -l"ZIPFoundation-library" -l"crypto" -l"ssl" -l"xml2" -framework "AppKit" -framework "Carbon"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
-SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS"
+SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library"
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

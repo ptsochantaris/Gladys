@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1130"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "40C0CCE56D79B3A5F5A2F608659C057A"
-               BuildableName = "libPods-iOS-GladysAction.a"
+               BuildableName = "Pods_iOS_GladysAction.framework"
                BlueprintName = "Pods-iOS-GladysAction"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

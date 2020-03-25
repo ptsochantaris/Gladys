@@ -720,6 +720,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 return
             }
             let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+            var ipsToReload = Set<IndexPath>()
+            var ipsToRemove = Set<IndexPath>()
+            var ipsToInsert = Set<IndexPath>()
+            var moveList = [(IndexPath, IndexPath)]()
 
             Set(oldUUIDs).union(newUUIDs).forEach { p in
                 let oldIndex = oldUUIDs.firstIndex(of: p)
@@ -727,22 +731,30 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 
                 if let oldIndex = oldIndex, let newIndex = newIndex {
                     if oldIndex == newIndex, savedUUIDs.contains(p) { // update
-                        let n = IndexPath(item: newIndex, section: 0)
-                        collection.reloadItems(at: [n])
+                        let n = IndexPath(item: oldIndex, section: 0)
+                        ipsToReload.insert(n)
                     } else { // move
                         let i1 = IndexPath(item: oldIndex, section: 0)
                         let i2 = IndexPath(item: newIndex, section: 0)
-                        collection.moveItem(at: i1, to: i2)
+                        moveList.append((i1, i2))
                     }
                 } else if let newIndex = newIndex { // insert
                     let n = IndexPath(item: newIndex, section: 0)
-                    collection.insertItems(at: [n])
+                    ipsToInsert.insert(n)
                 } else if let oldIndex = oldIndex { // remove
                     let o = IndexPath(item: oldIndex, section: 0)
-                    collection.deleteItems(at: [o])
+                    ipsToRemove.insert(o)
                     removedItems = true
                 }
             }
+            
+            collection.reloadItems(at: ipsToReload)
+            collection.deleteItems(at: ipsToRemove)
+            collection.insertItems(at: ipsToInsert)
+            for move in moveList {
+                collection.moveItem(at: move.0, to: move.1)
+            }
+            
         })
         if removedItems {
             self.itemsDeleted()

@@ -1,0 +1,6 @@
+module Fuzi {
+  umbrella header "Fuzi-library-umbrella.h"
+
+  export *
+  module * { export * }
+}
