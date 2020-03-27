@@ -22,9 +22,6 @@ abstract_target 'iOS' do
     pod 'Fuzi'
   end
   
-  target 'GladysFramework' do
-    pod 'OpenSSL-Universal'
-  end
 end
 
 abstract_target 'macOS' do
@@ -37,9 +34,6 @@ abstract_target 'macOS' do
     pod 'CallbackURLKit'
   end
 
-  target 'GladysFrameworkMac' do
-    pod 'OpenSSL-Universal'
-  end
 end
 
 post_install do |installer|

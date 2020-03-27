@@ -1,9 +1,9 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OpenSSL-Universal" $(SDKROOT)/usr/include/libxml2
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library" "${PODS_ROOT}/OpenSSL-Universal/macos/lib"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/OpenSSL-Universal"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-library" -l"Fuzi-library" -l"HotKey" -l"ZIPFoundation-library" -l"crypto" -l"ssl" -l"xml2" -framework "AppKit" -framework "Carbon"
+HEADER_SEARCH_PATHS = $(inherited) $(SDKROOT)/usr/include/libxml2
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library"
+OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-library" -l"Fuzi-library" -l"HotKey" -l"ZIPFoundation-library" -l"xml2" -framework "AppKit" -framework "Carbon"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

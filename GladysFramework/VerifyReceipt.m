@@ -60,24 +60,13 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 
 		const unsigned char *seq_end = ptr + length;
 		long attr_type = 0;
-		//long attr_version = 0;
 
-		// Parse the attribute type (an INTEGER is expected)
-		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
-		if (type != V_ASN1_INTEGER) {
-			return NO;
-		}
-		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
+        integer = d2i_ASN1_INTEGER(NULL, &ptr, length);
 		attr_type = ASN1_INTEGER_get(integer);
 		ASN1_INTEGER_free(integer);
 
-		// Parse the attribute version (an INTEGER is expected)
-		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
-		if (type != V_ASN1_INTEGER) {
-			return NO;
-		}
-		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
-		//attr_version = ASN1_INTEGER_get(integer);
+		integer = d2i_ASN1_INTEGER(NULL, &ptr, length);
+        // unused, used to be attr_version
 		ASN1_INTEGER_free(integer);
 
 		// Check the attribute value (an OCTET STRING is expected)
@@ -172,7 +161,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 	X509_STORE_add_cert(store, appleRootX509);
 
 	// Be sure to load the digests before the verification
-	OpenSSL_add_all_digests();
+	//OpenSSL_add_all_digests();
 
 	// Check the signature
 	int result = PKCS7_verify(receiptPKCS7, NULL, store, NULL, NULL, 0);
@@ -218,24 +207,13 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 
 		const unsigned char *seq_end = ptr + length;
 		long attr_type = 0;
-		//long attr_version = 0;
 
-		// Parse the attribute type (an INTEGER is expected)
-		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
-		if (type != V_ASN1_INTEGER) {
-			return NO;
-		}
-		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
+		integer = d2i_ASN1_INTEGER(NULL, &ptr, length);
 		attr_type = ASN1_INTEGER_get(integer);
 		ASN1_INTEGER_free(integer);
 
-		// Parse the attribute version (an INTEGER is expected)
-		ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
-		if (type != V_ASN1_INTEGER) {
-			return NO;
-		}
-		integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
-		//attr_version = ASN1_INTEGER_get(integer);
+		integer = d2i_ASN1_INTEGER(NULL, &ptr, length);
+        // unused, used to be attr_version
 		ASN1_INTEGER_free(integer);
 
 		// Check the attribute value (an OCTET STRING is expected)
