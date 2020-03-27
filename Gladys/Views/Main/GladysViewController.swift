@@ -189,7 +189,13 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 	}
 
 	private func showDone(_ show: Bool) {
-        showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
+        #if targetEnvironment(macCatalyst)
+            if doneButtonLocation != ActionLocation.right {
+                showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
+            }
+        #else
+            showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
+        #endif
 	}
     
     private func showWindow(_ show: Bool) {

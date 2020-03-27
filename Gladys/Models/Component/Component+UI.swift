@@ -107,7 +107,12 @@ extension Component {
 		if let canPreviewCache = canPreviewCache {
 			return canPreviewCache
 		}
-		let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
+        let res: Bool
+        #if targetEnvironment(macCatalyst)
+            res = isWebArchive || QLPreviewController.canPreviewItem(PreviewItem(typeItem: self))
+        #else
+            res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
+        #endif
 		canPreviewCache = res
 		return res
 	}
