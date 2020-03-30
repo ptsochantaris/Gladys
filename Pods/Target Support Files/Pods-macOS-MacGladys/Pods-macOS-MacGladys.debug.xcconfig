@@ -1,13 +1,12 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) $(SDKROOT)/usr/include/libxml2
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"CallbackURLKit-library" -l"Fuzi-library" -l"HotKey" -l"ZIPFoundation-library" -l"xml2" -framework "AppKit" -framework "Carbon"
-OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library/CallbackURLKit.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library/Fuzi.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library/ZIPFoundation.modulemap"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework/Headers" $(SDKROOT)/usr/include/libxml2
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS/Fuzi.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/HotKey/HotKey.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-macOS" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/HotKey"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"xml2" -framework "AppKit" -framework "CallbackURLKit" -framework "Carbon" -framework "Fuzi" -framework "HotKey" -framework "ZIPFoundation"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
-SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/CallbackURLKit-library" "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-library" "${PODS_CONFIGURATION_BUILD_DIR}/HotKey" "${PODS_CONFIGURATION_BUILD_DIR}/ZIPFoundation-library"
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

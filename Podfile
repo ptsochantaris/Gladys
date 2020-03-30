@@ -21,19 +21,19 @@ abstract_target 'iOS' do
   target 'GladysIntents' do
     pod 'Fuzi'
   end
-  
 end
 
 abstract_target 'macOS' do
   platform :osx, '10.13'
+  use_frameworks! :linkage => :static
 
   target 'MacGladys' do
     pod 'Fuzi'
     pod 'HotKey'
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
+    pod 'SwiftLint'
   end
-
 end
 
 post_install do |installer|

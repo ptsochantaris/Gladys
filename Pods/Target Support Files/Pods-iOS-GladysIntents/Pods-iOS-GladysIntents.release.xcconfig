@@ -1,7 +1,7 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework/Fuzi.framework/Headers" $(SDKROOT)/usr/include/libxml2
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework/Fuzi.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-framework"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS/Fuzi.framework/Headers" $(SDKROOT)/usr/include/libxml2
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS/Fuzi.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Fuzi-iOS"
 OTHER_LDFLAGS = $(inherited) -ObjC -l"xml2" -framework "Fuzi"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}

@@ -1,6 +1,0 @@
-module CallbackURLKit {
-  umbrella header "CallbackURLKit-library-umbrella.h"
-
-  export *
-  module * { export * }
-}

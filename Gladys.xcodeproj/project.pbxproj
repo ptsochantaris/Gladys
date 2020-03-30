@@ -397,7 +397,7 @@
 		16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
-		3D460DDEC55C43A37987D82B /* libPods-macOS-MacGladys.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA82AA8F96419FD364BB39AD /* libPods-macOS-MacGladys.a */; };
+		36382A8A3D358C80F43F90AC /* Pods_macOS_MacGladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */; };
 		3E17E7E721A0C85AEE5CA45B /* Pods_iOS_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */; };
 		9FFBFC5E9237DF08482A76ED /* Pods_iOS_GladysIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */; };
 		CDEAE775225DDD288529F298 /* Pods_iOS_GladysAction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */; };
@@ -823,7 +823,7 @@
 		8FD2703AB879FE60901E9D5A /* Pods-MacGladys-GladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys-GladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys-GladysFramework/Pods-MacGladys-GladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
 		94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C7614DF2557A5196832AECC /* Pods-iOS-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysAction/Pods-iOS-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
-		AA82AA8F96419FD364BB39AD /* libPods-macOS-MacGladys.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-macOS-MacGladys.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2C9366EDC84B7D9D0A3DC8 /* Pods-Gladys-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysIntents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysIntents/Pods-Gladys-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
 		B8D736F434C5BF76A8DA726B /* Pods-MacGladys-GladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys-GladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys-GladysFramework/Pods-MacGladys-GladysFramework.release.xcconfig"; sourceTree = "<group>"; };
 		BAF85DAFDF28A92897235CD1 /* libPods-MacGladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MacGladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -851,8 +851,8 @@
 			files = (
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
-				3D460DDEC55C43A37987D82B /* libPods-macOS-MacGladys.a in Frameworks */,
 				16118D28236478E200454326 /* GladysFramework.framework in Frameworks */,
+				36382A8A3D358C80F43F90AC /* Pods_macOS_MacGladys.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1425,10 +1425,10 @@
 				16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */,
 				1657B8AC1FD41C1C00EC480D /* Messages.framework */,
 				BAF85DAFDF28A92897235CD1 /* libPods-MacGladysFramework.a */,
-				AA82AA8F96419FD364BB39AD /* libPods-macOS-MacGladys.a */,
 				2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */,
 				94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */,
 				022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */,
+				A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3005,7 +3005,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 783;
+				CURRENT_PROJECT_VERSION = 785;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3165,7 +3165,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 783;
+				CURRENT_PROJECT_VERSION = 785;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;

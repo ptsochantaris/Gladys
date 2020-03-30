@@ -4,22 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CallbackURLKit-framework.xcscheme</key>
+		<key>CallbackURLKit-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>CallbackURLKit-library.xcscheme</key>
+		<key>CallbackURLKit-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Fuzi-framework.xcscheme</key>
+		<key>Fuzi-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Fuzi-library.xcscheme</key>
+		<key>Fuzi-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -49,17 +49,22 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SwiftLint.xcscheme</key>
+		<key>SwiftLint-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ZIPFoundation-framework.xcscheme</key>
+		<key>SwiftLint-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ZIPFoundation-library.xcscheme</key>
+		<key>ZIPFoundation-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>ZIPFoundation-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
