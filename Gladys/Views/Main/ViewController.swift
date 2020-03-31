@@ -1050,7 +1050,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let item = filter.filteredDrops[indexPath.item]
 
         if item.flags.contains(.needsUnlock) {
-            return UIContextMenuConfiguration(identifier: item.uuid as NSCopying, previewProvider: nil, actionProvider: { _ in
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
                 let unlockAction = UIAction(title: "Unlock") { _ in
                     item.unlock(label: "Unlock Item", action: "Unlock") { success in
                         if success {
@@ -1064,7 +1064,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             })
         }
         
-        return UIContextMenuConfiguration(identifier: item.uuid as NSCopying, previewProvider: { [weak self] in
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak self] in
             guard let s = self else { return nil }
             if item.canPreview, let previewItem = item.previewableTypeItem {
                 //if previewItem.isWebURL, let url = previewItem.encodedUrl {
