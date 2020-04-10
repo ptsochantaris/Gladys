@@ -120,11 +120,16 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 
 BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 
+#ifdef DEBUG
+#pragma GCC diagnostic ignored "-Wunreachable-code"
+    return YES;
+#endif
+    
 	NSURL *dataUrl = [[NSBundle mainBundle] appStoreReceiptURL];
 	if (!dataUrl) {
 		return NO;
 	}
-
+    
 	NSData *receiptData = [NSData dataWithContentsOfURL:dataUrl];
 	if (!receiptData) {
 		return NO;

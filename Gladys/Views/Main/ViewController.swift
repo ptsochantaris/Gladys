@@ -1064,7 +1064,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             })
         }
         
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: { [weak self] in
+        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: { [weak self] in
             guard let s = self else { return nil }
             if item.canPreview, let previewItem = item.previewableTypeItem {
                 //if previewItem.isWebURL, let url = previewItem.encodedUrl {
@@ -1244,8 +1244,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if
-            let uuid = configuration.identifier as? UUID,
-            let item = Model.item(uuid: uuid),
+            let uuidString = configuration.identifier as? String,
+            let uuid = uuidString.split(separator: "/").first,
+            let item = Model.item(uuid: String(uuid)),
             let index = filter.filteredDrops.firstIndex(of: item),
             let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
             noteLastActioned(item: item)
