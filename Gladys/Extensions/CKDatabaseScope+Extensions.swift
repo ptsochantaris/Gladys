@@ -8,6 +8,24 @@
 
 import CloudKit
 
+enum RecordChangeCheck {
+    case none, changed, tagOnly
+    
+    init(localRecord: CKRecord?, remoteRecord: CKRecord) {
+        if localRecord?.recordChangeTag == remoteRecord.recordChangeTag {
+            self = .none
+        }
+        
+        let localModification = localRecord?.modificationDate ?? .distantPast
+        let remoteModification = remoteRecord.modificationDate ?? .distantPast
+        if localModification < remoteModification {
+            self = .changed
+        } else {
+            self = .tagOnly
+        }
+    }
+}
+
 extension CKDatabase.Scope {
 	var keyName: String {
 		switch self {

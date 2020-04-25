@@ -328,15 +328,22 @@ extension CloudManager {
             if let item = Model.item(uuid: recordUUID) {
                 if item.parentZone != zoneID {
                     log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
-                } else if record.recordChangeTag == item.cloudKitRecord?.recordChangeTag {
-                    log("Update but no changes to item record (\(recordUUID))")
                 } else {
-                    log("Will update existing local item for cloud record \(recordUUID)")
-                    item.cloudKitUpdate(from: record)
-                    item.needsReIngest = true
-                    item.postModified()
-                    stats.updateCount += 1
+                    switch RecordChangeCheck(localRecord: item.cloudKitRecord, remoteRecord: record) {
+                    case .changed:
+                        log("Will update existing local item for cloud record \(recordUUID)")
+                        item.cloudKitUpdate(from: record)
+                        item.needsReIngest = true
+                        item.postModified()
+                        stats.updateCount += 1
+                    case .tagOnly:
+                        log("Update but no changes to item record (\(recordUUID)) apart from tag")
+                        item.cloudKitRecord = record
+                    case .none:
+                        log("Update but no changes to item record (\(recordUUID))")
+                    }
                 }
+                    
             } else {
                 log("Will create new local item for cloud record (\(recordUUID))")
                 let newItem = ArchivedItem(from: record)
@@ -365,12 +372,18 @@ extension CloudManager {
             if let typeItem = Model.component(uuid: recordUUID) {
                 if typeItem.parentZone != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
-                } else if record.recordChangeTag == typeItem.cloudKitRecord?.recordChangeTag {
-                    log("Update but no changes to item type data record (\(recordUUID))")
                 } else {
-                    log("Will update existing local type data: (\(recordUUID))")
-                    typeItem.cloudKitUpdate(from: record)
-                    stats.typeUpdateCount += 1
+                    switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
+                    case .changed:
+                        log("Will update existing local type data: (\(recordUUID))")
+                        typeItem.cloudKitUpdate(from: record)
+                        stats.typeUpdateCount += 1
+                    case .tagOnly:
+                        log("Update but no changes to item type data record (\(recordUUID)) apart from tag")
+                        typeItem.cloudKitRecord = record
+                    case .none:
+                        log("Update but no changes to item type data record (\(recordUUID))")
+                    }
                 }
             } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = Model.item(uuid: parentId) {
                 if existingParent.parentZone != zoneID {
@@ -386,10 +399,14 @@ extension CloudManager {
             }
             
         case RecordType.positionList:
-            if record.recordChangeTag != uuidSequenceRecord?.recordChangeTag || lastSyncCompletion == .distantPast {
+            let change = RecordChangeCheck(localRecord: uuidSequenceRecord, remoteRecord: record)
+            if change == .changed || lastSyncCompletion == .distantPast {
                 log("Received an updated position list record")
                 uuidSequence = (record["positionList"] as? [String]) ?? []
                 stats.updatedSequence = true
+                uuidSequenceRecord = record
+            } else if change == .tagOnly {
+                log("Received non-updated position list record, updated tag")
                 uuidSequenceRecord = record
             } else {
                 log("Received non-updated position list record")
