@@ -12,12 +12,10 @@ final class ProgressViewController: NSViewController {
 	@IBOutlet private weak var titleLabel: NSTextField!
 	@IBOutlet private weak var progressIndicator: NSProgressIndicator!
 
-	private var monitoredProgress: Progress?
     private var observer: NSKeyValueObservation?
 
 	func startMonitoring(progress: Progress?, titleOverride: String?) {
-		monitoredProgress = progress
-		if let monitoredProgress = monitoredProgress {
+		if let monitoredProgress = progress {
             observer = monitoredProgress.observe(\Progress.completedUnitCount, options: .new) { [weak self] p, _ in
                 self?.update(from: p)
             }
@@ -29,10 +27,10 @@ final class ProgressViewController: NSViewController {
 			titleLabel.stringValue = titleOverride
 		}
 	}
-
-	func endMonitoring() {
-		monitoredProgress?.removeObserver(self, forKeyPath: "completedUnitCount")
-	}
+    
+    func endMonitoring() {
+        observer = nil
+    }
 
 	private func update(from p: Progress) {
 		let current = p.completedUnitCount
