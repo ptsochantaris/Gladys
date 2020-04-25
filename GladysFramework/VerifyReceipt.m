@@ -19,16 +19,6 @@ uint32_t valueForKeyedArchiverUID(id keyedArchiverUID) {
 	return *valuePtr;
 }
 
-/*
-NSDateFormatter *makeFormatter() {
-	// Date formatter to handle RFC 3339 dates in GMT time zone
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-	[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
-	[formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-	return formatter;
-}*/
-
 BOOL checkPayload(const unsigned char *ptr, long len) {
 	const unsigned char *end = ptr + len;
 	const unsigned char *str_ptr;
@@ -38,10 +28,6 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 	long length = 0, str_length = 0;
 
 	NSString *productIdentifier;
-	//NSString *transactionIdentifier;
-	//NSDate *purchaseDate;
-
-	//NSDateFormatter *formatter = makeFormatter();
 
 	// Decode payload (a SET is expected)
 	ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
@@ -86,29 +72,6 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 					productIdentifier = [[NSString alloc] initWithBytes:str_ptr length:str_length encoding:NSUTF8StringEncoding];
 				}
 				break;
-
-				/*
-			case 1703:
-				// Transaction identifier
-				str_ptr = ptr;
-				ASN1_get_object(&str_ptr, &str_length, &str_type, &str_xclass, seq_end - str_ptr);
-				if (str_type == V_ASN1_UTF8STRING) {
-					// We store the decoded string for later
-					transactionIdentifier = [[NSString alloc] initWithBytes:str_ptr length:str_length encoding:NSUTF8StringEncoding];
-				}
-				break;
-
-			case 1704:
-				// Purchase date
-				str_ptr = ptr;
-				ASN1_get_object(&str_ptr, &str_length, &str_type, &str_xclass, seq_end - str_ptr);
-				if (str_type == V_ASN1_IA5STRING) {
-					// The date is stored as a string that needs to be parsed
-					NSString *dateString = [[NSString alloc] initWithBytes:str_ptr length:str_length encoding:NSASCIIStringEncoding];
-					purchaseDate = [formatter dateFromString:dateString];
-				}
-				break;
-				 */
 		}
 
 		// Move past the value
@@ -120,7 +83,7 @@ BOOL checkPayload(const unsigned char *ptr, long len) {
 
 BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 
-#ifdef DEBUG
+#ifdef NO_IAP
 #pragma GCC diagnostic ignored "-Wunreachable-code"
     return YES;
 #endif
@@ -164,9 +127,6 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 	// Create a certificate store
 	X509_STORE *store = X509_STORE_new();
 	X509_STORE_add_cert(store, appleRootX509);
-
-	// Be sure to load the digests before the verification
-	//OpenSSL_add_all_digests();
 
 	// Check the signature
 	int result = PKCS7_verify(receiptPKCS7, NULL, store, NULL, NULL, 0);
@@ -266,19 +226,6 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 					haveValidTransaction = checkPayload(ptr, length);
 				}
 				break;
-
-				/*
-			case 21:
-				// Expiration date
-				str_ptr = ptr;
-				ASN1_get_object(&str_ptr, &str_length, &str_type, &str_xclass, seq_end - str_ptr);
-				if (str_type == V_ASN1_IA5STRING) {
-					// The date is stored as a string that needs to be parsed
-					NSString *dateString = [[NSString alloc] initWithBytes:str_ptr length:str_length encoding:NSASCIIStringEncoding];
-					expirationDate = [formatter dateFromString:dateString];
-				}
-				break;
-				 */
 		}
 
 		// Move past the value
@@ -299,11 +246,6 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 	if (![bundleIdString isEqualToString:receiptId]) {
 		return NO;
 	}
-
-	// Check the bundle version
-	//if (![bundleVersionString isEqualToString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]]) {
-	//return NO;
-	//}
 
 	unsigned char hash[20];
 
@@ -328,9 +270,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 + (NSData *)archive:(id)object {
     @try {
         NSError *error;
-        return [super archivedDataWithRootObject:object
-                           requiringSecureCoding:NO
-                                           error:&error];
+        return [super archivedDataWithRootObject:object requiringSecureCoding:NO error:&error];
     } @catch (NSException *exception) {
         return nil;
     }
@@ -341,9 +281,7 @@ BOOL verifyIapReceipt(NSData *deviceIdentifier) {
 + (id)unarchive:(NSData *)data {
     @try {
         NSError *error;
-        return [super unarchivedObjectOfClass:[NSObject class]
-                                     fromData:data
-                                        error:&error];
+        return [super unarchivedObjectOfClass:[NSObject class] fromData:data error:&error];
     } @catch (NSException *exception) {
         return nil;
     }

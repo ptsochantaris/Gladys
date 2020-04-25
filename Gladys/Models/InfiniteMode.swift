@@ -64,11 +64,15 @@ private func getDeviceId() -> Data {
 }
 
 var receiptExists: Bool {
-	if let receiptUrl = Bundle.main.appStoreReceiptURL {
-		return FileManager.default.fileExists(atPath: receiptUrl.path)
-	} else {
-		return false
-	}
+    #if NO_IAP
+    return true
+    #else
+    if let receiptUrl = Bundle.main.appStoreReceiptURL {
+        return FileManager.default.fileExists(atPath: receiptUrl.path)
+    } else {
+        return false
+    }
+    #endif
 }
 #endif
 
