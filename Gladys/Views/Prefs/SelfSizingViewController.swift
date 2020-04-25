@@ -40,7 +40,7 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
 		}
 	}
 	
-	private func sizeWindow() {
+	func sizeWindow() {
         if let n = selectedViewController as? UINavigationController, let v = n.topViewController {
             n.view.layoutIfNeeded()
             var size = CGSize(width: 320, height: tabBar.frame.height + n.navigationBar.frame.height)

@@ -42,6 +42,7 @@ post_install do |installer|
       config.build_settings['GCC_FAST_MATH'] = 'YES'
       config.build_settings['LLVM_LTO'] = 'YES'
       config.build_settings['SWIFT_DISABLE_SAFETY_CHECKS'] = 'YES'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['SWIFT_ENFORCE_EXCLUSIVE_ACCESS'] = 'debug-only'
     end
   end

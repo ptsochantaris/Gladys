@@ -1798,7 +1798,7 @@ Selecting them will show only items that contain these labels.</string>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHy-ip-KBG">
                                                 <rect key="frame" x="0.0" y="254" width="240" height="30"/>
-                                                <state key="normal" title="Unlimited Mode"/>
+                                                <state key="normal" title="Activate Unlimited Mode"/>
                                                 <connections>
                                                     <action selector="unlimitedSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="czo-Mh-n6e"/>
                                                 </connections>
@@ -1838,7 +1838,13 @@ Selecting them will show only items that contain these labels.</string>
                         <viewLayoutGuide key="safeArea" id="J9I-Dy-W9t"/>
                     </view>
                     <navigationItem key="navigationItem" id="IwC-N7-oaE">
+                        <barButtonItem key="backBarButtonItem" title="About" id="Vxb-rd-Reo"/>
                         <barButtonItem key="leftBarButtonItem" enabled="NO" title="Version" id="1U2-0T-zYK"/>
+                        <barButtonItem key="rightBarButtonItem" title="Credits" id="q7H-xC-NTh">
+                            <connections>
+                                <segue destination="00a-DN-xD2" kind="show" id="SV9-0v-ZJl"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <size key="freeformSize" width="320" height="600"/>
                     <connections>
@@ -1851,6 +1857,204 @@ Selecting them will show only items that contain these labels.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6155" y="-2109"/>
+        </scene>
+        <!--Credits-->
+        <scene sceneID="CWg-lV-FSk">
+            <objects>
+                <viewController id="00a-DN-xD2" customClass="CreditsViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" id="niV-Md-CJQ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="900"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAS-QW-hLR">
+                                <rect key="frame" x="0.0" y="56" width="320" height="775"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tLR-z3-jkh">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="587.5"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="IdW-dE-Hwr">
+                                                <rect key="frame" x="16" y="8" width="288" height="571.5"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUb-ye-Kbd" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="0.0" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="DJI-K1-LaC"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OuU-1D-4Fr">
+                                                        <rect key="frame" x="0.0" y="22" width="288" height="88"/>
+                                                        <string key="text">Gladys relies on user feedback to evolve and deliver new features. A huge thank you to everyone who has taken the time to send feedback, feature suggestions, and bug reports.</string>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-wu-gPh" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="110" width="288" height="40"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="5Dl-bQ-uDf"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Design &amp; Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjL-KX-Co5">
+                                                        <rect key="frame" x="0.0" y="150" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O8w-Zm-DHn">
+                                                        <rect key="frame" x="0.0" y="164.5" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="Paul Tsochantaris"/>
+                                                        <connections>
+                                                            <action selector="authorSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="znx-u3-ruG"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UMp-gk-Yjj" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="197.5" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="H9V-IN-Fif"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="HTML Scanning" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e8r-e6-CdO">
+                                                        <rect key="frame" x="0.0" y="219.5" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h5-SG-rEC">
+                                                        <rect key="frame" x="0.0" y="234" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="Fuzi"/>
+                                                        <connections>
+                                                            <action selector="fuziSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="H6h-c3-5Gz"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvV-WY-t4c" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="267" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="EYt-Nf-YJD"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Creating ZIP Archives" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jql-B6-3It">
+                                                        <rect key="frame" x="0.0" y="289" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kc0-to-reO">
+                                                        <rect key="frame" x="0.0" y="303.5" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="ZipFoundation"/>
+                                                        <connections>
+                                                            <action selector="zipSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="L1Y-iR-TLi"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZQ-LV-vHl" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="336.5" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="Mn7-n0-qsR"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="x-callback-url Support" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Jh-r4-bUF">
+                                                        <rect key="frame" x="0.0" y="358.5" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4q-TB-Put">
+                                                        <rect key="frame" x="0.0" y="373" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="CallbackURLKit"/>
+                                                        <connections>
+                                                            <action selector="callbackSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="zFL-EE-Gg9"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="POX-nu-ak1" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="406" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="UNA-IR-bw4"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Sanity" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3Y-fI-TjG">
+                                                        <rect key="frame" x="0.0" y="428" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bny-va-9fm">
+                                                        <rect key="frame" x="0.0" y="442.5" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="SwiftLint"/>
+                                                        <connections>
+                                                            <action selector="lintSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="tbe-ld-a9g"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGY-dq-iBU" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="475.5" width="288" height="40"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="6i5-Yq-12M"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Gladys is Copyright (c) 2017-2020 Paul Tsochantaris, all rights reserved." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrS-5U-9pL">
+                                                        <rect key="frame" x="0.0" y="515.5" width="288" height="34"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B2P-RD-hoO" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="549.5" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="rVo-hd-cLO"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="IdW-dE-Hwr" firstAttribute="leading" secondItem="tLR-z3-jkh" secondAttribute="leadingMargin" id="46g-gL-deW"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="IdW-dE-Hwr" secondAttribute="bottom" id="GbH-gk-p8X"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="IdW-dE-Hwr" secondAttribute="trailing" id="Vvz-g7-BwH"/>
+                                            <constraint firstItem="IdW-dE-Hwr" firstAttribute="top" secondItem="tLR-z3-jkh" secondAttribute="topMargin" id="Xc5-p0-AxZ"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="tLR-z3-jkh" firstAttribute="trailing" secondItem="AAS-QW-hLR" secondAttribute="trailing" id="AAT-Pw-zAg"/>
+                                    <constraint firstItem="tLR-z3-jkh" firstAttribute="leading" secondItem="AAS-QW-hLR" secondAttribute="leading" id="EH1-By-xyP"/>
+                                    <constraint firstAttribute="bottom" secondItem="tLR-z3-jkh" secondAttribute="bottom" id="Rmu-0F-uiC"/>
+                                    <constraint firstItem="tLR-z3-jkh" firstAttribute="width" secondItem="AAS-QW-hLR" secondAttribute="width" id="T4E-Dw-e6N"/>
+                                    <constraint firstItem="tLR-z3-jkh" firstAttribute="top" secondItem="AAS-QW-hLR" secondAttribute="top" id="xwr-LN-0FU"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Y0S-YF-fhH"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="gt5-jO-lME"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" name="colorPaper"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="AAS-QW-hLR" secondAttribute="trailing" id="9H6-Eg-jZ0"/>
+                            <constraint firstItem="AAS-QW-hLR" firstAttribute="top" secondItem="cmA-tQ-M6f" secondAttribute="top" id="BlR-jO-z8J"/>
+                            <constraint firstItem="cmA-tQ-M6f" firstAttribute="bottom" secondItem="AAS-QW-hLR" secondAttribute="bottom" id="SvY-gV-FI8"/>
+                            <constraint firstItem="AAS-QW-hLR" firstAttribute="leading" secondItem="cmA-tQ-M6f" secondAttribute="leading" id="bIH-Bp-29X"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cmA-tQ-M6f"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Credits" id="1Cd-wY-qUU"/>
+                    <size key="freeformSize" width="320" height="900"/>
+                    <connections>
+                        <outlet property="scrollView" destination="AAS-QW-hLR" id="prn-Gg-CYA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z9w-hs-mMl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7162" y="-2109"/>
         </scene>
         <!--Detail Controller-->
         <scene sceneID="QlH-h2-M2Y">
@@ -2177,7 +2381,7 @@ Selecting them will show only items that contain these labels.</string>
                     <viewLayoutGuide key="safeArea" id="00w-AT-PRi"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4206.3999999999996" y="936.4317841079461"/>
+            <point key="canvasLocation" x="4131" y="942"/>
         </scene>
         <!--Hex Edit-->
         <scene sceneID="8x6-3J-YB8">

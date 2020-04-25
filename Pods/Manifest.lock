@@ -4,7 +4,7 @@ PODS:
   - CallbackURLKit/Core (2.3.0)
   - Fuzi (3.1.2)
   - HotKey (0.1.2)
-  - SwiftLint (0.39.1)
+  - SwiftLint (0.39.2)
   - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
@@ -26,9 +26,9 @@ SPEC CHECKSUMS:
   CallbackURLKit: a940d1b869c70e1fa700ea06f988ba2a8963dafb
   Fuzi: dba7215e52fb39dd7b1a62f69ede1e30edff0ae1
   HotKey: ad59450195936c10992438c4210f673de5aee43e
-  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
+  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: e678d33200eaba6ac4d593dc499f2d6ae9804be1
+PODFILE CHECKSUM: 608005dc13d706ed303cec790be7edb0c53e631b
 
 COCOAPODS: 1.9.1
