@@ -475,21 +475,21 @@ extension Model {
 					}
 				case .title:
 					if ascending {
-						actualItemsToSort.sort { $0.displayTitleOrUuid < $1.displayTitleOrUuid }
+                        actualItemsToSort.sort { $0.displayTitleOrUuid.localizedCaseInsensitiveCompare($1.displayTitleOrUuid) == .orderedAscending }
 					} else {
-						actualItemsToSort.sort { $0.displayTitleOrUuid > $1.displayTitleOrUuid }
+						actualItemsToSort.sort { $0.displayTitleOrUuid.localizedCaseInsensitiveCompare($1.displayTitleOrUuid) == .orderedDescending }
 					}
 				case .note:
 					if ascending {
-						actualItemsToSort.sort { $0.note < $1.note }
+                        actualItemsToSort.sort { $0.note.localizedCaseInsensitiveCompare($1.note) == .orderedAscending }
 					} else {
-						actualItemsToSort.sort { $0.note > $1.note }
+                        actualItemsToSort.sort { $0.note.localizedCaseInsensitiveCompare($1.note) == .orderedDescending }
 					}
 				case .label:
 					if ascending {
-						actualItemsToSort.sort { $0.labels.first ?? "" < $1.labels.first ?? "" }
+                        actualItemsToSort.sort { ($0.labels.first ?? "").localizedCaseInsensitiveCompare($1.labels.first ?? "") == .orderedAscending }
 					} else {
-						actualItemsToSort.sort { $0.labels.first ?? "" > $1.labels.first ?? "" }
+                        actualItemsToSort.sort { ($0.labels.first ?? "").localizedCaseInsensitiveCompare($1.labels.first ?? "") == .orderedDescending }
 					}
 				case .size:
 					if ascending {
