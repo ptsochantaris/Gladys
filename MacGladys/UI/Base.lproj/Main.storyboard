@@ -920,7 +920,7 @@ CA
                                                                 <rect key="frame" x="10" y="10" width="176" height="42"/>
                                                                 <subviews>
                                                                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y1M-pN-W07">
-                                                                        <rect key="frame" x="-2" y="18" width="150" height="25"/>
+                                                                        <rect key="frame" x="-2" y="18" width="163" height="25"/>
                                                                         <popUpButtonCell key="cell" type="push" title="No Screen Edge" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="bVP-KB-alA" id="Gd7-5D-9cV">
                                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                             <font key="font" metaFont="system"/>
@@ -929,16 +929,16 @@ CA
                                                                                     <menuItem title="No Screen Edge" state="on" id="bVP-KB-alA">
                                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                                     </menuItem>
-                                                                                    <menuItem title="Left" id="UyS-sf-NK9" userLabel="Left">
+                                                                                    <menuItem title="Left Screen Edge" id="UyS-sf-NK9" userLabel="Left">
                                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                                     </menuItem>
-                                                                                    <menuItem title="Right" id="ky0-Cl-m21" userLabel="Right">
+                                                                                    <menuItem title="Right Screen Edge" id="ky0-Cl-m21" userLabel="Right">
                                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                                     </menuItem>
-                                                                                    <menuItem title="Top" id="Epq-cX-l4Y" userLabel="Top">
+                                                                                    <menuItem title="Top Screen Edge" id="Epq-cX-l4Y" userLabel="Top">
                                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                                     </menuItem>
-                                                                                    <menuItem title="Bottom" id="AS9-W6-Vhy" userLabel="Bottom">
+                                                                                    <menuItem title="Bottom Screen Edge" id="AS9-W6-Vhy" userLabel="Bottom">
                                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                                     </menuItem>
                                                                                 </items>
@@ -949,10 +949,10 @@ CA
                                                                         </connections>
                                                                     </popUpButton>
                                                                     <button verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="hIC-Xb-Nkk">
-                                                                        <rect key="frame" x="-2" y="-2" width="149" height="18"/>
+                                                                        <rect key="frame" x="-2" y="-2" width="162" height="18"/>
                                                                         <buttonCell key="cell" type="check" title="Auto-show when dragging" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hgt-bN-4yB">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                            <font key="font" metaFont="label"/>
+                                                                            <font key="font" metaFont="system" size="10"/>
                                                                         </buttonCell>
                                                                         <connections>
                                                                             <action selector="autoShowWhenDraggingChanged:" target="FB0-Ob-ymN" id="O6E-5y-CxZ"/>

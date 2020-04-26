@@ -1300,25 +1300,23 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 enteredWindowAfterAutoShow = true
 
             } else if enteredWindowAfterAutoShow && (self.presentedViewControllers?.isEmpty ?? true) {
-                enteredWindowAfterAutoShow = false
-                autoShown = false
-                window.orderOut(nil)
+                hideWindowBecauseOfMouse()
             }
         } else if !window.isVisible {
             if checkingDrag || mouseInActivationBoundary(at: autoShowOnEdge, mouseLocation: mouseLocation) {
-                enteredWindowAfterAutoShow = false
-                autoShown = true
-                window.orderFrontRegardless()
-                window.makeKey()
+                showWindowBecauseOfMouse()
             }
         }
     }
     
-    func hideIfNeeded() {
-        guard let window = view.window, PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 else { return }
-        enteredWindowAfterAutoShow = false
-        autoShown = false
-        window.orderOut(nil)
+    func hideOnInactiveIfNeeded() {
+        guard PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 else { return }
+        hideWindowBecauseOfMouse()
+    }
+    
+    func showOnActiveIfNeeded() {
+        guard let window = view.window else { return }
+        window.alphaValue = 1
     }
     
     private func mouseInActivationBoundary(at autoShowOnEdge: Int, mouseLocation: CGPoint) -> Bool {
@@ -1338,9 +1336,28 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let wasDraggingData = dragPboardChangeCount != newCount
         dragPboardChangeCount = newCount
         if autoShown && wasDraggingData && !window.frame.contains(mouseLocation) {
-            enteredWindowAfterAutoShow = false
-            autoShown = false
-            window.orderOut(nil)
+            hideWindowBecauseOfMouse()
         }
+    }
+    
+    private func showWindowBecauseOfMouse() {
+        guard let window = view.window else { return }
+        enteredWindowAfterAutoShow = false
+        autoShown = true
+        window.alphaValue = 0
+        window.orderFrontRegardless()
+        window.makeKey()
+        window.animator().alphaValue = 1
+    }
+    
+    private func hideWindowBecauseOfMouse() {
+        guard let window = view.window else { return }
+        enteredWindowAfterAutoShow = false
+        autoShown = false
+        NSAnimationContext.runAnimationGroup({ _ in
+            window.animator().alphaValue = 0
+        }, completionHandler: {
+            window.orderOut(nil)
+        })
     }
 }
