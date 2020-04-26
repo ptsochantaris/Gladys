@@ -296,8 +296,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			CloudManager.sync { _ in }
 		}
 
-		updateTitle()
+        updateTitle()
         updateEmptyView()
+
+        setupMouseMonitoring()
 	}
 
 	@objc private func interfaceModeChanged(sender: NSNotification) {
@@ -1250,4 +1252,95 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			progressController = nil
 		}
 	}
+    
+    /////////////////////////////// Mouse monitoring
+    
+    private let dragPboard = NSPasteboard(name: .drag)
+    private var dragPboardChangeCount = 0
+    private var enteredWindowAfterAutoShow = false
+    private var autoShown = false
+
+    private func setupMouseMonitoring() {
+        NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [weak self] e in
+            self?.handleMouseReleased()
+            return e
+        }
+        
+        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] _ in
+            self?.handleMouseReleased()
+        }
+        
+        NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [weak self] e in
+            self?.handleMouseMoved(draggingData: false)
+            return e
+        }
+
+        NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved) { [weak self] _ in
+            self?.handleMouseMoved(draggingData: false)
+        }
+        
+        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged) { [weak self] _ in
+            guard let s = self else {
+                return
+            }
+            s.handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
+        }
+        
+        dragPboardChangeCount = dragPboard.changeCount
+    }
+    
+    private func handleMouseMoved(draggingData: Bool) {
+        guard let window = view.window else { return }
+        let checkingDrag = PersistedOptions.autoShowWhenDragging && draggingData
+        let autoShowOnEdge = PersistedOptions.autoShowFromEdge
+
+        let mouseLocation = NSEvent.mouseLocation
+        if !checkingDrag, window.isVisible {
+            if autoShown && autoShowOnEdge > 0 && window.frame.insetBy(dx: -30, dy: -30).contains(mouseLocation) {
+                enteredWindowAfterAutoShow = true
+
+            } else if enteredWindowAfterAutoShow && (self.presentedViewControllers?.isEmpty ?? true) {
+                enteredWindowAfterAutoShow = false
+                autoShown = false
+                window.orderOut(nil)
+            }
+        } else if !window.isVisible {
+            if checkingDrag || mouseInActivationBoundary(at: autoShowOnEdge, mouseLocation: mouseLocation) {
+                enteredWindowAfterAutoShow = false
+                autoShown = true
+                window.orderFrontRegardless()
+                window.makeKey()
+            }
+        }
+    }
+    
+    func hideIfNeeded() {
+        guard let window = view.window, PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 else { return }
+        enteredWindowAfterAutoShow = false
+        autoShown = false
+        window.orderOut(nil)
+    }
+    
+    private func mouseInActivationBoundary(at autoShowOnEdge: Int, mouseLocation: CGPoint) -> Bool {
+        switch autoShowOnEdge {
+        case 1: return mouseLocation.x == NSScreen.main?.frame.minX ?? 0
+        case 2: return mouseLocation.x > (NSScreen.main?.frame.maxX ?? 0) - 1
+        case 3: return mouseLocation.y == NSScreen.main?.frame.maxY ?? 0
+        case 4: return mouseLocation.y < (NSScreen.main?.frame.minY ?? 0) + 1
+        default: return false
+        }
+    }
+    
+    private func handleMouseReleased() {
+        guard let window = view.window, PersistedOptions.autoShowWhenDragging else { return }
+        let mouseLocation = NSEvent.mouseLocation
+        let newCount = dragPboard.changeCount
+        let wasDraggingData = dragPboardChangeCount != newCount
+        dragPboardChangeCount = newCount
+        if autoShown && wasDraggingData && !window.frame.contains(mouseLocation) {
+            enteredWindowAfterAutoShow = false
+            autoShown = false
+            window.orderOut(nil)
+        }
+    }
 }

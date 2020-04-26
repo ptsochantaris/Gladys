@@ -25,7 +25,9 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: NSButton!
     @IBOutlet private weak var autoConvertUrlsSwitch: NSButton!
     @IBOutlet private weak var convertLabelsToTagsSwitch: NSButton!
-
+    @IBOutlet private weak var autoShowWhenDraggingSwitch: NSButton!
+    @IBOutlet private weak var autoShowOnEdgePicker: NSPopUpButton!
+    
 	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
@@ -99,8 +101,10 @@ final class Preferences: NSViewController {
         disableUrlSupportSwitch.integerValue = PersistedOptions.blockGladysUrlRequests ? 1 : 0
         exclusiveMultipleLabelsSwitch.integerValue = PersistedOptions.exclusiveMultipleLabels ? 1 : 0
 		autoDownloadSwitch.integerValue = PersistedOptions.autoArchiveUrlComponents ? 1 : 0
+        autoShowWhenDraggingSwitch.integerValue = PersistedOptions.autoShowWhenDragging ? 1 : 0
 		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
         touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
+        autoShowOnEdgePicker.selectItem(at: PersistedOptions.autoShowFromEdge)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
@@ -117,7 +121,7 @@ final class Preferences: NSViewController {
                 if let char = createStringForKey(keyCode: CGKeyCode(code)) {
                     m.addItem(withTitle: char, action: #selector(hotkeyCharChanged), keyEquivalent: "")
                 } else {
-                    m.addItem(withTitle: "\(char)", action: #selector(hotkeyCharChanged), keyEquivalent: "")
+                    m.addItem(withTitle: String(char), action: #selector(hotkeyCharChanged), keyEquivalent: "")
                 }
                 count += 1
 			}
@@ -214,6 +218,14 @@ final class Preferences: NSViewController {
 		PersistedOptions.hotkeyCtrl = sender.integerValue == 1
 		updateHotkeyState()
 	}
+    
+    @IBAction private func autoShowWhenDraggingChanged(_ sender: NSButton) {
+        PersistedOptions.autoShowWhenDragging = sender.integerValue == 1
+    }
+    
+    @IBAction private func autoShowFromEdgeChanged(_ sender: NSPopUpButton) {
+        PersistedOptions.autoShowFromEdge = sender.indexOfSelectedItem
+    }
 
 	private func updateHotkeyState() {
 		let enable = hotkeyCmd.integerValue == 1 || hotkeyOption.integerValue == 1 || hotkeyCtrl.integerValue == 1

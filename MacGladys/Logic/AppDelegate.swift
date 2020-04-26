@@ -228,6 +228,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	func applicationDidResignActive(_ notification: Notification) {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
+        ViewController.shared.hideIfNeeded()
 	}
 
 	@objc private func systemDidWake() {

@@ -108,4 +108,22 @@ extension PersistedOptions {
 			defaults.set(newValue, forKey: "hideTitlebar")
 		}
 	}
+    
+    static var autoShowWhenDragging: Bool {
+        get {
+            return defaults.bool(forKey: "autoShowWhenDragging")
+        }
+        set {
+            defaults.set(newValue, forKey: "autoShowWhenDragging")
+        }
+    }
+
+    static var autoShowFromEdge: Int {
+        get {
+            return defaults.integer(forKey: "autoShowFromEdge")
+        }
+        set {
+            defaults.set(newValue, forKey: "autoShowFromEdge")
+        }
+    }
 }
