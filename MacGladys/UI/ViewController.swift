@@ -451,8 +451,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	deinit {
-		for o in observers {
-			NotificationCenter.default.removeObserver(o)
+        observers.forEach {
+			NotificationCenter.default.removeObserver($0)
 		}
 		DistributedNotificationCenter.default.removeObserver(self)
 	}
@@ -1261,6 +1261,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private var autoShown = false
 
     private func setupMouseMonitoring() {
+        dragPboardChangeCount = dragPboard.changeCount
+        
         NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [weak self] e in
             self?.handleMouseReleased()
             return e
@@ -1280,19 +1282,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
         
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged) { [weak self] _ in
-            guard let s = self else {
-                return
+            if let s = self {
+                s.handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
             }
-            s.handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
         }
-        
-        dragPboardChangeCount = dragPboard.changeCount
     }
     
     private func handleMouseMoved(draggingData: Bool) {
-        guard let window = view.window else { return }
         let checkingDrag = PersistedOptions.autoShowWhenDragging && draggingData
         let autoShowOnEdge = PersistedOptions.autoShowFromEdge
+        guard (checkingDrag || autoShowOnEdge > 0), let window = view.window else { return }
 
         let mouseLocation = NSEvent.mouseLocation
         if !checkingDrag, window.isVisible {
@@ -1321,12 +1320,26 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     
     private func mouseInActivationBoundary(at autoShowOnEdge: Int, mouseLocation: CGPoint) -> Bool {
         switch autoShowOnEdge {
-        case 1: return mouseLocation.x == NSScreen.main?.frame.minX ?? 0
-        case 2: return mouseLocation.x > (NSScreen.main?.frame.maxX ?? 0) - 1
-        case 3: return mouseLocation.y == NSScreen.main?.frame.maxY ?? 0
-        case 4: return mouseLocation.y < (NSScreen.main?.frame.minY ?? 0) + 1
-        default: return false
+        case 1:
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
+                return mouseLocation.x == currentScreenFrame.minX
+            }
+        case 2:
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
+                return mouseLocation.x > currentScreenFrame.maxX - 1
+            }
+        case 3:
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
+                return mouseLocation.y > currentScreenFrame.maxY - 1
+            }
+        case 4:
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
+                return mouseLocation.y < currentScreenFrame.minY + 1
+            }
+        default:
+            break
         }
+        return false
     }
     
     private func handleMouseReleased() {
