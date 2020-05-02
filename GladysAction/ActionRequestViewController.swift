@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreSpotlight
 
 final class ActionRequestViewController: UIViewController {
 
@@ -161,15 +160,7 @@ final class ActionRequestViewController: UIViewController {
 
 	private func commit(initialAdd: Bool) {
 		cancelButton.isEnabled = false
-		statusLabel.text = "Indexing…"
-        let searchableItems = newItems.map { $0.searchableItem }
-        Model.reIndex(items: searchableItems, in: CSSearchableIndex.default()) { [weak self] in
-            self?.save(initialAdd: initialAdd)
-		}
-	}
-
-	private func save(initialAdd: Bool) {
-		statusLabel.text = "Saving…"
+        statusLabel.text = "Saving…"
 
 		for item in newItems {
 
@@ -194,8 +185,7 @@ final class ActionRequestViewController: UIViewController {
 		} else {
 			Model.commitExistingItemsWithoutLoading(newItems)
 		}
-
-		log("Sharing done")
+        
 		if PersistedOptions.setLabelsWhenActioning {
 			statusLabel.isHidden = true
 			labelsButton.isHidden = false
@@ -204,6 +194,8 @@ final class ActionRequestViewController: UIViewController {
 			statusLabel.text = "Done"
 			done()
 		}
+        
+        log("Commit done")
 	}
 
 	private func showDone() {
@@ -220,11 +212,14 @@ final class ActionRequestViewController: UIViewController {
 
 	@objc private func done() {
         reset(ingestOnNextAppearance: true)
-		DispatchQueue.main.async { [weak self] in
-			self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-		}
+        scheduleAppRefresh()
+        
+        self.extensionContext?.completeRequest(returningItems: nil) { _ in
+            log("Dismissed")
+            
+        }
 	}
-
+    
 	////////////////////// Labels
 
     private var labelsToApply = [String]()

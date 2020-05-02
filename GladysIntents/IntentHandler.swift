@@ -7,7 +7,6 @@
 //
 
 import Intents
-import CoreSpotlight
 import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
@@ -99,19 +98,16 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
-        if Model.doneIngesting {
-            Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
-            let searchableItems = newItems.map { $0.searchableItem }
-            Model.reIndex(items: searchableItems, in: CSSearchableIndex.default()) { [weak self] in
-                self?.pasteDone()
-            }
-		}
-	}
-
-	private func pasteDone() {
-		intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
-		intentCompletion = nil
-		newItems.removeAll()
-		itemProviders.removeAll()
+        if !Model.doneIngesting {
+            return
+        }
+        Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
+        intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
+        intentCompletion = nil
+        newItems.removeAll()
+        itemProviders.removeAll()
+        
+        NotificationCenter.default.removeObserver(self)
+        scheduleAppRefresh()
 	}
 }

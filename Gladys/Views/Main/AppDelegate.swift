@@ -9,6 +9,7 @@
 import UIKit
 import CoreSpotlight
 import CloudKit
+import BackgroundTasks
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,9 +24,24 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         CloudManager.opportunisticSyncIfNeeded(isStartup: true)
 
         log("Initial reachability status: \(reachability.status.name)")
+        
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "build.bru.Gladys.scheduled.sync", using: nil) { task in
+            task.expirationHandler = {
+                log("Background sync task expired")
+            }
+            CloudManager.sync { error in
+                if let error = error {
+                    log("Scheduled sync error: \(error.localizedDescription)")
+                } else {
+                    log("Scheduled sync done")
+                }
+                task.setTaskCompleted(success: error == nil)
+            }
+        }
+        
 		return true
 	}
-        
+            
 	func applicationWillTerminate(_ application: UIApplication) {
 		IAPManager.shared.stop()
 	}
