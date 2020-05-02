@@ -20,10 +20,8 @@ final class ActionRequestViewController: UIViewController {
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
 
 	private var loadCount = 0
-	private var ingestOnNextAppearance = true
+	private var ingestOnWillAppear = true
 	private var newItems = [ArchivedItem]()
-	private var uploadObservation: NSKeyValueObservation?
-	private var uploadProgress: Progress?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,13 +31,13 @@ final class ActionRequestViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-        if ingestOnNextAppearance {
+        if ingestOnWillAppear {
             ingest()
         }
     }
     
     private func ingest() {
-        ingestOnNextAppearance = false
+        reset(ingestOnNextAppearance: false) // resets everything
 
         statusLabel.text = "Adding…"
         statusLabel.isHidden = false
@@ -51,8 +49,6 @@ final class ActionRequestViewController: UIViewController {
 			showDone()
 			return
 		}
-
-		reset()
 
 		Model.reloadDataIfNeeded()
 		
@@ -149,11 +145,9 @@ final class ActionRequestViewController: UIViewController {
 
 	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
 
-		for loadingItem in newItems {
-			loadingItem.cancelIngest()
-		}
+        newItems.forEach { $0.cancelIngest() }
 
-		shutdownExtension()
+        reset(ingestOnNextAppearance: true)
 
 		let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
 		extensionContext?.cancelRequest(withError: error)
@@ -184,12 +178,12 @@ final class ActionRequestViewController: UIViewController {
 		for item in newItems {
 
 			var change = false
-			if let labelsToApply = labelsToApply, item.labels != labelsToApply {
+			if item.labels != labelsToApply {
 				item.labels = labelsToApply
 				change = true
 			}
 
-			if let noteToApply = noteToApply, item.note != noteToApply {
+			if item.note != noteToApply {
 				item.note = noteToApply
 				change = true
 			}
@@ -205,28 +199,41 @@ final class ActionRequestViewController: UIViewController {
 			Model.commitExistingItemsWithoutLoading(newItems)
 		}
 
-		if !uploadAfterSave {
-			sharingDone(error: nil)
-			return
-		}
+        var finalError: Error?
+        let group = DispatchGroup()
+        var uploadProgress: Progress?
+        var uploadObservation: NSKeyValueObservation?
 
-		Model.reloadDataIfNeeded() // load up any changes we just commited so we can sync them
-		uploadProgress = CloudManager.sendUpdatesUp { [weak self] error in // will callback immediately if sync is off
-			self?.sharingDone(error: error)
-		}
+		if uploadAfterSave {
+            group.enter()
+            Model.reloadDataIfNeeded() // load up any changes we just commited so we can sync them
+            
+            uploadProgress = CloudManager.sendUpdatesUp { error in // will callback immediately if sync is off
+                finalError = error
+                group.leave()
+            }
 
-		if let p = uploadProgress {
-			statusLabel.text = "Uploading…"
-            uploadObservation = p.observe(\.completedUnitCount, options: .new) { [weak self] progress, _ in
-				let complete = Int((progress.fractionCompleted * 100).rounded())
-				self?.statusLabel.text = "\(complete)% Uploaded"
-			}
-		}
+            if let p = uploadProgress {
+                statusLabel.text = "Uploading…"
+                uploadObservation = p.observe(\.completedUnitCount, options: .new) { [weak self] progress, _ in
+                    let complete = Int((progress.fractionCompleted * 100).rounded())
+                    self?.statusLabel.text = "\(complete)% Uploaded"
+                }
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            withExtendedLifetime(uploadObservation) {
+                uploadObservation = nil
+            }
+            withExtendedLifetime(uploadProgress) {
+                uploadProgress = nil
+            }
+            self?.sharingDone(error: finalError)
+        }
 	}
 
 	private func sharingDone(error: Error?) {
-		uploadObservation = nil
-		uploadProgress = nil
 		if let error = error {
 			log("Error while sending up items from extension: \(error.finalDescription)")
 		}
@@ -245,20 +252,16 @@ final class ActionRequestViewController: UIViewController {
 		navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
 	}
 
-	private func shutdownExtension() {
-		ingestOnNextAppearance = true
-		reset()
-	}
-
-	private func reset() {
+    private func reset(ingestOnNextAppearance: Bool) {
+        ingestOnWillAppear = ingestOnNextAppearance
 		newItems.removeAll()
-		labelsToApply = nil
-		noteToApply = nil
+        labelsToApply.removeAll()
+		noteToApply = ""
 		Model.reset()
 	}
 
 	@objc private func done() {
-		shutdownExtension()
+        reset(ingestOnNextAppearance: true)
 		DispatchQueue.main.async { [weak self] in
 			self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		}
@@ -266,21 +269,23 @@ final class ActionRequestViewController: UIViewController {
 
 	////////////////////// Labels
 
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    private var labelsToApply = [String]()
+    private var noteToApply = ""
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let destination = segue.destination as? LabelEditorController {
 			if !newItems.isEmpty { // we're not in the process of adding
 				Model.reloadDataIfNeeded()
 			}
-			destination.note = noteToApply ?? ""
-			destination.selectedLabels = labelsToApply ?? []
-			destination.completion = applyNewLabels
+			destination.note = noteToApply
+			destination.selectedLabels = labelsToApply
+            destination.completion = { [weak self] newLabels, newNote in
+                self?.apply(newLabels, newNote)
+            }
 		}
 	}
 
-	private var labelsToApply: [String]?
-	private var noteToApply: String?
-
-	private func applyNewLabels(_ newLabels: [String], _ newNote: String) {
+	private func apply(_ newLabels: [String], _ newNote: String) {
 		labelsToApply = newLabels
 		noteToApply = newNote
 

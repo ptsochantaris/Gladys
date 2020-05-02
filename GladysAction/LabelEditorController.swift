@@ -48,10 +48,12 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 		if selectedLabels.contains(toggle) {
 			cell.tick.isHidden = false
 			cell.tick.isHighlighted = true
+            cell.labelName.textColor = UIColor.label
 			cell.accessibilityValue = "Selected"
 		} else {
 			cell.tick.isHidden = true
 			cell.tick.isHighlighted = false
+            cell.labelName.textColor = UIColor.secondaryLabel
 			cell.accessibilityValue = nil
 		}
 		return cell
