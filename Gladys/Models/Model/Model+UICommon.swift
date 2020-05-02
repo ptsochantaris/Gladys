@@ -784,7 +784,7 @@ extension Model {
 		}
 	}
     
-    static func detectExternalChanges() {
+    static func detectExternalChanges(completionGroup: DispatchGroup? = nil) {
         for item in drops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter { $0.needsDeletion }
             if !componentsToDelete.isEmpty {
@@ -801,7 +801,7 @@ extension Model {
         }
         
         for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
-            drop.reIngest()
+            drop.reIngest(completionGroup: completionGroup)
         }
     }
     

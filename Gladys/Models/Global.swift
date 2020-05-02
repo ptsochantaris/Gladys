@@ -1,5 +1,6 @@
 #if os(iOS)
 let groupName = "group.build.bru.Gladys"
+let syncSchedulingRequestId = "build.bru.Gladys.scheduled.sync"
 #else
 let groupName = "X727JSJUGJ.build.bru.MacGladys"
 #endif

@@ -53,7 +53,8 @@ extension ArchivedItem {
         return components.contains { $0.flags.contains(.loadingAborted) }
 	}
 
-	func reIngest() {
+    func reIngest(completionGroup: DispatchGroup? = nil) {
+        completionGroup?.enter()
         let group = DispatchGroup()
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
@@ -91,6 +92,7 @@ extension ArchivedItem {
         
         group.notify(queue: .main) {
             self.componentsIngested(error: loadingError)
+            completionGroup?.leave()
         }
 	}
     

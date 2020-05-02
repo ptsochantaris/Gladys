@@ -25,23 +25,27 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log("Initial reachability status: \(reachability.status.name)")
         
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "build.bru.Gladys.scheduled.sync", using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: syncSchedulingRequestId, using: .main) { task in
+            log("Scheduled sync requested...")
             task.expirationHandler = {
                 log("Background sync task expired")
             }
-            CloudManager.sync { error in
-                if let error = error {
-                    log("Scheduled sync error: \(error.localizedDescription)")
-                } else {
-                    log("Scheduled sync done")
+            let group = DispatchGroup()
+            Model.detectExternalChanges(completionGroup: group)
+            group.notify(queue: .main) {
+                CloudManager.sync { error in
+                    if let error = error {
+                        log("Scheduled sync error: \(error.localizedDescription)")
+                    } else {
+                        log("Scheduled sync done")
+                    }
                 }
-                task.setTaskCompleted(success: error == nil)
             }
         }
         
 		return true
 	}
-            
+    
 	func applicationWillTerminate(_ application: UIApplication) {
 		IAPManager.shared.stop()
 	}

@@ -10,8 +10,8 @@ import BackgroundTasks
 
 func scheduleAppRefresh() {
     do {
-        let request = BGAppRefreshTaskRequest(identifier: "build.bru.Gladys.scheduled.sync")
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 1)
+        let request = BGAppRefreshTaskRequest(identifier: syncSchedulingRequestId)
+        request.earliestBeginDate = nil
         try BGTaskScheduler.shared.submit(request)
         log("Scheduled main app sync")
     } catch {
