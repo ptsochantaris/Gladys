@@ -171,10 +171,6 @@ final class ActionRequestViewController: UIViewController {
 	private func save(initialAdd: Bool) {
 		statusLabel.text = "Saving…"
 
-		let uploadAfterSave = CloudManager.shareActionShouldUpload
-		let newItemIds = newItems.map { $0.uuid.uuidString }
-		CloudManager.shareActionIsActioningIds = uploadAfterSave ? newItemIds : []
-
 		for item in newItems {
 
 			var change = false
@@ -199,44 +195,6 @@ final class ActionRequestViewController: UIViewController {
 			Model.commitExistingItemsWithoutLoading(newItems)
 		}
 
-        var finalError: Error?
-        let group = DispatchGroup()
-        var uploadProgress: Progress?
-        var uploadObservation: NSKeyValueObservation?
-
-		if uploadAfterSave {
-            group.enter()
-            Model.reloadDataIfNeeded() // load up any changes we just commited so we can sync them
-            
-            uploadProgress = CloudManager.sendUpdatesUp { error in // will callback immediately if sync is off
-                finalError = error
-                group.leave()
-            }
-
-            if let p = uploadProgress {
-                statusLabel.text = "Uploading…"
-                uploadObservation = p.observe(\.completedUnitCount, options: .new) { [weak self] progress, _ in
-                    let complete = Int((progress.fractionCompleted * 100).rounded())
-                    self?.statusLabel.text = "\(complete)% Uploaded"
-                }
-            }
-        }
-
-        group.notify(queue: .main) { [weak self] in
-            withExtendedLifetime(uploadObservation) {
-                uploadObservation = nil
-            }
-            withExtendedLifetime(uploadProgress) {
-                uploadProgress = nil
-            }
-            self?.sharingDone(error: finalError)
-        }
-	}
-
-	private func sharingDone(error: Error?) {
-		if let error = error {
-			log("Error while sending up items from extension: \(error.finalDescription)")
-		}
 		log("Sharing done")
 		if PersistedOptions.setLabelsWhenActioning {
 			statusLabel.isHidden = true

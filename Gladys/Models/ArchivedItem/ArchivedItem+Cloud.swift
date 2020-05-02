@@ -39,13 +39,6 @@ extension ArchivedItem {
 
 	var populatedCloudKitRecord: CKRecord? {
 
-		#if MAINAPP
-			if CloudManager.shareActionIsActioningIds.contains(uuid.uuidString) {
-				log("Will not sync up item \(uuid.uuidString) since the action extension is taking care of it")
-				return nil
-			}
-		#endif
-
 		guard needsCloudPush && !needsDeletion && goodToSave else { return nil }
 
 		let record = cloudKitRecord ??

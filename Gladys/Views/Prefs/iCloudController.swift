@@ -15,17 +15,10 @@ final class iCloudController: GladysViewController {
 	@IBOutlet private weak var icloudSpinner: UIActivityIndicatorView!
 	@IBOutlet private weak var limitToWiFiSwitch: UISwitch!
 	@IBOutlet private weak var eraseAlliCloudData: UIButton!
-	@IBOutlet private weak var actionUploadSwitch: UISwitch!
 	@IBOutlet private weak var syncNowButton: UIBarButtonItem!
 
 	@IBAction private func limitToWiFiChanged(_ sender: UISwitch) {
 		CloudManager.onlySyncOverWiFi = sender.isOn
-	}
-
-	@IBAction private func uploadItemsFromShareChanged(_ sender: UISwitch) {
-		if icloudSwitch.isOn {
-			CloudManager.shareActionShouldUpload = sender.isOn
-		}
 	}
 
 	override func viewDidLoad() {
@@ -41,9 +34,6 @@ final class iCloudController: GladysViewController {
 
 		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
 		limitToWiFiSwitch.tintColor = UIColor(named: "colorLightGray")
-
-		actionUploadSwitch.isOn = CloudManager.shareActionShouldUpload
-		actionUploadSwitch.tintColor = UIColor(named: "colorLightGray")
 
 		updateiCloudControls()
 	}
@@ -98,13 +88,6 @@ final class iCloudController: GladysViewController {
 		}
 		eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
 		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn
-
-		if !icloudSwitch.isOn && actionUploadSwitch.isOn {
-			actionUploadSwitch.setOn(false, animated: true)
-		} else if icloudSwitch.isOn && !actionUploadSwitch.isOn && CloudManager.shareActionShouldUpload {
-			actionUploadSwitch.setOn(true, animated: true)
-		}
-		actionUploadSwitch.isEnabled = icloudSwitch.isOn
 
 		if !icloudSwitch.isOn && limitToWiFiSwitch.isOn {
 			limitToWiFiSwitch.setOn(false, animated: true)
