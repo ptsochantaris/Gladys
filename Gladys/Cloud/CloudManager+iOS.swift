@@ -38,7 +38,8 @@ extension CloudManager {
 				return
 			}
 			sync(scope: scope) { error in
-				if error != nil {
+				if let error = error {
+                    log("Sync from push failed: \(error.localizedDescription)")
 					completionHandler(.failed)
 				} else {
 					completionHandler(.newData)

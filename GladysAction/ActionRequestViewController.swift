@@ -212,7 +212,7 @@ final class ActionRequestViewController: UIViewController {
 
 	@objc private func done() {
         reset(ingestOnNextAppearance: true)
-        scheduleAppRefresh()
+        CloudManager.signalExtensionUpdate()
         
         self.extensionContext?.completeRequest(returningItems: nil) { _ in
             log("Dismissed")

@@ -108,6 +108,6 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
         itemProviders.removeAll()
         
         NotificationCenter.default.removeObserver(self)
-        scheduleAppRefresh()
+        CloudManager.signalExtensionUpdate()
 	}
 }
