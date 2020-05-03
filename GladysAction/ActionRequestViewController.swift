@@ -30,6 +30,7 @@ final class ActionRequestViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+        
         if ingestOnWillAppear {
             ingest()
         }
@@ -211,12 +212,13 @@ final class ActionRequestViewController: UIViewController {
 	}
 
 	@objc private func done() {
-        reset(ingestOnNextAppearance: true)
         CloudManager.signalExtensionUpdate()
         
-        self.extensionContext?.completeRequest(returningItems: nil) { _ in
-            log("Dismissed")
-            
+        dismiss(animated: true) {
+            self.reset(ingestOnNextAppearance: true)
+            self.extensionContext?.completeRequest(returningItems: nil) { _ in
+                log("Dismissed")
+            }
         }
 	}
     
