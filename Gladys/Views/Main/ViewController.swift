@@ -256,7 +256,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         if needsPost {
             self.focusInitialAccessibilityElement()
-            self.updateEmptyView(animated: true)
+            self.updateEmptyView()
         }
         
         if needsFullSave {
@@ -700,7 +700,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let index = filter.filteredDrops.firstIndex(of: item) {
                 let n = IndexPath(item: index, section: 0)
                 collection.insertItems(at: [n])
-                updateEmptyView(animated: false)
+                updateEmptyView()
             }
         }, completion: nil)
     }
@@ -714,7 +714,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
-            if Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
+            if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -766,7 +766,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var emptyView: UIImageView?
 	@objc private func updateUI() {
-		editButton.isEnabled = !Model.drops.isEmpty
+        if Model.drops.isEmpty {
+            editButton.isEnabled = false
+            if isEditing {
+                setEditing(false, animated: true)
+            }
+        } else {
+            editButton.isEnabled = true
+        }
 
 		selectedItems = selectedItems?.filter { uuid in Model.drops.contains { $0.uuid == uuid } }
 
@@ -807,7 +814,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		currentLabelEditor?.selectedItems = selectedItems
 		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
         
-        updateEmptyView(animated: false)
+        updateEmptyView()
 	}
 
 	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
@@ -953,11 +960,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-	private func updateEmptyView(animated: Bool) {
+	private func updateEmptyView() {
 		if Model.drops.isEmpty && emptyView == nil {
             let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
 			e.isAccessibilityElement = false
             e.contentMode = .scaleAspectFit
+            e.alpha = 0
 			e.center(on: view)
             NSLayoutConstraint.activate([
                 e.widthAnchor.constraint(equalToConstant: 160),
@@ -965,24 +973,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             ])
 			emptyView = e
 
-			if animated {
-				e.alpha = 0
-				UIView.animate(animations: {
-					e.alpha = 1
-				})
-			}
-
+            UIView.animate(animations: {
+                e.alpha = 1
+            })
+		
 		} else if let e = emptyView, !Model.drops.isEmpty {
 			emptyView = nil
-			if animated {
-				UIView.animate(animations: {
-					e.alpha = 0
-				}, completion: { _ in
-					e.removeFromSuperview()
-				})
-			} else {
-				e.removeFromSuperview()
-			}
+            UIView.animate(animations: {
+                e.alpha = 0
+            }, completion: { _ in
+                e.removeFromSuperview()
+            })
 		}
 	}
     
@@ -1005,12 +1006,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			deleteButton.isEnabled = false
 		}
 
-		UIView.performWithoutAnimation {
-			updateUI()
-			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
-				cell.isEditing = editing
-			}
-		}
+        updateUI()
+        for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
+            cell.isEditing = editing
+        }
 	}
     
     private var itemSize: CGSize = .zero
@@ -1350,14 +1349,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private func proceedWithDelete() {
 		guard let candidates = selectedItems, !candidates.isEmpty else { return }
 
-		let itemsToDelete = Model.drops.filter { item -> Bool in
-			candidates.contains(where: { $0 == item.uuid })
-		}
+        let candidateSet = Set(candidates)
+		let itemsToDelete = Model.drops.filter { candidateSet.contains($0.uuid) }
 		if !itemsToDelete.isEmpty {
+            setEditing(false, animated: true)
 			Model.delete(items: itemsToDelete)
 		}
-
-		selectedItems?.removeAll()
 	}
 
 	private var firstPresentedNavigationController: UINavigationController? {
@@ -1422,19 +1419,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if filter.isFiltering {
                 resetSearch(andLabels: true)
             }
-            
-            mostRecentIndexPathActioned = nil
-            updateEmptyView(animated: true)
-            if isEditing {
-                view.layoutIfNeeded()
-                setEditing(false, animated: true)
-            }
-            blurb(Greetings.randomCleanLine)
 
-        } else {
-            if isEditing {
-                setEditing(false, animated: true)
-            }
+            setEditing(false, animated: true)
+            mostRecentIndexPathActioned = nil
+            blurb(Greetings.randomCleanLine)
         }
         
         focusInitialAccessibilityElement()

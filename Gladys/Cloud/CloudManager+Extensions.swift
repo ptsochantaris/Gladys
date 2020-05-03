@@ -15,18 +15,19 @@ extension CloudManager {
         
         PersistedOptions.extensionRequestedSync = true
         
-        let deviceUUID = getDeviceId().base64EncodedString() as NSString
+        let deviceUUID = "\(getDeviceId().base64EncodedString())/\(UUID().uuidString)"
+        log("Updating extension update record: \(deviceUUID)")
 
         let updateRecord = CKRecord(recordType: RecordType.extensionUpdate, recordID: CKRecord.ID(recordName: RecordType.extensionUpdate, zoneID: privateZoneId))
-        updateRecord.setObject(deviceUUID, forKey: "deviceUUID")
+        updateRecord.setObject(deviceUUID as NSString, forKey: "deviceUUID")
 
         let operation = CKModifyRecordsOperation(recordsToSave: [updateRecord], recordIDsToDelete: nil)
         operation.savePolicy = .allKeys
         operation.perRecordCompletionBlock = { _, error in
             if let error = error {
-                log("Extension update posting failed: \(error.localizedDescription)")
+                log("Extension update post failed: \(error.localizedDescription)")
             } else {
-                log("Extension update posting done")
+                log("Extension update posted")
             }
         }
         
