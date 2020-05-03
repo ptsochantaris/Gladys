@@ -30,6 +30,15 @@ final class PersistedOptions {
 			defaults.set(newValue, forKey: "wideMode")
 		}
 	}
+    
+    static var extensionRequestedSync: Bool {
+        get {
+            return defaults.bool(forKey: "extensionRequestedSync")
+        }
+        set {
+            defaults.set(newValue, forKey: "extensionRequestedSync")
+        }
+    }
 
 	static var setLabelsWhenActioning: Bool {
 		get {

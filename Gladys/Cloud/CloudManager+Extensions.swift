@@ -13,6 +13,8 @@ extension CloudManager {
     static func signalExtensionUpdate() {
         guard syncSwitchedOn else { return }
         
+        PersistedOptions.extensionRequestedSync = true
+        
         let deviceUUID = getDeviceId().base64EncodedString() as NSString
 
         let updateRecord = CKRecord(recordType: RecordType.extensionUpdate, recordID: CKRecord.ID(recordName: RecordType.extensionUpdate, zoneID: privateZoneId))

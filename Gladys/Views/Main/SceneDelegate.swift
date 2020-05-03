@@ -55,9 +55,17 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @objc private func modelDataUpdate() {
-        Model.detectExternalChanges()
-        for session in UIApplication.shared.openSessions where session.scene?.activationState == .background {
-            UIApplication.shared.requestSceneSessionRefresh(session)
+        let group = DispatchGroup()
+        Model.detectExternalChanges(completionGroup: group)
+        group.notify(queue: .main) {
+            let openSessions = UIApplication.shared.openSessions
+            for session in openSessions where session.scene?.activationState == .background {
+                UIApplication.shared.requestSceneSessionRefresh(session)
+            }
+            if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
+                PersistedOptions.extensionRequestedSync = false
+                CloudManager.opportunisticSyncIfNeeded(force: true)
+            }
         }
     }
     
@@ -311,7 +319,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if PersistedOptions.mirrorFilesToDocuments {
                 Model.scanForMirrorChanges {}
             }
-            CloudManager.opportunisticSyncIfNeeded(isStartup: false)
+            CloudManager.opportunisticSyncIfNeeded()
         }
         checkWindowCount()
     }

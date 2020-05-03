@@ -185,32 +185,4 @@ extension Model {
 			drops.append(contentsOf: items)
 		}
 	}
-
-	static func commitExistingItemsWithoutLoading(_ items: [ArchivedItem]) {
-		if items.isEmpty { return }
-
-		if brokenMode {
-			log("Ignoring commit operation, model is broken, app needs restart.")
-			return
-		}
-
-		var closureError: NSError?
-		var coordinationError: NSError?
-		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
-			do {
-				for item in items {
-                    item.flags.remove(.isBeingCreatedBySync)
-                    item.flags.remove(.needsSaving)
-                    let finalPath = url.appendingPathComponent(item.uuid.uuidString)
-					try saveEncoder.encode(item).write(to: finalPath)
-				}
-			} catch {
-				closureError = error as NSError
-			}
-			// do not update last modified date, as there may be external changes that need to be loaded additionally later as well
-		}
-		if let e = coordinationError ?? closureError {
-			log("Error updating item in saved data store: \(e.localizedDescription)")
-		}
-	}
 }

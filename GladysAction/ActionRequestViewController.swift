@@ -154,50 +154,21 @@ final class ActionRequestViewController: UIViewController {
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
-        if Model.doneIngesting {
-			commit(initialAdd: true)
-		}
-	}
-
-	private func commit(initialAdd: Bool) {
-		cancelButton.isEnabled = false
-        statusLabel.text = "Saving…"
-
-		for item in newItems {
-
-			var change = false
-			if item.labels != labelsToApply {
-				item.labels = labelsToApply
-				change = true
-			}
-
-			if item.note != noteToApply {
-				item.note = noteToApply
-				change = true
-			}
-
-			if !initialAdd && change {
-				item.markUpdated()
-			}
+        guard Model.doneIngesting else {
+            return
 		}
 
-		if initialAdd {
-			Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
-		} else {
-			Model.commitExistingItemsWithoutLoading(newItems)
-		}
-        
-		if PersistedOptions.setLabelsWhenActioning {
-			statusLabel.isHidden = true
-			labelsButton.isHidden = false
-			showDone()
-		} else {
-			statusLabel.text = "Done"
-			done()
-		}
-        
-        log("Commit done")
-	}
+        cancelButton.isEnabled = false
+
+        if PersistedOptions.setLabelsWhenActioning {
+            statusLabel.isHidden = true
+            labelsButton.isHidden = false
+            showDone()
+        } else {
+            statusLabel.text = "Done"
+            done()
+        }
+    }
 
 	private func showDone() {
 		navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
@@ -212,6 +183,14 @@ final class ActionRequestViewController: UIViewController {
 	}
 
 	@objc private func done() {
+        
+        for item in newItems {
+            item.labels = labelsToApply
+            item.note = noteToApply
+        }
+
+        Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
+
         CloudManager.signalExtensionUpdate()
         
         dismiss(animated: true) {
@@ -235,22 +214,9 @@ final class ActionRequestViewController: UIViewController {
 			destination.note = noteToApply
 			destination.selectedLabels = labelsToApply
             destination.completion = { [weak self] newLabels, newNote in
-                self?.apply(newLabels, newNote)
+                self?.labelsToApply = newLabels
+                self?.noteToApply = newNote
             }
-		}
-	}
-
-	private func apply(_ newLabels: [String], _ newNote: String) {
-		labelsToApply = newLabels
-		noteToApply = newNote
-
-		let changes = newItems.contains { $0.labels != newLabels || $0.note != newNote }
-		if changes {
-			navigationItem.rightBarButtonItem = nil
-			labelsButton.isHidden = true
-			statusLabel.isHidden = false
-			Model.reloadDataIfNeeded()
-			commit(initialAdd: false)
 		}
 	}
 }

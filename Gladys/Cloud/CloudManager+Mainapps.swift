@@ -657,6 +657,7 @@ extension CloudManager {
             
         case RecordType.extensionUpdate:
             log("Received an extension update notification")
+            PersistedOptions.extensionRequestedSync = false
             
         default:
             log("Warning: Received record update for unkown type: \(record.recordType)")

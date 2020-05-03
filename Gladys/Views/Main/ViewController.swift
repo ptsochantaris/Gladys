@@ -609,7 +609,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	@objc private func reachabilityChanged() {
 		if reachability.status == .reachableViaWiFi && CloudManager.onlySyncOverWiFi {
-			CloudManager.opportunisticSyncIfNeeded(isStartup: false)
+			CloudManager.opportunisticSyncIfNeeded()
 		}
 	}
 
