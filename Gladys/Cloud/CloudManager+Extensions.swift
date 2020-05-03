@@ -13,9 +13,9 @@ extension CloudManager {
     static func signalExtensionUpdate() {
         guard syncSwitchedOn else { return }
         
-        let updateRecord = CKRecord(recordType: RecordType.extensionUpdate, recordID: CKRecord.ID(recordName: RecordType.extensionUpdate, zoneID: privateZoneId))
+        let deviceUUID = getDeviceId().base64EncodedString() as NSString
 
-        let deviceUUID = getDeviceId() as NSData
+        let updateRecord = CKRecord(recordType: RecordType.extensionUpdate, recordID: CKRecord.ID(recordName: RecordType.extensionUpdate, zoneID: privateZoneId))
         updateRecord.setObject(deviceUUID, forKey: "deviceUUID")
 
         let operation = CKModifyRecordsOperation(recordsToSave: [updateRecord], recordIDsToDelete: nil)
