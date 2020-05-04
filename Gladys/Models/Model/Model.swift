@@ -71,17 +71,18 @@ final class Model {
 					}
 					var newDrops = ContiguousArray<ArchivedItem>()
 					newDrops.reserveCapacity(itemCount)
-					var c = 0
-					while c < d.count {
-						let u = UUID(uuid: (d[c], d[c+1], d[c+2], d[c+3], d[c+4], d[c+5],
-											d[c+6], d[c+7], d[c+8], d[c+9], d[c+10], d[c+11],
-											d[c+12], d[c+13], d[c+14], d[c+15]))
-						c += 16
-						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
-							newDrops.append(item)
-						}
-					}
+                    
+                    d.withUnsafeBytes { pointer in
+                        let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+                        uuidSequence.forEach { u in
+                            let u = UUID(uuid: u)
+                            let dataPath = url.appendingPathComponent(u.uuidString)
+                            if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
+                                newDrops.append(item)
+                            }
+                        }
+                    }
+                    
 					drops = newDrops
 					log("Load time: \(-start.timeIntervalSinceNow) seconds")
 				} else {

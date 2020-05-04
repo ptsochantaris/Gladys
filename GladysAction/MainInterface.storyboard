@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jgp-rO-Atm">
-                                <rect key="frame" x="20" y="92" width="280" height="220"/>
+                                <rect key="frame" x="20" y="92" width="280" height="252"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="QQw-Qu-GXD">
                                         <rect key="frame" x="40" y="0.0" width="200" height="220"/>
@@ -26,21 +26,28 @@
                                             <constraint firstAttribute="width" constant="200" id="wSa-be-pde"/>
                                         </constraints>
                                     </imageView>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="6lt-f4-SQc">
+                                        <rect key="frame" x="130" y="225.5" width="20" height="1"/>
+                                    </imageView>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="W29-XL-sFv">
+                                        <rect key="frame" x="130" y="232" width="20" height="20"/>
+                                        <color key="color" name="colorTint"/>
+                                    </activityIndicatorView>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-t2-fVq">
-                                        <rect key="frame" x="86" y="0.0" width="108" height="0.0"/>
+                                        <rect key="frame" x="86" y="252" width="108" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <state key="normal" title="Note &amp; Labels"/>
                                         <connections>
                                             <segue destination="BYY-3D-u8m" kind="show" identifier="showLabels" id="4yJ-8o-FKO"/>
                                         </connections>
                                     </button>
-                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HyJ-oj-52E">
-                                        <rect key="frame" x="106.5" y="0.0" width="67.5" height="0.0"/>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HyJ-oj-52E">
+                                        <rect key="frame" x="106.5" y="252" width="67.5" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S0c-iC-66X">
-                                        <rect key="frame" x="83" y="0.0" width="114" height="0.0"/>
+                                        <rect key="frame" x="83" y="252" width="114" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <state key="normal" title="Expand Gladys"/>
                                         <connections>
@@ -70,11 +77,13 @@
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
                         <outlet property="cancelButton" destination="4KA-eY-A04" id="57d-sC-Z7T"/>
+                        <outlet property="check" destination="6lt-f4-SQc" id="N5e-s1-PvX"/>
                         <outlet property="expandButton" destination="S0c-iC-66X" id="RvU-Fc-FKn"/>
                         <outlet property="image" destination="QQw-Qu-GXD" id="KtA-qT-8Ay"/>
                         <outlet property="imageHeight" destination="D3U-1n-34l" id="BJa-uz-npI"/>
                         <outlet property="imageOffset" destination="gLQ-VJ-cOr" id="tkW-NJ-XgL"/>
                         <outlet property="labelsButton" destination="Y1j-t2-fVq" id="wd3-dw-y27"/>
+                        <outlet property="spinner" destination="W29-XL-sFv" id="ccw-eh-Fr9"/>
                         <outlet property="statusLabel" destination="HyJ-oj-52E" id="pPt-ah-ASv"/>
                         <outlet property="view" destination="zMn-AG-sqS" id="Qma-de-2ek"/>
                     </connections>
@@ -110,7 +119,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5aI-Qq-s6Y">
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5aI-Qq-s6Y">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="dUm-kQ-MJd">
@@ -179,13 +188,19 @@
                                     <outlet property="delegate" destination="BYY-3D-u8m" id="dSu-xj-oUw"/>
                                 </connections>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="l3k-ED-9Ww">
+                                <rect key="frame" x="150" y="230" width="20" height="20"/>
+                                <color key="color" name="colorTint"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="F5v-aE-vAS" firstAttribute="trailing" secondItem="5aI-Qq-s6Y" secondAttribute="trailing" id="1LW-Ba-24I"/>
                             <constraint firstAttribute="bottom" secondItem="5aI-Qq-s6Y" secondAttribute="bottom" id="DVM-NA-HnK"/>
                             <constraint firstItem="5aI-Qq-s6Y" firstAttribute="leading" secondItem="F5v-aE-vAS" secondAttribute="leading" id="Hp8-0Y-kNV"/>
+                            <constraint firstItem="l3k-ED-9Ww" firstAttribute="centerX" secondItem="gjt-sS-I4S" secondAttribute="centerX" id="Wtg-ZZ-AwX"/>
                             <constraint firstItem="5aI-Qq-s6Y" firstAttribute="top" secondItem="gjt-sS-I4S" secondAttribute="top" id="sXq-99-hiQ"/>
+                            <constraint firstItem="l3k-ED-9Ww" firstAttribute="centerY" secondItem="gjt-sS-I4S" secondAttribute="centerY" id="uqO-D4-I5n"/>
                         </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
@@ -202,6 +217,7 @@
                         <outlet property="headerLabel" destination="iEP-oB-gY3" id="cAF-Ky-fg6"/>
                         <outlet property="headerView" destination="1oI-9b-WQS" id="SAT-L7-vmh"/>
                         <outlet property="labelText" destination="gCw-g5-P07" id="Nqy-EP-3PQ"/>
+                        <outlet property="spinner" destination="l3k-ED-9Ww" id="eGN-Zj-p0F"/>
                         <outlet property="table" destination="5aI-Qq-s6Y" id="U5v-cZ-avd"/>
                     </connections>
                 </viewController>
@@ -240,7 +256,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7gS-75-Jgh">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7gS-75-Jgh">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" name="colorTint"/>

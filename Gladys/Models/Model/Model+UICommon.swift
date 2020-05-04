@@ -747,20 +747,24 @@ extension Model {
 					try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
 				}
 
-				var uuidData = Data()
-				uuidData.reserveCapacity(allItems.count * 16)
-				for item in allItems {
-					let u = item.uuid
-					let t = u.uuid
-					uuidData.append(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15])
-					if dirtyUuids.contains(u) {
-                        let finalPath = url.appendingPathComponent(u.uuidString)
-                        try saveEncoder.encode(item).write(to: finalPath)
-					}
-				}
+                let allCount = allItems.count
+				var uuidData = Data(count: allCount * 16)
+                uuidData.withUnsafeMutableBytes { unsafeMutableRawBufferPointer in
+                    let uuidArray = unsafeMutableRawBufferPointer.bindMemory(to: uuid_t.self)
+                    var count = 0
+                    for item in allItems {
+                        let u = item.uuid
+                        uuidArray[count] = u.uuid
+                        count += 1
+                        if dirtyUuids.contains(u) {
+                            let finalPath = url.appendingPathComponent(u.uuidString)
+                            try? saveEncoder.encode(item).write(to: finalPath)
+                        }
+                    }
+                }
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
-				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allItems.count { // at least one old file exists, let's find it
+				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
                     let uuidStrings = Set(allItems.map { $0.uuid.uuidString })
                     for file in filesInDir where !uuidStrings.contains(file) && file != "uuids" { // old file
                         log("Removing save file for non-existent item: \(file)")

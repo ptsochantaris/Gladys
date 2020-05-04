@@ -81,6 +81,21 @@ extension Model {
 		return item
 	}
 
+    static func getLabelsWithoutLoading() -> Set<String> {
+        if brokenMode {
+            log("Ignoring locate operation, model is broken, app needs restart.")
+            return []
+        }
+
+        var labels = Set<String>()
+        iterateThroughSavedItemsWithoutLoading {
+            labels.formUnion($0.labels)
+            return true
+        }
+
+        return labels
+    }
+    
 	static func locateComponentWithoutLoading(uuid: String) -> (ArchivedItem, Component)? {
 		if brokenMode {
 			log("Ignoring locate component operation, model is broken, app needs restart.")
@@ -116,21 +131,18 @@ extension Model {
 			}
 
 			do {
-				let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
-				var c = 0
-				var go = true
-				while c < d.count && go {
-					autoreleasepool {
-						let u = UUID(uuid: (d[c], d[c+1], d[c+2], d[c+3], d[c+4], d[c+5],
-											d[c+6], d[c+7], d[c+8], d[c+9], d[c+10], d[c+11],
-											d[c+12], d[c+13], d[c+14], d[c+15]))
-						c += 16
-						let dataPath = url.appendingPathComponent(u.uuidString)
-						if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
-							go = perItemCallback(item)
-						}
-					}
-				}
+                let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
+                d.withUnsafeBytes { pointer in
+                    pointer.bindMemory(to: uuid_t.self).forEach { u in
+                        autoreleasepool {
+                            let u = UUID(uuid: u)
+                            let dataPath = url.appendingPathComponent(u.uuidString)
+                            if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data), !perItemCallback(item) {
+                                return
+                            }
+                        }
+                    }
+                }
 			} catch {
 				log("Loading Error: \(error)")
 				loadingError = error as NSError

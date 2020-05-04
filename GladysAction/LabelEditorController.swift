@@ -7,27 +7,28 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private weak var headerLabel: UILabel!
-
+    
+    @IBOutlet private weak var spinner: UIActivityIndicatorView!
+    
 	var selectedLabels = [String]()
 	var completion: (([String], String) -> Void)?
 
 	var note = ""
 
-	private lazy var allToggles: [String] = { // lazy is important here, keep
-		var labels  = Set<String>()
-		for item in Model.drops {
-			for label in item.labels {
-				labels.insert(label)
-			}
-		}
-		return labels.sorted()
-	}()
+	private var allToggles = [String]()
 
 	private var availableToggles = [String]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		updateFilter(nil)
+        dataAccessQueue.async {
+            self.allToggles = Model.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+            DispatchQueue.main.async { [weak self] in
+                self?.table.isHidden = false
+                self?.spinner.stopAnimating()
+                self?.updateFilter(nil)
+            }
+        }
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {

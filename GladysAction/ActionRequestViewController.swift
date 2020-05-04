@@ -17,7 +17,9 @@ final class ActionRequestViewController: UIViewController {
 	@IBOutlet private weak var image: UIImageView!
 	@IBOutlet private weak var labelsButton: UIButton!
 	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
-
+    @IBOutlet private weak var spinner: UIActivityIndicatorView!
+    @IBOutlet private weak var check: UIImageView!
+    
 	private var loadCount = 0
 	private var ingestOnWillAppear = true
 	private var newItems = [ArchivedItem]()
@@ -36,23 +38,27 @@ final class ActionRequestViewController: UIViewController {
         }
     }
     
+    private var newTotal: Int {
+        return Model.countSavedItemsWithoutLoading() + loadCount
+    }
+    
+    private func error(text: String) {
+        statusLabel.isHidden = false
+        statusLabel.text = text
+        spinner.stopAnimating()
+    }
+    
     private func ingest() {
         reset(ingestOnNextAppearance: false) // resets everything
 
-        statusLabel.text = "Adding…"
-        statusLabel.isHidden = false
-		expandButton.isHidden = true
+        showBusy(true)
 		loadCount = extensionContext?.inputItems.count ?? 0
 
 		if loadCount == 0 {
-			statusLabel.text = "There don't seem to be any importable items offered by this app."
-			showDone()
+            error(text: "There don't seem to be any importable items offered by this app.")
 			return
 		}
-
-		Model.reloadDataIfNeeded()
 		
-		let newTotal = Model.drops.count + loadCount
 		if !infiniteMode && newTotal > nonInfiniteItemLimit {
 			// ensure the app wasn't just registered, just in case, before we warn the user
 			reVerifyInfiniteMode()
@@ -63,12 +69,9 @@ final class ActionRequestViewController: UIViewController {
 			imageOffset.constant = -140
 			labelsButton.isHidden = true
 			expandButton.isHidden = false
-			statusLabel.text = "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase."
+            error(text: "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.")
 			return
 		}
-
-		labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
-        expandButton.isHidden = true
 
 		var inputItems = extensionContext?.inputItems as? [NSExtensionItem] ?? []
 
@@ -130,7 +133,6 @@ final class ActionRequestViewController: UIViewController {
 
 	@IBAction private func expandSelected(_ sender: UIButton) {
 
-		let newTotal = Model.drops.count + loadCount
 		let url = URL(string: "gladys://in-app-purchase/\(newTotal)")!
 
 		cancelRequested(cancelButton) // warning: resets model counts from above!
@@ -142,6 +144,15 @@ final class ActionRequestViewController: UIViewController {
 		}
 		_ = responder?.perform(selector, with: url)
 	}
+    
+    private func showBusy(_ busy: Bool) {
+        check.isHidden = busy
+        if busy {
+            spinner.startAnimating()
+        } else {
+            spinner.stopAnimating()
+        }
+    }
 
 	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
 
@@ -159,13 +170,12 @@ final class ActionRequestViewController: UIViewController {
 		}
 
         cancelButton.isEnabled = false
+        showBusy(false)
 
         if PersistedOptions.setLabelsWhenActioning {
-            statusLabel.isHidden = true
             labelsButton.isHidden = false
             showDone()
         } else {
-            statusLabel.text = "Done"
             done()
         }
     }
@@ -175,6 +185,13 @@ final class ActionRequestViewController: UIViewController {
 	}
 
     private func reset(ingestOnNextAppearance: Bool) {
+        statusLabel.isHidden = true
+        expandButton.isHidden = true
+        labelsButton.isHidden = true
+        cancelButton.isEnabled = true
+        labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
+        showBusy(false)
+        
         ingestOnWillAppear = ingestOnNextAppearance
 		newItems.removeAll()
         labelsToApply.removeAll()
@@ -208,9 +225,6 @@ final class ActionRequestViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let destination = segue.destination as? LabelEditorController {
-			if !newItems.isEmpty { // we're not in the process of adding
-				Model.reloadDataIfNeeded()
-			}
 			destination.note = noteToApply
 			destination.selectedLabels = labelsToApply
             destination.completion = { [weak self] newLabels, newNote in
