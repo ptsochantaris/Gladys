@@ -21,7 +21,7 @@ extension CloudManager {
         }
     }
 
-	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 		if !syncSwitchedOn { return }
 
@@ -34,15 +34,15 @@ extension CloudManager {
 				Model.reloadDataIfNeeded()
 			} else if !Model.doneIngesting {
 				log("We'll be syncing in a moment anyway, ignoring the push for now")
-				completionHandler(.newData)
+				completionHandler?(.newData)
 				return
 			}
 			sync(scope: scope) { error in
 				if let error = error {
                     log("Sync from push failed: \(error.localizedDescription)")
-					completionHandler(.failed)
+					completionHandler?(.failed)
 				} else {
-					completionHandler(.newData)
+					completionHandler?(.newData)
 				}
 			}
 		case .public:

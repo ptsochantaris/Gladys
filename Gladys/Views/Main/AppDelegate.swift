@@ -19,11 +19,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		PullState.checkMigrations()
 		CallbackSupport.setupCallbackSupport()
 		IAPManager.shared.start()
-        Model.detectExternalChanges()
-        CloudManager.opportunisticSyncIfNeeded(isStartup: true)
-
         log("Initial reachability status: \(reachability.status.name)")
-                
+        Model.detectExternalChanges()
+        
+        if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+            CloudManager.received(notificationInfo: pushUserInfo, fetchCompletionHandler: nil)
+        } else {
+            CloudManager.opportunisticSyncIfNeeded(isStartup: true)
+        }
+        
 		return true
 	}
     
