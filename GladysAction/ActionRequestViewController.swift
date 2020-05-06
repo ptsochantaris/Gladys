@@ -174,14 +174,23 @@ final class ActionRequestViewController: UIViewController {
             return
 		}
 
-        showBusy(false)
-
         if PersistedOptions.setLabelsWhenActioning {
-            labelsButton.isHidden = false
             navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(signalDone))
-        } else {
-            signalDone()
         }
+        
+        self.showBusy(false)
+        self.check.transform = CGAffineTransform(scaleX: 0.33, y: 0.33)
+        self.view.layoutIfNeeded()
+
+        UIView.animate(withDuration: 0.33, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.check.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }, completion: { _ in
+            if !PersistedOptions.setLabelsWhenActioning {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.signalDone()
+                }
+            }
+        })
     }
 
     private func reset(ingestOnNextAppearance: Bool) {
