@@ -126,21 +126,34 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-g5-P07">
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="RZQ-K6-hXc">
                                             <rect key="frame" x="20" y="15.5" width="280" height="34"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="BYY-3D-u8m" id="fbg-n5-IRa"/>
-                                            </connections>
-                                        </textField>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-g5-P07">
+                                                    <rect key="frame" x="0.0" y="0.0" width="174" height="34"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="BYY-3D-u8m" id="fbg-n5-IRa"/>
+                                                    </connections>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOa-wm-AgD">
+                                                    <rect key="frame" x="194" y="0.0" width="86" height="34"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <state key="normal" title="Add Note..."/>
+                                                    <connections>
+                                                        <segue destination="btk-fG-BLI" kind="show" id="QTU-HX-KTP"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="gCw-g5-P07" secondAttribute="trailing" constant="20" id="BM2-Un-Btp"/>
-                                        <constraint firstItem="gCw-g5-P07" firstAttribute="leading" secondItem="dUm-kQ-MJd" secondAttribute="leading" constant="20" id="FBc-B6-cD6"/>
-                                        <constraint firstItem="gCw-g5-P07" firstAttribute="centerY" secondItem="dUm-kQ-MJd" secondAttribute="centerY" id="Pxt-eK-IEF"/>
+                                        <constraint firstItem="RZQ-K6-hXc" firstAttribute="centerY" secondItem="dUm-kQ-MJd" secondAttribute="centerY" id="FeI-VU-QGk"/>
+                                        <constraint firstAttribute="trailing" secondItem="RZQ-K6-hXc" secondAttribute="trailing" constant="20" id="JNP-EM-Pzm"/>
+                                        <constraint firstItem="RZQ-K6-hXc" firstAttribute="leading" secondItem="dUm-kQ-MJd" secondAttribute="leading" constant="20" id="aOT-QR-aDh"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
@@ -205,13 +218,7 @@
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
                         <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa">
-                        <barButtonItem key="rightBarButtonItem" title="Note" id="dV0-3n-Tfu">
-                            <connections>
-                                <segue destination="btk-fG-BLI" kind="show" identifier="showNotes" id="PCa-ti-UK9"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa"/>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
                         <outlet property="headerLabel" destination="iEP-oB-gY3" id="cAF-Ky-fg6"/>
@@ -244,7 +251,7 @@
             </objects>
             <point key="canvasLocation" x="1133" y="-19"/>
         </scene>
-        <!--Notes-->
+        <!--Note-->
         <scene sceneID="lj1-on-QfM">
             <objects>
                 <viewController id="btk-fG-BLI" customClass="NoteEditorController" customModule="GladysAction" customModuleProvider="target" sceneMemberID="viewController">
@@ -272,7 +279,7 @@
                             <constraint firstAttribute="bottom" secondItem="7gS-75-Jgh" secondAttribute="bottom" id="rep-TJ-nu6"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Notes" id="w3K-qi-Jga"/>
+                    <navigationItem key="navigationItem" title="Note" id="w3K-qi-Jga"/>
                     <connections>
                         <outlet property="textView" destination="7gS-75-Jgh" id="lIK-Qn-yeD"/>
                     </connections>

@@ -8,6 +8,10 @@
 
 import UIKit
 
+extension Notification.Name {
+    static let DoneSelected = Notification.Name("DoneSelected")
+}
+
 final class ActionRequestViewController: UIViewController {
 
 	@IBOutlet private weak var statusLabel: UILabel!
@@ -27,6 +31,7 @@ final class ActionRequestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(done), name: .DoneSelected, object: nil)
         ingest()
     }
 
@@ -169,41 +174,39 @@ final class ActionRequestViewController: UIViewController {
             return
 		}
 
-        cancelButton.isEnabled = false
         showBusy(false)
 
         if PersistedOptions.setLabelsWhenActioning {
             labelsButton.isHidden = false
-            showDone()
+            navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(signalDone))
         } else {
-            done()
+            signalDone()
         }
     }
-
-	private func showDone() {
-		navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
-	}
 
     private func reset(ingestOnNextAppearance: Bool) {
         statusLabel.isHidden = true
         expandButton.isHidden = true
         labelsButton.isHidden = true
-        cancelButton.isEnabled = true
         labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
         showBusy(false)
         
         ingestOnWillAppear = ingestOnNextAppearance
 		newItems.removeAll()
-        labelsToApply.removeAll()
-		noteToApply = ""
+        ActionRequestViewController.labelsToApply.removeAll()
+		ActionRequestViewController.noteToApply = ""
 		Model.reset()
 	}
+    
+    @objc private func signalDone() {
+        NotificationCenter.default.post(name: .DoneSelected, object: nil)
+    }
 
 	@objc private func done() {
         
         for item in newItems {
-            item.labels = labelsToApply
-            item.note = noteToApply
+            item.labels = ActionRequestViewController.labelsToApply
+            item.note = ActionRequestViewController.noteToApply
         }
 
         Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
@@ -220,17 +223,6 @@ final class ActionRequestViewController: UIViewController {
     
 	////////////////////// Labels
 
-    private var labelsToApply = [String]()
-    private var noteToApply = ""
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if let destination = segue.destination as? LabelEditorController {
-			destination.note = noteToApply
-			destination.selectedLabels = labelsToApply
-            destination.completion = { [weak self] newLabels, newNote in
-                self?.labelsToApply = newLabels
-                self?.noteToApply = newNote
-            }
-		}
-	}
+    static var labelsToApply = [String]()
+    static var noteToApply = ""
 }

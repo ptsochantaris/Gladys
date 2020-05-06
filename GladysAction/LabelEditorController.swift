@@ -10,9 +10,6 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
     
     @IBOutlet private weak var spinner: UIActivityIndicatorView!
     
-	var selectedLabels = [String]()
-	var completion: (([String], String) -> Void)?
-
 	var note = ""
 
 	private var allToggles = [String]()
@@ -29,7 +26,19 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
                 self?.updateFilter(nil)
             }
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
+        itemIngested(nil)
 	}
+    
+    @objc private func itemIngested(_ notification: Notification?) {
+        if Model.doneIngesting {
+            navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
+        }
+    }
+    
+    @objc private func done() {
+        NotificationCenter.default.post(name: .DoneSelected, object: nil)
+    }
 
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return min(1, availableToggles.count)
@@ -46,7 +55,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 		cell.labelName.text = toggle
 		cell.accessibilityLabel = toggle
 
-		if selectedLabels.contains(toggle) {
+        if ActionRequestViewController.labelsToApply.contains(toggle) {
 			cell.tick.isHidden = false
 			cell.tick.isHighlighted = true
             cell.labelName.textColor = UIColor.label
@@ -62,10 +71,10 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let toggle = availableToggles[indexPath.row]
-		if let i = selectedLabels.firstIndex(of: toggle) {
-			selectedLabels.remove(at: i)
+		if let i = ActionRequestViewController.labelsToApply.firstIndex(of: toggle) {
+			ActionRequestViewController.labelsToApply.remove(at: i)
 		} else {
-			selectedLabels.append(toggle)
+			ActionRequestViewController.labelsToApply.append(toggle)
 		}
 		tableView.reloadRows(at: [indexPath], with: .none)
 	}
@@ -115,7 +124,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 		if let i = allToggles.firstIndex(of: newTag) {
 			let existingToggle = allToggles[i]
 			let ip = IndexPath(row: i, section: 0)
-			if !selectedLabels.contains(existingToggle) {
+			if !ActionRequestViewController.labelsToApply.contains(existingToggle) {
 				tableView(table, didSelectRowAt: ip)
 			}
 			table.scrollToRow(at: ip, at: .middle, animated: true)
@@ -133,20 +142,5 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 		}
 
 		headerLabel.alpha = 1.0 - min(1, max(0, scrollView.contentOffset.y / 8.0))
-	}
-
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		completion?(selectedLabels, note)
-	}
-
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		super.prepare(for: segue, sender: sender)
-		if let d = segue.destination as? NoteEditorController {
-			d.initialNote = note
-			d.completion = { [weak self] newNote in
-				self?.note = newNote
-			}
-		}
 	}
 }
