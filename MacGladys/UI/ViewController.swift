@@ -480,7 +480,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func resetSearch(andLabels: Bool) {
 		searchBar.stringValue = ""
 		showSearch = false
-		updateSearch()
+        searchPopTimer.push()
 
 		if andLabels {
 			Model.sharedFilter.disableAllLabels()
@@ -501,15 +501,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
+    private lazy var searchPopTimer = {
+        return PopTimer(timeInterval: 0.2) { [weak self] in
+            guard let s = self else { return }
+            let str = s.searchBar.stringValue
+            Model.sharedFilter.filter = str.isEmpty ? nil : str
+            s.updateEmptyView()
+        }
+    }()
+    
 	func controlTextDidChange(_ obj: Notification) {
-		collection.selectionIndexes = []
-		updateSearch()
-	}
-
-	private func updateSearch() {
-		let s = searchBar.stringValue
-		Model.sharedFilter.filter = s.isEmpty ? nil : s
-        updateEmptyView()
+        collection.selectionIndexes = []
+        searchPopTimer.push()
 	}
 
     func touchedItem(_ item: ArchivedItem) {
@@ -567,7 +570,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func startSearch(initialText: String) {
 		showSearch = true
 		searchBar.stringValue = initialText
-		updateSearch()
+        searchPopTimer.push()
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
