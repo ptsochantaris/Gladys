@@ -444,9 +444,9 @@ extension Component {
 
 		} else if typeIdentifier == "public.vcard" {
 			if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
-				let name = [person.givenName, person.middleName, person.familyName].filter({ !$0.isEmpty }).joined(separator: " ")
-				let job = [person.jobTitle, person.organizationName].filter({ !$0.isEmpty }).joined(separator: ", ")
-				accessoryTitle = [name, job].filter({ !$0.isEmpty }).joined(separator: " - ")
+				let name = [person.givenName, person.middleName, person.familyName].filter { !$0.isEmpty }.joined(separator: " ")
+				let job = [person.jobTitle, person.organizationName].filter { !$0.isEmpty }.joined(separator: ", ")
+				accessoryTitle = [name, job].filter { !$0.isEmpty }.joined(separator: " - ")
 
 				if let imageData = person.imageData, let img = IMAGE(data: imageData) {
 					setDisplayIcon(img, 9, .circle)

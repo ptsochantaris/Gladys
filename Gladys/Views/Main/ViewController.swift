@@ -216,14 +216,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         coordinator.session.progressIndicatorStyle = .none
         
         var needsPost = false
-        var needsSaveIndex = false
         var needsFullSave = false
+        var needsSaveIndex = false
                 
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: filter.filteredDrops.count, section: 0)
         
-        let dropItems = coordinator.items.map({ $0.dragItem })
+        let dragItems = coordinator.items.map { $0.dragItem }
         
-        for dragItem in dropItems {
+        for dragItem in dragItems {
             
             if let existingItem = dragItem.localObject as? ArchivedItem {
                 
@@ -265,7 +265,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Model.saveIndexOnly()
         }
         
-        for dragItem in dropItems {
+        for dragItem in dragItems {
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
         }
 
