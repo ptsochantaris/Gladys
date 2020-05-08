@@ -298,7 +298,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	func resetForDragEntry(session: UIDropSession) {
 		if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: [GladysFileUTI, "public.zip-archive"]) {
 			dismissAnyPopOver()
-		} else if (componentDropActiveFromDetailView == nil && currentDetailView != nil) || currentLabelSelector != nil {
+        } else if (Singleton.shared.componentDropActiveFromDetailView == nil && currentDetailView != nil) || currentLabelSelector != nil {
 			dismissAnyPopOver()
 		}
 	}
@@ -346,7 +346,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3), to: myNavView)
 			p.delegate = self
 
-			if componentDropActiveFromDetailView != nil {
+			if Singleton.shared.componentDropActiveFromDetailView != nil {
 				trackCellForAWhile(cell, for: p, in: myNavView)
 			}
 
@@ -412,7 +412,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-		if collectionView.hasActiveDrop && componentDropActiveFromDetailView == nil { return }
+		if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return }
 
 		let item = filter.filteredDrops[indexPath.item]
 		if item.shouldDisplayLoading {

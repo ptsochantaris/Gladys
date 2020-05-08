@@ -14,13 +14,7 @@ import CloudKit
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-		UIApplication.shared.applicationIconBadgeNumber = 0
-        Model.beginMonitoringChanges() // will reload data as well
-		PullState.checkMigrations()
-		CallbackSupport.setupCallbackSupport()
-		IAPManager.shared.start()
-        log("Initial reachability status: \(reachability.status.name)")
-        Model.detectExternalChanges()
+        Singleton.shared.setup()
         
         if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
             CloudManager.received(notificationInfo: pushUserInfo, fetchCompletionHandler: nil)

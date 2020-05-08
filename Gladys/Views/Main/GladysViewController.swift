@@ -243,7 +243,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     
     private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
-            if SceneDelegate.openCount > 1 {
+            if Singleton.shared.openCount > 1 {
                 doneButtonLocation = .right
                 windowButtonLocation = .none
             } else {

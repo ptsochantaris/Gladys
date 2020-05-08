@@ -523,14 +523,14 @@ final class DetailController: GladysViewController,
 
 	func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
 		if session.localContext as? String == "typeItem" {
-			componentDropActiveFromDetailView = nil
+			Singleton.shared.componentDropActiveFromDetailView = nil
 		}
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
 		if let session = session.localDragSession {
 			if session.localContext as? String == "typeItem" {
-				componentDropActiveFromDetailView = self
+				Singleton.shared.componentDropActiveFromDetailView = self
 			}
             if !isAccessoryWindow {
                 done()
