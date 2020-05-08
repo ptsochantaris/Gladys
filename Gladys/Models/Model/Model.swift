@@ -1,5 +1,14 @@
 import Foundation
 
+// optmisation:
+// create an array subclass which
+// contains an index of UUIDs ([UUID -> Index] perhaps)
+// overrides append/insert/delete updating the index
+// is subscriptable by UUID
+
+// bug? sync seems to run without having stored DB/zone token after first sync
+
+
 final class Model {
 
 	static var brokenMode = false
@@ -173,8 +182,11 @@ final class Model {
 	}()
 
 	static func item(uuid: String) -> ArchivedItem? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.first { $0.uuid == uuidData }
+        if let uuidData = UUID(uuidString: uuid) {
+            return item(uuid: uuidData)
+        } else {
+            return nil
+        }
 	}
 
 	static func item(uuid: UUID) -> ArchivedItem? {
@@ -185,9 +197,21 @@ final class Model {
 		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
+    static func component(uuid: UUID) -> Component? {
+        for d in drops {
+            if let c = d.components.first(where: { $0.uuid == uuid }) {
+                return c
+            }
+        }
+        return nil
+    }
+    
 	static func component(uuid: String) -> Component? {
-		let uuidData = UUID(uuidString: uuid)
-		return drops.compactMap { $0.components.first { $0.uuid == uuidData } }.first
+        if let uuidData = UUID(uuidString: uuid) {
+            return component(uuid: uuidData)
+        } else {
+            return nil
+        }
 	}
 
 	static func modificationDate(for url: URL) -> Date? {
