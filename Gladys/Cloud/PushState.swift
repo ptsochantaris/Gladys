@@ -24,7 +24,7 @@ final class PushState {
 		var _dropsToPush = 0
 		var _dataItemsToPush = 0
 		var _uuid2progress = [String: Progress]()
-		var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
+		var _payloadsToPush = drops.all.compactMap { item -> [CKRecord]? in
 			guard let itemRecord = item.populatedCloudKitRecord else { return nil }
 			if itemRecord.recordID.zoneID != zoneId {
 				return nil
@@ -67,7 +67,7 @@ final class PushState {
 		}.bunch(maxSize: 100)
 
 		if zoneId == privateZoneId {
-			currentUUIDSequence = drops.map { $0.uuid.uuidString }
+			currentUUIDSequence = drops.all.map { $0.uuid.uuidString }
 			if PushState.sequenceNeedsUpload(currentUUIDSequence) {
 
 				var sequenceToSend: [String]?

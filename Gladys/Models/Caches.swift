@@ -35,12 +35,7 @@ let cloudKitRecordCache = NSCache<NSUUID, CKRecordCacheEntry>()
 let cloudKitShareCache = NSCache<NSUUID, CKShareCacheEntry>()
 
 func clearCaches() {
-	for drop in Model.drops {
-		for component in drop.components {
-			component.clearCachedFields()
-		}
-	}
-
+    Model.drops.clearCaches()
 	imageCache.removeAllObjects()
 	folderUrlCache.removeAllObjects()
 	cloudKitDataPathCache.removeAllObjects()

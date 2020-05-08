@@ -1,15 +1,118 @@
 import Foundation
 
-// optmisation:
-// create an array subclass which
-// contains an index of UUIDs ([UUID -> Index] perhaps)
-// overrides append/insert/delete updating the index
-// is subscriptable by UUID
+final class DropArray {
+    
+    private var uuidindex: [UUID: Int]?
+    
+    var all: ContiguousArray<ArchivedItem>
+            
+    var isEmpty: Bool {
+        return all.isEmpty
+    }
+    
+    var count: Int {
+        return all.count
+    }
+    
+    func append(_ newElement: ArchivedItem) {
+        uuidindex = nil
+        all.append(newElement)
+    }
+    
+    func replaceItem(at index: Int, with item: ArchivedItem) {
+        uuidindex = nil
+        all[index] = item
+    }
+    
+    private func rebuildIndexIfNeeded() {
+        if uuidindex == nil {
+            var count = -1
+            uuidindex = Dictionary(uniqueKeysWithValues: all.map { count += 1; return ($0.uuid, count) })
+            log("Rebuilt drop index")
+        }
+    }
+    
+    func firstIndexOfItem(with uuid: UUID) -> Int? {
+        rebuildIndexIfNeeded()
+        return uuidindex?[uuid]
+    }
+
+    func firstItem(with uuid: UUID) -> ArchivedItem? {
+        if let i = firstIndexOfItem(with: uuid) {
+            return all[i]
+        }
+        return nil
+    }
+    
+    func firstIndexOfItem(with uuid: String) -> Int? {
+        if let uuidData = UUID(uuidString: uuid) {
+            return firstIndexOfItem(with: uuidData)
+        }
+        return nil
+    }
+    
+    func contains(uuid: UUID) -> Bool {
+        rebuildIndexIfNeeded()
+        return uuidindex?[uuid] != nil
+    }
+
+    func sort(by areInIncreasingOrder: (ArchivedItem, ArchivedItem) throws -> Bool) rethrows {
+        uuidindex = nil
+        try all.sort(by: areInIncreasingOrder)
+    }
+    
+    func append<S>(contentsOf newElements: S) where ArchivedItem == S.Element, S: Sequence {
+        uuidindex = nil
+        all.append(contentsOf: newElements)
+    }
+
+    func insert<S>(contentsOf newElements: S, at index: Int) where ArchivedItem == S.Element, S: Collection {
+        uuidindex = nil
+        all.insert(contentsOf: newElements, at: index)
+    }
+
+    @discardableResult
+    func remove(at index: Int) -> ArchivedItem {
+        uuidindex = nil
+        return all.remove(at: index)
+    }
+
+    func insert(_ newElement: ArchivedItem, at i: Int) {
+        uuidindex = nil
+        all.insert(newElement, at: i)
+    }
+    
+    init() {
+        all = ContiguousArray<ArchivedItem>()
+    }
+    
+    init(existingItems: ContiguousArray<ArchivedItem>) {
+        all = existingItems
+    }
+    
+    func removeAll(keepingCapacity: Bool) {
+        uuidindex = nil
+        all.removeAll(keepingCapacity: keepingCapacity)
+    }
+    
+    func removeAll(where shouldBeRemoved: (ArchivedItem) throws -> Bool) rethrows {
+        uuidindex = nil
+        try all.removeAll(where: shouldBeRemoved)
+    }
+        
+    func clearCaches() {
+        for drop in all {
+            for component in drop.components {
+                component.clearCachedFields()
+            }
+        }
+    }
+}
 
 final class Model {
 
 	static var brokenMode = false
-	static var drops = ContiguousArray<ArchivedItem>()
+	static var drops = DropArray()
 	static var dataFileLastModified = Date.distantPast
 
 	private static var isStarted = false
@@ -47,7 +150,7 @@ final class Model {
 		coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 
 			if !FileManager.default.fileExists(atPath: url.path) {
-				drops = []
+                drops.removeAll(keepingCapacity: false)
 				log("Starting fresh store")
 				return
 			}
@@ -89,7 +192,7 @@ final class Model {
                         }
                     }
                     
-					drops = newDrops
+					drops = DropArray(existingItems: newDrops)
 					log("Load time: \(-start.timeIntervalSinceNow) seconds")
 				} else {
 					log("No need to reload data")
@@ -156,11 +259,11 @@ final class Model {
 	}
 
     static var doneIngesting: Bool {
-        return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
+        return !drops.all.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
     }
 
 	static var visibleDrops: ContiguousArray<ArchivedItem> {
-		return drops.filter { $0.isVisible }
+		return drops.all.filter { $0.isVisible }
 	}
 
 	static let itemsDirectoryUrl: URL = {
@@ -187,15 +290,15 @@ final class Model {
 	}
 
 	static func item(uuid: UUID) -> ArchivedItem? {
-		return drops.first { $0.uuid == uuid }
+        return drops.firstItem(with: uuid)
 	}
 
 	static func item(shareId: String) -> ArchivedItem? {
-		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
+		return drops.all.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
     static func component(uuid: UUID) -> Component? {
-        for d in drops {
+        for d in drops.all {
             if let c = d.components.first(where: { $0.uuid == uuid }) {
                 return c
             }

@@ -530,20 +530,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func highlightItem(with request: HighlightRequest) {
 		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
-        if let item = Model.item(uuid: request.uuid) {
-			if let i = Model.drops.firstIndex(of: item) {
-				let ip = IndexPath(item: i, section: 0)
-				collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
-				collection.selectionIndexes = IndexSet(integer: i)
-                if request.open {
-					info(nil)
-                } else if request.preview {
-					if !(previewPanel?.isVisible ?? false) {
-						ViewController.shared.toggleQuickLookPreviewPanel(self)
-					}
-				}
-			}
-		}
+        if let i = Model.drops.firstIndexOfItem(with: request.uuid) {
+            let ip = IndexPath(item: i, section: 0)
+            collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
+            collection.selectionIndexes = IndexSet(integer: i)
+            if request.open {
+                info(nil)
+            } else if request.preview {
+                if !(previewPanel?.isVisible ?? false) {
+                    ViewController.shared.toggleQuickLookPreviewPanel(self)
+                }
+            }
+        }
 	}
 
 	private var showSearch: Bool = false {
@@ -613,8 +611,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			}
 
 			var destinationIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
-			if destinationIndex >= Model.drops.count {
-				destinationIndex = Model.drops.count - 1
+            let count = Model.drops.count
+			if destinationIndex >= count {
+				destinationIndex = count - 1
 			}
 
 			var indexPath = indexPath
@@ -624,7 +623,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.sharedFilter.filteredDrops[draggingIndexPath.item]
-				let sourceIndex = Model.drops.firstIndex(of: sourceItem)!
+                let sourceIndex = Model.drops.firstIndexOfItem(with: sourceItem.uuid)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
 				collection.deselectAll(nil)
@@ -720,7 +719,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
             let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
             Model.sharedFilter.updateFilter(signalUpdate: false)
-            if !Model.drops.contains(where: { !$0.shouldDisplayLoading }) {
+            if !Model.drops.all.contains(where: { !$0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -1007,7 +1006,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func duplicateItem(_ sender: Any?) {
 		for item in collection.actionableSelectedItems {
-			if Model.drops.contains(item) { // sanity check
+            if Model.drops.contains(uuid: item.uuid) { // sanity check
 				Model.duplicate(item: item)
 			}
 		}

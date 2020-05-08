@@ -229,7 +229,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
-                if let modelSourceIndex = Model.drops.firstIndex(of: existingItem) {
+                if let modelSourceIndex = Model.drops.firstIndexOfItem(with: existingItem.uuid) {
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
                     Model.drops.insert(itemToMove, at: destinationIndexPath.item)
                     needsSaveIndex = true
@@ -714,7 +714,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
-            if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
+            if !Model.drops.isEmpty && Model.drops.all.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -775,7 +775,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             editButton.isEnabled = true
         }
 
-		selectedItems = selectedItems?.filter { uuid in Model.drops.contains { $0.uuid == uuid } }
+        selectedItems = selectedItems?.filter { Model.drops.contains(uuid: $0) }
 
 		let selectedCount = selectedItems?.count ?? 0
 		let someSelected = selectedCount > 0
@@ -1350,7 +1350,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		guard let candidates = selectedItems, !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-		let itemsToDelete = Model.drops.filter { candidateSet.contains($0.uuid) }
+		let itemsToDelete = Model.drops.all.filter { candidateSet.contains($0.uuid) }
 		if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
 			Model.delete(items: itemsToDelete)
@@ -1486,7 +1486,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			dismissAnyPopOverOrModal {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
-        } else if let index = Model.drops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
+        } else if let index = Model.drops.firstIndexOfItem(with: request.uuid) {
             self.resetSearch(andLabels: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
