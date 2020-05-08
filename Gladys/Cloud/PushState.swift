@@ -87,7 +87,8 @@ final class PushState {
 				}
 
 				if let sequenceToSend = sequenceToSend {
-					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: CloudManager.RecordType.positionList, recordID: CKRecord.ID(recordName: CloudManager.RecordType.positionList, zoneID: zoneId))
+                    let recordType = CloudManager.RecordType.positionList.rawValue
+					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: zoneId))
 					record["positionList"] = sequenceToSend as NSArray
 					if _payloadsToPush.isEmpty {
                         _payloadsToPush.append([record])
@@ -195,7 +196,7 @@ final class PushState {
 					}
 					for record in updatedRecords ?? [] {
 						let itemUUID = record.recordID.recordName
-						if itemUUID == CloudManager.RecordType.positionList {
+                        if itemUUID == CloudManager.RecordType.positionList.rawValue {
 							CloudManager.uuidSequence = self.currentUUIDSequence
 							CloudManager.uuidSequenceRecord = record
 						} else if let item = Model.item(uuid: itemUUID) {

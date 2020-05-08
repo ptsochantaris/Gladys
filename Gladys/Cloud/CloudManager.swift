@@ -50,12 +50,12 @@ extension Error {
 
 final class CloudManager {
 
-	struct RecordType {
-		static let item = "ArchivedDropItem"
-		static let component = "ArchivedDropItemType"
-		static let positionList = "PositionList"
-		static let share = "cloudkit.share"
-        static let extensionUpdate = "ExtensionUpdate"
+    enum RecordType: String {
+		case item = "ArchivedDropItem"
+		case component = "ArchivedDropItemType"
+		case positionList = "PositionList"
+		case share = "cloudkit.share"
+        case extensionUpdate = "ExtensionUpdate"
 	}
 	
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")

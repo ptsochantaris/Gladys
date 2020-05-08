@@ -42,7 +42,7 @@ extension ArchivedItem {
 		guard needsCloudPush && !needsDeletion && goodToSave else { return nil }
 
 		let record = cloudKitRecord ??
-			CKRecord(recordType: CloudManager.RecordType.item,
+            CKRecord(recordType: CloudManager.RecordType.item.rawValue,
 			         recordID: CKRecord.ID(recordName: uuid.uuidString, zoneID: privateZoneId))
 
         record.setValuesForKeys([

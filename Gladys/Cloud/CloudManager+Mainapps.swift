@@ -458,7 +458,7 @@ extension CloudManager {
     }
 
     static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?) -> Void) {
-        let positionListId = CKRecord.ID(recordName: RecordType.positionList, zoneID: zone.zoneID)
+        let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
         let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
         fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
             DispatchQueue.main.async {
@@ -499,10 +499,10 @@ extension CloudManager {
         perform(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
     }
 
-    static private func recordDeleted(recordId: CKRecord.ID, recordType: String, stats: PullState) {
+    static private func recordDeleted(recordId: CKRecord.ID, recordType: RecordType, stats: PullState) {
         let itemUUID = recordId.recordName
         switch recordType {
-        case RecordType.item:
+        case .item:
             if let item = Model.item(uuid: itemUUID) {
                 if item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
@@ -516,7 +516,7 @@ extension CloudManager {
             } else {
                 log("Received delete for non-existent item record \(itemUUID), ignoring")
             }
-        case RecordType.component:
+        case .component:
             if let component = Model.component(uuid: itemUUID) {
                 if component.parentZone != recordId.zoneID {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
@@ -529,7 +529,7 @@ extension CloudManager {
             } else {
                 log("Received delete for non-existent component record \(itemUUID), ignoring")
             }
-        case RecordType.share:
+        case .share:
             if let associatedItem = Model.item(shareId: itemUUID) {
                 if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
                     log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
@@ -541,17 +541,19 @@ extension CloudManager {
             } else {
                 log("Received delete for non-existent share record \(itemUUID), ignoring")
             }
-        default:
-            log("Warning: Received deletion for unknown record type: \(recordType)")
+        case .positionList:
+            log("Positionlist record deletion detected")
+        case .extensionUpdate:
+            log("Extension record deletion detected")
         }
     }
 
-    static private func recordChanged(record: CKRecord, stats: PullState) {
+    static private func recordChanged(record: CKRecord, recordType: RecordType, stats: PullState) {
         let recordID = record.recordID
         let zoneID = recordID.zoneID
         let recordUUID = recordID.recordName
-        switch record.recordType {
-        case RecordType.item:
+        switch recordType {
+        case .item:
             if let item = Model.item(uuid: recordUUID) {
                 if item.parentZone != zoneID {
                     log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
@@ -595,7 +597,7 @@ extension CloudManager {
                 stats.newDropCount += 1
             }
             
-        case RecordType.component:
+        case .component:
             if let typeItem = Model.component(uuid: recordUUID) {
                 if typeItem.parentZone != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
@@ -625,7 +627,7 @@ extension CloudManager {
                 log("Received new type item (\(recordUUID)) to link to upcoming new item")
             }
             
-        case RecordType.positionList:
+        case .positionList:
             let change = RecordChangeCheck(localRecord: uuidSequenceRecord, remoteRecord: record)
             if change == .changed || lastSyncCompletion == .distantPast {
                 log("Received an updated position list record")
@@ -639,7 +641,7 @@ extension CloudManager {
                 log("Received non-updated position list record")
             }
             
-        case RecordType.share:
+        case .share:
             if let share = record as? CKShare {
                 if let associatedItem = Model.item(shareId: recordUUID) {
                     if associatedItem.parentZone != zoneID {
@@ -655,12 +657,9 @@ extension CloudManager {
                 }
             }
             
-        case RecordType.extensionUpdate:
-            log("Received an extension update notification")
+        case .extensionUpdate:
+            log("Received an extension update record")
             PersistedOptions.extensionRequestedSync = false
-            
-        default:
-            log("Warning: Received record update for unkown type: \(record.recordType)")
         }
     }
 
@@ -696,14 +695,14 @@ extension CloudManager {
             group.leave()
         }
 
-        if scope == nil || scope == .shared {
-            group.enter()
-            fetchDBChanges(database: container.sharedCloudDatabase, stats: stats, completion: changeCallback)
-        }
-
         if scope == nil || scope == .private {
             group.enter()
             fetchDBChanges(database: container.privateCloudDatabase, stats: stats, completion: changeCallback)
+        }
+
+        if scope == nil || scope == .shared {
+            group.enter()
+            fetchDBChanges(database: container.sharedCloudDatabase, stats: stats, completion: changeCallback)
         }
 
         group.notify(queue: DispatchQueue.main) {
@@ -898,13 +897,17 @@ extension CloudManager {
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: configurationsByRecordZoneID)
         #endif
         operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-            DispatchQueue.main.sync {
-                recordDeleted(recordId: recordId, recordType: recordType, stats: stats)
+            if let type = RecordType(rawValue: recordType) {
+                DispatchQueue.main.async {
+                    recordDeleted(recordId: recordId, recordType: type, stats: stats)
+                }
             }
         }
         operation.recordChangedBlock = { record in
-            DispatchQueue.main.sync {
-                recordChanged(record: record, stats: stats)
+            if let type = RecordType(rawValue: record.recordType) {
+                DispatchQueue.main.async {
+                    recordChanged(record: record, recordType: type, stats: stats)
+                }
             }
         }
         operation.recordZoneFetchCompletionBlock = { zoneId, token, _, _, error in

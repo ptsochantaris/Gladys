@@ -18,7 +18,8 @@ extension CloudManager {
         let deviceUUID = "\(getDeviceId().base64EncodedString())/\(UUID().uuidString)"
         log("Updating extension update record: \(deviceUUID)")
 
-        let updateRecord = CKRecord(recordType: RecordType.extensionUpdate, recordID: CKRecord.ID(recordName: RecordType.extensionUpdate, zoneID: privateZoneId))
+        let recordType = RecordType.extensionUpdate.rawValue
+        let updateRecord = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: privateZoneId))
         updateRecord.setObject(deviceUUID as NSString, forKey: "deviceUUID")
 
         let operation = CKModifyRecordsOperation(recordsToSave: [updateRecord], recordIDsToDelete: nil)
