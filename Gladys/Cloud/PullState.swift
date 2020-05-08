@@ -32,7 +32,7 @@ final class PullState {
 		}
 	}
 
-	func processChanges(commitTokens: Bool) {
+    func processChanges(commitTokens: Bool, completion: @escaping () -> Void) {
 		CloudManager.syncProgressString = "Updating…"
 		log("Changes fetch complete, processing")
 
@@ -54,10 +54,12 @@ final class PullState {
 			if commitTokens {
 				Model.queueNextSaveCallback {
 					self.commitNewTokens()
+                    completion()
 				}
 			}
 			Model.saveIsDueToSyncFetch = true
 			Model.save()
+            
 		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
@@ -67,11 +69,14 @@ final class PullState {
 			if commitTokens {
 				commitNewTokens()
 			}
+            completion()
+            
 		} else {
 			log("No updates available")
 			if commitTokens {
 				commitNewTokens()
 			}
+            completion()
 		}
 	}
 

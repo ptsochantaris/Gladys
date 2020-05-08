@@ -20,7 +20,7 @@ extension CloudManager {
     
     static let privateDatabaseSubscriptionId = "private-changes"
     static let sharedDatabaseSubscriptionId = "shared-changes"
-    static var syncDirty = false
+    private static var syncDirty = false
     
     private static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
@@ -50,7 +50,7 @@ extension CloudManager {
     }
 
     @discardableResult
-    static func sendUpdatesUp(completion: @escaping (Error?) -> Void) -> Progress? {
+    private static func sendUpdatesUp(completion: @escaping (Error?) -> Void) -> Progress? {
         if !syncSwitchedOn {
             completion(nil)
             return nil
@@ -708,12 +708,14 @@ extension CloudManager {
         group.notify(queue: DispatchQueue.main) {
             if finalError == nil && shouldCommitTokens {
                 fetchMissingShareRecords { error in
-                    stats.processChanges(commitTokens: shouldCommitTokens)
-                    completion(error)
+                    stats.processChanges(commitTokens: shouldCommitTokens) {
+                        completion(error)
+                    }
                 }
             } else {
-                stats.processChanges(commitTokens: shouldCommitTokens)
-                completion(finalError)
+                stats.processChanges(commitTokens: shouldCommitTokens) {
+                    completion(finalError)
+                }
             }
         }
     }
@@ -1115,26 +1117,15 @@ extension CloudManager {
         syncing = true
         syncDirty = false
 
-        func done(_ error: Error?) {
-            syncing = false
-            if let e = error {
-                log("Sync failure: \(e.finalDescription)")
-            }
-            completion(error)
-            #if os(iOS)
-            BackgroundTask.unregisterForBackground()
-            #endif
-        }
-
         sendUpdatesUp { error in
             if let error = error {
-                done(error)
+                attemptSyncDone(error: error, completion: completion)
                 return
             }
 
             fetchDatabaseChanges(scope: scope) { error in
                 if let error = error {
-                    done(error)
+                    attemptSyncDone(error: error, completion: completion)
                 } else if syncDirty {
                     attemptSync(scope: nil, force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
                     #if os(iOS)
@@ -1142,10 +1133,21 @@ extension CloudManager {
                     #endif
                 } else {
                     lastSyncCompletion = Date()
-                    done(nil)
+                    attemptSyncDone(error: nil, completion: completion)
                 }
             }
         }
+    }
+    
+    private static func attemptSyncDone(error: Error?, completion: @escaping (Error?) -> Void) {
+        syncing = false
+        if let e = error {
+            log("Sync failure: \(e.finalDescription)")
+        }
+        completion(error)
+        #if os(iOS)
+        BackgroundTask.unregisterForBackground()
+        #endif
     }
 
     static func apnsUpdate(_ newToken: Data?) {

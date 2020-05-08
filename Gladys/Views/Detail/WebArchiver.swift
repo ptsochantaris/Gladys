@@ -166,7 +166,10 @@ final class WebArchiver {
 			log("Investigating possible HTML title from this URL: \(url.absoluteString)")
 
 			fetch(url, method: "HEAD") { _, response, error in
-				if let response = response as? HTTPURLResponse {
+                if let error = error {
+                    log("Error while investigating URL: \(error.finalDescription)")
+                    completion(nil, nil, nil, false)
+                } else if let response = response as? HTTPURLResponse {
 					if let type = response.mimeType, type.hasPrefix("text/html") {
 						log("Content for this is HTML, will try to fetch title")
 						self.fetchWebPreview(for: url, testing: false, completion: completion)
@@ -174,10 +177,6 @@ final class WebArchiver {
 						log("Content for this isn't HTML, never mind")
 						completion(nil, nil, nil, false)
 					}
-				}
-				if let error = error {
-					log("Error while investigating URL: \(error.finalDescription)")
-					completion(nil, nil, nil, false)
 				}
 			}
 

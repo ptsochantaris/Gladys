@@ -6,9 +6,6 @@ import Foundation
 // overrides append/insert/delete updating the index
 // is subscriptable by UUID
 
-// bug? sync seems to run without having stored DB/zone token after first sync
-
-
 final class Model {
 
 	static var brokenMode = false
