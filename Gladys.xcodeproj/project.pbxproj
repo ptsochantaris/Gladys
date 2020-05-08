@@ -46,6 +46,13 @@
 		16081003242D72AA00E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
 		16081004242D72C200E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
 		1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
+		160B5BF524659965009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BF624659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BF724659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BF82465998A009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BF92465998C009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BFA2465998F009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
+		160B5BFB2465998F009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */; };
 		161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */; };
@@ -595,6 +602,7 @@
 		160707A11F8A3915003B856A /* DataInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInspector.swift; sourceTree = "<group>"; };
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
 		16080FFF242D726800E19FCE /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "openssl-xcframeworks/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
+		160B5BF424659965009E2404 /* DropArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropArray.swift; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItem.swift; sourceTree = "<group>"; };
 		161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+iOS.swift"; sourceTree = "<group>"; };
@@ -1022,6 +1030,7 @@
 				166B638F236A451F00115AC3 /* FileMonitor.swift */,
 				165847052376CC2400666B7B /* Model+Siri.swift */,
 				165847082376EE4A00666B7B /* Model+Importing.swift */,
+				160B5BF424659965009E2404 /* DropArray.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2179,6 +2188,7 @@
 				16559C9120A4CC55006C281D /* Global.swift in Sources */,
 				16C3A2D920AF770000A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
+				160B5BFB2465998F009E2404 /* DropArray.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */,
 				16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */,
@@ -2235,6 +2245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				160B5BF624659989009E2404 /* DropArray.swift in Sources */,
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
 				1605050523784961002755A2 /* Notifications.swift in Sources */,
 				16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */,
@@ -2293,6 +2304,7 @@
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16CD7D7420A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */,
+				160B5BF724659989009E2404 /* DropArray.swift in Sources */,
 				1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */,
 				16CD7D9320A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
@@ -2337,6 +2349,7 @@
 				1602F32E2030E6310036E2B0 /* Data+Extensions.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedItem.swift in Sources */,
 				16CD7D8420A10AF10039E6C2 /* Component+Common.swift in Sources */,
+				160B5BFA2465998F009E2404 /* DropArray.swift in Sources */,
 				165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				16559C9020A4CC55006C281D /* Global.swift in Sources */,
@@ -2360,6 +2373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				160B5BF524659965009E2404 /* DropArray.swift in Sources */,
 				16CD7D7320A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */,
@@ -2497,6 +2511,7 @@
 				16969BAF1FB0E69C007B2F77 /* Types.swift in Sources */,
 				16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
+				160B5BF82465998A009E2404 /* DropArray.swift in Sources */,
 				166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16906A9723C8C0C700D6C177 /* Component+iOS.swift in Sources */,
 				1602F3292030E5FA0036E2B0 /* UIImage+Extensions.swift in Sources */,
@@ -2534,6 +2549,7 @@
 				16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */,
 				16D984A72160CC5500D9D51C /* Component+Common.swift in Sources */,
 				16D984A42160CC3900D9D51C /* Component.swift in Sources */,
+				160B5BF92465998C009E2404 /* DropArray.swift in Sources */,
 				1661B2CA245E264800BE888E /* CloudManager.swift in Sources */,
 				16D984A62160CC4C00D9D51C /* ArchivedItem+Common.swift in Sources */,
 				16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */,
