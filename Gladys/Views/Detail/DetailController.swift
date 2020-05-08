@@ -6,7 +6,7 @@ final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
 	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
 
-	var item: ArchivedItem!
+    var item: ArchivedItem!
 
 	private var showTypeDetails = false
 
@@ -45,7 +45,9 @@ final class DetailController: GladysViewController,
 	}
     
     @objc private func dataUpdate(_ notification: Notification) {
-        if let uuid = item?.uuid, let removedUUIDs = (notification.object as? [AnyHashable: Any])?["removed"] as? Set<UUID>, removedUUIDs.contains(uuid) {
+        if item == nil || item?.needsDeletion == true {
+            done()
+        } else if let uuid = item?.uuid, let removedUUIDs = (notification.object as? [AnyHashable: Any])?["removed"] as? Set<UUID>, removedUUIDs.contains(uuid) {
             done()
         } else {
             updateUI()
@@ -68,7 +70,7 @@ final class DetailController: GladysViewController,
         
 		// second pass, ensure item is fresh
 		item = Model.item(uuid: item.uuid)
-		if item == nil {
+        if item == nil || item?.needsDeletion == true {
 			done()
 		} else {
             isReadWrite = item.shareMode != .elsewhereReadOnly
@@ -168,6 +170,9 @@ final class DetailController: GladysViewController,
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {
+        if item == nil || item?.needsDeletion == true {
+            return 0
+        }
         return item.components.isEmpty ? 2 : 3
 	}
 

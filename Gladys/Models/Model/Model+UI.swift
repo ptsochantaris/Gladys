@@ -169,7 +169,8 @@ extension UISceneSession {
 
 extension UIView {
     var associatedFilter: ModelFilterContext? {
-        return window?.windowScene?.session.associatedFilter
+        let w = (self as? UIWindow) ?? window
+        return w?.windowScene?.session.associatedFilter
     }
 }
 

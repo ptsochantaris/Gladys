@@ -161,7 +161,11 @@ final class MirrorManager {
 
 extension ArchivedItem {
     fileprivate var fileMirrorPath: String {
-        var base = MirrorManager.mirrorBase.appendingPathComponent(displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)).path
+        var name = displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)
+        if name.isEmpty {
+            name = uuid.uuidString
+        }
+        var base = MirrorManager.mirrorBase.appendingPathComponent(name).path
         if components.count == 1, let item = components.first {
             if let ext = item.fileExtension, !base.hasSuffix("." + ext) {
                 base += "." + ext

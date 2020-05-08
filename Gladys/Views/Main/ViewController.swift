@@ -11,7 +11,7 @@ extension UIKeyCommand {
 }
 
 var currentWindow: UIWindow? {
-    return UIApplication.shared.connectedScenes.filter({ $0.activationState != .background }).compactMap({ ($0 as? UIWindowScene)?.windows.first }).lazy.first
+    return UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
 }
 
 @discardableResult
