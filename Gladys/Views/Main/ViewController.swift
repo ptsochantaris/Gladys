@@ -1032,14 +1032,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-        guard let uuid = configuration.identifier as? UUID, let item = Model.item(uuid: uuid), item.canPreview else {
-            animator.preferredCommitStyle = .dismiss
-            return
+        guard
+            let uuidString = configuration.identifier as? String,
+            let uuid = uuidString.split(separator: "/").first,
+            let item = Model.item(uuid: String(uuid)),
+            item.canPreview else {
+                animator.preferredCommitStyle = .dismiss
+                return
         }
         noteLastActioned(item: item)
         animator.preferredCommitStyle = .pop
-        animator.addAnimations {
-            if let index = self.filter.filteredDrops.firstIndex(of: item), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+        if let index = self.filter.filteredDrops.firstIndex(of: item), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+            animator.addCompletion {
                 item.tryPreview(in: self, from: cell, forceFullscreen: false)
             }
         }
@@ -1230,8 +1234,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if UIAccessibility.isVoiceOverRunning,
-            let uuid = configuration.identifier as? UUID,
-            let item = Model.item(uuid: uuid),
+            let uuidString = configuration.identifier as? String,
+            let uuid = uuidString.split(separator: "/").first,
+            let item = Model.item(uuid: String(uuid)),
             let index = filter.filteredDrops.firstIndex(of: item),
             let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
