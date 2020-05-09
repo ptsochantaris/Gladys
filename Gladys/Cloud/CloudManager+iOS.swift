@@ -11,13 +11,20 @@ import UIKit
 
 extension CloudManager {
 
-    static var onlySyncOverWiFi: Bool {
+    // optimise component lookups
+    
+    enum SyncPermissionContext: Int {
+        case always, wifiOnly, manualOnly
+    }
+    
+    static var syncContextSetting: SyncPermissionContext {
         get {
-            return PersistedOptions.defaults.bool(forKey: "onlySyncOverWiFi")
+            let i = PersistedOptions.defaults.integer(forKey: "syncContextSetting")
+            return SyncPermissionContext(rawValue: i) ?? .always
         }
 
         set {
-            PersistedOptions.defaults.set(newValue, forKey: "onlySyncOverWiFi")
+            PersistedOptions.defaults.set(newValue.rawValue, forKey: "syncContextSetting")
         }
     }
 
@@ -51,6 +58,38 @@ extension CloudManager {
 			break
 		}
 	}
+    
+    static func syncAfterSaveIfNeeded() {
+        if !syncSwitchedOn {
+            log("Sync switched off, no need to sync after save")
+            return
+        }
+        
+        let go: Bool
+        switch CloudManager.syncContextSetting {
+        case .always:
+            go = true
+            log("Sync after a local save")
+        case .wifiOnly:
+            go = reachability.status == .reachableViaWiFi
+            if go {
+                log("Will sync after save, since WiFi is available")
+            } else {
+                log("Won't sync after save, because no WiFi")
+            }
+        case .manualOnly:
+            go = false
+            log("Won't sync after save, as manual sync is selected")
+        }
+        
+        if !go { return }
+        
+        CloudManager.sync { error in
+            if let error = error {
+                log("Error in sync after save: \(error.finalDescription)")
+            }
+        }
+    }
 
     static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) {
         if isStartup && syncSwitchedOn {

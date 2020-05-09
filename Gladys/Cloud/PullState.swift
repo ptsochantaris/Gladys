@@ -116,6 +116,10 @@ final class PullState {
 			setZoneToken(token, for: privateZoneId)
 			legacyZoneChangeToken = nil
 		}
+        if PersistedOptions.defaults.bool(forKey: "onlySyncOverWiFi") {
+            CloudManager.syncContextSetting = .wifiOnly
+            PersistedOptions.defaults.removeObject(forKey: "onlySyncOverWiFi")
+        }
 	}
 
 	///////////////////////////////////////

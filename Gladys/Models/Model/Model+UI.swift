@@ -226,12 +226,7 @@ extension Model {
             saveIsDueToSyncFetch = false
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
         } else {
-            log("Will sync up after a local save")
-            CloudManager.sync { error in
-                if let error = error {
-                    log("Error in push after save: \(error.finalDescription)")
-                }
-            }
+            CloudManager.syncAfterSaveIfNeeded()
         }
         
         if registeredForBackground {

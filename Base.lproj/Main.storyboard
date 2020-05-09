@@ -1558,8 +1558,8 @@ Selecting them will show only items that contain these labels.</string>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XAu-Zj-d4Q">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="680"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ia5-kr-4dD">
-                                        <rect key="frame" x="0.0" y="20" width="320" height="424"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ia5-kr-4dD">
+                                        <rect key="frame" x="0.0" y="24" width="320" height="483"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="88n-uM-fcL" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
@@ -1569,7 +1569,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         <color key="color" name="colorTint"/>
                                                     </activityIndicatorView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                                        <rect key="frame" x="30" y="0.0" width="162" height="66"/>
+                                                        <rect key="frame" x="20" y="0.0" width="172" height="66"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="bfg-CL-PPA"/>
                                                         </constraints>
@@ -1589,123 +1589,90 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstAttribute="bottom" secondItem="bc6-6V-O7h" secondAttribute="bottom" id="4wI-eM-kXe"/>
                                                     <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
                                                     <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="21" id="Ex6-yc-wkY"/>
-                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="30" id="leg-YZ-isI"/>
+                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="20" id="leg-YZ-isI"/>
                                                     <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="76" width="320" height="66"/>
+                                                <rect key="frame" x="0.0" y="66" width="320" height="417"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Only automatically sync over WiFi" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guO-CQ-KTM">
-                                                        <rect key="frame" x="30" y="0.0" width="162" height="66"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="1xg-yZ-9vH"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <color key="textColor" name="colorComponentLabel"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i3g-cz-xkx">
-                                                        <rect key="frame" x="210" y="17.5" width="51" height="31"/>
-                                                        <color key="onTintColor" name="colorTint"/>
-                                                        <connections>
-                                                            <action selector="limitToWiFiChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="fAi-6F-G47"/>
-                                                        </connections>
-                                                    </switch>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Vjq-by-Z29">
+                                                        <rect key="frame" x="34.5" y="4" width="251" height="409"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cri-im-WsP">
+                                                                <rect key="frame" x="0.0" y="0.0" width="251" height="4"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="4" id="Daj-Hr-kkN"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Automatically sync items" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8vw-By-wE9">
+                                                                <rect key="frame" x="0.0" y="12" width="251" height="13.5"/>
+                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Nq2-7n-kQF">
+                                                                <rect key="frame" x="0.0" y="33.5" width="251" height="32"/>
+                                                                <segments>
+                                                                    <segment title="Always"/>
+                                                                    <segment title="Wi-Fi Only"/>
+                                                                    <segment title="Manually"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="syncPolicyChanged:" destination="PmV-gD-gyX" eventType="valueChanged" id="DND-l8-Dpy"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can request a manual sync by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
+                                                                <rect key="frame" x="0.0" y="72.5" width="251" height="26.5"/>
+                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pwa-0V-00N">
+                                                                <rect key="frame" x="0.0" y="107" width="251" height="10"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="10" id="brU-p9-BXr"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
+                                                                <rect key="frame" x="0.0" y="125" width="251" height="70"/>
+                                                                <string key="text">Gladys stores data in your private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
+                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLr-xZ-jCb">
+                                                                <rect key="frame" x="0.0" y="203" width="251" height="146"/>
+                                                                <state key="normal" title="Delete iCloud Data"/>
+                                                                <connections>
+                                                                    <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="13R-i5-FJZ"/>
+                                                                </connections>
+                                                            </button>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
+                                                                <rect key="frame" x="0.0" y="357" width="251" height="52"/>
+                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="i3g-cz-xkx" firstAttribute="leading" secondItem="guO-CQ-KTM" secondAttribute="trailing" constant="18" id="1eI-rP-K87"/>
-                                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="leading" secondItem="ehw-1I-mk8" secondAttribute="leading" constant="30" id="Gt0-dv-UhM"/>
-                                                    <constraint firstItem="guO-CQ-KTM" firstAttribute="top" secondItem="ehw-1I-mk8" secondAttribute="top" id="h5N-Ja-gzd"/>
-                                                    <constraint firstAttribute="bottom" secondItem="guO-CQ-KTM" secondAttribute="bottom" id="nJ9-2s-K44"/>
-                                                    <constraint firstItem="i3g-cz-xkx" firstAttribute="centerY" secondItem="ehw-1I-mk8" secondAttribute="centerY" id="ygt-mr-z3V"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kwg-sM-eFN">
-                                                <rect key="frame" x="0.0" y="152" width="320" height="50"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can request a manual sync by pulling down on the main view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSP-79-0Wg">
-                                                        <rect key="frame" x="40" y="4" width="240" height="46"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="top" secondItem="Kwg-sM-eFN" secondAttribute="top" constant="4" id="Gb3-fW-yf5"/>
-                                                    <constraint firstAttribute="bottom" secondItem="cSP-79-0Wg" secondAttribute="bottom" id="Nfu-Xm-WyI"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ezw-vL-hUU">
-                                                <rect key="frame" x="0.0" y="212" width="320" height="72"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
-                                                        <rect key="frame" x="40" y="0.0" width="240" height="72"/>
-                                                        <string key="text">Gladys stores data in your private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="RxQ-uD-Ykw" secondAttribute="bottom" id="P7c-zo-zRD"/>
-                                                    <constraint firstItem="RxQ-uD-Ykw" firstAttribute="top" secondItem="Ezw-vL-hUU" secondAttribute="top" id="Y94-Of-98g"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-Ow-Ebk">
-                                                <rect key="frame" x="0.0" y="294" width="320" height="50"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLr-xZ-jCb">
-                                                        <rect key="frame" x="20" y="0.0" width="280" height="50"/>
-                                                        <state key="normal" title="Delete iCloud Data"/>
-                                                        <connections>
-                                                            <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="13R-i5-FJZ"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="VLr-xZ-jCb" secondAttribute="bottom" id="QPH-J0-94H"/>
-                                                    <constraint firstItem="VLr-xZ-jCb" firstAttribute="leading" secondItem="th4-Ow-Ebk" secondAttribute="leading" constant="20" id="XHV-4E-oaq"/>
-                                                    <constraint firstAttribute="trailing" secondItem="VLr-xZ-jCb" secondAttribute="trailing" constant="20" id="dIa-Er-UCd"/>
-                                                    <constraint firstItem="VLr-xZ-jCb" firstAttribute="top" secondItem="th4-Ow-Ebk" secondAttribute="top" id="eE5-pH-aDk"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xO1-wX-AKe">
-                                                <rect key="frame" x="0.0" y="354" width="320" height="70"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
-                                                        <rect key="frame" x="40" y="0.0" width="240" height="70"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstItem="BZ8-I2-EIj" firstAttribute="top" secondItem="xO1-wX-AKe" secondAttribute="top" id="Rtb-gM-HTM"/>
-                                                    <constraint firstAttribute="bottom" secondItem="BZ8-I2-EIj" secondAttribute="bottom" id="avO-Cr-grW"/>
+                                                    <constraint firstItem="Vjq-by-Z29" firstAttribute="top" secondItem="ehw-1I-mk8" secondAttribute="top" constant="4" id="MMz-0Q-pJk"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Vjq-by-Z29" secondAttribute="bottom" constant="4" id="RoE-fs-McL"/>
+                                                    <constraint firstItem="Vjq-by-Z29" firstAttribute="centerX" secondItem="ehw-1I-mk8" secondAttribute="centerX" id="tle-Lb-Wgf"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="centerX" secondItem="RxQ-uD-Ykw" secondAttribute="centerX" id="NVb-pi-4gZ"/>
-                                            <constraint firstItem="i3g-cz-xkx" firstAttribute="centerX" secondItem="V6J-fH-sQH" secondAttribute="centerX" id="SUp-ZB-9DO"/>
-                                            <constraint firstItem="BZ8-I2-EIj" firstAttribute="width" secondItem="RxQ-uD-Ykw" secondAttribute="width" id="kGy-ZR-17X"/>
-                                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="width" secondItem="cSP-79-0Wg" secondAttribute="width" id="ufT-Ao-Ma0"/>
-                                            <constraint firstItem="RxQ-uD-Ykw" firstAttribute="centerX" secondItem="cSP-79-0Wg" secondAttribute="centerX" id="uuy-wr-3jI"/>
-                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Ia5-kr-4dD" firstAttribute="width" secondItem="XAu-Zj-d4Q" secondAttribute="width" id="6gv-wg-iRM"/>
                                     <constraint firstAttribute="bottom" secondItem="Ia5-kr-4dD" secondAttribute="bottom" constant="20" id="7kQ-Qu-BVW"/>
-                                    <constraint firstItem="Ia5-kr-4dD" firstAttribute="top" secondItem="XAu-Zj-d4Q" secondAttribute="top" constant="20" id="Nfp-Sk-Gch"/>
-                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="width" secondItem="XAu-Zj-d4Q" secondAttribute="width" constant="-80" id="UIb-Uq-19v"/>
+                                    <constraint firstItem="Ia5-kr-4dD" firstAttribute="top" secondItem="XAu-Zj-d4Q" secondAttribute="top" constant="24" id="Nfp-Sk-Gch"/>
                                     <constraint firstItem="Ia5-kr-4dD" firstAttribute="leading" secondItem="XAu-Zj-d4Q" secondAttribute="leading" id="UWR-pn-2iP"/>
-                                    <constraint firstItem="cSP-79-0Wg" firstAttribute="centerX" secondItem="XAu-Zj-d4Q" secondAttribute="centerX" id="fJK-LB-N61"/>
                                     <constraint firstAttribute="trailing" secondItem="Ia5-kr-4dD" secondAttribute="trailing" id="ybq-PI-nXN"/>
                                 </constraints>
                             </scrollView>
@@ -1732,8 +1699,8 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="icloudLabel" destination="bc6-6V-O7h" id="rqy-0u-zyk"/>
                         <outlet property="icloudSpinner" destination="0S6-rX-cYY" id="npm-S6-jF7"/>
                         <outlet property="icloudSwitch" destination="V6J-fH-sQH" id="waC-0C-0S1"/>
-                        <outlet property="limitToWiFiSwitch" destination="i3g-cz-xkx" id="bwk-rQ-871"/>
                         <outlet property="syncNowButton" destination="6if-e9-dgE" id="M7T-dE-gyP"/>
+                        <outlet property="syncPolicy" destination="Nq2-7n-kQF" id="KVU-8V-3fK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y6K-FZ-0og" userLabel="First Responder" sceneMemberID="firstResponder"/>

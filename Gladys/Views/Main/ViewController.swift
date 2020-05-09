@@ -608,7 +608,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	@objc private func reachabilityChanged() {
-		if reachability.status == .reachableViaWiFi && CloudManager.onlySyncOverWiFi {
+        if reachability.status == .reachableViaWiFi && CloudManager.syncContextSetting == .wifiOnly {
 			CloudManager.opportunisticSyncIfNeeded()
 		}
 	}
@@ -616,7 +616,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
 		guard let r = collection.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
-			CloudManager.sync(overridingWiFiPreference: true) { error in
+			CloudManager.sync(overridingUserPreference: true) { error in
 				if let error = error {
 					genericAlert(title: "Sync Error", message: error.finalDescription)
 				}

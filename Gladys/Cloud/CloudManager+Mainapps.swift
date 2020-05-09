@@ -928,7 +928,7 @@ extension CloudManager {
         perform(operation, on: database, type: "fetch zone changes")
     }
 
-    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingWiFiPreference: Bool = false, completion: @escaping (Error?) -> Void) {
+    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false, completion: @escaping (Error?) -> Void) {
 
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
@@ -946,16 +946,16 @@ extension CloudManager {
             }
         }
 
-        attemptSync(scope: scope, force: force, overridingWiFiPreference: overridingWiFiPreference) { error in
+        attemptSync(scope: scope, force: force, overridingUserPreference: overridingUserPreference) { error in
             if let ckError = error as? CKError {
-                reactToCkError(ckError, force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+                reactToCkError(ckError, force: force, overridingUserPreference: overridingUserPreference, completion: completion)
             } else {
                 completion(error)
             }
         }
     }
 
-    private static func reactToCkError(_ ckError: CKError, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?) -> Void) {
+    private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
         switch ckError.code {
 
         case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
@@ -974,7 +974,7 @@ extension CloudManager {
             syncRateLimited = true
             DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
                 syncRateLimited = false
-                attemptSync(scope: nil, force: force, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+                attemptSync(scope: nil, force: force, overridingUserPreference: overridingUserPreference, completion: completion)
             }
 
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .permissionFailure,
@@ -1079,7 +1079,7 @@ extension CloudManager {
                 if let error = error {
                     genericAlert(title: "Could not change state", message: error.finalDescription)
                 } else {
-                    sync(force: true, overridingWiFiPreference: true) { error in
+                    sync(force: true, overridingUserPreference: true) { error in
                         if let error = error {
                             genericAlert(title: "Initial sync failed", message: error.finalDescription)
                         }
@@ -1089,17 +1089,24 @@ extension CloudManager {
         }
     }
 
-    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingWiFiPreference: Bool, completion: @escaping (Error?) -> Void) {
+    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
         if !syncSwitchedOn {
             completion(nil)
             return
         }
 
         #if os(iOS)
-        if !force && !overridingWiFiPreference && onlySyncOverWiFi && reachability.status != .reachableViaWiFi {
-            log("Skipping sync because no WiFi is present and user has selected WiFi sync only")
-            completion(nil)
-            return
+        if !force && !overridingUserPreference {
+            if syncContextSetting == .wifiOnly && reachability.status != .reachableViaWiFi {
+                log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
+                completion(nil)
+                return
+            }
+            if syncContextSetting == .manualOnly {
+                log("Skipping auto sync because user selected manual sync only")
+                completion(nil)
+                return
+            }
         }
         #endif
 
@@ -1127,7 +1134,7 @@ extension CloudManager {
                 if let error = error {
                     attemptSyncDone(error: error, completion: completion)
                 } else if syncDirty {
-                    attemptSync(scope: nil, force: true, overridingWiFiPreference: overridingWiFiPreference, completion: completion)
+                    attemptSync(scope: nil, force: true, overridingUserPreference: overridingUserPreference, completion: completion)
                     #if os(iOS)
                     BackgroundTask.unregisterForBackground()
                     #endif

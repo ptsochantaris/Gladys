@@ -13,14 +13,10 @@ final class iCloudController: GladysViewController {
 	@IBOutlet private weak var icloudLabel: UILabel!
 	@IBOutlet private weak var icloudSwitch: UISwitch!
 	@IBOutlet private weak var icloudSpinner: UIActivityIndicatorView!
-	@IBOutlet private weak var limitToWiFiSwitch: UISwitch!
 	@IBOutlet private weak var eraseAlliCloudData: UIButton!
 	@IBOutlet private weak var syncNowButton: UIBarButtonItem!
-
-	@IBAction private func limitToWiFiChanged(_ sender: UISwitch) {
-		CloudManager.onlySyncOverWiFi = sender.isOn
-	}
-
+    @IBOutlet private weak var syncPolicy: UISegmentedControl!
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -31,9 +27,6 @@ final class iCloudController: GladysViewController {
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		icloudSwitch.tintColor = UIColor(named: "colorLightGray")
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
-
-		limitToWiFiSwitch.isOn = CloudManager.onlySyncOverWiFi
-		limitToWiFiSwitch.tintColor = UIColor(named: "colorLightGray")
 
 		updateiCloudControls()
 	}
@@ -89,14 +82,21 @@ final class iCloudController: GladysViewController {
 		eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
 		syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn
 
-		if !icloudSwitch.isOn && limitToWiFiSwitch.isOn {
-			limitToWiFiSwitch.setOn(false, animated: true)
-		} else if icloudSwitch.isOn && !limitToWiFiSwitch.isOn && CloudManager.onlySyncOverWiFi {
-			limitToWiFiSwitch.setOn(true, animated: true)
-		}
-		limitToWiFiSwitch.isEnabled = icloudSwitch.isOn
+        if icloudSwitch.isOn {
+            syncPolicy.selectedSegmentIndex = CloudManager.syncContextSetting.rawValue
+            syncPolicy.isEnabled = true
+        } else {
+            syncPolicy.selectedSegmentIndex = UISegmentedControl.noSegment
+            syncPolicy.isEnabled = false
+        }
 	}
-
+    
+    @IBAction private func syncPolicyChanged(_ sender: UISegmentedControl) {
+        if let newPolicy = CloudManager.SyncPermissionContext(rawValue: sender.selectedSegmentIndex) {
+            CloudManager.syncContextSetting = newPolicy
+        }
+    }
+    
 	@IBAction private func syncNowSelected(_ sender: UIBarButtonItem) {
 		CloudManager.sync { error in
 			DispatchQueue.main.async {

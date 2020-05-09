@@ -55,7 +55,7 @@ extension Model {
 			log("Will sync up after a local save")
 			CloudManager.sync { error in
 				if let error = error {
-					log("Error in push after save: \(error.finalDescription)")
+					log("Error in sync after save: \(error.finalDescription)")
 				}
 			}
 		}
