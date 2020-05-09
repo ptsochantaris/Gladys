@@ -87,24 +87,16 @@ final class ModelFilterContext {
     }
     
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
-        guard isFiltering else {
+        if !isFiltering {
             return index
         }
-        if filteredDrops.isEmpty {
-            return 0
-        }
-        let closestItem: ArchivedItem
         if index >= filteredDrops.count {
-            closestItem = filteredDrops.last!
-            if let i = Model.drops.firstIndexOfItem(with: closestItem.uuid) {
+            if let closestItem = filteredDrops.last, let i = Model.drops.firstIndexOfItem(with: closestItem.uuid) {
                 return i+1
             }
             return 0
-        } else if index > 0 {
-            closestItem = filteredDrops[index-1]
-            return (Model.drops.firstIndexOfItem(with: closestItem.uuid) ?? 0) + 1
         } else {
-            closestItem = filteredDrops[0]
+            let closestItem = filteredDrops[index]
             return Model.drops.firstIndexOfItem(with: closestItem.uuid) ?? 0
         }
     }

@@ -230,21 +230,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.drops.firstIndexOfItem(with: existingItem.uuid) {
+                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
-                    Model.drops.insert(itemToMove, at: destinationIndexPath.item)
-                    needsSaveIndex = true
+                    if !collectionView.hasActiveDrag {
+                        modelDestinationIndex = max(0, modelDestinationIndex - 1)
+                    }
+                    Model.drops.insert(itemToMove, at: modelDestinationIndex)
+
+                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && itemToMove.labels != filter.enabledLabelsForItems {
+                        itemToMove.labels = Array(Set(itemToMove.labels).union(filter.enabledLabelsForItems))
+                        itemToMove.postModified()
+                        needsFullSave = true
+                    } else {
+                        needsSaveIndex = true
+                    }
                 }
-                
+                                
             } else {
                 
                 for item in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-                    var dataIndex = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-                    
-                    if filter.isFiltering {
-                        dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(dataIndex)
-                        if filter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-                            item.labels = filter.enabledLabelsForItems
-                        }
+                    let i = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
+                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i)
+                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
+                        item.labels = filter.enabledLabelsForItems
                     }
                     
                     Model.drops.insert(item, at: dataIndex)
