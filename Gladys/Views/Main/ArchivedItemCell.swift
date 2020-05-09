@@ -202,7 +202,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
 
-	var archivedDropItem: ArchivedItem? {
+	weak var archivedDropItem: ArchivedItem? {
 		didSet {
 			reDecorate()
 		}

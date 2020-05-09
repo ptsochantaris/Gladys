@@ -11,8 +11,6 @@ import UIKit
 
 extension CloudManager {
 
-    // optimise component lookups
-    
     enum SyncPermissionContext: Int {
         case always, wifiOnly, manualOnly
     }

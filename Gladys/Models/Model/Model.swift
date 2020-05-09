@@ -189,12 +189,7 @@ final class Model {
 	}
 
     static func component(uuid: UUID) -> Component? {
-        for d in drops.all {
-            if let c = d.components.first(where: { $0.uuid == uuid }) {
-                return c
-            }
-        }
-        return nil
+        return Component.lookup(uuid: uuid)
     }
     
 	static func component(uuid: String) -> Component? {

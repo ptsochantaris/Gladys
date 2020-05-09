@@ -6,7 +6,20 @@ import UIKit
 import CloudKit
 
 final class Component: Codable {
-
+    
+    private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .weakMemory, valueOptions: .weakMemory)
+    private static let parentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue")
+    static func register(_ component: Component) {
+        parentLookupQueue.async {
+            componentLookup.setObject(component, forKey: component.uuid as NSUUID)
+        }
+    }
+    static func lookup(uuid: UUID) -> Component? {
+        return parentLookupQueue.sync {
+            return componentLookup.object(forKey: uuid as NSUUID)
+        }
+    }
+    
 	private enum CodingKeys: String, CodingKey {
 		case typeIdentifier
 		case representedClass
@@ -51,8 +64,10 @@ final class Component: Codable {
 		typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
 		representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
 		classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
-		uuid = try v.decode(UUID.self, forKey: .uuid)
-		parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
+
+        uuid = try v.decode(UUID.self, forKey: .uuid)
+        parentUuid = try v.decode(UUID.self, forKey: .parentUuid)
+        
 		accessoryTitle = try v.decodeIfPresent(String.self, forKey: .accessoryTitle)
 		displayTitle = try v.decodeIfPresent(String.self, forKey: .displayTitle)
 		displayTitlePriority = try v.decode(Int.self, forKey: .displayTitlePriority)
@@ -72,6 +87,8 @@ final class Component: Codable {
 		displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
         flags = []
+        
+        Component.register(self)
 	}
 
 	var typeIdentifier: String
@@ -113,11 +130,12 @@ final class Component: Codable {
 	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
-		self.parentUuid = parentUuid
 		self.order = order
 
 		uuid = UUID()
-		displayIconPriority = 0
+        self.parentUuid = parentUuid
+
+        displayIconPriority = 0
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
@@ -129,16 +147,19 @@ final class Component: Codable {
 		updatedAt = createdAt
 		representedClass = .data
 		setBytes(data)
+        
+        Component.register(self)
 	}
 
 	init(cloning item: Component, newParentUUID: UUID) {
 		uuid = UUID()
-		needsDeletion = false
+        parentUuid = newParentUUID
+
+        needsDeletion = false
 		createdAt = Date()
 		updatedAt = createdAt
         flags = []
-
-        parentUuid = newParentUUID
+        
 		typeIdentifier = item.typeIdentifier
         accessoryTitle = item.accessoryTitle
 		order = item.order
@@ -150,6 +171,8 @@ final class Component: Codable {
 		classWasWrapped = item.classWasWrapped
 		representedClass = item.representedClass
 		setBytes(item.bytes)
+        
+        Component.register(self)
 	}
 	#endif
 
@@ -157,11 +180,12 @@ final class Component: Codable {
 	init(typeIdentifier: String, parentUuid: UUID, order: Int) {
 
 		self.typeIdentifier = typeIdentifier
-		self.parentUuid = parentUuid
 		self.order = order
 
 		uuid = UUID()
-		displayIconPriority = 0
+        self.parentUuid = parentUuid
+        
+        displayIconPriority = 0
 		displayIconContentMode = .center
 		displayTitlePriority = 0
 		displayTitleAlignment = .center
@@ -172,12 +196,12 @@ final class Component: Codable {
 		updatedAt = createdAt
 		representedClass = .unknown(name: "")
         flags = [.isTransferring]
+        
+        Component.register(self)
 	}
 	#endif
 
 	init(from record: CKRecord, parentUuid: UUID) {
-
-		self.parentUuid = parentUuid
 
 		displayIconPriority = 0
 		displayIconContentMode = .center
@@ -188,6 +212,7 @@ final class Component: Codable {
         flags = []
 
 		uuid = UUID(uuidString: record.recordID.recordName)!
+        self.parentUuid = parentUuid
 
 		createdAt = record["createdAt"] as? Date ?? .distantPast
         
@@ -204,10 +229,11 @@ final class Component: Codable {
 			try? FileManager.default.copyAndReplaceItem(at: assetURL, to: bytesPath)
 		}
 		cloudKitRecord = record
+        
+        Component.register(self)
 	}
 
 	init(from typeItem: Component, newParent: ArchivedItem) {
-		parentUuid = newParent.uuid
 
 		displayIconPriority = 0
 		displayIconContentMode = .center
@@ -220,12 +246,20 @@ final class Component: Codable {
         flags = []
         
 		uuid = UUID()
-		createdAt = Date()
+        parentUuid = newParent.uuid
+
+        createdAt = Date()
 		updatedAt = Date()
 		typeIdentifier = typeItem.typeIdentifier
 		representedClass = typeItem.representedClass
 		classWasWrapped = typeItem.classWasWrapped
 		accessoryTitle = typeItem.accessoryTitle
 		setBytes(typeItem.bytes)
+        
+        Component.register(self)
 	}
+    
+    deinit {
+        log("Component deinit")
+    }
 }
