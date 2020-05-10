@@ -1561,36 +1561,47 @@ Selecting them will show only items that contain these labels.</string>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ia5-kr-4dD">
                                         <rect key="frame" x="0.0" y="24" width="320" height="483"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="88n-uM-fcL" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5ta-JY-1VM">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                                 <subviews>
-                                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
-                                                        <rect key="frame" x="280" y="23" width="20" height="20"/>
-                                                        <color key="color" name="colorTint"/>
-                                                    </activityIndicatorView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
-                                                        <rect key="frame" x="20" y="0.0" width="172" height="66"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="88n-uM-fcL" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                                        <rect key="frame" x="1.5" y="0.0" width="317" height="66"/>
+                                                        <subviews>
+                                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0S6-rX-cYY">
+                                                                <rect key="frame" x="277" y="23" width="20" height="20"/>
+                                                                <color key="color" name="colorTint"/>
+                                                            </activityIndicatorView>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="iCloud Sync" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bc6-6V-O7h">
+                                                                <rect key="frame" x="20" y="0.0" width="169" height="66"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="bfg-CL-PPA"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                <color key="textColor" name="colorComponentLabel"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
+                                                                <rect key="frame" x="207" y="17.5" width="51" height="31"/>
+                                                                <color key="onTintColor" name="colorTint"/>
+                                                            </switch>
+                                                        </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="bfg-CL-PPA"/>
+                                                            <constraint firstAttribute="trailing" secondItem="0S6-rX-cYY" secondAttribute="trailing" constant="20" id="0FB-YB-Xsh"/>
+                                                            <constraint firstItem="V6J-fH-sQH" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="2ig-al-Y58"/>
+                                                            <constraint firstItem="bc6-6V-O7h" firstAttribute="top" secondItem="88n-uM-fcL" secondAttribute="top" id="45b-fV-MGI"/>
+                                                            <constraint firstAttribute="bottom" secondItem="bc6-6V-O7h" secondAttribute="bottom" id="4wI-eM-kXe"/>
+                                                            <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
+                                                            <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="21" id="Ex6-yc-wkY"/>
+                                                            <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="20" id="leg-YZ-isI"/>
+                                                            <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <color key="textColor" name="colorComponentLabel"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-fH-sQH">
-                                                        <rect key="frame" x="210" y="17.5" width="51" height="31"/>
-                                                        <color key="onTintColor" name="colorTint"/>
-                                                    </switch>
+                                                    </view>
                                                 </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="0S6-rX-cYY" secondAttribute="trailing" constant="20" id="0FB-YB-Xsh"/>
-                                                    <constraint firstItem="V6J-fH-sQH" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="2ig-al-Y58"/>
-                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="top" secondItem="88n-uM-fcL" secondAttribute="top" id="45b-fV-MGI"/>
-                                                    <constraint firstAttribute="bottom" secondItem="bc6-6V-O7h" secondAttribute="bottom" id="4wI-eM-kXe"/>
-                                                    <constraint firstItem="V6J-fH-sQH" firstAttribute="leading" secondItem="bc6-6V-O7h" secondAttribute="trailing" constant="18" id="6BV-ag-ehq"/>
-                                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="leading" secondItem="V6J-fH-sQH" secondAttribute="trailing" constant="21" id="Ex6-yc-wkY"/>
-                                                    <constraint firstItem="bc6-6V-O7h" firstAttribute="leading" secondItem="88n-uM-fcL" secondAttribute="leading" constant="20" id="leg-YZ-isI"/>
-                                                    <constraint firstItem="0S6-rX-cYY" firstAttribute="centerY" secondItem="88n-uM-fcL" secondAttribute="centerY" id="mMl-B1-Rve"/>
+                                                    <constraint firstAttribute="bottom" secondItem="88n-uM-fcL" secondAttribute="bottom" id="DW1-Eh-4Ap"/>
+                                                    <constraint firstItem="88n-uM-fcL" firstAttribute="centerX" secondItem="5ta-JY-1VM" secondAttribute="centerX" id="dSK-xT-2EW"/>
+                                                    <constraint firstItem="88n-uM-fcL" firstAttribute="top" secondItem="5ta-JY-1VM" secondAttribute="top" id="ea1-tY-xVC"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
@@ -1666,6 +1677,11 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstItem="88n-uM-fcL" firstAttribute="width" secondItem="Vjq-by-Z29" secondAttribute="width" constant="66" id="2v9-sa-XKD"/>
+                                            <constraint firstItem="5ta-JY-1VM" firstAttribute="top" secondItem="Ia5-kr-4dD" secondAttribute="top" id="V1o-ux-i7w"/>
+                                            <constraint firstItem="ehw-1I-mk8" firstAttribute="top" secondItem="5ta-JY-1VM" secondAttribute="bottom" id="sf8-HQ-sdj"/>
+                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
