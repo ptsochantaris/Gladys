@@ -13,7 +13,10 @@ final class HighlightLabel: UILabel {
 
 	var labels = [String]() {
 		didSet {
-			update()
+            if labels != oldValue {
+                cachedPath = nil
+                update()
+            }
 		}
 	}
 
@@ -45,8 +48,12 @@ final class HighlightLabel: UILabel {
 
 		if textAlignment == .natural {
 			p.firstLineHeadIndent = 4
-			p.headIndent = 3
-		}
+			p.headIndent = 4
+        } else {
+            p.headIndent = 4
+            p.firstLineHeadIndent = 4
+            p.tailIndent = -4
+        }
 
 		let separator = "   "
 
@@ -65,11 +72,24 @@ final class HighlightLabel: UILabel {
 		}
 		attributedText = string
 	}
+    
+    private var cachedPath: CGPath?
+    private var cachedFrame = CGRect.zero
+    
+    override func layoutSubviews() {
+        let b = bounds
+        if b != cachedFrame {
+            cachedPath = nil
+        }
+        super.layoutSubviews()
+    }
 
 	override func draw(_ rect: CGRect) {
 
 		guard let attributedText = attributedText, let highlightColor = tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
 
+        cachedFrame = bounds
+        
 		let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
 
 		let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), CGPath(rect: rect, transform: nil), nil)
@@ -80,40 +100,48 @@ final class HighlightLabel: UILabel {
 
 		CTFrameDraw(totalFrame, context)
 
-		// frames
+        if let cachedPath = cachedPath {
+            context.addPath(cachedPath)
 
-		let lines = CTFrameGetLines(totalFrame) as NSArray
-		let lineCount = lines.count
-		let leftAlign = textAlignment == .natural
+        } else {
+            let newPath = CGMutablePath()
+            let lines = CTFrameGetLines(totalFrame) as NSArray
+            let lineCount = lines.count
+            let leftAlign = textAlignment == .natural
 
-		for index in 0 ..< lineCount {
-			let line = lines[index] as! CTLine
+            for index in 0 ..< lineCount {
+                let line = lines[index] as! CTLine
 
-			var origins = [CGPoint](repeating: .zero, count: lineCount)
-			CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-            let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
-			let lineStart = leftAlign ? 4 : (bounds.width - lineFrame.width) * 0.5
+                var origins = [CGPoint](repeating: .zero, count: lineCount)
+                CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
+                let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
+                let lineStart = leftAlign ? 4 : (bounds.width - lineFrame.width) * 0.5
 
-			for r in CTLineGetGlyphRuns(line) as NSArray {
+                for r in CTLineGetGlyphRuns(line) as NSArray {
 
-				let run = r as! CTRun
-				let attributes = CTRunGetAttributes(run) as NSDictionary
+                    let run = r as! CTRun
+                    let attributes = CTRunGetAttributes(run) as NSDictionary
 
-				if attributes["HighlightText"] != nil {
-					var runBounds = lineFrame
+                    if attributes["HighlightText"] != nil {
+                        var runBounds = lineFrame
 
-                    runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
-                    runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 3.5
-                    runBounds.origin.y = origins[index].y - 3
-                    runBounds.size.height += 1
+                        runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
+                        runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 3.5
+                        runBounds.origin.y = origins[index].y - 3
+                        runBounds.size.height += 1
 
-					context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
-				}
-			}
-		}
+                        let path = CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil)
+                        newPath.addPath(path)
+                    }
+                }
+            }
+            cachedPath = newPath
+            context.addPath(newPath)
+        }
 
 		context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
-		context.setLineWidth(0.5)
+        let pixel: CGFloat = 1 / UIScreen.main.scale
+		context.setLineWidth(pixel)
 		context.strokePath()
 	}
 }
