@@ -7,15 +7,15 @@ import CloudKit
 
 final class Component: Codable {
     
-    private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .weakMemory, valueOptions: .weakMemory)
-    private static let parentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue")
+    private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
+    private static let componentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue")
     static func register(_ component: Component) {
-        parentLookupQueue.async {
+        componentLookupQueue.async {
             componentLookup.setObject(component, forKey: component.uuid as NSUUID)
         }
     }
     static func lookup(uuid: UUID) -> Component? {
-        return parentLookupQueue.sync {
+        return componentLookupQueue.sync {
             return componentLookup.object(forKey: uuid as NSUUID)
         }
     }
