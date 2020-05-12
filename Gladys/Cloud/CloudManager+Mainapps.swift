@@ -291,26 +291,22 @@ extension CloudManager {
                         syncTransitioning = false
                     }
                 case .couldNotDetermine:
-                    activationFailure(error: error, reason: "There was an error while trying to retrieve your account status.", completion: completion)
+                    activationFailure(error: GladysError.cloudAccountRetirevalFailed.error, completion: completion)
                 case .noAccount:
-                    activationFailure(error: error, reason: "You are not logged into iCloud on this device.", completion: completion)
+                    activationFailure(error: GladysError.cloudLoginRequired.error, completion: completion)
                 case .restricted:
-                    activationFailure(error: error, reason: "iCloud access is restricted on this device due to policy or parental controls.", completion: completion)
+                    activationFailure(error: GladysError.cloudAccessRestricted.error, completion: completion)
                 @unknown default:
-                    activationFailure(error: error, reason: "iCloud access is not available on this device.", completion: completion)
+                    activationFailure(error: GladysError.cloudAccessNotSupported.error, completion: completion)
                 }
             }
         }
     }
 
-    static private func activationFailure(error: Error?, reason: String, completion: (Error?) -> Void) {
+    static private func activationFailure(error: NSError, completion: (Error?) -> Void) {
         syncTransitioning = false
-        log("Activation failure, reason: \(reason)")
-        if let error = error {
-            completion(error)
-        } else {
-            completion(NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: reason]))
-        }
+        log("Activation failure, reason: \(error.localizedDescription)")
+        completion(error)
     }
 
     static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
@@ -1067,7 +1063,7 @@ extension CloudManager {
         CloudManager.deactivate(force: false) { error in
             DispatchQueue.main.async {
                 if let error = error {
-                    genericAlert(title: "Could not change state", message: error.finalDescription)
+                    genericAlert(title: "Could not deactivate", message: error.finalDescription)
                 }
             }
         }
@@ -1077,7 +1073,7 @@ extension CloudManager {
         CloudManager.activate { error in
             DispatchQueue.main.async {
                 if let error = error {
-                    genericAlert(title: "Could not change state", message: error.finalDescription)
+                    genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
                 } else {
                     sync(force: true, overridingUserPreference: true) { error in
                         if let error = error {

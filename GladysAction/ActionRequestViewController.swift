@@ -160,13 +160,9 @@ final class ActionRequestViewController: UIViewController {
     }
 
 	@IBAction private func cancelRequested(_ sender: UIBarButtonItem) {
-
         newItems.forEach { $0.cancelIngest() }
-
         reset(ingestOnNextAppearance: true)
-
-		let error = NSError(domain: GladysErrorDomain, code: 84, userInfo: [ NSLocalizedDescriptionKey: statusLabel.text ?? "No further info" ])
-		extensionContext?.cancelRequest(withError: error)
+        extensionContext?.cancelRequest(withError: GladysError.actionCancelled.error)
 	}
 
     @objc private func itemIngested(_ notification: Notification) {

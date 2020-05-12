@@ -181,7 +181,7 @@ extension ArchivedItem {
 			n.sourceItemView = cell
 		}
 
-		if !PersistedOptions.fullScreenPreviews && !forceFullscreen {
+        if !(PersistedOptions.fullScreenPreviews || forceFullscreen || UIDevice.current.userInterfaceIdiom == .phone) {
 			n.modalPresentationStyle = .popover
 		}
         

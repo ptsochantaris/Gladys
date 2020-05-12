@@ -15,12 +15,20 @@ var currentWindow: UIWindow? {
 }
 
 @discardableResult
-func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", completion: (() -> Void)? = nil) -> UIAlertController {
+func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) -> UIAlertController {
         
 	let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
 	if let buttonTitle = buttonTitle {
 		a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
 	}
+    
+    if offerSettingsShortcut {
+        a.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:]) { _ in
+                completion?()
+            }
+        })
+    }
 
     if let connectedWindow = currentWindow {
         connectedWindow.alertPresenter?.present(a, animated: true)
@@ -718,6 +726,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
         
         var removedItems = false
+        var itemOrderChanged = false
         collection.performBatchUpdates({
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
@@ -745,14 +754,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         let i1 = IndexPath(item: oldIndex, section: 0)
                         let i2 = IndexPath(item: newIndex, section: 0)
                         moveList.append((i1, i2))
+                        itemOrderChanged = true
                     }
                 } else if let newIndex = newIndex { // insert
                     let n = IndexPath(item: newIndex, section: 0)
                     ipsToInsert.append(n)
+                    itemOrderChanged = true
                 } else if let oldIndex = oldIndex { // remove
                     let o = IndexPath(item: oldIndex, section: 0)
                     ipsToRemove.append(o)
                     removedItems = true
+                    itemOrderChanged = true
+                }
+            }
+            
+            if itemOrderChanged {
+                DispatchQueue.main.async {
+                    self.dismissAnyPopOver()
                 }
             }
             

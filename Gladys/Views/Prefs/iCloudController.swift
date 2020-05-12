@@ -125,7 +125,7 @@ final class iCloudController: GladysViewController {
                     }
                 }
 			}
-		} else if CloudManager.syncSwitchedOn {
+		} else if !icloudSwitch.isOn && CloudManager.syncSwitchedOn {
 			let sharingOwn = Model.sharingMyItems
 			let importing = Model.containsImportedShares
 			if sharingOwn && importing {

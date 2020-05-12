@@ -1533,6 +1533,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="dontAutoLabelNewItemsSwitch" destination="5wI-qp-Jk6" id="P61-9b-Sq8"/>
                         <outlet property="exclusiveLabelsSwitch" destination="Wpv-EZ-zak" id="qzx-LE-SUV"/>
                         <outlet property="fileMirrorSwitch" destination="N7T-6e-WF2" id="4o2-sD-YNX"/>
+                        <outlet property="fullScreenHolder" destination="UDR-4k-jjE" id="cbT-AY-Kdi"/>
                         <outlet property="fullScreenSwitch" destination="JPg-Em-fla" id="9hI-GJ-FJe"/>
                         <outlet property="inclusiveSearchTermsSwitch" destination="jHl-BA-be6" id="GI8-PE-Xca"/>
                         <outlet property="removeItemsWhenDraggedOutSwitch" destination="foO-r4-VVP" id="8cd-qD-PfN"/>

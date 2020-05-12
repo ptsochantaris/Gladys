@@ -43,7 +43,7 @@ extension Model {
 
         let finalPath = url.appendingPathComponent("items.json")
         guard let data = Data.forceMemoryMapped(contentsOf: finalPath) else {
-            throw NSError(domain: GladysErrorDomain, code: 96, userInfo: [NSLocalizedDescriptionKey: "Could not read imported archive"])
+            throw GladysError.importingArchiveFailed.error
         }
 		let itemsInPackage = try loadDecoder.decode(Array<ArchivedItem>.self, from: data)
 

@@ -17,7 +17,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var displayNotesInMainViewSwitch: UISwitch!
 	@IBOutlet private weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
 	@IBOutlet private weak var fullScreenSwitch: UISwitch!
-	@IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
+    @IBOutlet private weak var fullScreenHolder: SwitchHolder!
+    @IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
 	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
 	@IBOutlet private weak var wideModeSwitch: UISwitch!
 	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
@@ -155,6 +156,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         fileMirrorSwitch.isOn = PersistedOptions.mirrorFilesToDocuments
 		wideModeSwitch.isOn = PersistedOptions.wideMode
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
+        fullScreenHolder.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 
 		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue
 	}

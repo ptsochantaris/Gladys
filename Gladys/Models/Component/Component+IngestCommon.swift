@@ -95,7 +95,7 @@ extension Component {
 	}
 
     private func ingestFailed(error: Error?, andCall: ((Error?) -> Void)?) {
-		let error = error ?? NSError(domain: GladysErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown import error"])
+        let error = error ?? GladysError.unknownIngestError.error
 		log(">> Error receiving item: \(error.finalDescription)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
         DispatchQueue.main.async {

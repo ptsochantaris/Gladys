@@ -10,7 +10,7 @@ import Cocoa
 import Quartz
 import GladysFramework
 
-func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", completion: (() -> Void)? = nil) {
+func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) {
 
 	var finalVC: NSViewController = ViewController.shared
 	while let newVC = finalVC.presentedViewControllers?.first(where: { $0.view.window != nil }) {
