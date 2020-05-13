@@ -770,7 +770,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             
             if itemOrderChanged {
                 DispatchQueue.main.async {
-                    self.dismissAnyPopOver()
+                    if !self.phoneMode {
+                        (self.currentDetailView ?? self.currentPreviewView)?.dismiss(animated: false)
+                    }
                 }
             }
             
@@ -1405,6 +1407,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private var currentDetailView: DetailController? {
 		return firstPresentedNavigationController?.viewControllers.first as? DetailController
 	}
+
+    private var currentPreviewView: PreviewHostingViewController? {
+        return firstPresentedNavigationController?.viewControllers.first as? PreviewHostingViewController
+    }
 
 	private var currentPreferencesView: PreferencesController? {
 		return firstPresentedNavigationController?.viewControllers.first as? PreferencesController

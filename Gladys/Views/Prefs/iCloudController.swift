@@ -94,9 +94,12 @@ final class iCloudController: GladysViewController {
     @IBAction private func syncPolicyChanged(_ sender: UISegmentedControl) {
         if let newPolicy = CloudManager.SyncPermissionContext(rawValue: sender.selectedSegmentIndex) {
             CloudManager.syncContextSetting = newPolicy
+            if newPolicy == .manualOnly {
+                genericAlert(title: "Manual sync warning", message: "This is an advanced setting that disables all syncing unless explicitly requested. Best used as a temporary setting if items with large sizes need to be temporarily added without triggering long syncs.")
+            }
         }
     }
-    
+        
 	@IBAction private func syncNowSelected(_ sender: UIBarButtonItem) {
 		CloudManager.sync { error in
 			DispatchQueue.main.async {
