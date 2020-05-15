@@ -726,7 +726,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
         
         var removedItems = false
-        var itemOrderChanged = false
+        var orderChanged = false
         collection.performBatchUpdates({
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
@@ -747,34 +747,27 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 let newIndex = newUUIDs.firstIndex(of: p)
                 
                 if let oldIndex = oldIndex, let newIndex = newIndex {
-                    if oldIndex == newIndex, savedUUIDs.contains(p) { // update
-                        let n = IndexPath(item: oldIndex, section: 0)
-                        ipsToReload.append(n)
+                    if oldIndex == newIndex { // not moved
+                        if savedUUIDs.contains(p) { // just saved, reload
+                            let n = IndexPath(item: oldIndex, section: 0)
+                            ipsToReload.append(n)
+                        }
                     } else { // move
                         let i1 = IndexPath(item: oldIndex, section: 0)
                         let i2 = IndexPath(item: newIndex, section: 0)
                         moveList.append((i1, i2))
-                        itemOrderChanged = true
                     }
                 } else if let newIndex = newIndex { // insert
                     let n = IndexPath(item: newIndex, section: 0)
                     ipsToInsert.append(n)
-                    itemOrderChanged = true
                 } else if let oldIndex = oldIndex { // remove
                     let o = IndexPath(item: oldIndex, section: 0)
                     ipsToRemove.append(o)
-                    removedItems = true
-                    itemOrderChanged = true
                 }
             }
             
-            if itemOrderChanged {
-                DispatchQueue.main.async {
-                    if !self.phoneMode {
-                        (self.currentDetailView ?? self.currentPreviewView)?.dismiss(animated: false)
-                    }
-                }
-            }
+            removedItems = !ipsToRemove.isEmpty
+            orderChanged = removedItems || !(ipsToInsert.isEmpty && moveList.isEmpty)
             
             collection.reloadItems(at: ipsToReload)
             collection.deleteItems(at: ipsToRemove)
@@ -784,6 +777,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
         }, completion: { _ in
+            if orderChanged {
+                if !self.phoneMode, let vc = (self.currentDetailView ?? self.currentPreviewView) {
+                    //if !self.view.bounds.contains(self.view.convert(vc.view.bounds, from: vc.view)) {
+                        vc.dismiss(animated: false)
+                    //}
+                }
+            }
             if removedItems {
                 self.itemsDeleted()
             }
@@ -1408,8 +1408,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return firstPresentedNavigationController?.viewControllers.first as? DetailController
 	}
 
-    private var currentPreviewView: PreviewHostingViewController? {
-        return firstPresentedNavigationController?.viewControllers.first as? PreviewHostingViewController
+    private var currentPreviewView: PreviewHostingInternalController? {
+        return firstPresentedNavigationController?.viewControllers.first as? PreviewHostingInternalController
     }
 
 	private var currentPreferencesView: PreferencesController? {

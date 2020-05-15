@@ -734,9 +734,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 let newIndex = newUUIDs.firstIndex(of: p)
                 
                 if let oldIndex = oldIndex, let newIndex = newIndex {
-                    if oldIndex == newIndex, savedUUIDs.contains(p) { // update
-                        let n = IndexPath(item: oldIndex, section: 0)
-                        ipsToReload.insert(n)
+                    if oldIndex == newIndex { // didn't move
+                        if savedUUIDs.contains(p) { // just saved, reload
+                            let n = IndexPath(item: oldIndex, section: 0)
+                            ipsToReload.insert(n)
+                        }
                     } else { // move
                         let i1 = IndexPath(item: oldIndex, section: 0)
                         let i2 = IndexPath(item: newIndex, section: 0)

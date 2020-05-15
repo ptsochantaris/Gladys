@@ -69,21 +69,29 @@ final class Model {
 					} else {
 						itemCount = totalItemsInStore
 					}
-					var newDrops = ContiguousArray<ArchivedItem>()
-					newDrops.reserveCapacity(itemCount)
                     
+					var newDrops = ContiguousArray<ArchivedItem>()
+                    let loadQueue = DispatchQueue(label: "build.bru.Gladys.loadDecoderQueue", autoreleaseFrequency: .never)
+                    loadQueue.async {
+                        newDrops.reserveCapacity(itemCount)
+                    }
                     d.withUnsafeBytes { pointer in
                         let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
                         uuidSequence.forEach { u in
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
-                                newDrops.append(item)
+                            if let data = try? Data(contentsOf: dataPath) {
+                                loadQueue.async {
+                                    if let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
+                                        newDrops.append(item)
+                                    }
+                                }
                             }
                         }
                     }
                     
-					drops = DropArray(existingItems: newDrops)
+                    let finalDrops = loadQueue.sync { newDrops }
+					drops = DropArray(existingItems: finalDrops)
 					log("Load time: \(-start.timeIntervalSinceNow) seconds")
 				} else {
 					log("No need to reload data")

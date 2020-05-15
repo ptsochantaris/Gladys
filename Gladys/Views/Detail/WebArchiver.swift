@@ -68,22 +68,20 @@ final class WebArchiver {
 					return
 				}
 
-				var resource: [AnyHashable: Any] = [
-					"WebResourceURL": path
-				]
-				if let mimeType = response.mimeType {
-					resource["WebResourceMIMEType"] = mimeType
-				}
-				if let data = data {
-					resource["WebResourceData"] = data
-				}
-
-				assembleQueue.sync {
+				assembleQueue.async {
+                    var resource: [AnyHashable: Any] = [
+                        "WebResourceURL": path
+                    ]
+                    if let mimeType = response.mimeType {
+                        resource["WebResourceMIMEType"] = mimeType
+                    }
+                    if let data = data {
+                        resource["WebResourceData"] = data
+                    }
 					resourceInfo[path] = resource
+                    log("Downloaded \(path)")
+                    downloadGroup.leave()
 				}
-
-				log("Downloaded \(path)")
-				downloadGroup.leave()
 			}
 		}
 
