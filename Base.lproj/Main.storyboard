@@ -1818,10 +1818,10 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="56" width="320" height="775"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tLR-z3-jkh">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="587.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="657"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="IdW-dE-Hwr">
-                                                <rect key="frame" x="16" y="8" width="288" height="571.5"/>
+                                                <rect key="frame" x="16" y="8" width="288" height="641"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUb-ye-Kbd" userLabel="Spacer">
                                                         <rect key="frame" x="0.0" y="0.0" width="288" height="22"/>
@@ -1921,21 +1921,42 @@ Selecting them will show only items that contain these labels.</string>
                                                             <action selector="callbackSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="zFL-EE-Gg9"/>
                                                         </connections>
                                                     </button>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="POX-nu-ak1" userLabel="Spacer">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pc-lt-IiB" userLabel="Spacer">
                                                         <rect key="frame" x="0.0" y="406" width="288" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="22" id="dd6-Ty-MIh"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Diffing" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ea6-6W-6MI">
+                                                        <rect key="frame" x="0.0" y="428" width="288" height="14.5"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v61-AV-lhj">
+                                                        <rect key="frame" x="0.0" y="442.5" width="288" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                        <state key="normal" title="DeepDiff"/>
+                                                        <connections>
+                                                            <action selector="diffSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="flp-fh-grX"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="POX-nu-ak1" userLabel="Spacer">
+                                                        <rect key="frame" x="0.0" y="475.5" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="UNA-IR-bw4"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Sanity" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3Y-fI-TjG">
-                                                        <rect key="frame" x="0.0" y="428" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="497.5" width="288" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bny-va-9fm">
-                                                        <rect key="frame" x="0.0" y="442.5" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="512" width="288" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="SwiftLint"/>
                                                         <connections>
@@ -1943,20 +1964,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGY-dq-iBU" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="475.5" width="288" height="40"/>
+                                                        <rect key="frame" x="0.0" y="545" width="288" height="40"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="6i5-Yq-12M"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Gladys is Copyright (c) 2017-2020 Paul Tsochantaris, all rights reserved." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrS-5U-9pL">
-                                                        <rect key="frame" x="0.0" y="515.5" width="288" height="34"/>
+                                                        <rect key="frame" x="0.0" y="585" width="288" height="34"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B2P-RD-hoO" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="549.5" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="619" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="rVo-hd-cLO"/>

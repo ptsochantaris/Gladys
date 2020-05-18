@@ -12,6 +12,7 @@ abstract_target 'iOS' do
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
     pod 'SwiftLint'
+    pod 'DeepDiff'
   end
 
   target 'GladysAction' do
@@ -33,6 +34,7 @@ abstract_target 'macOS' do
     pod 'ZIPFoundation'
     pod 'CallbackURLKit'
     pod 'SwiftLint'
+    pod 'DeepDiff'
   end
 end
 

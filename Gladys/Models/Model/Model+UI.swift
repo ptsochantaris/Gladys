@@ -222,10 +222,13 @@ extension Model {
     private static func saveDone() {
         watchDelegate?.updateContext()
         
-        if saveIsDueToSyncFetch {
+        if saveIsDueToSyncFetch && !CloudManager.syncDirty {
             saveIsDueToSyncFetch = false
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
         } else {
+            if CloudManager.syncDirty {
+                log("A sync had been requested while syncing, evaluating another sync")
+            }
             CloudManager.syncAfterSaveIfNeeded()
         }
         

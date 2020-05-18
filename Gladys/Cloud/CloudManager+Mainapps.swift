@@ -20,7 +20,7 @@ extension CloudManager {
     
     static let privateDatabaseSubscriptionId = "private-changes"
     static let sharedDatabaseSubscriptionId = "shared-changes"
-    private static var syncDirty = false
+    static var syncDirty = false
     
     private static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")

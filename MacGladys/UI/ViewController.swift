@@ -9,6 +9,7 @@
 import Cocoa
 import Quartz
 import GladysFramework
+import DeepDiff
 
 func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) {
 
@@ -715,6 +716,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedItem }.map { $0.uuid }
 
         var removedItems = false
+        var ipsToReload = Set<IndexPath>()
         collection.animator().performBatchUpdates({
 
             let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
@@ -724,37 +726,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 return
             }
             let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
-            var ipsToReload = Set<IndexPath>()
             var ipsToRemove = Set<IndexPath>()
             var ipsToInsert = Set<IndexPath>()
             var moveList = [(IndexPath, IndexPath)]()
 
-            Set(oldUUIDs).union(newUUIDs).forEach { p in
-                let oldIndex = oldUUIDs.firstIndex(of: p)
-                let newIndex = newUUIDs.firstIndex(of: p)
-                
-                if let oldIndex = oldIndex, let newIndex = newIndex {
-                    if oldIndex == newIndex { // didn't move
-                        if savedUUIDs.contains(p) { // just saved, reload
-                            let n = IndexPath(item: oldIndex, section: 0)
-                            ipsToReload.insert(n)
-                        }
-                    } else { // move
-                        let i1 = IndexPath(item: oldIndex, section: 0)
-                        let i2 = IndexPath(item: newIndex, section: 0)
-                        moveList.append((i1, i2))
-                    }
-                } else if let newIndex = newIndex { // insert
-                    let n = IndexPath(item: newIndex, section: 0)
-                    ipsToInsert.insert(n)
-                } else if let oldIndex = oldIndex { // remove
-                    let o = IndexPath(item: oldIndex, section: 0)
-                    ipsToRemove.insert(o)
-                    removedItems = true
+            let changes = diff(old: oldUUIDs, new: newUUIDs)
+            for change in changes {
+                switch change {
+                case .delete(let deletion):
+                    ipsToRemove.insert(IndexPath(item: deletion.index, section: 0))
+                case .insert(let insertion):
+                    ipsToInsert.insert(IndexPath(item: insertion.index, section: 0))
+                case .move(let move):
+                    moveList.append((IndexPath(item: move.fromIndex, section: 0), IndexPath(item: move.toIndex, section: 0)))
+                case .replace(let reload):
+                    ipsToReload.insert(IndexPath(item: reload.index, section: 0))
                 }
             }
             
-            collection.reloadItems(at: ipsToReload)
+            for uuid in savedUUIDs {
+                if let i = newUUIDs.firstIndex(of: uuid) {
+                    let ip = IndexPath(item: i, section: 0)
+                    ipsToReload.insert(ip)
+                }
+            }
+            
+            removedItems = !ipsToRemove.isEmpty
+            
             collection.deleteItems(at: ipsToRemove)
             collection.insertItems(at: ipsToInsert)
             for move in moveList {
@@ -762,6 +760,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
             
         })
+
+        collection.reloadItems(at: ipsToReload)
+
         if removedItems {
             self.itemsDeleted()
         }

@@ -64,12 +64,12 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		PersistedOptions.dontAutoLabelNewItems = sender.isOn
 	}
 
-	@IBAction func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.exclusiveMultipleLabels = sender.isOn
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil, userInfo: nil)
 	}
 
-	@IBAction func autoArchiveSwitchSelected(_ sender: UISwitch) {
+	@IBAction private func autoArchiveSwitchSelected(_ sender: UISwitch) {
 		if sender.isOn {
 			let a = UIAlertController(title: "Are you sure?", message: "This can use a lot of data (and storage) when adding web links!\n\nActivate this only if you know what you are doing.", preferredStyle: .alert)
 			a.addAction(UIAlertAction(title: "Activate", style: .destructive) { _ in
@@ -84,7 +84,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		}
 	}
 
-	@IBAction func actionSelectorValueChanged(_ sender: UISegmentedControl) {
+	@IBAction private func actionSelectorValueChanged(_ sender: UISegmentedControl) {
 		if let value = DefaultTapAction(rawValue: sender.selectedSegmentIndex) {
 			PersistedOptions.actionOnTap = value
 		}

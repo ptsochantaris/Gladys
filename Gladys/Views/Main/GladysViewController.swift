@@ -133,60 +133,6 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             log("Error opening new window: \(error.localizedDescription)")
         }
     }
-    
-    private var scrollTimer: GladysTimer?
-	private var scrollLink: CADisplayLink?
-	private var scrollView: UIScrollView?
-
-	override var keyCommands: [UIKeyCommand]? {
-		var a = [
-			UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow),
-			UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow)
-		]
-		if self.popoverPresenter != nil {
-            let w = UIKeyCommand.makeCommand(input: "w", modifierFlags: .command, action: #selector(done), title: "Close This View")
-			a.insert(w, at: 0)
-		}
-		return a
-	}
-
-	@objc private func scrollUp() {
-		startScroll(#selector(scrollLineUp))
-	}
-
-	@objc private func scrollDown() {
-		startScroll(#selector(scrollLineDown))
-	}
-
-	private func startScroll(_ selector: Selector) {
-		scrollLink?.invalidate()
-		guard let scr = view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView else { return }
-		scrollView = scr
-		scrollLink = CADisplayLink(target: self, selector: selector)
-		scrollLink!.add(to: RunLoop.main, forMode: .common)
-		scrollTimer = GladysTimer(interval: 0.4) {
-			self.scrollLink?.invalidate()
-			self.scrollLink = nil
-			self.scrollView = nil
-		}
-	}
-
-	@objc private func scrollLineUp() {
-		if let firstScrollView = scrollView {
-			var newPos = firstScrollView.contentOffset
-			let maxY = (firstScrollView.contentSize.height - firstScrollView.bounds.size.height) + firstScrollView.adjustedContentInset.bottom
-			newPos.y = min(firstScrollView.contentOffset.y+8, maxY)
-			firstScrollView.setContentOffset(newPos, animated: false)
-		}
-	}
-
-	@objc private func scrollLineDown() {
-		if let firstScrollView = scrollView {
-			var newPos = firstScrollView.contentOffset
-			newPos.y = max(newPos.y-8, -firstScrollView.adjustedContentInset.top)
-			firstScrollView.setContentOffset(newPos, animated: false)
-		}
-	}
 
 	private func showDone(_ show: Bool) {
         #if targetEnvironment(macCatalyst)
@@ -296,5 +242,111 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     
     var isAccessoryWindow: Bool {
         return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
+    }
+    
+    // MARK: scrolling
+    
+    private final class ScrollInfo {
+        let scrollLink: CADisplayLink
+        let scrollView: UIScrollView
+        
+        init(scrollView: UIScrollView, target: AnyObject, selector: Selector) {
+            self.scrollView = scrollView
+            scrollLink = CADisplayLink(target: target, selector: selector)
+            scrollLink.add(to: RunLoop.main, forMode: .common)
+        }
+        
+        deinit {
+            scrollLink.invalidate()
+        }
+    }
+    
+    private var scrollInfo: ScrollInfo?
+
+    override var keyCommands: [UIKeyCommand]? {
+        var a = [UIKeyCommand]()
+        if #available(iOS 13.4, *) {
+            a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
+            a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
+            a.append(UIKeyCommand(title: "Page Down", action: #selector(pageDown), input: UIKeyCommand.inputPageDown))
+            a.append(UIKeyCommand(title: "Page Up", action: #selector(pageUp), input: UIKeyCommand.inputPageUp))
+        }
+        if self.popoverPresenter != nil {
+            let w = UIKeyCommand.makeCommand(input: "w", modifierFlags: .command, action: #selector(done), title: "Close Popup")
+            a.insert(w, at: 0)
+        }
+        return a
+    }
+
+    @objc private func scrollUp() {}
+
+    @objc private func scrollDown() {}
+
+    @objc private func pageDown() {
+        guard let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first else { return }
+        var currentOffset = scr.contentOffset
+        currentOffset.y = min(currentOffset.y + scr.bounds.height, scr.contentSize.height - scr.bounds.height + scr.adjustedContentInset.bottom)
+        scr.setContentOffset(currentOffset, animated: true)
+    }
+
+    @objc private func pageUp() {
+        guard let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first else { return }
+        var currentOffset = scr.contentOffset
+        currentOffset.y = max(currentOffset.y - scr.bounds.height, -scr.adjustedContentInset.top - 55)
+        scr.setContentOffset(currentOffset, animated: true)
+    }
+
+    private func pressesDone(_ presses: Set<UIPress>) -> Bool {
+        if #available(iOS 13.4, *) {
+            let code = presses.first?.key?.keyCode
+            if code == UIKeyboardHIDUsage.keyboardUpArrow || code == UIKeyboardHIDUsage.keyboardDownArrow {
+                scrollInfo = nil
+                return true
+            }
+        }
+        return false
+    }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        if #available(iOS 13.4, *), let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
+            let code = presses.first?.key?.keyCode
+            if code == UIKeyboardHIDUsage.keyboardUpArrow {
+                scrollInfo = ScrollInfo(scrollView: scr, target: self, selector: #selector(scrollLineDown))
+                return
+            } else if code == UIKeyboardHIDUsage.keyboardDownArrow {
+                scrollInfo = ScrollInfo(scrollView: scr, target: self, selector: #selector(scrollLineUp))
+                return
+            }
+        }
+        super.pressesBegan(presses, with: event)
+    }
+
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        if !pressesDone(presses) {
+            super.pressesEnded(presses, with: event)
+        }
+    }
+
+    override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        if !pressesDone(presses) {
+            super.pressesCancelled(presses, with: event)
+        }
+    }
+    
+    @objc private func scrollLineUp() {
+        if let firstScrollView = scrollInfo?.scrollView {
+            var newPos = firstScrollView.contentOffset
+            let maxY = (firstScrollView.contentSize.height - firstScrollView.bounds.size.height) + firstScrollView.adjustedContentInset.bottom
+            newPos.y = min(firstScrollView.contentOffset.y + 12, maxY)
+            firstScrollView.contentOffset = newPos
+        }
+    }
+
+    @objc private func scrollLineDown() {
+        if let firstScrollView = scrollInfo?.scrollView {
+            var newPos = firstScrollView.contentOffset
+            newPos.y = max(newPos.y - 12, -firstScrollView.adjustedContentInset.top - 1)
+            firstScrollView.contentOffset = newPos
+        }
     }
 }

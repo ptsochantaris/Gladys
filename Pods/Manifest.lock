@@ -2,6 +2,7 @@ PODS:
   - CallbackURLKit (2.3.0):
     - CallbackURLKit/Core (= 2.3.0)
   - CallbackURLKit/Core (2.3.0)
+  - DeepDiff (2.3.1)
   - Fuzi (3.1.2)
   - HotKey (0.1.2)
   - SwiftLint (0.39.2)
@@ -9,6 +10,7 @@ PODS:
 
 DEPENDENCIES:
   - CallbackURLKit
+  - DeepDiff
   - Fuzi
   - HotKey
   - SwiftLint
@@ -17,6 +19,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - CallbackURLKit
+    - DeepDiff
     - Fuzi
     - HotKey
     - SwiftLint
@@ -24,11 +27,12 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   CallbackURLKit: a940d1b869c70e1fa700ea06f988ba2a8963dafb
+  DeepDiff: e5ae6c50d0321568e4508cec5930b9f10bb293fc
   Fuzi: dba7215e52fb39dd7b1a62f69ede1e30edff0ae1
   HotKey: ad59450195936c10992438c4210f673de5aee43e
   SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 608005dc13d706ed303cec790be7edb0c53e631b
+PODFILE CHECKSUM: 33d1dc8352aff781ae88a4a67dc66fa9a39752fe
 
 COCOAPODS: 1.9.1

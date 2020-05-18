@@ -83,7 +83,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		tableView.reloadData()
 	}
     
-    @IBAction func renameLabelSelected(_ sender: NSMenuItem) {
+    @IBAction private func renameLabelSelected(_ sender: NSMenuItem) {
         let index = tableView.clickedRow
         let toggle = filteredLabels[index]
         
@@ -107,7 +107,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         }
     }
     
-    @IBAction func deleteLabelSelected(_ sender: NSMenuItem) {
+    @IBAction private func deleteLabelSelected(_ sender: NSMenuItem) {
         let index = tableView.clickedRow
         let toggle = filteredLabels[index]
         

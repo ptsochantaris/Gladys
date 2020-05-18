@@ -29,7 +29,7 @@ final class NotesEditorViewController: GladysViewController {
 		textView.becomeFirstResponder()
 	}
 
-	@IBAction func saveSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func saveSelected(_ sender: UIBarButtonItem) {
 		let text = textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 		delegate?.newNoteSaved(note: text)
 		navigationController?.popViewController(animated: true)

@@ -49,7 +49,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 		}
 	}
 
-	@IBAction func copySelected(_ sender: UIBarButtonItem) {
+	@IBAction private func copySelected(_ sender: UIBarButtonItem) {
 		if let p = propertyList as? [AnyHashable: Any],
 			let mimeType = p["WebResourceMIMEType"] as? String,
 			let data = p["WebResourceData"] as? Data,

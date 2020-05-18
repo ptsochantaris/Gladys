@@ -28,6 +28,10 @@ final class CreditsViewController: GladysViewController {
         UIApplication.shared.open(URL(string: "https://github.com/phimage/CallbackURLKit")!)
     }
 
+    @IBAction private func diffSelected(_ sender: UIButton) {
+        UIApplication.shared.open(URL(string: "https://github.com/onmyway133/DeepDiff")!)
+    }
+
     @IBAction private func lintSelected(_ sender: UIButton) {
         UIApplication.shared.open(URL(string: "https://github.com/realm/SwiftLint")!)
     }

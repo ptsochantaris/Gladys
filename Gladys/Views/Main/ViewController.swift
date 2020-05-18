@@ -1,6 +1,7 @@
 import UIKit
 import GladysFramework
 import Intents
+import DeepDiff
 
 extension UIKeyCommand {
     static func makeCommand(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, title: String) -> UIKeyCommand {
@@ -248,6 +249,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && itemToMove.labels != filter.enabledLabelsForItems {
                         itemToMove.labels = Array(Set(itemToMove.labels).union(filter.enabledLabelsForItems))
                         itemToMove.postModified()
+                        itemToMove.markUpdated()
                         needsFullSave = true
                     } else {
                         needsSaveIndex = true
@@ -727,6 +729,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         var removedItems = false
         var orderChanged = false
+        var ipsToReload = [IndexPath]()
         collection.performBatchUpdates({
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
@@ -737,39 +740,37 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
             let newUUIDs = filter.filteredDrops.map { $0.uuid }
-            var ipsToReload = [IndexPath]()
+            
             var ipsToRemove = [IndexPath]()
             var ipsToInsert = [IndexPath]()
             var moveList = [(IndexPath, IndexPath)]()
 
-            Set(oldUUIDs).union(newUUIDs).forEach { p in
-                let oldIndex = oldUUIDs.firstIndex(of: p)
-                let newIndex = newUUIDs.firstIndex(of: p)
-                
-                if let oldIndex = oldIndex, let newIndex = newIndex {
-                    if oldIndex == newIndex { // not moved
-                        if savedUUIDs.contains(p) { // just saved, reload
-                            let n = IndexPath(item: oldIndex, section: 0)
-                            ipsToReload.append(n)
-                        }
-                    } else { // move
-                        let i1 = IndexPath(item: oldIndex, section: 0)
-                        let i2 = IndexPath(item: newIndex, section: 0)
-                        moveList.append((i1, i2))
+            let changes = diff(old: oldUUIDs, new: newUUIDs)
+            for change in changes {
+                switch change {
+                case .delete(let deletion):
+                    ipsToRemove.append(IndexPath(item: deletion.index, section: 0))
+                case .insert(let insertion):
+                    ipsToInsert.append(IndexPath(item: insertion.index, section: 0))
+                case .move(let move):
+                    moveList.append((IndexPath(item: move.fromIndex, section: 0), IndexPath(item: move.toIndex, section: 0)))
+                case .replace(let reload):
+                    ipsToReload.append(IndexPath(item: reload.index, section: 0))
+                }
+            }
+            
+            for uuid in savedUUIDs {
+                if let i = newUUIDs.firstIndex(of: uuid) {
+                    let ip = IndexPath(item: i, section: 0)
+                    if !ipsToReload.contains(ip) {
+                        ipsToReload.append(ip)
                     }
-                } else if let newIndex = newIndex { // insert
-                    let n = IndexPath(item: newIndex, section: 0)
-                    ipsToInsert.append(n)
-                } else if let oldIndex = oldIndex { // remove
-                    let o = IndexPath(item: oldIndex, section: 0)
-                    ipsToRemove.append(o)
                 }
             }
             
             removedItems = !ipsToRemove.isEmpty
             orderChanged = removedItems || !(ipsToInsert.isEmpty && moveList.isEmpty)
             
-            collection.reloadItems(at: ipsToReload)
             collection.deleteItems(at: ipsToRemove)
             collection.insertItems(at: ipsToInsert)
             for move in moveList {
@@ -787,10 +788,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if removedItems {
                 self.itemsDeleted()
             }
+            self.updateUI()
         })
-                
-		updateUI()
-	}
+
+        collection.reloadItems(at: ipsToReload)
+    }
 
 	private var emptyView: UIImageView?
 	@objc private func updateUI() {
@@ -845,7 +847,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         updateEmptyView()
 	}
 
-	@IBAction func shareButtonSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func shareButtonSelected(_ sender: UIBarButtonItem) {
 		guard let selectedItems = selectedItems else { return }
         let sources = selectedItems.compactMap { Model.item(uuid: $0)?.mostRelevantTypeItem?.sharingActivitySource }
 		if sources.isEmpty { return }
@@ -1015,7 +1017,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    @IBAction func editButtonSelected(_ sender: UIBarButtonItem) {
+    @IBAction private func editButtonSelected(_ sender: UIBarButtonItem) {
         setEditing(!isEditing, animated: true)
     }
 

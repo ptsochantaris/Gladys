@@ -48,11 +48,15 @@ extension Model {
 	}
 
     static func saveComplete(wasIndexOnly: Bool) {
-		if saveIsDueToSyncFetch {
+		if saveIsDueToSyncFetch && !CloudManager.syncDirty {
 			saveIsDueToSyncFetch = false
 			log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
 		} else {
-			log("Will sync up after a local save")
+            if CloudManager.syncDirty {
+                log("A sync had been requested while syncing, running another sync")
+            } else {
+                log("Will sync up after a local save")
+            }
 			CloudManager.sync { error in
 				if let error = error {
 					log("Error in sync after save: \(error.finalDescription)")
