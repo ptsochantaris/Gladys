@@ -34,15 +34,34 @@ final class Singleton {
         
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
+            Model.scanForMirrorChanges {}
         }
 
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
-        
+        n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
+        n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+
         Model.beginMonitoringChanges() // will reload data as well
         Model.detectExternalChanges()
+    }
+    
+    @objc private func foregrounded() {
+        if UIApplication.shared.applicationState == .background {
+            // foregrounding, not including app launch
+            log("App foregrounded")
+            if PersistedOptions.mirrorFilesToDocuments {
+                Model.scanForMirrorChanges {}
+            }
+            CloudManager.opportunisticSyncIfNeeded()
+        }
+    }
+    
+    @objc private func backgrounded() {
+        log("App backgrounded")
+        Model.lockUnlockedItems()
     }
     
     @objc private func modelDataUpdate() {
@@ -191,11 +210,11 @@ final class Singleton {
         }
     }
     
-    func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
-        if let n = scene.windows.first?.rootViewController as? UINavigationController, let vc = n.viewControllers.first as? ViewController {
+        if let vc = scene.mainController {
             v = vc
             replacing = false
         } else {
@@ -241,11 +260,7 @@ final class Singleton {
             }
         }
     }
-    
-    func updateWindowCount() {
-        openCount = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.count
-    }
-    
+        
     func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {

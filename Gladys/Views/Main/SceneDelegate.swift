@@ -27,6 +27,13 @@ extension UIScene {
         let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController
         return n?.viewControllers.first
     }
+    
+    var mainController: ViewController? {
+        if let n = (self as? UIWindowScene)?.windows.first?.rootViewController as? UINavigationController, let vc = n.viewControllers.first as? ViewController {
+            return vc
+        }
+        return nil
+    }
 }
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -34,11 +41,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, useCentral: false)
-        Singleton.shared.updateWindowCount()
+        updateWindowCount()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
-        Singleton.shared.updateWindowCount()
+        updateWindowCount()
     }
     
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
@@ -73,26 +80,28 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
             
     func sceneWillEnterForeground(_ scene: UIScene) {
-        if UIApplication.shared.applicationState == .background {
-            // just launching, or user was in another app
-            if PersistedOptions.mirrorFilesToDocuments {
-                Model.scanForMirrorChanges {}
-            }
-            CloudManager.opportunisticSyncIfNeeded()
+        updateWindowCount()
+        log("Scene foregrounded")
+        if let vc = scene.mainController {
+            vc.sceneForegrounded()
         }
-        Singleton.shared.updateWindowCount()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
-        Singleton.shared.updateWindowCount()
+        updateWindowCount()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
-        Singleton.shared.updateWindowCount()
+        updateWindowCount()
+        log("Scene backgrounded")
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        Singleton.shared.updateWindowCount()
+        updateWindowCount()
+    }
+    
+    private func updateWindowCount() {
+        Singleton.shared.openCount = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.count
     }
         
     func windowScene(_ windowScene: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {

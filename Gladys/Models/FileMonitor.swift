@@ -40,6 +40,7 @@ final class FileMonitor: NSObject, NSFilePresenter {
         #endif
     }
     
+    #if os(iOS)
     @objc private func foregrounded() {
         NSFileCoordinator.addFilePresenter(self)
     }
@@ -47,6 +48,7 @@ final class FileMonitor: NSObject, NSFilePresenter {
     @objc private func backgrounded() {
         NSFileCoordinator.removeFilePresenter(self)
     }
+    #endif
     
     func stop() {
         if let p = presentedItemURL {

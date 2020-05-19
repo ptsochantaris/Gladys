@@ -224,7 +224,13 @@ final class ArchivedItemCell: UICollectionViewCell {
     
 	private var existingPreviewView: UIView?
 
-	var lowMemoryMode = false
+    var lowMemoryMode = false {
+        didSet {
+            if lowMemoryMode != oldValue {
+                reDecorate()
+            }
+        }
+    }
 
 	@objc private func itemModified(_ notification: Notification) {
         guard (notification.object as? ArchivedItem) == archivedDropItem else { return }
@@ -242,7 +248,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         }
 	}
 
-	func reDecorate() {
+	private func reDecorate() {
 		if lowMemoryMode {
 			decorate(with: nil)
 		} else {

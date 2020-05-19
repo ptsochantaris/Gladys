@@ -546,8 +546,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
-        n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
         n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
@@ -621,10 +619,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		acceptAlert = nil
 	}
 
-	@objc private func backgrounded() {
-		Model.lockUnlockedItems()
-	}
-
 	@objc private func reachabilityChanged() {
         if reachability.status == .reachableViaWiFi && CloudManager.syncContextSetting == .wifiOnly {
 			CloudManager.opportunisticSyncIfNeeded()
@@ -686,26 +680,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private var lowMemoryMode = false {
 		didSet {
-			for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
-				cell.lowMemoryMode = lowMemoryMode
-				cell.reDecorate()
-			}
+            if lowMemoryMode != oldValue {
+                for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
+                    cell.lowMemoryMode = lowMemoryMode
+                }
+            }
 		}
 	}
 
 	override func didReceiveMemoryWarning() {
 		if UIApplication.shared.applicationState == .background {
-			log("Placing UI in low-memory mode")
+			log("Placing UI in background low-memory mode")
 			lowMemoryMode = true
 		}
 		clearCaches()
 		super.didReceiveMemoryWarning()
 	}
 
-	@objc private func foregrounded() {
-		if lowMemoryMode {
-			lowMemoryMode = false
-		}
+    func sceneForegrounded() {
+        lowMemoryMode = false
 		if emptyView != nil {
 			blurb(Greetings.randomGreetLine)
 		}
@@ -1293,13 +1286,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         view.setNeedsLayout()
 	}
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-
+    private var lastLayoutProcessed = ""
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
         let sinset = layout.sectionInset
         let insets = collection.safeAreaInsets
         let width = collection.bounds.size.width - insets.left - insets.right - sinset.left - sinset.right
+        let wideMode = PersistedOptions.wideMode
+        let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
+        
+        let key = "\(width)-\(wideMode)-\(forceTwoColumn)"
+        if lastLayoutProcessed == key {
+            return
+        }
+        lastLayoutProcessed = key
 
         ////////////////////////////////////////
         
@@ -1315,14 +1317,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             itemSize = CGSize(width: side, height: 80)
         }
 
-        if PersistedOptions.wideMode {
+        if wideMode {
             if width >= 768 {
                 calculateWideSizes(for: 2)
             } else {
                 itemSize = CGSize(width: width, height: 80)
             }
         } else {
-            if width <= 320 && !PersistedOptions.forceTwoColumnPreference {
+            if width <= 320 && !forceTwoColumn {
                 itemSize = CGSize(width: 300, height: 200)
             } else if width >= 1366 {
                 calculateSizes(for: 5)

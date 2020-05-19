@@ -243,13 +243,13 @@ extension Model {
 
 	static func beginMonitoringChanges() {
 		let n = NotificationCenter.default
-		foregroundObserver = n.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { _ in
+		foregroundObserver = n.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { _ in
 			foregrounded()
 		}
-		backgroundObserver = n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { _ in
+		backgroundObserver = n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
 			backgrounded()
 		}
-		foregrounded()
+        foregrounded()
 	}
 
 	private static let filePresenter = ModelFilePresenter()
