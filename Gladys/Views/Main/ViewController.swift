@@ -1035,12 +1035,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 	}
     
-    private var itemSize: CGSize = .zero
-    
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return itemSize
-	}
-
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
 		let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell
         return cell?.dragParameters
@@ -1285,41 +1279,51 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@objc private func forceLayout() {
         view.setNeedsLayout()
 	}
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.collection.collectionViewLayout.invalidateLayout()
+    }
 
-    private var lastLayoutProcessed = ""
+    private var lastLayoutProcessed: CGFloat = 0
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let layout = (collection.collectionViewLayout as! UICollectionViewFlowLayout)
+        guard let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+
         let sinset = layout.sectionInset
         let insets = collection.safeAreaInsets
-        let width = collection.bounds.size.width - insets.left - insets.right - sinset.left - sinset.right
+        let bounds = collection.bounds
+        let width = bounds.size.width - insets.left - insets.right - sinset.left - sinset.right
         let wideMode = PersistedOptions.wideMode
         let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
         
-        let key = "\(width)-\(wideMode)-\(forceTwoColumn)"
+        let key = width + (wideMode ? 0.2 : 0) + (forceTwoColumn ? 0.2 : 0)
         if lastLayoutProcessed == key {
             return
         }
-        lastLayoutProcessed = key
 
         ////////////////////////////////////////
-        
-        func calculateSizes(for columnCount: CGFloat) {
+                
+        func calculateSizes(for columnCount: CGFloat) -> CGSize {
             let extras = layout.minimumInteritemSpacing * (columnCount - 1)
             let side = ((width - extras) / columnCount).rounded(.down)
-            itemSize = CGSize(width: side, height: side)
+            return CGSize(width: side, height: side)
         }
 
-        func calculateWideSizes(for columnCount: CGFloat) {
+        func calculateWideSizes(for columnCount: CGFloat) -> CGSize {
             let extras = layout.minimumInteritemSpacing * (columnCount - 1)
             let side = ((width - extras) / columnCount).rounded(.down)
-            itemSize = CGSize(width: side, height: 80)
+            return CGSize(width: side, height: 80)
         }
+
+        let itemSize: CGSize
 
         if wideMode {
             if width >= 768 {
-                calculateWideSizes(for: 2)
+                itemSize = calculateWideSizes(for: 2)
             } else {
                 itemSize = CGSize(width: width, height: 80)
             }
@@ -1327,18 +1331,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if width <= 320 && !forceTwoColumn {
                 itemSize = CGSize(width: 300, height: 200)
             } else if width >= 1366 {
-                calculateSizes(for: 5)
+                itemSize = calculateSizes(for: 5)
             } else if width > 980 {
-                calculateSizes(for: 4)
+                itemSize = calculateSizes(for: 4)
             } else if width > 438 {
-                calculateSizes(for: 3)
+                itemSize = calculateSizes(for: 3)
             } else {
-                calculateSizes(for: 2)
+                itemSize = calculateSizes(for: 2)
             }
         }
         
+        layout.itemSize = itemSize
+        lastLayoutProcessed = key
+        
         view.window?.windowScene?.session.userInfo?["ItemSize"] = itemSize
-        layout.invalidateLayout()
 
         log("Handlesize for: \(width), width: \(itemSize.width)")
 
