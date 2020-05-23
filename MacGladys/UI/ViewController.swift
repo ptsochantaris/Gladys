@@ -1302,6 +1302,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if !checkingDrag, window.isVisible {
             if autoShown && autoShowOnEdge > 0 && window.frame.insetBy(dx: -30, dy: -30).contains(mouseLocation) {
                 enteredWindowAfterAutoShow = true
+                hideTimer = nil
 
             } else if enteredWindowAfterAutoShow && (self.presentedViewControllers?.isEmpty ?? true) {
                 hideWindowBecauseOfMouse()
@@ -1325,21 +1326,41 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     
     private func mouseInActivationBoundary(at autoShowOnEdge: Int, mouseLocation: CGPoint) -> Bool {
         switch autoShowOnEdge {
-        case 1:
-            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
-                return mouseLocation.x == currentScreenFrame.minX
+        case 1: // left
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.x <= currentScreenFrame.minX
             }
-        case 2:
-            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
-                return mouseLocation.x > currentScreenFrame.maxX - 1
+        case 2: // right
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.x >= currentScreenFrame.maxX - 1
             }
-        case 3:
-            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
-                return mouseLocation.y > currentScreenFrame.maxY - 1
+        case 3: // top
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.y >= currentScreenFrame.maxY - 1
             }
-        case 4:
-            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })?.frame {
+        case 4: // bottom
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.y <= currentScreenFrame.minY + 1
+            }
+        case 5: // top left
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.x <= currentScreenFrame.minX
+                    && mouseLocation.y >= currentScreenFrame.maxY - 1
+            }
+        case 6: // top right
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.y >= currentScreenFrame.maxY - 1
+                    && mouseLocation.x >= currentScreenFrame.maxX - 1
+            }
+        case 7: // bottom left
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
                 return mouseLocation.y < currentScreenFrame.minY + 1
+                    && mouseLocation.x <= currentScreenFrame.minX
+            }
+        case 8: // bottom right
+            if let currentScreenFrame = NSScreen.screens.first(where: { $0.frame.insetBy(dx: -1, dy: -1).contains(mouseLocation) })?.frame {
+                return mouseLocation.y <= currentScreenFrame.minY + 1
+                    && mouseLocation.x >= currentScreenFrame.maxX - 1
             }
         default:
             break
@@ -1358,20 +1379,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
     
+    private var hideTimer: GladysTimer?
+    
     private func showWindowBecauseOfMouse() {
         guard let window = view.window else { return }
+        
+        hideTimer = nil
+        
         enteredWindowAfterAutoShow = false
         autoShown = true
         window.alphaValue = 0
         window.orderFrontRegardless()
         window.makeKey()
         window.animator().alphaValue = 1
+        
+        let time = TimeInterval(PersistedOptions.autoHideAfter)
+        if time > 0 {
+            hideTimer = GladysTimer(interval: time) {
+                self.hideWindowBecauseOfMouse()
+            }
+        }
     }
     
     private func hideWindowBecauseOfMouse() {
         guard let window = view.window else { return }
         enteredWindowAfterAutoShow = false
         autoShown = false
+
         NSAnimationContext.runAnimationGroup({ _ in
             window.animator().alphaValue = 0
         }, completionHandler: {

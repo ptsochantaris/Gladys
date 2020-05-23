@@ -138,4 +138,13 @@ extension PersistedOptions {
             defaults.set(newValue, forKey: "autoShowFromEdge")
         }
     }
+    
+    static var autoHideAfter: Int {
+        get {
+            return defaults.integer(forKey: "autoHideAfter")
+        }
+        set {
+            defaults.set(newValue, forKey: "autoHideAfter")
+        }
+    }
 }

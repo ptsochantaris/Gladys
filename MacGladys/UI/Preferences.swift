@@ -28,6 +28,9 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var autoShowWhenDraggingSwitch: NSButton!
     @IBOutlet private weak var autoShowOnEdgePicker: NSPopUpButton!
     
+    @IBOutlet private weak var fadeAfterLabel: NSTextField!
+    @IBOutlet private weak var fadeAfterCounter: NSStepper!
+    
 	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
 	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
 
@@ -106,12 +109,30 @@ final class Preferences: NSViewController {
 		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
         touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
         autoShowOnEdgePicker.selectItem(at: PersistedOptions.autoShowFromEdge)
+        updateFadeLabel()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
 		updateSyncSwitches()
 		setupHotkeySection()
 	}
-
+    
+    private func updateFadeLabel() {
+        let value = PersistedOptions.autoHideAfter
+        fadeAfterCounter.integerValue = value
+        if value == 0 {
+            fadeAfterLabel.stringValue = "Stay visible and wait for mouse to enter"
+        } else if value == 1 {
+            fadeAfterLabel.stringValue = "Hide again after 1 second if mouse doesn't enter"
+        } else {
+            fadeAfterLabel.stringValue = "Hide again after \(value) seconds if mouse doesn't enter"
+        }
+    }
+    
+    @IBAction private func autoFadeChanged(_ sender: NSStepperCell) {
+        PersistedOptions.autoHideAfter = sender.integerValue
+        updateFadeLabel()
+    }
+    
 	private func setupHotkeySection() {
 		if let m = hotkeyChar.menu {
 			m.removeAllItems()
