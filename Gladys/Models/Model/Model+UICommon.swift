@@ -741,6 +741,7 @@ extension Model {
 
                 let allCount = allItems.count
 				var uuidData = Data(count: allCount * 16)
+                let encoder = saveEncoder
                 uuidData.withUnsafeMutableBytes { unsafeMutableRawBufferPointer in
                     let uuidArray = unsafeMutableRawBufferPointer.bindMemory(to: uuid_t.self)
                     var count = 0
@@ -750,7 +751,7 @@ extension Model {
                         count += 1
                         if dirtyUuids.contains(u) {
                             let finalPath = url.appendingPathComponent(u.uuidString)
-                            try? saveEncoder.encode(item).write(to: finalPath)
+                            try? encoder.encode(item).write(to: finalPath)
                         }
                     }
                 }

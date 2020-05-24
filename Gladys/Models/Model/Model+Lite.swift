@@ -131,13 +131,14 @@ extension Model {
 			}
 
 			do {
+                let decoder = loadDecoder
                 let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
                 d.withUnsafeBytes { pointer in
                     pointer.bindMemory(to: uuid_t.self).forEach { u in
                         autoreleasepool {
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath), let item = try? loadDecoder.decode(ArchivedItem.self, from: data), !perItemCallback(item) {
+                            if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data), !perItemCallback(item) {
                                 return
                             }
                         }
@@ -175,13 +176,14 @@ extension Model {
 					uuidData = Data()
 				}
 
+                let encoder = saveEncoder
 				for item in items {
                     item.flags.remove(.isBeingCreatedBySync)
                     item.flags.remove(.needsSaving)
 					let u = item.uuid
 					let t = u.uuid
                     let finalPath = url.appendingPathComponent(u.uuidString)
-					try saveEncoder.encode(item).write(to: finalPath)
+					try encoder.encode(item).write(to: finalPath)
 					uuidData.insert(contentsOf: [t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7, t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15], at: 0)
 				}
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)

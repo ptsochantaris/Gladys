@@ -14,17 +14,29 @@ final class Model {
 		dataFileLastModified = .distantPast
 	}
     
-    static let loadDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-        return decoder
-    }()
+    static var loadDecoder: JSONDecoder {
+        if let decoder = Thread.current.threadDictionary["gladys.decoder"] as? JSONDecoder {
+            return decoder
+        } else {
+            log("Creating new loading decoder")
+            let decoder = JSONDecoder()
+            decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+            Thread.current.threadDictionary["gladys.decoder"] = decoder
+            return decoder
+        }
+    }
     
-    static let saveEncoder: JSONEncoder = {
-        let e = JSONEncoder()
-        e.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-        return e
-    }()
+    static var saveEncoder: JSONEncoder {
+        if let encoder = Thread.current.threadDictionary["gladys.encoder"] as? JSONEncoder {
+            return encoder
+        } else {
+            log("Creating new saving encoder")
+            let encoder = JSONEncoder()
+            encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+            Thread.current.threadDictionary["gladys.encoder"] = encoder
+            return encoder
+        }
+    }
 
 	static func reloadDataIfNeeded(maximumItems: Int? = nil) {
 
