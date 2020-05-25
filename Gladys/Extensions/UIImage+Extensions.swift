@@ -13,9 +13,11 @@ private let fromFileOptions: CFDictionary = [
     kCGImageSourceShouldAllowFloat: kCFBooleanTrue
 ] as CFDictionary
 
+let screenScale = UIScreen.main.scale
+
 extension UIImage {
 
-    static func fromFile(_ url: URL) -> UIImage? {
+    static func fromFile(_ url: URL, template: Bool) -> UIImage? {
         
         guard let provider = CGDataProvider(url: url as CFURL),
             let source = CGImageSourceCreateWithDataProvider(provider, nil),
@@ -40,7 +42,11 @@ extension UIImage {
         let rect = CGRect(x: 0, y: 0, width: width, height: height)
         imageContext.draw(imageRef, in: rect)
         if let outputImage = imageContext.makeImage() {
-            return UIImage(cgImage: outputImage)
+            if template {
+                return UIImage(cgImage: outputImage, scale: screenScale, orientation: .up).withRenderingMode(.alwaysTemplate)
+            } else {
+                return UIImage(cgImage: outputImage, scale: 1, orientation: .up)
+            }
         }
         return nil
     }
@@ -51,7 +57,7 @@ extension UIImage {
 		let mySizePixelWidth = size.width * targetScale
 		let mySizePixelHeight = size.height * targetScale
 
-		let s = useScreenScale ? UIScreen.main.scale : targetScale
+		let s = useScreenScale ? screenScale : targetScale
 		let outputImagePixelWidth = targetSize.width * s
 		let outputImagePixelHeight = targetSize.height * s
 

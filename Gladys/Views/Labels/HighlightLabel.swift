@@ -140,7 +140,7 @@ final class HighlightLabel: UILabel {
         }
 
 		context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
-        let pixel: CGFloat = 1 / UIScreen.main.scale
+        let pixel: CGFloat = 1 / screenScale
 		context.setLineWidth(pixel)
 		context.strokePath()
 	}

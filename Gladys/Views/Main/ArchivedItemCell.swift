@@ -177,7 +177,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		super.awakeFromNib()
         
         container.layer.cornerRadius = 10
-        container.layer.borderWidth = 1.0 / UIScreen.main.scale
+        container.layer.borderWidth = 1.0 / screenScale
         container.layer.borderColor = UIColor.opaqueSeparator.cgColor
 
         image.wideMode = wideCell

@@ -21,8 +21,7 @@ extension Component {
             }
         }
         get {
-            let i = UIImage.fromFile(imagePath)
-            return displayIconTemplate ? i?.withRenderingMode(.alwaysTemplate) : i
+            return UIImage.fromFile(imagePath, template: displayIconTemplate)
         }
     }
 }
