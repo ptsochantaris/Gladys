@@ -14,7 +14,7 @@ extension Component {
 		}
 	}
     
-	var displayIcon: NSImage? {
+	var componentIcon: NSImage? {
 		set {
             let ipath = imagePath
             if let n = newValue, let data = n.tiffRepresentation {

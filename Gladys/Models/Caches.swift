@@ -24,7 +24,7 @@ final class CKShareCacheEntry {
 }
 
 let imageCache = NSCache<NSString, IMAGE>()
-let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .utility)
+let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .utility, autoreleaseFrequency: .never)
 
 let folderUrlCache = NSCache<NSUUID, NSURL>()
 let cloudKitDataPathCache = NSCache<NSUUID, NSURL>()

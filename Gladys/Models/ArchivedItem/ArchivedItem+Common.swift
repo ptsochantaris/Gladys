@@ -54,7 +54,7 @@ extension ArchivedItem: Hashable {
 
 	var displayIcon: IMAGE {
 		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-		return highestPriorityIconItem?.displayIcon ?? #imageLiteral(resourceName: "iconStickyNote")
+		return highestPriorityIconItem?.componentIcon ?? #imageLiteral(resourceName: "iconStickyNote")
 	}
 
 	var dominantTypeDescription: String? {

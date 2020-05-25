@@ -9,28 +9,20 @@
 import UIKit
 
 extension Component {
-    var displayIcon: UIImage? {
+    var componentIcon: UIImage? {
         set {
             let ipath = imagePath
             if let n = newValue {
                 if let data = n.pngData() {
                     try? data.write(to: ipath)
                 }
-            } else if FileManager.default.fileExists(atPath: ipath.path) {
+            } else {
                 try? FileManager.default.removeItem(at: ipath)
             }
         }
         get {
-            if let data = try? Data(contentsOf: imagePath) {
-                if displayIconTemplate {
-                    let i = UIImage(data: data, scale: UIScreen.main.scale)
-                    return i?.withRenderingMode(.alwaysTemplate)
-                } else {
-                    return UIImage(data: data)
-                }
-            } else {
-                return nil
-            }
+            let i = UIImage.fromFile(imagePath)
+            return displayIconTemplate ? i?.withRenderingMode(.alwaysTemplate) : i
         }
     }
 }

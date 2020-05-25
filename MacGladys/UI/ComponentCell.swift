@@ -154,7 +154,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 			previewLabel.alignment = .center
 		}
         
-        if showPreview, let icon = typeEntry.displayIcon {
+        if showPreview, let icon = typeEntry.componentIcon {
             icon.desaturated { img in
                 self.centreBlock.layer?.contents = img
             }

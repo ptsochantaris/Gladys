@@ -8,9 +8,44 @@
 
 import UIKit
 
+private let fromFileOptions: CFDictionary = [
+    kCGImageSourceShouldCache: kCFBooleanFalse,
+    kCGImageSourceShouldAllowFloat: kCFBooleanTrue
+] as CFDictionary
+
 extension UIImage {
 
-	func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
+    static func fromFile(_ url: URL) -> UIImage? {
+        
+        guard let provider = CGDataProvider(url: url as CFURL),
+            let source = CGImageSourceCreateWithDataProvider(provider, nil),
+            let imageRef = CGImageSourceCreateImageAtIndex(source, 0, fromFileOptions) else {
+                return nil
+        }
+        
+        let width = imageRef.width
+        let height = imageRef.height
+        let alpha: UInt32
+        switch imageRef.alphaInfo {
+        case .none, .noneSkipFirst, .noneSkipLast:
+            alpha = CGImageAlphaInfo.noneSkipFirst.rawValue
+        default:
+            alpha = CGImageAlphaInfo.premultipliedFirst.rawValue
+        }
+        let colourSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo: UInt32 = alpha | CGBitmapInfo.byteOrder32Little.rawValue
+        guard let imageContext = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: colourSpace, bitmapInfo: bitmapInfo) else {
+            return nil
+        }
+        let rect = CGRect(x: 0, y: 0, width: width, height: height)
+        imageContext.draw(imageRef, in: rect)
+        if let outputImage = imageContext.makeImage() {
+            return UIImage(cgImage: outputImage)
+        }
+        return nil
+    }
+    
+	final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
 
 		let targetScale = singleScale ? 1 : scale
 		let mySizePixelWidth = size.width * targetScale
@@ -78,7 +113,7 @@ extension UIImage {
 		return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
 	}
     
-    func desaturated(darkMode: Bool, completion: @escaping (UIImage?) -> Void) {
+    final func desaturated(darkMode: Bool, completion: @escaping (UIImage?) -> Void) {
         DispatchQueue.global(qos: .utility).async {
             guard let ciImage = CIImage(image: self) else {
                 completion(nil)

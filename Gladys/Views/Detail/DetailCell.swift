@@ -132,7 +132,7 @@ final class DetailCell: UITableViewCell {
         imageHolder.image = nil
 
         var hasImage = false
-        if let icon = typeEntry.displayIcon, typeEntry.displayIconContentMode == .fill {
+        if typeEntry.displayIconContentMode == .fill, let icon = typeEntry.componentIcon {
             hasImage = true
             let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
             icon.desaturated(darkMode: darkMode) { [weak self] img in

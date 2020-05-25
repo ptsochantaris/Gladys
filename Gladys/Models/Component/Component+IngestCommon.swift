@@ -559,6 +559,6 @@ extension Component {
 		#else
 		displayIconTemplate = icon.isTemplate
 		#endif
-		displayIcon = result
+		componentIcon = result
 	}
 }

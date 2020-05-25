@@ -32,7 +32,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: UIActivity.ActivityType?, suggestedSize size: CGSize) -> UIImage? {
-        return component.displayIcon
+        return component.componentIcon
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?) -> String {
@@ -44,7 +44,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
         let metadata = LPLinkMetadata()
         metadata.title = component.trimmedSuggestedName
         
-        if let icon = component.displayIcon {
+        if let icon = component.componentIcon {
             metadata.imageProvider = NSItemProvider(object: icon)
             metadata.iconProvider = NSItemProvider(object: icon)
         }
