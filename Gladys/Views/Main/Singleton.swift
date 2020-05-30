@@ -114,7 +114,8 @@ final class Singleton {
             } else {
                 labelList = nil
             }
-            showCentral(in: scene, restoringLabels: labelList)
+            let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
+            showCentral(in: scene, restoringLabels: labelList, restoringSearch: searchText)
             return
 
         case kGladysQuicklookActivity:
@@ -210,7 +211,7 @@ final class Singleton {
         }
     }
     
-    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -226,6 +227,9 @@ final class Singleton {
         let filter = s.associatedFilter
         if let labels = labels {
             filter.enableLabelsByName(labels)
+        }
+        if let search = restoringSearch, !search.isEmpty {
+            filter.filter = search
         }
         v.filter = filter
         if replacing {

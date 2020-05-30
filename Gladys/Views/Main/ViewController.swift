@@ -526,8 +526,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
 		searchController.delegate = self
 		searchController.searchResultsUpdater = self
+        searchController.searchBar.returnKeyType = .search
+        searchController.searchBar.enablesReturnKeyAutomatically = false
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -554,6 +557,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
+        n.addObserver(self, selector: #selector(keyboardHiding), name: UIApplication.keyboardWillHideNotification, object: nil)
         
         if filter.isFilteringLabels { // in case we're restored with active labels
             filter.updateFilter(signalUpdate: false)
@@ -571,12 +575,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
 	}
-        
+    
     override func viewDidAppear(_ animated: Bool) {
+
+        if firstAppearance, let search = filter.filter, !search.isEmpty, let sc = navigationItem.searchController {
+            sc.searchBar.text = search
+            searchTimer.abort()
+            updateSearchResults(for: sc)
+        }
+
         super.viewDidAppear(animated)
+
         if let o = onLoad {
             o(self)
             onLoad = nil
+        }
+    }
+    
+    @objc private func keyboardHiding() {
+        if !filter.isFilteringText {
+            resetSearch(andLabels: false)
         }
     }
 
@@ -1513,14 +1531,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		s.isActive = false
         s.delegate = self
 
-        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
-            UIView.animate(animations: {
-                var newInsets = layout.sectionInset
-                newInsets.top = 0
-                layout.sectionInset = newInsets
-            })
-        }
-
 		if andLabels {
 			filter.disableAllLabels()
 			updateLabelIcon()
@@ -1562,16 +1572,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			self.collection.isUserInteractionEnabled = true
 		}
 	}
-
-    func willPresentSearchController(_ searchController: UISearchController) {
-        if let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout {
-            UIView.animate(animations: {
-                var newInsets = layout.sectionInset
-                newInsets.top = 10
-                layout.sectionInset = newInsets
-            })
-        }
-    }
     
 	func willDismissSearchController(_ searchController: UISearchController) {
 		resetSearch(andLabels: false)
@@ -1689,7 +1689,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         activity.title = title
-        activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles]
+        activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
+                             kGladysMainViewSearchText: filter.filter ?? ""]
     }
     
     // MARK: 

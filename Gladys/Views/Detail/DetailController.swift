@@ -88,6 +88,23 @@ final class DetailController: GladysViewController,
         }
     }
     
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override var keyCommands: [UIKeyCommand]? {
+        var a = super.keyCommands ?? []
+        a.append(
+            UIKeyCommand.makeCommand(input: "c", modifierFlags: [.command], action: #selector(copySelected), title: "Copy Item To Clipboard")
+        )
+        return a
+    }
+    
+    @objc private func copySelected() {
+        item.copyToPasteboard()
+        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+    }
+    
 	@objc private func keyboardHiding(_ notification: Notification) {
 		if let u = notification.userInfo, let previousState = u[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, !previousState.isEmpty {
 			view.endEditing(false)

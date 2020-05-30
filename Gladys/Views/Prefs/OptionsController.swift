@@ -40,7 +40,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.inclusiveSearchTerms = sender.isOn
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
+        view.associatedFilter?.updateFilter(signalUpdate: true)
 	}
 
 	@IBAction private func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
@@ -66,7 +66,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
 	@IBAction private func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.exclusiveMultipleLabels = sender.isOn
-		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil, userInfo: nil)
+        view.associatedFilter?.updateFilter(signalUpdate: true)
 	}
 
 	@IBAction private func autoArchiveSwitchSelected(_ sender: UISwitch) {

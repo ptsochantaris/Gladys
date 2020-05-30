@@ -12,6 +12,7 @@ let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
 let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
 let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
 let kGladysMainViewLabelList = "kGladysMainViewLabelList"
+let kGladysMainViewSearchText = "kGladysMainViewSearchText"
 let kGladysMainFilter = "mainFilter"
 #endif
 
