@@ -94,12 +94,43 @@ final class DetailController: GladysViewController,
     
     override var keyCommands: [UIKeyCommand]? {
         var a = super.keyCommands ?? []
-        a.append(
-            UIKeyCommand.makeCommand(input: "c", modifierFlags: [.command], action: #selector(copySelected), title: "Copy Item To Clipboard")
-        )
+        a.append(contentsOf: [
+            UIKeyCommand.makeCommand(input: "o", modifierFlags: [.command], action: #selector(openKeySelected), title: "Open Item"),
+            UIKeyCommand.makeCommand(input: "t", modifierFlags: [.command], action: #selector(topSelected), title: "Move Item To Top"),
+            UIKeyCommand.makeCommand(input: "d", modifierFlags: [.command], action: #selector(duplicateSelected), title: "Duplicate Item"),
+            UIKeyCommand.makeCommand(input: "c", modifierFlags: [.command], action: #selector(copySelected), title: "Copy Item To Clipboard"),
+            UIKeyCommand.makeCommand(input: "x", modifierFlags: [.command], action: #selector(cutSelected), title: "Cut Item To Clipboard"),
+            UIKeyCommand.makeCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteSelected), title: "Delete Item")
+        ])
         return a
     }
-    
+
+    @objc private func openKeySelected() {
+        if openButton.isEnabled {
+            openSelected(openButton)
+        }
+    }
+
+    @objc private func topSelected() {
+        done()
+        Model.sendToTop(items: [item])
+    }
+
+    @objc private func duplicateSelected() {
+        done()
+        Model.duplicate(item: item)
+    }
+
+    @objc private func cutSelected() {
+        item.copyToPasteboard()
+        deleteSelected()
+    }
+
+    @objc private func deleteSelected() {
+        done()
+        Model.delete(items: [item])
+    }
+
     @objc private func copySelected() {
         item.copyToPasteboard()
         genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
