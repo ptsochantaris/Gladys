@@ -351,24 +351,21 @@ extension Component: Equatable {
 
 	var sizeInBytes: Int64 {
 
-		func sizeItem(path: URL) -> Int64 {
-			let fm = FileManager.default
+        let fm = FileManager.default
 
-			var isDir: ObjCBool = false
-			if fm.fileExists(atPath: path.path, isDirectory: &isDir) {
+        var isDir: ObjCBool = false
+        let path = bytesPath
+        if fm.fileExists(atPath: path.path, isDirectory: &isDir) {
 
-				if isDir.boolValue {
-					return fm.contentSizeOfDirectory(at: path)
-				} else {
-					if let attrs = try? fm.attributesOfItem(atPath: path.path) {
-						return attrs[FileAttributeKey.size] as? Int64 ?? 0
-					}
-				}
-			}
-			return 0
-		}
-
-		return sizeItem(path: bytesPath)
+            if isDir.boolValue {
+                return fm.contentSizeOfDirectory(at: path)
+            } else {
+                if let attrs = try? fm.attributesOfItem(atPath: path.path) {
+                    return attrs[FileAttributeKey.size] as? Int64 ?? 0
+                }
+            }
+        }
+        return 0
 	}
 
 	var folderUrl: URL {

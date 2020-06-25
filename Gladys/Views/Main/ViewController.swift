@@ -438,7 +438,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
 		if isEditing {
-			let selectedIndex = selectedItems?.firstIndex { $0 == item.uuid }
+            let selectedIndex = selectedItems?.firstIndex(of: item.uuid)
 			if let selectedIndex = selectedIndex {
 				selectedItems?.remove(at: selectedIndex)
 			} else {
@@ -845,8 +845,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 		itemsCount.isEnabled = itemCount > 0
 
-		let size = someSelected ? Model.sizeForItems(uuids: selectedItems ?? []) : filter.filteredSizeInBytes
-		totalSizeLabel.title = diskSizeFormatter.string(fromByteCount: size)
+        totalSizeLabel.title = "..."
+        imageProcessingQueue.async {
+            let drops: ContiguousArray<ArchivedItem>
+            if let selectedItems = self.selectedItems, !selectedItems.isEmpty {
+                drops = self.filter.threadSafeFilteredDrops.filter { selectedItems.contains($0.uuid) }
+            } else {
+                drops = self.filter.threadSafeFilteredDrops
+            }
+            let size = drops.reduce(0) { $0 + $1.sizeInBytes }
+            let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
+            DispatchQueue.main.async {
+                self.totalSizeLabel.title = sizeLabel
+            }
+        }
 		deleteButton.isEnabled = someSelected
 		editLabelsButton.isEnabled = someSelected
 		shareButton.isEnabled = someSelected
@@ -1668,6 +1680,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@objc private func toggleEdit() {
 		setEditing(!isEditing, animated: true)
 	}
+    
+    func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+        if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return false }
+
+        let item = filter.filteredDrops[indexPath.item]
+        return !item.shouldDisplayLoading
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+        if !isEditing {
+            setEditing(true, animated: true)
+        }
+    }
+    
+    func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
+        collectionView.allowsMultipleSelection = false
+    }
     
 	override var keyCommands: [UIKeyCommand]? {
 		var a = super.keyCommands ?? []

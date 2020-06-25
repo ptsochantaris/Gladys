@@ -34,10 +34,6 @@ final class ModelFilterContext {
         reloadObservation = nil
     }
 
-    var filteredSizeInBytes: Int64 {
-        return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
-    }
-
     var sizeOfVisibleItemsInBytes: Int64 {
         return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
     }

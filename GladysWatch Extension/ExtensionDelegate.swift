@@ -8,6 +8,7 @@
 
 import WatchKit
 import WatchConnectivity
+import ClockKit
 
 final class ImageCache {
 

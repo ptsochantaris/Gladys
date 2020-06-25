@@ -44,7 +44,7 @@ extension ArchivedItem: Hashable {
 	}
 	
 	var sizeInBytes: Int64 {
-		return components.reduce(0, { $0 + $1.sizeInBytes })
+		return components.reduce(0) { $0 + $1.sizeInBytes }
 	}
 
 	var imagePath: URL? {

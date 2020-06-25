@@ -7,6 +7,7 @@
 //
 
 import WatchKit
+import ClockKit
 
 final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 
