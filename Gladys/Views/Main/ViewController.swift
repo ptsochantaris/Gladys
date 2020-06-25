@@ -192,7 +192,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let item = filter.filteredDrops[indexPath.item]
 			cell.archivedDropItem = item
 			cell.isEditing = isEditing
-			cell.isSelectedForAction = selectedItems?.contains(item.uuid) ?? false
 		}
 		return cell
 	}
@@ -387,7 +386,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 			p.delegate = self
             e.currentFilter = filter
-			e.selectedItems = selectedItems
+            e.selectedItems = selectedItems.map { $0.uuid }
 			e.endCallback = { [weak self] hasChanges in
 				if hasChanges {
 					self?.setEditing(false, animated: true)
@@ -428,28 +427,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return false }
+        let item = filter.filteredDrops[indexPath.item]
+        if item.shouldDisplayLoading { return false }
+        return true
+    }
+    
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-		if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return }
-
+        if isEditing {
+            updateUI()
+            return
+        }
+        
 		let item = filter.filteredDrops[indexPath.item]
-		if item.shouldDisplayLoading {
-			return
-		}
-
-		if isEditing {
-            let selectedIndex = selectedItems?.firstIndex(of: item.uuid)
-			if let selectedIndex = selectedIndex {
-				selectedItems?.remove(at: selectedIndex)
-			} else {
-				selectedItems?.append(item.uuid)
-			}
-			updateUI()
-			if let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell {
-				cell.isSelectedForAction = (selectedIndex == nil)
-			}
-
-		} else if item.flags.contains(.needsUnlock) {
+		if item.flags.contains(.needsUnlock) {
 			mostRecentIndexPathActioned = indexPath
             item.unlock(label: "Unlock Item", action: "Unlock") { success in
                 if success {
@@ -516,6 +508,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
+        collection.allowsMultipleSelection = true
 
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor(named: "colorLightGray")!
@@ -816,9 +809,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             editButton.isEnabled = true
         }
 
-        selectedItems = selectedItems?.filter { Model.drops.contains(uuid: $0) }
-
-		let selectedCount = selectedItems?.count ?? 0
+		let selectedCount = selectedItems.count
 		let someSelected = selectedCount > 0
 
         func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
@@ -846,12 +837,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		itemsCount.isEnabled = itemCount > 0
 
         totalSizeLabel.title = "..."
+        let filteredDrops = filter.filteredDrops
+        let selected = selectedItems
         imageProcessingQueue.async {
             let drops: ContiguousArray<ArchivedItem>
-            if let selectedItems = self.selectedItems, !selectedItems.isEmpty {
-                drops = self.filter.threadSafeFilteredDrops.filter { selectedItems.contains($0.uuid) }
+            if !selected.isEmpty {
+                drops = filteredDrops.filter { selected.contains($0) }
             } else {
-                drops = self.filter.threadSafeFilteredDrops
+                drops = filteredDrops
             }
             let size = drops.reduce(0) { $0 + $1.sizeInBytes }
             let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
@@ -864,15 +857,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		shareButton.isEnabled = someSelected
 
 		updateLabelIcon()
-		currentLabelEditor?.selectedItems = selectedItems
+        currentLabelEditor?.selectedItems = selectedItems.map { $0.uuid }
 		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
         
         updateEmptyView()
 	}
 
 	@IBAction private func shareButtonSelected(_ sender: UIBarButtonItem) {
-		guard let selectedItems = selectedItems else { return }
-        let sources = selectedItems.compactMap { Model.item(uuid: $0)?.mostRelevantTypeItem?.sharingActivitySource }
+        let sources = selectedItems.compactMap { $0.mostRelevantTypeItem?.sharingActivitySource }
 		if sources.isEmpty { return }
 		let a = UIActivityViewController(activityItems: sources, applicationActivities: nil)
 		a.completionWithItemsHandler = { [weak self] _, done, _, _ in
@@ -900,7 +892,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func sortRequested(_ option: Model.SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
-		let items = ignoreSelectedItems ? [] : (selectedItems?.compactMap { Model.item(uuid: $0) } ?? [])
+		let items = ignoreSelectedItems ? [] : selectedItems
 		if !items.isEmpty && verifyRange {
 			let a = UIAlertController(title: "Sort selected items?", message: "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?", preferredStyle: .actionSheet)
 			a.addAction(UIAlertAction(title: "Sort Selected", style: .default) { _ in
@@ -916,20 +908,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
 			sortMethod()
 			filter.updateFilter(signalUpdate: false)
-			reloadData(onlyIfPopulated: false)
             Model.save()
 		}
 	}
 
 	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
-		let selectedCount = (selectedItems?.count ?? 0)
+		let selectedCount = selectedItems.count
 		if selectedCount > 0 {
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
-				self.selectedItems?.removeAll()
-                self.collection.reloadSections(IndexSet(integer: 0))
-				self.updateUI()
+                self.deselectAll()
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
@@ -945,9 +934,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
 			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
-                self.selectedItems = self.filter.filteredDrops.map { $0.uuid }
-				self.collection.reloadData()
-				self.updateUI()
+                self.selectAll(nil)
 			})
 			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			a.modalPresentationStyle = .popover
@@ -1043,27 +1030,49 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @IBAction private func editButtonSelected(_ sender: UIBarButtonItem) {
         setEditing(!isEditing, animated: true)
     }
+    
+    private var selectedItems: [ArchivedItem] {
+        return (collection.indexPathsForSelectedItems ?? []).map {
+            self.filter.filteredDrops[$0.item]
+        }
+    }
 
 	override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
-		navigationController?.setToolbarHidden(!editing, animated: animated)
-		if editing {
-			selectedItems = [UUID]()
+        if editing {
+            navigationController?.setToolbarHidden(false, animated: animated)
             editButton.title = "Done"
             editButton.image = UIImage(systemName: "ellipsis.circle.fill")
+            updateUI()
+
 		} else {
-			selectedItems = nil
+            navigationController?.setToolbarHidden(true, animated: animated)
             editButton.title = "Edit"
             editButton.image = UIImage(systemName: "ellipsis.circle")
-			deleteButton.isEnabled = false
+            deselectAll() // calls updateUI
 		}
-
-        updateUI()
+        
         for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
             cell.isEditing = editing
         }
 	}
+    
+    override func selectAll(_ sender: Any?) {
+        // super not called intentionally
+        if collection.numberOfSections == 0 {
+            return
+        }
+        for ip in 0 ..< collection.numberOfItems(inSection: 0) {
+            collection.selectItem(at: IndexPath(item: ip, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+        }
+        updateUI()
+    }
+    
+    private func deselectAll() {
+        collection.selectItem(at: nil, animated: false, scrollPosition: .centeredHorizontally)
+        updateUI()
+    }
     
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
 		let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell
@@ -1400,9 +1409,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
 	/////////////////////////////////
 
-	private var selectedItems: [UUID]?
 	@IBAction private func deleteButtonSelected(_ sender: UIBarButtonItem) {
-		guard let candidates = selectedItems, !candidates.isEmpty else { return }
+        let candidates = selectedItems
+        guard !candidates.isEmpty else { return }
 
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 		let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
@@ -1420,10 +1429,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	private func proceedWithDelete() {
-		guard let candidates = selectedItems, !candidates.isEmpty else { return }
+        let candidates = selectedItems
+        guard !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-		let itemsToDelete = Model.drops.all.filter { candidateSet.contains($0.uuid) }
+		let itemsToDelete = Model.drops.all.filter { candidateSet.contains($0) }
 		if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
 			Model.delete(items: itemsToDelete)
@@ -1688,14 +1698,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return !item.shouldDisplayLoading
     }
     
+    private var selectingGestureActive = false
+    
     func collectionView(_ collectionView: UICollectionView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+        selectingGestureActive = true
         if !isEditing {
             setEditing(true, animated: true)
         }
     }
     
     func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
-        collectionView.allowsMultipleSelection = false
+        selectingGestureActive = false
     }
     
 	override var keyCommands: [UIKeyCommand]? {

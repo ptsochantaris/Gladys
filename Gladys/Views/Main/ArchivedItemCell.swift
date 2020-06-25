@@ -62,18 +62,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 		bottomLabel.highlightedTextColor = c
 	}
 
-	var isSelectedForAction: Bool {
-		set {
-			tickImage?.isHighlighted = newValue
-		}
-		get {
-			return tickImage?.isHighlighted ?? false
-		}
-	}
-
 	override var isSelected: Bool {
-		set {}
-		get { return false }
+        didSet {
+            tickImage?.isHighlighted = isSelected
+        }
 	}
 
 	override var isHighlighted: Bool {
@@ -91,6 +83,7 @@ final class ArchivedItemCell: UICollectionViewCell {
                 img.preferredSymbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
                 img.image = UIImage(systemName: "circle")
                 img.highlightedImage = UIImage(systemName: "checkmark.circle.fill")
+                img.isHighlighted = isSelected
 
 				let holder = UIView(frame: .zero)
 				holder.translatesAutoresizingMaskIntoConstraints = false
@@ -543,13 +536,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 				}
 				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomText].compactMap { $0 }.joined(separator: "\n")
 			}
-		}
-	}
-
-	override var accessibilityTraits: UIAccessibilityTraits {
-		set {}
-		get {
-			return isSelectedForAction ? .selected : .none
 		}
 	}
 

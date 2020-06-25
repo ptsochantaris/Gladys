@@ -16,7 +16,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private weak var headerLabel: UILabel!
 
-	var selectedItems: [UUID]?
+	var selectedItems = [UUID]()
 	var editedUUIDs = Set<UUID>()
 
 	var endCallback: ((Bool) -> Void)?
@@ -56,7 +56,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		if commonNote == nil {
 			r.title = "New Note"
 		} else {
-			let count = selectedItems?.count ?? 0
+			let count = selectedItems.count
 			r.title = count > 1 ? "Edit Notes" : "Edit Note"
 		}
 	}
@@ -84,7 +84,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let selectedItems = selectedItems else { return }
 		let toggle = availableToggles[indexPath.row]
 		let state = toggle.toggleState(across: selectedItems)
 		switch state {
@@ -154,7 +153,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 		textField.text = nil
 		if !allToggles.contains(where: { $0.name == newTag }) {
-			let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, emptyChecker: false)
+			let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems.count, enabled: false, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
 		}
@@ -211,10 +210,10 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	}
 
 	private var commonNote: String? {
-		if let firstItemUuid = selectedItems?.first {
+		if let firstItemUuid = selectedItems.first {
 			let firstItem = Model.item(uuid: firstItemUuid)
 			let commonNote = firstItem?.note
-			for item in selectedItems ?? [] where Model.item(uuid: item)?.note != commonNote {
+			for item in selectedItems where Model.item(uuid: item)?.note != commonNote {
 				return nil
 			}
 			return commonNote
@@ -223,7 +222,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 	}
 
 	func newNoteSaved(note: String) {
-		selectedItems?.forEach {
+		selectedItems.forEach {
 			if let item = Model.item(uuid: $0) {
 				item.note = note
 				item.postModified()
