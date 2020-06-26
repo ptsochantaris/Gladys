@@ -434,11 +434,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return true
     }
     
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        updateUI()
+    }
+    
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isEditing {
             updateUI()
             return
         }
+        
+        collectionView.deselectItem(at: indexPath, animated: false)
         
 		let item = filter.filteredDrops[indexPath.item]
 		if item.flags.contains(.needsUnlock) {
@@ -449,37 +455,57 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     item.postModified()
                 }
             }
+            return
             
-        } else {
-            mostRecentIndexPathActioned = indexPath
+        }
+        
+        mostRecentIndexPathActioned = indexPath
+        
+        switch PersistedOptions.actionOnTap {
             
-            switch PersistedOptions.actionOnTap {
-                
-            case .infoPanel:
-                performSegue(withIdentifier: "showDetail", sender: item)
-                
-            case .copy:
-                item.copyToPasteboard()
-                genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-                
-            case .open:
-                item.tryOpen(in: nil) { [weak self] success in
-                    if !success {
-                        self?.performSegue(withIdentifier: "showDetail", sender: item)
-                    }
+        case .infoPanel:
+            performSegue(withIdentifier: "showDetail", sender: item)
+            
+        case .copy:
+            item.copyToPasteboard()
+            genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+            
+        case .open:
+            item.tryOpen(in: nil) { [weak self] success in
+                if !success {
+                    self?.performSegue(withIdentifier: "showDetail", sender: item)
                 }
-                
-            case .preview:
-                let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
-                if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
-                    performSegue(withIdentifier: "showDetail", sender: item)
-                }
-                
-            case .none:
-                break
             }
+            
+        case .preview:
+            let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
+            if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
+                performSegue(withIdentifier: "showDetail", sender: item)
+            }
+            
+        case .none:
+            break
         }
 	}
+
+    @objc private func pinched(_ pinchRecognizer: CenteredPinchGestureRecognizer) {
+        if
+            pinchRecognizer.state == .changed,
+            pinchRecognizer.velocity > 3,
+            let startPoint = pinchRecognizer.startPoint,
+            let recognizerView = pinchRecognizer.view,
+            let itemIndexPath = collection.indexPathForItem(at: collection.convert(startPoint, from: recognizerView)),
+            let cell = collection.cellForItem(at: itemIndexPath) as? ArchivedItemCell,
+            let item = cell.archivedDropItem,
+            !item.shouldDisplayLoading,
+            item.canPreview,
+            !item.flags.contains(.needsUnlock),
+            let presenter = view.window?.alertPresenter {
+            
+            item.tryPreview(in: presenter, from: cell)
+            pinchRecognizer.state = .ended
+        }
+    }
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -508,7 +534,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
-        collection.allowsMultipleSelection = true
 
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor(named: "colorLightGray")!
@@ -567,6 +592,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
+        
+        let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_ :)))
+        for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
+            r.require(toFail: p)
+        }
+        collection.addGestureRecognizer(p)
 	}
     
     override func viewDidAppear(_ animated: Bool) {
@@ -1041,12 +1072,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		super.setEditing(editing, animated: animated)
 
         if editing {
+            collection.allowsMultipleSelection = true
             navigationController?.setToolbarHidden(false, animated: animated)
             editButton.title = "Done"
             editButton.image = UIImage(systemName: "ellipsis.circle.fill")
             updateUI()
 
 		} else {
+            collection.allowsMultipleSelection = false
             navigationController?.setToolbarHidden(true, animated: animated)
             editButton.title = "Edit"
             editButton.image = UIImage(systemName: "ellipsis.circle")
@@ -1692,7 +1725,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-        if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return false }
+        if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil {
+            return false
+        }
 
         let item = filter.filteredDrops[indexPath.item]
         return !item.shouldDisplayLoading

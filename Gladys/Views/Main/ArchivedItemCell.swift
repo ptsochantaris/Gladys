@@ -181,20 +181,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
-
-		let p = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
-		container.addGestureRecognizer(p)
 	}
-    
-	@objc private func pinched(_ pinchRecognizer: UIPinchGestureRecognizer) {
-        if pinchRecognizer.state == .changed, pinchRecognizer.velocity > 4, let item = archivedDropItem, !item.shouldDisplayLoading, item.canPreview, !item.flags.contains(.needsUnlock) {
-			pinchRecognizer.state = .ended
-            if let presenter = window?.alertPresenter {
-                item.tryPreview(in: presenter, from: self)
-            }
-		}
-	}
-
+        
 	weak var archivedDropItem: ArchivedItem? {
 		didSet {
 			reDecorate()
