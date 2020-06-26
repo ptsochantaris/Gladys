@@ -617,6 +617,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func keyboardHiding() {
+        if currentDetailView != nil {
+            return
+        }
         if !filter.isFilteringText {
             resetSearch(andLabels: false)
         }

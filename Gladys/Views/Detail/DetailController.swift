@@ -21,7 +21,7 @@ final class DetailController: GladysViewController,
 		doneButtonLocation = .right
         windowButtonLocation = .right
 
-		table.estimatedRowHeight = 120
+		table.estimatedRowHeight = UITableView.automaticDimension
         table.rowHeight = UITableView.automaticDimension
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
@@ -74,8 +74,8 @@ final class DetailController: GladysViewController,
 			done()
 		} else {
             isReadWrite = item.shareMode != .elsewhereReadOnly
-			table.reloadData()
-			sizeWindow()
+            self.view.setNeedsLayout()
+            table.reloadData()
 		}
 	}
     
@@ -175,31 +175,13 @@ final class DetailController: GladysViewController,
         sizeWindow()
 	}
 
-	private var initialWidth: CGFloat = 0
-
 	private func sizeWindow() {
-		let preferredSize: CGSize
-		if initialWidth > 0 {
-			//log("adapt to table height")
-			preferredSize = CGSize(width: initialWidth, height: table.contentSize.height)
-		} else {
-			//log("table layout")
-			table.layoutIfNeeded()
-			preferredSize = table.contentSize
-			initialWidth = preferredSize.width
-		}
-		//log("set preferred size to \(preferredSize)")
-		preferredContentSize = preferredSize
+        table.layoutIfNeeded()
+        let preferredSize = CGSize(width: 320, height: table.contentSize.height)
+		log("Detail view preferred size is \(preferredSize)")
+        popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
 	}
     
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-        if !firstAppearance {
-            preferredContentSize = .zero
-            sizeWindow()
-        }
-	}
-
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
 		item.tryOpen(in: navigationController!) { shouldClose in
 			if shouldClose {
@@ -237,9 +219,6 @@ final class DetailController: GladysViewController,
 			UIView.performWithoutAnimation {
 				table.beginUpdates()
 				table.endUpdates()
-			}
-			DispatchQueue.main.async {
-				self.sizeWindow()
 			}
 		}
 		if let caretRect = caretRect {
@@ -466,9 +445,9 @@ final class DetailController: GladysViewController,
                 let indexPath = IndexPath(row: index, section: 2)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
-            item.renumberTypeItems()
-            item.needsReIngest = true
         }, completion: { _ in
+            self.item.renumberTypeItems()
+            self.item.needsReIngest = true
             self.makeIndexAndSaveItem()
         })
 	}

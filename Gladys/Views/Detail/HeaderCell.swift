@@ -69,7 +69,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	func textViewDidChange(_ textView: UITextView) {
-		let newHeight = textView.sizeThatFits(CGSize(width: frame.size.width, height: 5000)).height
+        let newHeight = textView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: 5000)).height
 		if previousHeight != newHeight {
 			if let r = textView.selectedTextRange, let s = superview {
 				var caretRect = textView.caretRect(for: r.start)
