@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 import WebKit
 
 final class WebPreviewController: GladysViewController, WKNavigationDelegate {
@@ -16,7 +17,7 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	@IBOutlet private weak var spinner: UIActivityIndicatorView!
 
 	var address: URL?
-	var webArchive: Component.PreviewItem?
+	var webArchive: Component?
 
 	var relatedItem: ArchivedItem?
 	var relatedChildItem: Component?
@@ -49,8 +50,10 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 		if let address = address {
 			let r = URLRequest(url: address)
 			web.load(r)
-		} else if let previewURL = webArchive?.previewItemURL {
-			web.loadFileURL(previewURL, allowingReadAccessTo: previewURL)
+		} else if let archiveComponent = webArchive,
+            let bytes = archiveComponent.bytes,
+            let mimeType = UTTypeCopyPreferredTagWithClass(kUTTypeWebArchive, kUTTagClassMIMEType)?.takeRetainedValue() {
+            web.load(bytes, mimeType: mimeType as String, characterEncodingName: "utf-8", baseURL: URL(string: "about:blank")!)
 		}
 
 		if relatedItem != nil {

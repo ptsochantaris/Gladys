@@ -91,7 +91,7 @@ extension Component {
 		} else if isWebArchive {
 			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
 			d.title = "Loading…"
-			d.webArchive = PreviewItem(typeItem: self)
+			d.webArchive = self
 			d.relatedItem = Model.item(uuid: parentUuid)
 			d.relatedChildItem = self
             return d
