@@ -356,12 +356,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         case "showPreferences":
 			guard let t = segue.destination as? UITabBarController,
-				let p = t.popoverPresentationController
+				let p = t.popoverPresentationController,
+                let myNavView = navigationController?.view
 				else { return }
 
 			p.permittedArrowDirections = [.any]
 			p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
-			p.sourceView = navigationController!.view
+			p.sourceView = myNavView
 			p.delegate = self
 
         case "showDetail":
@@ -378,7 +379,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
 			p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.any]
-			p.sourceView = navigationController!.view
+			p.sourceView = myNavView
             p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3), to: myNavView)
 			p.delegate = self
 

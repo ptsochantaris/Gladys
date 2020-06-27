@@ -32,9 +32,9 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
         windowButtonLocation = .right
         
 		loadCheck1 = web.observe(\.estimatedProgress, options: .new) { [weak self] _, v in
-			if let n = v.newValue, n > 0.85 {
-                self?.spinner.stopAnimating()
-                self?.loadCheck1 = nil
+			if let s = self, let n = v.newValue, n > 0.85 {
+                s.showError(nil)
+                s.loadCheck1 = nil
 			}
 		}
 
@@ -81,18 +81,19 @@ final class WebPreviewController: GladysViewController, WKNavigationDelegate {
 	}
 
 	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-		spinner.stopAnimating()
-		statusLabel.text = error.finalDescription
-		statusLabel.isHidden = false
-		title = nil
+        showError(error)
 	}
 
 	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-		spinner.stopAnimating()
-		statusLabel.text = error.finalDescription
-		statusLabel.isHidden = false
-		title = nil
+        showError(error)
 	}
+    
+    private func showError(_ error: Error?) {
+        spinner.stopAnimating()
+        let text = error?.finalDescription
+        statusLabel.text = text
+        statusLabel.isHidden = text == nil
+    }
 
 	override var preferredContentSize: CGSize {
 		get {
