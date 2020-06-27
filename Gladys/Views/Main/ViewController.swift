@@ -92,6 +92,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	/////////////////////////////
 
 	private var dragModeReverse = false
+    
+    override var title: String? {
+        didSet {
+            updateTitle()
+        }
+    }
+    
+    private func updateTitle() {
+        guard let scene = viewIfLoaded?.window?.windowScene else {
+            return
+        }
+        if filter.isFilteringText {
+            scene.title = filter.filter
+        } else if filter.isFilteringLabels {
+            scene.title = title
+        } else {
+            scene.title = nil
+        }
+    }
 
 	private func showDragModeOverlay(_ show: Bool) {
 		if dragModePanel.superview != nil, !show {
@@ -602,12 +621,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     override func viewDidAppear(_ animated: Bool) {
 
-        if firstAppearance, let search = filter.filter, !search.isEmpty, let sc = navigationItem.searchController {
-            sc.searchBar.text = search
-            searchTimer.abort()
-            updateSearchResults(for: sc)
+        if firstAppearance {
+            if let search = filter.filter, !search.isEmpty, let sc = navigationItem.searchController {
+                sc.searchBar.text = search
+                searchTimer.abort()
+                updateSearchResults(for: sc)
+            }
+            updateTitle()
         }
-
+        
         super.viewDidAppear(animated)
 
         if let o = onLoad {
