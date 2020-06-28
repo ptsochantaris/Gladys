@@ -2,6 +2,10 @@ import UIKit
 import MapKit
 import CloudKit
 
+#if DEBUG
+import PencilKit
+#endif
+
 final class ArchivedItemCell: UICollectionViewCell {
     
 	@IBOutlet private weak var image: GladysImageView!
@@ -181,6 +185,13 @@ final class ArchivedItemCell: UICollectionViewCell {
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
+        
+        #if DEBUG
+        if #available(iOS 14.0, *) {
+            let pencil = UIIndirectScribbleInteraction(delegate: self)
+            addInteraction(pencil)
+        }
+        #endif
 	}
         
 	weak var archivedDropItem: ArchivedItem? {
@@ -534,4 +545,61 @@ final class ArchivedItemCell: UICollectionViewCell {
     var targetedPreviewItem: UITargetedPreview {
         return UITargetedPreview(view: container)
     }
+    
+    #if DEBUG
+    private var notesField: UITextView?
+    #endif
 }
+
+#if DEBUG
+extension ArchivedItemCell: UIIndirectScribbleInteractionDelegate {
+    func indirectScribbleInteraction(_ interaction: UIInteraction, shouldDelayFocusForElement elementIdentifier: String) -> Bool {
+        return false
+    }
+
+    func indirectScribbleInteraction(_ interaction: UIInteraction, willBeginWritingInElement elementIdentifier: String) {
+    }
+
+    func indirectScribbleInteraction(_ interaction: UIInteraction, didFinishWritingInElement elementIdentifier: String) {
+        if let item = archivedDropItem, let text = notesField?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, item.note != text {
+            item.note = text
+            item.markUpdated()
+            Model.save()
+        }
+        notesField?.removeFromSuperview()
+        notesField = nil
+    }
+
+    func indirectScribbleInteraction(_ interaction: UIInteraction, focusElementIfNeeded elementIdentifier: String, referencePoint focusReferencePoint: CGPoint, completion: @escaping ((UIResponder & UITextInput)?) -> Void) {
+        if notesField == nil {
+            let f = UITextView()
+            f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
+            f.backgroundColor = UIColor(named: "colorTint")
+            f.textColor = .white
+            f.font = UIFont.preferredFont(forTextStyle: .body)
+            f.textAlignment = .center
+            f.tintColor = UIColor(named: "colorTint")
+            self.image.cover(with: f)
+            notesField = f
+        }
+        completion(notesField)
+    }
+    
+    func indirectScribbleInteraction(_ interaction: UIInteraction, requestElementsIn rect: CGRect, completion: @escaping ([String]) -> Void) {
+        if archivedDropItem?.isLocked == true {
+            return completion([])
+        } else {
+            completion(["NotesIdentifier"])
+        }
+    }
+    
+    func indirectScribbleInteraction(_ interaction: UIInteraction, frameForElement elementIdentifier: String) -> CGRect {
+        return bounds
+    }
+    
+    func indirectScribbleInteraction(_ interaction: UIInteraction, isElementFocused elementIdentifier: String) -> Bool {
+        return notesField != nil
+    }
+}
+
+#endif
