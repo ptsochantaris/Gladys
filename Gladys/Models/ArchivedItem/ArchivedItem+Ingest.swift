@@ -3,6 +3,7 @@ import Foundation
 import MobileCoreServices
 #endif
 import GladysFramework
+import NaturalLanguage
 
 extension ArchivedItem {
 
@@ -21,7 +22,7 @@ extension ArchivedItem {
         return identifiers
 	}
 
-    private func componentsIngested(error: (Component, Error)?) {
+    private func componentsIngested(wasInitialIngest: Bool, error: (Component, Error)?) {
         #if MAC
         for component in components {
             if let contributedLabels = component.contributedLabels {
@@ -32,8 +33,37 @@ extension ArchivedItem {
             }
         }
         #endif
-		imageCache.removeObject(forKey: imageCacheKey)
-		loadingProgress = nil
+        
+        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, PersistedOptions.autoGenerateLabelsFromText, let finalTitle = displayText.0 {
+            Component.ingestQueue.async {
+                let tagger = NLTagger(tagSchemes: [.nameType])
+                tagger.string = finalTitle
+                let range = finalTitle.startIndex ..< finalTitle.endIndex
+                let tags = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames]).compactMap { token -> String? in
+                    guard let tag = token.0 else { return nil }
+                    switch tag {
+                    case .placeName, .personalName, .organizationName, .noun:
+                        return String(finalTitle[token.1])
+                    default:
+                        return nil
+                    }
+                }
+                log("Detected labels: \(tags)")
+                DispatchQueue.main.async {
+                    for tag in tags where !self.labels.contains(tag) {
+                        self.labels.append(tag)
+                    }
+                    self.componentIngestDone(error: error)
+                }
+            }
+        } else {
+            componentIngestDone(error: error)
+        }
+	}
+    
+    private func componentIngestDone(error: (Component, Error)?) {
+        imageCache.removeObject(forKey: imageCacheKey)
+        loadingProgress = nil
         needsReIngest = false
         
         #if MAINAPP || MAC
@@ -43,7 +73,7 @@ extension ArchivedItem {
         #endif
 
         NotificationCenter.default.post(name: .IngestComplete, object: self)
-	}
+    }
 
 	func cancelIngest() {
 		components.forEach { $0.cancelIngest() }
@@ -91,7 +121,7 @@ extension ArchivedItem {
 		}
         
         group.notify(queue: .main) {
-            self.componentsIngested(error: loadingError)
+            self.componentsIngested(wasInitialIngest: false, error: loadingError)
             completionGroup?.leave()
         }
 	}
@@ -190,7 +220,7 @@ extension ArchivedItem {
         loadingProgress = p
         
         group.notify(queue: .main) {
-            self.componentsIngested(error: loadingError)
+            self.componentsIngested(wasInitialIngest: true, error: loadingError)
         }
 	}
 }

@@ -166,10 +166,17 @@ final class ActionRequestViewController: UIViewController {
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
+        
+        if let item = notification.object as? ArchivedItem {
+            for label in item.labels where !ActionRequestViewController.labelsToApply.contains(label) {
+                ActionRequestViewController.labelsToApply.append(label)
+            }
+        }
+        
         guard Model.doneIngesting else {
             return
 		}
-
+        
         if PersistedOptions.setLabelsWhenActioning {
             navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(signalDone))
         }

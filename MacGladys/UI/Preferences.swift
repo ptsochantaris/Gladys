@@ -27,7 +27,8 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var convertLabelsToTagsSwitch: NSButton!
     @IBOutlet private weak var autoShowWhenDraggingSwitch: NSButton!
     @IBOutlet private weak var autoShowOnEdgePicker: NSPopUpButton!
-    
+    @IBOutlet private weak var autoDetectLabels: NSButton!
+
     @IBOutlet private weak var fadeAfterLabel: NSTextField!
     @IBOutlet private weak var fadeAfterCounter: NSStepper!
     
@@ -91,6 +92,7 @@ final class Preferences: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+        autoDetectLabels.integerValue = PersistedOptions.autoGenerateLabelsFromText ? 1 : 0
 		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
 		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
@@ -182,7 +184,11 @@ final class Preferences: NSViewController {
 	@IBAction private func autoDownloadSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.autoArchiveUrlComponents = sender.integerValue == 1
 	}
-    
+
+    @IBAction private func autoDetectLabelsChanged(_ sender: NSButton) {
+        PersistedOptions.autoGenerateLabelsFromText = sender.integerValue == 1
+    }
+
     @IBAction private func blockUrlSwitchChanged(_ sender: NSButton) {
         PersistedOptions.blockGladysUrlRequests = sender.integerValue == 1
     }

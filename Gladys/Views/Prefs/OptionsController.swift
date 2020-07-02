@@ -25,7 +25,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
     @IBOutlet private weak var autoConvertUrlsSwitch: UISwitch!
     @IBOutlet private weak var blockGladysUrls: UISwitch!
-
+    @IBOutlet private weak var autoGenerateLabelsSwitch: UISwitch!
+    
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
@@ -118,6 +119,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.blockGladysUrlRequests = sender.isOn
     }
     
+    @IBAction private func autoGenerateLabelsSelected(_ sender: UISwitch) {
+        PersistedOptions.autoGenerateLabelsFromText = sender.isOn
+    }
+    
     @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
         let on = sender.isOn
         PersistedOptions.mirrorFilesToDocuments = on
@@ -142,6 +147,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
         blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests
+        autoGenerateLabelsSwitch.isOn = PersistedOptions.autoGenerateLabelsFromText
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut
