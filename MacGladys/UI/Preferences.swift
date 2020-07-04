@@ -27,7 +27,8 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var convertLabelsToTagsSwitch: NSButton!
     @IBOutlet private weak var autoShowWhenDraggingSwitch: NSButton!
     @IBOutlet private weak var autoShowOnEdgePicker: NSPopUpButton!
-    @IBOutlet private weak var autoDetectLabels: NSButton!
+    @IBOutlet private weak var autoDetectLabelsFromTitles: NSButton!
+    @IBOutlet private weak var autoDetectLabelsFromThumbnails: NSButton!
 
     @IBOutlet private weak var fadeAfterLabel: NSTextField!
     @IBOutlet private weak var fadeAfterCounter: NSStepper!
@@ -92,7 +93,8 @@ final class Preferences: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-        autoDetectLabels.integerValue = PersistedOptions.autoGenerateLabelsFromText ? 1 : 0
+        autoDetectLabelsFromTitles.integerValue = PersistedOptions.autoGenerateLabelsFromText ? 1 : 0
+        autoDetectLabelsFromThumbnails.integerValue = PersistedOptions.autoGenerateLabelsFromImage ? 1 : 0
 		displayNotesSwitch.integerValue = PersistedOptions.displayNotesInMainView ? 1 : 0
 		displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
 		separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
@@ -185,8 +187,12 @@ final class Preferences: NSViewController {
 		PersistedOptions.autoArchiveUrlComponents = sender.integerValue == 1
 	}
 
-    @IBAction private func autoDetectLabelsChanged(_ sender: NSButton) {
+    @IBAction private func autoDetectLabelsFromTitlesChanged(_ sender: NSButton) {
         PersistedOptions.autoGenerateLabelsFromText = sender.integerValue == 1
+    }
+
+    @IBAction private func autoDetectLabelsFromThumbnailsChanged(_ sender: NSButton) {
+        PersistedOptions.autoGenerateLabelsFromImage = sender.integerValue == 1
     }
 
     @IBAction private func blockUrlSwitchChanged(_ sender: NSButton) {

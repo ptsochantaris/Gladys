@@ -4,6 +4,7 @@ import MobileCoreServices
 #endif
 import GladysFramework
 import NaturalLanguage
+import Vision
 
 extension ArchivedItem {
 
@@ -34,21 +35,51 @@ extension ArchivedItem {
         }
         #endif
         
-        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, PersistedOptions.autoGenerateLabelsFromText, let finalTitle = displayText.0 {
+        let autoText = PersistedOptions.autoGenerateLabelsFromText
+        let autoImage = PersistedOptions.autoGenerateLabelsFromImage
+        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, autoText || autoImage {
+            let finalTitle = displayText.0
+            let img: CGImage?
+            #if os(macOS)
+                if #available(OSX 10.15, *) {
+                    img = displayIcon.cgImage(forProposedRect: nil, context: nil, hints: nil)
+                } else {
+                    img = nil
+                }
+            #else
+                img = displayIcon.cgImage
+            #endif
+            let mode = displayMode
             Component.ingestQueue.async {
-                let tagger = NLTagger(tagSchemes: [.nameType])
-                tagger.string = finalTitle
-                let range = finalTitle.startIndex ..< finalTitle.endIndex
-                let tags = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames]).compactMap { token -> String? in
-                    guard let tag = token.0 else { return nil }
-                    switch tag {
-                    case .placeName, .personalName, .organizationName, .noun:
-                        return String(finalTitle[token.1])
-                    default:
-                        return nil
+                var tags = [String]()
+                if autoText, let finalTitle = finalTitle {
+                    let tagger = NLTagger(tagSchemes: [.nameType])
+                    tagger.string = finalTitle
+                    let range = finalTitle.startIndex ..< finalTitle.endIndex
+                    let textTags = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames]).compactMap { token -> String? in
+                        guard let tag = token.0 else { return nil }
+                        switch tag {
+                        case .placeName, .personalName, .organizationName, .noun:
+                            return String(finalTitle[token.1])
+                        default:
+                            return nil
+                        }
+                    }
+                    tags.append(contentsOf: textTags)
+                }
+                
+                if #available(OSX 10.15, iOS 13.0, *), autoImage, mode == .fill, let img = img {
+                    let handler = VNImageRequestHandler(cgImage: img)
+                    let request = VNClassifyImageRequest()
+                    try? handler.perform([request])
+                    if let observations = request.results as? [VNClassificationObservation] {
+                        let relevant = observations.filter {
+                            $0.hasMinimumPrecision(0.7, forRecall: 0) && !$0.identifier.contains("_")
+                        }.map { $0.identifier.capitalized }
+                        tags.append(contentsOf: relevant)
                     }
                 }
-                log("Detected labels: \(tags)")
+                
                 DispatchQueue.main.async {
                     for tag in tags where !self.labels.contains(tag) {
                         self.labels.append(tag)

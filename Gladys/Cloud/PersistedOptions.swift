@@ -49,6 +49,15 @@ final class PersistedOptions {
         }
     }
 
+    static var autoGenerateLabelsFromImage: Bool {
+        get {
+            return defaults.bool(forKey: "autoGenerateLabelsFromImage")
+        }
+        set {
+            defaults.set(newValue, forKey: "autoGenerateLabelsFromImage")
+        }
+    }
+
 	static var setLabelsWhenActioning: Bool {
 		get {
 			return defaults.bool(forKey: "setLabelsWhenActioning")
