@@ -727,7 +727,7 @@ CA
                                                                         </customView>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="uY2-Nn-cVk">
                                                                             <rect key="frame" x="-2" y="78" width="167" height="18"/>
-                                                                            <buttonCell key="cell" type="check" title="Detect labels from titles" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="u3i-LS-w8o">
+                                                                            <buttonCell key="cell" type="check" title="Create labels from titles" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="u3i-LS-w8o">
                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
@@ -737,7 +737,7 @@ CA
                                                                         </button>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="3UQ-jA-oKV">
                                                                             <rect key="frame" x="-2" y="53" width="375" height="22"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on a new item's title (requires macOS Mojave or higher)" id="s1c-v9-rhY">
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on the contents of a text item (requires macOS Mojave or higher)" id="s1c-v9-rhY">
                                                                                 <font key="font" metaFont="menu" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -750,8 +750,8 @@ CA
                                                                             </constraints>
                                                                         </customView>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="VRr-TX-lPn">
-                                                                            <rect key="frame" x="-2" y="25" width="204" height="18"/>
-                                                                            <buttonCell key="cell" type="check" title="Detect labels from thumbnails" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lMj-ld-EpL">
+                                                                            <rect key="frame" x="-2" y="25" width="181" height="18"/>
+                                                                            <buttonCell key="cell" type="check" title="Create labels from images" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lMj-ld-EpL">
                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
                                                                             </buttonCell>
@@ -761,7 +761,7 @@ CA
                                                                         </button>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-1G-AAX">
                                                                             <rect key="frame" x="-2" y="0.0" width="375" height="22"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on a new item's thumbnail (requires macOS Catalina or higher)" id="N4D-45-NNV">
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on the contents of an image item (requires macOS Catalina or higher)" id="N4D-45-NNV">
                                                                                 <font key="font" metaFont="menu" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

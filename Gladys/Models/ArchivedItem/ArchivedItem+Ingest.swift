@@ -7,6 +7,10 @@ import NaturalLanguage
 import Vision
 
 extension ArchivedItem {
+    
+    var mostRelevantTypeItem: Component? {
+        return components.max { $0.contentPriority < $1.contentPriority }
+    }
 
 	static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
@@ -22,6 +26,17 @@ extension ArchivedItem {
         }
         return identifiers
 	}
+    
+    private var imageOfImageComponentIfExists: CGImage? {
+        if let firstImageComponent = mostRelevantTypeItem, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
+            #if os(macOS)
+                return image.cgImage(forProposedRect: nil, context: nil, hints: nil)
+            #else
+                return image.cgImage
+            #endif
+        }
+        return nil
+    }
 
     private func componentsIngested(wasInitialIngest: Bool, error: (Component, Error)?) {
         #if MAC
@@ -42,12 +57,12 @@ extension ArchivedItem {
             let img: CGImage?
             #if os(macOS)
                 if #available(OSX 10.15, *) {
-                    img = displayIcon.cgImage(forProposedRect: nil, context: nil, hints: nil)
+                    img = imageOfImageComponentIfExists
                 } else {
                     img = nil
                 }
             #else
-                img = displayIcon.cgImage
+                img = imageOfImageComponentIfExists
             #endif
             let mode = displayMode
             Component.ingestQueue.async {
@@ -74,8 +89,8 @@ extension ArchivedItem {
                     try? handler.perform([request])
                     if let observations = request.results as? [VNClassificationObservation] {
                         let relevant = observations.filter {
-                            $0.hasMinimumPrecision(0.7, forRecall: 0) && !$0.identifier.contains("_")
-                        }.map { $0.identifier.capitalized }
+                            $0.hasMinimumPrecision(0.7, forRecall: 0)
+                        }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
                         tags.append(contentsOf: relevant)
                     }
                 }

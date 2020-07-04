@@ -81,10 +81,6 @@ extension ArchivedItem {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + ArchivedItem.dateFormatter.string(from: createdAt)
 	}
 
-	var mostRelevantTypeItem: Component? {
-		return components.max { $0.contentPriority < $1.contentPriority }
-	}
-
 	var previewableTypeItem: Component? {
         return components.filter { $0.canPreview }.max { $0.contentPriority < $1.contentPriority }
 	}
