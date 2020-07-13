@@ -3527,7 +3527,7 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G0I-PF-ZY6">
-                                                    <rect key="frame" x="15" y="11" width="260" height="39"/>
+                                                    <rect key="frame" x="15" y="14" width="260" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
@@ -3536,10 +3536,10 @@ Selecting them will show only items that contain these labels.</string>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="G0I-PF-ZY6" secondAttribute="bottom" id="9LJ-wz-M6v"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="G0I-PF-ZY6" secondAttribute="bottom" constant="4" id="9LJ-wz-M6v"/>
                                                 <constraint firstItem="G0I-PF-ZY6" firstAttribute="leading" secondItem="OdO-dC-Exf" secondAttribute="leadingMargin" id="Ouf-Qv-65p"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="G0I-PF-ZY6" secondAttribute="trailing" id="b09-Lj-HSe"/>
-                                                <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" id="xh6-eD-FRw"/>
+                                                <constraint firstItem="G0I-PF-ZY6" firstAttribute="top" secondItem="OdO-dC-Exf" secondAttribute="topMargin" constant="3" id="xh6-eD-FRw"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="2" left="10" bottom="8" right="10"/>
                                         </tableViewCellContentView>
