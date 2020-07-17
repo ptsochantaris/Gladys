@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -396,8 +396,8 @@
                     <connections>
                         <outlet property="collection" destination="90w-Xn-bmO" id="f5y-Uh-ajj"/>
                         <outlet property="deleteButton" destination="MyX-3U-Yhw" id="eUh-ub-Ifp"/>
-                        <outlet property="dragModeButton" destination="85D-T5-Fjo" id="ujb-j3-fnL"/>
                         <outlet property="dragModePanel" destination="WNd-OH-aUx" id="r4J-DU-6i9"/>
+                        <outlet property="dragModeSubtitle" destination="j2z-Oo-XrT" id="6sC-B4-k4L"/>
                         <outlet property="dragModeTitle" destination="srE-1O-tlR" id="aGp-HB-LOg"/>
                         <outlet property="editButton" destination="Ra4-MV-xG3" id="MpX-Kz-99u"/>
                         <outlet property="editLabelsButton" destination="MZc-J5-Dyp" id="Yao-os-MAr"/>
@@ -418,37 +418,47 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="WNd-OH-aUx">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="140"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                            <rect key="frame" x="0.0" y="60" width="200" height="26.5"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                            <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
-                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
+                            <rect key="frame" x="0.0" y="0.0" width="200" height="140"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="200" id="3Wb-60-GtN"/>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="MZa-aO-Yz8"/>
+                                <constraint firstAttribute="height" constant="140" id="ejA-Qf-1RE"/>
                             </constraints>
-                            <inset key="contentEdgeInsets" minX="0.0" minY="100" maxX="0.0" maxY="50"/>
+                            <inset key="contentEdgeInsets" minX="0.0" minY="50" maxX="0.0" maxY="50"/>
                             <state key="normal" title="Switch to Moving"/>
                             <connections>
                                 <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
                             </connections>
                         </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
+                            <rect key="frame" x="0.0" y="59.5" width="200" height="60.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
+                                    <rect key="frame" x="0.0" y="0.0" width="200" height="26.5"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                    <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Oo-XrT">
+                                    <rect key="frame" x="0.0" y="42.5" width="200" height="18"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <color key="textColor" name="colorTint"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
+                        <constraint firstItem="GZp-EI-Tfs" firstAttribute="bottom" secondItem="sCD-me-cQ0" secondAttribute="bottom" constant="20" id="HFi-ZR-eOO"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="top" secondItem="WNd-OH-aUx" secondAttribute="top" id="Px5-eq-2Pa"/>
+                        <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="sCD-me-cQ0" secondAttribute="trailing" id="XAc-Dx-D0c"/>
                         <constraint firstAttribute="trailing" secondItem="85D-T5-Fjo" secondAttribute="trailing" id="Yka-r7-K2t"/>
                         <constraint firstAttribute="bottom" secondItem="85D-T5-Fjo" secondAttribute="bottom" id="ilk-Q8-Zvr"/>
-                        <constraint firstItem="srE-1O-tlR" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="jZG-7J-yv0"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="leading" secondItem="WNd-OH-aUx" secondAttribute="leading" id="jux-TY-A2l"/>
-                        <constraint firstItem="srE-1O-tlR" firstAttribute="top" secondItem="GZp-EI-Tfs" secondAttribute="top" constant="60" id="m5Q-ZB-jhK"/>
-                        <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="srE-1O-tlR" secondAttribute="trailing" id="ocY-vw-enV"/>
+                        <constraint firstItem="sCD-me-cQ0" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="yj7-X9-zIR"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="GZp-EI-Tfs"/>
                 </view>

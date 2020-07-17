@@ -78,8 +78,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private weak var settingsButton: UIBarButtonItem!
 	@IBOutlet private weak var itemsCount: UIBarButtonItem!
 	@IBOutlet private weak var dragModePanel: UIView!
-	@IBOutlet private weak var dragModeButton: UIButton!
 	@IBOutlet private weak var dragModeTitle: UILabel!
+    @IBOutlet private weak var dragModeSubtitle: UILabel!
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
     @IBOutlet private weak var editButton: UIBarButtonItem!
 
@@ -116,6 +116,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		if dragModePanel.superview != nil, !show {
 			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 0
+                self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
 			}, completion: { _ in
 				self.dragModePanel.removeFromSuperview()
 			})
@@ -127,8 +128,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				dragModePanel.centerXAnchor.constraint(equalTo: collection.centerXAnchor),
                 dragModePanel.topAnchor.constraint(equalTo: n.view.topAnchor)
 				])
+            self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
 			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 1
+                self.dragModePanel.transform = .identity
 			}, completion: nil)
 		}
 	}
@@ -141,10 +144,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private func updateDragModeOverlay() {
 		if dragModeMove {
 			dragModeTitle.text = "Moving"
-			dragModeButton.setTitle("Copy instead", for: .normal)
+			dragModeSubtitle.text = "Copy instead"
 		} else {
 			dragModeTitle.text = "Copying"
-			dragModeButton.setTitle("Move instead", for: .normal)
+			dragModeSubtitle.text = "Move instead"
 		}
 	}
 
@@ -543,10 +546,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
         dragModePanel.layer.shadowColor = UIColor.label.cgColor
-		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
+		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 1)
 		dragModePanel.layer.shadowOpacity = 0.3
-		dragModePanel.layer.shadowRadius = 1
-		dragModePanel.layer.cornerRadius = 100
+		dragModePanel.layer.shadowRadius = 2
+		dragModePanel.layer.cornerRadius = 20
+        dragModePanel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
 		dragModePanel.alpha = 0
 	}
     
