@@ -257,7 +257,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.drops.firstIndexOfItem(with: existingItem.uuid) {
-                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item, checkForWeirdness: true)
+                    if modelDestinationIndex < 0 {
+                        log("Collection view wants to drop beyond the end of items, discaring local drop")
+                        continue // collection view has gone funny while returning a drag, do nothing
+                    }
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
                     if !collectionView.hasActiveDrag {
                         modelDestinationIndex = max(0, modelDestinationIndex - 1)
@@ -278,7 +282,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 for item in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
                     let i = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i)
+                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i, checkForWeirdness: false)
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
                         item.labels = filter.enabledLabelsForItems
                     }
