@@ -57,7 +57,7 @@ final class ModelFilterContext {
         return cachedFilteredDrops!
     }
 
-    var filter: String? {
+    var text: String? {
         get {
             return modelFilter
         }

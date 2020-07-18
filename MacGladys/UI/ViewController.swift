@@ -506,7 +506,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         return PopTimer(timeInterval: 0.2) { [weak self] in
             guard let s = self else { return }
             let str = s.searchBar.stringValue
-            Model.sharedFilter.filter = str.isEmpty ? nil : str
+            Model.sharedFilter.text = str.isEmpty ? nil : str
             s.updateEmptyView()
         }
     }()

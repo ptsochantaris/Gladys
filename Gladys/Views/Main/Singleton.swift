@@ -229,7 +229,7 @@ final class Singleton {
             filter.enableLabelsByName(labels)
         }
         if let search = restoringSearch, !search.isEmpty {
-            filter.filter = search
+            filter.text = search
         }
         v.filter = filter
         if replacing {

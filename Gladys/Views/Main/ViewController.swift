@@ -103,12 +103,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let scene = viewIfLoaded?.window?.windowScene else {
             return
         }
-        if filter.isFilteringText {
-            scene.title = filter.filter
-        } else if filter.isFilteringLabels {
-            scene.title = title
-        } else {
+        
+        guard let filter = filter else {
             scene.title = nil
+            return
+        }
+        
+        var components = filter.enabledLabelsForTitles
+        
+        if filter.isFilteringText, let searchText = filter.text {
+            components.insert("\"\(searchText)\"", at: 0)
+        }
+                
+        if components.isEmpty {
+            scene.title = nil
+        } else {
+            scene.title = components.joined(separator: ", ")
         }
     }
 
@@ -581,7 +591,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
-            self?.filter.filter = searchController?.searchBar.text
+            self?.filter.text = searchController?.searchBar.text
 			self?.updateUI()
 		}
 
@@ -632,7 +642,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func viewDidAppear(_ animated: Bool) {
 
         if firstAppearance {
-            if let search = filter.filter, !search.isEmpty, let sc = navigationItem.searchController {
+            if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
                 sc.searchBar.text = search
                 searchTimer.abort()
                 updateSearchResults(for: sc)
@@ -1802,7 +1812,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         super.updateUserActivityState(activity)
         activity.title = title
         activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
-                             kGladysMainViewSearchText: filter.filter ?? ""]
+                             kGladysMainViewSearchText: filter.text ?? ""]
     }
     
     // MARK: 

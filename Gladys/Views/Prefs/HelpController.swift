@@ -59,9 +59,9 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
                     • Renaming a label across all items.
                     • Deleting the label from all item.
-                    • Opening a new window with items for that label on iPadOS.
+                    • Opening a new window with items for that label on iPad.
 
-                    iPadOS will remember what labels or search are active on each window, so you can keep multiple windows open with assigned labels to act like specific folders.
+                    iPad will remember what labels or search are active on each window, so you can keep multiple windows open with assigned labels to act like specific folders.
                     """,
               link: nil),
         
@@ -123,15 +123,22 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
         
         Entry(title: "Windows",
               body: """
-                    On iPad, selecting the window option on the top right of the main view will create a clone of it as a new window. Each window can have different label and search terms specified, and dragging items between windows will add the labels in effect to the items that are dragged in, exactly the same way that new items are assigned the active labels when added the first time.
+                    On iPad, selecting the window option on the top right of the main view will create a clone of it as a new window. Tapping on the Gladys icon in the Dock will bring up, and let you manage, all created windows. This is supported for:
+
+                    • The main item window: Each one will persist its own search and label terms. Dragging items between windows will add the labels in effect to the items that are dragged in, exactly the same way that new items are assigned the active labels when added the first time.
+                    • Quick Look previews: Each one can live in their own window to help compare or refer to them while doing something else, and reduce the need to open supported items like PDFs in a separate app.
+                    • Item detail views: Having a separate window can make it much easier to perform long-running or detailed data component operations or inspections.
+
+                    Opening windows works great in combination with slide-over, where, for instance, you can set up various Gladys windows with separate labels for quick access, and to move data between them in a visual folder-like manner.
                     """,
               link: nil),
         
         Entry(title: "Callback URL Support",
               body: """
-                    Gladys supports the x-callback-url scheme for interoperability with other apps.
+                    Gladys supports the x-callback-url scheme for automation and interoperability. Currently it supports two main actions:
 
-                    Currently it supports two actions: 'paste-clipboard', and 'create-item' to paste items from the clipboard and also create simple text items, respectively.
+                    • 'paste-clipboard' to paste existing items from the clipboard.
+                    • 'create-item' to create new items with various properties.
 
                     You can get more details about the x-callback-url scheme support, and info about the parameters and syntax, by selecting this entry.
                     """,
