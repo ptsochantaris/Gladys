@@ -611,7 +611,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return false
 			}
 
-			var destinationIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+			var destinationIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
             let count = Model.drops.count
 			if destinationIndex >= count {
 				destinationIndex = count - 1
@@ -680,7 +680,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 				var modelIndex = indexPath.item
 				if Model.sharedFilter.isFiltering {
-					modelIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item)
+					modelIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
 					if Model.sharedFilter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
 						newItem.labels = Model.sharedFilter.enabledLabelsForItems
 					}

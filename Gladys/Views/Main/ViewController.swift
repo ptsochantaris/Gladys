@@ -421,13 +421,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
             
         case "toSiriShortcuts":
-            guard let d = segue.destination as? SiriShortcutsViewController,
+            guard let n = segue.destination as? UINavigationController,
+                let d = n.viewControllers.first as? SiriShortcutsViewController,
                 let cell = sender as? ArchivedItemCell,
                 let item = cell.archivedDropItem
                 else { return }
             
             d.sourceItem = item
-            if let p = d.popoverPresentationController {
+            if let p = n.popoverPresentationController {
                 p.sourceView = cell
                 p.delegate = self
             }

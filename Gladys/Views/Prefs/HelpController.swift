@@ -23,15 +23,17 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
     }
     
     private let entries = [
-        Entry(title: "Action Menu",
+        Entry(title: "Shortcut Menus",
               body: """
-                    You can bring up shortcut menus for items with a force-press, or long tap, on their icon. Tapping on an item's preview above a context menu will expand it into the full Quick Look view.
+                    You can bring up shortcut menus for items with a force-press (or long-tap) on their icon. Tapping on an item's preview above its menu will expand it into the full Quick Look view.
 
                     Shortcut menus are currently available on:
 
                     • Items in the main view.
                     • Data components inside an item's info view.
                     • Labels in the label selector.
+
+                    If you use a hardware keyboard you can bring up menus instantly by holding down CTRL while selecting an item, and of course if you use a trackpad or mouse you can CTRL-click or right-click.
                     """,
               link: nil),
         
@@ -103,7 +105,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     • Quick look supported item previews.
                     • Return to specific info panels.
 
-                    You can configure shortcuts directly from inside Gladys using the 'mic' icon from item info views, as well as the mic icon in the options view. Siri may also occasionally suggest shortcuts on the lockscreen for often-used actions based on your usage (as always, all data and processing related to this feature remains strictly on your own device.)
+                    You can configure shortcuts for any time directly from its context menu. You can configure the paste action from the mic icon in the options view. Siri may also occasionally suggest shortcuts on the lockscreen for often-used actions based on your usage (as always, all data and processing related to this feature remains strictly on your own device.)
                     """,
               link: nil),
         
@@ -143,7 +145,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
         
         Entry(title: "macOS",
               body: """
-                    If you also use a Mac, you may find Gladys for the Mac to be a valuable companion to this app.
+                    If you use a Mac, you may find Gladys for the Mac to be a valuable companion to this app.
 
                     • A fully-fledged version of Gladys for macOS that matches almost every feature.
                     • It's a totally native macOS app that follows the conventions of the Mac desktop.
