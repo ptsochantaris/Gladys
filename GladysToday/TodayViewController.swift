@@ -15,7 +15,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	@IBOutlet private weak var emptyLabel: UILabel!
 	@IBOutlet private weak var itemsView: UICollectionView!
 	@IBOutlet private weak var copiedLabel: UILabel!
-
+    
 	private var itemsPerRow: Int {
 		let c = Model.visibleDrops.count
 		let s = itemsView.bounds.size
@@ -27,18 +27,37 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 			return min(4, c)
 		}
 	}
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        guard let layout = itemsView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        layout.minimumInteritemSpacing = itemsView.layoutMargins.left - 1
+        layout.minimumLineSpacing = itemsView.layoutMargins.top - 1
+    }
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let compactHeight = extensionContext?.widgetMaximumSize(for: .compact).height ?? 110
-		let count = CGFloat(itemsPerRow)
-		var s = view.bounds.size
-		s.height = compactHeight - 20
-		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
-		return s
+        guard let extensionContext = extensionContext, let layout = itemsView.collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+
+        var cellSize = extensionContext.widgetMaximumSize(for: .compact)
+
+        let columnCount = CGFloat(itemsPerRow)
+        let spacing = layout.minimumInteritemSpacing
+        cellSize.width -= (itemsView.layoutMargins.left + itemsView.layoutMargins.right)
+        cellSize.width = ((cellSize.width - ((columnCount - 1) * spacing)) / columnCount).rounded(.down)
+
+        let margins = collectionView.layoutMargins
+        let topBottom = margins.top + margins.bottom
+        cellSize.height -= topBottom
+        
+		return cellSize
 	}
 
+    private var numberOfRows: Int {
+        return extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4
+    }
+    
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
+		let count = itemsPerRow * numberOfRows
 		return min(count, Model.visibleDrops.count)
 	}
 
@@ -51,11 +70,11 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let drop = Model.visibleDrops[indexPath.item]
 		drop.copyToPasteboard()
-		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
 			self.copiedLabel.alpha = 1
 			self.itemsView.alpha = 0
         }, completion: { _ in
-			UIView.animate(withDuration: 0.15, delay: 1, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.1, delay: 0.8, options: .curveEaseIn, animations: {
 				self.copiedLabel.alpha = 0
 				self.itemsView.alpha = 1
 			}, completion: nil)
@@ -81,6 +100,18 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
 		itemsView.dragDelegate = self
 		NotificationCenter.default.addObserver(self, selector: #selector(openParentApp(_:)), name: .OpenParentApp, object: nil)
+        
+        let divider = UIView()
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        divider.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        view.insertSubview(divider, at: 0)
+        
+        NSLayoutConstraint.activate([
+            divider.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            divider.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            divider.topAnchor.constraint(equalTo: view.topAnchor),
+            divider.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+        ])
 	}
 
 	@objc private func openParentApp(_ notification: Notification) {

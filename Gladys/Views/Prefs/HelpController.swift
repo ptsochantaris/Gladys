@@ -41,6 +41,18 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
               body: "Gladys supports the standard system selection gestures, so you can select multiple items by switching into edit mode and dragging across items, or immediately start swiping with two fingers across items, which will auto-activate edit mode.",
               link: nil),
         
+        Entry(title: "Windows",
+              body: """
+                    On iPad, selecting the window option on the top right of the main view will create a clone of it as a new window. Tapping on the Gladys icon in the Dock, while Gladys is visible, will let you manage your windows.
+
+                    • Main item window: Each one will persist its own search and label terms. Dragging items from one Gladys window to another will add the currently active labels to the items that are dragged in, exactly the same way that new items are assigned the currently active labels when dragged in.
+                    • Quick Look previews: Each one can live in their own window to help refer to them while doing something else in Gladys, and reduce the need to open supported items like images or PDFs in separate apps.
+                    • Item detail views: Having a separate window can make it much easier to perform long-running or detailed data component operations, inspections or comparisons.
+
+                    Opening windows works great in combination with slide-over, where, for instance, you can set up various Gladys windows with separate labels for quick access, and to move data between them in a visual folder-like manner.
+                    """,
+              link: nil),
+        
         Entry(title: "Pinch-To-Preview",
               body: """
                     If an item can be previewed with Quick Look, such as an image or PDF, then you can quickly open its preview by pinching out from the item.
@@ -65,6 +77,18 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     """,
               link: nil),
         
+        Entry(title: "Extensions",
+              body: """
+                    The 'Keep in Gladys' share-sheet extension can be used from inside apps that don't support drag-and-drop. Please bear in mind that the type of data which is sent using this method may be less detailed than the data that is provided by drag-and-drop.
+
+                    The Apple Watch app allows for quick browsing, copying, or deleting of the top 100 items. Force-press an item to bring up its options, such as copying it to the clipboard, deleting it, moving it to the top of your collection, or opening the item's info panel on your phone.
+
+                    The Today Widget allows fast access to recently added items from the home screen. You can tap on an item to quickly copy it to the clipboard. Tapping and holding on an item will launch Gladys and open the item's details. On iPad you can drag an item off to paste it in another app.
+
+                    The iMessage app allows you to quickly search and add an item from Gladys to a message.
+                    """,
+              link: nil),
+        
         Entry(title: "Data Components",
               body: """
                     When an item is added to Gladys, it can be provided by the sending app as one or more formats and representations, and they appear as the entries inside an item's info panel.
@@ -83,19 +107,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     Alternatively, you can drag a data component out of an info panel, and while dragging it, open other items' info panels and drop it there. This will add a copy of this data component to their existing components, such as adding a URL to an image for example.
                     """,
               link: nil),
-        
-        Entry(title: "Extensions",
-              body: """
-                    The 'Keep in Gladys' share-sheet extension can be used from inside apps that don't support drag-and-drop. Please bear in mind that the type of data which is sent using this method may be less detailed than the data that is provided by drag-and-drop.
-
-                    The Apple Watch app allows for quick browsing, copying, or deleting of the top 100 items. Force-press an item to bring up its options, such as copying it to the clipboard, deleting it, moving it to the top of your collection, or opening the item's info panel on your phone.
-
-                    The Today Widget allows fast access to recently added items from the home screen. You can tap on an item to quickly copy it to the clipboard. Tapping and holding on an item will launch Gladys and open the item's details. On iPad you can drag an item off to paste it in another app.
-
-                    The iMessage app allows you to quickly search and add an item from Gladys to a message.
-                    """,
-              link: nil),
-        
+                
         Entry(title: "Siri Shortcuts",
               body: """
                     Gladys supports shortcuts to:
@@ -109,7 +121,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     """,
               link: nil),
         
-        Entry(title: "Sharing",
+        Entry(title: "iCloud Sharing",
               body: """
                     If you're using iCloud sync, you can chose to share individual items with other Gladys users via iCloud sharing.
 
@@ -120,19 +132,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     When you un-share or delete a shared item, it's removed from all participants' collections (but be aware that others could have still made copies of it in the meantime.)
                     """,
               link: nil),
-        
-        Entry(title: "Windows",
-              body: """
-                    On iPad, selecting the window option on the top right of the main view will create a clone of it as a new window. Tapping on the Gladys icon in the Dock will bring up, and let you manage, all created windows. This is supported for:
-
-                    • The main item window: Each one will persist its own search and label terms. Dragging items between windows will add the labels in effect to the items that are dragged in, exactly the same way that new items are assigned the active labels when added the first time.
-                    • Quick Look previews: Each one can live in their own window to help compare or refer to them while doing something else, and reduce the need to open supported items like PDFs in a separate app.
-                    • Item detail views: Having a separate window can make it much easier to perform long-running or detailed data component operations or inspections.
-
-                    Opening windows works great in combination with slide-over, where, for instance, you can set up various Gladys windows with separate labels for quick access, and to move data between them in a visual folder-like manner.
-                    """,
-              link: nil),
-        
+                
         Entry(title: "Callback URL Support",
               body: """
                     Gladys supports the x-callback-url scheme for automation and interoperability. Currently it supports two main actions:
@@ -152,7 +152,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
         
         Entry(title: "macOS",
               body: """
-                    If you use a Mac, you may find Gladys for the Mac to be a valuable companion to this app.
+                    If you use a Mac, you may find Gladys for macOS to be a valuable companion to this app.
 
                     • A fully-fledged version of Gladys for macOS that matches almost every feature.
                     • It's a totally native macOS app that follows the conventions of the Mac desktop.

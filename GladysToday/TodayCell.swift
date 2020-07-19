@@ -33,19 +33,19 @@ final class TodayCell: UICollectionViewCell {
 		super.awakeFromNib()
 
 		let backgroundEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-		backgroundEffect.layer.cornerRadius = 10
+		backgroundEffect.layer.cornerRadius = 8
 		backgroundEffect.clipsToBounds = true
 		backgroundView = backgroundEffect
 
         let imageEffect = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-		imageEffect.layer.cornerRadius = 5
+		imageEffect.layer.cornerRadius = 4
 		imageEffect.clipsToBounds = true
 		imageView.coverUnder(with: imageEffect)
         
-        topLabel.font = topLabel.font.withSize(topLabel.font.pointSize - 2)
-        bottomLabel.font = bottomLabel.font.withSize(bottomLabel.font.pointSize - 2)
+        topLabel.font = topLabel.font.withSize(topLabel.font.pointSize - 3)
+        bottomLabel.font = bottomLabel.font.withSize(bottomLabel.font.pointSize - 3)
 
-		imageView.layer.cornerRadius = 5
+		imageView.layer.cornerRadius = 4
 		isAccessibilityElement = true
 		accessibilityHint = "Select to copy"
 
