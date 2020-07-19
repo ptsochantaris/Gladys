@@ -551,7 +551,7 @@ extension Model {
 		for item in itemsRelatedToZone {
 			item.removeFromCloudkit()
 		}
-		_ = delete(items: itemsRelatedToZone)
+		delete(items: itemsRelatedToZone)
 	}
 
 	static var sharingMyItems: Bool {

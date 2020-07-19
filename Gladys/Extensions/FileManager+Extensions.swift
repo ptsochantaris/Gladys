@@ -66,7 +66,7 @@ extension FileManager {
             if let newValue = date {
                 let string = String(newValue.timeIntervalSinceReferenceDate)
                 if let data = string.data(using: .utf8) {
-                    _ = data.withUnsafeBytes { ptr in
+                    data.withUnsafeBytes { ptr in
                         guard let base = ptr.baseAddress else { return }
                         let res = setxattr(fileSystemPath, attributeName, base, data.count, 0, 0)
                         if res < 0 {
@@ -88,7 +88,7 @@ extension FileManager {
         }
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if newValue {
-                _ = FileManager.trueData.withUnsafeBytes { ptr in
+                FileManager.trueData.withUnsafeBytes { ptr in
                     if let bytes = ptr.baseAddress {
                         let res = setxattr(fileSystemPath, attributeName, bytes, FileManager.trueDataCount, 0, 0)
                         if res < 0 {
@@ -140,7 +140,7 @@ extension FileManager {
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if let u = uuid?.uuid {
                 let bytes = [u.0, u.1, u.2, u.3, u.4, u.5, u.6, u.7, u.8, u.9, u.10, u.11, u.12, u.13, u.14, u.15]
-                _ = bytes.withUnsafeBytes { ptr in
+                bytes.withUnsafeBytes { ptr in
                     guard let base = ptr.baseAddress else { return }
                     let res = setxattr(fileSystemPath, attributeName, base, 16, 0, 0)
                     if res < 0 {
