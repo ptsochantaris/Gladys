@@ -68,6 +68,7 @@ final class AboutController: GladysViewController {
                     s.supportStack.isHidden = false
                 }
             }
+            (s.tabBarController as? SelfSizingTabController)?.sizeWindow()
         }
         
         for v in [p1, p2, p3, p4, p5] {
@@ -85,6 +86,13 @@ final class AboutController: GladysViewController {
             versionLabel.title = "v\(v) (\(b))"
         }
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if !firstAppearance {
+            (tabBarController as? SelfSizingTabController)?.sizeWindow()
+        }
+        super.viewDidAppear(animated)
+    }
 
 	@IBAction private func aboutSelected(_ sender: UIButton) {
         guard let u = URL(string: "https://bru.build/app/gladys") else { return }

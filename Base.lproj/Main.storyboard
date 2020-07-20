@@ -1808,23 +1808,23 @@ Selecting them will show only items that contain these labels.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGD-oM-cWh">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vGD-oM-cWh">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="580"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="JQU-c7-D51">
-                                        <rect key="frame" x="20" y="34" width="280" height="428"/>
+                                        <rect key="frame" x="8" y="34" width="304" height="428"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
-                                                <rect key="frame" x="0.0" y="0.0" width="280" height="120"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="120"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="120" id="Xsy-cM-XaU"/>
                                                 </constraints>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="CqQ-Qk-DZ1">
-                                                <rect key="frame" x="0.0" y="146" width="280" height="85"/>
+                                                <rect key="frame" x="0.0" y="146" width="304" height="85"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="280" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <state key="normal" title="Gladys Web Site"/>
                                                         <connections>
@@ -1832,7 +1832,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
-                                                        <rect key="frame" x="0.0" y="33" width="280" height="52"/>
+                                                        <rect key="frame" x="0.0" y="33" width="304" height="52"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -1840,48 +1840,48 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NQQ-Pu-pLP">
-                                                <rect key="frame" x="0.0" y="257" width="280" height="171"/>
+                                                <rect key="frame" x="0.0" y="257" width="304" height="171"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Supporting Gladys" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSU-2U-3sW">
-                                                        <rect key="frame" x="0.0" y="0.0" width="280" height="18"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="18"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7L-Su-Up0">
-                                                        <rect key="frame" x="0.0" y="28" width="280" height="70"/>
+                                                        <rect key="frame" x="0.0" y="28" width="304" height="70"/>
                                                         <string key="text">If you find Gladys useful then feel free to leave a tip! It will be greatly appreciated and will ensure I can keep working on and improving Gladys in the future.</string>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ukS-GM-zRt">
-                                                        <rect key="frame" x="0.0" y="108" width="280" height="63"/>
+                                                        <rect key="frame" x="0.0" y="108" width="304" height="63"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5sM-C8-DJQ">
-                                                                <rect key="frame" x="0.0" y="0.0" width="280" height="2"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="304" height="2"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="2" id="jSK-z3-Dp9"/>
                                                                 </constraints>
                                                             </view>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="cK2-2c-Njk">
-                                                                <rect key="frame" x="0.0" y="2" width="280" height="61"/>
+                                                                <rect key="frame" x="0.0" y="2" width="304" height="61"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wva-U3-Cnj" userLabel="p1">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="51" height="61"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="gp6-yW-WOL">
-                                                                                <rect key="frame" x="3" y="11" width="45" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="🙂" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8YS-iH-ueg">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2fR-kM-JFb">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="45" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <nil key="highlightedColor"/>
@@ -1889,7 +1889,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 </subviews>
                                                                             </stackView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SNE-gf-6Jm">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51" height="61"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                                 <connections>
                                                                                     <action selector="p1Selected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="9W9-kE-kQj"/>
@@ -1907,19 +1907,19 @@ Selecting them will show only items that contain these labels.</string>
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vde-Bx-uMY" userLabel="p2">
-                                                                        <rect key="frame" x="57" y="0.0" width="51.5" height="61"/>
+                                                                        <rect key="frame" x="62" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="cnF-A1-IqQ">
-                                                                                <rect key="frame" x="3" y="11" width="45.5" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="😊" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6B5-8m-pWr">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45.5" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4br-Bd-HvQ">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="45.5" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <nil key="highlightedColor"/>
@@ -1927,7 +1927,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 </subviews>
                                                                             </stackView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HQx-Bj-DrR">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51.5" height="61"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                                 <connections>
                                                                                     <action selector="p2Selected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="nfb-9P-WEY"/>
@@ -1945,19 +1945,19 @@ Selecting them will show only items that contain these labels.</string>
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0O-vX-IMV" userLabel="p3">
-                                                                        <rect key="frame" x="114.5" y="0.0" width="51" height="61"/>
+                                                                        <rect key="frame" x="124" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="o7A-wl-1JC">
-                                                                                <rect key="frame" x="3" y="11" width="45" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="🤗" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G85-yU-slg">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eyi-eQ-mA6">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="45" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <nil key="highlightedColor"/>
@@ -1965,7 +1965,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 </subviews>
                                                                             </stackView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2x-bl-JjF">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51" height="61"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                                 <connections>
                                                                                     <action selector="p3Selected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="XJX-KV-RFJ"/>
@@ -1983,19 +1983,19 @@ Selecting them will show only items that contain these labels.</string>
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="38A-uA-Tbo" userLabel="p4">
-                                                                        <rect key="frame" x="171.5" y="0.0" width="51.5" height="61"/>
+                                                                        <rect key="frame" x="186" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="5HM-vP-qKe">
-                                                                                <rect key="frame" x="3" y="11" width="45.5" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="😮" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABV-ol-I7e">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45.5" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C5L-qO-Y6G">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="45.5" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2003,7 +2003,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 </subviews>
                                                                             </stackView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JUv-Ba-s3b">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51.5" height="61"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                                 <connections>
                                                                                     <action selector="p4Selected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="w49-al-67v"/>
@@ -2021,19 +2021,19 @@ Selecting them will show only items that contain these labels.</string>
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Uv-Wb-qLp" userLabel="p5">
-                                                                        <rect key="frame" x="229" y="0.0" width="51" height="61"/>
+                                                                        <rect key="frame" x="248" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dkW-gj-WwU">
-                                                                                <rect key="frame" x="3" y="11" width="45" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="😱" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vfh-Xy-BHj">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jPV-M0-0YL">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="45" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2041,7 +2041,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                                 </subviews>
                                                                             </stackView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtW-oA-CFS">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51" height="61"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                                 <connections>
                                                                                     <action selector="p5Selected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="Xzw-t3-a2w"/>
@@ -2077,10 +2077,10 @@ Selecting them will show only items that contain these labels.</string>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="JQU-c7-D51" firstAttribute="top" secondItem="vGD-oM-cWh" secondAttribute="top" constant="34" id="G26-Sf-3So"/>
-                                    <constraint firstItem="JQU-c7-D51" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leading" constant="20" id="KGV-j2-gDA"/>
-                                    <constraint firstAttribute="trailing" secondItem="JQU-c7-D51" secondAttribute="trailing" constant="20" id="TEU-mC-dyT"/>
-                                    <constraint firstAttribute="bottom" secondItem="JQU-c7-D51" secondAttribute="bottom" constant="30" id="cXf-SO-D4N"/>
-                                    <constraint firstItem="JQU-c7-D51" firstAttribute="width" secondItem="vGD-oM-cWh" secondAttribute="width" constant="-40" id="wdM-AY-cgO"/>
+                                    <constraint firstItem="JQU-c7-D51" firstAttribute="leading" secondItem="vGD-oM-cWh" secondAttribute="leadingMargin" id="KGV-j2-gDA"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="JQU-c7-D51" secondAttribute="trailing" id="TEU-mC-dyT"/>
+                                    <constraint firstAttribute="bottom" secondItem="JQU-c7-D51" secondAttribute="bottom" constant="16" id="cXf-SO-D4N"/>
+                                    <constraint firstItem="JQU-c7-D51" firstAttribute="centerX" secondItem="vGD-oM-cWh" secondAttribute="centerX" id="vVy-q7-3Lv"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
