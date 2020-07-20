@@ -18,8 +18,6 @@ struct CallbackSupport {
 				success(nil)
 			case .noData:
 				failure(NSError.error(code: 1, failureReason: "Clipboard is empty."))
-			case .tooManyItems:
-				failure(NSError.error(code: 2, failureReason: "Gladys cannot hold more items."))
 			}
 		}
 	}

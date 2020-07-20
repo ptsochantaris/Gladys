@@ -35,7 +35,7 @@ final class CreditsViewController: GladysViewController {
     @IBAction private func lintSelected(_ sender: UIButton) {
         UIApplication.shared.open(URL(string: "https://github.com/realm/SwiftLint")!)
     }
-    
+        
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let tabs = tabBarController as? SelfSizingTabController else {

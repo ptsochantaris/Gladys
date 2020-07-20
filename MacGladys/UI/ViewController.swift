@@ -670,10 +670,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@discardableResult
 	func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
-		if IAPManager.shared.checkInfiniteMode(for: itemProviders.count) {
-			return false
-		}
-
 		var inserted = false
 		for provider in itemProviders {
 			for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {

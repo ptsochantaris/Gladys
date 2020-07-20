@@ -25,10 +25,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
     
-	func applicationWillTerminate(_ application: UIApplication) {
-		IAPManager.shared.stop()
-	}
-
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		log("APNS ready: \(deviceToken.base64EncodedString())")
 		CloudManager.apnsUpdate(deviceToken)

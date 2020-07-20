@@ -10,7 +10,7 @@ import UIKit
 
 extension Model {
     enum PasteResult {
-        case success, noData, tooManyItems
+        case success, noData
     }
 
     @discardableResult
@@ -18,10 +18,6 @@ extension Model {
         
         if providers.isEmpty {
             return .noData
-        }
-
-        if IAPManager.shared.checkInfiniteMode(for: 1) {
-            return .tooManyItems
         }
         
         let currentFilter = currentWindow?.associatedFilter

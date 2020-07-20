@@ -1,5 +1,4 @@
 import UIKit
-import GladysFramework
 import Intents
 import DeepDiff
 
@@ -248,11 +247,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        
-        if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
-            return
-        }
-                
+                        
         coordinator.session.progressIndicatorStyle = .none
         
         var needsPost = false
@@ -659,6 +654,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func keyboardHiding() {
+        if self.presentedViewController != nil {
+            return
+        }
         if currentDetailView != nil {
             return
         }

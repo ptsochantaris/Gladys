@@ -42,9 +42,6 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
-		16081003242D72AA00E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
-		16081004242D72C200E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
-		1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		160B5BF524659965009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
 		160B5BF624659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
 		160B5BF724659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
@@ -232,8 +229,6 @@
 		16906A9823C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9923C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9A23C8C18E00D6C177 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
-		1695218920A23B5200FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
-		1695218A20A240A000FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -261,6 +256,7 @@
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
+		16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A42A2124C4FAA1002CBD1B /* TipJar.swift */; };
 		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -357,7 +353,6 @@
 		16D984A82160CC5E00D9D51C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
 		16D984A92160CC6800D9D51C /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */; };
 		16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
-		16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		16D984AE2160D31C00D9D51C /* ArchivedItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */; };
 		16D984AF2160D32900D9D51C /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
@@ -390,8 +385,6 @@
 		16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+UI.swift */; };
 		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
-		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
-		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F1BD6922A7B605009BFFD1 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */; };
@@ -723,7 +716,6 @@
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		16906A9323C8C0C700D6C177 /* Component+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+iOS.swift"; sourceTree = "<group>"; };
-		1695218820A23B5200FFE817 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -742,6 +734,7 @@
 		169E5E051FE0851A00CCE984 /* Component+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Messages.swift"; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		16A42A2124C4FAA1002CBD1B /* TipJar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipJar.swift; sourceTree = "<group>"; };
 		16A4E7E01FBB844A00D60596 /* GladysWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GladysWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A4E7E31FBB844A00D60596 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		16A4E7E51FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -807,7 +800,6 @@
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
 		16EDB3761F2361EB001CC65C /* Model+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UI.swift"; sourceTree = "<group>"; };
 		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
-		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
@@ -852,7 +844,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16081004242D72C200E19FCE /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -905,7 +896,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16081003242D72AA00E19FCE /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,12 +1007,10 @@
 				16CD7DC820A12B770039E6C2 /* Model */,
 				1610899D1FA322580095FE34 /* ArchivedItem */,
 				1610899E1FA3225C0095FE34 /* Component */,
-				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
-				1695218820A23B5200FFE817 /* IAPManager.swift */,
 				16559C8920A4CC55006C281D /* Global.swift */,
 				162594D420D5548F00A65E06 /* Caches.swift */,
 				162BDD73220F01FA00A3C17B /* Logging.swift */,
@@ -1033,6 +1021,7 @@
 				165847052376CC2400666B7B /* Model+Siri.swift */,
 				165847082376EE4A00666B7B /* Model+Importing.swift */,
 				160B5BF424659965009E2404 /* DropArray.swift */,
+				16A42A2124C4FAA1002CBD1B /* TipJar.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2177,7 +2166,6 @@
 				16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */,
 				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
-				1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */,
 				16CD7D7A20A108550039E6C2 /* ArchivedItem+Ingest.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
 				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,
@@ -2205,7 +2193,6 @@
 				16C8166820CB0354001C12DF /* PullState.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
-				1695218A20A240A000FFE817 /* IAPManager.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
@@ -2289,7 +2276,6 @@
 				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */,
-				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16559C8C20A4CC55006C281D /* Global.swift in Sources */,
 				1657B8D51FD449D900EC480D /* Component+Copy.swift in Sources */,
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
@@ -2416,6 +2402,7 @@
 				1660C0262465C32000ABFDFD /* Singleton.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* Component.swift in Sources */,
+				16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				169763231F156E0700537776 /* ArchivedItem+Indexing.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
@@ -2460,7 +2447,6 @@
 				16B534BD237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				169763141F15669000537776 /* Component+Ingest+iOS.swift in Sources */,
-				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16CD7D8720A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
@@ -2474,7 +2460,6 @@
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
-				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
@@ -2567,7 +2552,6 @@
 				16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */,
 				16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */,
 				16D984B32160D56500D9D51C /* Component+Preview.swift in Sources */,
-				16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */,
 				16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */,
 				16D984AF2160D32900D9D51C /* ArchivedItem+Indexing.swift in Sources */,
 				16D984B02160D35B00D9D51C /* Component+IngestCommon.swift in Sources */,
@@ -2983,6 +2967,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -3015,7 +3000,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"NO_IAP=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3032,8 +3016,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NO_IAP";
-				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = "debug-only";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = on;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3172,7 +3156,6 @@
 				GCC_FAST_MATH = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				GCC_PREPROCESSOR_DEFINITIONS = "NO_IAP=1";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -3188,7 +3171,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NO_IAP;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = off;

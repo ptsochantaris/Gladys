@@ -69,17 +69,6 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 		newItems.removeAll()
 		intentCompletion = nil
 
-		let newTotal = Model.countSavedItemsWithoutLoading() + loadCount
-		if !infiniteMode && newTotal > nonInfiniteItemLimit {
-			// ensure the app wasn't just registered, just in case, before we warn the user
-			reVerifyInfiniteMode()
-		}
-
-		if !infiniteMode && newTotal > nonInfiniteItemLimit {
-			completion(PasteClipboardIntentResponse(code: .tooManyItems, userActivity: nil))
-			return
-		}
-
 		completion(PasteClipboardIntentResponse(code: .ready, userActivity: nil))
 	}
 

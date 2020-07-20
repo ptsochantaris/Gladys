@@ -11,18 +11,15 @@
 FOUNDATION_EXPORT double GladysFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char GladysFrameworkVersionString[];
 
-BOOL verifyIapReceipt(NSData *deviceIdentifier);
 NSData *sha1(NSString *input);
 
 #if TARGET_OS_IOS
 NSString *bundleId = @"build.bru.Gladys.Framework";
 NSString *receiptId = @"build.bru.Gladys";
-NSString *infiniteId = @"INFINITE";
 uint32_t valueForKeyedArchiverUID(id keyedArchiverUID);
 #else
 NSString *bundleId = @"build.bru.MacGladys.Framework";
 NSString *receiptId = @"build.bru.MacGladys";
-NSString *infiniteId = @"MACINFINITE";
 #endif
 
 @interface SafeArchiver: NSKeyedArchiver

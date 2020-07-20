@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,12 +20,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="aboutSelected:" target="Voe-Tx-rLC" id="hsb-tO-Wfq"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Unlimited Mode…" id="AN3-Zt-BA7">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="infiniteModeSelected:" target="Voe-Tx-rLC" id="6QJ-2h-jF9"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -308,7 +302,6 @@ CA
                         <outlet property="fileMenuItem" destination="P1e-EG-AfR" id="n7p-bV-0ri"/>
                         <outlet property="gladysMenuItem" destination="1Xt-HY-uBw" id="t75-hQ-3en"/>
                         <outlet property="helpMenuItem" destination="rvU-z6-TUv" id="2Wb-06-hOV"/>
-                        <outlet property="infiniteModeMenuEntry" destination="AN3-Zt-BA7" id="K7A-T0-Hhy"/>
                         <outlet property="itemMenuItem" destination="TlP-eF-ggR" id="aiC-AV-Lbb"/>
                         <outlet property="sortAscendingMenu" destination="Jrt-kd-Ak8" id="DXy-PN-Ndg"/>
                         <outlet property="sortDescendingMenu" destination="BEs-RJ-gLM" id="K29-I3-Kp6"/>

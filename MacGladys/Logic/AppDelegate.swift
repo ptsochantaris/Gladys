@@ -8,7 +8,6 @@
 
 import Cocoa
 import CoreSpotlight
-import GladysFramework
 import HotKey
 import CloudKit
 
@@ -42,8 +41,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	private var statusItem: NSStatusItem?
-
-	@IBOutlet private weak var infiniteModeMenuEntry: NSMenuItem!
 
 	@IBOutlet private weak var gladysMenuItem: NSMenuItem!
 	@IBOutlet private weak var fileMenuItem: NSMenuItem!
@@ -179,10 +176,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		
 		LauncherCommon.killHelper()
 
-		if !receiptExists {
-			exit(173)
-		}
-
 		CallbackSupport.setupCallbackSupport()
 
 		let s = NSAppleEventManager.shared()
@@ -195,10 +188,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [])
 		}
-
-		IAPManager.shared.start()
-		NotificationCenter.default.addObserver(self, selector: #selector(iapChanged), name: .IAPModeChanged, object: nil)
-		infiniteModeMenuEntry.isHidden = infiniteMode
 
 		NSApplication.shared.servicesProvider = servicesProvider
 
@@ -237,10 +226,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			AppDelegate.updateHotkey()
 			CloudManager.opportunisticSyncIfNeeded()
 		}
-	}
-
-	func applicationWillTerminate(_ aNotification: Notification) {
-		IAPManager.shared.stop()
 	}
 
 	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
@@ -341,15 +326,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			let aboutWindow = windowsAfter.first
 			aboutWindow?.level = .modalPanel
 		}
-	}
-
-	@objc private func iapChanged() {
-		infiniteModeMenuEntry.isHidden = infiniteMode
-		updateMenubarIconMode(showing: true, forceUpdateMenu: true)
-	}
-
-	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {
-		IAPManager.shared.displayRequest(newTotal: -1)
 	}
 
 	@IBAction private func openWebSite(_ sender: NSMenuItem) {
