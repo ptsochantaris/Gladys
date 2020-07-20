@@ -13,9 +13,11 @@ final class AboutController: GladysViewController {
 
     @IBOutlet private weak var versionLabel: UIBarButtonItem!
 	@IBOutlet private weak var logo: UIImageView!
-
+    @IBOutlet private weak var logoSize: NSLayoutConstraint!
+    
     @IBOutlet private weak var supportStack: UIStackView!
-
+    @IBOutlet private weak var topStack: UIStackView!
+    
     @IBOutlet private weak var p1: UIView!
     @IBOutlet private weak var p2: UIView!
     @IBOutlet private weak var p3: UIView!
@@ -43,6 +45,11 @@ final class AboutController: GladysViewController {
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        
+        if (UIApplication.shared.windows.first?.bounds.height ?? 0) > 600 {
+            logoSize.constant = 180
+            topStack.spacing = 32
+        }
 
         tipJar = TipJar { [weak self] items, _ in
             guard let s = self, let items = items, items.count > 4 else { return }
