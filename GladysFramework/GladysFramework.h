@@ -12,6 +12,7 @@ FOUNDATION_EXPORT double GladysFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char GladysFrameworkVersionString[];
 
 NSData *sha1(NSString *input);
+BOOL isRunningInTestFlightEnvironment(void);
 
 #if TARGET_OS_IOS
 NSString *bundleId = @"build.bru.Gladys.Framework";

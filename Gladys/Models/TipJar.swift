@@ -8,6 +8,7 @@
 
 import Foundation
 import StoreKit
+import GladysFramework
 
 extension SKProduct {
 
@@ -59,6 +60,12 @@ final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObs
     
     private var purchaseCompletion: (() -> Void)?
     func requestItem(_ item: SKProduct, completion: @escaping () -> Void) {
+        if isRunningInTestFlightEnvironment() {
+            genericAlert(title: "You can't tip on the beta",
+                         message: "Testflight builds cannot perform any in-app purchases, so tipping on this build won't work. However, your testing of this beta version is already a great contribution, so, thank you!!",
+                         completion: completion)
+            return
+        }
         purchaseCompletion = completion
         let payment = SKPayment(product: item)
         SKPaymentQueue.default().add(payment)
@@ -67,8 +74,8 @@ final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObs
     private func displaySuccess() {
         let completion = purchaseCompletion
         purchaseCompletion = nil
-        genericAlert(title: "Thank you for supporting Gladys",
-                     message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future!",
+        genericAlert(title: "Thank you for supporting Gladys!",
+                     message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
                      completion: completion)
     }
     
