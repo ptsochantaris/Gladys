@@ -1805,14 +1805,14 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="3Cr-dT-I5Y" customClass="AboutController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6e9-dF-Uv9" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vGD-oM-cWh">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="580"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="780"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="JQU-c7-D51">
-                                        <rect key="frame" x="8" y="34" width="304" height="428"/>
+                                        <rect key="frame" x="8" y="34" width="304" height="588"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="120"/>
@@ -2072,6 +2072,24 @@ Selecting them will show only items that contain these labels.</string>
                                                     </stackView>
                                                 </subviews>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="H7n-k8-CdC">
+                                                <rect key="frame" x="0.0" y="454" width="304" height="134"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank You For Testing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34y-Wj-pga">
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="18"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                        <color key="textColor" name="colorTint"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RFz-7l-kqi">
+                                                        <rect key="frame" x="0.0" y="28" width="304" height="106"/>
+                                                        <string key="text">Thank you for tesitng out Gladys betas, your feedback goes a long way in improving and evoling Gladys over time. Please do report any and all issues you encounter via email or TestFlight feedback and they will be looked into as a matter of priority.</string>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -2102,7 +2120,7 @@ Selecting them will show only items that contain these labels.</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <size key="freeformSize" width="320" height="600"/>
+                    <size key="freeformSize" width="320" height="800"/>
                     <connections>
                         <outlet property="l1" destination="2fR-kM-JFb" id="bby-Pv-P2I"/>
                         <outlet property="l2" destination="4br-Bd-HvQ" id="kl9-Lj-r3U"/>
@@ -2122,6 +2140,7 @@ Selecting them will show only items that contain these labels.</string>
                         <outlet property="t3" destination="G85-yU-slg" id="Utj-ds-MlI"/>
                         <outlet property="t4" destination="ABV-ol-I7e" id="YVJ-ie-UnH"/>
                         <outlet property="t5" destination="Vfh-Xy-BHj" id="nJo-6F-uVd"/>
+                        <outlet property="testFlightStack" destination="H7n-k8-CdC" id="HZ3-55-8PU"/>
                         <outlet property="topStack" destination="JQU-c7-D51" id="ptc-uq-8bu"/>
                         <outlet property="versionLabel" destination="1U2-0T-zYK" id="R8u-bm-Nqj"/>
                     </connections>

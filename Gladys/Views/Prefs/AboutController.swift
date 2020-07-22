@@ -8,6 +8,7 @@
 
 import UIKit
 import StoreKit
+import GladysFramework
 
 final class AboutController: GladysViewController {
 
@@ -16,6 +17,7 @@ final class AboutController: GladysViewController {
     @IBOutlet private weak var logoSize: NSLayoutConstraint!
     
     @IBOutlet private weak var supportStack: UIStackView!
+    @IBOutlet private weak var testFlightStack: UIStackView!
     @IBOutlet private weak var topStack: UIStackView!
     
     @IBOutlet private weak var p1: UIView!
@@ -36,7 +38,7 @@ final class AboutController: GladysViewController {
     @IBOutlet private weak var l4: UILabel!
     @IBOutlet private weak var l5: UILabel!
 
-    private var tipJar: TipJar!
+    private var tipJar: TipJar?
     private var tipItems: [SKProduct]?
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -45,38 +47,39 @@ final class AboutController: GladysViewController {
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
-        
-        if (UIApplication.shared.windows.first?.bounds.height ?? 0) > 600 {
-            logoSize.constant = 180
-            topStack.spacing = 32
-        }
-
-        tipJar = TipJar { [weak self] items, _ in
-            guard let s = self, let items = items, items.count > 4 else { return }
-
-            s.tipItems = items
-            s.l1.text = items[0].regularPrice
-            s.l2.text = items[1].regularPrice
-            s.l3.text = items[2].regularPrice
-            s.l4.text = items[3].regularPrice
-            s.l5.text = items[4].regularPrice
-
-            if s.firstAppearance {
-                s.supportStack.isHidden = false
-            } else {
-                UIView.animate(withDuration: 0.2) {
-                    s.supportStack.isHidden = false
-                }
-            }
-            (s.tabBarController as? SelfSizingTabController)?.sizeWindow()
-        }
-        
-        for v in [p1, p2, p3, p4, p5] {
-            v?.layer.cornerRadius = 8
-        }
-        
+                
         supportStack.isHidden = true
 
+        if isRunningInTestFlightEnvironment() {
+            testFlightStack.isHidden = false
+        } else {
+            testFlightStack.isHidden = true
+            
+            tipJar = TipJar { [weak self] items, _ in
+                guard let s = self, let items = items, items.count > 4 else { return }
+
+                s.tipItems = items
+                s.l1.text = items[0].regularPrice
+                s.l2.text = items[1].regularPrice
+                s.l3.text = items[2].regularPrice
+                s.l4.text = items[3].regularPrice
+                s.l5.text = items[4].regularPrice
+
+                if s.firstAppearance {
+                    s.supportStack.isHidden = false
+                } else {
+                    UIView.animate(withDuration: 0.2) {
+                        s.supportStack.isHidden = false
+                    }
+                }
+                (s.tabBarController as? SelfSizingTabController)?.sizeWindow()
+            }
+            
+            for v in [p1, p2, p3, p4, p5] {
+                v?.layer.cornerRadius = 8
+            }
+        }
+        
         doneButtonLocation = .right
 
         if let i = Bundle.main.infoDictionary,
@@ -85,8 +88,16 @@ final class AboutController: GladysViewController {
             
             versionLabel.title = "v\(v) (\(b))"
         }
-	}
+    }
     
+    override func updateViewConstraints() {
+        if view.bounds.height > 600 {
+            logoSize.constant = 160
+            topStack.spacing = 32
+        }
+        super.updateViewConstraints()
+    }
+                    
     override func viewDidAppear(_ animated: Bool) {
         if !firstAppearance {
             (tabBarController as? SelfSizingTabController)?.sizeWindow()
@@ -104,7 +115,7 @@ final class AboutController: GladysViewController {
 	}
     
     private func purchase(index: Int) {
-        guard let items = self.tipItems else { return }
+        guard let tipJar = tipJar, let items = self.tipItems else { return }
         
         let t = [t1!, t2!, t3!, t4!, t5!]
         let prev = t[index].text
