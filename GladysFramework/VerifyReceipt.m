@@ -38,7 +38,7 @@ uint32_t valueForKeyedArchiverUID(id keyedArchiverUID) {
 
 BOOL isRunningInTestFlightEnvironment(void) {
 #if TARGET_IPHONE_SIMULATOR
-    return YES;
+    return NO;
 #else
     BOOL sandbox = [NSBundle.mainBundle.appStoreReceiptURL.lastPathComponent isEqualToString:@"sandboxReceipt"];
     BOOL provision = [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"] != nil;

@@ -30,12 +30,21 @@ final class AboutViewController: NSViewController {
     @IBOutlet private weak var l5: NSTextField!
     
     @IBOutlet private weak var supportStack: NSStackView!
+    @IBOutlet private weak var versionLabel: NSTextField!
     
     private var tipJar: TipJar?
     private var tipItems: [SKProduct]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let i = Bundle.main.infoDictionary,
+            let v = i["CFBundleShortVersionString"] as? String,
+            let b = i["CFBundleVersion"] as? String {
+            
+            versionLabel.stringValue = "v\(v) (\(b))"
+        }
+        
         for t in [tip1!, tip2!, tip3!, tip4!, tip5!] {
             t.wantsLayer = true
             t.layer?.borderWidth = 1

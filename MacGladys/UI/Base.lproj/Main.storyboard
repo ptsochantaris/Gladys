@@ -344,40 +344,74 @@ CA
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="87v-Ap-9hC">
                                 <rect key="frame" x="20" y="20" width="640" height="420"/>
                                 <subviews>
-                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="24" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mh2-i4-UVt">
-                                        <rect key="frame" x="0.0" y="14" width="380" height="393"/>
+                                    <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mh2-i4-UVt">
+                                        <rect key="frame" x="0.0" y="20" width="380" height="381"/>
                                         <subviews>
-                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nef-N0-HY4">
-                                                <rect key="frame" x="130" y="273" width="120" height="120"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="120" id="Icp-cr-4Mg"/>
-                                                    <constraint firstAttribute="height" constant="120" id="kyr-nD-bKp"/>
-                                                </constraints>
-                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="MbR-z9-QBV"/>
-                                            </imageView>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qZt-B1-Zbn">
-                                                <rect key="frame" x="135" y="230" width="111" height="19"/>
-                                                <buttonCell key="cell" type="roundRect" title="Gladys Web Site" bezelStyle="roundedRect" imagePosition="left" borderStyle="border" inset="2" id="TEX-kv-UBl">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="controlContent"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="openWebSite:" target="GCw-ZO-1Jc" id="DXN-cw-L0E"/>
-                                                </connections>
-                                            </button>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zmc-QD-Yz2">
-                                                <rect key="frame" x="-2" y="175" width="384" height="32"/>
-                                                <textFieldCell key="cell" alignment="center" title="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" id="VFj-ux-zVy">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1qd-ir-97e">
-                                                <rect key="frame" x="0.0" y="0.0" width="380" height="151"/>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jlm-fy-dnP">
+                                                <rect key="frame" x="70" y="247" width="240" height="134"/>
+                                                <subviews>
+                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nef-N0-HY4">
+                                                        <rect key="frame" x="0.0" y="14" width="240" height="120"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="240" id="Icp-cr-4Mg"/>
+                                                            <constraint firstAttribute="height" constant="120" id="kyr-nD-bKp"/>
+                                                        </constraints>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="gladysImage" id="MbR-z9-QBV"/>
+                                                    </imageView>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DPN-b5-6hN">
+                                                        <rect key="frame" x="98" y="0.0" width="44" height="14"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Version" id="Rf6-EL-Q5y">
+                                                            <font key="font" metaFont="message" size="11"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ehk-8i-3o1">
+                                                <rect key="frame" x="0.0" y="167" width="380" height="60"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qZt-B1-Zbn">
+                                                        <rect key="frame" x="135" y="41" width="111" height="19"/>
+                                                        <buttonCell key="cell" type="roundRect" title="Gladys Web Site" bezelStyle="roundedRect" imagePosition="left" borderStyle="border" inset="2" id="TEX-kv-UBl">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="controlContent"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="openWebSite:" target="GCw-ZO-1Jc" id="DXN-cw-L0E"/>
+                                                        </connections>
+                                                    </button>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zmc-QD-Yz2">
+                                                        <rect key="frame" x="-2" y="0.0" width="384" height="32"/>
+                                                        <textFieldCell key="cell" alignment="center" title="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" id="VFj-ux-zVy">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                            <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1qd-ir-97e">
+                                                <rect key="frame" x="0.0" y="0.0" width="380" height="147"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="REe-tn-FCQ">
-                                                        <rect key="frame" x="125" y="134" width="130" height="17"/>
+                                                        <rect key="frame" x="125" y="130" width="130" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Supporting Gladys" id="rVl-XJ-EHY">
                                                             <font key="font" metaFont="systemSemibold" size="14"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -385,11 +419,11 @@ CA
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IWF-aI-fZI">
-                                                        <rect key="frame" x="-2" y="76" width="384" height="48"/>
+                                                        <rect key="frame" x="-2" y="74" width="384" height="48"/>
                                                         <textFieldCell key="cell" alignment="center" id="XVO-n1-nU4">
                                                             <font key="font" metaFont="system"/>
                                                             <string key="title">If you find Gladys useful then feel free to leave a tip! It will be greatly appreciated and will ensure I can keep working on and improving Gladys in the future.</string>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
@@ -637,10 +671,8 @@ CA
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
-                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
@@ -977,6 +1009,7 @@ Cg
                         <outlet property="tip3" destination="Suo-hb-1fR" id="G3a-ij-YVf"/>
                         <outlet property="tip4" destination="Izk-Zu-pTb" id="lbH-zP-Xft"/>
                         <outlet property="tip5" destination="XZ5-rJ-i5C" id="xVa-KZ-tWG"/>
+                        <outlet property="versionLabel" destination="DPN-b5-6hN" id="lGk-Qu-6Cd"/>
                     </connections>
                 </viewController>
                 <customObject id="GCw-ZO-1Jc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1160,7 +1193,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="oQJ-9f-FjU">
                                                                             <rect key="frame" x="-2" y="561" width="219" height="11"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show any added notes for items in the main view" id="8ji-yi-r5J">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1184,7 +1217,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="lSI-dW-7Od">
                                                                             <rect key="frame" x="-2" y="519" width="190" height="11"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show any labels for items in the main view" id="Chu-9A-MNz">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1208,7 +1241,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Fzu-Q5-uql">
                                                                             <rect key="frame" x="-2" y="466" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Import items with multiple data components as multiple items: One for each component of the original" id="DnH-zC-MSG">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1232,7 +1265,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ngA-YI-GOt">
                                                                             <rect key="frame" x="-2" y="424" width="361" height="11"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Prevent new items from being automatically tagged by the currently active labels" id="Vxg-fi-xNV">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1256,7 +1289,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="jNt-At-qaj">
                                                                             <rect key="frame" x="-2" y="371" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="When muliple labels are selected, show only items that contain all of the selected labels, rather than any of them" id="UN1-4v-uKj">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1280,7 +1313,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="GsB-XY-U8G">
                                                                             <rect key="frame" x="-2" y="318" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="When an item is first created and contains a URL data component, automatically download and archive the target of that URL" id="ee5-Aj-RNg">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1304,7 +1337,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="JnZ-by-hMs">
                                                                             <rect key="frame" x="-2" y="265" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Make results match any of the search terms provided, instead of having to contain all of them" id="rOw-2Z-i3f">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1328,7 +1361,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="qy1-2C-V3m">
                                                                             <rect key="frame" x="-2" y="212" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to automatically convert shared or imported text URLs to actual link components" id="WLI-0m-eaI">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1352,7 +1385,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ZlQ-HS-J6w">
                                                                             <rect key="frame" x="-2" y="159" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="For environents with locked-down security, you may want to ensure Gladys does not respond to any URL requests" id="jbb-3Q-xwF">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1376,7 +1409,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="sDn-wH-NcE">
                                                                             <rect key="frame" x="-2" y="106" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="wGz-pY-zHS">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <string key="title">Convert Finder tags to labels when dragging items into Gladys, and write an item's labels as Finder tags when dragging items to the Finder</string>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1401,7 +1434,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="3UQ-jA-oKV">
                                                                             <rect key="frame" x="-2" y="53" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on the contents of a text item (requires macOS Mojave or higher)" id="s1c-v9-rhY">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1425,7 +1458,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-1G-AAX">
                                                                             <rect key="frame" x="-2" y="0.0" width="375" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on the contents of an image item (requires macOS Catalina or higher)" id="N4D-45-NNV">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1751,7 +1784,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Ec-A6-WCp">
                                                                             <rect key="frame" x="-2" y="0.0" width="165" height="33"/>
                                                                             <textFieldCell key="cell" selectable="YES" alignment="center" title="You can always open an item's info window with Cmd-I, its context menu, or the menubar." id="Zi6-5v-dNh">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1819,7 +1852,7 @@ Cg
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="n4b-5k-1ek">
                                                                             <rect key="frame" x="-2" y="0.0" width="165" height="22"/>
                                                                             <textFieldCell key="cell" selectable="YES" alignment="center" title="Select what happens when an item is selected in the TouchBar." id="7nF-lL-uvv">
-                                                                                <font key="font" metaFont="menu" size="9"/>
+                                                                                <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1920,7 +1953,7 @@ Cg
                                                                                 <textField horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="MGw-cA-5Nx">
                                                                                     <rect key="frame" x="17" y="12" width="146" height="22"/>
                                                                                     <textFieldCell key="cell" title="Hide after X seconds unless mouse enters" id="4jT-7c-zg0">
-                                                                                        <font key="font" metaFont="menu" size="9"/>
+                                                                                        <font key="font" metaFont="label" size="9"/>
                                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                     </textFieldCell>
