@@ -114,6 +114,10 @@ final class AboutController: GladysViewController {
 		}
 	}
     
+    @IBAction private func testingSelected(_ sender: UIButton) {
+        UIApplication.shared.open(URL(string: "http://www.bru.build/gladys-beta-for-ios")!, options: [:], completionHandler: nil)
+    }
+    
     private func purchase(index: Int) {
         guard let tipJar = tipJar, let items = self.tipItems else { return }
         

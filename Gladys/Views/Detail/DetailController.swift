@@ -410,19 +410,46 @@ final class DetailController: GladysViewController,
 		}
 	}
     
-    private func blockedDueToSync() -> Bool {
-        if CloudManager.syncing || item.needsReIngest || item.isTransferring {
-            genericAlert(title: "Syncing", message: "Please try again in a moment.", buttonTitle: nil)
-            return true
+    private var shouldWaitForSync: Bool {
+        return CloudManager.syncing || item.needsReIngest || item.isTransferring
+    }
+    private func afterSync(completion: @escaping () -> Void) {
+        if shouldWaitForSync {
+            var keepChecking = true
+            let alert = genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") {
+                keepChecking = false
+            }
+            DispatchQueue.global(qos: .background).async {
+                while keepChecking {
+                    Thread.sleep(forTimeInterval: 0.25)
+                    DispatchQueue.main.async { [weak self] in
+                        if let s = self, s.shouldWaitForSync {
+                            // keep going
+                        } else {
+                            keepChecking = false
+                            alert.dismiss(animated: true) {
+                                completion()
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            completion()
         }
-        return false
     }
 
     private func removeLabel(_ label: String) {
-        guard !blockedDueToSync(), let index = item.labels.firstIndex(of: label) else {
-            return
+        afterSync { [weak self] in
+            self?._removeLabel(label)
         }
+    }
+    
+    private func _removeLabel(_ label: String) {
         table.performBatchUpdates({
+            guard let index = item.labels.firstIndex(of: label) else {
+                return
+            }
             item.labels.remove(at: index)
             let indexPath = IndexPath(row: index, section: 1)
             table.deleteRows(at: [indexPath], with: .automatic)
@@ -432,11 +459,17 @@ final class DetailController: GladysViewController,
         })
     }
 
-	private func removeComponent(_ component: Component) {
-        guard !blockedDueToSync(), let index = item.components.firstIndex(of: component) else {
-            return
+    private func removeComponent(_ component: Component) {
+        afterSync { [weak self] in
+            self?._removeComponent(component)
         }
+    }
+    
+	private func _removeComponent(_ component: Component) {
         table.performBatchUpdates({
+            guard let index = item.components.firstIndex(of: component) else {
+                return
+            }
             component.deleteFromStorage()
             item.components.remove(at: index)
             if item.components.isEmpty {

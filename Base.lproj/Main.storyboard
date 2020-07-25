@@ -792,7 +792,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ytr-ti-QpI">
                                                         <rect key="frame" x="20" y="30" width="280" height="91.5"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="2" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="2" verticalCompressionResistancePriority="1000" text="When Selecting an Item..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B6b-F7-z07">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="2" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="2" verticalCompressionResistancePriority="1000" text="When selecting an item…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B6b-F7-z07">
                                                                 <rect key="frame" x="0.0" y="0.0" width="280" height="14.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                 <color key="textColor" name="colorTint"/>
@@ -1812,7 +1812,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="780"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="JQU-c7-D51">
-                                        <rect key="frame" x="8" y="34" width="304" height="588"/>
+                                        <rect key="frame" x="8" y="34" width="304" height="582"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="120"/>
@@ -2073,17 +2073,19 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="H7n-k8-CdC">
-                                                <rect key="frame" x="0.0" y="454" width="304" height="134"/>
+                                                <rect key="frame" x="0.0" y="454" width="304" height="128"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank You For Testing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34y-Wj-pga">
-                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="18"/>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7H-nn-9rl">
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <color key="textColor" name="colorTint"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                        <state key="normal" title="Thank You For Testing"/>
+                                                        <connections>
+                                                            <action selector="testingSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="rcz-Gi-VfT"/>
+                                                        </connections>
+                                                    </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RFz-7l-kqi">
-                                                        <rect key="frame" x="0.0" y="28" width="304" height="106"/>
-                                                        <string key="text">Thank you for tesitng out Gladys betas, your feedback goes a long way in improving and evoling Gladys over time. Please do report any and all issues you encounter via email or TestFlight feedback and they will be looked into as a matter of priority.</string>
+                                                        <rect key="frame" x="0.0" y="40" width="304" height="88"/>
+                                                        <string key="text">Thank you for tesitng Gladys betas, your feedback goes a long way in improving and evoling Gladys over time. Please report issues you encounter via email or TestFlight feedback and they will be looked into as a matter of priority.</string>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>

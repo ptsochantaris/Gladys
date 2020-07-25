@@ -910,7 +910,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 		itemsCount.isEnabled = itemCount > 0
 
-        totalSizeLabel.title = "..."
+        totalSizeLabel.title = "…"
         let filteredDrops = filter.filteredDrops
         let selected = selectedItems
         imageProcessingQueue.async {

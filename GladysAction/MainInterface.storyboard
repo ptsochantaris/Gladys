@@ -138,7 +138,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOa-wm-AgD">
                                                     <rect key="frame" x="194" y="0.0" width="86" height="34"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <state key="normal" title="Add Note..."/>
+                                                    <state key="normal" title="Add Note…"/>
                                                     <connections>
                                                         <segue destination="btk-fG-BLI" kind="show" id="QTU-HX-KTP"/>
                                                     </connections>
