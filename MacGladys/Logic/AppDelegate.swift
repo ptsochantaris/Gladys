@@ -303,32 +303,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
-		let p = NSMutableParagraphStyle()
-		p.alignment = .center
-		p.lineSpacing = 1
-		let font = NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .small))
-		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
-			.font: font,
-			.foregroundColor: NSColor.controlTextColor,
-			.paragraphStyle: p
-			])
-
-		let windowsBefore = NSApplication.shared.windows
-		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
-
-		if PersistedOptions.alwaysOnTop {
-			var windowsAfter = NSApplication.shared.windows
-			for b in windowsBefore {
-				if let i = windowsAfter.firstIndex(of: b) {
-					windowsAfter.remove(at: i)
-				}
-			}
-			let aboutWindow = windowsAfter.first
-			aboutWindow?.level = .modalPanel
-		}
+        ViewController.shared.performSegue(withIdentifier: "showAbout", sender: nil)
 	}
 
-	@IBAction private func openWebSite(_ sender: NSMenuItem) {
+	@IBAction private func openWebSite(_ sender: Any) {
 		NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
 	}
 

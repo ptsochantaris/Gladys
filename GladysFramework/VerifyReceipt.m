@@ -41,7 +41,7 @@ BOOL isRunningInTestFlightEnvironment(void) {
     return YES;
 #else
     BOOL sandbox = [NSBundle.mainBundle.appStoreReceiptURL.lastPathComponent isEqualToString:@"sandboxReceipt"];
-    BOOL provision = [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"];
+    BOOL provision = [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"] != nil;
     return sandbox && !provision;
 #endif
 }
