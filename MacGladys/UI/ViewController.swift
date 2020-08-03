@@ -531,7 +531,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func highlightItem(with request: HighlightRequest) {
 		// focusOnChild ignored for now
 		resetSearch(andLabels: true)
-        if let i = Model.drops.firstIndexOfItem(with: request.uuid) {
+        if let i = Model.firstIndexOfItem(with: request.uuid) {
             let ip = IndexPath(item: i, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: i)
@@ -624,7 +624,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
 				let sourceItem = Model.sharedFilter.filteredDrops[draggingIndexPath.item]
-                let sourceIndex = Model.drops.firstIndexOfItem(with: sourceItem.uuid)!
+                let sourceIndex = Model.firstIndexOfItem(with: sourceItem.uuid)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
 				collection.deselectAll(nil)
@@ -717,7 +717,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
             let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
             Model.sharedFilter.updateFilter(signalUpdate: false)
-            if !Model.drops.all.contains(where: { !$0.shouldDisplayLoading }) {
+            if Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -1005,7 +1005,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	@objc func duplicateItem(_ sender: Any?) {
 		for item in collection.actionableSelectedItems {
-            if Model.drops.contains(uuid: item.uuid) { // sanity check
+            if Model.contains(uuid: item.uuid) { // sanity check
 				Model.duplicate(item: item)
 			}
 		}

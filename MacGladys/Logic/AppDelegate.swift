@@ -299,7 +299,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	func applicationWillResignActive(_ notification: Notification) {
-		clearCaches()
+        Model.clearCaches()
 	}
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {

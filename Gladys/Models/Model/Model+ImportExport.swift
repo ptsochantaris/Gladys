@@ -48,12 +48,12 @@ extension Model {
 		let itemsInPackage = try loadDecoder.decode(Array<ArchivedItem>.self, from: data)
 
 		for item in itemsInPackage.reversed() {
-			if let i = drops.firstIndexOfItem(with: item.uuid) {
-				if drops.all[i].updatedAt >= item.updatedAt || drops.all[i].shareMode != .none {
+			if let i = firstIndexOfItem(with: item.uuid) {
+				if drops[i].updatedAt >= item.updatedAt || drops[i].shareMode != .none {
 					continue
 				}
 				if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    drops.replaceItem(at: i, with: item)
+                    drops[i] = item
 				}
 			} else {
 				if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {

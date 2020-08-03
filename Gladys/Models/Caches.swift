@@ -34,18 +34,6 @@ let bytesPathCache = NSCache<NSUUID, NSURL>()
 let cloudKitRecordCache = NSCache<NSUUID, CKRecordCacheEntry>()
 let cloudKitShareCache = NSCache<NSUUID, CKShareCacheEntry>()
 
-func clearCaches() {
-    Model.drops.clearCaches()
-	imageCache.removeAllObjects()
-	folderUrlCache.removeAllObjects()
-	cloudKitDataPathCache.removeAllObjects()
-	cloudKitShareDataPathCache.removeAllObjects()
-	imagePathCache.removeAllObjects()
-	bytesPathCache.removeAllObjects()
-	cloudKitRecordCache.removeAllObjects()
-	cloudKitShareCache.removeAllObjects()
-}
-
 func clearCacheData(for uuid: UUID) {
 	let nsuuid = uuid as NSUUID
 	folderUrlCache.removeObject(forKey: nsuuid)

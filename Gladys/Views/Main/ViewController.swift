@@ -264,7 +264,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
-                if let modelSourceIndex = Model.drops.firstIndexOfItem(with: existingItem.uuid) {
+                if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
                     var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item, checkForWeirdness: true)
                     if modelDestinationIndex < 0 {
                         log("Collection view wants to drop beyond the end of items, discaring local drop")
@@ -778,7 +778,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			log("Placing UI in background low-memory mode")
 			lowMemoryMode = true
 		}
-		clearCaches()
 		super.didReceiveMemoryWarning()
 	}
 
@@ -812,7 +811,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
-            if !Model.drops.isEmpty && Model.drops.all.allSatisfy({ $0.shouldDisplayLoading }) {
+            if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -1509,7 +1508,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-		let itemsToDelete = Model.drops.all.filter { candidateSet.contains($0) }
+		let itemsToDelete = Model.drops.filter { candidateSet.contains($0) }
 		if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
 			Model.delete(items: itemsToDelete)
@@ -1641,7 +1640,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			dismissAnyPopOverOrModal {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
-        } else if let index = Model.drops.firstIndexOfItem(with: request.uuid) {
+        } else if let index = Model.firstIndexOfItem(with: request.uuid) {
             self.resetSearch(andLabels: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)

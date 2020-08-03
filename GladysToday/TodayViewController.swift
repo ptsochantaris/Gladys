@@ -137,11 +137,6 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		updateUI()
 	}
 
-    override func didReceiveMemoryWarning() {
-		clearCaches()
-        super.didReceiveMemoryWarning()
-    }
-
 	private func updateUI() {
 		copiedLabel.alpha = 0
 		emptyLabel.isHidden = !Model.visibleDrops.isEmpty
