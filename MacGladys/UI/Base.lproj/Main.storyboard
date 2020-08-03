@@ -447,7 +447,7 @@ CA
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QhA-Nk-Bt8">
                                                                                 <rect key="frame" x="3" y="0.0" width="59" height="13"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="GBP 19.99" id="ptl-iB-XyA">
-                                                                                    <font key="font" metaFont="system" size="10"/>
+                                                                                    <font key="font" metaFont="label"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -488,7 +488,7 @@ CA
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZZs-mN-CMY">
                                                                                 <rect key="frame" x="3" y="0.0" width="59" height="13"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="GBP 19.99" id="NXS-pg-on8">
-                                                                                    <font key="font" metaFont="system" size="10"/>
+                                                                                    <font key="font" metaFont="label"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -529,7 +529,7 @@ CA
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qin-24-qIB">
                                                                                 <rect key="frame" x="3" y="0.0" width="59" height="13"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="GBP 19.99" id="TJI-r7-h6T">
-                                                                                    <font key="font" metaFont="system" size="10"/>
+                                                                                    <font key="font" metaFont="label"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -570,7 +570,7 @@ CA
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="C3G-ur-LiE">
                                                                                 <rect key="frame" x="3" y="0.0" width="59" height="13"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="GBP 19.99" id="NeC-a0-CN5">
-                                                                                    <font key="font" metaFont="system" size="10"/>
+                                                                                    <font key="font" metaFont="label"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -611,7 +611,7 @@ CA
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="E8M-99-TgI">
                                                                                 <rect key="frame" x="3" y="0.0" width="59" height="13"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="GBP 19.99" id="aRC-zc-HRZ">
-                                                                                    <font key="font" metaFont="system" size="10"/>
+                                                                                    <font key="font" metaFont="label"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -687,7 +687,8 @@ CA
                                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="vGF-yj-9uy">
                                                     <rect key="frame" x="0.0" y="0.0" width="238" height="418"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <size key="minSize" width="238" height="418"/>
                                                     <size key="maxSize" width="419" height="10000000"/>
                                                     <attributedString key="textStorage">
@@ -697,6 +698,7 @@ CA
 Design &amp; Code
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -705,7 +707,7 @@ Design &amp; Code
                                                         </fragment>
                                                         <fragment content="Paul Tsochantaris">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="http://bru.build"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -718,6 +720,7 @@ Design &amp; Code
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -729,6 +732,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -739,6 +743,7 @@ Cg
                                                             <string key="content">HTML Scanning
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -747,7 +752,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="Fuzi">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/cezheng/Fuzi"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -760,6 +765,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -771,6 +777,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -781,6 +788,7 @@ Cg
                                                             <string key="content">Creating ZIP Archives
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -789,7 +797,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="ZIPFoundation">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/weichsel/ZIPFoundation"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -802,6 +810,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -813,6 +822,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -823,6 +833,7 @@ Cg
                                                             <string key="content">x-callback-url Support
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -831,7 +842,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="CallbackURLKit">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/phimage/CallbackURLKit"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -844,6 +855,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -855,6 +867,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -865,6 +878,7 @@ Cg
                                                             <string key="content">Diffing
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -873,7 +887,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="DeepDiff">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/onmyway133/DeepDiff"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -886,6 +900,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -897,6 +912,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -907,6 +923,7 @@ Cg
                                                             <string key="content">Sanity
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -915,7 +932,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="SwiftLint">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.89412000000000003" green="0.68627000000000005" blue="0.039219999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/realm/SwiftLint"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
@@ -928,6 +945,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -939,6 +957,7 @@ Cg
 Cg
 </string>
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -947,6 +966,7 @@ Cg
                                                         </fragment>
                                                         <fragment content="Gladys is Copyright (c) 2017-2020 Paul Tsochantaris, all rights reserved.">
                                                             <attributes>
+                                                                <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
@@ -954,7 +974,7 @@ Cg
                                                             </attributes>
                                                         </fragment>
                                                     </attributedString>
-                                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="insertionPointColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 </textView>
                                             </subviews>
                                         </clipView>
@@ -993,6 +1013,8 @@ Cg
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="credits" destination="vGF-yj-9uy" id="7rz-vX-5Oq"/>
+                        <outlet property="creditsContainer" destination="417-pj-PVz" id="Q0T-C3-ZZR"/>
                         <outlet property="f1" destination="BRN-yM-CIc" id="bjJ-u7-mGp"/>
                         <outlet property="f2" destination="DoF-c6-mhp" id="i4F-aQ-lgl"/>
                         <outlet property="f3" destination="qNF-Vo-V8i" id="i8F-yM-9X7"/>
@@ -1933,7 +1955,7 @@ Cg
                                                                             <rect key="frame" x="-2" y="42" width="165" height="18"/>
                                                                             <buttonCell key="cell" type="check" title="Always show when dragging" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hgt-bN-4yB">
                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                <font key="font" metaFont="system" size="10"/>
+                                                                                <font key="font" metaFont="label"/>
                                                                             </buttonCell>
                                                                             <connections>
                                                                                 <action selector="autoShowWhenDraggingChanged:" target="FB0-Ob-ymN" id="O6E-5y-CxZ"/>

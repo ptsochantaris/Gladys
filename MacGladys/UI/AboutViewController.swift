@@ -32,6 +32,9 @@ final class AboutViewController: NSViewController {
     @IBOutlet private weak var supportStack: NSStackView!
     @IBOutlet private weak var versionLabel: NSTextField!
     
+    @IBOutlet private weak var credits: NSTextView!
+    @IBOutlet private weak var creditsContainer: NSScrollView!
+    
     private var tipJar: TipJar?
     private var tipItems: [SKProduct]?
 
@@ -68,8 +71,16 @@ final class AboutViewController: NSViewController {
 
             s.supportStack.animator().isHidden = false
         }
+        
+        if #available(OSX 10.14, *) {
+            // no clue why this isn't picked up automatically
+            if view.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {
+                credits.setTextColor(.lightGray, range: NSRange(location: 0, length: credits.attributedString().length))
+                credits.backgroundColor = NSColor(white: 0, alpha: 0.5)
+            }
+        }
     }
-    
+        
     override func viewDidAppear() {
         super.viewDidAppear()
         tipJar?.aboutWindow = self.view.window
