@@ -19,7 +19,6 @@ extension ArchivedItem {
 		lockHint = record["lockHint"] as? String
 		labels = (record["labels"] as? [String]) ?? []
 
-		needsReIngest = true
         if isLocked {
             flags.insert(.needsUnlock)
         } else {
@@ -27,6 +26,8 @@ extension ArchivedItem {
         }
 
 		cloudKitRecord = record
+        needsReIngest = true
+        postModified()
 	}
 
 	var parentZone: CKRecordZone.ID {

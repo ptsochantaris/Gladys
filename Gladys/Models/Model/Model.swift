@@ -6,11 +6,21 @@ final class Model {
     
     static var drops = ContiguousArray<ArchivedItem>() {
         didSet {
+            assert(Thread.isMainThread)
             uuidindex = nil
         }
     }
+    
+    static func appendDropEfficiently(_ newDrop: ArchivedItem) {
+        uuidindex?[newDrop.uuid] = drops.count
+
+        let previousIndex = uuidindex
+        drops.append(newDrop)
+        uuidindex = previousIndex
+    }
 
     static private func rebuildIndexIfNeeded() {
+        assert(Thread.isMainThread)
         if uuidindex == nil {
             let z = zip(drops.map { $0.uuid }, 0 ..< drops.count)
             uuidindex = Dictionary(z) { one, _ in one }

@@ -558,8 +558,6 @@ extension CloudManager {
                     case .changed:
                         log("Will update existing local item for cloud record \(recordUUID)")
                         item.cloudKitUpdate(from: record)
-                        item.needsReIngest = true
-                        item.postModified()
                         stats.updateCount += 1
                     case .tagOnly:
                         log("Update but no changes to item record (\(recordUUID)) apart from tag")
@@ -588,7 +586,7 @@ extension CloudManager {
                     stats.pendingShareRecords.remove(at: pendingShareIndex)
                     log("  Hooked onto pending share \((existingShareId.recordName))")
                 }
-                Model.drops.append(newItem)
+                Model.appendDropEfficiently(newItem)
                 NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
                 stats.newDropCount += 1
             }
