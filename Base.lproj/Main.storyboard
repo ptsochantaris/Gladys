@@ -427,22 +427,21 @@
                                 <constraint firstAttribute="height" constant="140" id="ejA-Qf-1RE"/>
                             </constraints>
                             <inset key="contentEdgeInsets" minX="0.0" minY="50" maxX="0.0" maxY="50"/>
-                            <state key="normal" title="Switch to Moving"/>
                             <connections>
                                 <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
-                            <rect key="frame" x="0.0" y="59.5" width="200" height="60.5"/>
+                            <rect key="frame" x="20" y="59.5" width="160" height="60.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                                    <rect key="frame" x="0.0" y="0.0" width="200" height="26.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="26.5"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                    <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Oo-XrT">
-                                    <rect key="frame" x="0.0" y="42.5" width="200" height="18"/>
+                                    <rect key="frame" x="0.0" y="42.5" width="160" height="18"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="colorTint"/>
                                     <nil key="highlightedColor"/>
@@ -452,13 +451,13 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
-                        <constraint firstItem="GZp-EI-Tfs" firstAttribute="bottom" secondItem="sCD-me-cQ0" secondAttribute="bottom" constant="20" id="HFi-ZR-eOO"/>
+                        <constraint firstAttribute="bottom" secondItem="sCD-me-cQ0" secondAttribute="bottom" constant="20" id="HFi-ZR-eOO"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="top" secondItem="WNd-OH-aUx" secondAttribute="top" id="Px5-eq-2Pa"/>
-                        <constraint firstItem="GZp-EI-Tfs" firstAttribute="trailing" secondItem="sCD-me-cQ0" secondAttribute="trailing" id="XAc-Dx-D0c"/>
+                        <constraint firstAttribute="trailing" secondItem="sCD-me-cQ0" secondAttribute="trailing" constant="20" id="XAc-Dx-D0c"/>
                         <constraint firstAttribute="trailing" secondItem="85D-T5-Fjo" secondAttribute="trailing" id="Yka-r7-K2t"/>
                         <constraint firstAttribute="bottom" secondItem="85D-T5-Fjo" secondAttribute="bottom" id="ilk-Q8-Zvr"/>
                         <constraint firstItem="85D-T5-Fjo" firstAttribute="leading" secondItem="WNd-OH-aUx" secondAttribute="leading" id="jux-TY-A2l"/>
-                        <constraint firstItem="sCD-me-cQ0" firstAttribute="leading" secondItem="GZp-EI-Tfs" secondAttribute="leading" id="yj7-X9-zIR"/>
+                        <constraint firstItem="sCD-me-cQ0" firstAttribute="leading" secondItem="WNd-OH-aUx" secondAttribute="leading" constant="20" id="yj7-X9-zIR"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="GZp-EI-Tfs"/>
                 </view>
