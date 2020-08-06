@@ -173,7 +173,7 @@ extension ArchivedItem {
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
 
-        guard let q = itemToPreview?.quickLook(in: viewController.view.window?.windowScene) else { return false }
+        guard let q = itemToPreview?.quickLook() else { return false }
 
 		let n = PreviewHostingViewController(rootViewController: q)
 

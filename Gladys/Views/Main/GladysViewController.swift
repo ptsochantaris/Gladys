@@ -107,7 +107,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             dismiss(animated: true)
         }
 	}
-            
+                
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updateButtons(newTraitCollection: newCollection)

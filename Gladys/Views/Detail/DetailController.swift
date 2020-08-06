@@ -375,12 +375,10 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self, weak cell] in
 				guard let s = self, let c = cell else { return }
-                                
-                let scene = s.view.window?.windowScene
-                guard let q = typeEntry.quickLook(in: scene) else { return }
+
+                guard let q = typeEntry.quickLook() else { return }
                 if s.phoneMode || !PersistedOptions.fullScreenPreviews {
-                    let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
-                    n.qlController = q
+                    let n = PreviewHostingInternalController(qlController: q)
 					s.navigationController?.pushViewController(n, animated: true)
                     
 				} else if let presenter = s.view.window?.alertPresenter {

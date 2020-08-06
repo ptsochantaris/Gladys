@@ -143,9 +143,10 @@ final class Singleton {
                     return
                     
                 } else if let child = child {
-                    guard let q = child.quickLook(in: scene) else { return }
-                    let n = PreviewHostingViewController(rootViewController: q)
-                    scene.windows.first?.rootViewController = n
+                    if let q = child.quickLook() {
+                        let n = PreviewHostingViewController(rootViewController: q)
+                        scene.windows.first?.rootViewController = n
+                    }
                     return
                 }
             }

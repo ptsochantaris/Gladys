@@ -3455,62 +3455,6 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="5206" y="-2109"/>
         </scene>
-        <!--Web Preview Controller-->
-        <scene sceneID="w9e-TV-a0y">
-            <objects>
-                <viewController storyboardIdentifier="WebPreview" hidesBottomBarWhenPushed="YES" id="wbd-m0-Cft" customClass="WebPreviewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ndK-jn-u5m" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzu-kl-oLc">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                                <wkWebViewConfiguration key="configuration" allowsInlineMediaPlayback="YES">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="MJE-Ny-bGj">
-                                <rect key="frame" x="67.5" y="162.5" width="240" height="50.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVY-2l-WkD">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="14.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <color key="textColor" name="colorTint"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="RoG-HQ-ty2">
-                                        <rect key="frame" x="0.0" y="30.5" width="240" height="20"/>
-                                        <color key="color" name="colorTint"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="xQ9-VN-QxP"/>
-                                </constraints>
-                            </stackView>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="xzu-kl-oLc" firstAttribute="top" secondItem="ndK-jn-u5m" secondAttribute="top" id="BqE-d8-zV1"/>
-                            <constraint firstItem="xzu-kl-oLc" firstAttribute="leading" secondItem="ndK-jn-u5m" secondAttribute="leading" id="Vat-2l-C3F"/>
-                            <constraint firstAttribute="bottom" secondItem="xzu-kl-oLc" secondAttribute="bottom" id="YBj-sC-KM4"/>
-                            <constraint firstItem="MJE-Ny-bGj" firstAttribute="centerX" secondItem="ndK-jn-u5m" secondAttribute="centerX" id="cow-f8-6hk"/>
-                            <constraint firstAttribute="trailing" secondItem="xzu-kl-oLc" secondAttribute="trailing" id="edd-Fr-BxB"/>
-                            <constraint firstItem="MJE-Ny-bGj" firstAttribute="centerY" secondItem="ndK-jn-u5m" secondAttribute="centerY" id="lUC-XS-ltG"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="cvj-8E-BYA"/>
-                    </view>
-                    <size key="freeformSize" width="375" height="375"/>
-                    <connections>
-                        <outlet property="spinner" destination="RoG-HQ-ty2" id="wXd-7U-KjB"/>
-                        <outlet property="statusLabel" destination="dVY-2l-WkD" id="FpL-qV-0ka"/>
-                        <outlet property="web" destination="xzu-kl-oLc" id="Mj4-Cs-rzz"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="96y-tG-0db" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3273" y="2135"/>
-        </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
             <objects>

@@ -78,29 +78,8 @@ extension Component {
 		return i
 	}
 
-    func quickLook(in scene: UIWindowScene?) -> UIViewController? {
-        
-		if isWebURL, let url = encodedUrl {
-            let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-            d.title = "Loading…"
-            d.address = url as URL
-            d.relatedItem = Model.item(uuid: parentUuid)
-            d.relatedChildItem = self
-            return d
-
-		} else if isWebArchive {
-			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-			d.title = "Loading…"
-			d.webArchive = self
-			d.relatedItem = Model.item(uuid: parentUuid)
-			d.relatedChildItem = self
-            return d
-
-		} else if canPreview {
-            return GladysPreviewController(item: self)
-		}
-        
-		return nil
+    func quickLook() -> UIViewController? {
+        return canPreview ? GladysPreviewController(item: self) : nil
 	}
     
 	var canPreview: Bool {

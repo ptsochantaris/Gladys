@@ -1198,19 +1198,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             })
         }
         
-        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: { [weak self] in
-            guard let s = self else { return nil }
-            if item.canPreview, let previewItem = item.previewableTypeItem {
-                //if previewItem.isWebURL, let url = previewItem.encodedUrl {
-                    //let x = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "LinkPreview") as! LinkViewController
-                    //x.url = url as URL
-                    //return x
-                //} else {
-                    return previewItem.quickLook(in: s.view.window?.windowScene)
-                //}
-            } else {
-                return nil
-            }
+        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: {
+            return item.previewableTypeItem?.quickLook()
         }, actionProvider: { [weak self] _ in
             return self?.createShortcutActions(for: item)
         })

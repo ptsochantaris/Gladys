@@ -10,13 +10,14 @@ import UIKit
 import QuickLook
 
 final class PreviewHostingInternalController: GladysViewController {
-    var qlController: UIViewController?
+    var qlController: UIViewController
     
     private var titleObservation: NSKeyValueObservation?
     private var activityObservation: NSKeyValueObservation?
     private var sizeObservation: NSKeyValueObservation?
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    init(qlController: UIViewController) {
+        self.qlController = qlController
         super.init(nibName: nil, bundle: nil)
         hidesBottomBarWhenPushed = true
     }
@@ -32,36 +33,36 @@ final class PreviewHostingInternalController: GladysViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        preferredContentSize = mainWindow.bounds.size
-        let tint = UIColor(named: "colorTint")
-        view.tintColor = tint
+        view.tintColor = UIColor(named: "colorTint")
         
         windowButtonLocation = .right        
         doneButtonLocation = .right
-                
-        if let qlController = qlController {
-            
-            titleObservation = qlController.observe(\.title) { [weak self] q, _ in
-                self?.title = q.title
-            }
-            
-            activityObservation = qlController.observe(\.userActivity) { [weak self] q, _ in
-                self?.userActivity = q.userActivity
-                self?.userActivity?.needsSave = true
-            }
-            
-            sizeObservation = qlController.observe(\.preferredContentSize) { [weak self] q, _ in
-                self?.preferredContentSizeDidChange(forChildContentContainer: q)
-            }
-
-            addChildController(qlController, to: view)
-        }
-    }
         
-    deinit {
-        if let qlController = qlController {
-            removeChildController(qlController)
+        titleObservation = qlController.observe(\.title) { [weak self] q, _ in
+            self?.title = q.title
         }
+        
+        activityObservation = qlController.observe(\.userActivity) { [weak self] q, _ in
+            self?.userActivity = q.userActivity
+            self?.userActivity?.needsSave = true
+        }
+        
+        sizeObservation = qlController.observe(\.preferredContentSize) { [weak self] q, _ in
+            var contentSize = q.preferredContentSize
+            if contentSize == .zero {
+                contentSize = mainWindow.bounds.size
+            }
+            self?.preferredContentSize = contentSize
+        }
+
+        addChildController(qlController, to: view)
+    }
+    
+    override func done() {
+        for child in self.children {
+            removeChildController(child)
+        }
+        super.done()
     }
 }
 
@@ -70,8 +71,7 @@ final class PreviewHostingViewController: UINavigationController, UIViewControll
     weak var sourceItemView: UIView?
 
     override init(rootViewController: UIViewController) {
-        let i = PreviewHostingInternalController(nibName: nil, bundle: nil)
-        i.qlController = rootViewController
+        let i = PreviewHostingInternalController(qlController: rootViewController)
         super.init(rootViewController: i)
         modalPresentationStyle = .custom
         transitioningDelegate = self
