@@ -15,8 +15,14 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         title = item.oneTitle
         dataSource = self
         modalPresentationStyle = .overFullScreen
-        preferredContentSize = mainWindow.bounds.size
         transitioningDelegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if preferredContentSize == .zero {
+            preferredContentSize = CGSize(width: min(768, mainWindow.bounds.size.width), height: mainWindow.bounds.size.height)
+        }
     }
     
     private lazy var doneButton: UIBarButtonItem = {
@@ -145,13 +151,27 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        edgesForExtendedLayout = []
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-        view.tintColor = UIColor(named: "colorTint")
-        navigationController?.navigationBar.tintColor = UIColor(named: "colorTint")
-        navigationController?.navigationBar.standardAppearance.titleTextAttributes = [
+
+        let tint = UIColor(named: "colorTint")
+        view.tintColor = tint
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [
             .font: UIFont.preferredFont(forTextStyle: .callout),
             .foregroundColor: UIColor(named: "colorComponentLabel")!
         ]
+
+        if navigationController?.viewControllers.first == self {
+            navigationController?.navigationBar.tintColor = tint
+            if isAccessoryWindow {
+                appearance.backgroundColor = UIColor(named: "colorPaper")
+            }
+        }
+        
+        navigationItem.standardAppearance = appearance
     }
 
     required init?(coder: NSCoder) {

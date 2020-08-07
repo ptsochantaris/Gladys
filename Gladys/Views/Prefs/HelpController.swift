@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 final class HelpControllerCell: UITableViewCell {
 	@IBOutlet weak var label: UILabel!
@@ -142,13 +143,13 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
                     You can get more details about the x-callback-url scheme support, and info about the parameters and syntax, by selecting this entry.
                     """,
-              link: "http://www.bru.build/gladys-callback-scheme"),
+              link: "https://www.bru.build/gladys-callback-scheme"),
         
         Entry(title: "Privacy",
               body: """
                     Gladys does not monitor or report anything at all. You can find a detailed description of the privacy policy on the Gladys web site from the link in the About panel, or by selecting this entry.
                     """,
-              link: "http://www.bru.build/apps/gladys/privacy"),
+              link: "https://www.bru.build/apps/gladys/privacy"),
         
         Entry(title: "macOS",
               body: """
@@ -160,7 +161,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
                     Find more about it by selecting this entry.
                     """,
-              link: "http://www.bru.build/gladys-for-macos")
+              link: "https://www.bru.build/gladys-for-macos")
     ]
 
 	override func viewDidLoad() {
@@ -189,12 +190,13 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let urlString = entries[indexPath.section].link {
-			let d = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebPreview") as! WebPreviewController
-			d.title = "Loading…"
-			d.address = URL(string: urlString)
-			navigationController?.pushViewController(d, animated: true)
-			tableView.deselectRow(at: indexPath, animated: true)
+        if let urlString = entries[indexPath.section].link, let url = URL(string: urlString) {
+            let config = SFSafariViewController.Configuration()
+            let sf = SFSafariViewController(url: url, configuration: config)
+            sf.preferredControlTintColor = view.tintColor
+            present(sf, animated: true) {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
 		}
 	}
     

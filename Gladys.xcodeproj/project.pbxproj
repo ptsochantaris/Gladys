@@ -186,7 +186,6 @@
 		167CDF9520B62B3E00EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
 		167CDF9620B62B3E00EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
 		167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
-		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
 		16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
@@ -683,7 +682,6 @@
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		167CDF9420B62B3E00EABC0A /* Component+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Preview.swift"; sourceTree = "<group>"; };
-		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
 		16836EA82379598300985EA6 /* UIScene+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScene+Extensions.swift"; sourceTree = "<group>"; };
 		1686E7EF233D0D9C0012BA63 /* TouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBar.swift; sourceTree = "<group>"; };
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
@@ -986,7 +984,6 @@
 				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
-				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
 				165A8F0821AA92D300405701 /* PlistEditor.swift */,
 				162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */,
@@ -2421,7 +2418,6 @@
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				165847062376CC2400666B7B /* Model+Siri.swift in Sources */,
 				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
-				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				16E034FA20A0D8E200B9EE1A /* Greetings.swift in Sources */,
@@ -3016,7 +3012,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 864;
+				CURRENT_PROJECT_VERSION = 866;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_FAST_MATH = YES;
@@ -3174,7 +3170,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 864;
+				CURRENT_PROJECT_VERSION = 866;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;

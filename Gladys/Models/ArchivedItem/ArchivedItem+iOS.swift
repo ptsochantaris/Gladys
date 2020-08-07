@@ -188,11 +188,13 @@ extension ArchivedItem {
         if let p = n.popoverPresentationController, let cell = cell {
             p.sourceView = cell
             p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
+            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
         }
 		viewController.present(n, animated: true)
 		if let p = n.popoverPresentationController, let cell = cell {
 			p.sourceView = cell
 			p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
+            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
 		}
 		return true
 	}
