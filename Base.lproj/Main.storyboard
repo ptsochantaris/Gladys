@@ -421,16 +421,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="200" height="140"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
-                            <rect key="frame" x="0.0" y="0.0" width="200" height="140"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="140" id="ejA-Qf-1RE"/>
-                            </constraints>
-                            <inset key="contentEdgeInsets" minX="0.0" minY="50" maxX="0.0" maxY="50"/>
-                            <connections>
-                                <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
-                            </connections>
-                        </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
                             <rect key="frame" x="20" y="59.5" width="160" height="60.5"/>
                             <subviews>
@@ -448,6 +438,17 @@
                                 </label>
                             </subviews>
                         </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85D-T5-Fjo">
+                            <rect key="frame" x="0.0" y="0.0" width="200" height="140"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="140" id="ejA-Qf-1RE"/>
+                            </constraints>
+                            <inset key="contentEdgeInsets" minX="0.0" minY="50" maxX="0.0" maxY="50"/>
+                            <connections>
+                                <action selector="dragModeButtonSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j0d-Xn-W9j"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
@@ -3883,39 +3884,6 @@ Selecting them will show only items that contain these labels.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R78-ad-APK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7680" y="141"/>
-        </scene>
-        <!--Link View Controller-->
-        <scene sceneID="hYs-qh-kbx">
-            <objects>
-                <viewController storyboardIdentifier="LinkPreview" hidesBottomBarWhenPushed="YES" id="hgW-hl-pPi" customClass="LinkViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="URi-sC-MAf" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wp5-6y-O1D">
-                                <rect key="frame" x="20" y="20" width="335" height="335"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="4LM-Al-Ctu" firstAttribute="bottom" secondItem="Wp5-6y-O1D" secondAttribute="bottom" constant="20" id="9V3-4j-Wgy"/>
-                            <constraint firstItem="Wp5-6y-O1D" firstAttribute="leading" secondItem="4LM-Al-Ctu" secondAttribute="leading" constant="20" id="TSc-Y4-dvS"/>
-                            <constraint firstItem="Wp5-6y-O1D" firstAttribute="top" secondItem="4LM-Al-Ctu" secondAttribute="top" constant="20" id="eCf-uo-Opu"/>
-                            <constraint firstItem="4LM-Al-Ctu" firstAttribute="trailing" secondItem="Wp5-6y-O1D" secondAttribute="trailing" constant="20" id="mUy-sr-ODE"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="4LM-Al-Ctu"/>
-                    </view>
-                    <size key="freeformSize" width="375" height="375"/>
-                    <connections>
-                        <outlet property="statusLabel" destination="Wp5-6y-O1D" id="Dba-Km-Tvo"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jeU-kC-QFD" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3273" y="1675"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bxd-NA-ZTH">

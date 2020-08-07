@@ -131,7 +131,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         
         return i
     }
-        
+    
     @objc private func done() {
         NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
         if isAccessoryWindow, let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
@@ -157,7 +157,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         if let relatedItem = typeItem.parent {
