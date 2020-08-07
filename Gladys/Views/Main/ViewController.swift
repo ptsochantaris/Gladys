@@ -857,9 +857,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }, completion: { _ in
             if orderChanged {
                 if !self.phoneMode, let vc = (self.currentDetailView ?? self.currentPreviewView) {
-                    //if !self.view.bounds.contains(self.view.convert(vc.view.bounds, from: vc.view)) {
-                        vc.dismiss(animated: false)
-                    //}
+                    vc.dismiss(animated: false)
                 }
             }
             if removedItems {
@@ -1522,8 +1520,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return firstPresentedNavigationController?.viewControllers.first as? DetailController
 	}
 
-    private var currentPreviewView: PreviewHostingInternalController? {
-        return firstPresentedNavigationController?.viewControllers.first as? PreviewHostingInternalController
+    private var currentPreviewView: GladysPreviewController? {
+        return firstPresentedNavigationController?.viewControllers.first as? GladysPreviewController
     }
 
 	private var currentPreferencesView: PreferencesController? {

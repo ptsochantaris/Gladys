@@ -378,13 +378,11 @@ final class DetailController: GladysViewController,
 
                 guard let q = typeEntry.quickLook() else { return }
                 if s.phoneMode || !PersistedOptions.fullScreenPreviews {
-                    let n = PreviewHostingInternalController(qlController: q)
-					s.navigationController?.pushViewController(n, animated: true)
+					s.navigationController?.pushViewController(q, animated: true)
                     
 				} else if let presenter = s.view.window?.alertPresenter {
-                    let n = PreviewHostingViewController(rootViewController: q)
-                    n.sourceItemView = c
-                    presenter.present(n, animated: true)
+                    q.sourceItemView = c
+                    presenter.present(q, animated: true)
 				}
 			}
 		} else {

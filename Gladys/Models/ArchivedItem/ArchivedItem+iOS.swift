@@ -173,13 +173,13 @@ extension ArchivedItem {
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
 
-        guard let q = itemToPreview?.quickLook() else { return false }
-
-		let n = PreviewHostingViewController(rootViewController: q)
+        guard let ql = itemToPreview?.quickLook() else { return false }
 
 		if !PersistedOptions.wideMode {
-			n.sourceItemView = cell
+			ql.sourceItemView = cell
 		}
+        
+        let n = UINavigationController(rootViewController: ql)
 
         if !(PersistedOptions.fullScreenPreviews || forceFullscreen || UIDevice.current.userInterfaceIdiom == .phone) {
 			n.modalPresentationStyle = .popover

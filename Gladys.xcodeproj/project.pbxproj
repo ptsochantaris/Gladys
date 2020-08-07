@@ -275,7 +275,6 @@
 		16BCAE23245DEA9C000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
-		16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -387,6 +386,7 @@
 		16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */; };
 		16F2990720CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F2990920CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
+		16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
@@ -750,7 +750,6 @@
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
-		16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHostingViewController.swift; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
 		16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
@@ -989,7 +988,6 @@
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
 				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
-				16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */,
 				165A8F0821AA92D300405701 /* PlistEditor.swift */,
 				162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */,
 			);
@@ -2301,6 +2299,7 @@
 				16906A9623C8C0C700D6C177 /* Component+iOS.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
+				16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */,
 				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1604A3361F091D7D005A477E /* Component.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
@@ -2484,7 +2483,6 @@
 				16CD7D8F20A111340039E6C2 /* Component+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				165847092376EE4A00666B7B /* Model+Importing.swift in Sources */,
-				16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
@@ -3018,7 +3016,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 860;
+				CURRENT_PROJECT_VERSION = 862;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_FAST_MATH = YES;
@@ -3176,7 +3174,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 860;
+				CURRENT_PROJECT_VERSION = 862;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;
