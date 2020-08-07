@@ -20,9 +20,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if preferredContentSize == .zero {
-            preferredContentSize = CGSize(width: min(768, mainWindow.bounds.size.width), height: mainWindow.bounds.size.height)
-        }
+        popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, mainWindow.bounds.size.width), height: mainWindow.bounds.size.height)
     }
     
     private lazy var doneButton: UIBarButtonItem = {

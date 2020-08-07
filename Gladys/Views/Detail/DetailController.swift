@@ -178,8 +178,8 @@ final class DetailController: GladysViewController,
 	private func sizeWindow() {
         table.layoutIfNeeded()
         let preferredSize = CGSize(width: 320, height: table.contentSize.height)
-		log("Detail view preferred size is \(preferredSize)")
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
+		log("Detail view preferred size is \(preferredSize)")
 	}
     
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
