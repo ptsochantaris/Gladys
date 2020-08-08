@@ -144,7 +144,7 @@ final class Singleton {
                     
                 } else if let child = child {
                     if let q = child.quickLook() {
-                        let n = UINavigationController(rootViewController: q)
+                        let n = GladysNavController(rootViewController: q)
                         scene.windows.first?.rootViewController = n
                     }
                     return

@@ -4,6 +4,14 @@ import Contacts
 import CloudKit
 import QuickLook
 
+final class GladysNavController: UINavigationController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "colorPaper")
+        view.tintColor = UIColor(named: "colorTint")
+    }
+}
+
 final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
     private var typeItem: Component
     
@@ -162,10 +170,10 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
             .foregroundColor: UIColor(named: "colorComponentLabel")!
         ]
 
-        if navigationController?.viewControllers.first == self {
-            navigationController?.navigationBar.tintColor = tint
+        if let nav = navigationController, nav.viewControllers.first == self {
+            nav.navigationBar.tintColor = tint
             if isAccessoryWindow {
-                appearance.backgroundColor = UIColor(named: "colorPaper")
+                appearance.backgroundColor = nav.view.backgroundColor
             }
         }
         
