@@ -70,18 +70,6 @@ final class ModelFilterContext {
         }
     }
     
-    var threadSafeFilteredDrops: ContiguousArray<ArchivedItem> {
-        if Thread.isMainThread {
-            return filteredDrops
-        } else {
-            var dropsClone = ContiguousArray<ArchivedItem>()
-            DispatchQueue.main.sync {
-                dropsClone = filteredDrops
-            }
-            return dropsClone
-        }
-    }
-    
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
@@ -232,7 +220,7 @@ final class ModelFilterContext {
     }
     
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
-        let items = PersistedOptions.exportOnlyVisibleItems ? threadSafeFilteredDrops : Model.threadSafeDrops
+        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.drops // copy
         return items.filter { $0.goodToSave }
     }
     
@@ -532,18 +520,6 @@ extension Model {
 	static func removeImportedShares() {
         let toDelete = drops.filter { $0.isImportedShare }
         delete(items: toDelete)
-	}
-
-	static var threadSafeDrops: ContiguousArray<ArchivedItem> {
-		if Thread.isMainThread {
-            return drops
-		} else {
-			var dropsClone = ContiguousArray<ArchivedItem>()
-			DispatchQueue.main.sync {
-                dropsClone = drops
-			}
-			return dropsClone
-		}
 	}
 
 	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {

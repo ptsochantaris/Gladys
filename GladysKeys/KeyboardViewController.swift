@@ -9,8 +9,113 @@
 import UIKit
 
 private var latestOffset = CGPoint.zero
+private var selectedLabel: String?
 
-final class KeyboardViewController: UIInputViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate {
+final class SimpleLabelToggleCell: UITableViewCell {
+    @IBOutlet weak var labelName: UILabel!
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        accessoryType = selected ? .checkmark : .none
+        labelName.textColor = selected ? .label : UIColor(named: "colorComponentLabel")
+    }
+}
+
+final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    @IBOutlet private weak var table: UITableView!
+    @IBOutlet private weak var emptyLabel: UILabel!
+    @IBOutlet private weak var closeButton: UIButton!
+    
+    var changeCallback: (() -> Void)?
+        
+    let labels: [String] = {
+        return Model.visibleDrops
+            .reduce(Set<String>()) { $0.union($1.labels) }
+            .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        var count = 1
+        if let selected = selectedLabel {
+            for toggle in labels {
+                if toggle == selected {
+                    table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
+                }
+                count += 1
+            }
+        } else {
+            table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
+        }
+
+        if labels.isEmpty {
+            table.isHidden = true
+        } else {
+            emptyLabel.isHidden = true
+        }
+
+        table.tableFooterView = UIView()
+    }
+    
+    private var firstAppearance = true
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if firstAppearance {
+            if let f = selectedLabel, !f.isEmpty, let index = labels.firstIndex(of: f) {
+                table.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
+            }
+            firstAppearance = false
+        }
+    }
+
+    private func sizeWindow() {
+        if table.isHidden {
+            preferredContentSize = CGSize(width: 240, height: 240)
+        } else {
+            let full = table.contentSize.height + 8
+            preferredContentSize = CGSize(width: 240, height: full)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return labels.count + 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SimpleLabelToggleCell") as! SimpleLabelToggleCell
+        if indexPath.row == 0 {
+            cell.labelName.text = "Show All Items"
+        } else {
+            cell.labelName.text = labels[indexPath.row - 1]
+        }
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let selected = selectedLabel {
+            if indexPath.row > 0 {
+                cell.setSelected(labels[indexPath.row - 1] == selected, animated: false)
+            } else {
+                cell.setSelected(false, animated: false)
+            }
+        } else {
+            cell.setSelected(indexPath.row == 0, animated: false)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            selectedLabel = nil
+        } else {
+            selectedLabel = labels[indexPath.row - 1]
+        }
+        table.reloadData()
+        changeCallback?()
+        dismiss(animated: false)
+    }
+}
+
+final class KeyboardViewController: UIInputViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
     @IBOutlet private weak var emptyLabel: UILabel!
     @IBOutlet private weak var itemsView: UICollectionView!
@@ -19,7 +124,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBOutlet private weak var spaceButton: UIButton!
     @IBOutlet private weak var backspaceButton: UIButton!
     @IBOutlet private weak var enterButton: UIButton!
-        
+    @IBOutlet private weak var height: NSLayoutConstraint!
+    @IBOutlet private weak var labelsButton: UIButton!
+    @IBOutlet private weak var enterAspect: NSLayoutConstraint!
+    
+    private var filteredDrops = ContiguousArray<ArchivedItem>()
+    
     private func itemsPerRow(for size: CGSize) -> Int {
         if size.width <= 414 {
             return 3
@@ -43,12 +153,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Model.visibleDrops.count
+        return filteredDrops.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-        cell.dropItem = Model.visibleDrops[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "KeyboardCell", for: indexPath) as! KeyboardCell
+        cell.dropItem = filteredDrops[indexPath.item]
         return cell
     }
 
@@ -57,18 +167,18 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let drop = Model.visibleDrops[indexPath.row]
+        let drop = filteredDrops[indexPath.item]
         let (text, url) = drop.textForMessage
         textDocumentProxy.insertText(url?.absoluteString ?? text)
     }
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        let drop = Model.visibleDrops[indexPath.item]
+        let drop = filteredDrops[indexPath.item]
         return [drop.dragItem]
     }
 
     func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-        let item = Model.visibleDrops[indexPath.item].dragItem
+        let item = filteredDrops[indexPath.item].dragItem
         if !session.items.contains(item) {
             return [item]
         } else {
@@ -85,7 +195,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        if let cell = itemsView.cellForItem(at: indexPath) as? MessageCell, let b = cell.backgroundView {
+        if let cell = itemsView.cellForItem(at: indexPath) as? KeyboardCell, let b = cell.backgroundView {
             let corner = b.layer.cornerRadius
             let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
             let params = UIDragPreviewParameters()
@@ -107,9 +217,18 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBAction private func deleteSelected(_ sender: UIButton) {
         textDocumentProxy.deleteBackward()
     }
+    
+    private func updateFilteredItems() {
+        if let f = selectedLabel, !f.isEmpty {
+            filteredDrops = Model.visibleDrops.filter { $0.labels.contains(f) }
+        } else {
+            filteredDrops = Model.visibleDrops
+        }
+    }
 
     @objc private func externalDataUpdated() {
-        emptyLabel.isHidden = !Model.visibleDrops.isEmpty
+        updateFilteredItems()
+        emptyLabel.isHidden = !filteredDrops.isEmpty
         updateItemSize(for: view.bounds.size)
         itemsView.reloadData()
     }
@@ -128,9 +247,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             filePresenter = ModelFilePresenter()
             NSFileCoordinator.addFilePresenter(filePresenter!)
         }
-        emptyLabel.isHidden = !Model.visibleDrops.isEmpty
-        updateItemSize(for: view.bounds.size)
-        itemsView.reloadData()
+        externalDataUpdated()
         view.layoutIfNeeded()
         itemsView.contentOffset = latestOffset
     }
@@ -164,8 +281,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ModelDataUpdated, object: nil)
         itemsView.dragDelegate = self
         itemsView.dragInteractionEnabled = UIDevice.current.userInterfaceIdiom == .pad
-        
-        for b in [dismissButton, spaceButton, backspaceButton, enterButton, nextKeyboardButton] {
+
+        height.constant = min(400, UIScreen.main.bounds.height * 0.5)
+
+        for b in [labelsButton, dismissButton, spaceButton, backspaceButton, enterButton, nextKeyboardButton] {
             b?.layer.masksToBounds = true
             b?.layer.cornerRadius = 5
         }
@@ -174,10 +293,60 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         spaceButton.backgroundColor = UIColor(named: "colorKeyboardBright")
         backspaceButton.backgroundColor = UIColor(named: "colorKeyboardGray")
         nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        labelsButton.backgroundColor = UIColor(named: "colorKeyboardGray")
     }
-
+    
+    @IBAction func labelsSelected(_ sender: UIButton) {
+    }
+    
     override func viewWillLayoutSubviews() {
         nextKeyboardButton.isHidden = !needsInputModeSwitchKey
         super.viewWillLayoutSubviews()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let d = segue.destination as? SimpleLabelPicker else {
+            return
+        }
+        d.popoverPresentationController?.delegate = self
+        d.changeCallback = { [weak self] in
+            self?.externalDataUpdated()
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let item = filteredDrops[indexPath.item]
+
+        return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSString, previewProvider: nil) { _ in
+            let copyAction = UIAction(title: "Copy") { _ in
+                item.copyToPasteboard()
+            }
+            copyAction.image = UIImage(systemName: "doc.on.doc")
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [copyAction])
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return previewForContextMenu(of: configuration)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return previewForContextMenu(of: configuration)
+    }
+                
+    private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        if
+            let uuid = configuration.identifier as? String,
+            let item = Model.item(uuid: uuid),
+            let index = filteredDrops.firstIndex(of: item),
+            let cell = itemsView.cellForItem(at: IndexPath(item: index, section: 0)) as? KeyboardCell {
+            return cell.targetedPreviewItem
+        }
+        return nil
+    }
+
 }

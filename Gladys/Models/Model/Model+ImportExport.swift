@@ -177,7 +177,7 @@ extension Model {
 			bytes = data
 
 		} else if typeItem.classWasWrapped {
-			bytes = typeItem.dataForDroppingThread ?? typeItem.bytes
+			bytes = typeItem.dataForDropping ?? typeItem.bytes
 		}
 		if let B = bytes ?? typeItem.bytes {
 			let timmedName = typeItem.prepareFilename(name: name, directory: directory)

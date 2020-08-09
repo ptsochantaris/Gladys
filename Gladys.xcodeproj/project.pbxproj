@@ -71,6 +71,10 @@
 		161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
+		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
+		16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
+		16219A0B24E02013006ED18A /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
+		16219A0C24E02013006ED18A /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
@@ -267,7 +271,6 @@
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
 		16B2AA3F24DF42B5004F3FC2 /* Gladys Keys.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Gladys Keys.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		16B2AA4324DF4542004F3FC2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C31FD4329300EC480D /* MessageCell.swift */; };
 		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
@@ -438,6 +441,13 @@
 			remoteGlobalIDString = 16118D1B2364775A00454326;
 			remoteInfo = GladysFrameworkMac;
 		};
+		16219A0D24E02013006ED18A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 167573FE1F12C22500385079;
+			remoteInfo = GladysFramework;
+		};
 		16287AEC1EFB03FD007188AE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
@@ -532,6 +542,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				16118D29236478E200454326 /* GladysFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16219A0F24E02014006ED18A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				16219A0C24E02013006ED18A /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -653,6 +674,7 @@
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		1619E8161EFF3745000087DD /* MirrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorManager.swift; sourceTree = "<group>"; };
 		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
+		16219A0124E0108E006ED18A /* KeyboardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardCell.swift; sourceTree = "<group>"; };
 		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
@@ -975,6 +997,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16219A0B24E02013006ED18A /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1351,6 +1374,7 @@
 			children = (
 				16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */,
 				16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */,
+				16219A0124E0108E006ED18A /* KeyboardCell.swift */,
 				16B2AA3C24DF42B5004F3FC2 /* Info.plist */,
 				16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */,
 			);
@@ -1786,10 +1810,12 @@
 				16B2AA3424DF42B5004F3FC2 /* Sources */,
 				16B2AA3524DF42B5004F3FC2 /* Frameworks */,
 				16B2AA3624DF42B5004F3FC2 /* Resources */,
+				16219A0F24E02014006ED18A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				16219A0E24E02013006ED18A /* PBXTargetDependency */,
 			);
 			name = GladysKeys;
 			productName = GladysKeys;
@@ -2665,8 +2691,8 @@
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA5D24DF49E5004F3FC2 /* Component+iOS.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
-				16B2AA4324DF4542004F3FC2 /* MessageCell.swift in Sources */,
 				16B2AA4B24DF4746004F3FC2 /* ArchivedItem.swift in Sources */,
+				16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */,
 				16B2AA4A24DF473F004F3FC2 /* PopTimer.swift in Sources */,
 				16B2AA5424DF498F004F3FC2 /* Types.swift in Sources */,
 				16B2AA5024DF496F004F3FC2 /* ArchivedItem+Common.swift in Sources */,
@@ -2677,6 +2703,7 @@
 				16B2AA5A24DF49C1004F3FC2 /* Data+Extensions.swift in Sources */,
 				16B2AA5624DF499E004F3FC2 /* Component+Common.swift in Sources */,
 				16B2AA5E24DF49FC004F3FC2 /* UIImage+Extensions.swift in Sources */,
+				16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */,
 				16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */,
 				16B2AA5B24DF49D1004F3FC2 /* Component+BackgroundInfoObject.swift in Sources */,
 			);
@@ -2729,6 +2756,11 @@
 			isa = PBXTargetDependency;
 			target = 16118D1B2364775A00454326 /* GladysFrameworkMac */;
 			targetProxy = 16118D2A236478E200454326 /* PBXContainerItemProxy */;
+		};
+		16219A0E24E02013006ED18A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 167573FE1F12C22500385079 /* GladysFramework */;
+			targetProxy = 16219A0D24E02013006ED18A /* PBXContainerItemProxy */;
 		};
 		16287AED1EFB03FD007188AE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

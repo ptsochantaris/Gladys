@@ -20,9 +20,10 @@ final class Model {
     }
 
     static private func rebuildIndexIfNeeded() {
-        assert(Thread.isMainThread)
         if uuidindex == nil {
-            let z = zip(drops.map { $0.uuid }, 0 ..< drops.count)
+            assert(Thread.isMainThread)
+            let d = drops // copy
+            let z = zip(d.map { $0.uuid }, 0 ..< d.count)
             uuidindex = Dictionary(z) { one, _ in one }
             log("Rebuilt drop index")
         }

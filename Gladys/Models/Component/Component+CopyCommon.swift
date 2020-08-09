@@ -9,10 +9,6 @@
 import Foundation
 
 extension Component {
-	var dataForDroppingThread: Data? {
-        return DispatchQueue.main.sync { dataForDropping }
-    }
-    
     var dataForDropping: Data? {
 		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
 			let decoded = decode()
