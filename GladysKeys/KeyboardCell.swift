@@ -33,7 +33,9 @@ final class KeyboardCell: UICollectionViewCell {
 	}
 
     var targetedPreviewItem: UITargetedPreview {
-        return UITargetedPreview(view: contentView)
+        let params = UIDragPreviewParameters()
+        params.visiblePath = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 8, height: 8))
+        return UITargetedPreview(view: self, parameters: params)
     }
     
 	var dropItem: ArchivedItem? {

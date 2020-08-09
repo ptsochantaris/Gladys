@@ -96,12 +96,12 @@ final class Model {
             return encoder
         }
     }
-    
-	@discardableResult static func reloadDataIfNeeded(maximumItems: Int? = nil) -> Bool {
+
+	static func reloadDataIfNeeded(maximumItems: Int? = nil) {
 
 		if brokenMode {
 			log("Ignoring load, model is broken, app needs restart.")
-			return false
+			return
 		}
 
 		var coordinationError: NSError?
@@ -186,13 +186,12 @@ final class Model {
 					abort()
 				}
 			}
-			return false
+			return
 			#else
 			// still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
 			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 				exit(0)
 			}
-            return false
 			#endif
 			
 		} else if var e = coordinationError {
@@ -208,29 +207,24 @@ final class Model {
 					abort()
 				}
 			}
-			return false
-            #elseif KEYBOARDEXTENSION
-            return false
+			return
 			#else
 			exit(0)
 			#endif
 		}
 
-		if brokenMode {
-            return false
-        }
-        
-        DispatchQueue.main.async {
-            if isStarted {
-                if didLoad {
-                    NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-                }
-            } else {
-                isStarted = true
-                startupComplete()
-            }
-        }
-        return true
+		if !brokenMode {
+			DispatchQueue.main.async {
+				if isStarted {
+					if didLoad {
+                        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
+					}
+				} else {
+					isStarted = true
+					startupComplete()
+				}
+			}
+		}
 	}
 
     static var doneIngesting: Bool {

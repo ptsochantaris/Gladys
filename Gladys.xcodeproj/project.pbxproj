@@ -269,7 +269,7 @@
 		16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98921B457550049E433 /* NoteEditorController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
-		16B2AA3F24DF42B5004F3FC2 /* Gladys Keys.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Gladys Keys.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
@@ -555,7 +555,7 @@
 				1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed App Extensions */,
 				164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */,
 				16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed App Extensions */,
-				16B2AA3F24DF42B5004F3FC2 /* Gladys Keys.appex in Embed App Extensions */,
+				16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed App Extensions */,
 				16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -794,7 +794,7 @@
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
 		16AED98921B457550049E433 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
-		16B2AA3824DF42B5004F3FC2 /* Gladys Keys.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Gladys Keys.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyhive.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		16B2AA3C24DF42B5004F3FC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
@@ -1242,7 +1242,7 @@
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
 				16D984932160C5A000D9D51C /* GladysIntents.appex */,
 				16118D1C2364775A00454326 /* GladysFramework.framework */,
-				16B2AA3824DF42B5004F3FC2 /* Gladys Keys.appex */,
+				16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1806,7 +1806,7 @@
 			);
 			name = GladysKeys;
 			productName = GladysKeys;
-			productReference = 16B2AA3824DF42B5004F3FC2 /* Gladys Keys.appex */;
+			productReference = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		16D984922160C5A000D9D51C /* GladysIntents */ = {
@@ -3618,7 +3618,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
-				PRODUCT_NAME = "Gladys Keys";
+				PRODUCT_NAME = Keyhive;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG KEYBOARDEXTENSION";
 			};
@@ -3642,7 +3642,7 @@
 				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
-				PRODUCT_NAME = "Gladys Keys";
+				PRODUCT_NAME = Keyhive;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = KEYBOARDEXTENSION;
 			};

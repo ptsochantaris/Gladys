@@ -35,6 +35,8 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        (view as? UIInputView)?.allowsSelfSizing = true
+        
         var count = 1
         if let selected = selectedLabel {
             for toggle in labels {
@@ -198,9 +200,8 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         if let cell = itemsView.cellForItem(at: indexPath) as? KeyboardCell, let b = cell.backgroundView {
             let corner = b.layer.cornerRadius
-            let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
             let params = UIDragPreviewParameters()
-            params.visiblePath = path
+            params.visiblePath = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
             return params
         } else {
             return nil
@@ -215,8 +216,25 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         textDocumentProxy.insertText(" ")
     }
     
-    @IBAction private func deleteSelected(_ sender: UIButton) {
+    private weak var backspaceTimer: Timer?
+    
+    @IBAction private func deleteStarted(_ sender: UIButton) {
         textDocumentProxy.deleteBackward()
+        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
+            self?.startRapidBackspace()
+        }
+    }
+    
+    private func startRapidBackspace() {
+        textDocumentProxy.deleteBackward()
+        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] _ in
+            self?.textDocumentProxy.deleteBackward()
+        }
+    }
+
+    @IBAction private func deleteEnded(_ sender: UIButton) {
+        backspaceTimer?.invalidate()
+        backspaceTimer = nil
     }
     
     private func updateFilteredItems() {
@@ -249,13 +267,14 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if !Model.reloadDataIfNeeded() {
-            emptyLabel.text = "This keyboard requires perimssion to access your Gladys collection.\n\nPlease enable it from General > Keyboard > Keyboards > Gladys > Allow Full Access"
+        if hasFullAccess {
+            Model.reloadDataIfNeeded()
+            emptyLabel.text = "The items in your collection will appear here."
+        } else {
+            emptyLabel.text = "This keyboard requires perimssion to access your Gladys collection.\n\nPlease enable it from Gladys > Keyboards > Allow Full Access"
             emptyStack.isHidden = false
             settingsButton.isHidden = false
             return
-        } else {
-            emptyLabel.text = "The items in your collection will appear here."
         }
         
         if filePresenter == nil {
@@ -299,9 +318,17 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
         height.constant = min(400, UIScreen.main.bounds.height * 0.5)
 
+        let config: UIImage.SymbolConfiguration
+        if traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .regular)) {
+            config = UIImage.SymbolConfiguration(pointSize: 23, weight: .light, scale: .default)
+        } else {
+            config = UIImage.SymbolConfiguration(pointSize: 19, weight: .light, scale: .default)
+        }
+
         for b in [labelsButton, dismissButton, spaceButton, backspaceButton, enterButton, nextKeyboardButton] {
             b?.layer.masksToBounds = true
             b?.layer.cornerRadius = 5
+            b?.setPreferredSymbolConfiguration(config, forImageIn: .normal)
         }
         
         dismissButton.backgroundColor = UIColor(named: "colorKeyboardGray")
@@ -349,10 +376,15 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
                 item.copyToPasteboard()
             }
             copyAction.image = UIImage(systemName: "doc.on.doc")
-            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [copyAction])
+            let typeAction = UIAction(title: "Type") { [weak self] _ in
+                let (text, url) = item.textForMessage
+                self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
+            }
+            typeAction.image = UIImage(systemName: "keyboard")
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [typeAction, copyAction])
         }
     }
-    
+        
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         return previewForContextMenu(of: configuration)
     }
