@@ -117,7 +117,6 @@
                                                             <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         </state>
                                                         <connections>
-                                                            <action selector="labelsSelected:" destination="e5r-Ya-fom" eventType="touchUpInside" id="odA-XS-dP3"/>
                                                             <segue destination="OkQ-Ok-H0x" kind="popoverPresentation" identifier="showLabels" animates="NO" popoverAnchorView="enk-Rd-5ao" id="Abq-yF-fn9">
                                                                 <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                                             </segue>
@@ -183,22 +182,35 @@
                                     <constraint firstAttribute="height" priority="750" constant="528" id="Rdf-Pk-H7w"/>
                                 </constraints>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The items in your collection will appear here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yIS-aK-T3b">
-                                <rect key="frame" x="20" y="243" width="280" height="42.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="JAs-2z-fCd">
+                                <rect key="frame" x="20" y="196" width="280" height="85.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The items in your collection will appear here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yIS-aK-T3b">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="42.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n02-tq-utc">
+                                        <rect key="frame" x="0.0" y="52.5" width="280" height="33"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <state key="normal" title="Settings"/>
+                                        <connections>
+                                            <action selector="settingsSelected:" destination="e5r-Ya-fom" eventType="touchUpInside" id="C8w-Aa-cmo"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="yIS-aK-T3b" firstAttribute="centerY" secondItem="RQO-Sm-klh" secondAttribute="centerY" id="02b-qn-Eru"/>
                             <constraint firstItem="65W-h4-WAa" firstAttribute="trailing" secondItem="RQO-Sm-klh" secondAttribute="trailing" id="0T3-JN-v8Q"/>
                             <constraint firstItem="65W-h4-WAa" firstAttribute="top" secondItem="RQO-Sm-klh" secondAttribute="top" constant="1" id="Drn-r4-CA5"/>
                             <constraint firstItem="65W-h4-WAa" firstAttribute="leading" secondItem="RQO-Sm-klh" secondAttribute="leading" id="IOS-h6-uor"/>
-                            <constraint firstItem="yIS-aK-T3b" firstAttribute="leading" secondItem="ZUj-PB-aVf" secondAttribute="leading" constant="20" id="IqA-IS-o0m"/>
+                            <constraint firstItem="JAs-2z-fCd" firstAttribute="centerY" secondItem="3tQ-zx-Tbs" secondAttribute="centerY" id="T1W-7n-02f"/>
+                            <constraint firstAttribute="trailing" secondItem="JAs-2z-fCd" secondAttribute="trailing" constant="20" id="Wq1-tr-PrI"/>
                             <constraint firstItem="ZUj-PB-aVf" firstAttribute="bottom" secondItem="65W-h4-WAa" secondAttribute="bottom" id="ljb-WZ-k6B"/>
-                            <constraint firstItem="yIS-aK-T3b" firstAttribute="trailing" secondItem="ZUj-PB-aVf" secondAttribute="trailing" constant="-20" id="ogl-WR-lDQ"/>
+                            <constraint firstItem="JAs-2z-fCd" firstAttribute="leading" secondItem="ZUj-PB-aVf" secondAttribute="leading" constant="20" id="nxW-oF-p2E"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZUj-PB-aVf"/>
                     </view>
@@ -208,12 +220,14 @@
                         <outlet property="backspaceButton" destination="3Jg-dM-m8O" id="eq7-cn-faP"/>
                         <outlet property="dismissButton" destination="4h3-is-Jx8" id="s35-8C-6xI"/>
                         <outlet property="emptyLabel" destination="yIS-aK-T3b" id="mMv-ju-wEa"/>
+                        <outlet property="emptyStack" destination="JAs-2z-fCd" id="BWQ-aj-4Kf"/>
                         <outlet property="enterAspect" destination="fuq-zo-JMf" id="z1i-yT-3wR"/>
                         <outlet property="enterButton" destination="t82-VC-6Ge" id="CKs-OQ-Yce"/>
                         <outlet property="height" destination="Rdf-Pk-H7w" id="zOC-ZM-G7i"/>
                         <outlet property="itemsView" destination="3tQ-zx-Tbs" id="uZt-II-WR4"/>
                         <outlet property="labelsButton" destination="enk-Rd-5ao" id="FJr-Dg-GJG"/>
                         <outlet property="nextKeyboardButton" destination="i0C-Ea-L06" id="Jvg-GS-4KK"/>
+                        <outlet property="settingsButton" destination="n02-tq-utc" id="tR9-Yg-UaP"/>
                         <outlet property="spaceButton" destination="lDb-4e-hSN" id="jHX-sS-hZH"/>
                     </connections>
                 </viewController>

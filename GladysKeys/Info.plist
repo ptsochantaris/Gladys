@@ -31,7 +31,7 @@
 			<key>PrimaryLanguage</key>
 			<string>en-US</string>
 			<key>RequestsOpenAccess</key>
-			<false/>
+			<true/>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>

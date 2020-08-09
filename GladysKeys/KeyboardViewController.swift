@@ -24,7 +24,6 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
 
     @IBOutlet private weak var table: UITableView!
     @IBOutlet private weak var emptyLabel: UILabel!
-    @IBOutlet private weak var closeButton: UIButton!
     
     var changeCallback: (() -> Void)?
         
@@ -127,6 +126,8 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBOutlet private weak var height: NSLayoutConstraint!
     @IBOutlet private weak var labelsButton: UIButton!
     @IBOutlet private weak var enterAspect: NSLayoutConstraint!
+    @IBOutlet private weak var settingsButton: UIButton!
+    @IBOutlet private weak var emptyStack: UIStackView!
     
     private var filteredDrops = ContiguousArray<ArchivedItem>()
     
@@ -228,7 +229,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     @objc private func externalDataUpdated() {
         updateFilteredItems()
-        emptyLabel.isHidden = !filteredDrops.isEmpty
+        if filteredDrops.isEmpty {
+            emptyStack.isHidden = false
+            settingsButton.isHidden = true
+        } else {
+            emptyStack.isHidden = true
+        }
         updateItemSize(for: view.bounds.size)
         itemsView.reloadData()
     }
@@ -242,7 +248,16 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Model.reloadDataIfNeeded()
+        
+        if !Model.reloadDataIfNeeded() {
+            emptyLabel.text = "This keyboard requires perimssion to access your Gladys collection.\n\nPlease enable it from General > Keyboard > Keyboards > Gladys > Allow Full Access"
+            emptyStack.isHidden = false
+            settingsButton.isHidden = false
+            return
+        } else {
+            emptyLabel.text = "The items in your collection will appear here."
+        }
+        
         if filePresenter == nil {
             filePresenter = ModelFilePresenter()
             NSFileCoordinator.addFilePresenter(filePresenter!)
@@ -295,10 +310,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
         labelsButton.backgroundColor = UIColor(named: "colorKeyboardGray")
     }
-    
-    @IBAction func labelsSelected(_ sender: UIButton) {
-    }
-    
+        
     override func viewWillLayoutSubviews() {
         nextKeyboardButton.isHidden = !needsInputModeSwitchKey
         super.viewWillLayoutSubviews()
@@ -312,6 +324,17 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         d.changeCallback = { [weak self] in
             self?.externalDataUpdated()
         }
+    }
+    
+    @IBAction private func settingsSelected(_ sender: UIButton) {
+        let url = URL(string: UIApplication.openSettingsURLString)!
+
+        let selector = sel_registerName("openURL:")
+        var responder = self as UIResponder?
+        while let r = responder, !r.responds(to: selector) {
+            responder = r.next
+        }
+        _ = responder?.perform(selector, with: url)
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
