@@ -18,7 +18,7 @@ extension Component {
 			let p = Progress(totalUnitCount: 1)
 			DispatchQueue.global(qos: .userInitiated).async {
 				log("Responding with data block for type: \(t)")
-                let response = self.dataForDropping ?? self.bytes
+                let response = self.dataForDroppingThread ?? self.bytes
 				DispatchQueue.main.async {
 					Component.droppedIds.insert(self.parentUuid)
                     p.completedUnitCount = 1

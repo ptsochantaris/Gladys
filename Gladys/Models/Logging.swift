@@ -8,10 +8,9 @@
 
 #if DEBUG
 import os.log
-#endif
-
 func log(_ line: @autoclosure () -> String) {
-	#if DEBUG
 	os_log("%{public}@", line())
-	#endif
 }
+#else
+func log(_ line: @autoclosure () -> String) {}
+#endif

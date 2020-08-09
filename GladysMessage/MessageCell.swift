@@ -21,11 +21,11 @@ final class MessageCell: UICollectionViewCell {
 
 		let b = UIView()
 		b.backgroundColor = .systemBackground
-		b.layer.cornerRadius = 10
+		b.layer.cornerRadius = 8
 		b.clipsToBounds = true
 		backgroundView = b
 
-		imageView.layer.cornerRadius = 5
+		imageView.layer.cornerRadius = 4
 		isAccessibilityElement = true
 		accessibilityHint = "Select to send"
 	}

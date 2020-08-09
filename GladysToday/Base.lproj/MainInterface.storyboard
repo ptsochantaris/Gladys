@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -101,6 +102,7 @@
                             <constraint firstItem="RlE-Mh-9wq" firstAttribute="trailing" secondItem="S3S-Oj-5AN" secondAttribute="trailing" id="rn2-H2-EH8"/>
                             <constraint firstItem="RlE-Mh-9wq" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" id="wjn-gE-SGI"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="XSn-sI-hy0"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
