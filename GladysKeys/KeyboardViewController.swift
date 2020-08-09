@@ -57,7 +57,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
 
         table.tableFooterView = UIView()
     }
-    
+        
     private var firstAppearance = true
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -173,22 +173,14 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         let drop = filteredDrops[indexPath.item]
         let (text, url) = drop.textForMessage
         textDocumentProxy.insertText(url?.absoluteString ?? text)
+        updateReturn()
     }
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let drop = filteredDrops[indexPath.item]
         return [drop.dragItem]
     }
-
-    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-        let item = filteredDrops[indexPath.item].dragItem
-        if !session.items.contains(item) {
-            return [item]
-        } else {
-            return []
-        }
-    }
-    
+                
     func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
         dragCompletionGroup.enter()
     }
@@ -210,10 +202,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     @IBAction private func returnSelected(_ sender: UIButton) {
         textDocumentProxy.insertText("\n")
+        updateReturn()
     }
     
     @IBAction private func spaceSelected(_ sender: UIButton) {
         textDocumentProxy.insertText(" ")
+        updateReturn()
     }
     
     private weak var backspaceTimer: Timer?
@@ -284,8 +278,45 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         externalDataUpdated()
         view.layoutIfNeeded()
         itemsView.contentOffset = latestOffset
+        updateReturn()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateReturn()
+    }
+    
+    private func updateReturn() {
+        switch textDocumentProxy.returnKeyType {
+        case .continue:
+            enterButton.setTitle("Continue", for: .normal)
+            enterButton.setImage(nil, for: .normal)
+        case .done:
+            enterButton.setTitle("Done", for: .normal)
+            enterButton.setImage(nil, for: .normal)
+        case .go:
+            enterButton.setTitle("Go", for: .normal)
+            enterButton.setImage(nil, for: .normal)
+        case .next:
+            enterButton.setTitle("Next", for: .normal)
+            enterButton.setImage(nil, for: .normal)
+        case .search:
+            enterButton.setTitle("Search", for: .normal)
+            enterButton.setImage(nil, for: .normal)
+        default:
+            break
+        }
+        
+        let enabled: Bool
+        if textDocumentProxy.enablesReturnKeyAutomatically == true {
+            enabled = textDocumentProxy.hasText
+        } else {
+            enabled = true
+        }
+        enterButton.isEnabled = enabled
+        enterButton.alpha = enabled ? 1 : 0.4
+    }
+        
     private let dragCompletionGroup = DispatchGroup()
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -332,17 +363,22 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
         
         dismissButton.backgroundColor = UIColor(named: "colorKeyboardGray")
-        spaceButton.backgroundColor = UIColor(named: "colorKeyboardBright")
-        backspaceButton.backgroundColor = UIColor(named: "colorKeyboardGray")
-        nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
-        labelsButton.backgroundColor = UIColor(named: "colorKeyboardGray")
-    }
         
-    override func viewWillLayoutSubviews() {
+        spaceButton.backgroundColor = UIColor(named: "colorKeyboardBright")
+        
+        backspaceButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        
+        labelsButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        
+        nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
         nextKeyboardButton.isHidden = !needsInputModeSwitchKey
-        super.viewWillLayoutSubviews()
     }
     
+    override func textDidChange(_ textInput: UITextInput?) {
+        super.textDidChange(textInput)
+        updateReturn()
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let d = segue.destination as? SimpleLabelPicker else {
             return
@@ -379,6 +415,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             let typeAction = UIAction(title: "Type") { [weak self] _ in
                 let (text, url) = item.textForMessage
                 self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
+                self?.updateReturn()
             }
             typeAction.image = UIImage(systemName: "keyboard")
             return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [typeAction, copyAction])
