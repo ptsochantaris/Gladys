@@ -73,8 +73,7 @@
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
 		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
 		16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
-		16219A0B24E02013006ED18A /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
-		16219A0C24E02013006ED18A /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16219A1024E03918006ED18A /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
@@ -441,7 +440,7 @@
 			remoteGlobalIDString = 16118D1B2364775A00454326;
 			remoteInfo = GladysFrameworkMac;
 		};
-		16219A0D24E02013006ED18A /* PBXContainerItemProxy */ = {
+		16219A1224E03918006ED18A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
 			proxyType = 1;
@@ -542,17 +541,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				16118D29236478E200454326 /* GladysFramework.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		16219A0F24E02014006ED18A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				16219A0C24E02013006ED18A /* GladysFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -997,7 +985,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16219A0B24E02013006ED18A /* GladysFramework.framework in Frameworks */,
+				16219A1024E03918006ED18A /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1810,12 +1798,11 @@
 				16B2AA3424DF42B5004F3FC2 /* Sources */,
 				16B2AA3524DF42B5004F3FC2 /* Frameworks */,
 				16B2AA3624DF42B5004F3FC2 /* Resources */,
-				16219A0F24E02014006ED18A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				16219A0E24E02013006ED18A /* PBXTargetDependency */,
+				16219A1324E03918006ED18A /* PBXTargetDependency */,
 			);
 			name = GladysKeys;
 			productName = GladysKeys;
@@ -2757,10 +2744,10 @@
 			target = 16118D1B2364775A00454326 /* GladysFrameworkMac */;
 			targetProxy = 16118D2A236478E200454326 /* PBXContainerItemProxy */;
 		};
-		16219A0E24E02013006ED18A /* PBXTargetDependency */ = {
+		16219A1324E03918006ED18A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 167573FE1F12C22500385079 /* GladysFramework */;
-			targetProxy = 16219A0D24E02013006ED18A /* PBXContainerItemProxy */;
+			targetProxy = 16219A1224E03918006ED18A /* PBXContainerItemProxy */;
 		};
 		16287AED1EFB03FD007188AE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3181,7 +3168,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 870;
+				CURRENT_PROJECT_VERSION = 872;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_FAST_MATH = YES;
@@ -3340,7 +3327,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 870;
+				CURRENT_PROJECT_VERSION = 872;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;
