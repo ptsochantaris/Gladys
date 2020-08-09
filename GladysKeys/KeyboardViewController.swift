@@ -165,10 +165,15 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         itemsView.dragDelegate = self
         itemsView.dragInteractionEnabled = UIDevice.current.userInterfaceIdiom == .pad
         
-        for b in [dismissButton, spaceButton, backspaceButton, enterButton] {
+        for b in [dismissButton, spaceButton, backspaceButton, enterButton, nextKeyboardButton] {
             b?.layer.masksToBounds = true
-            b?.layer.cornerRadius = 6
+            b?.layer.cornerRadius = 5
         }
+        
+        dismissButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        spaceButton.backgroundColor = UIColor(named: "colorKeyboardBright")
+        backspaceButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
     }
 
     override func viewWillLayoutSubviews() {
