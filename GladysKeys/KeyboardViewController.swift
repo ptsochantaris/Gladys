@@ -173,6 +173,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         let drop = filteredDrops[indexPath.item]
         let (text, url) = drop.textForMessage
         textDocumentProxy.insertText(url?.absoluteString ?? text)
+        UIDevice.current.playInputClick()
         updateReturn()
     }
     
@@ -202,11 +203,13 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     @IBAction private func returnSelected(_ sender: UIButton) {
         textDocumentProxy.insertText("\n")
+        UIDevice.current.playInputClick()
         updateReturn()
     }
     
     @IBAction private func spaceSelected(_ sender: UIButton) {
         textDocumentProxy.insertText(" ")
+        UIDevice.current.playInputClick()
         updateReturn()
     }
     
@@ -214,6 +217,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     
     @IBAction private func deleteStarted(_ sender: UIButton) {
         textDocumentProxy.deleteBackward()
+        UIDevice.current.playInputClick()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             self?.startRapidBackspace()
         }
@@ -415,6 +419,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             let typeAction = UIAction(title: "Type") { [weak self] _ in
                 let (text, url) = item.textForMessage
                 self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
+                UIDevice.current.playInputClick()
                 self?.updateReturn()
             }
             typeAction.image = UIImage(systemName: "keyboard")

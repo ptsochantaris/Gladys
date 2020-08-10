@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "16B2AA3724DF42B5004F3FC2"
-               BuildableName = "Gladys Keys.appex"
+               BuildableName = "Keyhive.appex"
                BlueprintName = "GladysKeys"
                ReferencedContainer = "container:Gladys.xcodeproj">
             </BuildableReference>
