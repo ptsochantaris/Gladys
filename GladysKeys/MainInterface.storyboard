@@ -11,7 +11,7 @@
         <!--Keyboard View Controller-->
         <scene sceneID="o75-4T-Vos">
             <objects>
-                <viewController id="e5r-Ya-fom" customClass="KeyboardViewController" customModule="Gladys_Keys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="e5r-Ya-fom" customClass="KeyboardViewController" customModule="Keyhive" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RQO-Sm-klh" customClass="UIInputView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -19,11 +19,11 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="65W-h4-WAa">
                                 <rect key="frame" x="0.0" y="1" width="320" height="527"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NEU-xO-YnY" userLabel="Divider">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nig-Ch-HmM" userLabel="Divider">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
                                         <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="haH-Ge-52K"/>
+                                            <constraint firstAttribute="height" constant="1" id="RUr-wg-s84"/>
                                         </constraints>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" contentInsetAdjustmentBehavior="always" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tQ-zx-Tbs">
@@ -36,7 +36,7 @@
                                             <inset key="sectionInset" minX="7" minY="7" maxX="7" maxY="7"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="KeyboardCell" id="uRm-m4-URi" customClass="KeyboardCell" customModule="Gladys_Keys" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="KeyboardCell" id="uRm-m4-URi" customClass="KeyboardCell" customModule="Keyhive" customModuleProvider="target">
                                                 <rect key="frame" x="63" y="7" width="194" height="182"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -79,11 +79,11 @@
                                             <outlet property="delegate" destination="e5r-Ya-fom" id="bid-Fc-03V"/>
                                         </connections>
                                     </collectionView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nig-Ch-HmM" userLabel="Divider">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NEU-xO-YnY" userLabel="Divider">
                                         <rect key="frame" x="0.0" y="474" width="320" height="1"/>
                                         <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="RUr-wg-s84"/>
+                                            <constraint firstAttribute="height" constant="1" id="haH-Ge-52K"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kUr-Ew-DE2">
@@ -242,6 +242,7 @@ Second line.</string>
                     <size key="freeformSize" width="320" height="528"/>
                     <connections>
                         <outlet property="backspaceButton" destination="3Jg-dM-m8O" id="eq7-cn-faP"/>
+                        <outlet property="bottomDividerHeight" destination="haH-Ge-52K" id="pE4-Lw-2b3"/>
                         <outlet property="dismissButton" destination="4h3-is-Jx8" id="s35-8C-6xI"/>
                         <outlet property="emptyLabel" destination="yIS-aK-T3b" id="mMv-ju-wEa"/>
                         <outlet property="emptyStack" destination="JAs-2z-fCd" id="BWQ-aj-4Kf"/>
@@ -252,6 +253,8 @@ Second line.</string>
                         <outlet property="nextKeyboardButton" destination="i0C-Ea-L06" id="Jvg-GS-4KK"/>
                         <outlet property="settingsButton" destination="n02-tq-utc" id="tR9-Yg-UaP"/>
                         <outlet property="spaceButton" destination="lDb-4e-hSN" id="jHX-sS-hZH"/>
+                        <outlet property="topDivider" destination="Nig-Ch-HmM" id="Ifx-ui-fjK"/>
+                        <outlet property="topDividerHeight" destination="RUr-wg-s84" id="PwM-HV-YDX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dNJ-CP-wwQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -261,7 +264,7 @@ Second line.</string>
         <!--Simple Label Picker-->
         <scene sceneID="tAB-vP-WBE">
             <objects>
-                <viewController id="OkQ-Ok-H0x" customClass="SimpleLabelPicker" customModule="Gladys_Keys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OkQ-Ok-H0x" customClass="SimpleLabelPicker" customModule="Keyhive" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kQ5-OW-0x6">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="426"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,7 +273,7 @@ Second line.</string>
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="426"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleLabelToggleCell" rowHeight="70" id="kzT-Au-1D1" customClass="SimpleLabelToggleCell" customModule="Gladys_Keys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleLabelToggleCell" rowHeight="70" id="kzT-Au-1D1" customClass="SimpleLabelToggleCell" customModule="Keyhive" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kzT-Au-1D1" id="ioM-ul-hP9">

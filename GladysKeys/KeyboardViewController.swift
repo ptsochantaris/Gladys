@@ -116,6 +116,12 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
     }
 }
 
+extension UIInputView: UIInputViewAudioFeedback {
+    public var enableInputClicksWhenVisible: Bool {
+        return true
+    }
+}
+
 final class KeyboardViewController: UIInputViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
     @IBOutlet private weak var emptyLabel: UILabel!
@@ -127,9 +133,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBOutlet private weak var enterButton: UIButton!
     @IBOutlet private weak var height: NSLayoutConstraint!
     @IBOutlet private weak var labelsButton: UIButton!
-    @IBOutlet private weak var enterAspect: NSLayoutConstraint!
     @IBOutlet private weak var settingsButton: UIButton!
     @IBOutlet private weak var emptyStack: UIStackView!
+    
+    @IBOutlet private weak var topDivider: UIView!
+    @IBOutlet private weak var topDividerHeight: NSLayoutConstraint!
+    @IBOutlet private weak var bottomDividerHeight: NSLayoutConstraint!
     
     private var filteredDrops = ContiguousArray<ArchivedItem>()
     
@@ -170,10 +179,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        UIDevice.current.playInputClick()
         let drop = filteredDrops[indexPath.item]
         let (text, url) = drop.textForMessage
         textDocumentProxy.insertText(url?.absoluteString ?? text)
-        UIDevice.current.playInputClick()
         updateReturn()
     }
     
@@ -202,22 +211,22 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     @IBAction private func returnSelected(_ sender: UIButton) {
-        textDocumentProxy.insertText("\n")
         UIDevice.current.playInputClick()
+        textDocumentProxy.insertText("\n")
         updateReturn()
     }
     
     @IBAction private func spaceSelected(_ sender: UIButton) {
-        textDocumentProxy.insertText(" ")
         UIDevice.current.playInputClick()
+        textDocumentProxy.insertText(" ")
         updateReturn()
     }
     
     private weak var backspaceTimer: Timer?
     
     @IBAction private func deleteStarted(_ sender: UIButton) {
-        textDocumentProxy.deleteBackward()
         UIDevice.current.playInputClick()
+        textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             self?.startRapidBackspace()
         }
@@ -351,6 +360,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         itemsView.dragDelegate = self
         itemsView.dragInteractionEnabled = UIDevice.current.userInterfaceIdiom == .pad
 
+        topDivider.isHidden = UIDevice.current.userInterfaceIdiom == .phone
+        
+        let pixelHeight: CGFloat = 1 / UIScreen.main.scale
+        topDividerHeight.constant = pixelHeight
+        bottomDividerHeight.constant = pixelHeight
+        
         height.constant = min(400, UIScreen.main.bounds.height * 0.5)
 
         let config: UIImage.SymbolConfiguration
@@ -418,12 +433,14 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             copyAction.image = UIImage(systemName: "doc.on.doc")
             let typeAction = UIAction(title: "Type") { [weak self] _ in
                 let (text, url) = item.textForMessage
-                self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
                 UIDevice.current.playInputClick()
+                self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
                 self?.updateReturn()
             }
             typeAction.image = UIImage(systemName: "keyboard")
-            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [typeAction, copyAction])
+            let (text, url) = item.textForMessage
+            let title = url?.absoluteString ?? text
+            return UIMenu(title: title, image: nil, identifier: nil, options: [], children: [typeAction, copyAction])
         }
     }
         
