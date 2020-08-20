@@ -124,7 +124,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
         newSize.width -= margins.left
         newSize.width -= margins.right
         newSize.width -= (columnCount - 1) * layout.minimumInteritemSpacing
-        newSize.width /= columnCount
+        newSize.width = (newSize.width / columnCount).rounded(.down)
         
         newSize.height -= margins.top
         newSize.height -= margins.bottom
