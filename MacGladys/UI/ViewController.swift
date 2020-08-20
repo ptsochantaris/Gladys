@@ -644,6 +644,37 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
 			let extractor = NSItemProvider()
 			var count = 0
+            
+            if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
+                let destinationUrl = Model.temporaryDirectoryUrl
+                for promise in filePromises {
+                    for promiseType in promise.fileTypes {
+                        let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
+                        var dropData: Data?
+                        let dropLock = DispatchSemaphore(value: 0)
+                        promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                            if let error = error {
+                                log("Warning, loading error in file drop: \(error.localizedDescription)")
+                            }
+                            dropData = try? Data(contentsOf: url)
+                            dropLock.signal()
+                        }
+                        
+                        count += 1
+                        extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
+                            let p = Progress()
+                            p.totalUnitCount = 1
+                            DispatchQueue.global(qos: .background).async {
+                                dropLock.wait()
+                                p.completedUnitCount += 1
+                                callback(dropData, nil)
+                            }
+                            return p
+                        }
+                    }
+                }
+            }
+            
 			for type in pasteboardItem.types {
 				if let data = pasteboardItem.data(forType: type), !data.isEmpty {
 					count += 1
