@@ -15,6 +15,7 @@
 			dependencies = (
 			);
 			name = "SwiftLint-iOS";
+			productName = "SwiftLint-iOS";
 		};
 		9F0E6E0C8BF75091EADD98FA13B1A847 /* SwiftLint-macOS */ = {
 			isa = PBXAggregateTarget;
@@ -24,6 +25,7 @@
 			dependencies = (
 			);
 			name = "SwiftLint-macOS";
+			productName = "SwiftLint-macOS";
 		};
 /* End PBXAggregateTarget section */
 
@@ -236,7 +238,7 @@
 		03779F8F3CFF755B0817CAC9B8E35821 /* Fuzi-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Fuzi-macOS-dummy.m"; path = "../Fuzi-macOS/Fuzi-macOS-dummy.m"; sourceTree = "<group>"; };
 		05EB6C75450C530F06C06885E037239C /* Pods-macOS-MacGladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-macOS-MacGladys.debug.xcconfig"; sourceTree = "<group>"; };
 		0806DC3A46227352E62C6EA27D55F3A5 /* ZIPFoundation-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZIPFoundation-iOS-prefix.pch"; sourceTree = "<group>"; };
-		0A056BA8045654EBA8E9F6B3AF119385 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CallbackURLKit.framework; path = "CallbackURLKit-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A056BA8045654EBA8E9F6B3AF119385 /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C36EAA374E12253EFD671A61E58BC49 /* DiffAware.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DiffAware.swift; path = Sources/Shared/DiffAware.swift; sourceTree = "<group>"; };
 		0CEF3ADA30235822DCD4B69C7F93F623 /* CallbackURLKit-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CallbackURLKit-macOS-umbrella.h"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS-umbrella.h"; sourceTree = "<group>"; };
 		0DB9C31F8D4F28E8E4164090548595DE /* DeepDiff-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "DeepDiff-macOS-dummy.m"; path = "../DeepDiff-macOS/DeepDiff-macOS-dummy.m"; sourceTree = "<group>"; };
@@ -244,8 +246,8 @@
 		10C81BEA1C2624DA10C08690A3E5A88F /* DeepDiff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DeepDiff.swift; path = Sources/Shared/DeepDiff.swift; sourceTree = "<group>"; };
 		1E37B7BE7221A73CD8AC0DA34B7CC258 /* Pods-macOS-MacGladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-macOS-MacGladys.modulemap"; sourceTree = "<group>"; };
 		1E52C6266118E46596CC1EC9A54AD562 /* CallbackURLKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CallbackURLKit.swift; path = Sources/CallbackURLKit.swift; sourceTree = "<group>"; };
-		1E771902B7293132EFBCA4E69FDE3398 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		213FB8AF4A22110AF50B2862235627AE /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CallbackURLKit.framework; path = "CallbackURLKit-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E771902B7293132EFBCA4E69FDE3398 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		213FB8AF4A22110AF50B2862235627AE /* CallbackURLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CallbackURLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		227CBAE9FFAAFFADDBDEF81BF1DD8C6D /* Pods-iOS-GladysAction-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iOS-GladysAction-acknowledgements.plist"; sourceTree = "<group>"; };
 		25474B646C4A4DB176349BAB16A2401A /* KeyCombo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyCombo.swift; path = Sources/HotKey/KeyCombo.swift; sourceTree = "<group>"; };
 		29A3DDE28872A0C28CFE67B69F651CCE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -265,7 +267,7 @@
 		52E9184B78BD5A1AC76A3A337C654E9F /* Pods-iOS-Gladys.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iOS-Gladys.modulemap"; sourceTree = "<group>"; };
 		543F3705EA58B8F180183D751CD543D6 /* Pods-iOS-Gladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iOS-Gladys-acknowledgements.plist"; sourceTree = "<group>"; };
 		596D1F4E4A9B5E32F7E5490AE2226190 /* Archive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Archive.swift; path = Sources/ZIPFoundation/Archive.swift; sourceTree = "<group>"; };
-		5C9BBCA49A0A5B79F313D43F96E98556 /* Pods_macOS_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_macOS_MacGladys.framework; path = "Pods-macOS-MacGladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C9BBCA49A0A5B79F313D43F96E98556 /* Pods_macOS_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CD3DC989951455A4E3FBE508C4974E6 /* CallbackURLKit-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CallbackURLKit-macOS-prefix.pch"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS-prefix.pch"; sourceTree = "<group>"; };
 		5D537832F4AFCDAD929F6BBCC83B7611 /* Fuzi-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Fuzi-macOS-umbrella.h"; path = "../Fuzi-macOS/Fuzi-macOS-umbrella.h"; sourceTree = "<group>"; };
 		5E21A6692CDD47C8493A05A7F375621C /* Pods-iOS-Gladys-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iOS-Gladys-Info.plist"; sourceTree = "<group>"; };
@@ -278,7 +280,7 @@
 		68EE8F1258AB903E184CFC582A02ADCC /* Fuzi-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Fuzi-iOS-dummy.m"; sourceTree = "<group>"; };
 		6D33DB680BE2BCB5AC083C97141F8C83 /* MoveReducer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MoveReducer.swift; path = Sources/Shared/MoveReducer.swift; sourceTree = "<group>"; };
 		6D5CC47C1FBC7F4ECA035BFDCB8D3902 /* Pods-iOS-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iOS-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
-		6D71D3EF696BAED6A48491DB66071A6E /* DeepDiff.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DeepDiff.framework; path = "DeepDiff-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D71D3EF696BAED6A48491DB66071A6E /* DeepDiff.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DeepDiff.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E1067466D8482061E48E067E6417031 /* Change.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Change.swift; path = Sources/Shared/Change.swift; sourceTree = "<group>"; };
 		6E813D3C195BDDFB5D2C7D5024B4E07F /* Data+Serialization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Data+Serialization.swift"; path = "Sources/ZIPFoundation/Data+Serialization.swift"; sourceTree = "<group>"; };
 		6F355DC265A9D08408DB04C4313AD897 /* Fuzi-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Fuzi-iOS-umbrella.h"; sourceTree = "<group>"; };
@@ -308,7 +310,7 @@
 		85F3A507DBE40E93DBC59B5F3A62E298 /* Pods-iOS-Gladys-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iOS-Gladys-dummy.m"; sourceTree = "<group>"; };
 		8634BAF081B2EF328A029057F267B56C /* Helpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Sources/Helpers.swift; sourceTree = "<group>"; };
 		868050A01E3191CF47A6A735D79FE182 /* Fuzi-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Fuzi-macOS.debug.xcconfig"; path = "../Fuzi-macOS/Fuzi-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		88A6B8DB1902B6FC1C1B063E4547DDCE /* Pods_iOS_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_iOS_GladysIntents.framework; path = "Pods-iOS-GladysIntents.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		88A6B8DB1902B6FC1C1B063E4547DDCE /* Pods_iOS_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_GladysIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A730BBA6AAEDA6C93C5F75C210E822D /* Pods-iOS-GladysAction-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iOS-GladysAction-Info.plist"; sourceTree = "<group>"; };
 		8AADAB0BBC90DA17ADE1E69CD78A413B /* CallbackURLKit-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CallbackURLKit-macOS.debug.xcconfig"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8C9BD2A73CF848F1EB13CDF707596BE7 /* ZIPFoundation-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "ZIPFoundation-macOS.modulemap"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS.modulemap"; sourceTree = "<group>"; };
@@ -317,19 +319,19 @@
 		91078367B5A2918411E4C65BF86EC2CF /* ZIPFoundation-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "ZIPFoundation-iOS.modulemap"; sourceTree = "<group>"; };
 		914CE2F97B89EB9758469E1BEE2C28CA /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/Document.swift; sourceTree = "<group>"; };
 		92251A7DA65D56D83BB90D9EB510EC99 /* Pods-iOS-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iOS-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
-		93FE94A2EC67A141FAA523C3D2F89A1D /* Pods_iOS_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_iOS_Gladys.framework; path = "Pods-iOS-Gladys.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		93FE94A2EC67A141FAA523C3D2F89A1D /* Pods_iOS_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94C3DB0A70487C77ED64F18322110EC8 /* Key.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Key.swift; path = Sources/HotKey/Key.swift; sourceTree = "<group>"; };
 		969B65D52D67FEE3BFF5F781AC11831C /* CallbackURLKit-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CallbackURLKit-macOS-dummy.m"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS-dummy.m"; sourceTree = "<group>"; };
 		9A2652305893E7EEC2C3666CF8688928 /* Archive+Writing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Archive+Writing.swift"; path = "Sources/ZIPFoundation/Archive+Writing.swift"; sourceTree = "<group>"; };
-		9BC1F246F7EF310C62A17B761E63BACE /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BC1F246F7EF310C62A17B761E63BACE /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D116CAA855F180CDC844717ADBAD376 /* CallbackURLKit-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "CallbackURLKit-macOS.modulemap"; path = "../CallbackURLKit-macOS/CallbackURLKit-macOS.modulemap"; sourceTree = "<group>"; };
 		9D219BB21F8961B245849EA035774FF0 /* Array+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Extensions.swift"; path = "Sources/Shared/Array+Extensions.swift"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E05257CE3CD340507792254FF9D6EC9 /* SwiftLint-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "SwiftLint-macOS.release.xcconfig"; path = "../SwiftLint-macOS/SwiftLint-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		9EF83BCCEFAE08B31095A9B245E76A58 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZIPFoundation.framework; path = "ZIPFoundation-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EF83BCCEFAE08B31095A9B245E76A58 /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A098E725D66B3127B95796AFEE31C7D7 /* Fuzi-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Fuzi-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		A4989EA52F94E1FA8AC2B0E22A9FA13C /* Pods-macOS-MacGladys-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-macOS-MacGladys-acknowledgements.plist"; sourceTree = "<group>"; };
-		A6C728791A680A3D1020EE02EA79FEE0 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Fuzi.framework; path = "Fuzi-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6C728791A680A3D1020EE02EA79FEE0 /* Fuzi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fuzi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB3646B245A02F6C0D42A58E0A6364DE /* Pods-macOS-MacGladys-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-macOS-MacGladys-dummy.m"; sourceTree = "<group>"; };
 		ABB92C95738DDEDFD74EC3F6BCE5BC3B /* IndexPathConverter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IndexPathConverter.swift; path = Sources/iOS/IndexPathConverter.swift; sourceTree = "<group>"; };
 		AC870CA944597ED3C573D9CD05515F32 /* CallbackURLKit-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "CallbackURLKit-iOS-Info.plist"; sourceTree = "<group>"; };
@@ -342,7 +344,7 @@
 		BBF4EF0BCF9D89AFCF5DDF4C117C1C51 /* ZIPFoundation-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ZIPFoundation-macOS-umbrella.h"; path = "../ZIPFoundation-macOS/ZIPFoundation-macOS-umbrella.h"; sourceTree = "<group>"; };
 		BF2DB6921F184CDE297E77D71194E808 /* ZIPFoundation-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZIPFoundation-iOS-umbrella.h"; sourceTree = "<group>"; };
 		BFB3B74CF07361E62CF0BA41B9398C00 /* Pods-macOS-MacGladys-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-macOS-MacGladys-acknowledgements.markdown"; sourceTree = "<group>"; };
-		C05FD059F2D9CA907FB737D278B2353F /* Pods_iOS_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_iOS_GladysAction.framework; path = "Pods-iOS-GladysAction.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C05FD059F2D9CA907FB737D278B2353F /* Pods_iOS_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C17EAC7807F080558731B50119606998 /* DeepDiff-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "DeepDiff-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		C1DCD26C2B7ECA36B473B6E094438D4A /* Data+Compression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Data+Compression.swift"; path = "Sources/ZIPFoundation/Data+Compression.swift"; sourceTree = "<group>"; };
 		C2B4BBFDF117B2AB4D45F53C8DF2D753 /* HotKey-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "HotKey-Info.plist"; sourceTree = "<group>"; };
@@ -354,7 +356,7 @@
 		CAE8A85D85F9E3E8AA05AF4B56F7868F /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = Sources/Extensions.swift; sourceTree = "<group>"; };
 		CAEA33DF911D69E80E383A0AA1043F82 /* HotKey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HotKey.release.xcconfig; sourceTree = "<group>"; };
 		CB963CFFEFF61B353E1728905FEA647C /* Entry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Entry.swift; path = Sources/ZIPFoundation/Entry.swift; sourceTree = "<group>"; };
-		CD26BC6E439A05AD85877AA0AE9118F5 /* DeepDiff.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DeepDiff.framework; path = "DeepDiff-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD26BC6E439A05AD85877AA0AE9118F5 /* DeepDiff.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DeepDiff.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDFECB4DF4168F19493605256A3B3E2C /* Pods-iOS-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iOS-Gladys.release.xcconfig"; sourceTree = "<group>"; };
 		CEE792D84E5FBF0D517C41CA3A57A9BC /* DeepDiff-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DeepDiff-macOS-prefix.pch"; path = "../DeepDiff-macOS/DeepDiff-macOS-prefix.pch"; sourceTree = "<group>"; };
 		D2C6CDBF5BFBA2A1FFA30725148F2735 /* DeepDiff-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "DeepDiff-macOS.debug.xcconfig"; path = "../DeepDiff-macOS/DeepDiff-macOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -378,7 +380,7 @@
 		EAF3C4CE9CA235B19C43673B0D8966CF /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UICollectionView+Extensions.swift"; path = "Sources/iOS/UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
 		EB862B9660A8CEFF63E8F168AD908311 /* DeepDiff-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "DeepDiff-iOS.modulemap"; sourceTree = "<group>"; };
 		EC024AA353C86FD1F948993B9BBEA67E /* Pods-iOS-GladysIntents-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iOS-GladysIntents-acknowledgements.markdown"; sourceTree = "<group>"; };
-		F36B2E7BB4C3E92E4DF7443FAFF3AE3F /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HotKey.framework; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F36B2E7BB4C3E92E4DF7443FAFF3AE3F /* HotKey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HotKey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F372A31DF73177DD845B50DCB22AEF35 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		F50F8B46E96187D1277358A7A97AAFF2 /* Pods-iOS-GladysAction-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iOS-GladysAction-umbrella.h"; sourceTree = "<group>"; };
 		F541E0454EA6A9B1C06B702DAE59260F /* ZIPFoundation-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ZIPFoundation-iOS-dummy.m"; sourceTree = "<group>"; };
@@ -603,7 +605,6 @@
 				33C8C2A72188C397676BD4C43FB32F19 /* WagnerFischer.swift */,
 				15DAB86CCBCB01A81507E535C34E91DB /* Support Files */,
 			);
-			name = DeepDiff;
 			path = DeepDiff;
 			sourceTree = "<group>";
 		};
@@ -704,7 +705,6 @@
 				81CC94177D0802C1C0C14ED904EE81E0 /* FileManager+ZIP.swift */,
 				251DE0EB2CC7303BD56E79B39C4104FF /* Support Files */,
 			);
-			name = ZIPFoundation;
 			path = ZIPFoundation;
 			sourceTree = "<group>";
 		};
@@ -720,7 +720,6 @@
 				10B8F31E100C199CB6671458B8B1C3E9 /* Queryable.swift */,
 				D0F6587D8859FACAFB93D7C08809C8E1 /* Support Files */,
 			);
-			name = Fuzi;
 			path = Fuzi;
 			sourceTree = "<group>";
 		};
@@ -734,7 +733,6 @@
 				438AECF5F652A8C3824DD75A6212D143 /* NSEventModifierFlags+HotKey.swift */,
 				C018C69DB5ACB993AD334917C9D0FE36 /* Support Files */,
 			);
-			name = HotKey;
 			path = HotKey;
 			sourceTree = "<group>";
 		};
@@ -758,7 +756,6 @@
 			children = (
 				706D0F687D36D5B9C825F86D42511C71 /* Support Files */,
 			);
-			name = SwiftLint;
 			path = SwiftLint;
 			sourceTree = "<group>";
 		};
@@ -768,7 +765,6 @@
 				DC9CD7FFBEFA5F80B6DC98503FB73041 /* Core */,
 				863CD38E26569C7591430145E70ABEF5 /* Support Files */,
 			);
-			name = CallbackURLKit;
 			path = CallbackURLKit;
 			sourceTree = "<group>";
 		};
@@ -1222,7 +1218,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1200;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 11.0";
@@ -1605,7 +1601,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CAEA33DF911D69E80E383A0AA1043F82 /* HotKey.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1643,7 +1638,6 @@
 			baseConfigurationReference = 05EB6C75450C530F06C06885E037239C /* Pods-macOS-MacGladys.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1704,6 +1698,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1819,7 +1814,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8202ABA2ECBAB42CDC10775A873F009A /* Fuzi-macOS.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1856,7 +1850,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D2C6CDBF5BFBA2A1FFA30725148F2735 /* DeepDiff-macOS.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1927,7 +1920,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 868050A01E3191CF47A6A735D79FE182 /* Fuzi-macOS.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1965,7 +1957,6 @@
 			baseConfigurationReference = 0306E95E781EECF59AC36CF97547E1EA /* Pods-macOS-MacGladys.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2004,7 +1995,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2A08750D8524BA72CC32A34221D3EAED /* ZIPFoundation-macOS.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2115,7 +2105,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E05257CE3CD340507792254FF9D6EC9 /* SwiftLint-macOS.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
@@ -2243,7 +2232,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C5D02A0DC9EE16D6D2770DD3CF4992C4 /* DeepDiff-macOS.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2314,7 +2302,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7948FCC1A95738663B5032DBB7A78711 /* ZIPFoundation-macOS.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2352,7 +2339,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8AADAB0BBC90DA17ADE1E69CD78A413B /* CallbackURLKit-macOS.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2465,6 +2451,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2545,7 +2532,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D6078F0EC61086651387607BA20E3232 /* CallbackURLKit-macOS.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -2705,7 +2691,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 77BA019FC931807B8402DDF85A984595 /* HotKey.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2742,7 +2727,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D300CD8E3C499A6E8297B61D813C2CA1 /* SwiftLint-macOS.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "-";
