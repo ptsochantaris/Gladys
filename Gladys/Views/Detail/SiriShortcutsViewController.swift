@@ -14,16 +14,15 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	@IBOutlet private weak var openItemDetailContainer: UIView!
 	@IBOutlet private weak var copyItemContainer: UIView!
 	@IBOutlet private weak var quickLookItemContainer: UIView!
-	@IBOutlet private weak var backgroundView: UIImageView!
     
 	var sourceItem: ArchivedItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        
+        self.doneButtonLocation = .right
 
-        backgroundView.backgroundColor = .white
-
-        let style = INUIAddVoiceShortcutButtonStyle.black
+        let style = INUIAddVoiceShortcutButtonStyle.automaticOutline
 
 		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
 		if let sourceItem = sourceItem {
@@ -46,9 +45,12 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
 		}
 		quickLookShortcutButton.place(in: quickLookItemContainer, buttonDelegate: self)
-        
-		preferredContentSize = view.systemLayoutSizeFitting(CGSize(width: 240, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        preferredContentSize = view.systemLayoutSizeFitting(CGSize(width: 240, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+    }
     
     func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
 		addVoiceShortcutViewController.delegate = self

@@ -257,9 +257,5 @@ final class Component: Codable {
 		setBytes(typeItem.bytes)
         
         Component.register(self)
-	}
-    
-    deinit {
-        log("Component deinit")
-    }
+	}    
 }

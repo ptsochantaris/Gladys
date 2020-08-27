@@ -35,7 +35,7 @@ final class DetailController: GladysViewController,
         isReadWrite = item.shareMode != .elsewhereReadOnly
 
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
-
+        
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
@@ -178,8 +178,8 @@ final class DetailController: GladysViewController,
 	private func sizeWindow() {
         table.layoutIfNeeded()
         let preferredSize = CGSize(width: 320, height: table.contentSize.height)
-		log("Detail view preferred size is \(preferredSize)")
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
+		log("Detail view preferred size is \(preferredSize)")
 	}
     
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
@@ -375,18 +375,14 @@ final class DetailController: GladysViewController,
 		if typeEntry.canPreview {
 			cell.viewCallback = { [weak self, weak cell] in
 				guard let s = self, let c = cell else { return }
-                                
-                let scene = s.view.window?.windowScene
-                guard let q = typeEntry.quickLook(in: scene) else { return }
+
+                guard let q = typeEntry.quickLook() else { return }
                 if s.phoneMode || !PersistedOptions.fullScreenPreviews {
-                    let n = PreviewHostingInternalController(nibName: nil, bundle: nil)
-                    n.qlController = q
-					s.navigationController?.pushViewController(n, animated: true)
+					s.navigationController?.pushViewController(q, animated: true)
                     
 				} else if let presenter = s.view.window?.alertPresenter {
-                    let n = PreviewHostingViewController(rootViewController: q)
-                    n.sourceItemView = c
-                    presenter.present(n, animated: true)
+                    q.sourceItemView = c
+                    presenter.present(q, animated: true)
 				}
 			}
 		} else {
@@ -410,19 +406,46 @@ final class DetailController: GladysViewController,
 		}
 	}
     
-    private func blockedDueToSync() -> Bool {
-        if CloudManager.syncing || item.needsReIngest || item.isTransferring {
-            genericAlert(title: "Syncing", message: "Please try again in a moment.", buttonTitle: nil)
-            return true
+    private var shouldWaitForSync: Bool {
+        return CloudManager.syncing || item.needsReIngest || item.isTransferring
+    }
+    private func afterSync(completion: @escaping () -> Void) {
+        if shouldWaitForSync {
+            var keepChecking = true
+            let alert = genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") {
+                keepChecking = false
+            }
+            DispatchQueue.global(qos: .background).async {
+                while keepChecking {
+                    Thread.sleep(forTimeInterval: 0.25)
+                    DispatchQueue.main.async { [weak self] in
+                        if let s = self, s.shouldWaitForSync {
+                            // keep going
+                        } else {
+                            keepChecking = false
+                            alert.dismiss(animated: true) {
+                                completion()
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            completion()
         }
-        return false
     }
 
     private func removeLabel(_ label: String) {
-        guard !blockedDueToSync(), let index = item.labels.firstIndex(of: label) else {
-            return
+        afterSync { [weak self] in
+            self?._removeLabel(label)
         }
+    }
+    
+    private func _removeLabel(_ label: String) {
         table.performBatchUpdates({
+            guard let index = item.labels.firstIndex(of: label) else {
+                return
+            }
             item.labels.remove(at: index)
             let indexPath = IndexPath(row: index, section: 1)
             table.deleteRows(at: [indexPath], with: .automatic)
@@ -432,11 +455,17 @@ final class DetailController: GladysViewController,
         })
     }
 
-	private func removeComponent(_ component: Component) {
-        guard !blockedDueToSync(), let index = item.components.firstIndex(of: component) else {
-            return
+    private func removeComponent(_ component: Component) {
+        afterSync { [weak self] in
+            self?._removeComponent(component)
         }
+    }
+    
+	private func _removeComponent(_ component: Component) {
         table.performBatchUpdates({
+            guard let index = item.components.firstIndex(of: component) else {
+                return
+            }
             component.deleteFromStorage()
             item.components.remove(at: index)
             if item.components.isEmpty {

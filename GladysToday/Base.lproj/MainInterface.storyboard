@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,42 +12,42 @@
         <scene sceneID="cwh-vc-ff4">
             <objects>
                 <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" customModule="GladysToday" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" insetsLayoutMarginsFromSafeArea="NO" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RlE-Mh-9wq">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="RBz-D1-UeS">
-                                    <size key="itemSize" width="120" height="90"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" sectionInsetReference="layoutMargins" id="RBz-D1-UeS">
+                                    <size key="itemSize" width="187" height="140"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TodayCell" id="C1k-e1-Qzy" customClass="TodayCell" customModule="GladysToday" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="10" width="120" height="90"/>
+                                        <rect key="frame" x="70" y="8" width="180" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="120" height="90"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="180" height="140"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="0vt-xm-z8j">
                                                     <rect key="frame" x="8" y="6" width="144" height="114"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Line 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZzF-6l-rQY">
-                                                            <rect key="frame" x="0.0" y="0.0" width="108" height="13.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1000" text="Line 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZzF-6l-rQY">
+                                                            <rect key="frame" x="0.0" y="0.0" width="168" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uoc-c3-lhp">
-                                                            <rect key="frame" x="0.0" y="15.5" width="108" height="53"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="uoc-c3-lhp">
+                                                            <rect key="frame" x="0.0" y="15.5" width="168" height="103"/>
                                                             <color key="tintColor" name="colorTint"/>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbY-NC-nGt">
-                                                            <rect key="frame" x="0.0" y="70.5" width="108" height="13.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbY-NC-nGt">
+                                                            <rect key="frame" x="0.0" y="120.5" width="168" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                             <color key="textColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -62,6 +62,7 @@
                                             <constraint firstAttribute="trailing" secondItem="0vt-xm-z8j" secondAttribute="trailing" constant="6" id="Tmk-FM-GF8"/>
                                             <constraint firstAttribute="bottom" secondItem="0vt-xm-z8j" secondAttribute="bottom" constant="2" id="xOS-uM-eca"/>
                                         </constraints>
+                                        <size key="customSize" width="180" height="140"/>
                                         <connections>
                                             <outlet property="bottomLabel" destination="rbY-NC-nGt" id="wtO-mI-nZI"/>
                                             <outlet property="imageView" destination="uoc-c3-lhp" id="tP9-S0-jyE"/>
@@ -75,37 +76,37 @@
                                 </connections>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copied" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gWK-0m-iMe">
-                                <rect key="frame" x="20" y="20" width="280" height="70"/>
+                                <rect key="frame" x="20" y="20" width="280" height="360"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The top-most items in your collection will appear here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wri-OW-ONo">
-                                <rect key="frame" x="40" y="20" width="240" height="70"/>
+                                <rect key="frame" x="40" y="20" width="240" height="360"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="gWK-0m-iMe" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" constant="-20" id="09b-XB-Tg2"/>
-                            <constraint firstItem="Wri-OW-ONo" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" constant="20" id="BZR-5i-7a3"/>
-                            <constraint firstItem="gWK-0m-iMe" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="20" id="FGh-SL-cSN"/>
-                            <constraint firstItem="Wri-OW-ONo" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="40" id="KEW-ZV-YpF"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="Wri-OW-ONo" secondAttribute="bottom" constant="20" id="Lth-s0-pJz"/>
-                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="SnL-JH-wbI"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="Wri-OW-ONo" secondAttribute="trailing" constant="40" id="UXR-5V-czo"/>
-                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="fWf-Gb-laV"/>
-                            <constraint firstItem="gWK-0m-iMe" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" constant="20" id="gD3-DA-EAw"/>
-                            <constraint firstItem="gWK-0m-iMe" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" constant="-20" id="rKL-M1-KYc"/>
-                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" id="rn2-H2-EH8"/>
-                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="wjn-gE-SGI"/>
+                            <constraint firstItem="gWK-0m-iMe" firstAttribute="bottom" secondItem="S3S-Oj-5AN" secondAttribute="bottom" constant="-20" id="09b-XB-Tg2"/>
+                            <constraint firstItem="Wri-OW-ONo" firstAttribute="top" secondItem="S3S-Oj-5AN" secondAttribute="top" constant="20" id="BZR-5i-7a3"/>
+                            <constraint firstItem="gWK-0m-iMe" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" constant="20" id="FGh-SL-cSN"/>
+                            <constraint firstItem="Wri-OW-ONo" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" constant="40" id="KEW-ZV-YpF"/>
+                            <constraint firstAttribute="bottom" secondItem="Wri-OW-ONo" secondAttribute="bottom" constant="20" id="Lth-s0-pJz"/>
+                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="bottom" secondItem="S3S-Oj-5AN" secondAttribute="bottom" id="SnL-JH-wbI"/>
+                            <constraint firstAttribute="trailing" secondItem="Wri-OW-ONo" secondAttribute="trailing" constant="40" id="UXR-5V-czo"/>
+                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="top" secondItem="S3S-Oj-5AN" secondAttribute="top" id="fWf-Gb-laV"/>
+                            <constraint firstItem="gWK-0m-iMe" firstAttribute="top" secondItem="S3S-Oj-5AN" secondAttribute="top" constant="20" id="gD3-DA-EAw"/>
+                            <constraint firstItem="gWK-0m-iMe" firstAttribute="trailing" secondItem="S3S-Oj-5AN" secondAttribute="trailing" constant="-20" id="rKL-M1-KYc"/>
+                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="trailing" secondItem="S3S-Oj-5AN" secondAttribute="trailing" id="rn2-H2-EH8"/>
+                            <constraint firstItem="RlE-Mh-9wq" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" id="wjn-gE-SGI"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
+                        <viewLayoutGuide key="safeArea" id="XSn-sI-hy0"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="110"/>
+                    <size key="freeformSize" width="320" height="400"/>
                     <connections>
                         <outlet property="copiedLabel" destination="gWK-0m-iMe" id="DJe-5o-En8"/>
                         <outlet property="emptyLabel" destination="Wri-OW-ONo" id="Ih9-E2-zAi"/>

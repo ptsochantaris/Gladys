@@ -7,8 +7,16 @@
 //
 
 import CloudKit
+import UIKit
 
 extension CloudManager {
+
+    private static func getDeviceId() -> Data {
+        guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return Data() }
+        var uuidBytes = [UInt8](repeating: 0, count: 16)
+        identifier.getBytes(&uuidBytes)
+        return Data(uuidBytes)
+    }
 
     static func signalExtensionUpdate() {
         guard syncSwitchedOn else { return }

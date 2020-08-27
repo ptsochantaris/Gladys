@@ -14,14 +14,14 @@ enum RecordChangeCheck {
     init(localRecord: CKRecord?, remoteRecord: CKRecord) {
         if localRecord?.recordChangeTag == remoteRecord.recordChangeTag {
             self = .none
-        }
-        
-        let localModification = localRecord?.modificationDate ?? .distantPast
-        let remoteModification = remoteRecord.modificationDate ?? .distantPast
-        if localModification < remoteModification {
-            self = .changed
         } else {
-            self = .tagOnly
+            let localModification = localRecord?.modificationDate ?? .distantPast
+            let remoteModification = remoteRecord.modificationDate ?? .distantFuture
+            if localModification < remoteModification {
+                self = .changed
+            } else {
+                self = .tagOnly
+            }
         }
     }
 }

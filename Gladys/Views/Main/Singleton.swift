@@ -24,8 +24,6 @@ final class Singleton {
 
         CallbackSupport.setupCallbackSupport()
 
-        IAPManager.shared.start()
-
         log("Initial reachability status: \(reachability.status.name)")
 
         if !PersistedOptions.pasteShortcutAutoDonated {
@@ -145,9 +143,10 @@ final class Singleton {
                     return
                     
                 } else if let child = child {
-                    guard let q = child.quickLook(in: scene) else { return }
-                    let n = PreviewHostingViewController(rootViewController: q)
-                    scene.windows.first?.rootViewController = n
+                    if let q = child.quickLook() {
+                        let n = GladysNavController(rootViewController: q)
+                        scene.windows.first?.rootViewController = n
+                    }
                     return
                 }
             }
@@ -229,7 +228,7 @@ final class Singleton {
             filter.enableLabelsByName(labels)
         }
         if let search = restoringSearch, !search.isEmpty {
-            filter.filter = search
+            filter.text = search
         }
         v.filter = filter
         if replacing {
@@ -271,10 +270,7 @@ final class Singleton {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)
             activity.userInfo = [CSSearchableItemActivityIdentifier: itemId]
             Singleton.shared.showMaster(andHandle: activity, in: scene)
-            
-        } else if let c = url.host, c == "in-app-purchase", let p = url.pathComponents.last, let t = Int(p) {
-            IAPManager.shared.displayRequest(newTotal: t)
-                        
+                                    
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)

@@ -9,7 +9,7 @@
 import Foundation
 
 extension Component {
-	var dataForDropping: Data? {
+    var dataForDropping: Data? {
 		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
 			let decoded = decode()
 			if let s = decoded as? String {

@@ -2,8 +2,67 @@ import Foundation
 
 final class Model {
 
+    static private var uuidindex: [UUID: Int]?
+    
+    static var drops = ContiguousArray<ArchivedItem>() {
+        didSet {
+            assert(Thread.isMainThread)
+            uuidindex = nil
+        }
+    }
+    
+    static func appendDropEfficiently(_ newDrop: ArchivedItem) {
+        uuidindex?[newDrop.uuid] = drops.count
+
+        let previousIndex = uuidindex
+        drops.append(newDrop)
+        uuidindex = previousIndex
+    }
+
+    static private func rebuildIndexIfNeeded() {
+        if uuidindex == nil {
+            //assert(Thread.isMainThread)
+            let d = drops // copy
+            let z = zip(d.map { $0.uuid }, 0 ..< d.count)
+            uuidindex = Dictionary(z) { one, _ in one }
+            log("Rebuilt drop index")
+        }
+    }
+    
+    static func firstIndexOfItem(with uuid: UUID) -> Int? {
+        rebuildIndexIfNeeded()
+        return uuidindex?[uuid]
+    }
+    
+    static func firstItem(with uuid: UUID) -> ArchivedItem? {
+        if let i = firstIndexOfItem(with: uuid) {
+            return drops[i]
+        }
+        return nil
+    }
+    
+    static func firstIndexOfItem(with uuid: String) -> Int? {
+        if let uuidData = UUID(uuidString: uuid) {
+            return firstIndexOfItem(with: uuidData)
+        }
+        return nil
+    }
+    
+    static func contains(uuid: UUID) -> Bool {
+        return firstIndexOfItem(with: uuid) != nil
+    }
+    
+    static func clearCaches() {
+        for drop in drops {
+            for component in drop.components {
+                component.clearCachedFields()
+            }
+        }
+    }
+
+    ////////////////////////////////////////
+    
 	static var brokenMode = false
-	static var drops = DropArray()
 	static var dataFileLastModified = Date.distantPast
 
 	private static var isStarted = false
@@ -102,8 +161,7 @@ final class Model {
                         }
                     }
                     
-                    let finalDrops = loadQueue.sync { newDrops }
-					drops = DropArray(existingItems: finalDrops)
+                    drops = loadQueue.sync { newDrops }
 					log("Load time: \(-start.timeIntervalSinceNow) seconds")
 				} else {
 					log("No need to reload data")
@@ -170,11 +228,11 @@ final class Model {
 	}
 
     static var doneIngesting: Bool {
-        return !drops.all.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
+        return !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
     }
 
 	static var visibleDrops: ContiguousArray<ArchivedItem> {
-		return drops.all.filter { $0.isVisible }
+		return drops.filter { $0.isVisible }
 	}
 
 	static let itemsDirectoryUrl: URL = {
@@ -201,11 +259,11 @@ final class Model {
 	}
 
 	static func item(uuid: UUID) -> ArchivedItem? {
-        return drops.firstItem(with: uuid)
+        return firstItem(with: uuid)
 	}
 
 	static func item(shareId: String) -> ArchivedItem? {
-		return drops.all.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
+		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
 
     static func component(uuid: UUID) -> Component? {

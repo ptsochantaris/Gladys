@@ -1,5 +1,4 @@
 import UIKit
-import GladysFramework
 import Intents
 import DeepDiff
 
@@ -78,8 +77,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private weak var settingsButton: UIBarButtonItem!
 	@IBOutlet private weak var itemsCount: UIBarButtonItem!
 	@IBOutlet private weak var dragModePanel: UIView!
-	@IBOutlet private weak var dragModeButton: UIButton!
 	@IBOutlet private weak var dragModeTitle: UILabel!
+    @IBOutlet private weak var dragModeSubtitle: UILabel!
 	@IBOutlet private weak var shareButton: UIBarButtonItem!
     @IBOutlet private weak var editButton: UIBarButtonItem!
 
@@ -103,12 +102,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let scene = viewIfLoaded?.window?.windowScene else {
             return
         }
-        if filter.isFilteringText {
-            scene.title = filter.filter
-        } else if filter.isFilteringLabels {
-            scene.title = title
-        } else {
+        
+        guard let filter = filter else {
             scene.title = nil
+            return
+        }
+        
+        var components = filter.enabledLabelsForTitles
+        
+        if filter.isFilteringText, let searchText = filter.text {
+            components.insert("\"\(searchText)\"", at: 0)
+        }
+                
+        if components.isEmpty {
+            scene.title = nil
+        } else {
+            scene.title = components.joined(separator: ", ")
         }
     }
 
@@ -116,6 +125,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		if dragModePanel.superview != nil, !show {
 			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 0
+                self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
 			}, completion: { _ in
 				self.dragModePanel.removeFromSuperview()
 			})
@@ -127,8 +137,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				dragModePanel.centerXAnchor.constraint(equalTo: collection.centerXAnchor),
                 dragModePanel.topAnchor.constraint(equalTo: n.view.topAnchor)
 				])
+            self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
 			UIView.animate(withDuration: 0.1, animations: {
 				self.dragModePanel.alpha = 1
+                self.dragModePanel.transform = .identity
 			}, completion: nil)
 		}
 	}
@@ -141,10 +153,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private func updateDragModeOverlay() {
 		if dragModeMove {
 			dragModeTitle.text = "Moving"
-			dragModeButton.setTitle("Copy instead", for: .normal)
+			dragModeSubtitle.text = "Copy instead"
 		} else {
 			dragModeTitle.text = "Copying"
-			dragModeButton.setTitle("Move instead", for: .normal)
+			dragModeSubtitle.text = "Move instead"
 		}
 	}
 
@@ -235,11 +247,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        
-        if IAPManager.shared.checkInfiniteMode(for: countInserts(in: coordinator.session)) {
-            return
-        }
-                
+                        
         coordinator.session.progressIndicatorStyle = .none
         
         var needsPost = false
@@ -256,8 +264,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
-                if let modelSourceIndex = Model.drops.firstIndexOfItem(with: existingItem.uuid) {
-                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item)
+                if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
+                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item, checkForWeirdness: true)
+                    if modelDestinationIndex < 0 {
+                        log("Collection view wants to drop beyond the end of items, discaring local drop")
+                        continue // collection view has gone funny while returning a drag, do nothing
+                    }
                     let itemToMove = Model.drops.remove(at: modelSourceIndex)
                     if !collectionView.hasActiveDrag {
                         modelDestinationIndex = max(0, modelDestinationIndex - 1)
@@ -278,7 +290,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 for item in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
                     let i = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i)
+                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i, checkForWeirdness: false)
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
                         item.labels = filter.enabledLabelsForItems
                     }
@@ -414,13 +426,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
             
         case "toSiriShortcuts":
-            guard let d = segue.destination as? SiriShortcutsViewController,
+            guard let n = segue.destination as? UINavigationController,
+                let d = n.viewControllers.first as? SiriShortcutsViewController,
                 let cell = sender as? ArchivedItemCell,
                 let item = cell.archivedDropItem
                 else { return }
             
             d.sourceItem = item
-            if let p = d.popoverPresentationController {
+            if let p = n.popoverPresentationController {
                 p.sourceView = cell
                 p.delegate = self
             }
@@ -539,10 +552,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
         dragModePanel.layer.shadowColor = UIColor.label.cgColor
-		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 0)
+		dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 1)
 		dragModePanel.layer.shadowOpacity = 0.3
-		dragModePanel.layer.shadowRadius = 1
-		dragModePanel.layer.cornerRadius = 100
+		dragModePanel.layer.shadowRadius = 2
+		dragModePanel.layer.cornerRadius = 20
+        dragModePanel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
 		dragModePanel.alpha = 0
 	}
     
@@ -572,7 +586,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
-            self?.filter.filter = searchController?.searchBar.text
+            self?.filter.text = searchController?.searchBar.text
 			self?.updateUI()
 		}
 
@@ -623,7 +637,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func viewDidAppear(_ animated: Bool) {
 
         if firstAppearance {
-            if let search = filter.filter, !search.isEmpty, let sc = navigationItem.searchController {
+            if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
                 sc.searchBar.text = search
                 searchTimer.abort()
                 updateSearchResults(for: sc)
@@ -640,6 +654,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func keyboardHiding() {
+        if self.presentedViewController != nil {
+            return
+        }
         if currentDetailView != nil {
             return
         }
@@ -761,7 +778,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			log("Placing UI in background low-memory mode")
 			lowMemoryMode = true
 		}
-		clearCaches()
 		super.didReceiveMemoryWarning()
 	}
 
@@ -795,7 +811,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
             filter.updateFilter(signalUpdate: false)
-            if !Model.drops.isEmpty && Model.drops.all.allSatisfy({ $0.shouldDisplayLoading }) {
+            if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -841,9 +857,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }, completion: { _ in
             if orderChanged {
                 if !self.phoneMode, let vc = (self.currentDetailView ?? self.currentPreviewView) {
-                    //if !self.view.bounds.contains(self.view.convert(vc.view.bounds, from: vc.view)) {
-                        vc.dismiss(animated: false)
-                    //}
+                    vc.dismiss(animated: false)
                 }
             }
             if removedItems {
@@ -893,7 +907,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 		itemsCount.isEnabled = itemCount > 0
 
-        totalSizeLabel.title = "..."
+        totalSizeLabel.title = "…"
         let filteredDrops = filter.filteredDrops
         let selected = selectedItems
         imageProcessingQueue.async {
@@ -1182,19 +1196,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             })
         }
         
-        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: { [weak self] in
-            guard let s = self else { return nil }
-            if item.canPreview, let previewItem = item.previewableTypeItem {
-                //if previewItem.isWebURL, let url = previewItem.encodedUrl {
-                    //let x = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "LinkPreview") as! LinkViewController
-                    //x.url = url as URL
-                    //return x
-                //} else {
-                    return previewItem.quickLook(in: s.view.window?.windowScene)
-                //}
-            } else {
-                return nil
-            }
+        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: {
+            return item.previewableTypeItem?.quickLook()
         }, actionProvider: { [weak self] _ in
             return self?.createShortcutActions(for: item)
         })
@@ -1492,7 +1495,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-		let itemsToDelete = Model.drops.all.filter { candidateSet.contains($0) }
+		let itemsToDelete = Model.drops.filter { candidateSet.contains($0) }
 		if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
 			Model.delete(items: itemsToDelete)
@@ -1517,8 +1520,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		return firstPresentedNavigationController?.viewControllers.first as? DetailController
 	}
 
-    private var currentPreviewView: PreviewHostingInternalController? {
-        return firstPresentedNavigationController?.viewControllers.first as? PreviewHostingInternalController
+    private var currentPreviewView: GladysPreviewController? {
+        return firstPresentedNavigationController?.viewControllers.first as? GladysPreviewController
     }
 
 	private var currentPreferencesView: PreferencesController? {
@@ -1624,7 +1627,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			dismissAnyPopOverOrModal {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
-        } else if let index = Model.drops.firstIndexOfItem(with: request.uuid) {
+        } else if let index = Model.firstIndexOfItem(with: request.uuid) {
             self.resetSearch(andLabels: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
@@ -1793,7 +1796,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         super.updateUserActivityState(activity)
         activity.title = title
         activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
-                             kGladysMainViewSearchText: filter.filter ?? ""]
+                             kGladysMainViewSearchText: filter.text ?? ""]
     }
     
     // MARK: 

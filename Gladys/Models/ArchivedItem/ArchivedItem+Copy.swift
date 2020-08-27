@@ -20,7 +20,7 @@ extension ArchivedItem {
 		return p
 	}
 
-	#if MAINAPP || TODAYEXTENSION
+	#if MAINAPP || TODAYEXTENSION || KEYBOARDEXTENSION
 	var dragItem: UIDragItem {
 		let i = UIDragItem(itemProvider: itemProvider)
 		i.localObject = self

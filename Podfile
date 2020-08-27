@@ -5,7 +5,7 @@ use_modular_headers!
 
 abstract_target 'iOS' do
   platform :ios, '13.0'
-  use_frameworks! :linkage => :static
+  use_frameworks!
 
   target 'Gladys' do
     pod 'Fuzi'
@@ -26,7 +26,7 @@ end
 
 abstract_target 'macOS' do
   platform :osx, '10.13'
-  use_frameworks! :linkage => :static
+  use_frameworks!
 
   target 'MacGladys' do
     pod 'Fuzi'

@@ -125,7 +125,10 @@ final class TokenTextField: NSTextField {
                         runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
 						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
                         if #available(OSX 10.15, *) {
-                            runBounds.origin.y = origins[index].y - 2
+                            runBounds.origin.y = origins[index].y - 2.5
+                            runBounds = runBounds.insetBy(dx: 1, dy: 0)
+                            runBounds.origin.x += 0.5
+                            runBounds.size.height += 0.5
                         } else {
                             runBounds.origin.y = origins[index].y - 4
                         }

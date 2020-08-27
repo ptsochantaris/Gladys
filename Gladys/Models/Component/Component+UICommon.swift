@@ -51,29 +51,6 @@ extension Component {
 		return decode()
 	}
 
-	var contentPriority: Int {
-
-		if typeIdentifier == "com.apple.mapkit.map-item" { return 90 }
-
-		if typeConforms(to: kUTTypeVCard) { return 80 }
-
-		if isWebURL { return 70 }
-
-		if typeConforms(to: kUTTypeVideo) { return 60 }
-
-		if typeConforms(to: kUTTypeAudio) { return 50 }
-
-		if typeConforms(to: kUTTypePDF) { return 40 }
-
-		if typeConforms(to: kUTTypeImage) { return 30 }
-
-		if typeConforms(to: kUTTypeText) { return 20 }
-
-		if isFileURL { return 10 }
-
-		return 0
-	}
-
 	func prepareFilename(name: String, directory: String?) -> String {
 		var name = name
 

@@ -3,8 +3,14 @@ import Foundation
 import MobileCoreServices
 #endif
 import GladysFramework
+import NaturalLanguage
+import Vision
 
 extension ArchivedItem {
+    
+    var mostRelevantTypeItem: Component? {
+        return components.max { $0.contentPriority < $1.contentPriority }
+    }
 
 	static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
@@ -20,8 +26,19 @@ extension ArchivedItem {
         }
         return identifiers
 	}
+    
+    private var imageOfImageComponentIfExists: CGImage? {
+        if let firstImageComponent = mostRelevantTypeItem, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
+            #if os(macOS)
+                return image.cgImage(forProposedRect: nil, context: nil, hints: nil)
+            #else
+                return image.cgImage
+            #endif
+        }
+        return nil
+    }
 
-    private func componentsIngested(error: (Component, Error)?) {
+    private func componentsIngested(wasInitialIngest: Bool, error: (Component, Error)?) {
         #if MAC
         for component in components {
             if let contributedLabels = component.contributedLabels {
@@ -32,8 +49,67 @@ extension ArchivedItem {
             }
         }
         #endif
-		imageCache.removeObject(forKey: imageCacheKey)
-		loadingProgress = nil
+        
+        let autoText = PersistedOptions.autoGenerateLabelsFromText
+        let autoImage = PersistedOptions.autoGenerateLabelsFromImage
+        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, autoText || autoImage {
+            let finalTitle = displayText.0
+            let img: CGImage?
+            #if os(macOS)
+                if #available(OSX 10.15, *) {
+                    img = imageOfImageComponentIfExists
+                } else {
+                    img = nil
+                }
+            #else
+                img = imageOfImageComponentIfExists
+            #endif
+            let mode = displayMode
+            Component.ingestQueue.async {
+                var tags = [String]()
+                if autoText, let finalTitle = finalTitle {
+                    let tagger = NLTagger(tagSchemes: [.nameType])
+                    tagger.string = finalTitle
+                    let range = finalTitle.startIndex ..< finalTitle.endIndex
+                    let textTags = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames]).compactMap { token -> String? in
+                        guard let tag = token.0 else { return nil }
+                        switch tag {
+                        case .placeName, .personalName, .organizationName, .noun:
+                            return String(finalTitle[token.1])
+                        default:
+                            return nil
+                        }
+                    }
+                    tags.append(contentsOf: textTags)
+                }
+                
+                if #available(OSX 10.15, iOS 13.0, *), autoImage, mode == .fill, let img = img {
+                    let handler = VNImageRequestHandler(cgImage: img)
+                    let request = VNClassifyImageRequest()
+                    try? handler.perform([request])
+                    if let observations = request.results as? [VNClassificationObservation] {
+                        let relevant = observations.filter {
+                            $0.hasMinimumPrecision(0.7, forRecall: 0)
+                        }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
+                        tags.append(contentsOf: relevant)
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    for tag in tags where !self.labels.contains(tag) {
+                        self.labels.append(tag)
+                    }
+                    self.componentIngestDone(error: error)
+                }
+            }
+        } else {
+            componentIngestDone(error: error)
+        }
+	}
+    
+    private func componentIngestDone(error: (Component, Error)?) {
+        imageCache.removeObject(forKey: imageCacheKey)
+        loadingProgress = nil
         needsReIngest = false
         
         #if MAINAPP || MAC
@@ -43,7 +119,7 @@ extension ArchivedItem {
         #endif
 
         NotificationCenter.default.post(name: .IngestComplete, object: self)
-	}
+    }
 
 	func cancelIngest() {
 		components.forEach { $0.cancelIngest() }
@@ -91,7 +167,7 @@ extension ArchivedItem {
 		}
         
         group.notify(queue: .main) {
-            self.componentsIngested(error: loadingError)
+            self.componentsIngested(wasInitialIngest: false, error: loadingError)
             completionGroup?.leave()
         }
 	}
@@ -190,7 +266,7 @@ extension ArchivedItem {
         loadingProgress = p
         
         group.notify(queue: .main) {
-            self.componentsIngested(error: loadingError)
+            self.componentsIngested(wasInitialIngest: true, error: loadingError)
         }
 	}
 }

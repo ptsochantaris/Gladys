@@ -8,12 +8,6 @@
 
 import UIKit
 
-func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
-    let b = UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
-    b.accessibilityLabel = "Done"
-    return b
-}
-
 extension UIViewController {
     func addChildController(_ vc: UIViewController, to view: UIView) {
         vc.view.translatesAutoresizingMaskIntoConstraints = false
@@ -28,6 +22,12 @@ extension UIViewController {
         vc.didMove(toParent: self)
     }
 
+    func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
+        let b = UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
+        b.accessibilityLabel = "Done"
+        return b
+    }
+
     func removeChildController(_ vc: UIViewController) {
         vc.willMove(toParent: nil)
         vc.view.removeFromSuperview()
@@ -37,5 +37,13 @@ extension UIViewController {
     var phoneMode: Bool {
         guard let t = (viewIfLoaded ?? navigationController?.viewIfLoaded)?.window?.traitCollection else { return false }
         return t.horizontalSizeClass == .compact || t.verticalSizeClass == .compact
+    }
+    
+    var isHovering: Bool {
+        return (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1
+    }
+
+    var isAccessoryWindow: Bool {
+        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
     }
 }

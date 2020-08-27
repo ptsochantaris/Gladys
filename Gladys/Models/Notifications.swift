@@ -71,9 +71,3 @@ extension Notification.Name {
     static let PreferencesOpen = Notification.Name("PreferencesOpen")
 }
 #endif
-
-#if MAC
-extension Notification.Name {
-	static let IAPModeChanged = Notification.Name("IAPModeChanged")
-}
-#endif

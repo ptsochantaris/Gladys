@@ -52,12 +52,12 @@ final class ModelFilterContext {
 
     var filteredDrops: ContiguousArray<ArchivedItem> {
         if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
-            cachedFilteredDrops = Model.drops.all
+            cachedFilteredDrops = Model.drops
         }
         return cachedFilteredDrops!
     }
 
-    var filter: String? {
+    var text: String? {
         get {
             return modelFilter
         }
@@ -70,30 +70,27 @@ final class ModelFilterContext {
         }
     }
     
-    var threadSafeFilteredDrops: ContiguousArray<ArchivedItem> {
-        if Thread.isMainThread {
-            return filteredDrops
-        } else {
-            var dropsClone = ContiguousArray<ArchivedItem>()
-            DispatchQueue.main.sync {
-                dropsClone = filteredDrops
+    func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
+        if isFiltering {
+            if index >= filteredDrops.count {
+                if let closestItem = filteredDrops.last, let i = Model.firstIndexOfItem(with: closestItem.uuid) {
+                    let ret = i+1
+                    if checkForWeirdness, ret >= filteredDrops.count {
+                        return -1
+                    } else {
+                        return ret
+                    }
+                }
+                return 0
+            } else {
+                let closestItem = filteredDrops[index]
+                return Model.firstIndexOfItem(with: closestItem.uuid) ?? 0
             }
-            return dropsClone
-        }
-    }
-    
-    func nearestUnfilteredIndexForFilteredIndex(_ index: Int) -> Int {
-        if !isFiltering {
+        } else {
+            if checkForWeirdness, index >= filteredDrops.count {
+                return -1
+            }
             return index
-        }
-        if index >= filteredDrops.count {
-            if let closestItem = filteredDrops.last, let i = Model.drops.firstIndexOfItem(with: closestItem.uuid) {
-                return i+1
-            }
-            return 0
-        } else {
-            let closestItem = filteredDrops[index]
-            return Model.drops.firstIndexOfItem(with: closestItem.uuid) ?? 0
         }
     }
     
@@ -180,11 +177,11 @@ final class ModelFilterContext {
     
     private var postLabelDrops: ContiguousArray<ArchivedItem> {
         let enabledToggles = labelToggles.filter { $0.enabled }
-        if enabledToggles.isEmpty { return Model.drops.all }
+        if enabledToggles.isEmpty { return Model.drops }
 
         if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count
-            return Model.drops.all.filter { item in
+            return Model.drops.filter { item in
                 var matchCount = 0
                 for toggle in enabledToggles {
                     if toggle.emptyChecker {
@@ -199,7 +196,7 @@ final class ModelFilterContext {
             }
 
         } else {
-            return Model.drops.all.filter { item in
+            return Model.drops.filter { item in
                 for toggle in enabledToggles {
                     if toggle.emptyChecker {
                         if item.labels.isEmpty {
@@ -223,7 +220,7 @@ final class ModelFilterContext {
     }
     
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
-        let items = PersistedOptions.exportOnlyVisibleItems ? threadSafeFilteredDrops : Model.threadSafeDrops
+        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.drops // copy
         return items.filter { $0.goodToSave }
     }
     
@@ -306,7 +303,7 @@ final class ModelFilterContext {
     func rebuildLabels() {
         var counts = [String: Int]()
         var noLabelCount = 0
-        for item in Model.drops.all {
+        for item in Model.drops {
             item.labels.forEach {
                 if let c = counts[$0] {
                     counts[$0] = c+1
@@ -343,7 +340,7 @@ final class ModelFilterContext {
 
     func renameLabel(_ label: String, to newLabel: String) {
         let wasEnabled = labelToggles.first { $0.name == label }?.enabled ?? false
-        let affectedUuids = Model.drops.all.compactMap { i -> String? in
+        let affectedUuids = Model.drops.compactMap { i -> String? in
             if let index = i.labels.firstIndex(of: label) {
                 if i.labels.contains(newLabel) {
                     i.labels.remove(at: index)
@@ -373,7 +370,7 @@ final class ModelFilterContext {
     }
     
     func removeLabel(_ label: String) {
-        let affectedUuids = Model.drops.all.compactMap { i -> String? in
+        let affectedUuids = Model.drops.compactMap { i -> String? in
             if i.labels.contains(label) {
                 i.labels.removeAll { $0 == label }
                 i.needsCloudPush = true
@@ -402,11 +399,11 @@ extension Model {
 	private static var nextSaveCallbacks: [() -> Void]?
 
 	static var sizeInBytes: Int64 {
-		return drops.all.reduce(0, { $0 + $1.sizeInBytes })
+		return drops.reduce(0, { $0 + $1.sizeInBytes })
 	}
 
 	static func sizeForItems(uuids: [UUID]) -> Int64 {
-		return drops.all.reduce(0, { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) })
+		return drops.reduce(0, { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) })
 	}
 
 	enum SortOption {
@@ -433,9 +430,9 @@ extension Model {
 		}
 		private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
 			var itemIndexes = [Int]()
-            let toCheck = itemsToSort.isEmpty ? Model.drops.all : itemsToSort
+            let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
 			let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
-				if let index = Model.drops.firstIndexOfItem(with: item.uuid) {
+				if let index = Model.firstIndexOfItem(with: item.uuid) {
 					itemIndexes.append(index)
 					return item
 				}
@@ -489,7 +486,7 @@ extension Model {
 				for pos in 0 ..< itemIndexes.count {
 					let itemIndex = itemIndexes[pos]
 					let item = actualItemsToSort[pos]
-                    Model.drops.replaceItem(at: itemIndex, with: item)
+                    Model.drops[itemIndex] = item
 				}
                 Model.saveIndexOnly()
 			}
@@ -516,49 +513,37 @@ extension Model {
 	}
 
 	static func resetEverything() {
-        let toDelete = drops.all.filter { !$0.isImportedShare }
+        let toDelete = drops.filter { !$0.isImportedShare }
         delete(items: toDelete)
 	}
 
 	static func removeImportedShares() {
-        let toDelete = drops.all.filter { $0.isImportedShare }
+        let toDelete = drops.filter { $0.isImportedShare }
         delete(items: toDelete)
 	}
 
-	static var threadSafeDrops: ContiguousArray<ArchivedItem> {
-		if Thread.isMainThread {
-            return drops.all
-		} else {
-			var dropsClone = ContiguousArray<ArchivedItem>()
-			DispatchQueue.main.sync {
-                dropsClone = drops.all
-			}
-			return dropsClone
-		}
-	}
-
 	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
-		let itemsRelatedToZone = drops.all.filter { $0.parentZone == zoneID }
+		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
 		for item in itemsRelatedToZone {
 			item.removeFromCloudkit()
 		}
-		_ = delete(items: itemsRelatedToZone)
+		delete(items: itemsRelatedToZone)
 	}
 
 	static var sharingMyItems: Bool {
-		return drops.all.contains { $0.shareMode == .sharing }
+		return drops.contains { $0.shareMode == .sharing }
 	}
 
 	static var containsImportedShares: Bool {
-		return drops.all.contains { $0.isImportedShare }
+		return drops.contains { $0.isImportedShare }
 	}
 
 	static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
-		return drops.all.filter { $0.shareMode == .sharing }
+		return drops.filter { $0.shareMode == .sharing }
 	}
 
 	static func duplicate(item: ArchivedItem) {
-		if let previousIndex = drops.firstIndexOfItem(with: item.uuid) {
+		if let previousIndex = firstIndexOfItem(with: item.uuid) {
 			let newItem = ArchivedItem(cloning: item)
 			drops.insert(newItem, at: previousIndex+1)
             save()
@@ -573,7 +558,7 @@ extension Model {
 	}
 
 	static func lockUnlockedItems() {
-        for item in drops.all where item.isTemporarilyUnlocked {
+        for item in drops where item.isTemporarilyUnlocked {
             item.flags.insert(.needsUnlock)
 			item.postModified()
 		}
@@ -619,7 +604,7 @@ extension Model {
 
         let index = CSSearchableIndex.default()
 
-        let itemsToDelete = Set(drops.all.filter { $0.needsDeletion })
+        let itemsToDelete = Set(drops.filter { $0.needsDeletion })
         #if MAINAPP
         MirrorManager.removeItems(items: itemsToDelete)
         #endif
@@ -633,7 +618,7 @@ extension Model {
         
         drops.removeAll { $0.needsDeletion }
 
-        let saveableItems: ContiguousArray = drops.all.filter { $0.goodToSave }
+        let saveableItems: ContiguousArray = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         let searchableItems = itemsToWrite.map { $0.searchableItem }
         reIndex(items: searchableItems, in: index)
@@ -675,7 +660,7 @@ extension Model {
 	}
 
     static func saveIndexOnly() {
-        let itemsToSave: ContiguousArray = drops.all.filter { $0.goodToSave }
+        let itemsToSave: ContiguousArray = drops.filter { $0.goodToSave }
         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
 		saveQueue.async {
 			do {
@@ -704,7 +689,7 @@ extension Model {
             DispatchQueue.main.sync {
                 nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map { $0.uuid })
                 commitQueue.removeAll()
-                itemsToSave = drops.all.filter { $0.goodToSave }
+                itemsToSave = drops.filter { $0.goodToSave }
             }
             if nextItemUUIDs.isEmpty {
                 return
@@ -778,7 +763,7 @@ extension Model {
 	}
     
     static func detectExternalChanges(completionGroup: DispatchGroup? = nil) {
-        for item in drops.all where !item.needsDeletion { // partial deletes
+        for item in drops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter { $0.needsDeletion }
             if !componentsToDelete.isEmpty {
                 item.components.removeAll { $0.needsDeletion }
@@ -788,19 +773,19 @@ extension Model {
                 item.needsReIngest = true
             }
         }
-        let itemsToDelete = drops.all.filter { $0.needsDeletion }
+        let itemsToDelete = drops.filter { $0.needsDeletion }
         if !itemsToDelete.isEmpty {
             delete(items: itemsToDelete) // will also save
         }
         
-        for drop in drops.all where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+        for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
             drop.reIngest(completionGroup: completionGroup)
         }
     }
     
     static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map { $0.uuid })
-        let cut = drops.all.filter { uuids.contains($0.uuid) }
+        let cut = drops.filter { uuids.contains($0.uuid) }
         if cut.isEmpty { return }
         
         drops.removeAll { uuids.contains($0.uuid) }

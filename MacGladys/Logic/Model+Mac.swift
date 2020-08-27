@@ -38,7 +38,7 @@ extension Model {
 	}
 
 	private static func syncWithExternalUpdates() {
-        let changedDrops = drops.all.filter { $0.scanForBlobChanges() }
+        let changedDrops = drops.filter { $0.scanForBlobChanges() }
 		for item in changedDrops {
 			log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
 			item.needsReIngest = true

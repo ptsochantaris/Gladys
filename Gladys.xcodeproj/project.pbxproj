@@ -42,16 +42,6 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
-		16081003242D72AA00E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
-		16081004242D72C200E19FCE /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16080FFF242D726800E19FCE /* openssl.xcframework */; };
-		1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
-		160B5BF524659965009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BF624659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BF724659989009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BF82465998A009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BF92465998C009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BFA2465998F009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
-		160B5BFB2465998F009E2404 /* DropArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160B5BF424659965009E2404 /* DropArray.swift */; };
 		16101E8A1EF5A1A000CCBD3C /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
 		16101E8C1EF5A1EB00CCBD3C /* ArchivedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */; };
 		161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */; };
@@ -81,6 +71,9 @@
 		161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
+		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
+		16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
+		16219A1024E03918006ED18A /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
@@ -121,6 +114,7 @@
 		163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163EB5F220A8BC5000D0BF74 /* HighlightLabel.swift */; };
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1642A77924CC5CF700282670 /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A42A2124C4FAA1002CBD1B /* TipJar.swift */; };
 		1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1643C03F2323EDA0005D7BF3 /* StoreKit.framework */; };
 		1643C04123253C24005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		1643C04223253C3D005D7BF3 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -195,7 +189,6 @@
 		167CDF9520B62B3E00EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
 		167CDF9620B62B3E00EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
 		167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167CDF9420B62B3E00EABC0A /* Component+Preview.swift */; };
-		1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */; };
 		16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
@@ -232,8 +225,6 @@
 		16906A9823C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9923C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9A23C8C18E00D6C177 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
-		1695218920A23B5200FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
-		1695218A20A240A000FFE817 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695218820A23B5200FFE817 /* IAPManager.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -261,6 +252,7 @@
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
+		16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A42A2124C4FAA1002CBD1B /* TipJar.swift */; };
 		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7ED1FBB844A00D60596 /* GladysWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -276,6 +268,33 @@
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98921B457550049E433 /* NoteEditorController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
+		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
+		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
+		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
+		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
+		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
+		16B2AA4A24DF473F004F3FC2 /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
+		16B2AA4B24DF4746004F3FC2 /* ArchivedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */; };
+		16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
+		16B2AA4D24DF4794004F3FC2 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
+		16B2AA4E24DF47CA004F3FC2 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
+		16B2AA4F24DF47D3004F3FC2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31E2030E5550036E2B0 /* Notifications.swift */; };
+		16B2AA5024DF496F004F3FC2 /* ArchivedItem+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D8620A10E5D0039E6C2 /* ArchivedItem+Common.swift */; };
+		16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
+		16B2AA5224DF4980004F3FC2 /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		16B2AA5324DF4988004F3FC2 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
+		16B2AA5424DF498F004F3FC2 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
+		16B2AA5524DF4996004F3FC2 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
+		16B2AA5624DF499E004F3FC2 /* Component+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7E20A10AF10039E6C2 /* Component+Common.swift */; };
+		16B2AA5724DF49A6004F3FC2 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
+		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
+		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
+		16B2AA5A24DF49C1004F3FC2 /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
+		16B2AA5B24DF49D1004F3FC2 /* Component+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D520AF76A600A04F10 /* Component+BackgroundInfoObject.swift */; };
+		16B2AA5C24DF49D9004F3FC2 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
+		16B2AA5D24DF49E5004F3FC2 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
+		16B2AA5E24DF49FC004F3FC2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */; };
 		16B534BD237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B534BC237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift */; };
 		16B5419C246E0C63003F82D1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -285,7 +304,6 @@
 		16BCAE23245DEA9C000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
-		16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -337,8 +355,12 @@
 		16CD7D9620A112670039E6C2 /* Component+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */; };
 		16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16CD7DB820A124390039E6C2 /* Model+UICommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7DB720A124390039E6C2 /* Model+UICommon.swift */; };
+		16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
+		16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
+		16CE3EA324DF6B43009EC017 /* Component+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
+		16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F3A224CC6E040091F468 /* AboutViewController.swift */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
 		16D984502160B25200D9D51C /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 16D984512160B8BC00D9D51C /* Intents.intentdefinition */; settings = {ATTRIBUTES = (codegen, ); }; };
@@ -357,7 +379,6 @@
 		16D984A82160CC5E00D9D51C /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
 		16D984A92160CC6800D9D51C /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */; };
 		16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
-		16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		16D984AE2160D31C00D9D51C /* ArchivedItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */; };
 		16D984AF2160D32900D9D51C /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
@@ -390,8 +411,6 @@
 		16EDB3771F2361EB001CC65C /* Model+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* Model+UI.swift */; };
 		16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16EDB37B1F236404001CC65C /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
-		16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
-		16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3871F2370B4001CC65C /* InfiniteMode.swift */; };
 		16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F1BD6922A7B605009BFFD1 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */; };
@@ -399,12 +418,14 @@
 		16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F254651F2D55C2008EE07B /* ArchivedItem+Ingest.swift */; };
 		16F2990720CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F2990920CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
+		16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
+		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		36382A8A3D358C80F43F90AC /* Pods_macOS_MacGladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */; };
 		3E17E7E721A0C85AEE5CA45B /* Pods_iOS_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */; };
 		9FFBFC5E9237DF08482A76ED /* Pods_iOS_GladysIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */; };
@@ -418,6 +439,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 16118D1B2364775A00454326;
 			remoteInfo = GladysFrameworkMac;
+		};
+		16219A1224E03918006ED18A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 167573FE1F12C22500385079;
+			remoteInfo = GladysFramework;
 		};
 		16287AEC1EFB03FD007188AE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -482,6 +510,13 @@
 			remoteGlobalIDString = 16A4E7DF1FBB844A00D60596;
 			remoteInfo = GladysWatch;
 		};
+		16B2AA3D24DF42B5004F3FC2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16B2AA3724DF42B5004F3FC2;
+			remoteInfo = GladysKeys;
+		};
 		16B552821F12E5C200641009 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
@@ -520,6 +555,7 @@
 				1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed App Extensions */,
 				164136961F09195000B34574 /* GladysAction.appex in Embed App Extensions */,
 				16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed App Extensions */,
+				16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed App Extensions */,
 				16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -603,7 +639,6 @@
 		160707A11F8A3915003B856A /* DataInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInspector.swift; sourceTree = "<group>"; };
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
 		16080FFF242D726800E19FCE /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "openssl-xcframeworks/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
-		160B5BF424659965009E2404 /* DropArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropArray.swift; sourceTree = "<group>"; };
 		16101E891EF5A1A000CCBD3C /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItem.swift; sourceTree = "<group>"; };
 		161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+iOS.swift"; sourceTree = "<group>"; };
@@ -627,6 +662,7 @@
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		1619E8161EFF3745000087DD /* MirrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorManager.swift; sourceTree = "<group>"; };
 		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
+		16219A0124E0108E006ED18A /* KeyboardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardCell.swift; sourceTree = "<group>"; };
 		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
@@ -696,7 +732,6 @@
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		167CDF9420B62B3E00EABC0A /* Component+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Preview.swift"; sourceTree = "<group>"; };
-		1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewController.swift; sourceTree = "<group>"; };
 		16836EA82379598300985EA6 /* UIScene+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScene+Extensions.swift"; sourceTree = "<group>"; };
 		1686E7EF233D0D9C0012BA63 /* TouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBar.swift; sourceTree = "<group>"; };
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
@@ -723,7 +758,6 @@
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		16906A9323C8C0C700D6C177 /* Component+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+iOS.swift"; sourceTree = "<group>"; };
-		1695218820A23B5200FFE817 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -742,6 +776,7 @@
 		169E5E051FE0851A00CCE984 /* Component+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Messages.swift"; sourceTree = "<group>"; };
 		16A223E21EF67959009EEEBC /* PopTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTimer.swift; sourceTree = "<group>"; };
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		16A42A2124C4FAA1002CBD1B /* TipJar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipJar.swift; sourceTree = "<group>"; };
 		16A4E7E01FBB844A00D60596 /* GladysWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GladysWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A4E7E31FBB844A00D60596 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		16A4E7E51FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -759,11 +794,14 @@
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
 		16AED98921B457550049E433 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
+		16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyhive.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		16B2AA3C24DF42B5004F3FC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16B534BC237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+ActivityItemSource.swift"; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
-		16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHostingViewController.swift; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
 		16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
@@ -783,9 +821,11 @@
 		16CD7D8E20A111340039E6C2 /* Component+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+UICommon.swift"; sourceTree = "<group>"; };
 		16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+CopyCommon.swift"; sourceTree = "<group>"; };
 		16CD7DB720A124390039E6C2 /* Model+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UICommon.swift"; sourceTree = "<group>"; };
+		16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gladys Keys.entitlements"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		16D7F3A224CC6E040091F468 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		16D829121F86D3DD00CF06FF /* AboutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
 		16D984512160B8BC00D9D51C /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Intents.intentdefinition; path = Gladys/Intents.intentdefinition; sourceTree = "<group>"; };
 		16D984932160C5A000D9D51C /* GladysIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -807,7 +847,6 @@
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
 		16EDB3761F2361EB001CC65C /* Model+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UI.swift"; sourceTree = "<group>"; };
 		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
-		16EDB3871F2370B4001CC65C /* InfiniteMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteMode.swift; sourceTree = "<group>"; };
 		16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudManager.swift; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
@@ -852,7 +891,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16081004242D72C200E19FCE /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -905,7 +943,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16081003242D72AA00E19FCE /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -941,6 +978,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16B2AA3524DF42B5004F3FC2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16219A1024E03918006ED18A /* GladysFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1002,9 +1047,7 @@
 				167ABECA1F77D3C30075E0E8 /* NoteCell.swift */,
 				16062E0B1EFE705800AB5353 /* DetailCell.swift */,
 				16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */,
-				1680B6DA1FA503D900B6A3CA /* WebPreviewController.swift */,
 				16DD7F64208E637B005F37C9 /* TextEditController.swift */,
-				16C2A42E217B1EA1006CF0F4 /* PreviewHostingViewController.swift */,
 				165A8F0821AA92D300405701 /* PlistEditor.swift */,
 				162BDD93220F8F0500A3C17B /* SiriShortcutsViewController.swift */,
 			);
@@ -1017,12 +1060,10 @@
 				16CD7DC820A12B770039E6C2 /* Model */,
 				1610899D1FA322580095FE34 /* ArchivedItem */,
 				1610899E1FA3225C0095FE34 /* Component */,
-				16EDB3871F2370B4001CC65C /* InfiniteMode.swift */,
 				16A223E21EF67959009EEEBC /* PopTimer.swift */,
 				163845FB1EF8629700CB8D97 /* Types.swift */,
 				1602F31E2030E5550036E2B0 /* Notifications.swift */,
 				16E034F920A0D8E200B9EE1A /* Greetings.swift */,
-				1695218820A23B5200FFE817 /* IAPManager.swift */,
 				16559C8920A4CC55006C281D /* Global.swift */,
 				162594D420D5548F00A65E06 /* Caches.swift */,
 				162BDD73220F01FA00A3C17B /* Logging.swift */,
@@ -1032,7 +1073,7 @@
 				166B638F236A451F00115AC3 /* FileMonitor.swift */,
 				165847052376CC2400666B7B /* Model+Siri.swift */,
 				165847082376EE4A00666B7B /* Model+Importing.swift */,
-				160B5BF424659965009E2404 /* DropArray.swift */,
+				16A42A2124C4FAA1002CBD1B /* TipJar.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1178,6 +1219,7 @@
 				161718C52094D333005ABD6C /* MacGladys */,
 				168DFAFF20B85F3D002C603D /* MacGladysHelper */,
 				164947CD20BEAA6200BD1BEB /* MacGladysShare */,
+				16B2AA3924DF42B5004F3FC2 /* GladysKeys */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 				F997D53C5E7A383D99BD35DB /* Pods */,
@@ -1200,6 +1242,7 @@
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
 				16D984932160C5A000D9D51C /* GladysIntents.appex */,
 				16118D1C2364775A00454326 /* GladysFramework.framework */,
+				16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1247,6 +1290,7 @@
 				1686E7EF233D0D9C0012BA63 /* TouchBar.swift */,
 				161718C82094D333005ABD6C /* ViewController.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
+				16D7F3A224CC6E040091F468 /* AboutViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1311,6 +1355,18 @@
 				16A4E7F91FBB844A00D60596 /* Info.plist */,
 			);
 			path = "GladysWatch Extension";
+			sourceTree = "<group>";
+		};
+		16B2AA3924DF42B5004F3FC2 /* GladysKeys */ = {
+			isa = PBXGroup;
+			children = (
+				16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */,
+				16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */,
+				16219A0124E0108E006ED18A /* KeyboardCell.swift */,
+				16B2AA3C24DF42B5004F3FC2 /* Info.plist */,
+				16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */,
+			);
+			path = GladysKeys;
 			sourceTree = "<group>";
 		};
 		16C4BAA01F9294420012C9E0 /* Prefs */ = {
@@ -1533,6 +1589,7 @@
 				16114861209FA266008BB332 /* Embed Frameworks */,
 				169D54B120B84FAC004E518E /* Embed Helper */,
 				164947DD20BEAA6200BD1BEB /* Embed App Extensions */,
+				69620C510B805516EE19F301 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1646,6 +1703,7 @@
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
 				16A4E8041FBB844A00D60596 /* Embed Watch Content */,
+				829472256F076A2430C1D21C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1657,6 +1715,7 @@
 				16A4E7FB1FBB844A00D60596 /* PBXTargetDependency */,
 				1657B8B81FD41C1C00EC480D /* PBXTargetDependency */,
 				16D984992160C5A000D9D51C /* PBXTargetDependency */,
+				16B2AA3E24DF42B5004F3FC2 /* PBXTargetDependency */,
 			);
 			name = Gladys;
 			productName = Gladys;
@@ -1732,6 +1791,24 @@
 			productReference = 16A4E7EC1FBB844A00D60596 /* GladysWatch Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
+		16B2AA3724DF42B5004F3FC2 /* GladysKeys */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 16B2AA4224DF42B5004F3FC2 /* Build configuration list for PBXNativeTarget "GladysKeys" */;
+			buildPhases = (
+				16B2AA3424DF42B5004F3FC2 /* Sources */,
+				16B2AA3524DF42B5004F3FC2 /* Frameworks */,
+				16B2AA3624DF42B5004F3FC2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				16219A1324E03918006ED18A /* PBXTargetDependency */,
+			);
+			name = GladysKeys;
+			productName = GladysKeys;
+			productReference = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		16D984922160C5A000D9D51C /* GladysIntents */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16D9849B2160C5A000D9D51C /* Build configuration list for PBXNativeTarget "GladysIntents" */;
@@ -1756,8 +1833,8 @@
 		1678F9C51EF475FE005697CB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 1150;
+				LastSwiftUpdateCheck = 1160;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
 					16118D1B2364775A00454326 = {
@@ -1884,6 +1961,9 @@
 							};
 						};
 					};
+					16B2AA3724DF42B5004F3FC2 = {
+						CreatedOnToolsVersion = 11.6;
+					};
 					16D984922160C5A000D9D51C = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1020;
@@ -1916,6 +1996,7 @@
 				16A4E7DF1FBB844A00D60596 /* GladysWatch */,
 				16A4E7EB1FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AA1FD41C1B00EC480D /* GladysMessage */,
+				16B2AA3724DF42B5004F3FC2 /* GladysKeys */,
 				161718C32094D333005ABD6C /* MacGladys */,
 				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 				164947CB20BEAA6200BD1BEB /* MacGladysShare */,
@@ -2035,6 +2116,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		16B2AA3624DF42B5004F3FC2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */,
+				16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16D984912160C5A000D9D51C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2122,6 +2212,40 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		69620C510B805516EE19F301 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		829472256F076A2430C1D21C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D7ED05F9740E57E438CB0ADC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2177,7 +2301,6 @@
 				16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */,
 				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
-				1608992020A08A5500FA5688 /* InfiniteMode.swift in Sources */,
 				16CD7D7A20A108550039E6C2 /* ArchivedItem+Ingest.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
 				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,
@@ -2191,7 +2314,6 @@
 				16559C9120A4CC55006C281D /* Global.swift in Sources */,
 				16C3A2D920AF770000A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
-				160B5BFB2465998F009E2404 /* DropArray.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */,
 				16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */,
@@ -2200,12 +2322,12 @@
 				161718E12094DCEC005ABD6C /* ArchivedItem+Indexing.swift in Sources */,
 				166B6391236A451F00115AC3 /* FileMonitor.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
+				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				16C8166820CB0354001C12DF /* PullState.swift in Sources */,
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
-				1695218A20A240A000FFE817 /* IAPManager.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
@@ -2236,6 +2358,7 @@
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				16CD7D8D20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */,
+				1642A77924CC5CF700282670 /* TipJar.swift in Sources */,
 				161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */,
 				161718E02094DC32005ABD6C /* Model+Indexing.swift in Sources */,
 				16CD7D7D20A108BB0039E6C2 /* ArchivedItem+UICommon.swift in Sources */,
@@ -2248,7 +2371,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				160B5BF624659989009E2404 /* DropArray.swift in Sources */,
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
 				1605050523784961002755A2 /* Notifications.swift in Sources */,
 				16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */,
@@ -2283,13 +2405,13 @@
 				16906A9623C8C0C700D6C177 /* Component+iOS.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */,
+				16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */,
 				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1604A3361F091D7D005A477E /* Component.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */,
-				16EDB3891F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16559C8C20A4CC55006C281D /* Global.swift in Sources */,
 				1657B8D51FD449D900EC480D /* Component+Copy.swift in Sources */,
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
@@ -2308,7 +2430,6 @@
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16CD7D7420A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */,
-				160B5BF724659989009E2404 /* DropArray.swift in Sources */,
 				1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */,
 				16CD7D9320A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
@@ -2352,7 +2473,6 @@
 				1602F32E2030E6310036E2B0 /* Data+Extensions.swift in Sources */,
 				1657B8BE1FD41E6700EC480D /* ArchivedItem.swift in Sources */,
 				16CD7D8420A10AF10039E6C2 /* Component+Common.swift in Sources */,
-				160B5BFA2465998F009E2404 /* DropArray.swift in Sources */,
 				165A567E218EE51500E27C22 /* ModelFilePresenter.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				16559C9020A4CC55006C281D /* Global.swift in Sources */,
@@ -2376,7 +2496,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				160B5BF524659965009E2404 /* DropArray.swift in Sources */,
 				16CD7D7320A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */,
@@ -2408,7 +2527,6 @@
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				165847062376CC2400666B7B /* Model+Siri.swift in Sources */,
 				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
-				1680B6DB1FA503D900B6A3CA /* WebPreviewController.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				16E034FA20A0D8E200B9EE1A /* Greetings.swift in Sources */,
@@ -2416,6 +2534,7 @@
 				1660C0262465C32000ABFDFD /* Singleton.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				16101E8A1EF5A1A000CCBD3C /* Component.swift in Sources */,
+				16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				169763231F156E0700537776 /* ArchivedItem+Indexing.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
@@ -2460,7 +2579,6 @@
 				16B534BD237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				169763141F15669000537776 /* Component+Ingest+iOS.swift in Sources */,
-				16EDB3881F2370B4001CC65C /* InfiniteMode.swift in Sources */,
 				16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16CD7D8720A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
@@ -2470,11 +2588,9 @@
 				16CD7D8F20A111340039E6C2 /* Component+UICommon.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				165847092376EE4A00666B7B /* Model+Importing.swift in Sources */,
-				16C2A42F217B1EA1006CF0F4 /* PreviewHostingViewController.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
-				1695218920A23B5200FFE817 /* IAPManager.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
@@ -2515,7 +2631,6 @@
 				16969BAF1FB0E69C007B2F77 /* Types.swift in Sources */,
 				16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
-				160B5BF82465998A009E2404 /* DropArray.swift in Sources */,
 				166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				16906A9723C8C0C700D6C177 /* Component+iOS.swift in Sources */,
 				1602F3292030E5FA0036E2B0 /* UIImage+Extensions.swift in Sources */,
@@ -2544,6 +2659,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		16B2AA3424DF42B5004F3FC2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
+				16B2AA4E24DF47CA004F3FC2 /* ModelFilePresenter.swift in Sources */,
+				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
+				16B2AA4F24DF47D3004F3FC2 /* Notifications.swift in Sources */,
+				16B2AA5524DF4996004F3FC2 /* Component.swift in Sources */,
+				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
+				16B2AA5724DF49A6004F3FC2 /* FileManager+Extensions.swift in Sources */,
+				16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */,
+				16B2AA5C24DF49D9004F3FC2 /* Global.swift in Sources */,
+				16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
+				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
+				16B2AA5224DF4980004F3FC2 /* Caches.swift in Sources */,
+				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
+				16B2AA5D24DF49E5004F3FC2 /* Component+iOS.swift in Sources */,
+				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
+				16B2AA4B24DF4746004F3FC2 /* ArchivedItem.swift in Sources */,
+				16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */,
+				16B2AA4A24DF473F004F3FC2 /* PopTimer.swift in Sources */,
+				16B2AA5424DF498F004F3FC2 /* Types.swift in Sources */,
+				16B2AA5024DF496F004F3FC2 /* ArchivedItem+Common.swift in Sources */,
+				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
+				16B2AA4D24DF4794004F3FC2 /* Logging.swift in Sources */,
+				16CE3EA324DF6B43009EC017 /* Component+CopyCommon.swift in Sources */,
+				16B2AA5324DF4988004F3FC2 /* NSAttributedString+Extensions.swift in Sources */,
+				16B2AA5A24DF49C1004F3FC2 /* Data+Extensions.swift in Sources */,
+				16B2AA5624DF499E004F3FC2 /* Component+Common.swift in Sources */,
+				16B2AA5E24DF49FC004F3FC2 /* UIImage+Extensions.swift in Sources */,
+				16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */,
+				16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */,
+				16B2AA5B24DF49D1004F3FC2 /* Component+BackgroundInfoObject.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16D9848F2160C5A000D9D51C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2553,7 +2705,6 @@
 				16D984AA2160CC7300D9D51C /* Data+Extensions.swift in Sources */,
 				16D984A72160CC5500D9D51C /* Component+Common.swift in Sources */,
 				16D984A42160CC3900D9D51C /* Component.swift in Sources */,
-				160B5BF92465998C009E2404 /* DropArray.swift in Sources */,
 				1661B2CA245E264800BE888E /* CloudManager.swift in Sources */,
 				16D984A62160CC4C00D9D51C /* ArchivedItem+Common.swift in Sources */,
 				16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */,
@@ -2567,7 +2718,6 @@
 				16D984B52160D58300D9D51C /* NSAttributedString+Extensions.swift in Sources */,
 				16A2A96F22ADBA4D00DF2249 /* WebArchiver.swift in Sources */,
 				16D984B32160D56500D9D51C /* Component+Preview.swift in Sources */,
-				16D984AB2160D07C00D9D51C /* InfiniteMode.swift in Sources */,
 				16D984AD2160D2F900D9D51C /* PersistedOptions.swift in Sources */,
 				16D984AF2160D32900D9D51C /* ArchivedItem+Indexing.swift in Sources */,
 				16D984B02160D35B00D9D51C /* Component+IngestCommon.swift in Sources */,
@@ -2593,6 +2743,11 @@
 			isa = PBXTargetDependency;
 			target = 16118D1B2364775A00454326 /* GladysFrameworkMac */;
 			targetProxy = 16118D2A236478E200454326 /* PBXContainerItemProxy */;
+		};
+		16219A1324E03918006ED18A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 167573FE1F12C22500385079 /* GladysFramework */;
+			targetProxy = 16219A1224E03918006ED18A /* PBXContainerItemProxy */;
 		};
 		16287AED1EFB03FD007188AE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2641,6 +2796,11 @@
 			platformFilter = ios;
 			target = 16A4E7DF1FBB844A00D60596 /* GladysWatch */;
 			targetProxy = 16A4E7FA1FBB844A00D60596 /* PBXContainerItemProxy */;
+		};
+		16B2AA3E24DF42B5004F3FC2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16B2AA3724DF42B5004F3FC2 /* GladysKeys */;
+			targetProxy = 16B2AA3D24DF42B5004F3FC2 /* PBXContainerItemProxy */;
 		};
 		16B552831F12E5C200641009 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2983,6 +3143,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -3007,7 +3168,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 826;
+				CURRENT_PROJECT_VERSION = 882;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_FAST_MATH = YES;
@@ -3015,7 +3176,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"NO_IAP=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3032,8 +3192,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NO_IAP";
-				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = "debug-only";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = on;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3046,6 +3206,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 419F950A548D49B2EF17B8C2 /* Pods-iOS-Gladys.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3166,13 +3327,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 826;
+				CURRENT_PROJECT_VERSION = 882;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				GCC_PREPROCESSOR_DEFINITIONS = "NO_IAP=1";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -3188,7 +3348,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NO_IAP;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = off;
@@ -3205,6 +3364,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 03C71810BA95F7B3BFC84B8D /* Pods-iOS-Gladys.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3439,6 +3599,55 @@
 			};
 			name = Release;
 		};
+		16B2AA4024DF42B5004F3FC2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "GladysKeys/Gladys Keys.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = GladysKeys/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
+				PRODUCT_NAME = Keyhive;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG KEYBOARDEXTENSION";
+			};
+			name = Debug;
+		};
+		16B2AA4124DF42B5004F3FC2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "GladysKeys/Gladys Keys.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = GladysKeys/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
+				PRODUCT_NAME = Keyhive;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = KEYBOARDEXTENSION;
+			};
+			name = Release;
+		};
 		16D9849C2160C5A000D9D51C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE26DEA89782198112B9CAD7 /* Pods-iOS-GladysIntents.debug.xcconfig */;
@@ -3608,6 +3817,15 @@
 			buildConfigurations = (
 				16A4E7FD1FBB844A00D60596 /* Debug */,
 				16A4E7FE1FBB844A00D60596 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		16B2AA4224DF42B5004F3FC2 /* Build configuration list for PBXNativeTarget "GladysKeys" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				16B2AA4024DF42B5004F3FC2 /* Debug */,
+				16B2AA4124DF42B5004F3FC2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

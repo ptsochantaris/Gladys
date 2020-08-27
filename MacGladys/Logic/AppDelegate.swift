@@ -8,7 +8,6 @@
 
 import Cocoa
 import CoreSpotlight
-import GladysFramework
 import HotKey
 import CloudKit
 
@@ -42,8 +41,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	private var statusItem: NSStatusItem?
-
-	@IBOutlet private weak var infiniteModeMenuEntry: NSMenuItem!
 
 	@IBOutlet private weak var gladysMenuItem: NSMenuItem!
 	@IBOutlet private weak var fileMenuItem: NSMenuItem!
@@ -179,10 +176,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		
 		LauncherCommon.killHelper()
 
-		if !receiptExists {
-			exit(173)
-		}
-
 		CallbackSupport.setupCallbackSupport()
 
 		let s = NSAppleEventManager.shared()
@@ -195,10 +188,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		if CloudManager.syncSwitchedOn {
 			NSApplication.shared.registerForRemoteNotifications(matching: [])
 		}
-
-		IAPManager.shared.start()
-		NotificationCenter.default.addObserver(self, selector: #selector(iapChanged), name: .IAPModeChanged, object: nil)
-		infiniteModeMenuEntry.isHidden = infiniteMode
 
 		NSApplication.shared.servicesProvider = servicesProvider
 
@@ -237,10 +226,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			AppDelegate.updateHotkey()
 			CloudManager.opportunisticSyncIfNeeded()
 		}
-	}
-
-	func applicationWillTerminate(_ aNotification: Notification) {
-		IAPManager.shared.stop()
 	}
 
 	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
@@ -314,45 +299,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	func applicationWillResignActive(_ notification: Notification) {
-		clearCaches()
+        Model.clearCaches()
 	}
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
-		let p = NSMutableParagraphStyle()
-		p.alignment = .center
-		p.lineSpacing = 1
-		let font = NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .small))
-		let credits = NSAttributedString(string: "If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build\n", attributes: [
-			.font: font,
-			.foregroundColor: NSColor.controlTextColor,
-			.paragraphStyle: p
-			])
-
-		let windowsBefore = NSApplication.shared.windows
-		NSApplication.shared.orderFrontStandardAboutPanel(options: [.credits: credits])
-
-		if PersistedOptions.alwaysOnTop {
-			var windowsAfter = NSApplication.shared.windows
-			for b in windowsBefore {
-				if let i = windowsAfter.firstIndex(of: b) {
-					windowsAfter.remove(at: i)
-				}
-			}
-			let aboutWindow = windowsAfter.first
-			aboutWindow?.level = .modalPanel
-		}
+        ViewController.shared.performSegue(withIdentifier: "showAbout", sender: nil)
 	}
 
-	@objc private func iapChanged() {
-		infiniteModeMenuEntry.isHidden = infiniteMode
-		updateMenubarIconMode(showing: true, forceUpdateMenu: true)
-	}
-
-	@IBAction private func infiniteModeSelected(_ sender: NSMenuItem) {
-		IAPManager.shared.displayRequest(newTotal: -1)
-	}
-
-	@IBAction private func openWebSite(_ sender: NSMenuItem) {
+	@IBAction private func openWebSite(_ sender: Any) {
 		NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
 	}
 

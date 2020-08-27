@@ -173,13 +173,13 @@ extension ArchivedItem {
 		}
 		itemToPreview = itemToPreview ?? previewableTypeItem
 
-        guard let q = itemToPreview?.quickLook(in: viewController.view.window?.windowScene) else { return false }
-
-		let n = PreviewHostingViewController(rootViewController: q)
+        guard let ql = itemToPreview?.quickLook() else { return false }
 
 		if !PersistedOptions.wideMode {
-			n.sourceItemView = cell
+			ql.sourceItemView = cell
 		}
+        
+        let n = GladysNavController(rootViewController: ql)
 
         if !(PersistedOptions.fullScreenPreviews || forceFullscreen || UIDevice.current.userInterfaceIdiom == .phone) {
 			n.modalPresentationStyle = .popover
@@ -188,11 +188,13 @@ extension ArchivedItem {
         if let p = n.popoverPresentationController, let cell = cell {
             p.sourceView = cell
             p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
+            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
         }
 		viewController.present(n, animated: true)
-		if let p = n.popoverPresentationController, let cell = cell {
+        if let p = n.popoverPresentationController, let cell = cell, p.sourceView == nil { // sanity check, iOS versions get confused about this
 			p.sourceView = cell
 			p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
+            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
 		}
 		return true
 	}

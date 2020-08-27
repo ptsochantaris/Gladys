@@ -137,7 +137,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 
 		DispatchQueue.main.async {
 			let total = Model.drops.count
-			let items = Model.drops.all.prefix(100).map { $0.watchItem }
+			let items = Model.drops.prefix(100).map { $0.watchItem }
 			DispatchQueue.global(qos: .background).async {
 				if let compressedData = SafeArchiver.archive(items)?.data(operation: .compress) {
 					do {
@@ -265,7 +265,7 @@ extension Model {
     
     static func createMirror(completion: @escaping () -> Void) {
         log("Creating file mirror")
-        drops.all.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
+        drops.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
         runMirror(completion: completion)
     }
 
@@ -275,7 +275,7 @@ extension Model {
     }
 
     private static func runMirror(completion: @escaping () -> Void) {
-        let itemsToMirror: ContiguousArray = drops.all.filter { $0.goodToSave }
+        let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         BackgroundTask.registerForBackground()
         MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true) {
             completion()
@@ -285,7 +285,7 @@ extension Model {
     
     static func scanForMirrorChanges(completion: @escaping () -> Void) {
         BackgroundTask.registerForBackground()
-        let itemsToMirror: ContiguousArray = drops.all.filter { $0.goodToSave }
+        let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         MirrorManager.scanForMirrorChanges(items: itemsToMirror) {
             completion()
             BackgroundTask.unregisterForBackground()

@@ -9,11 +9,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>gj9UM0</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19B88</string>
+	<string>19F101</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11B500</string>
+	<string>11E708</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.2.1</string>
+	<string>11.6</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -70,14 +70,6 @@
 						<string>EfBwsp</string>
 						<key>INIntentResponseCodeName</key>
 						<string>noData</string>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeFormatString</key>
-						<string>There are too many items in Gladys at the moment.</string>
-						<key>INIntentResponseCodeFormatStringID</key>
-						<string>gUYEgt</string>
-						<key>INIntentResponseCodeName</key>
-						<string>tooManyItems</string>
 					</dict>
 				</array>
 			</dict>

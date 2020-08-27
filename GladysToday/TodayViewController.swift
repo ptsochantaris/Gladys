@@ -15,31 +15,23 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	@IBOutlet private weak var emptyLabel: UILabel!
 	@IBOutlet private weak var itemsView: UICollectionView!
 	@IBOutlet private weak var copiedLabel: UILabel!
-
-	private var itemsPerRow: Int {
-		let c = Model.visibleDrops.count
-		let s = itemsView.bounds.size
-		if s.width < 320 {
-			return min(2, c)
-		} else if s.width < 400 {
-			return min(3, c)
-		} else {
-			return min(4, c)
-		}
-	}
-
+            
+    private var cellSize = CGSize.zero
+    private var itemsPerRow = 1
+    
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let compactHeight = extensionContext?.widgetMaximumSize(for: .compact).height ?? 110
-		let count = CGFloat(itemsPerRow)
-		var s = view.bounds.size
-		s.height = compactHeight - 20
-		s.width = ((s.width - ((count+1) * 10)) / count).rounded(.down)
-		return s
+		return cellSize
 	}
-
+        
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let count = itemsPerRow * (extensionContext?.widgetActiveDisplayMode == .compact ? 1 : 4)
-		return min(count, Model.visibleDrops.count)
+        let compact = extensionContext?.widgetActiveDisplayMode == .compact
+        let numberOfRows: Int
+        if #available(iOS 14.0, *) {
+            numberOfRows = compact ? 1 : 3
+        } else {
+            numberOfRows = compact ? 1 : 4
+        }
+		return min(itemsPerRow * numberOfRows, Model.visibleDrops.count)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -51,11 +43,11 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let drop = Model.visibleDrops[indexPath.item]
 		drop.copyToPasteboard()
-		UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
 			self.copiedLabel.alpha = 1
 			self.itemsView.alpha = 0
         }, completion: { _ in
-			UIView.animate(withDuration: 0.15, delay: 1, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.1, delay: 0.8, options: .curveEaseIn, animations: {
 				self.copiedLabel.alpha = 0
 				self.itemsView.alpha = 1
 			}, completion: nil)
@@ -81,6 +73,18 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
 		itemsView.dragDelegate = self
 		NotificationCenter.default.addObserver(self, selector: #selector(openParentApp(_:)), name: .OpenParentApp, object: nil)
+        
+        let divider = UIView()
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        divider.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        view.insertSubview(divider, at: 0)
+        
+        NSLayoutConstraint.activate([
+            divider.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            divider.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            divider.topAnchor.constraint(equalTo: view.topAnchor),
+            divider.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
+        ])
 	}
 
 	@objc private func openParentApp(_ notification: Notification) {
@@ -90,24 +94,69 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	}
 
 	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
+        reloadData()
+
+        let width = view.bounds.width
+        if width < 320 {
+            itemsPerRow = min(2, Model.visibleDrops.count)
+        } else if width < 400 {
+            itemsPerRow = min(3, Model.visibleDrops.count)
+        } else {
+            itemsPerRow = min(4, Model.visibleDrops.count)
+        }
+        
+        let columnCount = CGFloat(itemsPerRow)
+        
+        guard columnCount > 0,
+            let extensionContext = extensionContext,
+            let layout = itemsView.collectionViewLayout as? UICollectionViewFlowLayout
+        else {
+            cellSize = .zero
+            return
+        }
+
+        layout.minimumInteritemSpacing = itemsView.layoutMargins.left - 1
+        layout.minimumLineSpacing = itemsView.layoutMargins.top - 1
+        
+        let margins = itemsView.layoutMargins
+
+        var newSize = CGSize(width: width, height: extensionContext.widgetMaximumSize(for: .compact).height)
+        newSize.width -= margins.left
+        newSize.width -= margins.right
+        newSize.width -= (columnCount - 1) * layout.minimumInteritemSpacing
+        newSize.width = (newSize.width / columnCount).rounded(.down)
+        
+        newSize.height -= margins.top
+        newSize.height -= margins.bottom
+        if #available(iOS 14.0, *), activeDisplayMode == .expanded {
+            newSize.height -= 2
+        }
+
+        cellSize = newSize
+        
 		updateUI()
 	}
 
-    override func didReceiveMemoryWarning() {
-		clearCaches()
-        super.didReceiveMemoryWarning()
-    }
-
 	private func updateUI() {
-		Model.reloadDataIfNeeded(maximumItems: 16)
 		copiedLabel.alpha = 0
 		emptyLabel.isHidden = !Model.visibleDrops.isEmpty
-		itemsView.reloadData()
-		itemsView.layoutIfNeeded()
-		preferredContentSize = itemsView.contentSize
+        itemsView.reloadData()
+        itemsView.layoutIfNeeded()
+        preferredContentSize = itemsView.contentSize
 	}
+    
+    private func reloadData() {
+        let max: Int
+        if #available(iOS 14.0, *) {
+            max = 12
+        } else {
+            max = 16
+        }
+        Model.reloadDataIfNeeded(maximumItems: max)
+    }
 
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
+        reloadData()
 		updateUI()
         completionHandler(NCUpdateResult.newData)
     }

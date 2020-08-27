@@ -107,7 +107,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             dismiss(animated: true)
         }
 	}
-            
+                
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updateButtons(newTraitCollection: newCollection)
@@ -182,11 +182,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         }
         navigationController?.navigationBar.setNeedsLayout()
     }
-    
-    var isHovering: Bool {
-        return (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1
-    }
-    
+        
     private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if Singleton.shared.openCount > 1 {
@@ -213,7 +209,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             }
             
         } else { // full window?
-            showDone(popoverPresentationController == nil || phoneMode || isAccessoryWindow)
+            showDone(popoverPresentationController == nil || phoneMode)
         }
         
         let w = windowButtonLocation != .none && UIApplication.shared.supportsMultipleScenes
@@ -239,11 +235,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         b.tag = 10923
         return b
     }()
-    
-    var isAccessoryWindow: Bool {
-        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
-    }
-    
+        
     // MARK: scrolling
     
     private final class ScrollInfo {

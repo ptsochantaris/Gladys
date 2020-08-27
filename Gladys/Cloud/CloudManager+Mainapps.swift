@@ -57,7 +57,7 @@ extension CloudManager {
         }
 
         var sharedZonesToPush = Set<CKRecordZone.ID>()
-        for item in Model.drops.all where item.needsCloudPush {
+        for item in Model.drops where item.needsCloudPush {
             let zoneID = item.parentZone
             if zoneID != privateZoneId {
                 sharedZonesToPush.insert(zoneID)
@@ -385,7 +385,7 @@ extension CloudManager {
                 NSApplication.shared.unregisterForRemoteNotifications()
                 #endif
                 PersistedOptions.lastPushToken = nil
-                for item in Model.drops.all {
+                for item in Model.drops {
                     item.removeFromCloudkit()
                 }
                 Model.save()
@@ -558,8 +558,6 @@ extension CloudManager {
                     case .changed:
                         log("Will update existing local item for cloud record \(recordUUID)")
                         item.cloudKitUpdate(from: record)
-                        item.needsReIngest = true
-                        item.postModified()
                         stats.updateCount += 1
                     case .tagOnly:
                         log("Update but no changes to item record (\(recordUUID)) apart from tag")
@@ -588,7 +586,7 @@ extension CloudManager {
                     stats.pendingShareRecords.remove(at: pendingShareIndex)
                     log("  Hooked onto pending share \((existingShareId.recordName))")
                 }
-                Model.drops.append(newItem)
+                Model.appendDropEfficiently(newItem)
                 NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
                 stats.newDropCount += 1
             }
@@ -720,7 +718,7 @@ extension CloudManager {
 
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
-        for item in Model.drops.all {
+        for item in Model.drops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
                 if var existingFetchGroup = fetchGroups[zoneId] {

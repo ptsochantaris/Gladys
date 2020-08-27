@@ -25,6 +25,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
     @IBOutlet private weak var autoConvertUrlsSwitch: UISwitch!
     @IBOutlet private weak var blockGladysUrls: UISwitch!
+    @IBOutlet private weak var generateLabelsFromTitlesSwitch: UISwitch!
+    @IBOutlet private weak var generateLabelsFromThumbnailsSwitch: UISwitch!
 
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
@@ -33,7 +35,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
-		clearCaches()
+        imageCache.removeAllObjects()
         NotificationCenter.default.post(name: .ForceLayoutRequested, object: nil)
         NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
@@ -118,6 +120,14 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.blockGladysUrlRequests = sender.isOn
     }
     
+    @IBAction private func generateLabelsFromTitleSelected(_ sender: UISwitch) {
+        PersistedOptions.autoGenerateLabelsFromText = sender.isOn
+    }
+
+    @IBAction private func generateLabelsFromThumbnailSelected(_ sender: UISwitch) {
+        PersistedOptions.autoGenerateLabelsFromImage = sender.isOn
+    }
+
     @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
         let on = sender.isOn
         PersistedOptions.mirrorFilesToDocuments = on
@@ -142,6 +152,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
         autoConvertUrlsSwitch.isOn = PersistedOptions.automaticallyDetectAndConvertWebLinks
         blockGladysUrls.isOn = PersistedOptions.blockGladysUrlRequests
+        generateLabelsFromTitlesSwitch.isOn = PersistedOptions.autoGenerateLabelsFromText
+        generateLabelsFromThumbnailsSwitch.isOn = PersistedOptions.autoGenerateLabelsFromImage
 		separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut

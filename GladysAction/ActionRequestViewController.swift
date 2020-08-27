@@ -16,11 +16,8 @@ final class ActionRequestViewController: UIViewController {
 
 	@IBOutlet private weak var statusLabel: UILabel!
 	@IBOutlet private weak var cancelButton: UIBarButtonItem!
-	@IBOutlet private weak var imageHeight: NSLayoutConstraint!
-	@IBOutlet private weak var expandButton: UIButton!
 	@IBOutlet private weak var image: UIImageView!
 	@IBOutlet private weak var labelsButton: UIButton!
-	@IBOutlet private weak var imageOffset: NSLayoutConstraint!
     @IBOutlet private weak var spinner: UIActivityIndicatorView!
     @IBOutlet private weak var check: UIImageView!
     
@@ -64,20 +61,6 @@ final class ActionRequestViewController: UIViewController {
 			return
 		}
 		
-		if !infiniteMode && newTotal > nonInfiniteItemLimit {
-			// ensure the app wasn't just registered, just in case, before we warn the user
-			reVerifyInfiniteMode()
-		}
-
-		if !infiniteMode && newTotal > nonInfiniteItemLimit {
-			imageHeight.constant = 60
-			imageOffset.constant = -140
-			labelsButton.isHidden = true
-			expandButton.isHidden = false
-            error(text: "That operation would result in a total of \(newTotal) items, and Gladys will hold up to \(nonInfiniteItemLimit).\n\nYou can delete older stuff to make space, or you can expand Gladys to hold unlimited items with a one-time in-app purchase.")
-			return
-		}
-
 		var inputItems = extensionContext?.inputItems as? [NSExtensionItem] ?? []
 
 		if inputItems.count == 2 {
@@ -135,20 +118,6 @@ final class ActionRequestViewController: UIViewController {
 			}
 		}
     }
-
-	@IBAction private func expandSelected(_ sender: UIButton) {
-
-		let url = URL(string: "gladys://in-app-purchase/\(newTotal)")!
-
-		cancelRequested(cancelButton) // warning: resets model counts from above!
-
-		let selector = sel_registerName("openURL:")
-		var responder = self as UIResponder?
-		while let r = responder, !r.responds(to: selector) {
-			responder = r.next
-		}
-		_ = responder?.perform(selector, with: url)
-	}
     
     private func showBusy(_ busy: Bool) {
         check.isHidden = busy
@@ -166,10 +135,17 @@ final class ActionRequestViewController: UIViewController {
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
+        
+        if let item = notification.object as? ArchivedItem {
+            for label in item.labels where !ActionRequestViewController.labelsToApply.contains(label) {
+                ActionRequestViewController.labelsToApply.append(label)
+            }
+        }
+        
         guard Model.doneIngesting else {
             return
 		}
-
+        
         if PersistedOptions.setLabelsWhenActioning {
             navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(signalDone))
         }
@@ -191,7 +167,6 @@ final class ActionRequestViewController: UIViewController {
 
     private func reset(ingestOnNextAppearance: Bool) {
         statusLabel.isHidden = true
-        expandButton.isHidden = true
         labelsButton.isHidden = true
         labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
         showBusy(false)
