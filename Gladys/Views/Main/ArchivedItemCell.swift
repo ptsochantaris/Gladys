@@ -2,7 +2,7 @@ import UIKit
 import MapKit
 import CloudKit
 
-#if DEBUG
+#if canImport(PencilKit)
 import PencilKit
 #endif
 
@@ -186,7 +186,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
         
-        #if DEBUG
+        #if canImport(PencilKit)
         if #available(iOS 14.0, *) {
             let pencil = UIIndirectScribbleInteraction(delegate: self)
             addInteraction(pencil)
@@ -546,12 +546,12 @@ final class ArchivedItemCell: UICollectionViewCell {
         return UITargetedPreview(view: container)
     }
     
-    #if DEBUG
-    private var notesField: UITextView?
+    #if canImport(PencilKit)
+    private var notesTextView: UITextView?
     #endif
 }
 
-#if DEBUG
+#if canImport(PencilKit)
 extension ArchivedItemCell: UIIndirectScribbleInteractionDelegate {
     func indirectScribbleInteraction(_ interaction: UIInteraction, shouldDelayFocusForElement elementIdentifier: String) -> Bool {
         return false
@@ -561,28 +561,49 @@ extension ArchivedItemCell: UIIndirectScribbleInteractionDelegate {
     }
 
     func indirectScribbleInteraction(_ interaction: UIInteraction, didFinishWritingInElement elementIdentifier: String) {
-        if let item = archivedDropItem, let text = notesField?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, item.note != text {
+        if let item = archivedDropItem, let text = notesTextView?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, item.note != text {
             item.note = text
             item.markUpdated()
             Model.save()
         }
-        notesField?.removeFromSuperview()
-        notesField = nil
+        
+        if let n = notesTextView {
+            notesTextView = nil
+            UIView.animate(withDuration: 0.15, animations: {
+                n.alpha = 0
+            }, completion: { _ in
+                n.removeFromSuperview()
+            })
+        }
     }
 
     func indirectScribbleInteraction(_ interaction: UIInteraction, focusElementIfNeeded elementIdentifier: String, referencePoint focusReferencePoint: CGPoint, completion: @escaping ((UIResponder & UITextInput)?) -> Void) {
-        if notesField == nil {
-            let f = UITextView()
-            f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
-            f.backgroundColor = UIColor(named: "colorTint")
-            f.textColor = .white
-            f.font = UIFont.preferredFont(forTextStyle: .body)
-            f.textAlignment = .center
-            f.tintColor = UIColor(named: "colorTint")
-            self.image.cover(with: f)
-            notesField = f
+        if let n = notesTextView {
+            completion(n)
+            return
         }
-        completion(notesField)
+        
+        let f = UITextView()
+        f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
+        f.backgroundColor = UIColor(named: "colorTint")
+        f.tintColor = UIColor(named: "colorTint")
+        f.textColor = .white
+        f.font = UIFont.preferredFont(forTextStyle: .headline)
+        f.isEditable = false
+        f.isSelectable = false
+        f.clipsToBounds = true
+        f.layer.cornerRadius = 10
+        f.layer.borderWidth = 1.0 / screenScale
+        f.layer.borderColor = UIColor.opaqueSeparator.cgColor
+        f.autocorrectionType = .no
+        f.alpha = 0
+        self.cover(with: f)
+        notesTextView = f
+        UIView.animate(withDuration: 0.15, animations: {
+            f.alpha = 1
+        }, completion: { _ in
+            completion(f)
+        })
     }
     
     func indirectScribbleInteraction(_ interaction: UIInteraction, requestElementsIn rect: CGRect, completion: @escaping ([String]) -> Void) {
@@ -598,7 +619,7 @@ extension ArchivedItemCell: UIIndirectScribbleInteractionDelegate {
     }
     
     func indirectScribbleInteraction(_ interaction: UIInteraction, isElementFocused elementIdentifier: String) -> Bool {
-        return notesField != nil
+        return notesTextView != nil
     }
 }
 
