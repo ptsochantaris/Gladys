@@ -8,14 +8,15 @@
 
 import UIKit
 
-private let fromFileOptions: CFDictionary = [
-    kCGImageSourceShouldCache: kCFBooleanFalse,
-    kCGImageSourceShouldAllowFloat: kCFBooleanTrue
-] as CFDictionary
-
 let screenScale = UIScreen.main.scale
 
 extension UIImage {
+
+    private static let colourSpace = CGColorSpaceCreateDeviceRGB()
+
+    private static let fromFileOptions: CFDictionary = [
+        kCGImageSourceShouldCache: kCFBooleanFalse
+    ] as CFDictionary
 
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
         
@@ -27,15 +28,13 @@ extension UIImage {
         
         let width = imageRef.width
         let height = imageRef.height
-        let alpha: UInt32
+        let bitmapInfo: UInt32
         switch imageRef.alphaInfo {
         case .none, .noneSkipFirst, .noneSkipLast:
-            alpha = CGImageAlphaInfo.noneSkipFirst.rawValue
+            bitmapInfo = CGImageAlphaInfo.noneSkipFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
         default:
-            alpha = CGImageAlphaInfo.premultipliedFirst.rawValue
+            bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
         }
-        let colourSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo: UInt32 = alpha | CGBitmapInfo.byteOrder32Little.rawValue
         guard let imageContext = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: colourSpace, bitmapInfo: bitmapInfo) else {
             return nil
         }
