@@ -35,10 +35,6 @@ final class NotesEditor: NSViewController {
 		}
 	}
 
-	@IBAction private func cancelSelected(_ sender: NSButton) {
-		dismiss(nil)
-	}
-
 	@IBAction private func saveSelected(_ sender: NSButton) {
 		var changes = false
 		let newText = noteField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)

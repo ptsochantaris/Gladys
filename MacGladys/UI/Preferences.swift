@@ -13,9 +13,9 @@ final class Preferences: NSViewController {
 	@IBOutlet private weak var syncSwitch: NSButton!
 	@IBOutlet private weak var syncSpinner: NSProgressIndicator!
 	@IBOutlet private weak var syncNowButton: NSButton!
-
+    @IBOutlet private weak var syncStatus: NSTextField!
+    
 	@IBOutlet private weak var deleteAllButton: NSButton!
-	@IBOutlet private weak var doneButton: NSButton!
 	@IBOutlet private weak var eraseAlliCloudDataButton: NSButton!
 
 	@IBOutlet private weak var displayNotesSwitch: NSButton!
@@ -166,8 +166,8 @@ final class Preferences: NSViewController {
 
 	override func viewWillAppear() {
 		super.viewWillAppear()
-		view.window!.initialFirstResponder = doneButton
-	}
+        self.view.window?.styleMask.remove(.resizable)
+    }
 
     @IBAction private func convertLabelsToTagsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.readAndStoreFinderTagsAsLabels = sender.integerValue == 1
@@ -280,15 +280,17 @@ final class Preferences: NSViewController {
 			syncSwitch.isEnabled = false
 			syncNowButton.isEnabled = false
 			deleteAllButton.isEnabled = false
-			eraseAlliCloudDataButton.isEnabled = false
-			syncSwitch.title = CloudManager.syncString
+			eraseAlliCloudDataButton.isHidden = true
+			syncStatus.stringValue = CloudManager.syncString
+            syncStatus.isHidden = false
 			syncSpinner.startAnimation(nil)
 		} else {
 			syncSwitch.isEnabled = true
 			syncNowButton.isEnabled = CloudManager.syncSwitchedOn
 			deleteAllButton.isEnabled = true
-			eraseAlliCloudDataButton.isEnabled = true
-			syncSwitch.title = "iCloud Sync"
+            eraseAlliCloudDataButton.isHidden = false
+            syncStatus.stringValue = ""
+            syncStatus.isHidden = true
 			syncSpinner.stopAnimation(nil)
 			syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
 		}
