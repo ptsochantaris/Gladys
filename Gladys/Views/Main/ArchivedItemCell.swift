@@ -73,8 +73,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	override var isHighlighted: Bool {
-		set {}
 		get { return false }
+        set {}
 	}
 
 	var isEditing: Bool = false {
@@ -501,24 +501,23 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	override var isAccessibilityElement: Bool {
-		set {}
 		get {
 			return true
 		}
+        set {}
 	}
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			if shouldDisplayLoading {
 				return nil
 			}
 			return (topLabel.text ?? "") + ((archivedDropItem?.isLocked ?? false) ? "\nItem Locked" : "")
 		}
+        set {}
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			if shouldDisplayLoading {
 				return "Processing item. Activate to cancel."
@@ -536,6 +535,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 				return [archivedDropItem?.dominantTypeDescription, image.accessibilityLabel, image.accessibilityValue, bottomText].compactMap { $0 }.joined(separator: "\n")
 			}
 		}
+        set {}
 	}
 
 	private var shouldDisplayLoading: Bool {

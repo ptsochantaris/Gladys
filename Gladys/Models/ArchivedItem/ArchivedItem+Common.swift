@@ -164,15 +164,15 @@ extension ArchivedItem: Hashable {
 
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
 	var needsCloudPush: Bool {
+        get {
+            return dataAccessQueue.sync {
+                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+            }
+        }
 		set {
             let path = cloudKitDataPath
             dataAccessQueue.async {
                 FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
-            }
-		}
-		get {
-            return dataAccessQueue.sync {
-                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
             }
 		}
 	}

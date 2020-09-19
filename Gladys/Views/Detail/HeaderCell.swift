@@ -122,24 +122,24 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	/////////////////////////////////////
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			return "Title"
 		}
+        set {}
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			return label.accessibilityValue
 		}
+        set {}
 	}
 
 	override var accessibilityHint: String? {
-		set {}
 		get {
 			return "Select to edit"
 		}
+        set {}
 	}
 
 	override func accessibilityActivate() -> Bool {
@@ -148,9 +148,9 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	override var isAccessibilityElement: Bool {
-		set {}
 		get {
 			return !label.isFirstResponder
 		}
+        set {}
 	}
 }

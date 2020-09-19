@@ -15,15 +15,7 @@ extension Component {
 	}
     
 	var componentIcon: NSImage? {
-		set {
-            let ipath = imagePath
-            if let n = newValue, let data = n.tiffRepresentation {
-                try? data.write(to: ipath)
-            } else if FileManager.default.fileExists(atPath: ipath.path) {
-                try? FileManager.default.removeItem(at: ipath)
-            }
-		}
-		get {
+        get {
             guard let d = try? Data(contentsOf: imagePath), let i = NSImage(data: d) else {
                 return nil
             }
@@ -35,6 +27,14 @@ extension Component {
                 i.size = NSSize(width: w * scale, height: h * scale)
             }
             return i
+        }
+		set {
+            let ipath = imagePath
+            if let n = newValue, let data = n.tiffRepresentation {
+                try? data.write(to: ipath)
+            } else if FileManager.default.fileExists(atPath: ipath.path) {
+                try? FileManager.default.removeItem(at: ipath)
+            }
 		}
 	}
 

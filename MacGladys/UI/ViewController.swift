@@ -62,9 +62,6 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 
 	var lastWindowPosition: NSRect? {
-		set {
-			PersistedOptions.defaults.setValue(newValue?.dictionaryRepresentation, forKey: "lastWindowPosition")
-		}
 		get {
 			if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
 				return NSRect(dictionaryRepresentation: d)
@@ -72,6 +69,9 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 				return nil
 			}
 		}
+        set {
+            PersistedOptions.defaults.setValue(newValue?.dictionaryRepresentation, forKey: "lastWindowPosition")
+        }
 	}
 
 	override func windowDidLoad() {

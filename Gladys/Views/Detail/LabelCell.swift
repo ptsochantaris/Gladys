@@ -31,23 +31,23 @@ final class LabelCell: UITableViewCell {
 	/////////////////////////////////////
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			return labelText.accessibilityValue
 		}
+        set {}
 	}
 
 	override var accessibilityHint: String? {
-		set {}
 		get {
 			return label == nil ? "Select to add a new label" : "Select to edit"
 		}
+        set {}
 	}
 
 	override var isAccessibilityElement: Bool {
-		set {}
 		get {
 			return true
 		}
-	}        
+        set {}
+	}
 }

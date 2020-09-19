@@ -5,7 +5,7 @@ PODS:
   - DeepDiff (2.3.1)
   - Fuzi (3.1.2)
   - HotKey (0.1.2)
-  - SwiftLint (0.39.2)
+  - SwiftLint (0.40.2)
   - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
@@ -30,7 +30,7 @@ SPEC CHECKSUMS:
   DeepDiff: e5ae6c50d0321568e4508cec5930b9f10bb293fc
   Fuzi: dba7215e52fb39dd7b1a62f69ede1e30edff0ae1
   HotKey: ad59450195936c10992438c4210f673de5aee43e
-  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
+  SwiftLint: 1216c910d27c2633ade33b4f071bb6b930982e62
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
 PODFILE CHECKSUM: cf7ab3d91153866db0882644b89ca219e58bf673

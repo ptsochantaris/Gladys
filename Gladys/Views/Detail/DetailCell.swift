@@ -175,14 +175,13 @@ final class DetailCell: UITableViewCell {
 	/////////////////////////////////////
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			return desc.text
 		}
+        set {}
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			if name.text == "Binary Data" {
 				return "\(size.text ?? ""), Binary data"
@@ -190,10 +189,10 @@ final class DetailCell: UITableViewCell {
 				return "\(size.text ?? ""), Contents: \(name.text ?? "")"
 			}
 		}
+        set {}
 	}
 
 	override var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
-		set {}
 		get {
 			var actions = [UIAccessibilityCustomAction]()
 			if !viewButton.isHidden {
@@ -210,6 +209,7 @@ final class DetailCell: UITableViewCell {
 			}
 			return actions
 		}
+        set {}
 	}
 
 	override func accessibilityActivate() -> Bool {
@@ -228,9 +228,9 @@ final class DetailCell: UITableViewCell {
 	}
 
 	override var isAccessibilityElement: Bool {
-		set {}
 		get {
 			return true
 		}
+        set {}
 	}
 }

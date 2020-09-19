@@ -16,7 +16,6 @@ final class SwitchHolder: UIView {
 	}
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			let components = subviews
 				.sorted { $0.frame.origin.y < $1.frame.origin.y }
@@ -24,6 +23,7 @@ final class SwitchHolder: UIView {
 			
             return components.isEmpty ? nil : components.joined(separator: ".")
 		}
+        set {}
 	}
 
 	var switchControl: UISwitch? {
@@ -31,24 +31,24 @@ final class SwitchHolder: UIView {
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			return switchControl?.accessibilityValue
 		}
+        set {}
 	}
 
 	override var accessibilityTraits: UIAccessibilityTraits {
-		set {}
 		get {
 			return switchControl?.accessibilityTraits ?? .none
 		}
+        set {}
 	}
 
 	override var accessibilityHint: String? {
-		set {}
 		get {
 			return switchControl?.accessibilityHint
 		}
+        set {}
 	}
 
 	override func accessibilityActivate() -> Bool {

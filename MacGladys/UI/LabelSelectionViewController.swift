@@ -18,10 +18,10 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	}
 
 	override var preferredContentSize: NSSize {
-		set {}
 		get {
 			return NSSize(width: 200, height: ViewController.shared.view.frame.size.height)
 		}
+        set {}
 	}
 
 	func numberOfRows(in tableView: NSTableView) -> Int {

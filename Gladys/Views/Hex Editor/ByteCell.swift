@@ -16,17 +16,17 @@ final class ByteCell: UICollectionViewCell {
 	var address: Int64 = 0
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			return label.text
 		}
+        set {}
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			return String(format: "Location %X", address)
 		}
+        set {}
 	}
 
 	var byte: UInt8 = 0 {

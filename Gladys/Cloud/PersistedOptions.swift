@@ -236,6 +236,9 @@ final class PersistedOptions {
 	}
 
 	static var lastRanVersion: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "LastRanVersion")
+        }
 		set {
 			let d = UserDefaults.standard
 			if let newValue = newValue {
@@ -244,35 +247,32 @@ final class PersistedOptions {
 				d.removeObject(forKey: "LastRanVersion")
 			}
 		}
-		get {
-			return UserDefaults.standard.string(forKey: "LastRanVersion")
-		}
 	}
     
     static var automaticallyDetectAndConvertWebLinks: Bool {
-        set {
-            defaults.set(newValue, forKey: "AutomaticallyConvertWebLinks")
-        }
         get {
             return defaults.bool(forKey: "AutomaticallyConvertWebLinks")
+        }
+        set {
+            defaults.set(newValue, forKey: "AutomaticallyConvertWebLinks")
         }
     }
     
     static var readAndStoreFinderTagsAsLabels: Bool {
-        set {
-            defaults.set(newValue, forKey: "ReadAndStoreFinderTagsAsLabels")
-        }
         get {
             return defaults.bool(forKey: "ReadAndStoreFinderTagsAsLabels")
+        }
+        set {
+            defaults.set(newValue, forKey: "ReadAndStoreFinderTagsAsLabels")
         }
     }
     
     static var blockGladysUrlRequests: Bool {
-        set {
-            defaults.set(newValue, forKey: "BlockGladysUrlRequests")
-        }
         get {
             return defaults.bool(forKey: "BlockGladysUrlRequests")
+        }
+        set {
+            defaults.set(newValue, forKey: "BlockGladysUrlRequests")
         }
     }
 }

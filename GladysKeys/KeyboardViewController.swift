@@ -265,7 +265,6 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
         log("Keyboard extension dismissed")
     }
 

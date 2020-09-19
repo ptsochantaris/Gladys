@@ -10,6 +10,9 @@ import UIKit
 
 extension Component {
     var componentIcon: UIImage? {
+        get {
+            return UIImage.fromFile(imagePath, template: displayIconTemplate)
+        }
         set {
             let ipath = imagePath
             if let n = newValue {
@@ -19,9 +22,6 @@ extension Component {
             } else {
                 try? FileManager.default.removeItem(at: ipath)
             }
-        }
-        get {
-            return UIImage.fromFile(imagePath, template: displayIconTemplate)
         }
     }
 }

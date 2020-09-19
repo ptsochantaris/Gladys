@@ -108,24 +108,24 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	/////////////////////////////////////
 
 	override var accessibilityLabel: String? {
-		set {}
 		get {
 			return placeholder.isHidden ? "Note" : "Add Note"
 		}
+        set {}
 	}
 
 	override var accessibilityValue: String? {
-		set {}
 		get {
 			return textView.accessibilityValue
 		}
+        set {}
 	}
 
 	override var accessibilityHint: String? {
-		set {}
 		get {
 			return placeholder.isHidden ? "Select to edit" : "Select to add a note"
 		}
+        set {}
 	}
 
 	override func accessibilityActivate() -> Bool {
@@ -134,9 +134,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	}
 
 	override var isAccessibilityElement: Bool {
-		set {}
 		get {
 			return !textView.isFirstResponder
 		}
+        set {}
 	}
 }

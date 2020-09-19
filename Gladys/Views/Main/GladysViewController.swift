@@ -93,10 +93,6 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 		}
 	}
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
 	@objc func done() {
         NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
         if (isAccessoryWindow || self is ViewController), let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
