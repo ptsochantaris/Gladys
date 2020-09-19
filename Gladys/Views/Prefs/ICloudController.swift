@@ -1,5 +1,5 @@
 //
-//  iCloudController.swift
+//  ICloudController.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 24/10/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class iCloudController: GladysViewController {
+final class ICloudController: GladysViewController {
 
 	@IBOutlet private weak var icloudLabel: UILabel!
 	@IBOutlet private weak var icloudSwitch: UISwitch!

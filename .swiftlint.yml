@@ -9,7 +9,6 @@ disabled_rules:
   - notification_center_detachment
   - unused_setter_value
   - cyclomatic_complexity
-  - type_name
   - type_body_length
   - force_try
   - implicit_getter

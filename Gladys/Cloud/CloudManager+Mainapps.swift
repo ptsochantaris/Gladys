@@ -8,10 +8,8 @@
 
 #if os(iOS)
 import UIKit
-typealias VC = UIViewController
 #else
 import Cocoa
-typealias VC = NSViewController
 #endif
 import CloudKit
 import GladysFramework
@@ -132,10 +130,10 @@ extension CloudManager {
         }
     }
 
-    typealias iCloudToken = (NSCoding & NSCopying & NSObjectProtocol)
-    static var lastiCloudAccount: iCloudToken? {
+    typealias ICloudToken = (NSCoding & NSCopying & NSObjectProtocol)
+    static var lastiCloudAccount: ICloudToken? {
         get {
-            let o = PersistedOptions.defaults.object(forKey: "lastiCloudAccount") as? iCloudToken
+            let o = PersistedOptions.defaults.object(forKey: "lastiCloudAccount") as? ICloudToken
             return (o?.isEqual("") ?? false) ? nil : o
         }
         set {

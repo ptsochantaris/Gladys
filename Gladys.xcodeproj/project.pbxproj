@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -326,7 +326,7 @@
 		16C8166820CB0354001C12DF /* PullState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166620CB0354001C12DF /* PullState.swift */; };
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
 		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
-		16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */; };
+		16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */; };
 		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
 		16CD7D7320A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7220A0FF570039E6C2 /* Component+IngestCommon.swift */; };
 		16CD7D7420A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D7220A0FF570039E6C2 /* Component+IngestCommon.swift */; };
@@ -812,7 +812,7 @@
 		16C8166620CB0354001C12DF /* PullState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullState.swift; sourceTree = "<group>"; };
 		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		16CA7AA0236F880C00F96699 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudController.swift; sourceTree = "<group>"; };
+		16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		16CD7D7220A0FF570039E6C2 /* Component+IngestCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+IngestCommon.swift"; sourceTree = "<group>"; };
 		16CD7D7B20A108BB0039E6C2 /* ArchivedItem+UICommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+UICommon.swift"; sourceTree = "<group>"; };
@@ -1374,7 +1374,7 @@
 			children = (
 				16D829121F86D3DD00CF06FF /* AboutController.swift */,
 				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
-				16CAB03A1F9FD26D00A9F736 /* iCloudController.swift */,
+				16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */,
 				16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */,
 				1688B82A1FAE60B80014FA1B /* OptionsController.swift */,
 				1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */,
@@ -1976,7 +1976,7 @@
 				};
 			};
 			buildConfigurationList = 1678F9C81EF475FE005697CB /* Build configuration list for PBXProject "Gladys" */;
-			compatibilityVersion = "Xcode 11.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -2501,7 +2501,7 @@
 				1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */,
 				161089A01FA322A90095FE34 /* Component+Cloud.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
-				16CAB03B1F9FD26D00A9F736 /* iCloudController.swift in Sources */,
+				16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */,
 				168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
 				16EEE9B31F9BA1AC008AD9DB /* CloudManager.swift in Sources */,
