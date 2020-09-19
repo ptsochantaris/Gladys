@@ -28,7 +28,8 @@ final class ItemController: WKInterfaceController {
 	@IBOutlet private var copyLabel: WKInterfaceLabel!
 	@IBOutlet private var topGroup: WKInterfaceGroup!
 	@IBOutlet private var bottomGroup: WKInterfaceGroup!
-
+    @IBOutlet private var menuView: WKInterfaceGroup!
+    
 	private var gotImage = false
 	private var context: [String: Any]!
 	private var active = false
@@ -50,7 +51,7 @@ final class ItemController: WKInterfaceController {
 		}
 		updateGroups()
 	}
-
+    
 	deinit {
 		if let observer = observer {
 			NotificationCenter.default.removeObserver(observer)
@@ -86,6 +87,9 @@ final class ItemController: WKInterfaceController {
 	override func willDisappear() {
 		super.willDisappear()
 		ExtensionDelegate.currentUUID = ""
+        if menuVisible {
+            showMenu(false)
+        }
 	}
 
 	private static let topShade = makeGradient(up: true)
@@ -200,6 +204,7 @@ final class ItemController: WKInterfaceController {
 	}
 
 	@IBAction private func viewOnDeviceSelected() {
+        showMenu(false)
 		if let uuid = uuid {
 			opening = true
 			WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
@@ -215,6 +220,7 @@ final class ItemController: WKInterfaceController {
 	}
 
 	@IBAction private func copySelected() {
+        showMenu(false)
 		if let uuid = uuid {
 			copying = true
 			WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
@@ -230,6 +236,7 @@ final class ItemController: WKInterfaceController {
 	}
 
 	@IBAction private func moveToTopSelected() {
+        showMenu(false)
 		if let uuid = uuid {
 			topping = true
 			WCSession.default.sendMessage(["moveToTop": uuid], replyHandler: { _ in
@@ -245,6 +252,7 @@ final class ItemController: WKInterfaceController {
 	}
 
 	@IBAction private func deleteSelected() {
+        showMenu(false)
 		if let uuid = uuid {
 			deleting = true
 			WCSession.default.sendMessage(["delete": uuid], replyHandler: { _ in
@@ -260,13 +268,39 @@ final class ItemController: WKInterfaceController {
 	}
 
 	private static var hidden = false
-	@IBAction private func tapped() {
-		ItemController.hidden = !ItemController.hidden
-		NotificationCenter.default.post(name: .GroupsUpdated, object: nil)
+    @IBAction private func tapped(_ tap: WKTapGestureRecognizer) {
+        ItemController.hidden = !ItemController.hidden
+        NotificationCenter.default.post(name: .GroupsUpdated, object: nil)
 	}
 
 	private func updateGroups() {
 		topGroup.setHidden(ItemController.hidden)
 		bottomGroup.setHidden(ItemController.hidden)
 	}
+    
+    private var menuVisible = false
+    private func showMenu(_ show: Bool) {
+        menuVisible = show
+        if show {
+            menuView.setAlpha(0)
+            menuView.setHidden(false)
+            animate(withDuration: 0.2) {
+                self.menuView.setAlpha(1)
+            }
+
+        } else {
+            animate(withDuration: 0.2) {
+                self.menuView.setAlpha(0)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.menuView.setHidden(true)
+            }
+        }
+    }
+    
+    @IBAction private func longPress(_ press: WKLongPressGestureRecognizer) {
+        if press.state == .began {
+            showMenu(!menuVisible)
+        }
+    }
 }

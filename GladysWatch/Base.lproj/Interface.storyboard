@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15702" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17156" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17034"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
     </dependencies>
     <scenes>
         <!--StartupController-->
@@ -25,77 +26,220 @@
             <objects>
                 <controller identifier="ItemController" alwaysBounce="YES" fullBounds="YES" id="mJP-ds-eku" customClass="ItemController" customModule="GladysWatch" customModuleProvider="target">
                     <items>
-                        <button alignment="center" verticalAlignment="center" id="29O-lL-WJR">
-                            <group key="contentGroup" width="1" height="1" alignment="left" layout="overlap" radius="34" id="D3x-gM-hNW">
-                                <items>
-                                    <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" radius="0.0" id="if9-pT-VGa">
-                                        <items>
-                                            <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
-                                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </imageView>
-                                        </items>
-                                        <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </group>
-                                    <group width="1" alignment="center" layout="overlap" radius="0.0" id="z6C-zg-Pzx">
-                                        <items>
-                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="Hpo-D8-PYh">
-                                                <string key="text">Label
+                        <group width="1" height="1" alignment="left" layout="overlap" id="sDS-Fo-mNN">
+                            <items>
+                                <group width="1" height="1" alignment="left" layout="overlap" id="D3x-gM-hNW">
+                                    <items>
+                                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" id="if9-pT-VGa">
+                                            <items>
+                                                <imageView width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFit" id="yIB-Vg-Pav">
+                                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </imageView>
+                                            </items>
+                                            <color key="backgroundColor" red="0.84313725490196079" green="0.83137254901960778" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </group>
+                                        <group width="1" alignment="center" layout="overlap" radius="0.0" id="z6C-zg-Pzx">
+                                            <items>
+                                                <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="Hpo-D8-PYh">
+                                                    <string key="text">Label
 Label
 Label
 Label</string>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="font" type="system" pointSize="12"/>
-                                            </label>
-                                        </items>
-                                        <edgeInsets key="margins" left="2" right="2" top="2" bottom="10"/>
-                                    </group>
-                                    <group width="1" alignment="center" verticalAlignment="bottom" layout="overlap" radius="0.0" id="bSZ-GK-Zhg">
-                                        <items>
-                                            <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="veG-bS-Gax">
-                                                <string key="text">Label
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="font" type="system" pointSize="12"/>
+                                                </label>
+                                            </items>
+                                            <edgeInsets key="margins" left="2" right="2" top="2" bottom="10"/>
+                                        </group>
+                                        <group width="1" alignment="center" verticalAlignment="bottom" layout="overlap" radius="0.0" id="bSZ-GK-Zhg">
+                                            <items>
+                                                <label width="1" alignment="center" verticalAlignment="center" textAlignment="center" numberOfLines="4" id="veG-bS-Gax">
+                                                    <string key="text">Label
 Label
 Label
 Label</string>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="font" type="system" pointSize="12"/>
-                                            </label>
-                                        </items>
-                                        <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
-                                    </group>
-                                    <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying…" textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    </label>
-                                </items>
-                            </group>
-                            <connections>
-                                <action selector="tapped" destination="mJP-ds-eku" id="6xp-2N-xgo"/>
-                            </connections>
-                        </button>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="font" type="system" pointSize="12"/>
+                                                </label>
+                                            </items>
+                                            <edgeInsets key="margins" left="2" right="2" top="10" bottom="2"/>
+                                        </group>
+                                        <label alignment="center" verticalAlignment="center" hidden="YES" text="Copying…" textAlignment="center" numberOfLines="0" id="BFr-jH-zmC">
+                                            <color key="textColor" systemColor="darkTextColor"/>
+                                        </label>
+                                    </items>
+                                    <gestureRecognizers>
+                                        <tapGestureRecognizer id="UTZ-2K-ZJ4">
+                                            <connections>
+                                                <action selector="tapped:" destination="mJP-ds-eku" id="n1m-kN-Sa9"/>
+                                            </connections>
+                                        </tapGestureRecognizer>
+                                    </gestureRecognizers>
+                                </group>
+                                <group width="1" height="1" alignment="left" hidden="YES" layout="vertical" id="Nxs-Vz-OnI" userLabel="Menu">
+                                    <items>
+                                        <group alignment="center" verticalAlignment="center" layout="vertical" spacing="4" id="Quk-cl-KJN">
+                                            <items>
+                                                <button alignment="left" id="GFP-R2-744">
+                                                    <group key="contentGroup" width="1" alignment="left" spacing="5" id="AQe-wI-4Ew">
+                                                        <items>
+                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" image="eye.fill" catalog="system" contentMode="scaleAspectFit" id="Mbv-H6-cwX">
+                                                                <color key="tintColor" name="colorTint"/>
+                                                            </imageView>
+                                                            <label alignment="left" verticalAlignment="center" text="View on Device" id="ugw-bZ-i57">
+                                                                <color key="textColor" name="colorDarkGray"/>
+                                                                <fontDescription key="font" type="system" pointSize="11"/>
+                                                                <variation key="device=watch40mm">
+                                                                    <fontDescription key="font" type="system" pointSize="15"/>
+                                                                </variation>
+                                                                <variation key="device=watch42mm">
+                                                                    <fontDescription key="font" type="system" pointSize="14"/>
+                                                                </variation>
+                                                                <variation key="device=watch44mm">
+                                                                    <fontDescription key="font" type="system" pointSize="17"/>
+                                                                </variation>
+                                                            </label>
+                                                        </items>
+                                                        <color key="backgroundColor" name="colorPaper"/>
+                                                        <edgeInsets key="margins" left="6" right="6" top="9" bottom="9"/>
+                                                        <variation key="device=watch40mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="9" bottom="9"/>
+                                                        </variation>
+                                                        <variation key="device=watch42mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="10" bottom="10"/>
+                                                        </variation>
+                                                        <variation key="device=watch44mm" spacing="6">
+                                                            <edgeInsets key="margins" left="10" right="6" top="11" bottom="11"/>
+                                                        </variation>
+                                                    </group>
+                                                    <connections>
+                                                        <action selector="viewOnDeviceSelected" destination="mJP-ds-eku" id="ueg-1k-Ct1"/>
+                                                    </connections>
+                                                </button>
+                                                <button alignment="left" id="4Uy-Ze-hkk">
+                                                    <group key="contentGroup" width="1" alignment="left" spacing="5" id="uuj-Ii-tWs">
+                                                        <items>
+                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" image="doc.on.clipboard.fill" catalog="system" contentMode="scaleAspectFit" id="F3c-Hp-8hC">
+                                                                <color key="tintColor" name="colorTint"/>
+                                                            </imageView>
+                                                            <label alignment="left" verticalAlignment="center" text="Copy" id="X3t-Zf-zhW">
+                                                                <color key="textColor" name="colorDarkGray"/>
+                                                                <fontDescription key="font" type="system" pointSize="11"/>
+                                                                <variation key="device=watch40mm">
+                                                                    <fontDescription key="font" type="system" pointSize="15"/>
+                                                                </variation>
+                                                                <variation key="device=watch42mm">
+                                                                    <fontDescription key="font" type="system" pointSize="14"/>
+                                                                </variation>
+                                                                <variation key="device=watch44mm">
+                                                                    <fontDescription key="font" type="system" pointSize="17"/>
+                                                                </variation>
+                                                            </label>
+                                                        </items>
+                                                        <color key="backgroundColor" name="colorPaper"/>
+                                                        <edgeInsets key="margins" left="6" right="6" top="9" bottom="9"/>
+                                                        <variation key="device=watch40mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="9" bottom="9"/>
+                                                        </variation>
+                                                        <variation key="device=watch42mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="10" bottom="10"/>
+                                                        </variation>
+                                                        <variation key="device=watch44mm" spacing="6">
+                                                            <edgeInsets key="margins" left="10" right="6" top="11" bottom="11"/>
+                                                        </variation>
+                                                    </group>
+                                                    <connections>
+                                                        <action selector="copySelected" destination="mJP-ds-eku" id="E6l-1I-yIl"/>
+                                                    </connections>
+                                                </button>
+                                                <button alignment="left" id="27c-bq-9FJ">
+                                                    <group key="contentGroup" width="1" alignment="left" spacing="5" id="XJC-QW-FLk">
+                                                        <items>
+                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" image="arrow.up.square.fill" catalog="system" contentMode="scaleAspectFit" id="CIm-zh-it1">
+                                                                <color key="tintColor" name="colorTint"/>
+                                                            </imageView>
+                                                            <label alignment="left" verticalAlignment="center" text="Move to Top" id="2Ii-vc-5Fu">
+                                                                <color key="textColor" name="colorDarkGray"/>
+                                                                <fontDescription key="font" type="system" pointSize="11"/>
+                                                                <variation key="device=watch40mm">
+                                                                    <fontDescription key="font" type="system" pointSize="15"/>
+                                                                </variation>
+                                                                <variation key="device=watch42mm">
+                                                                    <fontDescription key="font" type="system" pointSize="14"/>
+                                                                </variation>
+                                                                <variation key="device=watch44mm">
+                                                                    <fontDescription key="font" type="system" pointSize="17"/>
+                                                                </variation>
+                                                            </label>
+                                                        </items>
+                                                        <color key="backgroundColor" name="colorPaper"/>
+                                                        <edgeInsets key="margins" left="6" right="6" top="9" bottom="9"/>
+                                                        <variation key="device=watch40mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="9" bottom="9"/>
+                                                        </variation>
+                                                        <variation key="device=watch42mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="10" bottom="10"/>
+                                                        </variation>
+                                                        <variation key="device=watch44mm" spacing="6">
+                                                            <edgeInsets key="margins" left="10" right="6" top="11" bottom="11"/>
+                                                        </variation>
+                                                    </group>
+                                                    <connections>
+                                                        <action selector="moveToTopSelected" destination="mJP-ds-eku" id="MfG-V5-j6a"/>
+                                                    </connections>
+                                                </button>
+                                                <button alignment="left" id="Ucw-Jd-QYV">
+                                                    <group key="contentGroup" width="1" alignment="left" spacing="5" id="ddR-pr-cej">
+                                                        <items>
+                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" image="bin.xmark.fill" catalog="system" contentMode="scaleAspectFit" id="eV3-QB-rTJ">
+                                                                <color key="tintColor" name="colorTint"/>
+                                                            </imageView>
+                                                            <label alignment="left" verticalAlignment="center" text="Delete Item" id="zOZ-yf-Ljy">
+                                                                <color key="textColor" name="colorDarkGray"/>
+                                                                <fontDescription key="font" type="system" pointSize="11"/>
+                                                                <variation key="device=watch40mm">
+                                                                    <fontDescription key="font" type="system" pointSize="15"/>
+                                                                </variation>
+                                                                <variation key="device=watch42mm">
+                                                                    <fontDescription key="font" type="system" pointSize="14"/>
+                                                                </variation>
+                                                                <variation key="device=watch44mm">
+                                                                    <fontDescription key="font" type="system" pointSize="17"/>
+                                                                </variation>
+                                                            </label>
+                                                        </items>
+                                                        <color key="backgroundColor" name="colorPaper"/>
+                                                        <edgeInsets key="margins" left="6" right="6" top="9" bottom="9"/>
+                                                        <variation key="device=watch40mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="9" bottom="9"/>
+                                                        </variation>
+                                                        <variation key="device=watch42mm" spacing="6">
+                                                            <edgeInsets key="margins" left="7" right="6" top="10" bottom="10"/>
+                                                        </variation>
+                                                        <variation key="device=watch44mm" spacing="6">
+                                                            <edgeInsets key="margins" left="10" right="6" top="11" bottom="11"/>
+                                                        </variation>
+                                                    </group>
+                                                    <connections>
+                                                        <action selector="deleteSelected" destination="mJP-ds-eku" id="IiW-CU-ErS"/>
+                                                    </connections>
+                                                </button>
+                                            </items>
+                                        </group>
+                                    </items>
+                                    <color key="backgroundColor" white="0.0" alpha="0.69718535958904104" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <edgeInsets key="margins" left="6" right="6" top="6" bottom="6"/>
+                                </group>
+                            </items>
+                            <gestureRecognizers>
+                                <longPressGestureRecognizer delaysTouchesBegan="YES" id="QJ2-eP-whY">
+                                    <connections>
+                                        <action selector="longPress:" destination="mJP-ds-eku" id="2By-dC-89h"/>
+                                    </connections>
+                                </longPressGestureRecognizer>
+                            </gestureRecognizers>
+                        </group>
                     </items>
-                    <menu key="menu" id="C7V-jZ-1AQ">
-                        <items>
-                            <menuItem title="Delete" icon="trash" id="CrJ-Bd-Ra6">
-                                <connections>
-                                    <action selector="deleteSelected" destination="mJP-ds-eku" id="Z6u-so-32f"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Move to Top" image="List" id="Sd6-N8-wup">
-                                <connections>
-                                    <action selector="moveToTopSelected" destination="mJP-ds-eku" id="C2C-PD-nEf"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="View in app" image="View" id="VTy-Yq-BjD" userLabel="View on Phone">
-                                <connections>
-                                    <action selector="viewOnDeviceSelected" destination="mJP-ds-eku" id="rcu-PE-mvN"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Copy to Clipboard" image="Copy" id="ioU-vk-SBJ">
-                                <connections>
-                                    <action selector="copySelected" destination="mJP-ds-eku" id="I7A-QN-aqD"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
                     <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                     <connections>
                         <outlet property="bottomGroup" destination="bSZ-GK-Zhg" id="gY8-2L-wM6"/>
@@ -103,6 +247,7 @@ Label</string>
                         <outlet property="date" destination="veG-bS-Gax" id="11B-hx-sv3"/>
                         <outlet property="image" destination="yIB-Vg-Pav" id="1MP-Uk-6tp"/>
                         <outlet property="label" destination="Hpo-D8-PYh" id="Gia-eZ-tWi"/>
+                        <outlet property="menuView" destination="Nxs-Vz-OnI" id="gBP-wf-Ceu"/>
                         <outlet property="topGroup" destination="z6C-zg-Pzx" id="fGq-x0-zS5"/>
                     </connections>
                 </controller>
@@ -123,9 +268,23 @@ Label</string>
             <point key="canvasLocation" x="-5" y="501"/>
         </scene>
     </scenes>
+    <color key="tintColor" name="colorTint"/>
     <resources>
-        <image name="Copy" width="20" height="27"/>
-        <image name="List" width="23" height="19"/>
-        <image name="View" width="27" height="21"/>
+        <image name="arrow.up.square.fill" catalog="system" width="128" height="114"/>
+        <image name="bin.xmark.fill" catalog="system" width="128" height="91"/>
+        <image name="doc.on.clipboard.fill" catalog="system" width="119" height="128"/>
+        <image name="eye.fill" catalog="system" width="128" height="77"/>
+        <namedColor name="colorDarkGray">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorPaper">
+            <color red="0.90196078431372551" green="0.89803921568627454" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorTint">
+            <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
