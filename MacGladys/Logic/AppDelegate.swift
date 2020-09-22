@@ -126,15 +126,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			a.informativeText = "This is an archive of Gladys items that was previously exported. Would you like to import the items inside this archive to your current collection?"
 			a.addButton(withTitle: "Cancel")
 			a.addButton(withTitle: "Import Items")
-			a.beginSheetModal(for: ViewController.shared.view.window!) { response in
-				switch response.rawValue {
-				case 1000:
-					log("Cancelled")
-				default:
-					let url = URL(fileURLWithPath: name)
-					self.proceedWithImport(from: url)
-				}
-			}
+            let response = a.runModal()
+            switch response.rawValue {
+            case 1000:
+                log("Cancelled")
+            default:
+                let url = URL(fileURLWithPath: name)
+                self.proceedWithImport(from: url)
+            }
 		} else {
 			ViewController.shared.importFiles(paths: filenames)
 		}
@@ -325,13 +324,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		o.message = "Select an archive from which to\nmerge items into your existing collection."
 		o.isExtensionHidden = true
 		o.allowedFileTypes = ["gladysArchive"]
-		o.beginSheetModal(for: w) { [weak self] response in
-			if response == .OK, let url = o.url {
-				DispatchQueue.main.async {
-					self?.proceedWithImport(from: url)
-				}
-			}
-		}
+        let response = o.runModal()
+        if response == .OK, let url = o.url {
+            proceedWithImport(from: url)
+        }
 	}
 
 	private func proceedWithImport(from url: URL) {
@@ -353,7 +349,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			a.alertStyle = .warning
 			a.messageText = "Operation Failed"
 			a.informativeText = error.finalDescription
-			a.beginSheetModal(for: ViewController.shared.view.window!, completionHandler: nil)
+            a.runModal()
 		}
 	}
 
@@ -371,14 +367,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		s.isExtensionHidden = true
 		s.nameFieldStringValue = "Gladys Archive"
 		s.allowedFileTypes = ["gladysArchive"]
-		s.beginSheetModal(for: w) { response in
-			if response == .OK, let selectedUrl = s.url {
-                let p = Model.createArchive(using: Model.sharedFilter) { createdUrl, error in
-					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
-				}
-				ViewController.shared.startProgress(for: p)
-			}
-		}
+        let response = s.runModal()
+        if response == .OK, let selectedUrl = s.url {
+            let p = Model.createArchive(using: Model.sharedFilter) { createdUrl, error in
+                self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
+            }
+            ViewController.shared.startProgress(for: p)
+        }
 	}
 
 	@objc private func onlyVisibleItemsToggled(_ sender: NSButton) {
@@ -406,15 +401,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		s.isExtensionHidden = true
 		s.nameFieldStringValue = "Gladys"
 		s.allowedFileTypes = [kUTTypeZipArchive as String]
-		s.beginSheetModal(for: w) { response in
-			if response == .OK, let selectedUrl = s.url {
-				assert(Thread.isMainThread)
-                let p = Model.createZip(using: Model.sharedFilter) { createdUrl, error in
-					self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
-				}
-				ViewController.shared.startProgress(for: p)
-			}
-		}
+        let response = s.runModal()
+        if response == .OK, let selectedUrl = s.url {
+            assert(Thread.isMainThread)
+            let p = Model.createZip(using: Model.sharedFilter) { createdUrl, error in
+                self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
+            }
+            ViewController.shared.startProgress(for: p)
+        }
 	}
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -493,16 +487,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			a.addButton(withTitle: "Sort Selected")
 			a.addButton(withTitle: "Sort All")
 			a.addButton(withTitle: "Cancel")
-			a.beginSheetModal(for: ViewController.shared.view.window!) { response in
-				switch response.rawValue {
-				case 1000:
-					self.proceedWithSort(sender: sender, items: selectedItems)
-				case 1001:
-					self.proceedWithSort(sender: sender, items: [])
-				default:
-					break
-				}
-			}
+            let response = a.runModal()
+            switch response.rawValue {
+            case 1000:
+                self.proceedWithSort(sender: sender, items: selectedItems)
+            case 1001:
+                self.proceedWithSort(sender: sender, items: [])
+            default:
+                break
+            }
 		}
 	}
 

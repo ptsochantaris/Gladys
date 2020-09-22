@@ -13,6 +13,11 @@ final class ProgressViewController: NSViewController {
 	@IBOutlet private weak var progressIndicator: NSProgressIndicator!
 
     private var observer: NSKeyValueObservation?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Processing..."
+    }
 
 	func startMonitoring(progress: Progress?, titleOverride: String?) {
 		if let monitoredProgress = progress {

@@ -25,14 +25,8 @@ func genericAlert(title: String, message: String?, windowOverride: NSWindow? = n
 		a.informativeText = message
 	}
     
-    if let window = windowOverride ?? finalVC.view.window {
-        a.beginSheetModal(for: window) { _ in
-            completion?()
-        }
-    } else {
-        a.runModal()
-        completion?()
-    }
+    a.runModal()
+    completion?()
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
@@ -676,18 +670,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
             
 			for type in pasteboardItem.types {
-				if let data = pasteboardItem.data(forType: type), !data.isEmpty {
-					count += 1
-                    extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-						let p = Progress()
-						p.totalUnitCount = 1
-						DispatchQueue.global(qos: .userInitiated).async {
-							callback(data, nil)
-							p.completedUnitCount = 1
-						}
-						return p
-					}
-				}
+                count += 1
+                extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+                    let p = Progress()
+                    p.totalUnitCount = 1
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let data = pasteboardItem.data(forType: type)
+                        callback(data, nil)
+                        p.completedUnitCount = 1
+                    }
+                    return p
+                }
 			}
 			return count > 0 ? extractor : nil
 		}
@@ -851,24 +844,23 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		input.placeholderString = "Password"
 		a.accessoryView = input
 		a.window.initialFirstResponder = input
-		a.beginSheetModal(for: view.window!) { [weak self] response in
-			if response.rawValue == 1000 {
-				let text = input.stringValue
-				let hash = sha1(text)
-				var successCount = 0
-				for item in items where item.lockPassword == hash {
-					item.lockPassword = nil
-					item.lockHint = nil
-                    item.flags.remove(.needsUnlock)
-					item.markUpdated()
-					successCount += 1
-				}
-				if successCount == 0 {
-                    self?.removeLockWithPassword(items: items, label: label, plural: plural)
-				} else {
-					Model.save()
-				}
-			}
+        let response = a.runModal()
+        if response.rawValue == 1000 {
+            let text = input.stringValue
+            let hash = sha1(text)
+            var successCount = 0
+            for item in items where item.lockPassword == hash {
+                item.lockPassword = nil
+                item.lockHint = nil
+                item.flags.remove(.needsUnlock)
+                item.markUpdated()
+                successCount += 1
+            }
+            if successCount == 0 {
+                removeLockWithPassword(items: items, label: label, plural: plural)
+            } else {
+                Model.save()
+            }
 		}
 	}
 
@@ -917,23 +909,22 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		hint.nextKeyView = password
 		a.accessoryView = input
 		a.window.initialFirstResponder = password
-		a.beginSheetModal(for: view.window!) { [weak self] response in
-			if response.rawValue == 1000 {
-				let text = password.stringValue
-				if !text.isEmpty {
-					let hashed = sha1(text)
-					for item in items {
-                        item.flags.insert(.needsUnlock)
-						item.lockPassword = hashed
-						item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
-						item.markUpdated()
-					}
-					Model.save()
-				} else {
-					self?.createLock(sender)
-				}
-			}
-		}
+        let response = a.runModal()
+        if response.rawValue == 1000 {
+            let text = password.stringValue
+            if !text.isEmpty {
+                let hashed = sha1(text)
+                for item in items {
+                    item.flags.insert(.needsUnlock)
+                    item.lockPassword = hashed
+                    item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
+                    item.markUpdated()
+                }
+                Model.save()
+            } else {
+                createLock(sender)
+            }
+        }
 	}
     
     @objc func unlock(_ sender: Any?) {
@@ -963,21 +954,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		input.placeholderString = "Password"
 		a.accessoryView = input
 		a.window.initialFirstResponder = input
-		a.beginSheetModal(for: view.window!) { [weak self] response in
-			if response.rawValue == 1000 {
-				let text = input.stringValue
-				var successCount = 0
-				let hashed = sha1(text)
-				for item in items where item.lockPassword == hashed {
-                    item.flags.remove(.needsUnlock)
-					item.postModified()
-					successCount += 1
-				}
-				if successCount == 0 {
-					self?.unlockWithPassword(items: items, label: label, plural: plural)
-				}
-			}
-		}
+        let response = a.runModal()
+        if response.rawValue == 1000 {
+            let text = input.stringValue
+            var successCount = 0
+            let hashed = sha1(text)
+            for item in items where item.lockPassword == hashed {
+                item.flags.remove(.needsUnlock)
+                item.postModified()
+                successCount += 1
+            }
+            if successCount == 0 {
+                unlockWithPassword(items: items, label: label, plural: plural)
+            }
+        }
 	}
 
 	@objc func info(_ sender: Any?) {
@@ -1063,14 +1053,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			a.addButton(withTitle: "Cancel")
 			a.showsSuppressionButton = true
 			a.suppressionButton?.title = "Don't ask me again"
-			a.beginSheetModal(for: view.window!) { response in
-				if response.rawValue == 1000 {
-                    Model.delete(items: items)
-					if let s = a.suppressionButton, s.integerValue > 0 {
-						PersistedOptions.unconfirmedDeletes = true
-					}
-				}
-			}
+            let response = a.runModal()
+            if response.rawValue == 1000 {
+                Model.delete(items: items)
+                if let s = a.suppressionButton, s.integerValue > 0 {
+                    PersistedOptions.unconfirmedDeletes = true
+                }
+            }
 		}
 	}
 
