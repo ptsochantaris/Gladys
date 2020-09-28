@@ -127,30 +127,6 @@ final class Component: Codable {
 	var canPreviewCache: Bool?
 
 	#if MAINAPP || MAC
-	init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
-
-		self.typeIdentifier = typeIdentifier
-		self.order = order
-
-		uuid = UUID()
-        self.parentUuid = parentUuid
-
-        displayIconPriority = 0
-		displayIconContentMode = .center
-		displayTitlePriority = 0
-		displayTitleAlignment = .center
-		displayIconTemplate = false
-		classWasWrapped = false
-		needsDeletion = false
-        flags = []
-		createdAt = Date()
-		updatedAt = createdAt
-		representedClass = .data
-		setBytes(data)
-        
-        Component.register(self)
-	}
-
 	init(cloning item: Component, newParentUUID: UUID) {
 		uuid = UUID()
         parentUuid = newParentUUID
@@ -177,6 +153,30 @@ final class Component: Codable {
 	#endif
 
 	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
+    init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
+
+        self.typeIdentifier = typeIdentifier
+        self.order = order
+
+        uuid = UUID()
+        self.parentUuid = parentUuid
+
+        displayIconPriority = 0
+        displayIconContentMode = .center
+        displayTitlePriority = 0
+        displayTitleAlignment = .center
+        displayIconTemplate = false
+        classWasWrapped = false
+        needsDeletion = false
+        flags = []
+        createdAt = Date()
+        updatedAt = createdAt
+        representedClass = .data
+        setBytes(data)
+        
+        Component.register(self)
+    }
+
 	init(typeIdentifier: String, parentUuid: UUID, order: Int) {
 
 		self.typeIdentifier = typeIdentifier

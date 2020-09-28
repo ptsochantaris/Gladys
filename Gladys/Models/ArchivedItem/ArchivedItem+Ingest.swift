@@ -52,7 +52,9 @@ extension ArchivedItem {
         
         let autoText = PersistedOptions.autoGenerateLabelsFromText
         let autoImage = PersistedOptions.autoGenerateLabelsFromImage
-        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, autoText || autoImage {
+        let ocrImage = PersistedOptions.autoGenerateTextFromImage
+        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, autoText || autoImage || ocrImage {
+            var newComponent: Component?
             let finalTitle = displayText.0
             let img: CGImage?
             #if os(macOS)
@@ -67,6 +69,43 @@ extension ArchivedItem {
             let mode = displayMode
             Component.ingestQueue.async {
                 var tags = [String]()
+
+                if #available(OSX 10.15, iOS 13.0, *), (autoImage || ocrImage), mode == .fill, let img = img {
+                    var requests = [VNImageBasedRequest]()
+                    if autoImage {
+                        requests.append(VNClassifyImageRequest())
+                    }
+                    if ocrImage {
+                        let request = VNRecognizeTextRequest()
+                        request.recognitionLevel = .accurate
+                        requests.append(request)
+                    }
+
+                    if !requests.isEmpty {
+                        let handler = VNImageRequestHandler(cgImage: img)
+                        try? handler.perform(requests)
+                    }
+                    
+                    if let classificationRequest = requests.first(where: { $0 is VNClassifyImageRequest }) as? VNClassifyImageRequest,
+                       let observations = classificationRequest.results as? [VNClassificationObservation] {
+
+                        let relevant = observations.filter {
+                            $0.hasMinimumPrecision(0.7, forRecall: 0)
+                        }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
+                        tags.append(contentsOf: relevant)
+                    }
+                    
+                    if let ocrRequest = requests.first(where: { $0 is VNRecognizeTextRequest }) as? VNRecognizeTextRequest,
+                       let observations = ocrRequest.results as? [VNRecognizedTextObservation] {
+
+                        let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !detectedText.isEmpty, let data = detectedText.data(using: .utf8) {
+                            newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
+                            newComponent?.accessoryTitle = detectedText
+                        }
+                    }
+                }
+
                 if autoText, let finalTitle = finalTitle {
                     let tagger = NLTagger(tagSchemes: [.nameType])
                     tagger.string = finalTitle
@@ -82,20 +121,11 @@ extension ArchivedItem {
                     }
                     tags.append(contentsOf: textTags)
                 }
-                
-                if #available(OSX 10.15, iOS 13.0, *), autoImage, mode == .fill, let img = img {
-                    let handler = VNImageRequestHandler(cgImage: img)
-                    let request = VNClassifyImageRequest()
-                    try? handler.perform([request])
-                    if let observations = request.results as? [VNClassificationObservation] {
-                        let relevant = observations.filter {
-                            $0.hasMinimumPrecision(0.7, forRecall: 0)
-                        }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                        tags.append(contentsOf: relevant)
-                    }
-                }
-                
+
                 DispatchQueue.main.async {
+                    if let o = newComponent {
+                        self.components.insert(o, at: 0)
+                    }
                     for tag in tags where !self.labels.contains(tag) {
                         self.labels.append(tag)
                     }
