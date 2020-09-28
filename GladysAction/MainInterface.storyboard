@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ona-bB-sCC">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -37,8 +39,8 @@
                                         <rect key="frame" x="123.5" y="232" width="33" height="33"/>
                                         <color key="color" name="colorTint"/>
                                     </activityIndicatorView>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-t2-fVq">
-                                        <rect key="frame" x="86" y="265" width="108" height="0.0"/>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-t2-fVq">
+                                        <rect key="frame" x="86.5" y="265" width="107" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <state key="normal" title="Note &amp; Labels"/>
                                         <connections>
@@ -46,7 +48,7 @@
                                         </connections>
                                     </button>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HyJ-oj-52E">
-                                        <rect key="frame" x="106.5" y="265" width="67.5" height="0.0"/>
+                                        <rect key="frame" x="106.5" y="265" width="67" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -57,13 +59,13 @@
                                 </constraints>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="VVe-Uw-JpX"/>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="VVe-Uw-JpX" firstAttribute="trailing" secondItem="Jgp-rO-Atm" secondAttribute="trailing" constant="20" id="424-fi-hyc"/>
                             <constraint firstItem="QQw-Qu-GXD" firstAttribute="centerY" secondItem="VVe-Uw-JpX" secondAttribute="centerY" constant="-60" id="gLQ-VJ-cOr"/>
                             <constraint firstItem="Jgp-rO-Atm" firstAttribute="leading" secondItem="VVe-Uw-JpX" secondAttribute="leading" constant="20" id="khb-nu-x5i"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="VVe-Uw-JpX"/>
                     </view>
                     <navigationItem key="navigationItem" id="mCn-lq-9Sr">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="4KA-eY-A04">
@@ -127,16 +129,16 @@
                                             <rect key="frame" x="20" y="15.5" width="280" height="34"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-g5-P07">
-                                                    <rect key="frame" x="0.0" y="0.0" width="174" height="34"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="175" height="34"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="BYY-3D-u8m" id="fbg-n5-IRa"/>
                                                     </connections>
                                                 </textField>
-                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOa-wm-AgD">
-                                                    <rect key="frame" x="194" y="0.0" width="86" height="34"/>
+                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOa-wm-AgD">
+                                                    <rect key="frame" x="195" y="0.0" width="85" height="34"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <state key="normal" title="Add Note…"/>
                                                     <connections>
@@ -162,13 +164,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ut-h9-8Vl">
-                                                    <rect key="frame" x="15" y="15" width="262" height="40"/>
+                                                    <rect key="frame" x="16" y="15" width="260" height="40"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="circle" catalog="system" highlightedImage="checkmark.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-qO-gUb">
-                                                    <rect key="frame" x="285" y="25.5" width="20" height="19"/>
+                                                    <rect key="frame" x="284" y="25.5" width="20" height="19"/>
                                                     <color key="tintColor" name="colorTint"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="IlX-4s-iEv"/>
@@ -203,6 +205,7 @@
                                 <color key="color" name="colorTint"/>
                             </activityIndicatorView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
                         <color key="backgroundColor" name="colorPaper"/>
                         <constraints>
                             <constraint firstItem="F5v-aE-vAS" firstAttribute="trailing" secondItem="5aI-Qq-s6Y" secondAttribute="trailing" id="1LW-Ba-24I"/>
@@ -213,7 +216,6 @@
                             <constraint firstItem="l3k-ED-9Ww" firstAttribute="centerY" secondItem="gjt-sS-I4S" secondAttribute="centerY" id="uqO-D4-I5n"/>
                         </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
-                        <viewLayoutGuide key="safeArea" id="F5v-aE-vAS"/>
                     </view>
                     <navigationItem key="navigationItem" title="Labels" id="s2C-7E-Vaa"/>
                     <size key="freeformSize" width="320" height="480"/>
@@ -237,13 +239,13 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
+                    <viewLayoutGuide key="safeArea" id="UNU-Hk-soI"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="iEP-oB-gY3" firstAttribute="centerY" secondItem="1oI-9b-WQS" secondAttribute="centerY" id="CdD-TY-PhS"/>
                         <constraint firstItem="iEP-oB-gY3" firstAttribute="leading" secondItem="UNU-Hk-soI" secondAttribute="leading" constant="16" id="RqH-vr-oKw"/>
                         <constraint firstItem="UNU-Hk-soI" firstAttribute="trailing" secondItem="iEP-oB-gY3" secondAttribute="trailing" constant="16" id="Zmy-5K-XFb"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="UNU-Hk-soI"/>
                 </view>
             </objects>
             <point key="canvasLocation" x="1133" y="-19"/>
@@ -297,5 +299,11 @@
         <namedColor name="colorTint">
             <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

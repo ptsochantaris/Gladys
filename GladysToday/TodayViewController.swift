@@ -132,7 +132,11 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
             newSize.height -= 2
         }
 
-        cellSize = newSize
+        if newSize.width < 0 || newSize.height < 0 {
+            cellSize = .zero
+        } else {
+            cellSize = newSize
+        }
         
 		updateUI()
 	}

@@ -31,7 +31,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 	}
     
     @objc private func itemIngested(_ notification: Notification?) {
-        if Model.doneIngesting && !Model.drops.isEmpty {
+        if Model.doneIngesting {
             navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
         }
     }
