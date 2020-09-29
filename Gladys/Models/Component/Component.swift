@@ -257,5 +257,9 @@ final class Component: Codable {
 		setBytes(typeItem.bytes)
         
         Component.register(self)
-	}    
+	}
+    
+    var dataExists: Bool {
+        return FileManager.default.fileExists(atPath: bytesPath.path)
+    }
 }

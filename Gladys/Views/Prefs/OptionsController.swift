@@ -28,7 +28,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private weak var generateLabelsFromTitlesSwitch: UISwitch!
     @IBOutlet private weak var generateLabelsFromThumbnailsSwitch: UISwitch!
     @IBOutlet private weak var generateTextFromThumbnailsSwitch: UISwitch!
-
+    @IBOutlet private weak var applyMlToUrlsSwitch: UISwitch!
+    
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
 	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
 	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
@@ -132,6 +133,10 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func generateTextFromThumbnailSelected(_ sender: UISwitch) {
         PersistedOptions.autoGenerateTextFromImage = sender.isOn
     }
+    
+    @IBAction private func applyMlToUrlsSwitchSelected(_ sender: UISwitch) {
+        PersistedOptions.includeUrlImagesInMlLogic = sender.isOn
+    }
 
     @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
         let on = sender.isOn
@@ -160,6 +165,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         generateLabelsFromTitlesSwitch.isOn = PersistedOptions.autoGenerateLabelsFromText
         generateLabelsFromThumbnailsSwitch.isOn = PersistedOptions.autoGenerateLabelsFromImage
         generateTextFromThumbnailsSwitch.isOn = PersistedOptions.autoGenerateTextFromImage
+        applyMlToUrlsSwitch.isOn = PersistedOptions.includeUrlImagesInMlLogic
         separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference
 		removeItemsWhenDraggedOutSwitch.isOn = PersistedOptions.removeItemsWhenDraggedOut

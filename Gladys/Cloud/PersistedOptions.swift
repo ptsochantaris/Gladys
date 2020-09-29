@@ -57,6 +57,15 @@ final class PersistedOptions {
             defaults.set(newValue, forKey: "autoGenerateLabelsFromImage")
         }
     }
+    
+    static var includeUrlImagesInMlLogic: Bool {
+        get {
+            return defaults.bool(forKey: "includeUrlImagesInMlLogic")
+        }
+        set {
+            defaults.set(newValue, forKey: "includeUrlImagesInMlLogic")
+        }
+    }
 
     static var autoGenerateTextFromImage: Bool {
         get {

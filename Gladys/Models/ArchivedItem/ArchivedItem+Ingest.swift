@@ -12,10 +12,21 @@ extension ArchivedItem {
         return components.max { $0.contentPriority < $1.contentPriority }
     }
 
+    var mostRelevantTypeItemImage: Component? {
+        let item = mostRelevantTypeItem
+        if let i = item, i.typeConforms(to: kUTTypeURL), PersistedOptions.includeUrlImagesInMlLogic {
+            return components.filter { $0.typeConforms(to: kUTTypeImage) }.max { $0.contentPriority < $1.contentPriority }
+        }
+        return item
+    }
+    
 	static func sanitised(_ ids: [String]) -> [String] {
-        let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted", "dyn.ah62d4rv4gu8y6y4usm1044pxqzb085xyqz1hk64uqm10c6xenv61a3k"]
+        let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
 		var identifiers = ids.filter { typeIdentifier in
 			#if os(OSX)
+            if typeIdentifier.hasPrefix("dyn.") {
+                return false
+            }
 			let cfid = typeIdentifier as CFString
 			if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
 			#endif
@@ -28,7 +39,7 @@ extension ArchivedItem {
 	}
     
     private var imageOfImageComponentIfExists: CGImage? {
-        if let firstImageComponent = mostRelevantTypeItem, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
+        if let firstImageComponent = mostRelevantTypeItemImage, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
             #if os(macOS)
                 return image.cgImage(forProposedRect: nil, context: nil, hints: nil)
             #else
@@ -38,7 +49,9 @@ extension ArchivedItem {
         return nil
     }
 
-    private func componentsIngested(wasInitialIngest: Bool, error: (Component, Error)?) {
+    private func initialIngestComplete() {
+        components.removeAll { !$0.dataExists }
+
         #if MAC
         for component in components {
             if let contributedLabels = component.contributedLabels {
@@ -53,51 +66,50 @@ extension ArchivedItem {
         let autoText = PersistedOptions.autoGenerateLabelsFromText
         let autoImage = PersistedOptions.autoGenerateLabelsFromImage
         let ocrImage = PersistedOptions.autoGenerateTextFromImage
-        if #available(OSX 10.14, iOS 13.0, *), wasInitialIngest, error == nil, autoText || autoImage || ocrImage {
-            var newComponent: Component?
-            let finalTitle = displayText.0
-            let img: CGImage?
-            #if os(macOS)
-                if #available(OSX 10.15, *) {
-                    img = imageOfImageComponentIfExists
-                } else {
-                    img = nil
-                }
-            #else
+        if #available(OSX 10.14, iOS 13.0, *), autoText || autoImage || ocrImage {
+            processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage)
+        } else {
+            componentIngestDone()
+        }
+	}
+    
+    @available(OSX 10.14, iOS 13.0, *)
+    private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool) {
+        var newComponent: Component?
+        let finalTitle = displayText.0
+        let img: CGImage?
+        #if os(macOS)
+            if #available(OSX 10.15, *) {
                 img = imageOfImageComponentIfExists
-            #endif
-            let mode = displayMode
-            Component.ingestQueue.async {
-                var tags = [String]()
+            } else {
+                img = nil
+            }
+        #else
+            img = imageOfImageComponentIfExists
+        #endif
 
-                if #available(OSX 10.15, iOS 13.0, *), (autoImage || ocrImage), mode == .fill, let img = img {
-                    var requests = [VNImageBasedRequest]()
-                    if autoImage {
-                        requests.append(VNClassifyImageRequest())
-                    }
-                    if ocrImage {
-                        let request = VNRecognizeTextRequest()
-                        request.recognitionLevel = .accurate
-                        requests.append(request)
-                    }
+        let group = DispatchGroup()
+        var tags1 = [String]()
+        var tags2 = [String]()
 
-                    if !requests.isEmpty {
-                        let handler = VNImageRequestHandler(cgImage: img)
-                        try? handler.perform(requests)
-                    }
-                    
-                    if let classificationRequest = requests.first(where: { $0 is VNClassifyImageRequest }) as? VNClassifyImageRequest,
-                       let observations = classificationRequest.results as? [VNClassificationObservation] {
+        if #available(OSX 10.15, iOS 13.0, *), (autoImage || ocrImage), displayMode == .fill, let img = img {
+            var requests = [VNImageBasedRequest]()
 
+            if autoImage {
+                let r = VNClassifyImageRequest { request, _ in
+                    if let observations = request.results as? [VNClassificationObservation] {
                         let relevant = observations.filter {
                             $0.hasMinimumPrecision(0.7, forRecall: 0)
                         }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                        tags.append(contentsOf: relevant)
+                        tags1.append(contentsOf: relevant)
                     }
-                    
-                    if let ocrRequest = requests.first(where: { $0 is VNRecognizeTextRequest }) as? VNRecognizeTextRequest,
-                       let observations = ocrRequest.results as? [VNRecognizedTextObservation] {
-
+                }
+                requests.append(r)
+            }
+            
+            if ocrImage {
+                let r = VNRecognizeTextRequest { request, _ in
+                    if let observations = request.results as? [VNRecognizedTextObservation] {
                         let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
                         if !detectedText.isEmpty, let data = detectedText.data(using: .utf8) {
                             newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
@@ -105,49 +117,57 @@ extension ArchivedItem {
                         }
                     }
                 }
-
-                if autoText, let finalTitle = finalTitle {
-                    let tagger = NLTagger(tagSchemes: [.nameType])
-                    tagger.string = finalTitle
-                    let range = finalTitle.startIndex ..< finalTitle.endIndex
-                    let textTags = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames]).compactMap { token -> String? in
-                        guard let tag = token.0 else { return nil }
-                        switch tag {
-                        case .placeName, .personalName, .organizationName, .noun:
-                            return String(finalTitle[token.1])
-                        default:
-                            return nil
-                        }
-                    }
-                    tags.append(contentsOf: textTags)
-                }
-
-                DispatchQueue.main.async {
-                    if let o = newComponent {
-                        self.components.insert(o, at: 0)
-                    }
-                    for tag in tags where !self.labels.contains(tag) {
-                        self.labels.append(tag)
-                    }
-                    self.componentIngestDone(error: error)
+                r.recognitionLevel = .accurate
+                requests.append(r)
+            }
+            
+            if !requests.isEmpty {
+                let handler = VNImageRequestHandler(cgImage: img)
+                group.enter()
+                DispatchQueue.global(qos: .utility).async {
+                    try? handler.perform(requests)
+                    group.leave()
                 }
             }
-        } else {
-            componentIngestDone(error: error)
         }
-	}
+        
+        if autoText, let finalTitle = finalTitle {
+            let tagger = NLTagger(tagSchemes: [.nameType])
+            tagger.string = finalTitle
+            let range = finalTitle.startIndex ..< finalTitle.endIndex
+            group.enter()
+            DispatchQueue.global(qos: .utility).async {
+                let results = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames])
+                let textTags = results.compactMap { token -> String? in
+                    guard let tag = token.0 else { return nil }
+                    switch tag {
+                    case .placeName, .personalName, .organizationName, .noun:
+                        return String(finalTitle[token.1])
+                    default:
+                        return nil
+                    }
+                }
+                tags2.append(contentsOf: textTags)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if let o = newComponent {
+                self.components.insert(o, at: 0)
+            }
+            let newTags = tags1 + tags2
+            for tag in newTags where !self.labels.contains(tag) {
+                self.labels.append(tag)
+            }
+            self.componentIngestDone()
+        }
+    }
     
-    private func componentIngestDone(error: (Component, Error)?) {
+    private func componentIngestDone() {
         imageCache.removeObject(forKey: imageCacheKey)
         loadingProgress = nil
         needsReIngest = false
-        
-        #if MAINAPP || MAC
-        if let error = error {
-            genericAlert(title: "Some data from \(displayTitleOrUuid) could not be imported", message: "Error processing type " + error.0.typeIdentifier + ": " + error.1.finalDescription)
-        }
-        #endif
-
         NotificationCenter.default.post(name: .IngestComplete, object: self)
     }
 
@@ -173,8 +193,6 @@ extension ArchivedItem {
 		let p = Progress(totalUnitCount: Int64(loadCount * 100))
 		loadingProgress = p
         
-        var loadingError: (Component, Error)?
-
 		if loadCount == 0 { // can happen for example when all components are removed
             group.enter()
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -186,10 +204,7 @@ extension ArchivedItem {
 			}
 			components.forEach { i in
                 group.enter()
-                let cp = i.reIngest { error in
-                    if let error = error {
-                        loadingError = (i, error)
-                    }
+                let cp = i.reIngest { _ in
                     group.leave()
                 }
 				p.addChild(cp, withPendingUnitCount: 100)
@@ -197,7 +212,7 @@ extension ArchivedItem {
 		}
         
         group.notify(queue: .main) {
-            self.componentsIngested(wasInitialIngest: false, error: loadingError)
+            self.componentIngestDone()
             completionGroup?.leave()
         }
 	}
@@ -230,7 +245,7 @@ extension ArchivedItem {
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
 		var progressChildren = [Progress]()
-        var loadingError: (Component, Error)?
+        var componentsThatFailed = [Component]()
         
 		for provider in providers {
 
@@ -265,7 +280,8 @@ extension ArchivedItem {
                 group.enter()
                 let p = i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive) { error in
                     if let error = error {
-                        loadingError = (i, error)
+                        componentsThatFailed.append(i)
+                        log("Import error: \(error.finalDescription)")
                     }
                     group.leave()
                 }
@@ -296,7 +312,7 @@ extension ArchivedItem {
         loadingProgress = p
         
         group.notify(queue: .main) {
-            self.componentsIngested(wasInitialIngest: true, error: loadingError)
+            self.initialIngestComplete()
         }
 	}
 }

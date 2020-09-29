@@ -15,10 +15,6 @@ import MobileCoreServices
 
 extension Component {
 
-	var dataExists: Bool {
-		return FileManager.default.fileExists(atPath: bytesPath.path)
-	}
-
 	var sizeDescription: String? {
 		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
 	}

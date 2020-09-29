@@ -30,6 +30,7 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var autoDetectLabelsFromTitles: NSButton!
     @IBOutlet private weak var autoDetectLabelsFromThumbnails: NSButton!
     @IBOutlet private weak var autoDetectTextFromThumbnails: NSButton!
+    @IBOutlet private weak var applyMlSettingsToLinks: NSButton!
     
     @IBOutlet private weak var fadeAfterLabel: NSTextField!
     @IBOutlet private weak var fadeAfterCounter: NSStepper!
@@ -115,6 +116,7 @@ final class Preferences: NSViewController {
 		selectionActionPicker.selectItem(at: PersistedOptions.actionOnTap.rawValue)
         touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
         autoShowOnEdgePicker.selectItem(at: PersistedOptions.autoShowFromEdge)
+        applyMlSettingsToLinks.integerValue = PersistedOptions.includeUrlImagesInMlLogic ? 1 : 0
         updateFadeLabel()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
@@ -200,7 +202,11 @@ final class Preferences: NSViewController {
     @IBAction private func autoDetectTextFromThumbnailsChanged(_ sender: NSButton) {
         PersistedOptions.autoGenerateTextFromImage = sender.integerValue == 1
     }
-    
+
+    @IBAction private func applyMlSettingsToLinksChanged(_ sender: NSButton) {
+        PersistedOptions.includeUrlImagesInMlLogic = sender.integerValue == 1
+    }
+
     @IBAction private func blockUrlSwitchChanged(_ sender: NSButton) {
         PersistedOptions.blockGladysUrlRequests = sender.integerValue == 1
     }
