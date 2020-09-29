@@ -171,36 +171,20 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		switch shareMode {
 		case .none:
 			readOnlyLabel.isHidden = true
-            if #available(OSX 10.14, *) {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
-                inviteButton.contentTintColor = .systemGray
-            } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserAdd").template(with: .systemGray)
-            }
+            inviteButton.image = #imageLiteral(resourceName: "iconUserAdd")
+            inviteButton.contentTintColor = .systemGray
 		case .elsewhereReadOnly:
 			readOnlyLabel.isHidden = false
-            if #available(OSX 10.14, *) {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-                inviteButton.contentTintColor = .systemGray
-            } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: .systemGray)
-            }
+            inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+            inviteButton.contentTintColor = .systemGray
 		case .elsewhereReadWrite:
 			readOnlyLabel.isHidden = true
-            if #available(OSX 10.14, *) {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-                inviteButton.contentTintColor = .systemGray
-            } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: .systemGray)
-            }
+            inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+            inviteButton.contentTintColor = .systemGray
 		case .sharing:
 			readOnlyLabel.isHidden = true
-            if #available(OSX 10.14, *) {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-                inviteButton.contentTintColor = NSColor(named: "colorTint")
-            } else {
-                inviteButton.image = #imageLiteral(resourceName: "iconUserChecked").template(with: NSColor(named: "colorTint")!)
-            }
+            inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
+            inviteButton.contentTintColor = NSColor(named: "colorTint")
 		}
 
 		titleField.isEditable = readWrite

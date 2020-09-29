@@ -8,6 +8,7 @@
 
 import Foundation
 import CallbackURLKit
+import AppKit
 
 struct CallbackSupport {
 	private static func handle(result: Bool, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {

@@ -62,7 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	@objc private func statusBarItemSelected() {
 		if NSApp.isActive && (ViewController.shared.view.window?.isVisible ?? false) {
-			statusItem?.popUpMenu(menu)
+            statusItem?.menu?.popUp(positioning: nil, at: .zero, in: nil)
 		} else {
 			focus()
 		}
@@ -85,21 +85,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 				s = existingStatusItem
 			} else {
 				s = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-				s.image = #imageLiteral(resourceName: "menubarIcon")
+                s.button?.image = #imageLiteral(resourceName: "menubarIcon")
 				statusItem = s
 				log("Creating menubar status item")
 			}
 
 			if showing {
 				if s.menu == nil || forceUpdateMenu {
-					s.action = nil
+                    s.button?.action = nil
 					s.menu = menu
 					log("Updating status item menu")
 				}
 			} else {
-				if s.action == nil {
+                if s.button?.action == nil {
 					s.menu = nil
-					s.action = #selector(statusBarItemSelected)
+                    s.button?.action = #selector(statusBarItemSelected)
 					log("Status item watching for click")
 				}
 			}

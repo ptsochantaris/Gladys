@@ -66,14 +66,14 @@ extension ArchivedItem {
         let autoText = PersistedOptions.autoGenerateLabelsFromText
         let autoImage = PersistedOptions.autoGenerateLabelsFromImage
         let ocrImage = PersistedOptions.autoGenerateTextFromImage
-        if #available(OSX 10.14, iOS 13.0, *), autoText || autoImage || ocrImage {
+        if #available(iOS 13.0, *), autoText || autoImage || ocrImage {
             processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage)
         } else {
             componentIngestDone()
         }
 	}
     
-    @available(OSX 10.14, iOS 13.0, *)
+    @available(iOS 13.0, *)
     private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool) {
         var newComponent: Component?
         let finalTitle = displayText.0
@@ -92,7 +92,7 @@ extension ArchivedItem {
         var tags1 = [String]()
         var tags2 = [String]()
 
-        if #available(OSX 10.15, iOS 13.0, *), (autoImage || ocrImage), displayMode == .fill, let img = img {
+        if #available(OSX 10.15, *), (autoImage || ocrImage), displayMode == .fill, let img = img {
             var requests = [VNImageBasedRequest]()
 
             if autoImage {

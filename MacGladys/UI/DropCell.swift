@@ -17,7 +17,6 @@ class FirstMouseView: NSView {
     
     @IBInspectable final var bgColor: NSColor?
 
-    @available(OSX 10.14, *)
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
         let ea = effectiveAppearance
@@ -74,7 +73,7 @@ final class TokenTextField: NSTextField {
 				start += len + separator.count
 			}
 			attributedStringValue = string
-			setNeedsDisplay()
+            needsDisplay = true
 		}
 	}
 
@@ -505,19 +504,11 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			sharedIcon.isHidden = true
 			bottomStackView.isHidden = hideBottomLabel
 		case .elsewhereReadOnly, .elsewhereReadWrite:
-            if #available(OSX 10.14, *) {
-                sharedIcon.contentTintColor = NSColor.systemGray
-            } else {
-                sharedIcon.image = sharedIcon.image?.template(with: NSColor.systemGray)
-            }
+            sharedIcon.contentTintColor = NSColor.systemGray
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		case .sharing:
-            if #available(OSX 10.14, *) {
-                sharedIcon.contentTintColor = NSColor(named: "colorTint")
-            } else {
-                sharedIcon.image = sharedIcon.image?.template(with: NSColor(named: "colorTint")!)
-            }
+            sharedIcon.contentTintColor = NSColor(named: "colorTint")
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		}

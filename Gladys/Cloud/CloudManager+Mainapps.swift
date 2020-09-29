@@ -871,11 +871,7 @@ extension CloudManager {
 
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
-        #if os(iOS)
         typealias ZoneConfig=CKFetchRecordZoneChangesOperation.ZoneConfiguration
-        #else
-        typealias ZoneConfig=CKFetchRecordZoneChangesOperation.ZoneOptions
-        #endif
 
         var needsRetry = false
         var configurationsByRecordZoneID = [CKRecordZone.ID: ZoneConfig]()
@@ -885,11 +881,7 @@ extension CloudManager {
             configurationsByRecordZoneID[zoneID] = options
         }
 
-        #if os(iOS)
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)
-        #else
-        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: configurationsByRecordZoneID)
-        #endif
         operation.recordWithIDWasDeletedBlock = { recordId, recordType in
             if let type = RecordType(rawValue: recordType) {
                 DispatchQueue.main.async {

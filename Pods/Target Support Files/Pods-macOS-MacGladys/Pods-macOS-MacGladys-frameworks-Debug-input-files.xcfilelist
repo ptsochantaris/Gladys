@@ -1,6 +1,0 @@
-${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks.sh
-${BUILT_PRODUCTS_DIR}/CallbackURLKit-macOS/CallbackURLKit.framework
-${BUILT_PRODUCTS_DIR}/DeepDiff-macOS/DeepDiff.framework
-${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework
-${BUILT_PRODUCTS_DIR}/ZIPFoundation-macOS/ZIPFoundation.framework
-${BUILT_PRODUCTS_DIR}/HotKey/HotKey.framework

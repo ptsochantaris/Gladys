@@ -162,15 +162,7 @@ final class ArchivedItem: Codable {
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
-        #if MAC
-        if #available(OSX 10.14, *) {
-            suggestedName = providers.first!.suggestedName
-        } else {
-            suggestedName = nil
-        }
-        #else
 		suggestedName = providers.first!.suggestedName
-        #endif
 		needsReIngest = false // original ingest, not re-ingest, show "cancel"
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""

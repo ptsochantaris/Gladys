@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -300,6 +300,17 @@
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16B89E6E2523D4F1007FD864 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E6D2523D4F1007FD864 /* DeepDiff */; };
+		16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E7C2523D50C007FD864 /* CallbackURLKit */; };
+		16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E8B2523D536007FD864 /* ZIPFoundation */; };
+		16B89E9B2523D545007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E9A2523D545007FD864 /* Fuzi */; };
+		16B89EA92523D5A0007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89EA82523D5A0007FD864 /* Fuzi */; };
+		16B89EB72523D5AE007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89EB62523D5AE007FD864 /* Fuzi */; };
+		16B89ED12523D6BB007FD864 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED02523D6BB007FD864 /* DeepDiff */; };
+		16B89ED32523D6BB007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED22523D6BB007FD864 /* CallbackURLKit */; };
+		16B89ED52523D6BB007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED42523D6BB007FD864 /* ZIPFoundation */; };
+		16B89ED72523D6BB007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED62523D6BB007FD864 /* Fuzi */; };
+		16B89F162523D885007FD864 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89F152523D885007FD864 /* HotKey */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BCAE23245DEA9C000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
@@ -426,10 +437,6 @@
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
-		36382A8A3D358C80F43F90AC /* Pods_macOS_MacGladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */; };
-		3E17E7E721A0C85AEE5CA45B /* Pods_iOS_Gladys.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */; };
-		9FFBFC5E9237DF08482A76ED /* Pods_iOS_GladysIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */; };
-		CDEAE775225DDD288529F298 /* Pods_iOS_GladysAction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -619,8 +626,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_GladysIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		03C71810BA95F7B3BFC84B8D /* Pods-iOS-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-Gladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys.release.xcconfig"; sourceTree = "<group>"; };
 		1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		1602F3172030E4C90036E2B0 /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
@@ -855,35 +860,6 @@
 		16F2990620CBEF30005DE3AD /* PushState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushState.swift; sourceTree = "<group>"; };
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
-		1A4CB68D92CDE793E646F364 /* Pods-iOS-GladysIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysIntents/Pods-iOS-GladysIntents.release.xcconfig"; sourceTree = "<group>"; };
-		256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys.release.xcconfig"; sourceTree = "<group>"; };
-		2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_Gladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CBF79386F568F87B32EAECF /* Pods-macOS-MacGladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS-MacGladys.debug.xcconfig"; path = "Pods/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys.debug.xcconfig"; sourceTree = "<group>"; };
-		2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
-		30CAE53B87C9134335DDEFEF /* Pods-GladysIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIntents/Pods-GladysIntents.release.xcconfig"; sourceTree = "<group>"; };
-		3D896B1CC8CEB7876385DD20 /* Pods-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysIntents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysIntents/Pods-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
-		419F950A548D49B2EF17B8C2 /* Pods-iOS-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-Gladys.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
-		46FDF6FB1FDD988C4CAEAC6A /* Pods-Gladys-GladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysFramework/Pods-Gladys-GladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
-		6BCD6DBF9914E5081B001F4E /* Pods-macOS-MacGladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS-MacGladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys.release.xcconfig"; sourceTree = "<group>"; };
-		733912839CE1AE01434A7C36 /* Pods-GladysAction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysAction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction.debug.xcconfig"; sourceTree = "<group>"; };
-		787EBF1A50EB25D2C0F7EB31 /* Pods-MacGladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys/Pods-MacGladys.debug.xcconfig"; sourceTree = "<group>"; };
-		7F58EB1436FF3F1475909292 /* Pods-iOS-GladysAction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysAction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysAction/Pods-iOS-GladysAction.debug.xcconfig"; sourceTree = "<group>"; };
-		830AF4B32245C358B4C1156F /* Pods-Gladys.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.debug.xcconfig"; sourceTree = "<group>"; };
-		89993A8F41AF455091EBCF5A /* Pods-Gladys-GladysIntents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysIntents.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysIntents/Pods-Gladys-GladysIntents.release.xcconfig"; sourceTree = "<group>"; };
-		8FD2703AB879FE60901E9D5A /* Pods-MacGladys-GladysFramework.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys-GladysFramework.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys-GladysFramework/Pods-MacGladys-GladysFramework.debug.xcconfig"; sourceTree = "<group>"; };
-		94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_GladysAction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9C7614DF2557A5196832AECC /* Pods-iOS-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysAction/Pods-iOS-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
-		A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_MacGladys.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE2C9366EDC84B7D9D0A3DC8 /* Pods-Gladys-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysIntents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysIntents/Pods-Gladys-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
-		B8D736F434C5BF76A8DA726B /* Pods-MacGladys-GladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladys-GladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladys-GladysFramework/Pods-MacGladys-GladysFramework.release.xcconfig"; sourceTree = "<group>"; };
-		BAF85DAFDF28A92897235CD1 /* libPods-MacGladysFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MacGladysFramework.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBB19B9BFCB1F8D38406BA14 /* Pods-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-GladysAction/Pods-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
-		BCB1F62DCC7BDC22E0AE4831 /* Pods-Gladys.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys/Pods-Gladys.release.xcconfig"; sourceTree = "<group>"; };
-		C087CC713A09341FAB8535B0 /* Pods-MacGladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MacGladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-MacGladysFramework/Pods-MacGladysFramework.release.xcconfig"; sourceTree = "<group>"; };
-		CE26DEA89782198112B9CAD7 /* Pods-iOS-GladysIntents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-GladysIntents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-GladysIntents/Pods-iOS-GladysIntents.debug.xcconfig"; sourceTree = "<group>"; };
-		D8F04E23A28E3B875E318551 /* Pods-Gladys-GladysFramework.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysFramework.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysFramework/Pods-Gladys-GladysFramework.release.xcconfig"; sourceTree = "<group>"; };
-		FF4407060DEACD8C39519301 /* Pods-Gladys-GladysAction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysAction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysAction/Pods-Gladys-GladysAction.debug.xcconfig"; sourceTree = "<group>"; };
-		FF9A4BB0B7FAEE19A5341313 /* Pods-Gladys-GladysAction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Gladys-GladysAction.release.xcconfig"; path = "Pods/Target Support Files/Pods-Gladys-GladysAction/Pods-Gladys-GladysAction.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -898,10 +874,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B89ED32523D6BB007FD864 /* CallbackURLKit in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
+				16B89F162523D885007FD864 /* HotKey in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				16118D28236478E200454326 /* GladysFramework.framework in Frameworks */,
-				36382A8A3D358C80F43F90AC /* Pods_macOS_MacGladys.framework in Frameworks */,
+				16B89ED72523D6BB007FD864 /* Fuzi in Frameworks */,
+				16B89ED12523D6BB007FD864 /* DeepDiff in Frameworks */,
+				16B89ED52523D6BB007FD864 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,9 +897,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B89EA92523D5A0007FD864 /* Fuzi in Frameworks */,
 				16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */,
 				16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */,
-				CDEAE775225DDD288529F298 /* Pods_iOS_GladysAction.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,10 +930,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */,
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
-				3E17E7E721A0C85AEE5CA45B /* Pods_iOS_Gladys.framework in Frameworks */,
+				16B89E9B2523D545007FD864 /* Fuzi in Frameworks */,
+				16B89E6E2523D4F1007FD864 /* DeepDiff in Frameworks */,
+				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,9 +976,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16B89EB72523D5AE007FD864 /* Fuzi in Frameworks */,
 				1661B2C1245E219200BE888E /* CloudKit.framework in Frameworks */,
 				16D984D02161497000D9D51C /* GladysFramework.framework in Frameworks */,
-				9FFBFC5E9237DF08482A76ED /* Pods_iOS_GladysIntents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,7 +1205,6 @@
 				16B2AA3924DF42B5004F3FC2 /* GladysKeys */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
-				F997D53C5E7A383D99BD35DB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1495,46 +1477,8 @@
 				16F21C171F12D1B40033FE8B /* Fuzi.framework */,
 				16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */,
 				1657B8AC1FD41C1C00EC480D /* Messages.framework */,
-				BAF85DAFDF28A92897235CD1 /* libPods-MacGladysFramework.a */,
-				2682FB272B17118D44C7F170 /* Pods_iOS_Gladys.framework */,
-				94FF71D5246DD31DBA79A82A /* Pods_iOS_GladysAction.framework */,
-				022F620E8794084149CA89B0 /* Pods_iOS_GladysIntents.framework */,
-				A8EF2578E1D8BDBEF3C48DCD /* Pods_macOS_MacGladys.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F997D53C5E7A383D99BD35DB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				830AF4B32245C358B4C1156F /* Pods-Gladys.debug.xcconfig */,
-				BCB1F62DCC7BDC22E0AE4831 /* Pods-Gladys.release.xcconfig */,
-				733912839CE1AE01434A7C36 /* Pods-GladysAction.debug.xcconfig */,
-				BBB19B9BFCB1F8D38406BA14 /* Pods-GladysAction.release.xcconfig */,
-				787EBF1A50EB25D2C0F7EB31 /* Pods-MacGladys.debug.xcconfig */,
-				256B9847BB126D109DB133F4 /* Pods-MacGladys.release.xcconfig */,
-				2E2AE82FD05C3D91D7528CF9 /* Pods-MacGladysFramework.debug.xcconfig */,
-				C087CC713A09341FAB8535B0 /* Pods-MacGladysFramework.release.xcconfig */,
-				3D896B1CC8CEB7876385DD20 /* Pods-GladysIntents.debug.xcconfig */,
-				30CAE53B87C9134335DDEFEF /* Pods-GladysIntents.release.xcconfig */,
-				FF4407060DEACD8C39519301 /* Pods-Gladys-GladysAction.debug.xcconfig */,
-				FF9A4BB0B7FAEE19A5341313 /* Pods-Gladys-GladysAction.release.xcconfig */,
-				AE2C9366EDC84B7D9D0A3DC8 /* Pods-Gladys-GladysIntents.debug.xcconfig */,
-				89993A8F41AF455091EBCF5A /* Pods-Gladys-GladysIntents.release.xcconfig */,
-				8FD2703AB879FE60901E9D5A /* Pods-MacGladys-GladysFramework.debug.xcconfig */,
-				B8D736F434C5BF76A8DA726B /* Pods-MacGladys-GladysFramework.release.xcconfig */,
-				46FDF6FB1FDD988C4CAEAC6A /* Pods-Gladys-GladysFramework.debug.xcconfig */,
-				D8F04E23A28E3B875E318551 /* Pods-Gladys-GladysFramework.release.xcconfig */,
-				419F950A548D49B2EF17B8C2 /* Pods-iOS-Gladys.debug.xcconfig */,
-				03C71810BA95F7B3BFC84B8D /* Pods-iOS-Gladys.release.xcconfig */,
-				7F58EB1436FF3F1475909292 /* Pods-iOS-GladysAction.debug.xcconfig */,
-				9C7614DF2557A5196832AECC /* Pods-iOS-GladysAction.release.xcconfig */,
-				CE26DEA89782198112B9CAD7 /* Pods-iOS-GladysIntents.debug.xcconfig */,
-				1A4CB68D92CDE793E646F364 /* Pods-iOS-GladysIntents.release.xcconfig */,
-				2CBF79386F568F87B32EAECF /* Pods-macOS-MacGladys.debug.xcconfig */,
-				6BCD6DBF9914E5081B001F4E /* Pods-macOS-MacGladys.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1581,7 +1525,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 161718D32094D334005ABD6C /* Build configuration list for PBXNativeTarget "MacGladys" */;
 			buildPhases = (
-				D7ED05F9740E57E438CB0ADC /* [CP] Check Pods Manifest.lock */,
 				16CFDC4C23E5E59000FA4F00 /* Lint */,
 				161718C02094D333005ABD6C /* Sources */,
 				161718C12094D333005ABD6C /* Frameworks */,
@@ -1589,7 +1532,6 @@
 				16114861209FA266008BB332 /* Embed Frameworks */,
 				169D54B120B84FAC004E518E /* Embed Helper */,
 				164947DD20BEAA6200BD1BEB /* Embed App Extensions */,
-				69620C510B805516EE19F301 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1599,6 +1541,13 @@
 				16118D2B236478E200454326 /* PBXTargetDependency */,
 			);
 			name = MacGladys;
+			packageProductDependencies = (
+				16B89ED02523D6BB007FD864 /* DeepDiff */,
+				16B89ED22523D6BB007FD864 /* CallbackURLKit */,
+				16B89ED42523D6BB007FD864 /* ZIPFoundation */,
+				16B89ED62523D6BB007FD864 /* Fuzi */,
+				16B89F152523D885007FD864 /* HotKey */,
+			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
 			productType = "com.apple.product-type.application";
@@ -1624,7 +1573,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 164136991F09195000B34574 /* Build configuration list for PBXNativeTarget "GladysAction" */;
 			buildPhases = (
-				59EF9D7C6D95C4201888FDBC /* [CP] Check Pods Manifest.lock */,
 				164136891F09195000B34574 /* Sources */,
 				1641368A1F09195000B34574 /* Frameworks */,
 				1641368B1F09195000B34574 /* Resources */,
@@ -1635,6 +1583,9 @@
 				169426481F12D2F800F3A0A4 /* PBXTargetDependency */,
 			);
 			name = GladysAction;
+			packageProductDependencies = (
+				16B89EA82523D5A0007FD864 /* Fuzi */,
+			);
 			productName = GladysAction;
 			productReference = 1641368D1F09195000B34574 /* GladysAction.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -1695,15 +1646,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
 			buildPhases = (
-				DF4A5BA8C7CAA5EA03717D45 /* [CP] Check Pods Manifest.lock */,
-				16CFDC4B23E5CD9A00FA4F00 /* Link */,
+				16CFDC4B23E5CD9A00FA4F00 /* Lint */,
 				1678F9C91EF475FE005697CB /* Sources */,
 				1678F9CA1EF475FE005697CB /* Frameworks */,
 				1678F9CB1EF475FE005697CB /* Resources */,
 				16287AF21EFB03FD007188AE /* Embed App Extensions */,
 				167574071F12C22500385079 /* Embed Frameworks */,
 				16A4E8041FBB844A00D60596 /* Embed Watch Content */,
-				829472256F076A2430C1D21C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1718,6 +1667,12 @@
 				16B2AA3E24DF42B5004F3FC2 /* PBXTargetDependency */,
 			);
 			name = Gladys;
+			packageProductDependencies = (
+				16B89E6D2523D4F1007FD864 /* DeepDiff */,
+				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
+				16B89E8B2523D536007FD864 /* ZIPFoundation */,
+				16B89E9A2523D545007FD864 /* Fuzi */,
+			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
 			productType = "com.apple.product-type.application";
@@ -1813,7 +1768,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16D9849B2160C5A000D9D51C /* Build configuration list for PBXNativeTarget "GladysIntents" */;
 			buildPhases = (
-				342B5AB228E9E5C15669DB0F /* [CP] Check Pods Manifest.lock */,
 				16D9848F2160C5A000D9D51C /* Sources */,
 				16D984902160C5A000D9D51C /* Frameworks */,
 				16D984912160C5A000D9D51C /* Resources */,
@@ -1823,6 +1777,9 @@
 			dependencies = (
 			);
 			name = GladysIntents;
+			packageProductDependencies = (
+				16B89EB62523D5AE007FD864 /* Fuzi */,
+			);
 			productName = GladysIntents;
 			productReference = 16D984932160C5A000D9D51C /* GladysIntents.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -1976,7 +1933,7 @@
 				};
 			};
 			buildConfigurationList = 1678F9C81EF475FE005697CB /* Build configuration list for PBXProject "Gladys" */;
-			compatibilityVersion = "Xcode 11.4";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1984,6 +1941,13 @@
 				Base,
 			);
 			mainGroup = 1678F9C41EF475FE005697CB;
+			packageReferences = (
+				16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */,
+				16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */,
+				16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */,
+				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
+			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2136,7 +2100,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		16CFDC4B23E5CD9A00FA4F00 /* Link */ = {
+		16CFDC4B23E5CD9A00FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2145,14 +2109,14 @@
 			);
 			inputPaths = (
 			);
-			name = Link;
+			name = Lint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+			shellScript = "swiftlint\n";
 		};
 		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2170,117 +2134,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
-		};
-		342B5AB228E9E5C15669DB0F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iOS-GladysIntents-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		59EF9D7C6D95C4201888FDBC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iOS-GladysAction-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69620C510B805516EE19F301 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-macOS-MacGladys/Pods-macOS-MacGladys-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		829472256F076A2430C1D21C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS-Gladys/Pods-iOS-Gladys-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D7ED05F9740E57E438CB0ADC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-macOS-MacGladys-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DF4A5BA8C7CAA5EA03717D45 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iOS-Gladys-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "swiftlint\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2934,7 +2788,6 @@
 		};
 		161718D12094D334005ABD6C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CBF79386F568F87B32EAECF /* Pods-macOS-MacGladys.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2961,7 +2814,6 @@
 		};
 		161718D22094D334005ABD6C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6BCD6DBF9914E5081B001F4E /* Pods-macOS-MacGladys.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -3188,7 +3040,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.4.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3206,7 +3058,6 @@
 		};
 		1694264F1F12D58700F3A0A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 419F950A548D49B2EF17B8C2 /* Pods-iOS-Gladys.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
@@ -3251,7 +3102,6 @@
 		};
 		169426521F12D58700F3A0A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7F58EB1436FF3F1475909292 /* Pods-iOS-GladysAction.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
@@ -3346,7 +3196,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.4.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -3365,7 +3215,6 @@
 		};
 		169426551F12D59B00F3A0A4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 03C71810BA95F7B3BFC84B8D /* Pods-iOS-Gladys.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
@@ -3410,7 +3259,6 @@
 		};
 		169426581F12D59B00F3A0A4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C7614DF2557A5196832AECC /* Pods-iOS-GladysAction.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Extension";
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
@@ -3653,7 +3501,6 @@
 		};
 		16D9849C2160C5A000D9D51C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE26DEA89782198112B9CAD7 /* Pods-iOS-GladysIntents.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -3680,7 +3527,6 @@
 		};
 		16D9849D2160C5A000D9D51C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A4CB68D92CDE793E646F364 /* Pods-iOS-GladysIntents.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -3843,6 +3689,107 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
+		16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/phimage/CallbackURLKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.2;
+			};
+		};
+		16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.11;
+			};
+		};
+		16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cezheng/Fuzi";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.2;
+			};
+		};
+		16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		16B89E6D2523D4F1007FD864 /* DeepDiff */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
+			productName = DeepDiff;
+		};
+		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
+			productName = CallbackURLKit;
+		};
+		16B89E8B2523D536007FD864 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		16B89E9A2523D545007FD864 /* Fuzi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
+			productName = Fuzi;
+		};
+		16B89EA82523D5A0007FD864 /* Fuzi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
+			productName = Fuzi;
+		};
+		16B89EB62523D5AE007FD864 /* Fuzi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
+			productName = Fuzi;
+		};
+		16B89ED02523D6BB007FD864 /* DeepDiff */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
+			productName = DeepDiff;
+		};
+		16B89ED22523D6BB007FD864 /* CallbackURLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
+			productName = CallbackURLKit;
+		};
+		16B89ED42523D6BB007FD864 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		16B89ED62523D6BB007FD864 /* Fuzi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
+			productName = Fuzi;
+		};
+		16B89F152523D885007FD864 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1678F9C51EF475FE005697CB /* Project object */;
 }

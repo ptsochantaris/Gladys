@@ -36,9 +36,7 @@ extension ArchivedItem {
     
     var itemProviderForSharing: NSItemProvider {
         let p = NSItemProvider()
-        if #available(OSX 10.14, *) {
-            p.suggestedName = trimmedSuggestedName
-        }
+        p.suggestedName = trimmedSuggestedName
         components.forEach { $0.registerForSharing(with: p) }
         return p
     }

@@ -72,12 +72,10 @@ final class AboutViewController: NSViewController {
             s.supportStack.animator().isHidden = false
         }
         
-        if #available(OSX 10.14, *) {
-            // no clue why this isn't picked up automatically
-            if view.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {
-                credits.setTextColor(.lightGray, range: NSRange(location: 0, length: credits.attributedString().length))
-                credits.backgroundColor = NSColor(white: 0, alpha: 0.5)
-            }
+        // no clue why this isn't picked up automatically
+        if view.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {
+            credits.setTextColor(.lightGray, range: NSRange(location: 0, length: credits.attributedString().length))
+            credits.backgroundColor = NSColor(white: 0, alpha: 0.5)
         }
     }
         

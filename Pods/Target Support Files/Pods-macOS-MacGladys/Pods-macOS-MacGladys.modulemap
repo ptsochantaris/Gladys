@@ -1,6 +1,0 @@
-framework module Pods_macOS_MacGladys {
-  umbrella header "Pods-macOS-MacGladys-umbrella.h"
-
-  export *
-  module * { export * }
-}
