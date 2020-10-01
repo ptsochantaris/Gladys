@@ -44,10 +44,15 @@ final class TokenTextField: NSTextField {
 
 	static let highlightTextKey = NSAttributedString.Key("HighlightText")
 
+    private static let separator = "   "
+    private static let separatorCount = separator.utf16.count
+    private static let tintColor = NSColor(named: "colorTint")!
+    private static let highlightColor = tintColor.withAlphaComponent(0.7)
+    
 	var labels: [String]? {
 		didSet {
 
-			guard let labels = labels, !labels.isEmpty else {
+			guard let labels = labels, !labels.isEmpty, let font = font else {
 				attributedStringValue = NSAttributedString()
 				return
 			}
@@ -57,91 +62,76 @@ final class TokenTextField: NSTextField {
 			p.lineBreakMode = .byWordWrapping
 			p.lineSpacing = 3
 
-			let separator = "   "
-
-			let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
-				.font: font!,
-				.foregroundColor: NSColor(named: "colorTint")!,
-				.paragraphStyle: p,
-				.baselineOffset: -2
+            let ls = labels.map { $0.replacingOccurrences(of: " ", with: "\u{a0}") }
+            let joinedLabels = ls.joined(separator: TokenTextField.separator)
+            let string = NSMutableAttributedString(string: joinedLabels, attributes: [
+				.font: font,
+                .foregroundColor: TokenTextField.tintColor,
+				.paragraphStyle: p
 				])
 
 			var start = 0
-			for label in labels {
-				let len = label.count
+			for label in ls {
+                let len = label.utf16.count
 				string.addAttribute(TokenTextField.highlightTextKey, value: 1, range: NSRange(location: start, length: len))
-				start += len + separator.count
+                start += len + TokenTextField.separatorCount
 			}
 			attributedStringValue = string
-            needsDisplay = true
 		}
 	}
-
-	override var intrinsicContentSize: NSSize {
-		var s = super.intrinsicContentSize
-		s.height += 2
-		return s
-	}
-
+        
 	override func draw(_ dirtyRect: NSRect) {
 
 		guard !attributedStringValue.string.isEmpty, let labels = labels, let context = NSGraphicsContext.current?.cgContext else { return }
 
-		let highlightColor = NSColor(named: "colorTint")!
-
+        let insideRect = dirtyRect.insetBy(dx: 1, dy: 0).offsetBy(dx: -1, dy: 0)
 		let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
-
-		let path = CGMutablePath()
-		path.addRect(dirtyRect)
-
+        let path = CGPath(rect: insideRect, transform: nil)
 		let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, nil)
 
-		context.textMatrix = .identity
-		context.translateBy(x: 0, y: dirtyRect.size.height)
+		context.translateBy(x: 0, y: insideRect.size.height)
 		context.scaleBy(x: 1, y: -1)
+        CTFrameDraw(totalFrame, context)
 
-		if !labels.isEmpty {
+		if labels.isEmpty {
+            return
+        }
 
-			let lines = CTFrameGetLines(totalFrame) as NSArray
-			let lineCount = lines.count
+        context.setStrokeColor(TokenTextField.highlightColor.cgColor)
+        context.setLineWidth(0.5)
 
-			for index in 0 ..< lineCount {
-				let line = lines[index] as! CTLine
+        let lines = CTFrameGetLines(totalFrame) as NSArray
+        let lineCount = lines.count
 
-				var origins = [CGPoint](repeating: .zero, count: lineCount)
-				CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-                let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
-				let lineStart = (dirtyRect.width - lineFrame.width) * 0.5
+        var origins = [CGPoint](repeating: .zero, count: lineCount)
+        CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
 
-				for r in CTLineGetGlyphRuns(line) as NSArray {
+        for index in 0 ..< lineCount {
+            let line = lines[index] as! CTLine
+            let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
+            let lineStart = (insideRect.width - lineFrame.width) * 0.5
 
-					let run = r as! CTRun
-					let attributes = CTRunGetAttributes(run) as NSDictionary
+            for r in CTLineGetGlyphRuns(line) as NSArray {
 
-					if attributes["HighlightText"] != nil {
-						var runBounds = lineFrame
+                let run = r as! CTRun
+                let attributes = CTRunGetAttributes(run) as NSDictionary
 
-                        runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
-						runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
-                        if #available(OSX 10.15, *) {
-                            runBounds.origin.y = origins[index].y - 2.5
-                            runBounds = runBounds.insetBy(dx: 1, dy: 0)
-                            runBounds.origin.x += 0.5
-                            runBounds.size.height += 0.5
-                        } else {
-                            runBounds.origin.y = origins[index].y - 4
-                        }
+                if attributes["HighlightText"] != nil {
+                    var runBounds = lineFrame
 
-						context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
-						context.setLineWidth(0.5)
-						context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
-						context.strokePath()
-					}
-				}
-			}
-		}
+                    runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
+                    runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
+                    runBounds.origin.y = origins[index].y - 2.5
+                    runBounds = runBounds.insetBy(dx: 1, dy: 0)
+                    runBounds.origin.x += 0.5
+                    runBounds.size.height += 0.5
 
-		CTFrameDraw(totalFrame, context)
+                    context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
+                }
+            }
+        }
+        
+        context.strokePath()
 	}
 }
 

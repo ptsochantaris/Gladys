@@ -29,6 +29,8 @@ final class HighlightLabel: UILabel {
 	}
 
 	static let highlightTextKey = NSAttributedString.Key("HighlightText")
+    private static let separator = "   "
+    private static let separatorCount = separator.utf16.count
 
 	private func update() {
 
@@ -55,9 +57,9 @@ final class HighlightLabel: UILabel {
             p.tailIndent = -4
         }
 
-		let separator = "   "
-
-		let string = NSMutableAttributedString(string: labels.joined(separator: separator), attributes: [
+        let ls = labels.map { $0.replacingOccurrences(of: " ", with: "\u{a0}") }
+        let joinedLabels = ls.joined(separator: HighlightLabel.separator)
+		let string = NSMutableAttributedString(string: joinedLabels, attributes: [
 			.font: font,
 			.foregroundColor: tintColor,
 			.paragraphStyle: p,
@@ -65,10 +67,10 @@ final class HighlightLabel: UILabel {
 			])
 
 		var start = 0
-		for label in labels {
-			let len = label.count
+		for label in ls {
+            let len = label.utf16.count
 			string.addAttribute(HighlightLabel.highlightTextKey, value: 1, range: NSRange(location: start, length: len))
-			start += len + separator.count
+            start += len + HighlightLabel.separatorCount
 		}
 		attributedText = string
 	}
@@ -109,11 +111,12 @@ final class HighlightLabel: UILabel {
             let lineCount = lines.count
             let leftAlign = textAlignment == .natural
 
+            var origins = [CGPoint](repeating: .zero, count: lineCount)
+            CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
+
             for index in 0 ..< lineCount {
                 let line = lines[index] as! CTLine
 
-                var origins = [CGPoint](repeating: .zero, count: lineCount)
-                CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
                 let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
                 let lineStart = leftAlign ? 4 : (bounds.width - lineFrame.width) * 0.5
 

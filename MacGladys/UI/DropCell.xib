@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,11 +29,11 @@
             <rect key="frame" x="0.0" y="0.0" width="303" height="302"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
-                <stackView autoresizesSubviews="NO" wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
-                    <rect key="frame" x="10" y="10" width="283" height="282"/>
+                <stackView autoresizesSubviews="NO" wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
+                    <rect key="frame" x="8" y="8" width="287" height="286"/>
                     <subviews>
                         <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Man-El-psZ">
-                            <rect key="frame" x="124" y="269" width="35" height="13"/>
+                            <rect key="frame" x="126" y="273" width="35" height="13"/>
                             <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="Gny-xC-pSm">
                                 <font key="font" metaFont="system" size="10"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -41,7 +41,7 @@
                             </textFieldCell>
                         </textField>
                         <customView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZY-Vj-9PZ" customClass="FirstMouseView" customModule="Gladys" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="78" width="283" height="186"/>
+                            <rect key="frame" x="2" y="83" width="283" height="186"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                                     <color key="value" name="colorFill"/>
@@ -49,12 +49,12 @@
                             </userDefinedRuntimeAttributes>
                         </customView>
                         <imageView autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-B4-WQQ" customClass="FirstMouseImageView" customModule="Gladys" customModuleProvider="target">
-                            <rect key="frame" x="133" y="37" width="17" height="36"/>
+                            <rect key="frame" x="135" y="35" width="17" height="44"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
                             <color key="contentTintColor" name="colorTint"/>
                         </imageView>
-                        <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
-                            <rect key="frame" x="124" y="19" width="35" height="13"/>
+                        <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
+                            <rect key="frame" x="126" y="18" width="35" height="13"/>
                             <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="jch-fj-zkm">
                                 <font key="font" metaFont="system" size="10"/>
                                 <color key="textColor" name="colorTint"/>
@@ -62,14 +62,14 @@
                             </textFieldCell>
                         </textField>
                         <stackView autoresizesSubviews="NO" distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4i-OV-TYP">
-                            <rect key="frame" x="0.0" y="0.0" width="283" height="14"/>
+                            <rect key="frame" x="0.0" y="0.0" width="287" height="14"/>
                             <subviews>
                                 <imageView horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-K8-ebl">
                                     <rect key="frame" x="0.0" y="0.0" width="12" height="14"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
                                 </imageView>
                                 <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
-                                    <rect key="frame" x="18" y="1" width="267" height="13"/>
+                                    <rect key="frame" x="18" y="1" width="271" height="13"/>
                                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
                                         <font key="font" metaFont="system" size="10"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -149,10 +149,10 @@ Gw
                 <constraint firstItem="72j-vo-hKN" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" id="QV8-zT-r1d"/>
                 <constraint firstItem="57i-Zw-oXw" firstAttribute="centerX" secondItem="zta-tj-lHd" secondAttribute="centerX" id="b63-2X-J4U"/>
                 <constraint firstItem="57i-Zw-oXw" firstAttribute="centerY" secondItem="zta-tj-lHd" secondAttribute="centerY" id="bJX-nk-kPw"/>
-                <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="10" id="dvh-qF-Qzh"/>
-                <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" constant="10" id="gvH-wC-pDa"/>
-                <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="10" id="iCR-Wi-2Nr"/>
-                <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="10" id="tDq-GB-o82"/>
+                <constraint firstItem="o2k-wL-hgZ" firstAttribute="top" secondItem="zta-tj-lHd" secondAttribute="top" constant="8" id="dvh-qF-Qzh"/>
+                <constraint firstAttribute="trailing" secondItem="o2k-wL-hgZ" secondAttribute="trailing" constant="8" id="gvH-wC-pDa"/>
+                <constraint firstAttribute="bottom" secondItem="o2k-wL-hgZ" secondAttribute="bottom" constant="8" id="iCR-Wi-2Nr"/>
+                <constraint firstItem="o2k-wL-hgZ" firstAttribute="leading" secondItem="zta-tj-lHd" secondAttribute="leading" constant="8" id="tDq-GB-o82"/>
             </constraints>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="color" keyPath="bgColor">

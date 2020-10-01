@@ -505,8 +505,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 					}
 				}
 			} else if let data = data, let typeIdentifier = typeIdentifier {
-				let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
 				DispatchQueue.main.async {
+                    let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
 					self.item.components.append(newTypeItem)
 					self.saveItem()
 				}
