@@ -90,6 +90,15 @@ extension PersistedOptions {
 			defaults.set(newValue, forKey: "menubarIconMode")
 		}
 	}
+    
+    static var clipboardSnooping: Bool {
+        get {
+            return defaults.bool(forKey: "clipboardSnooping")
+        }
+        set {
+            defaults.set(newValue, forKey: "clipboardSnooping")
+        }
+    }
 
 	static var alwaysOnTop: Bool {
 		get {

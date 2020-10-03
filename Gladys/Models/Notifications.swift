@@ -46,6 +46,7 @@ extension Notification.Name {
 	static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
 	static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
     static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
+    static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
 }
 
 #if MAINAPP

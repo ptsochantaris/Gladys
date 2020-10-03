@@ -210,6 +210,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private var observers = [NSObjectProtocol]()
+    private var pasteboardObservationTimer: Timer?
+    private var pasteboardObservationCount = NSPasteboard.general.changeCount
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -283,9 +285,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             })
         }
         
+        let a14 = n.addObserver(forName: .ClipboardSnoopingChanged, object: nil, queue: .main) { [weak self] _ in
+            self?.setupClipboardSnooping()
+        }
+        
 		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 
-		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13]
+		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13, a14]
 
 		if CloudManager.syncSwitchedOn {
 			CloudManager.sync { _ in }
@@ -293,10 +299,35 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         updateTitle()
         updateEmptyView()
-
         setupMouseMonitoring()
+        setupClipboardSnooping()
 	}
+    
+    private func setupClipboardSnooping() {
+        let snoop = PersistedOptions.clipboardSnooping
+        
+        if snoop, pasteboardObservationTimer == nil {
+            let pasteboard = NSPasteboard.general
+            let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+                let newCount = pasteboard.changeCount
+                guard let s = self, s.pasteboardObservationCount != newCount else {
+                    return
+                }
+                s.pasteboardObservationCount = newCount
+                if let text = pasteboard.string(forType: .string) {
+                    let i = NSItemProvider(object: text as NSItemProviderWriting)
+                    s.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil)
+                }
+            }
+            timer.tolerance = 0.5
+            pasteboardObservationTimer = timer
 
+        } else if !snoop, let p = pasteboardObservationTimer {
+            p.invalidate()
+            pasteboardObservationTimer = nil
+        }
+    }
+    
 	@objc private func interfaceModeChanged(sender: NSNotification) {
 		imageCache.removeAllObjects()
 		collection.reloadData()
