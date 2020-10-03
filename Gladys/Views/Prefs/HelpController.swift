@@ -61,7 +61,15 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     If you prefer to have previews always open full-screen you can set this at the options panel.
                     """,
               link: nil),
-        
+
+        Entry(title: "Scribble",
+              body: """
+                    On iPad you can write notes directly on items with an Apple Pencil; just write anywhere on an item. The note you write will overwrite any previous note on that item.
+
+                    You may find it useful to turn on the display of notes in the main view when using this feature.
+                    """,
+              link: nil),
+
         Entry(title: "Labels",
               body: """
                     If you drag-in or paste items while having some active labels, the items will have those labels auto-assigned to them. You can change this behaviour from the options panel.
