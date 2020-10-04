@@ -1113,6 +1113,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         if editing {
             collection.allowsMultipleSelection = true
+            if #available(iOS 14.0, *) {
+                collection.allowsMultipleSelectionDuringEditing = true
+            }
             navigationController?.setToolbarHidden(false, animated: animated)
             editButton.title = "Done"
             editButton.image = UIImage(systemName: "ellipsis.circle.fill")
@@ -1120,6 +1123,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		} else {
             collection.allowsMultipleSelection = false
+            if #available(iOS 14.0, *) {
+                collection.allowsMultipleSelectionDuringEditing = false
+            }
             navigationController?.setToolbarHidden(true, animated: animated)
             editButton.title = "Edit"
             editButton.image = UIImage(systemName: "ellipsis.circle")
