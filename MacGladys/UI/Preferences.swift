@@ -33,6 +33,7 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var applyMlSettingsToLinks: NSButton!
     
     @IBOutlet private weak var clipboardSnooping: NSButton!
+    @IBOutlet private weak var clipboardSnoopingAll: NSButton!
     
     @IBOutlet private weak var fadeAfterLabel: NSTextField!
     @IBOutlet private weak var fadeAfterCounter: NSStepper!
@@ -120,6 +121,7 @@ final class Preferences: NSViewController {
         autoShowOnEdgePicker.selectItem(at: PersistedOptions.autoShowFromEdge)
         applyMlSettingsToLinks.integerValue = PersistedOptions.includeUrlImagesInMlLogic ? 1 : 0
         clipboardSnooping.integerValue = PersistedOptions.clipboardSnooping ? 1 : 0
+        clipboardSnoopingAll.integerValue = PersistedOptions.clipboardSnoopingAll ? 1 : 0
         updateFadeLabel()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
@@ -193,6 +195,10 @@ final class Preferences: NSViewController {
     @IBAction func clipboardSnoopingSelected(_ sender: NSButton) {
         PersistedOptions.clipboardSnooping = sender.integerValue == 1
         NotificationCenter.default.post(name: .ClipboardSnoopingChanged, object: nil)
+    }
+
+    @IBAction func clipboardSnoopingAllSelected(_ sender: NSButton) {
+        PersistedOptions.clipboardSnoopingAll = sender.integerValue == 1
     }
 
 	@IBAction private func autoDownloadSwitchChanged(_ sender: NSButton) {

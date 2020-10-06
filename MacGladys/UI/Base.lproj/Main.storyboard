@@ -1149,11 +1149,11 @@ Cg
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="1074" height="536"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1423" height="536"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="14" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3ko-1F-sfS">
-                                <rect key="frame" x="16" y="12" width="1042" height="512"/>
+                                <rect key="frame" x="16" y="12" width="1391" height="512"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qIg-3b-sKc">
                                         <rect key="frame" x="0.0" y="74" width="254" height="438"/>
@@ -1448,10 +1448,10 @@ Cg
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J6p-fh-3TY">
-                                        <rect key="frame" x="268" y="97" width="171" height="415"/>
+                                        <rect key="frame" x="268" y="67" width="171" height="445"/>
                                         <subviews>
                                             <box horizontalHuggingPriority="251" title="Launch Options" translatesAutoresizingMaskIntoConstraints="NO" id="20K-Xt-vhp">
-                                                <rect key="frame" x="-3" y="326" width="177" height="89"/>
+                                                <rect key="frame" x="-3" y="356" width="177" height="89"/>
                                                 <view key="contentView" id="4RA-cN-rRX">
                                                     <rect key="frame" x="3" y="3" width="171" height="71"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1502,7 +1502,7 @@ Cg
                                                 </view>
                                             </box>
                                             <box verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" title="Window Options" translatesAutoresizingMaskIntoConstraints="NO" id="ihY-lg-LbY">
-                                                <rect key="frame" x="-3" y="231" width="177" height="89"/>
+                                                <rect key="frame" x="-3" y="261" width="177" height="89"/>
                                                 <view key="contentView" id="4XA-BB-dE8">
                                                     <rect key="frame" x="3" y="3" width="171" height="71"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1550,7 +1550,7 @@ Cg
                                                 </view>
                                             </box>
                                             <box horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" title="Hotkey" translatesAutoresizingMaskIntoConstraints="NO" id="m7a-4X-bGl">
-                                                <rect key="frame" x="-3" y="104" width="177" height="121"/>
+                                                <rect key="frame" x="-3" y="134" width="177" height="121"/>
                                                 <view key="contentView" id="sd6-hw-ax3">
                                                     <rect key="frame" x="3" y="3" width="171" height="103"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1644,16 +1644,24 @@ Cg
                                                 </view>
                                             </box>
                                             <box title="Clipboard snooping" translatesAutoresizingMaskIntoConstraints="NO" id="OmX-lf-ZSU">
-                                                <rect key="frame" x="-3" y="-4" width="177" height="102"/>
+                                                <rect key="frame" x="-3" y="-4" width="177" height="132"/>
                                                 <view key="contentView" id="O1i-bS-3Fd">
-                                                    <rect key="frame" x="3" y="3" width="171" height="84"/>
+                                                    <rect key="frame" x="3" y="3" width="171" height="114"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1zm-tv-gsu">
-                                                            <rect key="frame" x="16" y="16" width="139" height="52"/>
+                                                            <rect key="frame" x="16" y="16" width="139" height="86"/>
                                                             <subviews>
+                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Cxe-bA-pjx">
+                                                                    <rect key="frame" x="-2" y="58" width="143" height="28"/>
+                                                                    <textFieldCell key="cell" selectable="YES" alignment="left" title="Keep text items from the system clipboard." id="WVl-Q0-3iB">
+                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
                                                                 <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ezb-6C-8BJ">
-                                                                    <rect key="frame" x="-2" y="36" width="63" height="18"/>
+                                                                    <rect key="frame" x="-2" y="32" width="63" height="18"/>
                                                                     <buttonCell key="cell" type="check" title="Enable" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2qV-H2-D6Z">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -1662,27 +1670,33 @@ Cg
                                                                         <action selector="clipboardSnoopingSelected:" target="FB0-Ob-ymN" id="SPV-LP-kuz"/>
                                                                     </connections>
                                                                 </button>
-                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Cxe-bA-pjx">
-                                                                    <rect key="frame" x="-2" y="0.0" width="143" height="28"/>
-                                                                    <textFieldCell key="cell" selectable="YES" alignment="left" title="Keep text items from the system clipboard." id="WVl-Q0-3iB">
+                                                                <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="JM5-KX-Cx4">
+                                                                    <rect key="frame" x="-2" y="-2" width="126" height="28"/>
+                                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Wmu-yx-5At">
+                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                        <string key="title">Include text marked
+sensitive or secure</string>
                                                                         <font key="font" metaFont="toolTip"/>
-                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                </textField>
+                                                                    </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="clipboardSnoopingAllSelected:" target="FB0-Ob-ymN" id="cr9-7i-pB9"/>
+                                                                    </connections>
+                                                                </button>
                                                             </subviews>
                                                             <visibilityPriorities>
+                                                                <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
                                                             </customSpacing>
                                                         </stackView>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="1zm-tv-gsu" firstAttribute="top" secondItem="O1i-bS-3Fd" secondAttribute="top" constant="16" id="Cf3-yZ-Bo2"/>
+                                                        <constraint firstItem="1zm-tv-gsu" firstAttribute="top" secondItem="O1i-bS-3Fd" secondAttribute="top" constant="12" id="Cf3-yZ-Bo2"/>
                                                         <constraint firstAttribute="trailing" secondItem="1zm-tv-gsu" secondAttribute="trailing" constant="16" id="FX6-oh-Qn5"/>
                                                         <constraint firstAttribute="bottom" secondItem="1zm-tv-gsu" secondAttribute="bottom" constant="16" id="j51-QV-J0l"/>
                                                         <constraint firstItem="1zm-tv-gsu" firstAttribute="leading" secondItem="O1i-bS-3Fd" secondAttribute="leading" constant="16" id="slj-rr-O7h"/>
@@ -2067,7 +2081,7 @@ Cg
                                         </constraints>
                                     </box>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3km-oC-FvU">
-                                        <rect key="frame" x="797" y="106" width="245" height="406"/>
+                                        <rect key="frame" x="797" y="106" width="594" height="406"/>
                                         <subviews>
                                             <box title="ML Options" translatesAutoresizingMaskIntoConstraints="NO" id="SVU-Js-14t">
                                                 <rect key="frame" x="-3" y="154" width="250" height="252"/>
@@ -2395,6 +2409,7 @@ Cg
                         <outlet property="autoShowOnEdgePicker" destination="Y1M-pN-W07" id="2UP-bn-lMx"/>
                         <outlet property="autoShowWhenDraggingSwitch" destination="hIC-Xb-Nkk" id="m5t-8p-FFw"/>
                         <outlet property="clipboardSnooping" destination="ezb-6C-8BJ" id="kIS-CZ-CjN"/>
+                        <outlet property="clipboardSnoopingAll" destination="JM5-KX-Cx4" id="HI7-8U-80K"/>
                         <outlet property="convertLabelsToTagsSwitch" destination="KI7-qt-4aU" id="axR-GH-bku"/>
                         <outlet property="deleteAllButton" destination="3y4-gH-maW" id="tOH-hk-TGi"/>
                         <outlet property="disableUrlSupportSwitch" destination="S44-1y-3Pe" id="kpX-Pk-jSP"/>

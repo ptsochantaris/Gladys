@@ -100,6 +100,15 @@ extension PersistedOptions {
         }
     }
 
+    static var clipboardSnoopingAll: Bool {
+        get {
+            return defaults.bool(forKey: "clipboardSnoopingAll")
+        }
+        set {
+            defaults.set(newValue, forKey: "clipboardSnoopingAll")
+        }
+    }
+
 	static var alwaysOnTop: Bool {
 		get {
 			return defaults.bool(forKey: "alwaysOnTop")
