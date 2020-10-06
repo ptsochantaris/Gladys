@@ -472,9 +472,27 @@ extension Model {
 					}
 				case .label:
 					if ascending {
-                        actualItemsToSort.sort { ($0.labels.first ?? "").localizedCaseInsensitiveCompare($1.labels.first ?? "") == .orderedAscending }
+                        actualItemsToSort.sort {
+                            // treat empty as after Z
+                            guard let l1 = $0.labels.first else {
+                                return false
+                            }
+                            guard let l2 = $1.labels.first else {
+                                return true
+                            }
+                            return l1.localizedCaseInsensitiveCompare(l2) == .orderedAscending
+                        }
 					} else {
-                        actualItemsToSort.sort { ($0.labels.first ?? "").localizedCaseInsensitiveCompare($1.labels.first ?? "") == .orderedDescending }
+                        actualItemsToSort.sort {
+                            // treat empty as after Z
+                            guard let l1 = $0.labels.first else {
+                                return false
+                            }
+                            guard let l2 = $1.labels.first else {
+                                return true
+                            }
+                            return l1.localizedCaseInsensitiveCompare(l2) == .orderedDescending
+                        }
 					}
 				case .size:
 					if ascending {
