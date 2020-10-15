@@ -40,7 +40,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, useCentral: false)
+        let forceMainWindow = !UIApplication.shared.supportsMultipleScenes
+        Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, forceMainWindow: forceMainWindow)
         updateWindowCount()
     }
     
@@ -51,17 +52,17 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
 
         if shortcutItem.type.hasSuffix(".Search") {
-            Singleton.shared.showMaster(andHandle: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
+            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
 
         } else if shortcutItem.type.hasSuffix(".Paste") {
-            Singleton.shared.showMaster(andHandle: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
+            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
 
         }
         completionHandler(true)
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        Singleton.shared.handleActivity(userActivity, in: scene, useCentral: true)
+        Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)
     }
         
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

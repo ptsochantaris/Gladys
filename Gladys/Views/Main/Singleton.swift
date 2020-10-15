@@ -98,7 +98,7 @@ final class Singleton {
         }
     }
 
-    func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, useCentral: Bool) {
+    func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {
         guard let scene = scene as? UIWindowScene else { return }
         
         scene.session.stateRestorationActivity = userActivity
@@ -113,7 +113,7 @@ final class Singleton {
                 labelList = nil
             }
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
-            showCentral(in: scene, restoringLabels: labelList, restoringSearch: searchText)
+            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText)
             return
 
         case kGladysQuicklookActivity:
@@ -123,7 +123,7 @@ final class Singleton {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
 
                 guard let item = Model.item(uuid: uuidString) else {
-                    showCentral(in: scene) { _ in
+                    showMainWindow(in: scene) { _ in
                         genericAlert(title: "Not Found", message: "This item was not found")
                     }
                     return
@@ -135,8 +135,8 @@ final class Singleton {
                 } else {
                     child = item.previewableTypeItem
                 }
-                if useCentral {
-                    showCentral(in: scene) { _ in
+                if forceMainWindow {
+                    showMainWindow(in: scene) { _ in
                         let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
                         NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
                     }
@@ -158,14 +158,14 @@ final class Singleton {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
 
                 guard let item = Model.item(uuid: uuidString) else {
-                    showCentral(in: scene) { _ in
+                    showMainWindow(in: scene) { _ in
                         genericAlert(title: "Not Found", message: "This item was not found")
                     }
                     return
                 }
 
-                if useCentral {
-                    showCentral(in: scene) { _ in
+                if forceMainWindow {
+                    showMainWindow(in: scene) { _ in
                         let request = HighlightRequest(uuid: uuidString, open: true)
                         NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
                     }
@@ -179,28 +179,28 @@ final class Singleton {
             }
             
         case kGladysStartPasteShortcutActivity:
-            showCentral(in: scene) { _ in NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
+            showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
             return
 
         case kGladysStartSearchShortcutActivity:
-            showCentral(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
+            showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
             return
 
         case CSSearchableItemActionType:
             if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier)
-                showCentral(in: scene) { _ in NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
+                showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
                 return
             }
 
         case CSQueryContinuationActionType:
             if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-                showCentral(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
+                showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
                 return
             }
 
         default:
-            showCentral(in: scene)
+            showMainWindow(in: scene)
             return
         }
         
@@ -210,7 +210,7 @@ final class Singleton {
         }
     }
     
-    private func showCentral(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -239,7 +239,7 @@ final class Singleton {
         }
     }
     
-    func showMaster(andHandle activity: NSUserActivity?, in scene: UIScene?) {
+    func boot(with activity: NSUserActivity?, in scene: UIScene?) {
         if UIApplication.shared.supportsMultipleScenes {
             let masterSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
             let options = UIScene.ActivationRequestOptions()
@@ -248,7 +248,7 @@ final class Singleton {
                 log("Error requesting new scene: \(error)")
             }
         } else if let scene = scene {
-            handleActivity(activity, in: scene, useCentral: true)
+            handleActivity(activity, in: scene, forceMainWindow: true)
         } else {
             // in theory this should never happen, leave the UI as-is
         }
@@ -269,8 +269,8 @@ final class Singleton {
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)
             activity.userInfo = [CSSearchableItemActivityIdentifier: itemId]
-            Singleton.shared.showMaster(andHandle: activity, in: scene)
-                                    
+            Singleton.shared.boot(with: activity, in: scene)
+        
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
