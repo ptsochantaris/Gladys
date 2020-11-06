@@ -546,19 +546,21 @@ extension Component {
 
     func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 3)
-		overallProgress.completedUnitCount = 2
-		if let bytesCopy = bytes {
-            Component.ingestQueue.async {
-                self.ingest(data: bytesCopy, storeBytes: false) { error in
+		overallProgress.completedUnitCount = 1
+        Component.ingestQueue.async { [weak self] in
+            guard let s = self else { return }
+            if let bytesCopy = s.bytes {
+                overallProgress.completedUnitCount += 1
+                s.ingest(data: bytesCopy, storeBytes: false) { error in
                     assert(Thread.isMainThread)
                     overallProgress.completedUnitCount += 1
                     andCall(error)
                 }
+            } else {
+                overallProgress.completedUnitCount += 2
+                s.completeIngest(andCall: andCall)
             }
-		} else {
-			overallProgress.completedUnitCount += 1
-			completeIngest(andCall: andCall)
-		}
+        }
 		return overallProgress
 	}
 

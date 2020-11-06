@@ -354,13 +354,14 @@ extension Component: Equatable {
         let fm = FileManager.default
 
         var isDir: ObjCBool = false
-        let path = bytesPath
-        if fm.fileExists(atPath: path.path, isDirectory: &isDir) {
+        let url = getBytesPath(createIfNeeded: false)
+        let path = url.path
+        if fm.fileExists(atPath: path, isDirectory: &isDir) {
 
             if isDir.boolValue {
-                return fm.contentSizeOfDirectory(at: path)
+                return fm.contentSizeOfDirectory(at: url)
             } else {
-                if let attrs = try? fm.attributesOfItem(atPath: path.path) {
+                if let attrs = try? fm.attributesOfItem(atPath: path) {
                     return attrs[FileAttributeKey.size] as? Int64 ?? 0
                 }
             }
@@ -368,20 +369,26 @@ extension Component: Equatable {
         return 0
 	}
 
-	var folderUrl: URL {
+    func getFolderUrl(createIfNeeded: Bool) -> URL {
 		let nsuuiud = uuid as NSUUID
 		if let url = folderUrlCache.object(forKey: nsuuiud) {
 			return url as URL
 		}
 
 		let url = Model.appStorageUrl.appendingPathComponent(parentUuid.uuidString).appendingPathComponent(uuid.uuidString)
-		let f = FileManager.default
-		if !f.fileExists(atPath: url.path) {
-			try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-		}
-		folderUrlCache.setObject(url as NSURL, forKey: nsuuiud)
+        if createIfNeeded {
+            let f = FileManager.default
+            if !f.fileExists(atPath: url.path) {
+                try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            }
+            folderUrlCache.setObject(url as NSURL, forKey: nsuuiud)
+        }
 		return url
 	}
+    
+    var folderUrl: URL {
+        return getFolderUrl(createIfNeeded: true)
+    }
 
 	var imagePath: URL {
 		let nsuuiud = uuid as NSUUID
@@ -389,21 +396,25 @@ extension Component: Equatable {
 			return url as URL
 		}
 
-		let url = folderUrl.appendingPathComponent("thumbnail.png")
+		let url = getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
 		imagePathCache.setObject(url as NSURL, forKey: nsuuiud)
 		return url
 	}
 
-	var bytesPath: URL {
+    func getBytesPath(createIfNeeded: Bool) -> URL {
 		let nsuuiud = uuid as NSUUID
 		if let url = bytesPathCache.object(forKey: nsuuiud) {
 			return url as URL
 		}
 
-		let url = folderUrl.appendingPathComponent("blob", isDirectory: false)
+		let url = getFolderUrl(createIfNeeded: createIfNeeded).appendingPathComponent("blob", isDirectory: false)
 		bytesPathCache.setObject(url as NSURL, forKey: nsuuiud)
 		return url
 	}
+    
+    var bytesPath: URL {
+        return getBytesPath(createIfNeeded: true)
+    }
 	
 	private var cloudKitDataPath: URL {
 		let nsuuiud = uuid as NSUUID
