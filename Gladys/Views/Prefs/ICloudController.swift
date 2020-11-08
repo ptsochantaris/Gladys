@@ -22,7 +22,7 @@ final class ICloudController: GladysViewController {
 
 		doneButtonLocation = .right
 
-		NotificationCenter.default.addObserver(self, selector: #selector(icloudTransitionChanged), name: .CloudManagerStatusChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateiCloudControls), name: .CloudManagerStatusChanged, object: nil)
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
 		icloudSwitch.tintColor = UIColor(named: "colorLightGray")
@@ -61,14 +61,7 @@ final class ICloudController: GladysViewController {
 		}
 	}
 
-	@objc private func icloudTransitionChanged() {
-		updateiCloudControls()
-		UIView.animate(animations: {
-			self.view.layoutIfNeeded()
-		}, completion: nil)
-	}
-
-	private func updateiCloudControls() {
+	@objc private func updateiCloudControls() {
 		if CloudManager.syncTransitioning || CloudManager.syncing {
 			icloudSwitch.isEnabled = false
 			icloudLabel.text = CloudManager.syncString

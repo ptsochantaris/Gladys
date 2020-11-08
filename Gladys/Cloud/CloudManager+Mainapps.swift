@@ -271,7 +271,7 @@ extension CloudManager {
         }
     }
 
-    static func activate(completion: @escaping (Error?) -> Void) {
+    static private func activate(completion: @escaping (Error?) -> Void) {
 
         if syncSwitchedOn {
             completion(nil)
@@ -334,7 +334,7 @@ extension CloudManager {
         perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
 
-    static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
+    private static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
         syncTransitioning = true
 
         if deactivatingShares {
