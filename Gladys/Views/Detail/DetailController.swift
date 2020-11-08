@@ -14,6 +14,8 @@ final class DetailController: GladysViewController,
 	@IBOutlet private weak var openButton: UIBarButtonItem!
 	@IBOutlet private weak var dateLabel: UILabel!
 	@IBOutlet private weak var dateLabelHolder: UIView!
+    
+    private var menuButton: UIBarButtonItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -43,6 +45,33 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 14.0, *) {
+            if presentingViewController != nil {
+                let menu = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: nil, action: nil)
+                var newItems = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
+                newItems.insert(menu, at: 0)
+                navigationItem.leftBarButtonItems = newItems
+                menuButton = menu
+            }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if #available(iOS 14.0, *) {
+            updateMenuButton()
+        }
+    }
+    
+    @available(iOS 14.0, *)
+    private func updateMenuButton() {
+        if let m = menuButton, let v = view.window?.windowScene?.mainController {
+            m.menu = v.createShortcutActions(for: item, mainView: false)
+        }
+    }
     
     @objc private func dataUpdate(_ notification: Notification) {
         if item == nil || item?.needsDeletion == true {
@@ -74,6 +103,9 @@ final class DetailController: GladysViewController,
 			done()
 		} else {
             isReadWrite = item.shareMode != .elsewhereReadOnly
+            if #available(iOS 14.0, *) {
+                updateMenuButton()
+            }
             self.view.setNeedsLayout()
             table.reloadData()
 		}

@@ -1205,7 +1205,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: {
             return item.previewableTypeItem?.quickLook()
         }, actionProvider: { [weak self] _ in
-            return self?.createShortcutActions(for: item)
+            return self?.createShortcutActions(for: item, mainView: true)
         })
     }
 
@@ -1221,7 +1221,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         Model.save()
     }
 
-    private func createShortcutActions(for item: ArchivedItem) -> UIMenu? {
+    func createShortcutActions(for item: ArchivedItem, mainView: Bool) -> UIMenu? {
         
         func makeAction(title: String, callback: @escaping () -> Void, style: UIAction.Attributes, iconName: String?) -> UIAction {
             let a = UIAction(title: title) { _ in callback() }
@@ -1234,19 +1234,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         var children = [UIMenuElement]()
         
-        if item.canOpen {
+        if mainView && item.canOpen {
             children.append(makeAction(title: "Open", callback: { [weak self] in
                 self?.noteLastActioned(item: item)
                 item.tryOpen(in: nil) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
 
-        let topElements = [
+        var topElements = mainView ? [
             makeAction(title: "Info Panel", callback: { [weak self] in
                 self?.noteLastActioned(item: item)
                 self?.performSegue(withIdentifier: "showDetail", sender: item)
-            }, style: [], iconName: "list.bullet.below.rectangle"),
-            
+            }, style: [], iconName: "list.bullet.below.rectangle")
+        ] : [UIAction]()
+        
+        topElements.append(contentsOf: [
             makeAction(title: "Move to Top", callback: { [weak self] in
                 self?.noteLastActioned(item: item)
                 Model.sendToTop(items: [item])
@@ -1259,7 +1261,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     UIAccessibility.post(notification: .announcement, argument: "Copied.")
                 }
             }, style: [], iconName: "doc.on.doc")
-        ]
+        ])
 
         let topHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: topElements)
         children.append(topHolder)
@@ -1298,24 +1300,32 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let s = self,
                 let index = s.filter.filteredDrops.firstIndex(of: item),
                 let cell = s.collection.cellForItem(at: IndexPath(item: index, section: 0)) {
-                self?.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
+                s.dismissAnyPopOver {
+                    s.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
+                }
             }
         }, style: [], iconName: "mic"))
         
         if CloudManager.syncSwitchedOn {
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
-                    self?.addInvites(to: item)
+                    guard let s = self else { return }
+                    s.dismissAnyPopOver {
+                        s.addInvites(to: item)
+                    }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
                 
             } else {
                 children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
-                    if item.isPrivateShareWithOnlyOwner {
-                        self?.shareOptionsPrivate(for: item)
-                    } else if item.isShareWithOnlyOwner {
-                        self?.shareOptionsPublic(for: item)
-                    } else {
-                        self?.editInvites(in: item)
+                    guard let s = self else { return }
+                    s.dismissAnyPopOver {
+                        if item.isPrivateShareWithOnlyOwner {
+                            s.shareOptionsPrivate(for: item)
+                        } else if item.isShareWithOnlyOwner {
+                            s.shareOptionsPublic(for: item)
+                        } else {
+                            s.editInvites(in: item)
+                        }
                     }
                 }, style: [], iconName: "person.crop.circle.fill.badge.checkmark"))
             }
@@ -1329,12 +1339,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         return
                 }
                 
-                s.noteLastActioned(item: item)
-                let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
-                s.present(a, animated: true)
-                if let p = a.popoverPresentationController {
-                    p.sourceView = cell
-                    p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
+                s.dismissAnyPopOver {
+                    s.noteLastActioned(item: item)
+                    let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
+                    s.present(a, animated: true)
+                    if let p = a.popoverPresentationController {
+                        p.sourceView = cell
+                        p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
+                    }
                 }
             }, style: [], iconName: "square.and.arrow.up"))
         }
