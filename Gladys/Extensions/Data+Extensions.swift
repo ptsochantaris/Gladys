@@ -49,15 +49,17 @@ extension Data {
             return nil
         }
         
+        defer {
+            if close(fd) != 0 {
+                log("Warning, error when closing \(url.absoluteURL.path)")
+            }
+        }
+        
         guard let mappedBuffer = mmap(nil, count, PROT_READ, MAP_PRIVATE|MAP_FILE, fd, 0) else {
             log("Warning, could not memory map \(url.absoluteURL.path)")
             return nil
         }
-        
-        if close(fd) != 0 {
-            log("Warning, error when closing \(url.absoluteURL.path)")
-        }
-        
+                
         return Data(bytesNoCopy: mappedBuffer, count: count, deallocator: .unmap)
     }
 }
