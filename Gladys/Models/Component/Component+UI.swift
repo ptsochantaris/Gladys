@@ -26,8 +26,8 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         transitioningDelegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, mainWindow.bounds.size.width), height: mainWindow.bounds.size.height)
     }
     
@@ -90,6 +90,9 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
             } else if popoverPresentationController == nil { // full window?
                 showDone = true
             }
+            
+        } else if navigationController?.viewControllers.count == 1 && popoverPresentationController == nil { // fullscreen
+            showDone = true
         }
         
         if UIApplication.shared.supportsMultipleScenes {
@@ -101,7 +104,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
                 showNewWindow = true
             }
         }
-                
+        
         let newWindowIndex = i.rightBarButtonItems?.firstIndex(of: newWindowButton)
         if showNewWindow && newWindowIndex == nil {
             i.rightBarButtonItems?.insert(newWindowButton, at: 0)

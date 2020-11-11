@@ -45,11 +45,14 @@ final class DetailController: GladysViewController,
 		n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
+
+    private var addedMenu = false
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if #available(iOS 14.0, *) {
-            if presentingViewController != nil {
+            if !addedMenu, presentingViewController != nil {
+                addedMenu = true
                 let menu = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: nil, action: nil)
                 var newItems = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
                 newItems.insert(menu, at: 0)
