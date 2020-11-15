@@ -230,7 +230,15 @@ extension ArchivedItem {
 
         if components.count == 1, let child = components.first {
                         
+            guard f.fileExists(atPath: fmp) else {
+                return
+            }
+            
             let itemUrl = URL(fileURLWithPath: fmp)
+            if child.uuid != f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: itemUrl) {
+                return
+            }
+            
             if let fileDate = try? MirrorManager.modificationDate(for: itemUrl, using: f), fileDate <= updatedAt {
                 return
             }
@@ -255,13 +263,17 @@ extension ArchivedItem {
                     continue
                 }
 
-                let url = URL(fileURLWithPath: path)
-                if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate <= updatedAt {
+                let componentUrl = URL(fileURLWithPath: path)
+                if child.uuid != f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: componentUrl) {
+                    continue
+                }
+                
+                if let fileDate = try? MirrorManager.modificationDate(for: componentUrl, using: f), fileDate <= updatedAt {
                     continue
                 }
 
                 log("Assimilating mirror changes into component \(child.uuid.uuidString)")
-                try? f.copyAndReplaceItem(at: url, to: child.bytesPath)
+                try? f.copyAndReplaceItem(at: componentUrl, to: child.bytesPath)
                 child.markUpdated()
                 assimilated = true
             }
@@ -283,7 +295,7 @@ extension ArchivedItem {
 extension Component {
     
     fileprivate func mirror(to path: String, using f: FileManager) throws -> Bool {
-                
+        
         if !f.fileExists(atPath: bytesPath.path) {
             return false
         }
@@ -305,7 +317,7 @@ extension Component {
         v.creationDate = createdAt
         v.contentModificationDate = updatedAt
         try url.setResourceValues(v)
-                
+        
         return true
     }
 }
