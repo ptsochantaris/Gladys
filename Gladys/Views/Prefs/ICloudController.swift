@@ -104,7 +104,10 @@ final class ICloudController: GladysViewController {
 	}
 
 	@objc private func icloudSwitchChanged() {
-		if icloudSpinner.isAnimating { return }
+		if icloudSpinner.isAnimating {
+            icloudSwitch.isOn = CloudManager.syncSwitchedOn
+            return
+        }
 
 		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
 			if Model.drops.isEmpty {

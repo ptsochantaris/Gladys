@@ -740,6 +740,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}
 			lastSyncUpdate()
 		}
+        
+        if CloudManager.syncing || CloudManager.syncTransitioning {
+            collection.accessibilityLabel = CloudManager.syncString
+        } else {
+            collection.accessibilityLabel = "Items"
+        }
 	}
 
 	private func lastSyncUpdate() {
@@ -930,7 +936,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		updateLabelIcon()
         currentLabelEditor?.selectedItems = selectedItems.map { $0.uuid }
 		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
-        
+
         updateEmptyView()
 	}
 

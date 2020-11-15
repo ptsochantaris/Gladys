@@ -256,6 +256,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 			}
 		}
 	}
+    
+    private var isFirstImport: Bool {
+        guard let item = archivedDropItem else { return false }
+        return item.shouldDisplayLoading && !(item.needsReIngest || item.flags.contains(.isBeingCreatedBySync))
+    }
 
 	private func decorate(with item: ArchivedItem?) {
 
@@ -280,11 +285,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 		if let item = item {
 
 			if item.shouldDisplayLoading {
-                if item.needsReIngest || item.flags.contains(.isBeingCreatedBySync) {
-					hideSpinner = false
+                if isFirstImport {
+                    hideProgress = false
+                    progressView.observedProgress = item.loadingProgress
 				} else {
-					hideProgress = false
-					progressView.observedProgress = item.loadingProgress
+                    hideSpinner = false
 				}
 
 			} else if item.flags.contains(.needsUnlock) {
@@ -495,7 +500,9 @@ final class ArchivedItemCell: UICollectionViewCell {
         if progressViewHolder.isHidden {
             return super.accessibilityActivate()
 		} else {
-            cancelSelected(cancelButton)
+            if isFirstImport {
+                cancelSelected(cancelButton)
+            }
             return true
 		}
 	}
@@ -510,7 +517,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityLabel: String? {
 		get {
 			if shouldDisplayLoading {
-				return nil
+                if isFirstImport {
+                    return "Importing item. Activate to cancel."
+                } else {
+                    return "Processing item."
+                }
 			}
 			return (topLabel.text ?? "") + ((archivedDropItem?.isLocked ?? false) ? "\nItem Locked" : "")
 		}
@@ -520,7 +531,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	override var accessibilityValue: String? {
 		get {
 			if shouldDisplayLoading {
-				return "Processing item. Activate to cancel."
+                return nil
+                
 			} else {
 				var bottomText = ""
 				if PersistedOptions.displayLabelsInMainView, let l = archivedDropItem?.labels, !l.isEmpty {

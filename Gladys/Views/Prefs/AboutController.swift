@@ -26,6 +26,12 @@ final class AboutController: GladysViewController {
     @IBOutlet private weak var p4: UIView!
     @IBOutlet private weak var p5: UIView!
 
+    @IBOutlet private weak var b1: UIButton!
+    @IBOutlet private weak var b2: UIButton!
+    @IBOutlet private weak var b3: UIButton!
+    @IBOutlet private weak var b4: UIButton!
+    @IBOutlet private weak var b5: UIButton!
+    
     @IBOutlet private weak var t1: UILabel!
     @IBOutlet private weak var t2: UILabel!
     @IBOutlet private weak var t3: UILabel!
@@ -64,6 +70,12 @@ final class AboutController: GladysViewController {
                 s.l3.text = items[2].regularPrice
                 s.l4.text = items[3].regularPrice
                 s.l5.text = items[4].regularPrice
+                
+                s.b1.accessibilityValue = s.l1.text
+                s.b2.accessibilityValue = s.l2.text
+                s.b3.accessibilityValue = s.l3.text
+                s.b4.accessibilityValue = s.l4.text
+                s.b5.accessibilityValue = s.l5.text
 
                 if s.firstAppearance {
                     s.supportStack.isHidden = false

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -1779,7 +1779,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     <constraint firstItem="88n-uM-fcL" firstAttribute="top" secondItem="5ta-JY-1VM" secondAttribute="top" id="ea1-tY-xVC"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-1I-mk8">
                                                 <rect key="frame" x="0.0" y="66" width="320" height="417"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Vjq-by-Z29">
@@ -2216,6 +2216,11 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationItem>
                     <size key="freeformSize" width="320" height="800"/>
                     <connections>
+                        <outlet property="b1" destination="SNE-gf-6Jm" id="kZb-JB-fGz"/>
+                        <outlet property="b2" destination="HQx-Bj-DrR" id="yS0-i3-6bH"/>
+                        <outlet property="b3" destination="q2x-bl-JjF" id="u74-17-KSq"/>
+                        <outlet property="b4" destination="JUv-Ba-s3b" id="uhr-E7-j81"/>
+                        <outlet property="b5" destination="GtW-oA-CFS" id="Dfh-RG-KkC"/>
                         <outlet property="l1" destination="2fR-kM-JFb" id="bby-Pv-P2I"/>
                         <outlet property="l2" destination="4br-Bd-HvQ" id="kl9-Lj-r3U"/>
                         <outlet property="l3" destination="eyi-eQ-mA6" id="Iks-BS-LD1"/>

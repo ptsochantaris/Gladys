@@ -54,6 +54,7 @@ final class DetailController: GladysViewController,
             if !addedMenu, presentingViewController != nil {
                 addedMenu = true
                 let menu = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: nil, action: nil)
+                menu.accessibilityValue = "Menu"
                 var newItems = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
                 newItems.insert(menu, at: 0)
                 navigationItem.leftBarButtonItems = newItems
