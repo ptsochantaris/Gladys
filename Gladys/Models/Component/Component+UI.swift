@@ -1,6 +1,7 @@
 import UIKit
 import MapKit
 import Contacts
+import ContactsUI
 import CloudKit
 import QuickLook
 
@@ -314,4 +315,49 @@ extension Component {
 		canPreviewCache = res
 		return res
 	}
+    
+    var canOpen: Bool {
+        let item = objectForShare
+        if item is MKMapItem {
+            return true
+        } else if item is CNContact {
+            return true
+        } else if let url = item as? URL {
+            return !url.isFileURL && UIApplication.shared.canOpenURL(url)
+        }
+
+        return false
+    }
+    
+    func tryOpen(in viewController: UINavigationController?) {
+        let item = objectForShare
+        if let item = item as? MKMapItem {
+            item.openInMaps(launchOptions: [:])
+
+        } else if let contact = item as? CNContact {
+            let c = CNContactViewController(forUnknownContact: contact)
+            c.contactStore = CNContactStore()
+            c.hidesBottomBarWhenPushed = true
+            if let viewController = viewController {
+                viewController.pushViewController(c, animated: true)
+            } else {
+                let scene = currentWindow?.windowScene
+                let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true, sourceScene: scene)
+                NotificationCenter.default.post(name: .UIRequest, object: request)
+            }
+
+        } else if let item = item as? URL {
+            UIApplication.shared.connectedScenes.first?.open(item, options: nil) { success in
+                if !success {
+                    let message: String
+                    if item.isFileURL {
+                        message = "iOS does not recognise the type of this file"
+                    } else {
+                        message = "iOS does not recognise the type of this link"
+                    }
+                    genericAlert(title: "Can't Open", message: message)
+                }
+            }
+        }
+    }
 }

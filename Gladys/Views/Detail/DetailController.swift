@@ -339,8 +339,29 @@ final class DetailController: GladysViewController,
                     UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
                         component.copyToPasteboard()
                         genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                    },
+                    
+                    UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { [weak self] _ in
+                        guard let s = self, let cell = s.table.cellForRow(at: indexPath) else { return }
+                        let a = UIActivityViewController(activityItems: [component.sharingActivitySource], applicationActivities: nil)
+                        if let p = a.popoverPresentationController {
+                            p.sourceView = cell
+                            p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
+                        }
+                        s.present(a, animated: true)
+                        if let p = a.popoverPresentationController {
+                            p.sourceView = cell
+                            p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
+                        }
                     }
                 ]
+                
+                if component.canOpen {
+                    children.insert(UIAction(title: "Open", image: UIImage(systemName: "arrow.up.doc")) { [weak self] _ in
+                        guard let n = self?.navigationController else { return }
+                        component.tryOpen(in: n)
+                    }, at: 0)
+                }
                 
                 if component.parent?.shareMode != .elsewhereReadOnly {
                     children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in

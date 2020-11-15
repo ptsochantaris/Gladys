@@ -23,5 +23,5 @@ extension Component {
                 try? FileManager.default.removeItem(at: ipath)
             }
         }
-    }
+    }    
 }

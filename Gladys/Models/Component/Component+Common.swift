@@ -368,7 +368,7 @@ extension Component: Equatable {
         }
         return 0
 	}
-
+    
     func getFolderUrl(createIfNeeded: Bool) -> URL {
 		let nsuuiud = uuid as NSUUID
 		if let url = folderUrlCache.object(forKey: nsuuiud) {

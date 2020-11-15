@@ -139,17 +139,7 @@ extension ArchivedItem {
 	}
 
 	var canOpen: Bool {
-		let item = mostRelevantTypeItem?.objectForShare
-
-		if item is MKMapItem {
-			return true
-		} else if item is CNContact {
-			return true
-		} else if let item = item as? URL {
-			return !item.isFileURL && UIApplication.shared.canOpenURL(item)
-		}
-
-		return false
+        return mostRelevantTypeItem?.canOpen == true
 	}
 
 	var watchItem: [String: Any] {
