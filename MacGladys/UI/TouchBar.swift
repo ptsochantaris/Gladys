@@ -126,5 +126,6 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     func scrubber(_ scrubber: NSScrubber, didSelectItemAt index: Int) {
         let drop = Model.sharedFilter.filteredDrops[index]
         ViewController.shared.touchedItem(drop)
+        scrubber.selectedIndex = -1
     }
 }

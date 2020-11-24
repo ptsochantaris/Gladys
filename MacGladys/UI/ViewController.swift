@@ -548,6 +548,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             let str = s.searchBar.stringValue
             Model.sharedFilter.text = str.isEmpty ? nil : str
             s.updateEmptyView()
+            s.touchBarScrubber?.reloadData()
         }
     }()
     
