@@ -64,6 +64,13 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
 	}
 
 	private func done(_ label: String) {
+        var latest = ModelFilterContext.LabelToggle.Section.latestLabels
+        if let i = latest.firstIndex(of: label) {
+            latest.remove(at: i)
+        }
+        latest.insert(label, at: 0)
+        ModelFilterContext.LabelToggle.Section.latestLabels = Array(latest.prefix(10))
+
 		delegate?.newLabelController(self, selectedLabel: label)
 		dismiss(nil)
 	}
@@ -93,7 +100,6 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
         } else {
             view.textField?.stringValue = item as? String ?? ""
         }
-        view.textField?.sizeToFit()
         return view
     }
     
@@ -103,12 +109,6 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
         if let label = labelList.item(atRow: labelList.selectedRow) as? String, !label.isEmpty {
-            var latest = ModelFilterContext.LabelToggle.Section.latestLabels
-            if let i = latest.firstIndex(of: label) {
-                latest.remove(at: i)
-            }
-            latest.insert(label, at: 0)
-            ModelFilterContext.LabelToggle.Section.latestLabels = Array(latest.prefix(10))
             done(label)
         }
     }
