@@ -48,46 +48,48 @@ final class ShareViewController: NSViewController {
 		guard let extensionContext = extensionContext else { return }
 
 		for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
-            
-			if let text = inputItem.attributedContentText {
-				log("Ingesting inputItem with text: [\(text.string)]")
-				pasteboardItems.append(text)
 
-			} else if let title = inputItem.attributedTitle {
-				log("Ingesting inputItem with title: [\(title.string)]")
-				pasteboardItems.append(title)
+            var attachments = inputItem.attachments ?? []
 
-			} else {
-                var attachments = inputItem.attachments ?? []
-                if attachments.count == 2, // detect Safari PDF preview getting attached
-                    attachments[0].registeredTypeIdentifiers == ["public.url"],
-                    attachments[1].registeredTypeIdentifiers == ["com.adobe.pdf"] {
-                    log("Safari PDF found, stripping it")
-                    attachments.removeAll { $0.registeredTypeIdentifiers == ["com.adobe.pdf"] }
+            if attachments.count == 2, // detect Safari PDF preview getting attached
+                attachments[0].registeredTypeIdentifiers == ["public.url"],
+                attachments[1].registeredTypeIdentifiers == ["com.adobe.pdf"] {
+                log("Safari PDF found, stripping it")
+                attachments.removeAll { $0.registeredTypeIdentifiers == ["com.adobe.pdf"] }
+            }
+
+            if attachments.isEmpty { // use the legacy fields
+                if let text = inputItem.attributedContentText {
+                    log("Ingesting inputItem with text: [\(text.string)]")
+                    pasteboardItems.append(text)
+
+                } else if let title = inputItem.attributedTitle {
+                    log("Ingesting inputItem with title: [\(title.string)]")
+                    pasteboardItems.append(title)
                 }
+            }
 
-                log("Ingesting inputItem with \(attachments.count) attachment(s)…")
-				for attachment in attachments {
-					let newItem = NSPasteboardItem()
-					pasteboardItems.append(newItem)
-					var identifiers = attachment.registeredTypeIdentifiers
-					if identifiers.contains("public.file-url") && identifiers.contains("public.url") { // finder is sharing
-						log("> Removing Finder redundant URL data")
-						identifiers.removeAll { $0 == "public.file-url" || $0 == "public.url" }
-					}
-					log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
-					for type in identifiers {
-						importGroup.enter()
-						let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
-							guard let s = self else { return }
-							if let data = data {
-								newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
-							}
-							s.importGroup.leave()
-						}
-						progresses.append(p)
-					}
-				}
+            log("Ingesting inputItem with \(attachments.count) attachment(s)…")
+            for attachment in attachments {
+                let newItem = NSPasteboardItem()
+                pasteboardItems.append(newItem)
+                var identifiers = attachment.registeredTypeIdentifiers
+                if identifiers.contains("public.file-url") && identifiers.contains("public.url") { // finder is sharing
+                    log("> Removing Finder redundant URL data")
+                    identifiers.removeAll { $0 == "public.file-url" || $0 == "public.url" }
+                }
+                log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
+                for type in identifiers {
+                    importGroup.enter()
+                    let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
+                        guard let s = self else { return }
+                        if let data = data {
+                            newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
+                        }
+                        s.importGroup.leave()
+                    }
+                    progresses.append(p)
+                }
 			}
 		}
 	}

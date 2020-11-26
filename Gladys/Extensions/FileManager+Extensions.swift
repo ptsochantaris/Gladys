@@ -44,9 +44,9 @@ extension FileManager {
         return url.withUnsafeFileSystemRepresentation { fileSystemPath in
             let length = getxattr(fileSystemPath, attributeName, nil, 0, 0, 0)
             if length > 0 {
-                var data = Data(count: length)
+                var data = [UInt8](repeating: 0, count: length)
                 let result = getxattr(fileSystemPath, attributeName, &data, length, 0, 0)
-                if result > 0, let dateString = String(data: data, encoding: .utf8), let time = TimeInterval(dateString) {
+                if result > 0, let dateString = String(bytes: data, encoding: .utf8), let time = TimeInterval(dateString) {
                     return Date(timeIntervalSinceReferenceDate: time)
                 }
             }
