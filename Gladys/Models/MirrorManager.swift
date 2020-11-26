@@ -197,7 +197,17 @@ extension ArchivedItem {
     private func mirrorFolder(to path: String, using f: FileManager) throws -> Bool {
         
         if !f.fileExists(atPath: path) {
-            try f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            let url = URL(fileURLWithPath: path)
+            do {
+                try f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                let nsError = (error as NSError)
+                if nsError.domain == NSCocoaErrorDomain && nsError.code == 4 { // exists, but case conflict
+                    return false
+                } else {
+                    throw error
+                }
+            }
         }
         
         var mirrored = false
@@ -306,7 +316,7 @@ extension Component {
             if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
             } else {
-                try f.removeItem(at: url)
+                try f.removeItem(atPath: path)
             }
         }
         try f.copyItem(at: bytesPath, to: url)

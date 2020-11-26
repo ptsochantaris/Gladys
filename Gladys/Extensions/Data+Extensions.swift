@@ -10,26 +10,17 @@ import Foundation
 
 extension Data {
 	var isPlist: Bool {
-		guard count > 6 else { return false }
-		return withUnsafeBytes { ptr -> Bool in
-			guard let x = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return false }
-			return x[0] == 0x62
-				&& x[1] == 0x70
-				&& x[2] == 0x6c
-				&& x[3] == 0x69
-				&& x[4] == 0x73
-				&& x[5] == 0x74
-		}
+        return count > 5
+            && self[0 ..< 6].elementsEqual([0x62, 0x70, 0x6c, 0x69, 0x73, 0x74])
 	}
-	var isZip: Bool {
-		guard count > 3 else { return false }
-		return withUnsafeBytes { ptr -> Bool in
-			guard let x = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return false }
-			return x[0] == 0x50
-				&& x[1] == 0x4B
-				&& ((x[2] == 3 && x[3] == 4) || (x[2] == 5 && x[3] == 6) || (x[2] == 7 && x[3] == 8))
-		}
-	}
+    var isZip: Bool {
+        return count > 3
+            && self[0 ..< 2].elementsEqual([0x50, 0x4b])
+            && (self[2 ..< 4].elementsEqual([3, 4])
+                    || self[2 ..< 4].elementsEqual([5, 6])
+                    || self[2 ..< 4].elementsEqual([7, 8])
+            )
+    }
     static func forceMemoryMapped(contentsOf url: URL) -> Data? {
         guard let cPath = url.absoluteURL.path.cString(using: .utf8) else {
             log("Warning, could not resolve \(url.absoluteURL.path)")
