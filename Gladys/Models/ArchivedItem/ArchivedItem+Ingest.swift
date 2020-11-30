@@ -219,8 +219,7 @@ extension ArchivedItem {
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
         var extractedData: Data?
-        let g = DispatchGroup()
-        g.enter()
+        let sem = DispatchSemaphore(value: 0)
         provider.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
             if let data = data, data.count < 16384 {
                 var extractedText: String?
@@ -230,13 +229,14 @@ extension ArchivedItem {
                 } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
                     extractedText = text
                 }
+                
                 if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
                     extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
                 }
             }
-            g.leave()
+            sem.signal()
         }
-        g.wait()
+        sem.wait()
         return extractedData
     }
 

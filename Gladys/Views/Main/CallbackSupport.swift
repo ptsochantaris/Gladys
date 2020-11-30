@@ -26,12 +26,12 @@ struct CallbackSupport {
 		let m = Manager.shared
 		m.callbackURLScheme = Manager.urlSchemes?.first
 
-		m["paste-clipboard"] = { parameters, success, failure, cancel in
+		m["paste-clipboard"] = { parameters, success, failure, _ in
 			let result = handlePasteRequest(title: parameters["title"], note: parameters["note"], labels: parameters["labels"])
 			handle(result: result, success: success, failure: failure)
 		}
 
-		m["create-item"] = { parameters, success, failure, cancel in
+		m["create-item"] = { parameters, success, failure, _ in
 			let importOverrides = createOverrides(from: parameters)
 
 			if let text = parameters["text"] as NSString? {

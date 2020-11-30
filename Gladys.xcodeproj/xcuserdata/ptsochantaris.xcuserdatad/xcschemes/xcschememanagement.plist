@@ -69,7 +69,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>13</integer>
 		</dict>
 		<key>Playground-iOS (Playground) 2.xcscheme</key>
 		<dict>
@@ -83,7 +83,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>12</integer>
 		</dict>
 		<key>Playground-macOS (Playground) 1.xcscheme</key>
 		<dict>

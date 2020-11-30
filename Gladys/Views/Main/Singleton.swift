@@ -241,10 +241,10 @@ final class Singleton {
     
     func boot(with activity: NSUserActivity?, in scene: UIScene?) {
         if UIApplication.shared.supportsMultipleScenes {
-            let masterSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
+            let centralSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
             let options = UIScene.ActivationRequestOptions()
             options.requestingScene = scene
-            UIApplication.shared.requestSceneSessionActivation(masterSession, userActivity: activity, options: options) { error in
+            UIApplication.shared.requestSceneSessionActivation(centralSession, userActivity: activity, options: options) { error in
                 log("Error requesting new scene: \(error)")
             }
         } else if let scene = scene {

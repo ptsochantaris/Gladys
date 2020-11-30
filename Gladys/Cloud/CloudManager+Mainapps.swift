@@ -310,7 +310,7 @@ extension CloudManager {
     static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
         let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
         modifyOperation.savePolicy = .allKeys
-        modifyOperation.perRecordCompletionBlock = { record, error in
+        modifyOperation.perRecordCompletionBlock = { record, _ in
             let recordUUID = record.recordID.recordName
             DispatchQueue.main.async {
                 if let item = Model.item(shareId: recordUUID) {
@@ -348,7 +348,7 @@ extension CloudManager {
         var finalError: Error?
 
         let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
-        ss.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+        ss.modifySubscriptionsCompletionBlock = { _, _, error in
             if let error = error {
                 finalError = error
             }
@@ -356,7 +356,7 @@ extension CloudManager {
         perform(ss, on: container.sharedCloudDatabase, type: "delete subscription")
 
         let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
-        ms.modifySubscriptionsCompletionBlock = { savedSubscriptions, deletedIds, error in
+        ms.modifySubscriptionsCompletionBlock = { _, _, error in
             if let error = error {
                 finalError = error
             }
@@ -481,7 +481,7 @@ extension CloudManager {
     static func eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
         showNetwork = true
         let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: [privateZoneId])
-        deleteZone.modifyRecordZonesCompletionBlock = { savedRecordZones, deletedRecordZoneIDs, error in
+        deleteZone.modifyRecordZonesCompletionBlock = { _, _, error in
             if let error = error {
                 log("Error while deleting zone: \(error.finalDescription)")
             }
@@ -988,7 +988,7 @@ extension CloudManager {
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
         let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
         operation.savePolicy = .allKeys
-        operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
+        operation.modifyRecordsCompletionBlock = { _, _, error in
             completion(shareRecord, container, error)
         }
         perform(operation, on: container.privateCloudDatabase, type: "share item")

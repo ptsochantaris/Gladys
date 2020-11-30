@@ -144,7 +144,7 @@ final class PushState {
 			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
 			operation.database = database
 			operation.savePolicy = .allKeys
-			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
+			operation.modifyRecordsCompletionBlock = { _, deletedRecordIds, error in
 
 				let requestedDeletionUUIDs = recordIdList.map { $0.recordName }
 				let deletedUUIDs = deletedRecordIds?.map { $0.recordName } ?? []
@@ -182,7 +182,7 @@ final class PushState {
 					recordProgress?.completedUnitCount = Int64(progress * 100.0)
 				}
 			}
-			operation.modifyRecordsCompletionBlock = { updatedRecords, deletedRecordIds, error in
+			operation.modifyRecordsCompletionBlock = { updatedRecords, _, error in
 				DispatchQueue.main.async {
 					if let error = error {
 						log("Error updating cloud records: \(error.finalDescription)")
