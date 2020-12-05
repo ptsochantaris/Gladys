@@ -33,7 +33,9 @@ extension Model {
 				parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID)")
 				parent.reIngest()
-			}
+            } else {
+                log("No change detected")
+            }
 		}
 	}
 

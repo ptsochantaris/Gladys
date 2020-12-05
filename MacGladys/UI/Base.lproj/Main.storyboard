@@ -1149,11 +1149,11 @@ Cg
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="1423" height="552"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1076" height="552"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="14" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3ko-1F-sfS">
-                                <rect key="frame" x="16" y="12" width="1391" height="528"/>
+                                <rect key="frame" x="16" y="12" width="1044" height="528"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qIg-3b-sKc">
                                         <rect key="frame" x="0.0" y="94" width="242" height="434"/>
@@ -1343,7 +1343,7 @@ Cg
                                                                     <rect key="frame" x="0.0" y="0.0" width="210" height="30"/>
                                                                     <subviews>
                                                                         <stepper horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i5v-fY-I23">
-                                                                            <rect key="frame" x="-3" y="5" width="19" height="28"/>
+                                                                            <rect key="frame" x="-3" y="6" width="19" height="28"/>
                                                                             <stepperCell key="cell" continuous="YES" alignment="left" maxValue="60" id="qGo-gZ-TNA">
                                                                                 <connections>
                                                                                     <action selector="autoFadeChanged:" target="FB0-Ob-ymN" id="lCt-pB-xCI"/>
@@ -2084,7 +2084,7 @@ sensitive or secure</string>
                                         </constraints>
                                     </box>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3km-oC-FvU">
-                                        <rect key="frame" x="791" y="118" width="600" height="410"/>
+                                        <rect key="frame" x="791" y="118" width="253" height="410"/>
                                         <subviews>
                                             <box title="ML Options" translatesAutoresizingMaskIntoConstraints="NO" id="SVU-Js-14t">
                                                 <rect key="frame" x="-3" y="150" width="259" height="260"/>
@@ -2337,7 +2337,7 @@ sensitive or secure</string>
                                                                 </gridView>
                                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Ec-A6-WCp">
                                                                     <rect key="frame" x="-2" y="0.0" width="217" height="42"/>
-                                                                    <textFieldCell key="cell" selectable="YES" alignment="left" title="You can always open an item's info window with Cmd-I, its context menu, or the menubar." id="Zi6-5v-dNh">
+                                                                    <textFieldCell key="cell" selectable="YES" alignment="left" title="You can always open an item's info window with Cmd-I, or via its context menu, or via the menubar." id="Zi6-5v-dNh">
                                                                         <font key="font" metaFont="toolTip"/>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2442,7 +2442,7 @@ sensitive or secure</string>
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-88" y="792"/>
+            <point key="canvasLocation" x="-262" y="792"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -2917,11 +2917,11 @@ Only</string>
             <objects>
                 <viewController id="gNv-h2-b4E" customClass="NewLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="Gsn-Jo-TRL">
-                        <rect key="frame" x="0.0" y="0.0" width="184" height="265"/>
+                        <rect key="frame" x="0.0" y="0.0" width="188" height="265"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qlZ-aM-jH6">
-                                <rect key="frame" x="17" y="227" width="150" height="21"/>
+                                <rect key="frame" x="17" y="227" width="154" height="21"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="New Label" drawsBackground="YES" id="vZG-ok-ZJa">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2932,19 +2932,19 @@ Only</string>
                                 </connections>
                             </textField>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="CCQ-ZH-Svz">
-                                <rect key="frame" x="0.0" y="0.0" width="184" height="210"/>
+                                <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="4PC-K5-z9n">
-                                    <rect key="frame" x="0.0" y="0.0" width="184" height="210"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="16" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="3kn-eL-Prc" id="oI8-zK-gGx">
-                                            <rect key="frame" x="0.0" y="0.0" width="184" height="210"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="gridColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <tableColumns>
-                                                <tableColumn identifier="LabelColumn" editable="NO" width="152" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
+                                                <tableColumn identifier="LabelColumn" editable="NO" width="156" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
