@@ -359,12 +359,12 @@ final class Preferences: NSViewController {
 
 	@IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
-		ViewController.shared.itemView.reloadData()
+		ViewController.shared.collection.reloadData()
 	}
 
 	@IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
-		ViewController.shared.itemView.reloadData()
+		ViewController.shared.collection.reloadData()
 	}
 
 	@IBAction private func multipleSwitchChanged(_ sender: NSButton) {

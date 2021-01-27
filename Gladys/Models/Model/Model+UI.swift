@@ -190,7 +190,7 @@ extension Model {
 		if !registeredForBackground {
 			registeredForBackground = true
 			BackgroundTask.registerForBackground()
-			//log("Starting save queue background task")
+			// log("Starting save queue background task")
 		}
 	}
 

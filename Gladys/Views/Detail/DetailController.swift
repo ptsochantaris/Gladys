@@ -207,7 +207,7 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		//log("laid-out for \(view.bounds.size)")
+		// log("laid-out for \(view.bounds.size)")
         sizeWindow()
 	}
 

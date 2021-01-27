@@ -67,7 +67,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
 	}
 
 	func windowDidEndLiveResize(_ notification: Notification) {
-		ViewController.shared.itemView.reloadData()
+		ViewController.shared.collection.reloadData()
 	}
 
 	var lastWindowPosition: NSRect? {
@@ -159,7 +159,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
 
-	@IBOutlet private weak var collection: MainCollectionView!
+	@IBOutlet weak var collection: MainCollectionView!
 
 	static var shared: ViewController!
 
@@ -207,10 +207,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		AppDelegate.shared?.updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 	}
 
-	var itemView: MainCollectionView {
-		return collection
-	}
-    
     private func insertItems(count: Int) {
         collection.deselectAll(nil)
         let ips = (0 ..< count).map { IndexPath(item: $0, section: 0) }
@@ -250,6 +246,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
 			self?.updateTitle()
             self?.collection.animator().reloadData()
+            self?.touchBarScrubber?.reloadData()
 		}
 
 		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
@@ -548,7 +545,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             let str = s.searchBar.stringValue
             Model.sharedFilter.text = str.isEmpty ? nil : str
             s.updateEmptyView()
-            s.touchBarScrubber?.reloadData()
         }
     }()
     

@@ -52,9 +52,9 @@ extension Component: Equatable {
 		guard let bytes = bytes else { return nil }
 
 		// Do not do this because there may be a URL hidden there
-		//if representedClass == "NSData" {
-		//return bytes
-		//}
+		// if representedClass == "NSData" {
+		// return bytes
+		// }
 
 		if classWasWrapped, let unarchived = SafeUnarchiver.unarchive(bytes) {
 			return unarchived

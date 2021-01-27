@@ -97,7 +97,6 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
         scrubber.selectionBackgroundStyle = .none
         scrubber.delegate = self
         scrubber.dataSource = self
-        //scrubber.backgroundColor = .scrubberTexturedBackground
         view = scrubber
     }
     

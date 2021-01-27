@@ -47,7 +47,7 @@ final class NotesEditor: NSViewController {
 			}
 		}
 		if changes {
-			ViewController.shared.itemView.reloadData()
+			ViewController.shared.collection.reloadData()
 			Model.save()
 		}
 		dismiss(nil)
