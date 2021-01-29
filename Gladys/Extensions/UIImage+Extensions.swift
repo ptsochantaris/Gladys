@@ -18,36 +18,37 @@ extension UIImage {
         kCGImageSourceShouldCache: kCFBooleanFalse
     ] as CFDictionary
 
+    private static let regularFormat = UIGraphicsImageRendererFormat.default()
+    private static let templateFormat: UIGraphicsImageRendererFormat = {
+        let f = UIGraphicsImageRendererFormat.default()
+        f.scale = screenScale
+        return f
+    }()
+    
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
-        
         guard let provider = CGDataProvider(url: url as CFURL),
             let source = CGImageSourceCreateWithDataProvider(provider, nil),
             let imageRef = CGImageSourceCreateImageAtIndex(source, 0, fromFileOptions) else {
                 return nil
         }
         
-        let width = imageRef.width
-        let height = imageRef.height
-        let bitmapInfo: UInt32
-        switch imageRef.alphaInfo {
-        case .none, .noneSkipFirst, .noneSkipLast:
-            bitmapInfo = CGImageAlphaInfo.noneSkipFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
-        default:
-            bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+        let format = template ? templateFormat : regularFormat
+        let scale = format.scale
+        let w = CGFloat(imageRef.width) / scale
+        let h = CGFloat(imageRef.height) / scale
+        let rect = CGRect(x: 0, y: 0, width: w, height: h)
+        let outputImage = UIGraphicsImageRenderer(bounds: rect, format: format).image { rc in
+            let c = rc.cgContext
+            c.translateBy(x: 0, y: h)
+            c.scaleBy(x: 1, y: -1)
+            c.draw(imageRef, in: rect)
         }
-        guard let imageContext = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: colourSpace, bitmapInfo: bitmapInfo) else {
-            return nil
+                
+        if template {
+            return outputImage.withRenderingMode(.alwaysTemplate)
+        } else {
+            return outputImage
         }
-        let rect = CGRect(x: 0, y: 0, width: width, height: height)
-        imageContext.draw(imageRef, in: rect)
-        if let outputImage = imageContext.makeImage() {
-            if template {
-                return UIImage(cgImage: outputImage, scale: screenScale, orientation: .up).withRenderingMode(.alwaysTemplate)
-            } else {
-                return UIImage(cgImage: outputImage, scale: 1, orientation: .up)
-            }
-        }
-        return nil
     }
     
 	final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {

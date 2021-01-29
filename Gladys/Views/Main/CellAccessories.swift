@@ -26,12 +26,10 @@ final class GladysImageView: UIImageView {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 
-        let radius: CGFloat
-        let corners: UIRectCorner
 		if circle {
 			let smallestSide = min(bounds.size.width, bounds.size.height)
-			radius = (smallestSide * 0.5).rounded(.down)
-            corners = UIRectCorner.allCorners
+            layer.cornerRadius = (smallestSide * 0.5).rounded(.down)
+            layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
 
 			if let a = aspectLock {
 				a.constant = smallestSide
@@ -41,27 +39,21 @@ final class GladysImageView: UIImageView {
 			}
 
         } else if wideMode {
-            radius = 10
-            corners = [UIRectCorner.topLeft, UIRectCorner.bottomLeft]
+            layer.cornerRadius = 10
+            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
             if let a = aspectLock {
                 removeConstraint(a)
                 aspectLock = nil
             }
 
 		} else {
-            radius = 5
-            corners = UIRectCorner.allCorners
+            layer.cornerRadius = 5
+            layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
             if let a = aspectLock {
                 removeConstraint(a)
                 aspectLock = nil
             }
 		}
-        
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        layer.mask = mask
-        layer.masksToBounds = true
 	}
 }
 
