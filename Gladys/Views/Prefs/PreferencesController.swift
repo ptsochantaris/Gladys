@@ -1,5 +1,6 @@
 import UIKit
 import MobileCoreServices
+import UniformTypeIdentifiers
 
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
@@ -274,11 +275,11 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
 	@objc private func importExportSelected() {
 		let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { _ in
-			self.importSelected()
+		a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { [weak self] _ in
+			self?.importSelected()
 		})
-		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { _ in
-			self.exportSelected()
+		a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { [weak self] _ in
+			self?.exportSelected()
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(a, animated: true)
@@ -298,7 +299,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 	}
 
 	private func importSelected() {
-		let p = UIDocumentPickerViewController(documentTypes: [GladysFileUTI], in: .import)
+        let p = UIDocumentPickerViewController(forOpeningContentTypes: [UTType(GladysFileUTI)!])
 		p.delegate = self
 		present(p, animated: true)
 	}
@@ -320,7 +321,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 		guard let url = url else { return }
 		DispatchQueue.main.async {
 			self.exportingFileURL = url
-			let p = UIDocumentPickerViewController(url: url, in: .exportToService)
+            let p = UIDocumentPickerViewController(forExporting: [url])
 			p.delegate = self
 			self.present(p, animated: true)
 		}
