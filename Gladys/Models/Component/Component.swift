@@ -152,7 +152,7 @@ final class Component: Codable {
 	}
 	#endif
 
-	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
+	#if MAINAPP || ACTIONEXTENSION || MAC
     init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
 
         self.typeIdentifier = typeIdentifier

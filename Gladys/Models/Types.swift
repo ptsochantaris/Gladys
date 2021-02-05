@@ -2,6 +2,9 @@ import Foundation
 
 #if MAINAPP
 let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
+#endif
+
+#if MAINAPP || INTENTSEXTENSION
 let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
 #endif
 

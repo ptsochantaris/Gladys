@@ -11,10 +11,6 @@ import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
 
-	private var newItems = [ArchivedItem]()
-	private var itemProviders = [NSItemProvider]()
-	private var intentCompletion: ((PasteClipboardIntentResponse) -> Void)?
-
 	func handle(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
 		guard let uuidString = intent.component?.identifier else {
 			completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
@@ -58,45 +54,11 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 	}
 
 	func confirm(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
-		itemProviders = UIPasteboard.general.itemProviders
-		let loadCount = itemProviders.count
-
-		if loadCount == 0 {
-			completion(PasteClipboardIntentResponse(code: .noData, userActivity: nil))
-			return
-		}
-
-		newItems.removeAll()
-		intentCompletion = nil
-
 		completion(PasteClipboardIntentResponse(code: .ready, userActivity: nil))
 	}
 
 	func handle(intent: PasteClipboardIntent, completion: @escaping (PasteClipboardIntentResponse) -> Void) {
-		intentCompletion = completion
-        
-        let n = NotificationCenter.default
-        n.removeObserver(self)
-        n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
-
-        for provider in itemProviders {
-			for newItem in ArchivedItem.importData(providers: [provider], overrides: nil) {
-				newItems.append(newItem)
-			}
-		}
-	}
-
-    @objc private func itemIngested(_ notification: Notification) {
-        if !Model.doneIngesting {
-            return
-        }
-        Model.insertNewItemsWithoutLoading(items: newItems.reversed(), addToDrops: false)
-        intentCompletion?(PasteClipboardIntentResponse(code: .success, userActivity: nil))
-        intentCompletion = nil
-        newItems.removeAll()
-        itemProviders.removeAll()
-        
-        NotificationCenter.default.removeObserver(self)
-        CloudManager.signalExtensionUpdate()
+        let activity = NSUserActivity(activityType: kGladysStartPasteShortcutActivity)
+        completion(PasteClipboardIntentResponse(code: .continueInApp, userActivity: activity))
 	}
 }

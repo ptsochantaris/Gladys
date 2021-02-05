@@ -138,7 +138,7 @@ final class ArchivedItem: Codable {
 	}
 	#endif
 
-	#if MAINAPP || ACTIONEXTENSION || INTENTSEXTENSION || MAC
+	#if MAINAPP || ACTIONEXTENSION || MAC
 
 	static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedItem> {
 		if PersistedOptions.separateItemPreference {

@@ -5,15 +5,15 @@
 	<key>INEnums</key>
 	<array/>
 	<key>INIntentDefinitionModelVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>INIntentDefinitionNamespace</key>
 	<string>gj9UM0</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19F101</string>
+	<string>20D64</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11E708</string>
+	<string>12D4e</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.6</string>
+	<string>12.4</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -38,7 +38,7 @@
 					<key>INIntentParameterCombinationSubtitleID</key>
 					<string>rGaNK7</string>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
-					<true/>
+					<false/>
 					<key>INIntentParameterCombinationTitle</key>
 					<string>Paste clipboard into Gladys</string>
 					<key>INIntentParameterCombinationTitleID</key>
