@@ -51,12 +51,12 @@ final class PullState {
 		
 		if itemsModified {
 			// need to save stuff that's been modified
-			if commitTokens {
-				Model.queueNextSaveCallback {
-					self.commitNewTokens()
-                    completion()
-				}
-			}
+            Model.queueNextSaveCallback {
+                if commitTokens {
+                    self.commitNewTokens()
+                }
+                completion()
+            }
 			Model.saveIsDueToSyncFetch = true
 			Model.save()
             
