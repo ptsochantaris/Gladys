@@ -11,11 +11,11 @@ import MobileCoreServices
 import GladysFramework
 
 final class PlistEditorCell: UITableViewCell {
-	@IBOutlet weak var titleLabel: UILabel!
-	@IBOutlet weak var subtitleLabel: UILabel!
+	@IBOutlet var titleLabel: UILabel!
+	@IBOutlet var subtitleLabel: UILabel!
 
-	@IBOutlet private weak var topDistance: NSLayoutConstraint!
-	@IBOutlet private weak var bottomDistance: NSLayoutConstraint!
+	@IBOutlet private var topDistance: NSLayoutConstraint!
+	@IBOutlet private var bottomDistance: NSLayoutConstraint!
 
 	var arrayMode = false {
 		didSet {
@@ -35,9 +35,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
 	private var arrayMode = false
 
-	@IBOutlet private weak var table: UITableView!
-	@IBOutlet private weak var backgroundView: UIImageView!
-	@IBOutlet private weak var copyButton: UIBarButtonItem!
+	@IBOutlet private var table: UITableView!
+	@IBOutlet private var backgroundView: UIImageView!
+	@IBOutlet private var copyButton: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

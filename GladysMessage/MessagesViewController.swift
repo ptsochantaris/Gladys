@@ -14,10 +14,10 @@ private var lastFilter: String?
 
 final class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
 
-	@IBOutlet private weak var emptyLabel: UILabel!
-	@IBOutlet private weak var itemsView: UICollectionView!
-	@IBOutlet private weak var searchBar: UISearchBar!
-	@IBOutlet private weak var searchOffset: NSLayoutConstraint!
+	@IBOutlet private var emptyLabel: UILabel!
+	@IBOutlet private var itemsView: UICollectionView!
+	@IBOutlet private var searchBar: UISearchBar!
+	@IBOutlet private var searchOffset: NSLayoutConstraint!
 
 	private var searchTimer: PopTimer!
 

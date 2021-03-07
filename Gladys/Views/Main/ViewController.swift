@@ -68,19 +68,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate,
     UICloudSharingControllerDelegate {
 
-	@IBOutlet private weak var collection: UICollectionView!
-	@IBOutlet private weak var totalSizeLabel: UIBarButtonItem!
-	@IBOutlet private weak var deleteButton: UIBarButtonItem!
-	@IBOutlet private weak var editLabelsButton: UIBarButtonItem!
-	@IBOutlet private weak var sortAscendingButton: UIBarButtonItem!
-	@IBOutlet private weak var labelsButton: UIBarButtonItem!
-	@IBOutlet private weak var settingsButton: UIBarButtonItem!
-	@IBOutlet private weak var itemsCount: UIBarButtonItem!
-	@IBOutlet private weak var dragModePanel: UIView!
-	@IBOutlet private weak var dragModeTitle: UILabel!
-    @IBOutlet private weak var dragModeSubtitle: UILabel!
-	@IBOutlet private weak var shareButton: UIBarButtonItem!
-    @IBOutlet private weak var editButton: UIBarButtonItem!
+	@IBOutlet private var collection: UICollectionView!
+	@IBOutlet private var totalSizeLabel: UIBarButtonItem!
+	@IBOutlet private var deleteButton: UIBarButtonItem!
+	@IBOutlet private var editLabelsButton: UIBarButtonItem!
+	@IBOutlet private var sortAscendingButton: UIBarButtonItem!
+	@IBOutlet private var labelsButton: UIBarButtonItem!
+	@IBOutlet private var settingsButton: UIBarButtonItem!
+	@IBOutlet private var itemsCount: UIBarButtonItem!
+	@IBOutlet private var dragModePanel: UIView!
+	@IBOutlet private var dragModeTitle: UILabel!
+    @IBOutlet private var dragModeSubtitle: UILabel!
+	@IBOutlet private var shareButton: UIBarButtonItem!
+    @IBOutlet private var editButton: UIBarButtonItem!
 
     var filter: ModelFilterContext!
     
@@ -758,7 +758,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		lastSyncUpdate()
 	}
 
-	@IBOutlet private weak var pasteButton: UIBarButtonItem!
+	@IBOutlet private var pasteButton: UIBarButtonItem!
 
 	@IBAction private func pasteSelected(_ sender: UIBarButtonItem) {
         Model.donatePasteIntent()

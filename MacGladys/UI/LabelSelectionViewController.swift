@@ -64,9 +64,9 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		labelsUpdated()
 	}
 
-	@IBOutlet private weak var clearAllButton: NSButton!
-	@IBOutlet private weak var tableView: NSTableView!
-	@IBOutlet private weak var searchField: NSSearchField!
+	@IBOutlet private var clearAllButton: NSButton!
+	@IBOutlet private var tableView: NSTableView!
+	@IBOutlet private var searchField: NSSearchField!
 
 	@IBAction private func clearAllSelected(_ sender: NSButton) {
 		Model.sharedFilter.disableAllLabels()

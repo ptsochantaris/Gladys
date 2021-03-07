@@ -10,12 +10,12 @@ import UIKit
 
 final class ICloudController: GladysViewController {
 
-	@IBOutlet private weak var icloudLabel: UILabel!
-	@IBOutlet private weak var icloudSwitch: UISwitch!
-	@IBOutlet private weak var icloudSpinner: UIActivityIndicatorView!
-	@IBOutlet private weak var eraseAlliCloudData: UIButton!
-	@IBOutlet private weak var syncNowButton: UIBarButtonItem!
-    @IBOutlet private weak var syncPolicy: UISegmentedControl!
+	@IBOutlet private var icloudLabel: UILabel!
+	@IBOutlet private var icloudSwitch: UISwitch!
+	@IBOutlet private var icloudSpinner: UIActivityIndicatorView!
+	@IBOutlet private var eraseAlliCloudData: UIButton!
+	@IBOutlet private var syncNowButton: UIBarButtonItem!
+    @IBOutlet private var syncPolicy: UISegmentedControl!
     
 	override func viewDidLoad() {
 		super.viewDidLoad()

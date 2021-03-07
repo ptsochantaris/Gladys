@@ -11,10 +11,10 @@ import UIKit
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate,
 UISearchResultsUpdating, UITableViewDragDelegate {
 
-	@IBOutlet private weak var table: UITableView!
-	@IBOutlet private weak var clearAllButton: UIBarButtonItem!
-	@IBOutlet private weak var emptyLabel: UILabel!
-    @IBOutlet private weak var closeButton: UIButton!
+	@IBOutlet private var table: UITableView!
+	@IBOutlet private var clearAllButton: UIBarButtonItem!
+	@IBOutlet private var emptyLabel: UILabel!
+    @IBOutlet private var closeButton: UIButton!
     
     var filter: ModelFilterContext!
     

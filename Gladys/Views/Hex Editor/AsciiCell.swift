@@ -10,8 +10,8 @@ import UIKit
 
 final class AsciiCell: UICollectionViewCell {
 
-	@IBOutlet private weak var label: UILabel!
-	@IBOutlet private weak var letter: UILabel!
+	@IBOutlet private var label: UILabel!
+	@IBOutlet private var letter: UILabel!
 
 	var address: Int64 = 0
 

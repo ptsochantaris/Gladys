@@ -12,9 +12,9 @@ final class NotesEditor: NSViewController {
 
 	var uuids = [UUID]()
 
-	@IBOutlet private weak var topLabel: NSTextField!
-	@IBOutlet private weak var noteField: NSTextField!
-	@IBOutlet private weak var saveButton: NSButton!
+	@IBOutlet private var topLabel: NSTextField!
+	@IBOutlet private var noteField: NSTextField!
+	@IBOutlet private var saveButton: NSButton!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

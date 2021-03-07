@@ -14,9 +14,9 @@ final class ShareViewController: NSViewController {
         return NSNib.Name("ShareViewController")
     }
 
-	@IBOutlet private weak var spinner: NSProgressIndicator!
-	@IBOutlet private weak var cancelButton: NSButton!
-	@IBOutlet private weak var status: NSTextField!
+	@IBOutlet private var spinner: NSProgressIndicator!
+	@IBOutlet private var cancelButton: NSButton!
+	@IBOutlet private var status: NSTextField!
 
 	private var cancelled = false
 	private var progresses = [Progress]()

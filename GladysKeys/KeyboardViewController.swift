@@ -12,7 +12,7 @@ private var latestOffset = CGPoint.zero
 private var selectedLabel: String?
 
 final class SimpleLabelToggleCell: UITableViewCell {
-    @IBOutlet weak var labelName: UILabel!
+    @IBOutlet var labelName: UILabel!
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         accessoryType = selected ? .checkmark : .none
@@ -22,8 +22,8 @@ final class SimpleLabelToggleCell: UITableViewCell {
 
 final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    @IBOutlet private weak var table: UITableView!
-    @IBOutlet private weak var emptyLabel: UILabel!
+    @IBOutlet private var table: UITableView!
+    @IBOutlet private var emptyLabel: UILabel!
     
     var changeCallback: (() -> Void)?
         
@@ -124,21 +124,21 @@ extension UIInputView: UIInputViewAudioFeedback {
 
 final class KeyboardViewController: UIInputViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
 
-    @IBOutlet private weak var emptyLabel: UILabel!
-    @IBOutlet private weak var itemsView: UICollectionView!
-    @IBOutlet private weak var nextKeyboardButton: UIButton!
-    @IBOutlet private weak var dismissButton: UIButton!
-    @IBOutlet private weak var spaceButton: UIButton!
-    @IBOutlet private weak var backspaceButton: UIButton!
-    @IBOutlet private weak var enterButton: UIButton!
-    @IBOutlet private weak var height: NSLayoutConstraint!
-    @IBOutlet private weak var labelsButton: UIButton!
-    @IBOutlet private weak var settingsButton: UIButton!
-    @IBOutlet private weak var emptyStack: UIStackView!
+    @IBOutlet private var emptyLabel: UILabel!
+    @IBOutlet private var itemsView: UICollectionView!
+    @IBOutlet private var nextKeyboardButton: UIButton!
+    @IBOutlet private var dismissButton: UIButton!
+    @IBOutlet private var spaceButton: UIButton!
+    @IBOutlet private var backspaceButton: UIButton!
+    @IBOutlet private var enterButton: UIButton!
+    @IBOutlet private var height: NSLayoutConstraint!
+    @IBOutlet private var labelsButton: UIButton!
+    @IBOutlet private var settingsButton: UIButton!
+    @IBOutlet private var emptyStack: UIStackView!
     
-    @IBOutlet private weak var topDivider: UIView!
-    @IBOutlet private weak var topDividerHeight: NSLayoutConstraint!
-    @IBOutlet private weak var bottomDividerHeight: NSLayoutConstraint!
+    @IBOutlet private var topDivider: UIView!
+    @IBOutlet private var topDividerHeight: NSLayoutConstraint!
+    @IBOutlet private var bottomDividerHeight: NSLayoutConstraint!
     
     private var filteredDrops = ContiguousArray<ArchivedItem>()
     

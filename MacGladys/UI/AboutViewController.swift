@@ -11,29 +11,29 @@ import StoreKit
 
 final class AboutViewController: NSViewController {
     
-    @IBOutlet private weak var tip1: NSView!
-    @IBOutlet private weak var tip2: NSView!
-    @IBOutlet private weak var tip3: NSView!
-    @IBOutlet private weak var tip4: NSView!
-    @IBOutlet private weak var tip5: NSView!
+    @IBOutlet private var tip1: NSView!
+    @IBOutlet private var tip2: NSView!
+    @IBOutlet private var tip3: NSView!
+    @IBOutlet private var tip4: NSView!
+    @IBOutlet private var tip5: NSView!
     
-    @IBOutlet private weak var f1: NSTextField!
-    @IBOutlet private weak var f2: NSTextField!
-    @IBOutlet private weak var f3: NSTextField!
-    @IBOutlet private weak var f4: NSTextField!
-    @IBOutlet private weak var f5: NSTextField!
+    @IBOutlet private var f1: NSTextField!
+    @IBOutlet private var f2: NSTextField!
+    @IBOutlet private var f3: NSTextField!
+    @IBOutlet private var f4: NSTextField!
+    @IBOutlet private var f5: NSTextField!
     
-    @IBOutlet private weak var l1: NSTextField!
-    @IBOutlet private weak var l2: NSTextField!
-    @IBOutlet private weak var l3: NSTextField!
-    @IBOutlet private weak var l4: NSTextField!
-    @IBOutlet private weak var l5: NSTextField!
+    @IBOutlet private var l1: NSTextField!
+    @IBOutlet private var l2: NSTextField!
+    @IBOutlet private var l3: NSTextField!
+    @IBOutlet private var l4: NSTextField!
+    @IBOutlet private var l5: NSTextField!
     
-    @IBOutlet private weak var supportStack: NSStackView!
-    @IBOutlet private weak var versionLabel: NSTextField!
+    @IBOutlet private var supportStack: NSStackView!
+    @IBOutlet private var versionLabel: NSTextField!
     
-    @IBOutlet private weak var credits: NSTextView!
-    @IBOutlet private weak var creditsContainer: NSScrollView!
+    @IBOutlet private var credits: NSTextView!
+    @IBOutlet private var creditsContainer: NSScrollView!
     
     private var tipJar: TipJar?
     private var tipItems: [SKProduct]?

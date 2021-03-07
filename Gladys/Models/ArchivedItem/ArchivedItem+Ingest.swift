@@ -79,14 +79,13 @@ extension ArchivedItem {
         let autoImage = PersistedOptions.autoGenerateLabelsFromImage
         let ocrImage = PersistedOptions.autoGenerateTextFromImage
         let transcribeAudio = PersistedOptions.transcribeSpeechFromMedia
-        if #available(iOS 13.0, *), autoText || autoImage || ocrImage {
+        if autoText || autoImage || ocrImage || transcribeAudio {
             processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
         } else {
             componentIngestDone()
         }
 	}
     
-    @available(iOS 13.0, *)
     private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) {
         let finalTitle = displayText.0
         var transcribedText: String?
@@ -150,7 +149,7 @@ extension ArchivedItem {
                     }
                 }
             }
-                        
+            
             if transcribeAudio, let (mediaUrl, ext) = mediaInfo, let recognizer = SFSpeechRecognizer(), recognizer.isAvailable, recognizer.supportsOnDeviceRecognition {
                 group.enter()
                 log("Will treat media file as \(ext) file for audio transcribing")

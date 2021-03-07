@@ -12,37 +12,37 @@ import GladysFramework
 
 final class AboutController: GladysViewController {
 
-    @IBOutlet private weak var versionLabel: UIBarButtonItem!
-	@IBOutlet private weak var logo: UIImageView!
-    @IBOutlet private weak var logoSize: NSLayoutConstraint!
+    @IBOutlet private var versionLabel: UIBarButtonItem!
+	@IBOutlet private var logo: UIImageView!
+    @IBOutlet private var logoSize: NSLayoutConstraint!
     
-    @IBOutlet private weak var supportStack: UIStackView!
-    @IBOutlet private weak var testFlightStack: UIStackView!
-    @IBOutlet private weak var topStack: UIStackView!
+    @IBOutlet private var supportStack: UIStackView!
+    @IBOutlet private var testFlightStack: UIStackView!
+    @IBOutlet private var topStack: UIStackView!
     
-    @IBOutlet private weak var p1: UIView!
-    @IBOutlet private weak var p2: UIView!
-    @IBOutlet private weak var p3: UIView!
-    @IBOutlet private weak var p4: UIView!
-    @IBOutlet private weak var p5: UIView!
+    @IBOutlet private var p1: UIView!
+    @IBOutlet private var p2: UIView!
+    @IBOutlet private var p3: UIView!
+    @IBOutlet private var p4: UIView!
+    @IBOutlet private var p5: UIView!
 
-    @IBOutlet private weak var b1: UIButton!
-    @IBOutlet private weak var b2: UIButton!
-    @IBOutlet private weak var b3: UIButton!
-    @IBOutlet private weak var b4: UIButton!
-    @IBOutlet private weak var b5: UIButton!
+    @IBOutlet private var b1: UIButton!
+    @IBOutlet private var b2: UIButton!
+    @IBOutlet private var b3: UIButton!
+    @IBOutlet private var b4: UIButton!
+    @IBOutlet private var b5: UIButton!
     
-    @IBOutlet private weak var t1: UILabel!
-    @IBOutlet private weak var t2: UILabel!
-    @IBOutlet private weak var t3: UILabel!
-    @IBOutlet private weak var t4: UILabel!
-    @IBOutlet private weak var t5: UILabel!
+    @IBOutlet private var t1: UILabel!
+    @IBOutlet private var t2: UILabel!
+    @IBOutlet private var t3: UILabel!
+    @IBOutlet private var t4: UILabel!
+    @IBOutlet private var t5: UILabel!
     
-    @IBOutlet private weak var l1: UILabel!
-    @IBOutlet private weak var l2: UILabel!
-    @IBOutlet private weak var l3: UILabel!
-    @IBOutlet private weak var l4: UILabel!
-    @IBOutlet private weak var l5: UILabel!
+    @IBOutlet private var l1: UILabel!
+    @IBOutlet private var l2: UILabel!
+    @IBOutlet private var l3: UILabel!
+    @IBOutlet private var l4: UILabel!
+    @IBOutlet private var l5: UILabel!
 
     private var tipJar: TipJar?
     private var tipItems: [SKProduct]?

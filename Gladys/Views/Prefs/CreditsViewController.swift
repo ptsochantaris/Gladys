@@ -10,7 +10,7 @@ import UIKit
 
 final class CreditsViewController: GladysViewController {
     
-    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private var scrollView: UIScrollView!
     
     @IBAction private func authorSelected(_ sender: UIButton) {
         UIApplication.shared.open(URL(string: "http://bru.build")!)

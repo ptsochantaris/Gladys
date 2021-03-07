@@ -10,7 +10,7 @@ import UIKit
 
 final class NoteEditorController: UIViewController {
 
-	@IBOutlet private weak var textView: UITextView!
+	@IBOutlet private var textView: UITextView!
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)

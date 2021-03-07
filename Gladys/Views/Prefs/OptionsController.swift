@@ -11,31 +11,31 @@ import Speech
 
 final class OptionsController: GladysViewController, UIPopoverPresentationControllerDelegate {
 
-	@IBOutlet private weak var twoColumnsSwitch: UISwitch!
-	@IBOutlet private weak var separateItemsSwitch: UISwitch!
-	@IBOutlet private weak var removeItemsWhenDraggedOutSwitch: UISwitch!
-	@IBOutlet private weak var dontAutoLabelNewItemsSwitch: UISwitch!
-	@IBOutlet private weak var displayNotesInMainViewSwitch: UISwitch!
-	@IBOutlet private weak var showCopyMoveSwitchSelectorSwitch: UISwitch!
-	@IBOutlet private weak var fullScreenSwitch: UISwitch!
-    @IBOutlet private weak var fullScreenHolder: SwitchHolder!
-    @IBOutlet private weak var displayLabelsInMainViewSwitch: UISwitch!
-	@IBOutlet private weak var allowLabelsInExtensionSwitch: UISwitch!
-	@IBOutlet private weak var wideModeSwitch: UISwitch!
-	@IBOutlet private weak var inclusiveSearchTermsSwitch: UISwitch!
-	@IBOutlet private weak var siriSettingsButton: UIBarButtonItem!
-    @IBOutlet private weak var autoConvertUrlsSwitch: UISwitch!
-    @IBOutlet private weak var blockGladysUrls: UISwitch!
-    @IBOutlet private weak var generateLabelsFromTitlesSwitch: UISwitch!
-    @IBOutlet private weak var generateLabelsFromThumbnailsSwitch: UISwitch!
-    @IBOutlet private weak var generateTextFromThumbnailsSwitch: UISwitch!
-    @IBOutlet private weak var transcribeSpeechInMedia: UISwitch!
-    @IBOutlet private weak var applyMlToUrlsSwitch: UISwitch!
+	@IBOutlet private var twoColumnsSwitch: UISwitch!
+	@IBOutlet private var separateItemsSwitch: UISwitch!
+	@IBOutlet private var removeItemsWhenDraggedOutSwitch: UISwitch!
+	@IBOutlet private var dontAutoLabelNewItemsSwitch: UISwitch!
+	@IBOutlet private var displayNotesInMainViewSwitch: UISwitch!
+	@IBOutlet private var showCopyMoveSwitchSelectorSwitch: UISwitch!
+	@IBOutlet private var fullScreenSwitch: UISwitch!
+    @IBOutlet private var fullScreenHolder: SwitchHolder!
+    @IBOutlet private var displayLabelsInMainViewSwitch: UISwitch!
+	@IBOutlet private var allowLabelsInExtensionSwitch: UISwitch!
+	@IBOutlet private var wideModeSwitch: UISwitch!
+	@IBOutlet private var inclusiveSearchTermsSwitch: UISwitch!
+	@IBOutlet private var siriSettingsButton: UIBarButtonItem!
+    @IBOutlet private var autoConvertUrlsSwitch: UISwitch!
+    @IBOutlet private var blockGladysUrls: UISwitch!
+    @IBOutlet private var generateLabelsFromTitlesSwitch: UISwitch!
+    @IBOutlet private var generateLabelsFromThumbnailsSwitch: UISwitch!
+    @IBOutlet private var generateTextFromThumbnailsSwitch: UISwitch!
+    @IBOutlet private var transcribeSpeechInMedia: UISwitch!
+    @IBOutlet private var applyMlToUrlsSwitch: UISwitch!
     
-	@IBOutlet private weak var actionSelector: UISegmentedControl!
-	@IBOutlet private weak var autoArchiveSwitch: UISwitch!
-	@IBOutlet private weak var exclusiveLabelsSwitch: UISwitch!
-    @IBOutlet private weak var fileMirrorSwitch: UISwitch!
+	@IBOutlet private var actionSelector: UISegmentedControl!
+	@IBOutlet private var autoArchiveSwitch: UISwitch!
+	@IBOutlet private var exclusiveLabelsSwitch: UISwitch!
+    @IBOutlet private var fileMirrorSwitch: UISwitch!
     
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
@@ -142,8 +142,14 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
                 switch status {
                 case .authorized:
                     DispatchQueue.main.async {
-                        PersistedOptions.transcribeSpeechFromMedia = true
-                        genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
+                        if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
+                            PersistedOptions.transcribeSpeechFromMedia = true
+                            genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
+                        } else {
+                            sender.isOn = false
+                            PersistedOptions.transcribeSpeechFromMedia = false
+                            genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                        }
                     }
                 case .denied, .notDetermined, .restricted:
                     DispatchQueue.main.async {

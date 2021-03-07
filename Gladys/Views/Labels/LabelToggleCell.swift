@@ -9,8 +9,8 @@
 import UIKit
 
 final class LabelToggleCell: UITableViewCell {
-	@IBOutlet private weak var labelCount: UILabel!
-	@IBOutlet private weak var labelName: UILabel!
+	@IBOutlet private var labelCount: UILabel!
+	@IBOutlet private var labelName: UILabel!
     
     weak var parent: LabelSelector?
         

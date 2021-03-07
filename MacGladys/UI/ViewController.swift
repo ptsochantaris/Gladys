@@ -159,22 +159,22 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
 
-	@IBOutlet weak var collection: MainCollectionView!
+	@IBOutlet var collection: MainCollectionView!
 
 	static var shared: ViewController!
 
 	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
-	@IBOutlet private weak var searchHolder: NSView!
-	@IBOutlet private weak var searchBar: NSSearchField!
+	@IBOutlet private var searchHolder: NSView!
+	@IBOutlet private var searchBar: NSSearchField!
 
-	@IBOutlet private weak var emptyView: NSImageView!
-	@IBOutlet private weak var emptyLabel: NSTextField!
+	@IBOutlet private var emptyView: NSImageView!
+	@IBOutlet private var emptyLabel: NSTextField!
 
-	@IBOutlet private weak var topBackground: NSVisualEffectView!
-	@IBOutlet private weak var titleBarBackground: NSView!
+	@IBOutlet private var topBackground: NSVisualEffectView!
+	@IBOutlet private var titleBarBackground: NSView!
 
-	@IBOutlet private weak var translucentView: NSVisualEffectView!
+	@IBOutlet private var translucentView: NSVisualEffectView!
 
 	override func viewWillAppear() {
 		handleLayout()

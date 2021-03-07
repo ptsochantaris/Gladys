@@ -11,9 +11,9 @@ import IntentsUI
 
 final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
 
-	@IBOutlet private weak var openItemDetailContainer: UIView!
-	@IBOutlet private weak var copyItemContainer: UIView!
-	@IBOutlet private weak var quickLookItemContainer: UIView!
+	@IBOutlet private var openItemDetailContainer: UIView!
+	@IBOutlet private var copyItemContainer: UIView!
+	@IBOutlet private var quickLookItemContainer: UIView!
     
 	var sourceItem: ArchivedItem?
 

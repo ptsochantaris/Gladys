@@ -9,5 +9,5 @@
 import UIKit
 
 final class LabelListCell: UITableViewCell {
-	@IBOutlet weak var labelName: UILabel!
+	@IBOutlet var labelName: UILabel!
 }

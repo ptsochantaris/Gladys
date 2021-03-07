@@ -9,6 +9,6 @@
 import UIKit
 
 final class LabelEditorCell: UITableViewCell {
-	@IBOutlet weak var labelName: UILabel!
-	@IBOutlet weak var tick: UIImageView!
+	@IBOutlet var labelName: UILabel!
+	@IBOutlet var tick: UIImageView!
 }

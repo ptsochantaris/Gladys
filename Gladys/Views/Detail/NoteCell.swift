@@ -10,9 +10,9 @@ import UIKit
 
 final class NoteCell: UITableViewCell, UITextViewDelegate {
 	
-	@IBOutlet private weak var placeholder: UILabel!
+	@IBOutlet private var placeholder: UILabel!
 
-	@IBOutlet private weak var textView: UITextView!
+	@IBOutlet private var textView: UITextView!
 
 	var resizeCallback: ((CGRect?, Bool) -> Void)?
     

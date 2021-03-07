@@ -14,12 +14,12 @@ extension Notification.Name {
 
 final class ActionRequestViewController: UIViewController {
 
-	@IBOutlet private weak var statusLabel: UILabel!
-	@IBOutlet private weak var cancelButton: UIBarButtonItem!
-	@IBOutlet private weak var image: UIImageView!
-	@IBOutlet private weak var labelsButton: UIButton!
-    @IBOutlet private weak var spinner: UIActivityIndicatorView!
-    @IBOutlet private weak var check: UIImageView!
+	@IBOutlet private var statusLabel: UILabel!
+	@IBOutlet private var cancelButton: UIBarButtonItem!
+	@IBOutlet private var image: UIImageView!
+	@IBOutlet private var labelsButton: UIButton!
+    @IBOutlet private var spinner: UIActivityIndicatorView!
+    @IBOutlet private var check: UIImageView!
     
 	private var loadCount = 0
 	private var ingestOnWillAppear = true

@@ -8,25 +8,25 @@ import PencilKit
 
 final class ArchivedItemCell: UICollectionViewCell {
     
-	@IBOutlet private weak var image: GladysImageView!
-	@IBOutlet private weak var bottomLabel: UILabel!
-	@IBOutlet private weak var labelsLabel: HighlightLabel!
-    @IBOutlet private weak var labelsHolder: UIView!
+	@IBOutlet private var image: GladysImageView!
+	@IBOutlet private var bottomLabel: UILabel!
+	@IBOutlet private var labelsLabel: HighlightLabel!
+    @IBOutlet private var labelsHolder: UIView!
     
-    @IBOutlet private weak var container: UIView!
+    @IBOutlet private var container: UIView!
 
-	@IBOutlet private weak var topLabel: UILabel!
-	@IBOutlet private weak var topLabelHolder: UIView!
+	@IBOutlet private var topLabel: UILabel!
+	@IBOutlet private var topLabelHolder: UIView!
 
-	@IBOutlet private weak var progressView: UIProgressView!
-	@IBOutlet private weak var progressViewHolder: UIView!
+	@IBOutlet private var progressView: UIProgressView!
+	@IBOutlet private var progressViewHolder: UIView!
 
-	@IBOutlet private weak var cancelButton: UIButton!
-	@IBOutlet private weak var lockImage: UIImageView!
-	@IBOutlet private weak var spinner: UIActivityIndicatorView!
+	@IBOutlet private var cancelButton: UIButton!
+	@IBOutlet private var lockImage: UIImageView!
+	@IBOutlet private var spinner: UIActivityIndicatorView!
 
-	@IBOutlet private weak var topLabelLeft: NSLayoutConstraint!
-	@IBOutlet private weak var labelStack: UIStackView!
+	@IBOutlet private var topLabelLeft: NSLayoutConstraint!
+	@IBOutlet private var labelStack: UIStackView!
 
 	private var tickImage: UIImageView?
 	private var tickHolder: UIView?

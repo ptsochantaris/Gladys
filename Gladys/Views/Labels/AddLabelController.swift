@@ -14,8 +14,8 @@ protocol AddLabelControllerDelegate: class {
 
 final class AddLabelController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-	@IBOutlet private weak var labelText: UITextField!
-	@IBOutlet private weak var table: UITableView!
+	@IBOutlet private var labelText: UITextField!
+	@IBOutlet private var table: UITableView!
 
 	var label: String?
     var exclude = Set<String>()

@@ -12,12 +12,12 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
 	var bytes: Data!
 
-	@IBOutlet private weak var addressViewHolder: UIView!
-	@IBOutlet private weak var addressButton: UIButton!
-	@IBOutlet private weak var addressItem: UIBarButtonItem!
-	@IBOutlet private weak var grid: UICollectionView!
-	@IBOutlet private weak var inspectorButton: UIBarButtonItem!
-	@IBOutlet private weak var asciiModeButton: UIBarButtonItem!
+	@IBOutlet private var addressViewHolder: UIView!
+	@IBOutlet private var addressButton: UIButton!
+	@IBOutlet private var addressItem: UIBarButtonItem!
+	@IBOutlet private var grid: UICollectionView!
+	@IBOutlet private var inspectorButton: UIBarButtonItem!
+	@IBOutlet private var asciiModeButton: UIBarButtonItem!
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return bytes.count
@@ -190,7 +190,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 		}
 	}
 
-	@IBOutlet private weak var ascii: UIBarButtonItem!
+	@IBOutlet private var ascii: UIBarButtonItem!
 
 	@IBAction private func asciiSelected(_ sender: UIBarButtonItem) {
 		let selectedIndexes = grid.indexPathsForSelectedItems

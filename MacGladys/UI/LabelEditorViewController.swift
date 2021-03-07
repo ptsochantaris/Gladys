@@ -2,9 +2,9 @@ import AppKit
 
 final class LabelEditorViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
 
-	@IBOutlet private weak var tableView: NSTableView!
-	@IBOutlet private weak var newLabelField: NSTextField!
-	@IBOutlet weak var togglesColumn: NSTableColumn!
+	@IBOutlet private var tableView: NSTableView!
+	@IBOutlet private var newLabelField: NSTextField!
+	@IBOutlet var togglesColumn: NSTableColumn!
 
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		return availableToggles.count

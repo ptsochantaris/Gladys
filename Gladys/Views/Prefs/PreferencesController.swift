@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
 
-	@IBOutlet private weak var exportOnlyVisibleSwitch: UISwitch!
+	@IBOutlet private var exportOnlyVisibleSwitch: UISwitch!
 
 	private func showExportActivity(_ show: Bool) {
 		if show {
@@ -140,19 +140,19 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
 	//////////////////////////////////
 
-	@IBOutlet private weak var topLabel: UILabel!
-	@IBOutlet private weak var bottomLabel: UILabel!
-	@IBOutlet private weak var zipLabel: UILabel!
+	@IBOutlet private var topLabel: UILabel!
+	@IBOutlet private var bottomLabel: UILabel!
+	@IBOutlet private var zipLabel: UILabel!
 
-	@IBOutlet private weak var infoLabel: UILabel!
-	@IBOutlet private weak var container: UIView!
-	@IBOutlet private weak var innerFrame: UIView!
-	@IBOutlet private weak var spinner: UIActivityIndicatorView!
+	@IBOutlet private var infoLabel: UILabel!
+	@IBOutlet private var container: UIView!
+	@IBOutlet private var innerFrame: UIView!
+	@IBOutlet private var spinner: UIActivityIndicatorView!
 
-	@IBOutlet private weak var zipContainer: UIView!
-	@IBOutlet private weak var zipInnerFrame: UIView!
-	@IBOutlet private weak var zipSpinner: UIActivityIndicatorView!
-	@IBOutlet private weak var zipImage: UIImageView!
+	@IBOutlet private var zipContainer: UIView!
+	@IBOutlet private var zipInnerFrame: UIView!
+	@IBOutlet private var zipSpinner: UIActivityIndicatorView!
+	@IBOutlet private var zipImage: UIImageView!
 
 	@IBAction private func deleteAllItemsSelected(_ sender: UIBarButtonItem) {
 		if spinner.isAnimating || zipSpinner.isAnimating {
@@ -181,7 +181,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 		present(a, animated: true)
 	}
 
-	@IBOutlet private weak var deleteAll: UIBarButtonItem!
+	@IBOutlet private var deleteAll: UIBarButtonItem!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

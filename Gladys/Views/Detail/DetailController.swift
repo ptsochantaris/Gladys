@@ -10,10 +10,10 @@ final class DetailController: GladysViewController,
 
 	private var showTypeDetails = false
 
-	@IBOutlet private weak var table: UITableView!
-	@IBOutlet private weak var openButton: UIBarButtonItem!
-	@IBOutlet private weak var dateLabel: UILabel!
-	@IBOutlet private weak var dateLabelHolder: UIView!
+	@IBOutlet private var table: UITableView!
+	@IBOutlet private var openButton: UIBarButtonItem!
+	@IBOutlet private var dateLabel: UILabel!
+	@IBOutlet private var dateLabelHolder: UIView!
     
     private var menuButton: UIBarButtonItem?
 

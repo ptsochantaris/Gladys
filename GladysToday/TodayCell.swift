@@ -23,9 +23,9 @@ extension Notification.Name {
 
 final class TodayCell: UICollectionViewCell {
 
-	@IBOutlet private weak var topLabel: UILabel!
-	@IBOutlet private weak var bottomLabel: UILabel!
-	@IBOutlet private weak var imageView: UIImageView!
+	@IBOutlet private var topLabel: UILabel!
+	@IBOutlet private var bottomLabel: UILabel!
+	@IBOutlet private var imageView: UIImageView!
 
 	private var existingPreviewView: UIView?
 

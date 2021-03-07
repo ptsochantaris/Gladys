@@ -2,13 +2,13 @@ import UIKit
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-	@IBOutlet private weak var labelText: UITextField!
-	@IBOutlet private weak var table: UITableView!
+	@IBOutlet private var labelText: UITextField!
+	@IBOutlet private var table: UITableView!
 
 	@IBOutlet private var headerView: UIView!
-	@IBOutlet private weak var headerLabel: UILabel!
+	@IBOutlet private var headerLabel: UILabel!
     
-    @IBOutlet private weak var spinner: UIActivityIndicatorView!
+    @IBOutlet private var spinner: UIActivityIndicatorView!
     
 	var note = ""
 

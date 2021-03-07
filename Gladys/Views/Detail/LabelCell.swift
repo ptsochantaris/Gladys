@@ -10,7 +10,7 @@ import UIKit
 
 final class LabelCell: UITableViewCell {
 	
-	@IBOutlet private weak var labelText: UILabel!
+	@IBOutlet private var labelText: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

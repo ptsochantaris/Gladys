@@ -28,10 +28,10 @@ extension INUIAddVoiceShortcutButton {
 
 final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
 
-	@IBOutlet private weak var pasteInGladysContainer: UIView!
-	@IBOutlet private weak var backgroundView: UIImageView!
-	@IBOutlet private weak var stackHolder: UIView!
-	@IBOutlet private weak var scrollView: UIScrollView!
+	@IBOutlet private var pasteInGladysContainer: UIView!
+	@IBOutlet private var backgroundView: UIImageView!
+	@IBOutlet private var stackHolder: UIView!
+	@IBOutlet private var scrollView: UIScrollView!
 	@IBOutlet private var headers: [UILabel]!
 	@IBOutlet private var footers: [UILabel]!
 

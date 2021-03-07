@@ -9,8 +9,8 @@
 import Cocoa
 
 final class ProgressViewController: NSViewController {
-	@IBOutlet private weak var titleLabel: NSTextField!
-	@IBOutlet private weak var progressIndicator: NSProgressIndicator!
+	@IBOutlet private var titleLabel: NSTextField!
+	@IBOutlet private var progressIndicator: NSProgressIndicator!
 
     private var observer: NSKeyValueObservation?
     

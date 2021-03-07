@@ -11,52 +11,52 @@ import Speech
 import Carbon.HIToolbox
 
 final class Preferences: NSViewController {
-	@IBOutlet private weak var syncSwitch: NSButton!
-	@IBOutlet private weak var syncSpinner: NSProgressIndicator!
-	@IBOutlet private weak var syncNowButton: NSButton!
-    @IBOutlet private weak var syncStatus: NSTextField!
+	@IBOutlet private var syncSwitch: NSButton!
+	@IBOutlet private var syncSpinner: NSProgressIndicator!
+	@IBOutlet private var syncNowButton: NSButton!
+    @IBOutlet private var syncStatus: NSTextField!
     
-	@IBOutlet private weak var deleteAllButton: NSButton!
-	@IBOutlet private weak var eraseAlliCloudDataButton: NSButton!
+	@IBOutlet private var deleteAllButton: NSButton!
+	@IBOutlet private var eraseAlliCloudDataButton: NSButton!
 
-	@IBOutlet private weak var displayNotesSwitch: NSButton!
-	@IBOutlet private weak var displayLabelsSwitch: NSButton!
-	@IBOutlet private weak var separateItemsSwitch: NSButton!
-	@IBOutlet private weak var autoLabelSwitch: NSButton!
-	@IBOutlet private weak var inclusiveSearchTermsSwitch: NSButton!
-    @IBOutlet private weak var autoConvertUrlsSwitch: NSButton!
-    @IBOutlet private weak var convertLabelsToTagsSwitch: NSButton!
-    @IBOutlet private weak var autoShowWhenDraggingSwitch: NSButton!
-    @IBOutlet private weak var autoShowOnEdgePicker: NSPopUpButton!
-    @IBOutlet private weak var autoDetectLabelsFromTitles: NSButton!
-    @IBOutlet private weak var autoDetectLabelsFromThumbnails: NSButton!
-    @IBOutlet private weak var autoDetectTextFromThumbnails: NSButton!
+	@IBOutlet private var displayNotesSwitch: NSButton!
+	@IBOutlet private var displayLabelsSwitch: NSButton!
+	@IBOutlet private var separateItemsSwitch: NSButton!
+	@IBOutlet private var autoLabelSwitch: NSButton!
+	@IBOutlet private var inclusiveSearchTermsSwitch: NSButton!
+    @IBOutlet private var autoConvertUrlsSwitch: NSButton!
+    @IBOutlet private var convertLabelsToTagsSwitch: NSButton!
+    @IBOutlet private var autoShowWhenDraggingSwitch: NSButton!
+    @IBOutlet private var autoShowOnEdgePicker: NSPopUpButton!
+    @IBOutlet private var autoDetectLabelsFromTitles: NSButton!
+    @IBOutlet private var autoDetectLabelsFromThumbnails: NSButton!
+    @IBOutlet private var autoDetectTextFromThumbnails: NSButton!
     @IBOutlet private var transcribeSpeechFromMedia: NSButton!
-    @IBOutlet private weak var applyMlSettingsToLinks: NSButton!
+    @IBOutlet private var applyMlSettingsToLinks: NSButton!
     
-    @IBOutlet private weak var clipboardSnooping: NSButton!
-    @IBOutlet private weak var clipboardSnoopingAll: NSButton!
+    @IBOutlet private var clipboardSnooping: NSButton!
+    @IBOutlet private var clipboardSnoopingAll: NSButton!
     
-    @IBOutlet private weak var fadeAfterLabel: NSTextField!
-    @IBOutlet private weak var fadeAfterCounter: NSStepper!
+    @IBOutlet private var fadeAfterLabel: NSTextField!
+    @IBOutlet private var fadeAfterCounter: NSStepper!
     
-	@IBOutlet private weak var launchAtLoginSwitch: NSButton!
-	@IBOutlet private weak var hideMainWindowSwitch: NSButton!
+	@IBOutlet private var launchAtLoginSwitch: NSButton!
+	@IBOutlet private var hideMainWindowSwitch: NSButton!
 
-	@IBOutlet private weak var menuBarModeSwitch: NSButton!
-	@IBOutlet private weak var alwaysOnTopSwitch: NSButton!
-    @IBOutlet private weak var disableUrlSupportSwitch: NSButton!
+	@IBOutlet private var menuBarModeSwitch: NSButton!
+	@IBOutlet private var alwaysOnTopSwitch: NSButton!
+    @IBOutlet private var disableUrlSupportSwitch: NSButton!
     
-	@IBOutlet private weak var autoDownloadSwitch: NSButton!
-	@IBOutlet private weak var exclusiveMultipleLabelsSwitch: NSButton!
-	@IBOutlet private weak var selectionActionPicker: NSPopUpButton!
-    @IBOutlet private weak var touchbarActionPicker: NSPopUpButton!
+	@IBOutlet private var autoDownloadSwitch: NSButton!
+	@IBOutlet private var exclusiveMultipleLabelsSwitch: NSButton!
+	@IBOutlet private var selectionActionPicker: NSPopUpButton!
+    @IBOutlet private var touchbarActionPicker: NSPopUpButton!
 
-	@IBOutlet private weak var hotkeyCmd: NSButton!
-	@IBOutlet private weak var hotkeyOption: NSButton!
-	@IBOutlet private weak var hotkeyShift: NSButton!
-	@IBOutlet private weak var hotkeyChar: NSPopUpButton!
-	@IBOutlet private weak var hotkeyCtrl: NSButton!
+	@IBOutlet private var hotkeyCmd: NSButton!
+	@IBOutlet private var hotkeyOption: NSButton!
+	@IBOutlet private var hotkeyShift: NSButton!
+	@IBOutlet private var hotkeyChar: NSPopUpButton!
+	@IBOutlet private var hotkeyCtrl: NSButton!
     
 	private let keyMap = [
         kVK_ANSI_A, kVK_ANSI_B, kVK_ANSI_C, kVK_ANSI_D, kVK_ANSI_E, kVK_ANSI_F, kVK_ANSI_G, kVK_ANSI_H,
@@ -231,8 +231,14 @@ final class Preferences: NSViewController {
                     switch status {
                     case .authorized:
                         DispatchQueue.main.async {
-                            PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
-                            genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                            if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
+                                PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
+                                genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                            } else {
+                                sender.integerValue = 0
+                                PersistedOptions.transcribeSpeechFromMedia = false
+                                genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                            }
                         }
                     case .denied, .notDetermined, .restricted:
                         DispatchQueue.main.async {

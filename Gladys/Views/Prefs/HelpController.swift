@@ -10,12 +10,12 @@ import UIKit
 import SafariServices
 
 final class HelpControllerCell: UITableViewCell {
-	@IBOutlet weak var label: UILabel!
+	@IBOutlet var label: UILabel!
 }
 
 final class HelpController: GladysViewController, UITableViewDataSource, UITableViewDelegate {
 
-	@IBOutlet private weak var table: UITableView!
+	@IBOutlet private var table: UITableView!
     
     private struct Entry {
         let title: String

@@ -17,7 +17,7 @@ final class NotesEditorViewController: GladysViewController {
 	var startupNote: String?
 	weak var delegate: NotesEditorViewControllerDelegate?
 
-	@IBOutlet weak private var textView: UITextView!
+	@IBOutlet private var textView: UITextView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

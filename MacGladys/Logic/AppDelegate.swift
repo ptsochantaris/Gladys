@@ -42,12 +42,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	private var statusItem: NSStatusItem?
 
-	@IBOutlet private weak var gladysMenuItem: NSMenuItem!
-	@IBOutlet private weak var fileMenuItem: NSMenuItem!
-	@IBOutlet private weak var editMenuItem: NSMenuItem!
-	@IBOutlet private weak var itemMenuItem: NSMenuItem!
-	@IBOutlet private weak var windowMenuItem: NSMenuItem!
-	@IBOutlet private weak var helpMenuItem: NSMenuItem!
+	@IBOutlet private var gladysMenuItem: NSMenuItem!
+	@IBOutlet private var fileMenuItem: NSMenuItem!
+	@IBOutlet private var editMenuItem: NSMenuItem!
+	@IBOutlet private var itemMenuItem: NSMenuItem!
+	@IBOutlet private var windowMenuItem: NSMenuItem!
+	@IBOutlet private var helpMenuItem: NSMenuItem!
 
 	private var menu: NSMenu {
 		let m = NSMenu(title: "Gladys")
@@ -466,8 +466,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	////////////////////////////////////////////// Sorting
 
-	@IBOutlet weak var sortAscendingMenu: NSMenu!
-	@IBOutlet weak var sortDescendingMenu: NSMenu!
+	@IBOutlet var sortAscendingMenu: NSMenu!
+	@IBOutlet var sortDescendingMenu: NSMenu!
 
 	private func setupSortMenu() {
 		for sortOption in Model.SortOption.options {

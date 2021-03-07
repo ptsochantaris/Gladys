@@ -2,15 +2,15 @@ import UIKit
 
 final class DetailCell: UITableViewCell {
         
-	@IBOutlet private weak var name: UILabel!
-	@IBOutlet private weak var size: UILabel!
-	@IBOutlet private weak var desc: UILabel!
-	@IBOutlet private weak var nameHolder: UIView!
-	@IBOutlet weak var inspectButton: UIButton!
-	@IBOutlet private weak var viewButton: UIButton!
-	@IBOutlet weak var archiveButton: UIButton!
-	@IBOutlet private weak var editButton: UIButton!
-    @IBOutlet private weak var imageHolder: UIImageView!
+	@IBOutlet private var name: UILabel!
+	@IBOutlet private var size: UILabel!
+	@IBOutlet private var desc: UILabel!
+	@IBOutlet private var nameHolder: UIView!
+	@IBOutlet var inspectButton: UIButton!
+	@IBOutlet private var viewButton: UIButton!
+	@IBOutlet var archiveButton: UIButton!
+	@IBOutlet private var editButton: UIButton!
+    @IBOutlet private var imageHolder: UIImageView!
     
 	var inspectionCallback: (() -> Void)? {
 		didSet {

@@ -53,15 +53,15 @@ final class DataInspector: GladysViewController {
 		}
 	}
 
-    @IBOutlet private weak var mainStack: UIStackView!
+    @IBOutlet private var mainStack: UIStackView!
 
-	@IBOutlet private weak var bit16: UILabel!
-	@IBOutlet private weak var bit32: UILabel!
-	@IBOutlet private weak var bit64: UILabel!
+	@IBOutlet private var bit16: UILabel!
+	@IBOutlet private var bit32: UILabel!
+	@IBOutlet private var bit64: UILabel!
 
-	@IBOutlet private weak var signedSwitch: UISegmentedControl!
-	@IBOutlet private weak var littleEndianSwitch: UISegmentedControl!
-	@IBOutlet private weak var decimalSwitch: UISegmentedControl!
+	@IBOutlet private var signedSwitch: UISegmentedControl!
+	@IBOutlet private var littleEndianSwitch: UISegmentedControl!
+	@IBOutlet private var decimalSwitch: UISegmentedControl!
 
 	private var signedAccessibility: UIAccessibilityElement!
 	private var endianAccessibility: UIAccessibilityElement!
