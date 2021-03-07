@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Speech
 
 final class OptionsController: GladysViewController, UIPopoverPresentationControllerDelegate {
 
@@ -28,6 +29,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private weak var generateLabelsFromTitlesSwitch: UISwitch!
     @IBOutlet private weak var generateLabelsFromThumbnailsSwitch: UISwitch!
     @IBOutlet private weak var generateTextFromThumbnailsSwitch: UISwitch!
+    @IBOutlet private weak var transcribeSpeechInMedia: UISwitch!
     @IBOutlet private weak var applyMlToUrlsSwitch: UISwitch!
     
 	@IBOutlet private weak var actionSelector: UISegmentedControl!
@@ -134,6 +136,32 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.autoGenerateTextFromImage = sender.isOn
     }
     
+    @IBAction private func transcribeSpeechInMediaSelected(_ sender: UISwitch) {
+        if sender.isOn {
+            SFSpeechRecognizer.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    DispatchQueue.main.async {
+                        PersistedOptions.transcribeSpeechFromMedia = true
+                        genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
+                    }
+                case .denied, .notDetermined, .restricted:
+                    DispatchQueue.main.async {
+                        sender.isOn = false
+                        PersistedOptions.transcribeSpeechFromMedia = false
+                    }
+                @unknown default:
+                    DispatchQueue.main.async {
+                        sender.isOn = false
+                        PersistedOptions.transcribeSpeechFromMedia = false
+                    }
+                }
+            }
+        } else {
+            PersistedOptions.transcribeSpeechFromMedia = false
+        }
+    }
+    
     @IBAction private func applyMlToUrlsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.includeUrlImagesInMlLogic = sender.isOn
     }
@@ -165,6 +193,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         generateLabelsFromTitlesSwitch.isOn = PersistedOptions.autoGenerateLabelsFromText
         generateLabelsFromThumbnailsSwitch.isOn = PersistedOptions.autoGenerateLabelsFromImage
         generateTextFromThumbnailsSwitch.isOn = PersistedOptions.autoGenerateTextFromImage
+        transcribeSpeechInMedia.isOn = PersistedOptions.transcribeSpeechFromMedia
         applyMlToUrlsSwitch.isOn = PersistedOptions.includeUrlImagesInMlLogic
         separateItemsSwitch.isOn = PersistedOptions.separateItemPreference
 		twoColumnsSwitch.isOn = PersistedOptions.forceTwoColumnPreference

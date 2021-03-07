@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1208,7 +1208,7 @@ Cg
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="WTh-H6-SIE">
                                                                     <rect key="frame" x="-2" y="156" width="214" height="14"/>
                                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Sync status" id="emj-4Y-FLD">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="colorTint"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -1216,7 +1216,7 @@ Cg
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="dlq-PW-jWZ">
                                                                     <rect key="frame" x="-2" y="92" width="214" height="56"/>
                                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="mkX-Gl-h4R">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <string key="title">Gladys stores data in your own private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1225,7 +1225,7 @@ Cg
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="k6W-tC-lCK">
                                                                     <rect key="frame" x="-2" y="28" width="214" height="56"/>
                                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" id="8DV-H0-AKB">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -1283,7 +1283,7 @@ Cg
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Nh-tD-GjE">
                                                                     <rect key="frame" x="-2" y="94" width="186" height="14"/>
                                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="…and show when mouse touches…" id="P6z-et-W5A">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -1330,10 +1330,10 @@ Cg
                                                                     </connections>
                                                                 </popUpButton>
                                                                 <button horizontalHuggingPriority="248" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="hIC-Xb-Nkk">
-                                                                    <rect key="frame" x="-2" y="38" width="212" height="18"/>
+                                                                    <rect key="frame" x="-2" y="39" width="212" height="16"/>
                                                                     <buttonCell key="cell" type="check" title="Always show when dragging" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hgt-bN-4yB">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                     </buttonCell>
                                                                     <connections>
                                                                         <action selector="autoShowWhenDraggingChanged:" target="FB0-Ob-ymN" id="O6E-5y-CxZ"/>
@@ -1356,7 +1356,7 @@ Cg
                                                                                 <constraint firstAttribute="height" constant="30" id="RmJ-we-9m4"/>
                                                                             </constraints>
                                                                             <textFieldCell key="cell" title="Hide after X seconds unless mouse enters" id="4jT-7c-zg0">
-                                                                                <font key="font" metaFont="toolTip"/>
+                                                                                <font key="font" usesAppearanceFont="YES"/>
                                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
@@ -1658,7 +1658,7 @@ Cg
                                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Cxe-bA-pjx">
                                                                     <rect key="frame" x="-2" y="64" width="149" height="28"/>
                                                                     <textFieldCell key="cell" selectable="YES" alignment="left" title="Keep text items from the system clipboard." id="WVl-Q0-3iB">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -1679,7 +1679,7 @@ Cg
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <string key="title">Include text marked
 sensitive or secure</string>
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                     </buttonCell>
                                                                     <connections>
                                                                         <action selector="clipboardSnoopingAllSelected:" target="FB0-Ob-ymN" id="cr9-7i-pB9"/>
@@ -2084,19 +2084,19 @@ sensitive or secure</string>
                                         </constraints>
                                     </box>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3km-oC-FvU">
-                                        <rect key="frame" x="791" y="118" width="253" height="410"/>
+                                        <rect key="frame" x="791" y="58" width="253" height="470"/>
                                         <subviews>
                                             <box title="ML Options" translatesAutoresizingMaskIntoConstraints="NO" id="SVU-Js-14t">
-                                                <rect key="frame" x="-3" y="150" width="259" height="260"/>
+                                                <rect key="frame" x="-3" y="150" width="259" height="320"/>
                                                 <view key="contentView" id="1aZ-pt-c6d">
-                                                    <rect key="frame" x="3" y="3" width="253" height="242"/>
+                                                    <rect key="frame" x="3" y="3" width="253" height="302"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fYo-E2-9kW">
-                                                            <rect key="frame" x="20" y="16" width="213" height="210"/>
+                                                            <rect key="frame" x="20" y="16" width="213" height="270"/>
                                                             <subviews>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7P6-Rg-1LI">
-                                                                    <rect key="frame" x="0.0" y="158" width="213" height="52"/>
+                                                                    <rect key="frame" x="0.0" y="218" width="213" height="52"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yqu-n5-wjV">
                                                                             <rect key="frame" x="-2" y="35" width="185" height="18"/>
@@ -2127,7 +2127,7 @@ sensitive or secure</string>
                                                                     </customSpacing>
                                                                 </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0g7-jk-Ydo">
-                                                                    <rect key="frame" x="0.0" y="98" width="213" height="52"/>
+                                                                    <rect key="frame" x="0.0" y="158" width="213" height="52"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="G6q-QJ-Zqo">
                                                                             <rect key="frame" x="-2" y="35" width="172" height="18"/>
@@ -2158,7 +2158,7 @@ sensitive or secure</string>
                                                                     </customSpacing>
                                                                 </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V55-pK-oog">
-                                                                    <rect key="frame" x="0.0" y="49" width="213" height="41"/>
+                                                                    <rect key="frame" x="0.0" y="109" width="213" height="41"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="pau-O4-2iG">
                                                                             <rect key="frame" x="-2" y="24" width="164" height="18"/>
@@ -2173,6 +2173,37 @@ sensitive or secure</string>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="9Dz-19-SZ5">
                                                                             <rect key="frame" x="-2" y="0.0" width="217" height="22"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to generate labels based on the contents of a text item" id="53W-MA-BDt">
+                                                                                <font key="font" metaFont="label" size="9"/>
+                                                                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                    </subviews>
+                                                                    <visibilityPriorities>
+                                                                        <integer value="1000"/>
+                                                                        <integer value="1000"/>
+                                                                    </visibilityPriorities>
+                                                                    <customSpacing>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                    </customSpacing>
+                                                                </stackView>
+                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PRb-WD-gSu">
+                                                                    <rect key="frame" x="0.0" y="49" width="213" height="52"/>
+                                                                    <subviews>
+                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="1kP-p5-XJs">
+                                                                            <rect key="frame" x="-2" y="35" width="193" height="18"/>
+                                                                            <buttonCell key="cell" type="check" title="Transcribe speech in media" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="oP1-AY-fu5">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <connections>
+                                                                                <action selector="transcribeSpeechFromMediaChanged:" target="FB0-Ob-ymN" id="AAE-IK-pDt"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                        <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="KXw-jo-hKi">
+                                                                            <rect key="frame" x="-2" y="0.0" width="217" height="33"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to transcribe speech from imported media items. Processing is done on the local device (requires macOS Catalina or higher)" id="2lw-IA-LhC">
                                                                                 <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2225,8 +2256,10 @@ sensitive or secure</string>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
@@ -2266,7 +2299,7 @@ sensitive or secure</string>
                                                                             <textField key="contentView" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="B3o-zJ-lNz">
                                                                                 <rect key="frame" x="30" y="29" width="75" height="14"/>
                                                                                 <textFieldCell key="cell" selectable="YES" alignment="center" title="Double-click" id="jyw-WU-NUr">
-                                                                                    <font key="font" metaFont="toolTip"/>
+                                                                                    <font key="font" usesAppearanceFont="YES"/>
                                                                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -2296,7 +2329,7 @@ sensitive or secure</string>
                                                                             <textField key="contentView" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="n4b-5k-1ek">
                                                                                 <rect key="frame" x="44" y="3" width="61" height="14"/>
                                                                                 <textFieldCell key="cell" selectable="YES" alignment="center" title="Touch Bar" id="7nF-lL-uvv">
-                                                                                    <font key="font" metaFont="toolTip"/>
+                                                                                    <font key="font" usesAppearanceFont="YES"/>
                                                                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
@@ -2338,7 +2371,7 @@ sensitive or secure</string>
                                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0Ec-A6-WCp">
                                                                     <rect key="frame" x="-2" y="0.0" width="217" height="42"/>
                                                                     <textFieldCell key="cell" selectable="YES" alignment="left" title="You can always open an item's info window with Cmd-I, or via its context menu, or via the menubar." id="Zi6-5v-dNh">
-                                                                        <font key="font" metaFont="toolTip"/>
+                                                                        <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -2438,6 +2471,7 @@ sensitive or secure</string>
                         <outlet property="syncStatus" destination="WTh-H6-SIE" id="6ZY-S6-zI6"/>
                         <outlet property="syncSwitch" destination="WFi-R6-MZO" id="MP1-yh-pnL"/>
                         <outlet property="touchbarActionPicker" destination="8DM-WW-T2P" id="wbj-Ke-Ort"/>
+                        <outlet property="transcribeSpeechFromMedia" destination="1kP-p5-XJs" id="ewm-ZP-g3h"/>
                     </connections>
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -3210,7 +3244,7 @@ Only</string>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Hlc-yo-qdG">
                                 <rect key="frame" x="18" y="160" width="284" height="28"/>
                                 <textFieldCell key="cell" selectable="YES" alignment="center" title="The currently selected items have different notes, this will overwrite them." id="rAp-cP-h0l">
-                                    <font key="font" metaFont="toolTip"/>
+                                    <font key="font" usesAppearanceFont="YES"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>

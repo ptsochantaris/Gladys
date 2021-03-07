@@ -58,6 +58,15 @@ final class PersistedOptions {
         }
     }
     
+    static var transcribeSpeechFromMedia: Bool {
+        get {
+            return defaults.bool(forKey: "transcribeSpeechFromMedia")
+        }
+        set {
+            defaults.set(newValue, forKey: "transcribeSpeechFromMedia")
+        }
+    }
+    
     static var includeUrlImagesInMlLogic: Bool {
         get {
             return defaults.bool(forKey: "includeUrlImagesInMlLogic")

@@ -146,5 +146,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Gladys will only transcribe speech from media items when this setting is on, and only process it on the local device.</string>
 </dict>
 </plist>

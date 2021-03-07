@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Speech
 import Carbon.HIToolbox
 
 final class Preferences: NSViewController {
@@ -30,6 +31,7 @@ final class Preferences: NSViewController {
     @IBOutlet private weak var autoDetectLabelsFromTitles: NSButton!
     @IBOutlet private weak var autoDetectLabelsFromThumbnails: NSButton!
     @IBOutlet private weak var autoDetectTextFromThumbnails: NSButton!
+    @IBOutlet private var transcribeSpeechFromMedia: NSButton!
     @IBOutlet private weak var applyMlSettingsToLinks: NSButton!
     
     @IBOutlet private weak var clipboardSnooping: NSButton!
@@ -120,6 +122,7 @@ final class Preferences: NSViewController {
         touchbarActionPicker.selectItem(at: PersistedOptions.actionOnTouchbar.rawValue)
         autoShowOnEdgePicker.selectItem(at: PersistedOptions.autoShowFromEdge)
         applyMlSettingsToLinks.integerValue = PersistedOptions.includeUrlImagesInMlLogic ? 1 : 0
+        transcribeSpeechFromMedia.integerValue = PersistedOptions.transcribeSpeechFromMedia ? 1 : 0
         clipboardSnooping.integerValue = PersistedOptions.clipboardSnooping ? 1 : 0
         clipboardSnoopingAll.integerValue = PersistedOptions.clipboardSnoopingAll ? 1 : 0
         updateFadeLabel()
@@ -219,6 +222,37 @@ final class Preferences: NSViewController {
 
     @IBAction private func applyMlSettingsToLinksChanged(_ sender: NSButton) {
         PersistedOptions.includeUrlImagesInMlLogic = sender.integerValue == 1
+    }
+    
+    @IBAction private func transcribeSpeechFromMediaChanged(_ sender: NSButton) {
+        if #available(OSX 10.15, *) {
+            if sender.integerValue == 1 {
+                SFSpeechRecognizer.requestAuthorization { status in
+                    switch status {
+                    case .authorized:
+                        DispatchQueue.main.async {
+                            PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
+                            genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                        }
+                    case .denied, .notDetermined, .restricted:
+                        DispatchQueue.main.async {
+                            sender.integerValue = 0
+                            PersistedOptions.transcribeSpeechFromMedia = false
+                        }
+                    @unknown default:
+                        DispatchQueue.main.async {
+                            sender.integerValue = 0
+                            PersistedOptions.transcribeSpeechFromMedia = false
+                        }
+                    }
+                }
+            } else {
+                PersistedOptions.transcribeSpeechFromMedia = false
+            }
+        } else {
+            sender.integerValue = 0
+            PersistedOptions.transcribeSpeechFromMedia = false
+        }
     }
 
     @IBAction private func blockUrlSwitchChanged(_ sender: NSButton) {
