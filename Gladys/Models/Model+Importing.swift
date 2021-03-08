@@ -36,7 +36,7 @@ extension Model {
         }
         
         if addedStuff {
-            Model.save()
+            currentFilter?.updateFilter(signalUpdate: true)
         }
         
         return .success
