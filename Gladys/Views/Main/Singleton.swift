@@ -18,8 +18,6 @@ final class Singleton {
 
         PullState.checkMigrations()
 
-        UIApplication.shared.applicationIconBadgeNumber = 0
-
         Model.setup()
 
         CallbackSupport.setupCallbackSupport()

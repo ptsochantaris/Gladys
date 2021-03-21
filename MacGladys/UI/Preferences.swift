@@ -38,6 +38,8 @@ final class Preferences: NSViewController {
     @IBOutlet private var clipboardSnooping: NSButton!
     @IBOutlet private var clipboardSnoopingAll: NSButton!
     
+    @IBOutlet private var badgeItemWithVisibleItemCount: NSButton!
+    
     @IBOutlet private var fadeAfterLabel: NSTextField!
     @IBOutlet private var fadeAfterCounter: NSStepper!
     
@@ -126,6 +128,7 @@ final class Preferences: NSViewController {
         transcribeSpeechFromMedia.integerValue = PersistedOptions.transcribeSpeechFromMedia ? 1 : 0
         clipboardSnooping.integerValue = PersistedOptions.clipboardSnooping ? 1 : 0
         clipboardSnoopingAll.integerValue = PersistedOptions.clipboardSnoopingAll ? 1 : 0
+        badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
@@ -223,6 +226,11 @@ final class Preferences: NSViewController {
 
     @IBAction private func applyMlSettingsToLinksChanged(_ sender: NSButton) {
         PersistedOptions.includeUrlImagesInMlLogic = sender.integerValue == 1
+    }
+
+    @IBAction private func badgeIconWithItemCountSelected(_ sender: NSButton) {
+        PersistedOptions.badgeIconWithItemCount = sender.integerValue == 1
+        Model.updateBadge()
     }
     
     @IBAction private func transcribeSpeechFromMediaChanged(_ sender: NSButton) {

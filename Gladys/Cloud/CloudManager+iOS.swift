@@ -27,7 +27,7 @@ extension CloudManager {
     }
 
 	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-		UIApplication.shared.applicationIconBadgeNumber = 0
+        Model.updateBadge()
 		if !syncSwitchedOn { return }
 
 		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }

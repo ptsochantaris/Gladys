@@ -99,6 +99,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneDidBecomeActive(_ scene: UIScene) {
         updateWindowCount()
+        Model.updateBadge()
     }
     
     private func updateWindowCount() {

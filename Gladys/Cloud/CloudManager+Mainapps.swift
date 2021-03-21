@@ -25,12 +25,10 @@ extension CloudManager {
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
-
+    
     static var showNetwork: Bool = false {
         didSet {
-            #if MAC
-            NSApplication.shared.dockTile.badgeLabel = showNetwork ? "↔" : nil
-            #endif
+            Model.updateBadge()
         }
     }
 

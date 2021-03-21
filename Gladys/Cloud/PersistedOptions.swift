@@ -302,4 +302,13 @@ final class PersistedOptions {
             defaults.set(newValue, forKey: "BlockGladysUrlRequests")
         }
     }
+    
+    static var badgeIconWithItemCount: Bool {
+        get {
+            return defaults.bool(forKey: "badgeIconWithItemCount")
+        }
+        set {
+            defaults.set(newValue, forKey: "badgeIconWithItemCount")
+        }
+    }
 }

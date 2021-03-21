@@ -152,24 +152,27 @@ final class ModelFilterContext {
         }
 
         let changesToVisibleItems = previousFilteredDrops != filteredDrops
-        if signalUpdate && changesToVisibleItems {
+        if changesToVisibleItems {
+            Model.updateBadge()
+            if signalUpdate {
 
-            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+                NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 
-            #if os(iOS)
-            if filtering && UIAccessibility.isVoiceOverRunning {
-                let resultString: String
-                let c = filteredDrops.count
-                if c == 0 {
-                    resultString = "No results"
-                } else if c == 1 {
-                    resultString = "One result"
-                } else {
-                    resultString = "\(filteredDrops.count) results"
+                #if os(iOS)
+                if filtering && UIAccessibility.isVoiceOverRunning {
+                    let resultString: String
+                    let c = filteredDrops.count
+                    if c == 0 {
+                        resultString = "No results"
+                    } else if c == 1 {
+                        resultString = "One result"
+                    } else {
+                        resultString = "\(filteredDrops.count) results"
+                    }
+                    UIAccessibility.post(notification: .announcement, argument: resultString)
                 }
-                UIAccessibility.post(notification: .announcement, argument: resultString)
+                #endif
             }
-            #endif
         }
 
         return changesToVisibleItems
@@ -582,11 +585,49 @@ extension Model {
 		}
 	}
 
+    static func updateBadge() {
+        #if MAC
+        let tile = NSApp.dockTile
+        if CloudManager.showNetwork {
+            log("Updating app badge to show network")
+            tile.badgeLabel = "↔"
+        } else if PersistedOptions.badgeIconWithItemCount {
+            let count = Model.sharedFilter.filteredDrops.count
+            log("Updating app badge to show item count (\(count))")
+            tile.badgeLabel = String(count)
+        } else {
+            log("Updating app badge to clear")
+            tile.badgeLabel = nil
+        }
+        #else
+        if PersistedOptions.badgeIconWithItemCount, let count = currentWindow?.associatedFilter?.filteredDrops.count {
+            log("Updating app badge to show item count (\(count))")
+            UIApplication.shared.applicationIconBadgeNumber = count
+        } else {
+            log("Updating app badge to clear")
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+        #endif
+    }
+
 	///////////////////////// Migrating
 
 	static func setup() {
         reloadDataIfNeeded()
         setupIndexDelegate()
+        
+        #if !MAC
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
+            if granted {
+                log("Got provisional badging permission")
+                DispatchQueue.main.async {
+                    Model.updateBadge()
+                }
+            } else if let error = error {
+                log("Error requesting badge permission: \(error.localizedDescription)")
+            }
+        }
+        #endif
         
         // migrate if needed
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String

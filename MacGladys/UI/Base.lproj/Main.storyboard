@@ -1658,7 +1658,7 @@ Cg
                                                             <rect key="frame" x="16" y="314" width="602" height="78"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <view key="contentView" id="P5P-xy-ecY">
-                                                                <rect key="frame" x="3" y="3" width="595" height="60"/>
+                                                                <rect key="frame" x="3" y="3" width="596" height="60"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="25" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Dk-Yp-zPm">
@@ -1965,17 +1965,17 @@ sensitive or secure</string>
                                     </tabViewItem>
                                     <tabViewItem label="Advanced" identifier="" id="Oc0-5j-eT3">
                                         <view key="view" id="D9b-Q1-GgY">
-                                            <rect key="frame" x="10" y="33" width="636" height="406"/>
+                                            <rect key="frame" x="10" y="33" width="635" height="406"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SM1-Ec-TnM">
-                                                    <rect key="frame" x="68" y="59" width="500" height="289"/>
+                                                    <rect key="frame" x="68" y="51" width="500" height="304"/>
                                                     <subviews>
-                                                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tgy-uP-gbz">
-                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="289"/>
+                                                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tgy-uP-gbz">
+                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="304"/>
                                                             <subviews>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1W-Vy-03O">
-                                                                    <rect key="frame" x="0.0" y="237" width="240" height="52"/>
+                                                                    <rect key="frame" x="0.0" y="252" width="240" height="52"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Wei-DU-6Ep">
                                                                             <rect key="frame" x="-2" y="35" width="173" height="18"/>
@@ -2025,59 +2025,8 @@ sensitive or secure</string>
                                                                         <real value="3.4028234663852886e+38"/>
                                                                     </customSpacing>
                                                                 </stackView>
-                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mgo-L4-jAT">
-                                                                    <rect key="frame" x="0.0" y="176" width="240" height="41"/>
-                                                                    <subviews>
-                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="eu9-14-bpz">
-                                                                            <rect key="frame" x="-2" y="24" width="162" height="18"/>
-                                                                            <buttonCell key="cell" type="check" title="Inclusive search terms" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lzj-kc-Xrt">
-                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                <font key="font" metaFont="system"/>
-                                                                            </buttonCell>
-                                                                            <connections>
-                                                                                <action selector="inclusiveSearchTermsSwitchChanged:" target="FB0-Ob-ymN" id="cC2-hE-3NK"/>
-                                                                            </connections>
-                                                                        </button>
-                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1pT-ge-bcf">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="22"/>
-                                                                            <subviews>
-                                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="CcG-Co-1KY">
-                                                                                    <rect key="frame" x="0.0" y="18" width="21" height="4"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="width" constant="21" id="Pey-WN-5je"/>
-                                                                                        <constraint firstAttribute="height" constant="4" id="gSl-Jt-OGg"/>
-                                                                                    </constraints>
-                                                                                </customView>
-                                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Zde-84-Z0u">
-                                                                                    <rect key="frame" x="19" y="0.0" width="223" height="22"/>
-                                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Make results match any of the search terms provided, instead of having to contain all of them" id="LBr-GJ-ELx">
-                                                                                        <font key="font" metaFont="label" size="9"/>
-                                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                                    </textFieldCell>
-                                                                                </textField>
-                                                                            </subviews>
-                                                                            <visibilityPriorities>
-                                                                                <integer value="1000"/>
-                                                                                <integer value="1000"/>
-                                                                            </visibilityPriorities>
-                                                                            <customSpacing>
-                                                                                <real value="3.4028234663852886e+38"/>
-                                                                                <real value="3.4028234663852886e+38"/>
-                                                                            </customSpacing>
-                                                                        </stackView>
-                                                                    </subviews>
-                                                                    <visibilityPriorities>
-                                                                        <integer value="1000"/>
-                                                                        <integer value="1000"/>
-                                                                    </visibilityPriorities>
-                                                                    <customSpacing>
-                                                                        <real value="3.4028234663852886e+38"/>
-                                                                        <real value="3.4028234663852886e+38"/>
-                                                                    </customSpacing>
-                                                                </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-Wv-zgF">
-                                                                    <rect key="frame" x="0.0" y="88" width="240" height="68"/>
+                                                                    <rect key="frame" x="0.0" y="168" width="240" height="68"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="WIb-28-3sd">
                                                                             <rect key="frame" x="-2" y="36" width="180" height="32"/>
@@ -2130,7 +2079,7 @@ data components</string>
                                                                     </customSpacing>
                                                                 </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mvr-PI-2U3">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="68"/>
+                                                                    <rect key="frame" x="0.0" y="84" width="240" height="68"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Dgi-3I-XZK">
                                                                             <rect key="frame" x="-2" y="36" width="195" height="32"/>
@@ -2183,79 +2132,8 @@ Finder tags</string>
                                                                         <real value="3.4028234663852886e+38"/>
                                                                     </customSpacing>
                                                                 </stackView>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="240" id="vb2-in-9np"/>
-                                                            </constraints>
-                                                            <visibilityPriorities>
-                                                                <integer value="1000"/>
-                                                                <integer value="1000"/>
-                                                                <integer value="1000"/>
-                                                                <integer value="1000"/>
-                                                            </visibilityPriorities>
-                                                            <customSpacing>
-                                                                <real value="3.4028234663852886e+38"/>
-                                                                <real value="3.4028234663852886e+38"/>
-                                                                <real value="3.4028234663852886e+38"/>
-                                                                <real value="3.4028234663852886e+38"/>
-                                                            </customSpacing>
-                                                        </stackView>
-                                                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pmr-wM-Xub">
-                                                            <rect key="frame" x="260" y="11" width="240" height="278"/>
-                                                            <subviews>
-                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OFS-vH-sHv">
-                                                                    <rect key="frame" x="0.0" y="237" width="240" height="41"/>
-                                                                    <subviews>
-                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="GGS-xR-YNp">
-                                                                            <rect key="frame" x="-2" y="24" width="197" height="18"/>
-                                                                            <buttonCell key="cell" type="check" title="Do not auto-label new items" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9Vh-er-Qph">
-                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                <font key="font" metaFont="system"/>
-                                                                            </buttonCell>
-                                                                            <connections>
-                                                                                <action selector="autoLabelSwitchChanged:" target="FB0-Ob-ymN" id="158-O6-gmm"/>
-                                                                            </connections>
-                                                                        </button>
-                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QaA-aN-52J">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="22"/>
-                                                                            <subviews>
-                                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="swR-Ub-pc5">
-                                                                                    <rect key="frame" x="0.0" y="18" width="21" height="4"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="width" constant="21" id="Juo-pE-oHY"/>
-                                                                                        <constraint firstAttribute="height" constant="4" id="rYe-Lk-tBD"/>
-                                                                                    </constraints>
-                                                                                </customView>
-                                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Wyw-pe-pX8">
-                                                                                    <rect key="frame" x="19" y="0.0" width="223" height="22"/>
-                                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Prevent new items from being automatically tagged by the currently active labels" id="ljh-46-cHO">
-                                                                                        <font key="font" metaFont="label" size="9"/>
-                                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                                    </textFieldCell>
-                                                                                </textField>
-                                                                            </subviews>
-                                                                            <visibilityPriorities>
-                                                                                <integer value="1000"/>
-                                                                                <integer value="1000"/>
-                                                                            </visibilityPriorities>
-                                                                            <customSpacing>
-                                                                                <real value="3.4028234663852886e+38"/>
-                                                                                <real value="3.4028234663852886e+38"/>
-                                                                            </customSpacing>
-                                                                        </stackView>
-                                                                    </subviews>
-                                                                    <visibilityPriorities>
-                                                                        <integer value="1000"/>
-                                                                        <integer value="1000"/>
-                                                                    </visibilityPriorities>
-                                                                    <customSpacing>
-                                                                        <real value="3.4028234663852886e+38"/>
-                                                                        <real value="3.4028234663852886e+38"/>
-                                                                    </customSpacing>
-                                                                </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DF9-P7-Re4">
-                                                                    <rect key="frame" x="0.0" y="149" width="240" height="68"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="68"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Fle-eY-xuf">
                                                                             <rect key="frame" x="-2" y="36" width="208" height="32"/>
@@ -2307,8 +2185,130 @@ components</string>
                                                                         <real value="3.4028234663852886e+38"/>
                                                                     </customSpacing>
                                                                 </stackView>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="240" id="vb2-in-9np"/>
+                                                            </constraints>
+                                                            <visibilityPriorities>
+                                                                <integer value="1000"/>
+                                                                <integer value="1000"/>
+                                                                <integer value="1000"/>
+                                                                <integer value="1000"/>
+                                                            </visibilityPriorities>
+                                                            <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                            </customSpacing>
+                                                        </stackView>
+                                                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pmr-wM-Xub">
+                                                            <rect key="frame" x="260" y="8" width="240" height="296"/>
+                                                            <subviews>
+                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mgo-L4-jAT">
+                                                                    <rect key="frame" x="0.0" y="255" width="240" height="41"/>
+                                                                    <subviews>
+                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="eu9-14-bpz">
+                                                                            <rect key="frame" x="-2" y="24" width="162" height="18"/>
+                                                                            <buttonCell key="cell" type="check" title="Inclusive search terms" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lzj-kc-Xrt">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <connections>
+                                                                                <action selector="inclusiveSearchTermsSwitchChanged:" target="FB0-Ob-ymN" id="cC2-hE-3NK"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1pT-ge-bcf">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="22"/>
+                                                                            <subviews>
+                                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="CcG-Co-1KY">
+                                                                                    <rect key="frame" x="0.0" y="18" width="21" height="4"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="width" constant="21" id="Pey-WN-5je"/>
+                                                                                        <constraint firstAttribute="height" constant="4" id="gSl-Jt-OGg"/>
+                                                                                    </constraints>
+                                                                                </customView>
+                                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Zde-84-Z0u">
+                                                                                    <rect key="frame" x="19" y="0.0" width="223" height="22"/>
+                                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Make results match any of the search terms provided, instead of having to contain all of them" id="LBr-GJ-ELx">
+                                                                                        <font key="font" metaFont="label" size="9"/>
+                                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                            <visibilityPriorities>
+                                                                                <integer value="1000"/>
+                                                                                <integer value="1000"/>
+                                                                            </visibilityPriorities>
+                                                                            <customSpacing>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                            </customSpacing>
+                                                                        </stackView>
+                                                                    </subviews>
+                                                                    <visibilityPriorities>
+                                                                        <integer value="1000"/>
+                                                                        <integer value="1000"/>
+                                                                    </visibilityPriorities>
+                                                                    <customSpacing>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                    </customSpacing>
+                                                                </stackView>
+                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OFS-vH-sHv">
+                                                                    <rect key="frame" x="0.0" y="198" width="240" height="41"/>
+                                                                    <subviews>
+                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="GGS-xR-YNp">
+                                                                            <rect key="frame" x="-2" y="24" width="197" height="18"/>
+                                                                            <buttonCell key="cell" type="check" title="Do not auto-label new items" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9Vh-er-Qph">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <connections>
+                                                                                <action selector="autoLabelSwitchChanged:" target="FB0-Ob-ymN" id="158-O6-gmm"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QaA-aN-52J">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="22"/>
+                                                                            <subviews>
+                                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="swR-Ub-pc5">
+                                                                                    <rect key="frame" x="0.0" y="18" width="21" height="4"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="width" constant="21" id="Juo-pE-oHY"/>
+                                                                                        <constraint firstAttribute="height" constant="4" id="rYe-Lk-tBD"/>
+                                                                                    </constraints>
+                                                                                </customView>
+                                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Wyw-pe-pX8">
+                                                                                    <rect key="frame" x="19" y="0.0" width="223" height="22"/>
+                                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Prevent new items from being automatically tagged by the currently active labels" id="ljh-46-cHO">
+                                                                                        <font key="font" metaFont="label" size="9"/>
+                                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                            <visibilityPriorities>
+                                                                                <integer value="1000"/>
+                                                                                <integer value="1000"/>
+                                                                            </visibilityPriorities>
+                                                                            <customSpacing>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                            </customSpacing>
+                                                                        </stackView>
+                                                                    </subviews>
+                                                                    <visibilityPriorities>
+                                                                        <integer value="1000"/>
+                                                                        <integer value="1000"/>
+                                                                    </visibilityPriorities>
+                                                                    <customSpacing>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                    </customSpacing>
+                                                                </stackView>
                                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZZO-MP-8m1">
-                                                                    <rect key="frame" x="0.0" y="72" width="240" height="57"/>
+                                                                    <rect key="frame" x="0.0" y="125" width="240" height="57"/>
                                                                     <subviews>
                                                                         <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="tnv-sQ-rCO">
                                                                             <rect key="frame" x="-2" y="25" width="220" height="32"/>
@@ -2335,6 +2335,57 @@ to links</string>
                                                                                 <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="HmM-xH-7zH">
                                                                                     <rect key="frame" x="19" y="0.0" width="223" height="22"/>
                                                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Try to automatically convert shared or imported text URLs to actual link components" id="1NI-t4-imK">
+                                                                                        <font key="font" metaFont="label" size="9"/>
+                                                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                            <visibilityPriorities>
+                                                                                <integer value="1000"/>
+                                                                                <integer value="1000"/>
+                                                                            </visibilityPriorities>
+                                                                            <customSpacing>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                            </customSpacing>
+                                                                        </stackView>
+                                                                    </subviews>
+                                                                    <visibilityPriorities>
+                                                                        <integer value="1000"/>
+                                                                        <integer value="1000"/>
+                                                                    </visibilityPriorities>
+                                                                    <customSpacing>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                        <real value="3.4028234663852886e+38"/>
+                                                                    </customSpacing>
+                                                                </stackView>
+                                                                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aUc-Zb-7Nf">
+                                                                    <rect key="frame" x="0.0" y="68" width="240" height="41"/>
+                                                                    <subviews>
+                                                                        <button verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="e7W-ub-QWK">
+                                                                            <rect key="frame" x="-2" y="24" width="233" height="18"/>
+                                                                            <buttonCell key="cell" type="check" title="Badge icon with visible item count" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Wi1-r2-wnN">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <connections>
+                                                                                <action selector="badgeIconWithItemCountSelected:" target="FB0-Ob-ymN" id="4y3-zr-dzW"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PCY-Cu-Yje">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="22"/>
+                                                                            <subviews>
+                                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="ZOx-lG-2Jd">
+                                                                                    <rect key="frame" x="0.0" y="18" width="21" height="4"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="height" constant="4" id="I0m-uH-7aG"/>
+                                                                                        <constraint firstAttribute="width" constant="21" id="dUb-Pl-2RX"/>
+                                                                                    </constraints>
+                                                                                </customView>
+                                                                                <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0JT-pb-klp">
+                                                                                    <rect key="frame" x="19" y="0.0" width="223" height="22"/>
+                                                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Badge the app's dock icon with the number of items that are currently visible." id="hlo-Cb-WCo">
                                                                                         <font key="font" metaFont="label" size="9"/>
                                                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2417,8 +2468,10 @@ to links</string>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
@@ -2755,6 +2808,7 @@ to links</string>
                         <outlet property="autoLabelSwitch" destination="GGS-xR-YNp" id="EX7-KD-DMg"/>
                         <outlet property="autoShowOnEdgePicker" destination="Ja7-q3-jnF" id="Nzt-wD-aT8"/>
                         <outlet property="autoShowWhenDraggingSwitch" destination="QZl-T8-SRc" id="617-AN-U27"/>
+                        <outlet property="badgeItemWithVisibleItemCount" destination="e7W-ub-QWK" id="8Av-ye-5Je"/>
                         <outlet property="clipboardSnooping" destination="Il5-ig-9jb" id="xmD-8a-SEx"/>
                         <outlet property="clipboardSnoopingAll" destination="02j-C4-SrB" id="fyN-iG-ZSh"/>
                         <outlet property="convertLabelsToTagsSwitch" destination="Dgi-3I-XZK" id="RX3-i8-hT9"/>
