@@ -184,7 +184,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		case .sharing:
 			readOnlyLabel.isHidden = true
             inviteButton.image = #imageLiteral(resourceName: "iconUserChecked")
-            inviteButton.contentTintColor = UIColor.g_colorTint
+            inviteButton.contentTintColor = NSColor.g_colorTint
 		}
 
 		titleField.isEditable = readWrite

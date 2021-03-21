@@ -181,7 +181,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 		didSet {
 			guard let l = view.layer else { return }
 			if isSelected {
-				l.borderColor = UIColor.g_colorTint.cgColor
+				l.borderColor = NSColor.g_colorTint.cgColor
 				l.borderWidth = 2
 			} else {
 				l.borderColor = NSColor.clear.cgColor

@@ -15,6 +15,7 @@ final class Preferences: NSViewController {
 	@IBOutlet private var syncSpinner: NSProgressIndicator!
 	@IBOutlet private var syncNowButton: NSButton!
     @IBOutlet private var syncStatus: NSTextField!
+    @IBOutlet private var syncStatusHolder: NSStackView!
     
 	@IBOutlet private var deleteAllButton: NSButton!
 	@IBOutlet private var eraseAlliCloudDataButton: NSButton!
@@ -96,7 +97,7 @@ final class Preferences: NSViewController {
 	@IBAction private func doneSelected(_ sender: NSButton) {
 		dismiss(nil)
 	}
-
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -348,7 +349,7 @@ final class Preferences: NSViewController {
 			deleteAllButton.isEnabled = false
 			eraseAlliCloudDataButton.isHidden = true
 			syncStatus.stringValue = CloudManager.syncString
-            syncStatus.isHidden = false
+            syncStatusHolder.isHidden = false
 			syncSpinner.startAnimation(nil)
 		} else {
 			syncSwitch.isEnabled = true
@@ -356,7 +357,7 @@ final class Preferences: NSViewController {
 			deleteAllButton.isEnabled = true
             eraseAlliCloudDataButton.isHidden = false
             syncStatus.stringValue = ""
-            syncStatus.isHidden = true
+            syncStatusHolder.isHidden = true
 			syncSpinner.stopAnimation(nil)
 			syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
 		}

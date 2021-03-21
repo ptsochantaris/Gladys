@@ -407,6 +407,7 @@
 		16EC10452607B21500ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC10462607B21600ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC10472607B21700ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
 		16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
@@ -2197,6 +2198,7 @@
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
+				16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
 				16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
 				16D989242463737D00217F21 /* PopTimer.swift in Sources */,

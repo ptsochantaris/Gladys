@@ -1,8 +1,8 @@
-import Foundation
 #if os(iOS)
 import UIKit
 typealias COLORCLASS = UIColor
 #else
+import Foundation
 import AppKit
 typealias COLORCLASS = NSColor
 #endif
