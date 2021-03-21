@@ -15,7 +15,7 @@ final class LabelCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         let b = UIView()
-        b.backgroundColor = UIColor(named: "colorTint")?.withAlphaComponent(0.1)
+        b.backgroundColor = UIColor.g_colorTint.withAlphaComponent(0.1)
         selectedBackgroundView = b
     }
     
@@ -24,7 +24,7 @@ final class LabelCell: UITableViewCell {
             labelText.text = label ?? "Add…"
             labelText.textColor = label == nil
                 ? selectedBackgroundView?.backgroundColor?.withAlphaComponent(0.8)
-                : UIColor(named: "colorComponentLabel")
+                : .g_colorComponentLabel
         }
     }
     

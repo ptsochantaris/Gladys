@@ -51,7 +51,7 @@ final class AsciiCell: UICollectionViewCell {
 		if isSelected {
             letter.textColor = .white
 			label.textColor = .white
-			letter.backgroundColor = UIColor(named: "colorTint")
+			letter.backgroundColor = UIColor.g_colorTint
 		} else {
             letter.textColor = UIColor.secondaryLabel
             label.textColor = UIColor.tertiaryLabel

@@ -177,7 +177,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		doneButtonLocation = .right
 		table.backgroundView = nil
 		table.backgroundColor = .clear
-        table.tintColor = UIColor(named: "colorTint")
+        table.tintColor = UIColor.g_colorTint
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {

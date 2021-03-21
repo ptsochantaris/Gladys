@@ -570,10 +570,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		collection.dragInteractionEnabled = true
 
 		navigationController?.navigationBar.titleTextAttributes = [
-            .foregroundColor: UIColor(named: "colorLightGray")!
+            .foregroundColor: UIColor.g_colorLightGray
 		]
 		navigationController?.navigationBar.largeTitleTextAttributes = [
-			.foregroundColor: UIColor(named: "colorLightGray")!
+            .foregroundColor: UIColor.g_colorLightGray
 		]
 
 		let searchController = UISearchController(searchResultsController: nil)

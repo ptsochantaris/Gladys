@@ -49,7 +49,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 	private var shareColor: UIColor? {
 		if archivedDropItem?.shareMode == .sharing {
-			return UIColor(named: "colorTint")
+            return UIColor.g_colorTint
 		} else {
             return UIColor.secondaryLabel
 		}
@@ -481,7 +481,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         let topColor = topLabel.textColor
         let bottomColor = bottomLabel.textColor
 		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-			self.container.backgroundColor = UIColor(named: "colorTint")
+			self.container.backgroundColor = UIColor.g_colorTint
             self.topLabel.textColor = .systemBackground
             self.bottomLabel.textColor = .systemBackground
         }, completion: { _ in
@@ -597,8 +597,8 @@ extension ArchivedItemCell: UIIndirectScribbleInteractionDelegate {
         
         let f = UITextView()
         f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
-        f.backgroundColor = UIColor(named: "colorTint")
-        f.tintColor = UIColor(named: "colorTint")
+        f.backgroundColor = UIColor.g_colorTint
+        f.tintColor = UIColor.g_colorTint
         f.textColor = .white
         f.font = UIFont.preferredFont(forTextStyle: .headline)
         f.isEditable = false

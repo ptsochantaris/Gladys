@@ -49,7 +49,7 @@ final class ByteCell: UICollectionViewCell {
 		if isSelected {
             label.textColor = .white
             letter.textColor = .white
-            label.backgroundColor = UIColor(named: "colorTint")
+            label.backgroundColor = UIColor.g_colorTint
         } else {
             label.textColor = UIColor.secondaryLabel
             letter.textColor = UIColor.tertiaryLabel

@@ -130,7 +130,7 @@ extension UIImage {
             let a: CGFloat = darkMode ? 0.05 : 0.2
             let blackAndWhiteImage = ciImage
                 .applyingFilter("CIFalseColor", parameters: [
-                    p1: CIColor(color: UIColor(named: "colorFill")!),
+                    p1: CIColor(color: UIColor.g_colorFill),
                     p2: CIColor(color: UIColor.secondaryLabel.withAlphaComponent(a))
                 ])
             let img = UIImage(ciImage: blackAndWhiteImage)

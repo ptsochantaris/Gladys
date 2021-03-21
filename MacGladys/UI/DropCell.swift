@@ -46,7 +46,7 @@ final class TokenTextField: NSTextField {
 
     private static let separator = "   "
     private static let separatorCount = separator.utf16.count
-    private static let tintColor = NSColor(named: "colorTint")!
+    private static let tintColor = UIColor.g_colorTint
     private static let highlightColor = tintColor.withAlphaComponent(0.7)
     
 	var labels: [String]? {
@@ -349,7 +349,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 						if u1 == item.uuid {
 							var img = item.displayIcon
 							if img.isTemplate {
-                                img = img.template(with: NSColor(named: "colorTint")!)
+                                img = img.template(with: UIColor.g_colorTint)
 							}
 							imageCache.setObject(img, forKey: cacheKey)
 							DispatchQueue.main.sync { [weak self] in
@@ -482,7 +482,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		bottomLabel.stringValue = bottomLabelText
 		bottomLabel.isHidden = hideBottomLabel
 		bottomLabel.alignment = bottomLabelAlignment
-        bottomLabel.textColor = bottomLabelHighlight ? NSColor(named: "colorTint")! : NSColor.labelColor
+        bottomLabel.textColor = bottomLabelHighlight ? UIColor.g_colorTint : NSColor.labelColor
 
 		image.isHidden = hideImage
 		cancelButton.isHidden = hideCancel
@@ -498,7 +498,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		case .sharing:
-            sharedIcon.contentTintColor = NSColor(named: "colorTint")
+            sharedIcon.contentTintColor = UIColor.g_colorTint
 			sharedIcon.isHidden = false
 			bottomStackView.isHidden = false
 		}
@@ -602,7 +602,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		didSet {
 			guard let l = view.layer else { return }
 			if isSelected {
-				l.borderColor = NSColor(named: "colorTint")!.cgColor
+				l.borderColor = UIColor.g_colorTint.cgColor
 				l.borderWidth = 3
 			} else {
                 l.borderColor = NSColor.labelColor.withAlphaComponent(0.2).cgColor

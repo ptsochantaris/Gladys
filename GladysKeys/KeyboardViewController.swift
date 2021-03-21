@@ -16,7 +16,7 @@ final class SimpleLabelToggleCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         accessoryType = selected ? .checkmark : .none
-        labelName.textColor = selected ? .label : UIColor(named: "colorComponentLabel")
+        labelName.textColor = selected ? .label : .g_colorComponentLabel
     }
 }
 
@@ -380,15 +380,15 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             b?.setPreferredSymbolConfiguration(config, forImageIn: .normal)
         }
         
-        dismissButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        dismissButton.backgroundColor = UIColor.g_colorKeyboardGray
         
-        spaceButton.backgroundColor = UIColor(named: "colorKeyboardBright")
+        spaceButton.backgroundColor = UIColor.g_colorKeyboardBright
         
-        backspaceButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        backspaceButton.backgroundColor = UIColor.g_colorKeyboardGray
         
-        labelsButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        labelsButton.backgroundColor = UIColor.g_colorKeyboardGray
         
-        nextKeyboardButton.backgroundColor = UIColor(named: "colorKeyboardGray")
+        nextKeyboardButton.backgroundColor = UIColor.g_colorKeyboardGray
         nextKeyboardButton.isHidden = !needsInputModeSwitchKey
     }
     

@@ -8,8 +8,8 @@ import QuickLook
 final class GladysNavController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "colorPaper")
-        view.tintColor = UIColor(named: "colorTint")
+        view.backgroundColor = UIColor.g_colorPaper
+        view.tintColor = UIColor.g_colorTint
     }
 }
 
@@ -164,14 +164,14 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         edgesForExtendedLayout = []
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
 
-        let tint = UIColor(named: "colorTint")
+        let tint = UIColor.g_colorTint
         view.tintColor = tint
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.titleTextAttributes = [
             .font: UIFont.preferredFont(forTextStyle: .callout),
-            .foregroundColor: UIColor(named: "colorComponentLabel")!
+            .foregroundColor: UIColor.g_colorComponentLabel
         ]
 
         if let nav = navigationController, nav.viewControllers.first == self {

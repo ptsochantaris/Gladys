@@ -25,6 +25,6 @@ final class LabelToggleCell: UITableViewCell {
 
 	override func setSelected(_ selected: Bool, animated: Bool) {
 		accessoryType = selected ? .checkmark : .none
-        labelName.textColor = selected ? .label : UIColor(named: "colorComponentLabel")
+        labelName.textColor = selected ? .label : .g_colorComponentLabel
 	}    
 }

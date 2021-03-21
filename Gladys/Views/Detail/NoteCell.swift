@@ -22,7 +22,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
         super.awakeFromNib()
         textView.textContainerInset = .zero
 
-		let c = UIColor(named: "colorTint")
+		let c = UIColor.g_colorTint
 		textView.textColor = c
 		placeholder.textColor = c
         observer = textView.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in

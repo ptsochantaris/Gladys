@@ -195,7 +195,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 		zipInnerFrame.layer.cornerRadius = 5
 
 		exportOnlyVisibleSwitch.onTintColor = view.tintColor
-		exportOnlyVisibleSwitch.tintColor = UIColor(named: "colorLightGray")
+        exportOnlyVisibleSwitch.tintColor = UIColor.g_colorLightGray
 		exportOnlyVisibleSwitch.isOn = PersistedOptions.exportOnlyVisibleItems
 
 		let dragInteraction = UIDragInteraction(delegate: self)

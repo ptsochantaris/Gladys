@@ -1268,7 +1268,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1554.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transcribe speech in media" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IpX-nj-TnK">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="54"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1281,7 +1281,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to transcribe speech from imported media items. Processing is done on the local device " textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHv-MN-60R">
-                                                        <rect key="frame" x="30" y="32" width="193" height="82.5"/>
+                                                        <rect key="frame" x="30" y="68" width="193" height="46.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>

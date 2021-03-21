@@ -400,6 +400,13 @@
 		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		16EC101D2607AFE300ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC102A2607B14500ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10372607B21400ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10452607B21500ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10462607B21600ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
+		16EC10472607B21700ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
 		16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
@@ -834,6 +841,7 @@
 		16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
 		16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		16EC2934219D5F11004174C3 /* Model+Lite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Lite.swift"; sourceTree = "<group>"; };
 		16EC2937219D6341004174C3 /* Model+IndexLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+IndexLite.swift"; sourceTree = "<group>"; };
 		16EC3D082145286F0015714A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -1441,6 +1449,7 @@
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
 				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
+				16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */,
 			);
 			name = Support;
 			path = ..;
@@ -2224,6 +2233,7 @@
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedItem+Indexing.swift in Sources */,
+				16EC10372607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				162BDD75220F020700A3C17B /* Logging.swift in Sources */,
 				16906A9523C8C0C700D6C177 /* Component+iOS.swift in Sources */,
 				169763A1216BEB3B002AC228 /* NSAttributedString+Extensions.swift in Sources */,
@@ -2254,6 +2264,7 @@
 				1604A3361F091D7D005A477E /* Component.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
+				16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */,
 				16559C8C20A4CC55006C281D /* Global.swift in Sources */,
@@ -2323,6 +2334,7 @@
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
 				1602F32F2030E63B0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */,
+				16EC10472607B21700ABE6D2 /* Color+Extensions.swift in Sources */,
 				16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				1657B8D21FD4494D00EC480D /* Component+Copy.swift in Sources */,
 			);
@@ -2435,6 +2447,7 @@
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
+				16EC101D2607AFE300ABE6D2 /* Color+Extensions.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C3A2D620AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				16A223E51EF67FC7009EEEBC /* Model.swift in Sources */,
@@ -2468,6 +2481,7 @@
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
+				16EC10452607B21500ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F32D2030E6240036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16969BB01FB0E6B1007B2F77 /* Model+SimpleCoordinator.swift in Sources */,
 				16559C8E20A4CC55006C281D /* Global.swift in Sources */,
@@ -2535,6 +2549,7 @@
 				16B2AA5624DF499E004F3FC2 /* Component+Common.swift in Sources */,
 				16B2AA5E24DF49FC004F3FC2 /* UIImage+Extensions.swift in Sources */,
 				16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */,
+				16EC102A2607B14500ABE6D2 /* Color+Extensions.swift in Sources */,
 				16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */,
 				16B2AA5B24DF49D1004F3FC2 /* Component+BackgroundInfoObject.swift in Sources */,
 			);
@@ -2555,6 +2570,7 @@
 				165B970425CD884000E73E2D /* Component+Intents.swift in Sources */,
 				165B974525CD887A00E73E2D /* Types.swift in Sources */,
 				165B96D025CD86AE00E73E2D /* Model+Lite.swift in Sources */,
+				16EC10462607B21600ABE6D2 /* Color+Extensions.swift in Sources */,
 				165B96B625CD85F600E73E2D /* Model.swift in Sources */,
 				165B96DD25CD87FD00E73E2D /* ArchivedItem+Common.swift in Sources */,
 				165B97BA25CD88E400E73E2D /* Data+Extensions.swift in Sources */,

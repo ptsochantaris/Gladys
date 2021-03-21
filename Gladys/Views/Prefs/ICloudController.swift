@@ -25,7 +25,7 @@ final class ICloudController: GladysViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(updateiCloudControls), name: .CloudManagerStatusChanged, object: nil)
 
 		icloudSwitch.isOn = CloudManager.syncSwitchedOn
-		icloudSwitch.tintColor = UIColor(named: "colorLightGray")
+        icloudSwitch.tintColor = UIColor.g_colorLightGray
 		icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
 
 		updateiCloudControls()

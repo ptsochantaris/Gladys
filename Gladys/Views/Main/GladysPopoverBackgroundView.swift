@@ -51,7 +51,7 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
 
     private let containerRectangle: UIView = {
         let v = UIView()
-        v.backgroundColor = UIColor(named: "colorPaper")
+        v.backgroundColor = UIColor.g_colorPaper
         v.clipsToBounds = true
         v.layer.cornerRadius = 13
         return v
@@ -142,7 +142,7 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
         if arrowRectangle.center.y < 44 {
             arrowRectangle.tintColor = darkMode ? UIColor(white: 0.175, alpha: 1) : UIColor.white
         } else {
-            arrowRectangle.tintColor = UIColor(named: "colorPaper")
+            arrowRectangle.tintColor = UIColor.g_colorPaper
         }
         arrowRectangle.center = arrowCenter
         arrowRectangle.transform = CGAffineTransform(rotationAngle: arrowTransformInRadians)
