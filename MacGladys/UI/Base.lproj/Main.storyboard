@@ -1174,15 +1174,15 @@ Cg
             <objects>
                 <viewController title="Preferences" showSeguePresentationStyle="single" id="FB0-Ob-ymN" customClass="Preferences" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="voj-7Z-m9G">
-                        <rect key="frame" x="0.0" y="0.0" width="662" height="466"/>
+                        <rect key="frame" x="0.0" y="0.0" width="661" height="466"/>
                         <subviews>
                             <tabView translatesAutoresizingMaskIntoConstraints="NO" id="Qpf-fV-LVK">
-                                <rect key="frame" x="3" y="0.0" width="656" height="452"/>
+                                <rect key="frame" x="3" y="0.0" width="655" height="452"/>
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="General" identifier="" id="Hpm-yO-9Mp">
                                         <view key="view" id="ij9-3h-6Yz">
-                                            <rect key="frame" x="10" y="33" width="636" height="406"/>
+                                            <rect key="frame" x="10" y="33" width="635" height="406"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VH1-rZ-Gog">
@@ -1546,11 +1546,11 @@ Cg
                                     </tabViewItem>
                                     <tabViewItem label="iCloud" identifier="" id="dLd-a3-GcQ">
                                         <view key="view" id="Arv-sO-NKY">
-                                            <rect key="frame" x="10" y="33" width="636" height="406"/>
+                                            <rect key="frame" x="10" y="33" width="635" height="406"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDI-A5-fWC">
-                                                    <rect key="frame" x="415" y="10" width="211" height="32"/>
+                                                <button verticalHuggingPriority="750" id="oDI-A5-fWC">
+                                                    <rect key="frame" x="414" y="10" width="211" height="32"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <buttonCell key="cell" type="push" title="Delete All Gladys iCloud Data" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0dg-Ax-Z7G">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1560,8 +1560,8 @@ Cg
                                                         <action selector="eraseiCloudDataSelected:" target="FB0-Ob-ymN" id="CNd-UA-vEA"/>
                                                     </connections>
                                                 </button>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0OU-9N-goS">
-                                                    <rect key="frame" x="271" y="246" width="97" height="16"/>
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0OU-9N-goS">
+                                                    <rect key="frame" x="269" y="246" width="97" height="16"/>
                                                     <subviews>
                                                         <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="P3I-9f-G3D">
                                                             <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
@@ -1584,8 +1584,8 @@ Cg
                                                         <real value="3.4028234663852886e+38"/>
                                                     </customSpacing>
                                                 </stackView>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIB-fh-aeF">
-                                                    <rect key="frame" x="156" y="177" width="324" height="48"/>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" id="CIB-fh-aeF">
+                                                    <rect key="frame" x="155" y="177" width="324" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="Gwz-kA-qOE">
                                                         <font key="font" usesAppearanceFont="YES"/>
@@ -1594,8 +1594,8 @@ Cg
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V2j-oX-pFu">
-                                                    <rect key="frame" x="156" y="116" width="324" height="48"/>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" id="V2j-oX-pFu">
+                                                    <rect key="frame" x="155" y="116" width="324" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" id="Uht-au-cpK">
                                                         <font key="font" usesAppearanceFont="YES"/>
@@ -1603,8 +1603,9 @@ Cg
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
-                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9eA-GN-MbX">
+                                                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="9eA-GN-MbX">
                                                     <rect key="frame" x="225" y="281" width="186" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
                                                         <button horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5D3-iM-sSG">
                                                             <rect key="frame" x="-2" y="1" width="99" height="18"/>
@@ -1637,11 +1638,16 @@ Cg
                                                     </customSpacing>
                                                 </stackView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="0OU-9N-goS" firstAttribute="centerX" secondItem="Arv-sO-NKY" secondAttribute="centerX" id="73Y-me-kWc"/>
+                                                <constraint firstItem="0OU-9N-goS" firstAttribute="centerX" secondItem="Arv-sO-NKY" secondAttribute="centerX" id="SOO-kr-FAa"/>
+                                                <constraint firstItem="0OU-9N-goS" firstAttribute="top" secondItem="GgE-RY-aoh" secondAttribute="bottom" constant="19" id="kdc-3h-R0M"/>
+                                            </constraints>
                                         </view>
                                     </tabViewItem>
                                     <tabViewItem label="Interface" identifier="" id="atB-ND-1de">
                                         <view key="view" id="0vt-BW-gHG">
-                                            <rect key="frame" x="10" y="33" width="636" height="406"/>
+                                            <rect key="frame" x="10" y="33" width="635" height="406"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <customView autoresizesSubviews="NO" focusRingType="none" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dfv-cF-7Rh">
@@ -1732,10 +1738,10 @@ Cg
                                                             </view>
                                                         </box>
                                                         <box fixedFrame="YES" title="Auto-hiding" translatesAutoresizingMaskIntoConstraints="NO" id="txY-wg-CfD">
-                                                            <rect key="frame" x="16" y="21" width="336" height="162"/>
+                                                            <rect key="frame" x="16" y="21" width="324" height="162"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <view key="contentView" id="69n-n0-Dru">
-                                                                <rect key="frame" x="3" y="3" width="329" height="144"/>
+                                                                <rect key="frame" x="3" y="3" width="318" height="144"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <stepper horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fjP-Wp-Vc8">
@@ -1821,11 +1827,11 @@ Cg
                                                                 </subviews>
                                                             </view>
                                                         </box>
-                                                        <box fixedFrame="YES" title="Selection" translatesAutoresizingMaskIntoConstraints="NO" id="1eg-Nb-Trk">
+                                                        <box fixedFrame="YES" title="Selecting items" translatesAutoresizingMaskIntoConstraints="NO" id="1eg-Nb-Trk">
                                                             <rect key="frame" x="15" y="192" width="603" height="112"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <view key="contentView" id="W3y-81-q8B">
-                                                                <rect key="frame" x="3" y="3" width="596" height="94"/>
+                                                                <rect key="frame" x="3" y="3" width="597" height="94"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JOK-rk-07w">
