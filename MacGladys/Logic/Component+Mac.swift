@@ -216,14 +216,14 @@ extension Component {
 			let fm = FileManager.default
 			guard fm.fileExists(atPath: recordLocation.path) else { return }
 
-			if let blobModification = Model.modificationDate(for: recordLocation) {
+			if let fileModification = Model.modificationDate(for: recordLocation) {
 				if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
-					if recordedModification < blobModification { // is the file modified after we stamped it?
-						lastGladysBlobUpdate = Date()
+					if recordedModification < fileModification { // is the file modified after we stamped it?
+						lastGladysBlobUpdate = fileModification
 						detectedChange = true
-					}
+                    }
 				} else {
-					lastGladysBlobUpdate = Date() // have modification date but no stamp
+					lastGladysBlobUpdate = fileModification // have modification date but no stamp
 				}
 			} else {
 				let now = Date()

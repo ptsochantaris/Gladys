@@ -62,8 +62,8 @@ extension FileManager {
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if let newValue = date {
                 let string = String(newValue.timeIntervalSinceReferenceDate)
-                if var data = string.data(using: .utf8) {
-                    let res = setxattr(fileSystemPath, attributeName, &data, data.count, 0, 0)
+                string.data(using: .utf8)?.withUnsafeBytes { bytes in
+                    let res = setxattr(fileSystemPath, attributeName, bytes.baseAddress!, bytes.count, 0, 0)
                     if res < 0 {
                         log(String(format: "Error while setting date attribute: %s for %s", strerror(errno), fileSystemPath!))
                     }
@@ -74,16 +74,14 @@ extension FileManager {
         }
     }
     
-    private static let trueData = "true".data(using: .utf8)!
-    private static let trueDataCount = trueData.count
     func setBoolAttribute(_ attributeName: String, at url: URL, to newValue: Bool) {
         guard fileExists(atPath: url.path) else {
             return
         }
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if newValue {
-                var bytes = FileManager.trueData
-                let res = setxattr(fileSystemPath, attributeName, &bytes, FileManager.trueDataCount, 0, 0)
+                var bytes: [UInt8] = [116, 114, 117, 101]
+                let res = setxattr(fileSystemPath, attributeName, &bytes, 4, 0, 0)
                 if res < 0 {
                     log(String(format: "Error while setting bool attribute: %s for %s", strerror(errno), fileSystemPath!))
                 }
