@@ -586,6 +586,12 @@ extension Model {
 	}
 
     static func updateBadge() {
+        DispatchQueue.main.async {
+            _updateBadge()
+        }
+    }
+    
+    private static func _updateBadge() {
         #if MAC
         let tile = NSApp.dockTile
         if CloudManager.showNetwork {
@@ -620,9 +626,7 @@ extension Model {
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
             if granted {
                 log("Got provisional badging permission")
-                DispatchQueue.main.async {
-                    Model.updateBadge()
-                }
+                Model.updateBadge()
             } else if let error = error {
                 log("Error requesting badge permission: \(error.localizedDescription)")
             }

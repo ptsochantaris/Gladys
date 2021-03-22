@@ -61,7 +61,7 @@ extension String {
 extension NSURL {
 	var urlFileContent: Data? {
 		if let a = absoluteString {
-			return "[InternetShortcut]\r\nURL=\(a)\r\n".data(using: .utf8)
+            return Data("[InternetShortcut]\r\nURL=\(a)\r\n".utf8)
 		}
 		return nil
 	}

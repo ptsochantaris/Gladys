@@ -31,7 +31,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var generateTextFromThumbnailsSwitch: UISwitch!
     @IBOutlet private var transcribeSpeechInMedia: UISwitch!
     @IBOutlet private var applyMlToUrlsSwitch: UISwitch!
-    
+    @IBOutlet private var badgeIconSwitch: UISwitch!
+
 	@IBOutlet private var actionSelector: UISegmentedControl!
 	@IBOutlet private var autoArchiveSwitch: UISwitch!
 	@IBOutlet private var exclusiveLabelsSwitch: UISwitch!
@@ -171,6 +172,11 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func applyMlToUrlsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.includeUrlImagesInMlLogic = sender.isOn
     }
+    
+    @IBAction private func badgeIconSwitch(_ sender: UISwitch) {
+        PersistedOptions.badgeIconWithItemCount = sender.isOn
+        Model.updateBadge()
+    }
 
     @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
         let on = sender.isOn
@@ -215,6 +221,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         fileMirrorSwitch.isOn = PersistedOptions.mirrorFilesToDocuments
 		wideModeSwitch.isOn = PersistedOptions.wideMode
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
+        badgeIconSwitch.isOn = PersistedOptions.badgeIconWithItemCount
         fullScreenHolder.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 
 		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue

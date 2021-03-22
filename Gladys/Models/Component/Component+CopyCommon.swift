@@ -13,7 +13,7 @@ extension Component {
 		if classWasWrapped && typeIdentifier.hasPrefix("public.") {
 			let decoded = decode()
 			if let s = decoded as? String {
-				return s.data(using: .utf8)
+                return Data(s.utf8)
 			} else if let s = decoded as? NSAttributedString {
 				return s.toData
             } else if let s = decoded as? NSURL, let urlString = s.absoluteString {

@@ -309,7 +309,7 @@ extension Component {
 			let data = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
 			setBytes(data)
 		} else {
-			let data = newUrl.absoluteString?.data(using: .utf8)
+            let data = Data((newUrl.absoluteString ?? "").utf8)
 			setBytes(data)
 		}
 		encodedURLCache = (true, newUrl)

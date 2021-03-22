@@ -204,7 +204,8 @@ extension ArchivedItem {
         }
         
         finalGroup.notify(queue: .main) {
-            if let t = transcribedText, let data = t.data(using: .utf8) {
+            if let t = transcribedText {
+                let data = Data(t.utf8)
                 let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
                 newComponent.accessoryTitle = t
                 self.components.insert(newComponent, at: 0)

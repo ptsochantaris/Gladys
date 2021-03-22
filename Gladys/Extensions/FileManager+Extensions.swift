@@ -62,7 +62,7 @@ extension FileManager {
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if let newValue = date {
                 let string = String(newValue.timeIntervalSinceReferenceDate)
-                string.data(using: .utf8)?.withUnsafeBytes { bytes in
+                Data(string.utf8).withUnsafeBytes { bytes in
                     let res = setxattr(fileSystemPath, attributeName, bytes.baseAddress!, bytes.count, 0, 0)
                     if res < 0 {
                         log(String(format: "Error while setting date attribute: %s for %s", strerror(errno), fileSystemPath!))
