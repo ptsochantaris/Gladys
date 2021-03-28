@@ -593,7 +593,7 @@ extension Model {
     
     private static func _updateBadge() {
         #if MAC
-        let tile = NSApp.dockTile
+        let tile = NSApplication.shared.dockTile
         if CloudManager.showNetwork {
             log("Updating app badge to show network")
             tile.badgeLabel = "↔"
