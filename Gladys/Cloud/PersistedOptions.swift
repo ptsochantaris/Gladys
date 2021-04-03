@@ -311,4 +311,13 @@ final class PersistedOptions {
             defaults.set(newValue, forKey: "badgeIconWithItemCount")
         }
     }
+    
+    static var migratedSubscriptions7: Bool {
+        get {
+            return defaults.bool(forKey: "migratedSubscriptions7")
+        }
+        set {
+            defaults.set(newValue, forKey: "migratedSubscriptions7")
+        }
+    }
 }

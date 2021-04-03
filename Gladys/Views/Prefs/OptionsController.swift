@@ -174,10 +174,29 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     }
     
     @IBAction private func badgeIconSwitch(_ sender: UISwitch) {
-        PersistedOptions.badgeIconWithItemCount = sender.isOn
-        Model.updateBadge()
+        if !sender.isOn {
+            PersistedOptions.badgeIconWithItemCount = false
+            Model.updateBadge()
+            return
+        }
+        
+        badgeIconSwitch.isEnabled = false
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
+            DispatchQueue.main.async {
+                self.badgeIconSwitch.isEnabled = false
+                if granted {
+                    log("Got provisional badging permission")
+                    PersistedOptions.badgeIconWithItemCount = true
+                    Model.updateBadge()
+                } else if let error = error {
+                    self.badgeIconSwitch.isOn = false
+                    genericAlert(title: "Error", message: "Could not obtain permission to display badges, you may need to manually allow Gladys to display badges from settings.", offerSettingsShortcut: true)
+                    log("Error requesting badge permission: \(error.localizedDescription)")
+                }
+            }
+        }
     }
-
+    
     @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
         let on = sender.isOn
         PersistedOptions.mirrorFilesToDocuments = on

@@ -395,16 +395,6 @@ extension CloudManager {
         OperationQueue.main.addOperation(doneOperation)
     }
 
-    private static func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
-        let notificationInfo = CKSubscription.NotificationInfo()
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.shouldBadge = true
-
-        let subscription = CKDatabaseSubscription(subscriptionID: id)
-        subscription.notificationInfo = notificationInfo
-        return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
-    }
-
     private static func proceedWithActivation(completion: @escaping (Error?) -> Void) {
 
         let zone = CKRecordZone(zoneID: privateZoneId)
@@ -427,19 +417,44 @@ extension CloudManager {
     }
 
     private static func updateSubscriptions(completion: @escaping (Error?) -> Void) {
+        
+        func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
+            let notificationInfo = CKSubscription.NotificationInfo()
+            notificationInfo.shouldSendContentAvailable = true
+            notificationInfo.shouldSendMutableContent = false
+            notificationInfo.shouldBadge = false
+
+            let subscription = CKDatabaseSubscription(subscriptionID: id)
+            subscription.notificationInfo = notificationInfo
+            return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
+        }
+
+        let group = DispatchGroup()
+        var finalError: Error?
+
+        group.enter()
         let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
         subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
             if error != nil {
-                completion(error)
-            } else {
-                let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
-                subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
-                    completion(error)
-                }
-                perform(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
+                finalError = error
             }
+            group.leave()
         }
         perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
+        
+        group.enter()
+        let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
+        subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
+            if error != nil {
+                finalError = error
+            }
+            group.leave()
+        }
+        perform(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
+
+        group.notify(queue: .main) {
+            completion(finalError)
+        }
     }
 
     static private func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
@@ -1140,22 +1155,24 @@ extension CloudManager {
     }
 
     static func apnsUpdate(_ newToken: Data?) {
-        let previousToken = PersistedOptions.lastPushToken
-        if newToken != previousToken {
-            if let newToken = newToken {
-                log("New APNS token, will update subscriptions")
-                updateSubscriptions { error in
-                    if let error = error {
-                        log("Subscription update failed: \(error)")
-                    } else {
-                        log("Subscriptions updated successfully, storing new token")
-                        DispatchQueue.main.async {
-                            PersistedOptions.lastPushToken = newToken
-                        }
-                    }
-                }
+        if newToken == PersistedOptions.lastPushToken && PersistedOptions.migratedSubscriptions7 {
+            return
+        }
+        
+        guard let newToken = newToken else {
+            PersistedOptions.migratedSubscriptions7 = true
+            PersistedOptions.lastPushToken = nil
+            return
+        }
+        
+        log("New APNS token or push migration needed, will update subscriptions")
+        updateSubscriptions { error in
+            if let error = error {
+                log("Subscription update failed: \(error)")
             } else {
-                PersistedOptions.lastPushToken = nil
+                log("Subscriptions updated successfully, storing new token")
+                PersistedOptions.migratedSubscriptions7 = true
+                PersistedOptions.lastPushToken = newToken
             }
         }
     }

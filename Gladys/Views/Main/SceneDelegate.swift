@@ -104,6 +104,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func updateWindowCount() {
         Singleton.shared.openCount = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.count
+        if let c = currentWindow {
+            lastUsedWindow = c
+        }
     }
         
     func windowScene(_ windowScene: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {

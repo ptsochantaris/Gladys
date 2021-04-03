@@ -606,7 +606,7 @@ extension Model {
             tile.badgeLabel = nil
         }
         #else
-        if PersistedOptions.badgeIconWithItemCount, let count = currentWindow?.associatedFilter?.filteredDrops.count {
+        if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
             log("Updating app badge to show item count (\(count))")
             UIApplication.shared.applicationIconBadgeNumber = count
         } else {
@@ -621,17 +621,6 @@ extension Model {
 	static func setup() {
         reloadDataIfNeeded()
         setupIndexDelegate()
-        
-        #if !MAC
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
-            if granted {
-                log("Got provisional badging permission")
-                Model.updateBadge()
-            } else if let error = error {
-                log("Error requesting badge permission: \(error.localizedDescription)")
-            }
-        }
-        #endif
         
         // migrate if needed
 		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
