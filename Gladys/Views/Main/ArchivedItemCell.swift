@@ -187,10 +187,8 @@ final class ArchivedItemCell: UICollectionViewCell {
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
         
         #if canImport(PencilKit)
-        if #available(iOS 14.0, *) {
-            let pencil = UIIndirectScribbleInteraction(delegate: self)
-            addInteraction(pencil)
-        }
+        let pencil = UIIndirectScribbleInteraction(delegate: self)
+        addInteraction(pencil)
         #endif
 	}
         

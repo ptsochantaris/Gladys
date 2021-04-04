@@ -183,7 +183,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         badgeIconSwitch.isEnabled = false
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
             DispatchQueue.main.async {
-                self.badgeIconSwitch.isEnabled = false
+                self.badgeIconSwitch.isEnabled = true
                 if granted {
                     log("Got provisional badging permission")
                     PersistedOptions.badgeIconWithItemCount = true

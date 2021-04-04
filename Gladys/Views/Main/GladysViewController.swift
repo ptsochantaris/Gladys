@@ -253,7 +253,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 
     override var keyCommands: [UIKeyCommand]? {
         var a = [UIKeyCommand]()
-        if #available(iOS 13.4, *), isFirstResponder {
+        if isFirstResponder {
             a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
             a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
             a.append(UIKeyCommand(title: "Page Down", action: #selector(pageDown), input: UIKeyCommand.inputPageDown))
@@ -285,7 +285,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
 
     private func pressesDone(_ presses: Set<UIPress>) -> Bool {
-        if #available(iOS 13.4, *), isFirstResponder {
+        if isFirstResponder {
             let code = presses.first?.key?.keyCode
             if code == UIKeyboardHIDUsage.keyboardUpArrow || code == UIKeyboardHIDUsage.keyboardDownArrow {
                 scrollInfo = nil
@@ -296,7 +296,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        if #available(iOS 13.4, *), isFirstResponder, let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
+        if isFirstResponder, let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
             let code = presses.first?.key?.keyCode
             if code == UIKeyboardHIDUsage.keyboardUpArrow {
                 scrollInfo = ScrollInfo(scrollView: scr, target: self, selector: #selector(scrollLineDown))

@@ -20,36 +20,35 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
-        self.doneButtonLocation = .right
-
-        let style = INUIAddVoiceShortcutButtonStyle.automaticOutline
-
-		let detailShortcutButton = INUIAddVoiceShortcutButton(style: style)
+		let detailShortcutButton = INUIAddVoiceShortcutButton(style: .black)
 		if let sourceItem = sourceItem {
             let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
             ArchivedItem.updateUserActivity(activity, from: sourceItem, child: nil, titled: "Info of")
 			detailShortcutButton.shortcut = INShortcut(userActivity: activity)
 		}
-		detailShortcutButton.place(in: openItemDetailContainer, buttonDelegate: self)
+        detailShortcutButton.delegate = self
+        openItemDetailContainer.cover(with: detailShortcutButton)
 
-		let copyItemShortcutButton = INUIAddVoiceShortcutButton(style: style)
+		let copyItemShortcutButton = INUIAddVoiceShortcutButton(style: .black)
 		if let sourceItem = sourceItem {
 			copyItemShortcutButton.shortcut = INShortcut(intent: sourceItem.copyIntent)
 		}
-		copyItemShortcutButton.place(in: copyItemContainer, buttonDelegate: self)
+        copyItemShortcutButton.delegate = self
+		copyItemContainer.cover(with: copyItemShortcutButton)
 
-		let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: style)
+		let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: .black)
 		if let sourceItem = sourceItem {
 			let previewActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
 			ArchivedItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
 			quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)
 		}
-		quickLookShortcutButton.place(in: quickLookItemContainer, buttonDelegate: self)
+        quickLookShortcutButton.delegate = self
+        quickLookItemContainer.cover(with: quickLookShortcutButton)
 	}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        preferredContentSize = view.systemLayoutSizeFitting(CGSize(width: 240, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        preferredContentSize = view.systemLayoutSizeFitting(CGSize(width: 220, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
     }
     
     func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {

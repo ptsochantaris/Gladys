@@ -14,8 +14,7 @@ final class DetailController: GladysViewController,
 	@IBOutlet private var openButton: UIBarButtonItem!
 	@IBOutlet private var dateLabel: UILabel!
 	@IBOutlet private var dateLabelHolder: UIView!
-    
-    private var menuButton: UIBarButtonItem?
+    @IBOutlet private var menuButton: UIBarButtonItem?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -46,31 +45,20 @@ final class DetailController: GladysViewController,
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 	}
 
-    private var addedMenu = false
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if #available(iOS 14.0, *) {
-            if !addedMenu, presentingViewController != nil {
-                addedMenu = true
-                let menu = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: nil, action: nil)
-                menu.accessibilityValue = "Menu"
-                var newItems = navigationItem.leftBarButtonItems ?? [UIBarButtonItem]()
-                newItems.insert(menu, at: 0)
-                navigationItem.leftBarButtonItems = newItems
-                menuButton = menu
-            }
+        if let m = menuButton, presentingViewController == nil,
+           let i = navigationItem.leftBarButtonItems?.firstIndex(of: m) {
+            navigationItem.leftBarButtonItems?.remove(at: i)
+            menuButton = nil
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if #available(iOS 14.0, *) {
-            updateMenuButton()
-        }
+        updateMenuButton()
     }
     
-    @available(iOS 14.0, *)
     private func updateMenuButton() {
         if let m = menuButton, let v = view.window?.windowScene?.mainController {
             m.menu = v.createShortcutActions(for: item, mainView: false)
@@ -107,9 +95,7 @@ final class DetailController: GladysViewController,
 			done()
 		} else {
             isReadWrite = item.shareMode != .elsewhereReadOnly
-            if #available(iOS 14.0, *) {
-                updateMenuButton()
-            }
+            updateMenuButton()
             self.view.setNeedsLayout()
             table.reloadData()
 		}
@@ -537,57 +523,65 @@ final class DetailController: GladysViewController,
             self.makeIndexAndSaveItem()
         })
 	}
-
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "textEdit",
-			let typeEntry = sender as? Component,
-			let e = segue.destination as? TextEditController {
-			e.item = item
-			e.typeEntry = typeEntry
-			e.delegate = self
-
-		} else if segue.identifier == "hexEdit",
-			let typeEntry = sender as? Component,
-			let e = segue.destination as? HexEdit {
-			
-			e.bytes = typeEntry.bytes ?? Data()
-			
-			let f = ByteCountFormatter()
-			let size = f.string(fromByteCount: Int64(e.bytes.count))
-			e.title = typeEntry.typeDescription + " (\(size))"
-
-		} else if segue.identifier == "plistEdit",
-			let typeEntry = sender as? Component,
-			let e = segue.destination as? PlistEditor,
-			let b = typeEntry.bytes,
-			let propertyList = try? PropertyListSerialization.propertyList(from: b, options: [], format: nil) {
-
-			e.title = typeEntry.trimmedName
-			e.propertyList = propertyList
-
-		} else if segue.identifier == "addLabel",
-			let indexPath = sender as? IndexPath,
-			let n = segue.destination as? UINavigationController,
-			let p = n.popoverPresentationController,
-			let d = n.topViewController as? AddLabelController {
-
-			if let cell = table.cellForRow(at: indexPath) {
-				p.sourceView = cell
-				p.sourceRect = cell.bounds.insetBy(dx: 30, dy: 15)
-			}
-			p.permittedArrowDirections = [.left, .right]
-			d.delegate = self
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "textEdit",
+           let typeEntry = sender as? Component,
+           let e = segue.destination as? TextEditController {
+            e.item = item
+            e.typeEntry = typeEntry
+            e.delegate = self
+            
+        } else if segue.identifier == "hexEdit",
+                  let typeEntry = sender as? Component,
+                  let e = segue.destination as? HexEdit {
+            
+            e.bytes = typeEntry.bytes ?? Data()
+            
+            let f = ByteCountFormatter()
+            let size = f.string(fromByteCount: Int64(e.bytes.count))
+            e.title = typeEntry.typeDescription + " (\(size))"
+            
+        } else if segue.identifier == "plistEdit",
+                  let typeEntry = sender as? Component,
+                  let e = segue.destination as? PlistEditor,
+                  let b = typeEntry.bytes,
+                  let propertyList = try? PropertyListSerialization.propertyList(from: b, options: [], format: nil) {
+            
+            e.title = typeEntry.trimmedName
+            e.propertyList = propertyList
+            
+        } else if segue.identifier == "addLabel",
+                  let indexPath = sender as? IndexPath,
+                  let n = segue.destination as? UINavigationController,
+                  let p = n.popoverPresentationController,
+                  let d = n.topViewController as? AddLabelController {
+            
+            if let cell = table.cellForRow(at: indexPath) {
+                p.sourceView = cell
+                p.sourceRect = cell.bounds.insetBy(dx: 30, dy: 15)
+            }
+            p.permittedArrowDirections = [.left, .right]
+            d.delegate = self
             d.exclude = Set(item.labels)
             d.modelFilter = view.associatedFilter
-			p.delegate = self
-			if indexPath.row < item.labels.count {
-				d.title = "Edit Label"
-				d.label = item.labels[indexPath.row]
-			} else {
-				d.title = "Add Label"
-			}
-		}
-	}
+            p.delegate = self
+            if indexPath.row < item.labels.count {
+                d.title = "Edit Label"
+                d.label = item.labels[indexPath.row]
+            } else {
+                d.title = "Add Label"
+            }
+            
+        } else if segue.identifier == "toSiriShortcuts",
+                  let n = segue.destination as? UINavigationController,
+                  let p = n.popoverPresentationController {
+            p.delegate = self
+            if let m = menuButton {
+                p.barButtonItem = m
+            }
+        }
+    }
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {

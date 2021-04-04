@@ -1119,9 +1119,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         if editing {
             collection.allowsMultipleSelection = true
-            if #available(iOS 14.0, *) {
-                collection.allowsMultipleSelectionDuringEditing = true
-            }
+            collection.allowsMultipleSelectionDuringEditing = true
             navigationController?.setToolbarHidden(false, animated: animated)
             editButton.title = "Done"
             editButton.image = UIImage(systemName: "ellipsis.circle.fill")
@@ -1129,9 +1127,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		} else {
             collection.allowsMultipleSelection = false
-            if #available(iOS 14.0, *) {
-                collection.allowsMultipleSelectionDuringEditing = false
-            }
+            collection.allowsMultipleSelectionDuringEditing = false
             navigationController?.setToolbarHidden(true, animated: animated)
             editButton.title = "Edit"
             editButton.image = UIImage(systemName: "ellipsis.circle")
@@ -1306,8 +1302,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let s = self,
                 let index = s.filter.filteredDrops.firstIndex(of: item),
                 let cell = s.collection.cellForItem(at: IndexPath(item: index, section: 0)) {
-                s.dismissAnyPopOver {
-                    s.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
+                if let detail = s.currentDetailView {
+                    detail.performSegue(withIdentifier: "toSiriShortcuts", sender: nil)
+                } else {
+                    s.dismissAnyPopOver {
+                        s.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
+                    }
                 }
             }
         }, style: [], iconName: "mic"))
@@ -1709,7 +1709,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		let t = (controller.presentedViewController as? UINavigationController)?.topViewController
-		if t is LabelSelector || t is LabelEditorController {
+		if t is LabelSelector || t is LabelEditorController || t is SiriShortcutsViewController {
 			return .none
 		} else {
 			return .overCurrentContext

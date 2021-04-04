@@ -25,12 +25,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
         
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let compact = extensionContext?.widgetActiveDisplayMode == .compact
-        let numberOfRows: Int
-        if #available(iOS 14.0, *) {
-            numberOfRows = compact ? 1 : 3
-        } else {
-            numberOfRows = compact ? 1 : 4
-        }
+        let numberOfRows = compact ? 1 : 3
 		return min(itemsPerRow * numberOfRows, Model.visibleDrops.count)
 	}
 
@@ -128,7 +123,7 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
         
         newSize.height -= margins.top
         newSize.height -= margins.bottom
-        if #available(iOS 14.0, *), activeDisplayMode == .expanded {
+        if activeDisplayMode == .expanded {
             newSize.height -= 2
         }
 
@@ -150,19 +145,13 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 	}
     
     private func reloadData() {
-        let max: Int
-        if #available(iOS 14.0, *) {
-            max = 12
-        } else {
-            max = 16
-        }
-        Model.reloadDataIfNeeded(maximumItems: max)
+        Model.reloadDataIfNeeded(maximumItems: 12)
     }
 
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         reloadData()
 		updateUI()
-        completionHandler(NCUpdateResult.newData)
+        completionHandler(.newData)
     }
 
 	private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
