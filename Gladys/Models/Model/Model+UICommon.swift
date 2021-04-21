@@ -593,14 +593,14 @@ extension Model {
     
     private static func _updateBadge() {
         #if MAC
-        let tile = NSApplication.shared.dockTile
+        let tile = NSApp.dockTile
         if CloudManager.showNetwork {
             log("Updating app badge to show network")
             tile.badgeLabel = "↔"
         } else if PersistedOptions.badgeIconWithItemCount {
             let count = Model.sharedFilter.filteredDrops.count
             log("Updating app badge to show item count (\(count))")
-            tile.badgeLabel = String(count)
+            tile.badgeLabel = count > 0 ? String(count) : nil
         } else {
             log("Updating app badge to clear")
             tile.badgeLabel = nil

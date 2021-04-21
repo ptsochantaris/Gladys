@@ -230,7 +230,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
 		CloudManager.received(notificationInfo: userInfo)
 	}
-
+    
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
 		NSApplication.shared.windows.first(where: { $0.contentViewController is ViewController })?.makeKeyAndOrderFront(self)
 		return false

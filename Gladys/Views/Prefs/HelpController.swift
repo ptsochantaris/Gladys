@@ -213,7 +213,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
             v.textLabel?.textColor = table.tintColor
         }
     }
-
+    
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return entries[section].title
 	}

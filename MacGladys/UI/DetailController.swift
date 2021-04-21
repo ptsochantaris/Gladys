@@ -21,7 +21,7 @@ final class ComponentCollectionView: NSCollectionView {
 	}
 }
 
-protocol FocusableTextFieldDelegate: class {
+protocol FocusableTextFieldDelegate: AnyObject {
 	func fieldReceivedFocus(_ field: FocusableTextField)
 }
 

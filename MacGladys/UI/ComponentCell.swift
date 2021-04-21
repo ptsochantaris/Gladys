@@ -8,7 +8,7 @@
 
 import Cocoa
 
-protocol ComponentCellDelegate: class {
+protocol ComponentCellDelegate: AnyObject {
 	func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action)
 }
 
