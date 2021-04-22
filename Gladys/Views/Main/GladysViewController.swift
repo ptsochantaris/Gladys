@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol GladysViewDelegate: class {
+protocol GladysViewDelegate: AnyObject {
     func movedToWindow()
 }
 

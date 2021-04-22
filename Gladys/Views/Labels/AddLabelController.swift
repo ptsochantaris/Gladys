@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol AddLabelControllerDelegate: class {
+protocol AddLabelControllerDelegate: AnyObject {
 	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?)
 }
 
